@@ -102,34 +102,37 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.None;
 		}
-		if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID) // cables - always connect
+		else if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID) // cables - always connect
 		{
 			return RedNetConnectionType.CableAll;
 		}
-		if(_mode == 2) // cable-only, and not a cable - don't connct
+		else if(_mode == 2) // cable-only, and not a cable - don't connct
 		{
 			return RedNetConnectionType.None;
 		}
-		if(b instanceof IConnectableRedNet) // API node - let them figure it out
+		else if(b instanceof IConnectableRedNet) // API node - let them figure it out
 		{
 			RedNetConnectionType type = ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
 			return type.isConnectionForced && _mode != 1 ? RedNetConnectionType.None : type; 
 		}
-		if(_mode == 1) // mode 1 forces plate mode for weak power
+		else if(_mode == 1) // mode 1 forces plate mode for weak power
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
 		}
-		if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId) || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
+		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId) || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
 			// standard connection logic, then figure out if we shouldn't connect
 			// mode 1 will skip this
 		{
 			return RedNetConnectionType.None;
 		}
-		if(b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
+		else if(b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
 		{
 			return RedNetConnectionType.CableSingle;
 		}
-		return RedNetConnectionType.PlateSingle;
+		else
+		{
+			return RedNetConnectionType.PlateSingle;
+		}
 	}
 	
 	@Override
