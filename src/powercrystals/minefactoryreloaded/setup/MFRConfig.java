@@ -99,6 +99,16 @@ public class MFRConfig
 	public static Property laserFocusItemId;
 	public static Property chocolateMilkBucketItemId;
 	public static Property mushroomSoupBucketItemId;
+	public static Property needlegunItemId;
+	public static Property needlegunAmmoEmptyItemId;
+	public static Property needlegunAmmoStandardItemId;
+	public static Property needlegunAmmoLavaItemId;
+	public static Property needlegunAmmoSludgeItemId;
+	public static Property needlegunAmmoSewageItemId;
+	public static Property needlegunAmmoFireItemId;
+	public static Property needlegunAmmoAnvilItemId;
+	
+	public static Property plasticCupItemId;
 	
 	public static Property zoolologistEntityId;
 	
@@ -111,8 +121,8 @@ public class MFRConfig
 	public static Property craftSingleDSU;
 	public static Property enableMossyCobbleRecipe;
 	public static Property conveyorCaptureNonItems;
-        public static Property conveyorNeverCapturesPlayers;
-        public static Property conveyorNeverCapturesTCGolems;
+	public static Property conveyorNeverCapturesPlayers;
+	public static Property conveyorNeverCapturesTCGolems;
 	public static Property playSounds;
 	public static Property fruitTreeSearchMaxVertical;
 	public static Property fruitTreeSearchMaxHorizontal;
@@ -145,7 +155,7 @@ public class MFRConfig
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
 	
-	//recipes config
+	// recipes config
 	public static Property vanillaRecipes;
 	public static Property thermalExpansionRecipes;
 	public static Property gregTechRecipes;
@@ -153,7 +163,7 @@ public class MFRConfig
 	public static void loadClientConfig(File configFile)
 	{
 		Configuration c = new Configuration(configFile);
-	
+		
 		spyglassRange = c.get(Configuration.CATEGORY_GENERAL, "SpyglassRange", 200);
 		spyglassRange.comment = "The maximum number of blocks the spyglass and ruler can look to find something. This calculation is performed only on the client side.";
 		
@@ -244,9 +254,18 @@ public class MFRConfig
 		laserFocusItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.LaserFocus", 12033);
 		chocolateMilkBucketItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.ChocolateMilkBucket", 12034);
 		mushroomSoupBucketItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.MushroomSoupBucket", 12035);
+		needlegunItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun", 12036);
+		needlegunAmmoEmptyItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Empty", 12037);
+		needlegunAmmoStandardItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Standard", 12038);
+		needlegunAmmoLavaItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Lava", 12039);
+		needlegunAmmoSludgeItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Sludge", 12040);
+		needlegunAmmoSewageItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Sewage", 12041);
+		needlegunAmmoFireItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Fire", 12042);
+		needlegunAmmoAnvilItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.NeedleGun.Ammo.Anvil", 12043);
+		plasticCupItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.PlasticCup", 12044);
 		
 		zoolologistEntityId = c.get("Entity", "ID.Zoologist", 330);
-	
+		
 		colorblindMode = c.get(Configuration.CATEGORY_GENERAL, "RedNet.EnableColorblindMode", false);
 		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
 		treeSearchMaxHorizontal = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxHoriztonal", 8);
@@ -273,10 +292,10 @@ public class MFRConfig
 		enableMossyCobbleRecipe.comment = "If true, mossy cobble can be crafted.";
 		conveyorCaptureNonItems = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.CaptureNonItems", true);
 		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
-                conveyorNeverCapturesPlayers = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.NeverCapturePlayers", false);
-                conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
-                conveyorNeverCapturesTCGolems = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.NeverCaptureTCGolems", false);
-                conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture Thaumcraft golems regardless of other settings.";
+		conveyorNeverCapturesPlayers = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.NeverCapturePlayers", false);
+		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
+		conveyorNeverCapturesTCGolems = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.NeverCaptureTCGolems", false);
+		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture Thaumcraft golems regardless of other settings.";
 		playSounds = c.get(Configuration.CATEGORY_GENERAL, "PlaySounds", true);
 		playSounds.comment = "Set to false to disable the harvester's sound when a block is harvested.";
 		enableSlipperyRoads = c.get(Configuration.CATEGORY_GENERAL, "Road.Slippery", true);
@@ -304,7 +323,7 @@ public class MFRConfig
 		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
 		
 		enableCompatibleAutoEnchanter = c.get(Configuration.CATEGORY_GENERAL, "AutoEnchanter.EnableSafeMode", false);
-		enableCompatibleAutoEnchanter.comment = "If true, the Auto Enchanter will accept entire stacks of books. This is provided to prevent a crash with BuildCraft. This will allow many books to be enchanted at once - only enable this if you know what you're doing.";
+		enableCompatibleAutoEnchanter.comment = "This was provided to workaround a BuildCraft issue in 1.4 and no longer has any effect.";
 		
 		redNetDebug = c.get(Configuration.CATEGORY_GENERAL, "RedNet.Debug", false);
 		redNetDebug.comment = "If true, RedNet cables will dump a massive amount of data to the log file. You should probably only use this if PC tells you to.";
@@ -321,14 +340,14 @@ public class MFRConfig
 		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk.";
 		mfrLakeSewageRarity = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.LakeRarity.Sewage", 32);
 		mfrLakeSewageRarity.comment = "Higher numbers make sewage lakes rarer. A value of one will be approximately one per chunk.";
-	
+		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
 		thermalExpansionRecipes = c.get("RecipeSets", "EnableThermalExpansionRecipes", false);
 		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
 		gregTechRecipes = c.get("RecipeSets", "EnableGregTechRecipes", false);
 		gregTechRecipes.comment = "If true, MFR will register its GregTech-based recipes.";
-	
+		
 		for(Machine machine : Machine.values())
 		{
 			machine.load(c);
@@ -336,5 +355,5 @@ public class MFRConfig
 		
 		c.save();
 	}
-
+	
 }

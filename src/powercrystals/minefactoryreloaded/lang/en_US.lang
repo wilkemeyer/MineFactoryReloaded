@@ -153,6 +153,8 @@ tile.mfr.liquid.pinkslime.still.name = Pink Slime
 tile.mfr.liquid.chocolatemilk.still.name = Chocolate Milk
 tile.mfr.liquid.mushroomsoup.still.name = Mushroom Soup
 
+entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Pink Slime
+
 item.mfr.bucket.milk.name = Milk Bucket
 item.mfr.bucket.sewage.name = Sewage Bucket
 item.mfr.bucket.sludge.name = Sludge Bucket
@@ -162,6 +164,10 @@ item.mfr.bucket.meat.name = Meat Bucket
 item.mfr.bucket.pinkslime.name = Pink Slime Bucket
 item.mfr.bucket.chocolatemilk.name = Chocolate Milk Bucket
 item.mfr.bucket.mushroomsoup.name = Mushroom Soup Bucket
+
+item.mfr.bucket.plasticcup.name = Plastic Cup
+item.mfr.bucket.plasticcup.prefix.name =
+item.mfr.bucket.plasticcup.suffix.name = Cup
 
 item.mfr.hammer.name = Precision Sledgehammer
 item.mfr.fertilizer.name = Industrial Fertilizer
@@ -246,6 +252,15 @@ item.mfr.upgrade.logic.100.name = PRC LX-100 Logic Expansion Card
 item.mfr.upgrade.logic.300.name = PRC LX-300 Logic Expansion Card
 item.mfr.upgrade.logic.500.name = PRC LX-500 Logic Expansion Card
 
+item.mfr.needlegun.name = Needlegun
+item.mfr.needlegun.ammo.empty.name = Needlegun Magazine
+item.mfr.needlegun.ammo.standard.name = Needlegun Ammo (Needles)
+item.mfr.needlegun.ammo.lava.name = Needlegun Ammo (Lava)
+item.mfr.needlegun.ammo.sludge.name = Needlegun Ammo (Sludge)
+item.mfr.needlegun.ammo.sewage.name = Needlegun Ammo (Sewage)
+item.mfr.needlegun.ammo.fire.name = Needlegun Ammo (Fire)
+item.mfr.needlegun.ammo.anvil.name = Needlegun Ammo (Anvil)
+
 circuit.mfr.noop = (No-Op)
 circuit.mfr.adder.analog = Adder (Analog)
 circuit.mfr.adder.digital.full = Adder (Digital, Full)
@@ -269,6 +284,7 @@ circuit.mfr.fanout = Fanout
 circuit.mfr.flipflop.jk = JK-FlipFlop
 circuit.mfr.flipflop.t = T-FlipFlop
 circuit.mfr.inverter = Inverter
+circuit.mfr.latch.d.clocked = D-Latch (Clocked)
 circuit.mfr.latch.d.gated = D-Latch (Gated)
 circuit.mfr.latch.sr = SR-Latch
 circuit.mfr.latch.sr.gated = SR-Latch (Gated)
@@ -278,6 +294,8 @@ circuit.mfr.max.4 = Maximum (4-Input)
 circuit.mfr.min.2 = Minimum (2-Input)
 circuit.mfr.min.3 = Minimum (3-Input)
 circuit.mfr.min.4 = Minimum (4-Input)
+circuit.mfr.multipulse = Multipulse
+circuit.mfr.mux.16.analog = Mux (15-Input, Analog)
 circuit.mfr.mux.4 = Mux (4-Input)
 circuit.mfr.nand.2 = Nand (2-Input)
 circuit.mfr.nand.3 = Nand (3-Input)

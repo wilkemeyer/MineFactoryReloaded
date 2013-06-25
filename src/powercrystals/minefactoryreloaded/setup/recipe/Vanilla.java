@@ -23,6 +23,7 @@ public class Vanilla
 	private static boolean _registeredMiscItems;
 	private static boolean _registeredVanillaImprovements;
 	private static boolean _registeredRails;
+	private static boolean _registeredGuns;
 	private static boolean _registeredRedNet;
 	private static boolean _registeredRedNetManual;
 	
@@ -36,6 +37,7 @@ public class Vanilla
 		registerMiscItems();
 		registerVanillaImprovements();
 		registerRails();
+		registerGuns();
 		registerRedNet();
 		registerRedNetManual();
 	}
@@ -983,7 +985,6 @@ public class Vanilla
 				} );
 		
 		// meta-sensitive optional override in block code?
-		// TE pulveriser?
 		
 		/**
 		 * Large brick:
@@ -1078,7 +1079,6 @@ public class Vanilla
 			'D', Item.sugar,
 				} );
 		
-		// Railcraft Rock Crusher?
 		// FZ grinder?
 		
 		/**
@@ -1113,6 +1113,8 @@ public class Vanilla
 				new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 10));
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1), 
 				new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 11));
+		
+		// TODO: add white/black sand?
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12), new Object[]
 				{
@@ -1225,7 +1227,7 @@ public class Vanilla
 			'#', "dustPlastic",
 				} ));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.fertilizerItem, 16), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.fertilizerItem, 16), new Object[]
 				{
 			"WBW",
 			"STS",
@@ -1233,8 +1235,8 @@ public class Vanilla
 			'W', Item.wheat,
 			'B', new ItemStack(Item.dyePowder, 1, 15),
 			'S', Item.silk,
-			'T', Item.stick,
-				} );
+			'T', "stickWood",
+				} ));
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.safariNetItem, 1), new Object[]
 				{
@@ -1282,7 +1284,7 @@ public class Vanilla
 			" S ",
 			" S ",
 			'P', "sheetPlastic",
-			'S', Item.stick,
+			'S', "stickWood",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.blankRecordItem, 1), new Object[]
@@ -1302,7 +1304,7 @@ public class Vanilla
 			'G', Item.ingotGold,
 			'L', Block.glass,
 			'P', "sheetPlastic",
-			'S', Item.stick
+			'S', "stickWood",
 				} ));
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.portaSpawnerItem), new Object[]
@@ -1352,6 +1354,13 @@ public class Vanilla
 				} );
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Item.bucketMilk, Item.bucketEmpty, new ItemStack(Item.dyePowder, 1, 3));
+		
+		/*GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.emptyPlasticCup, 16), new Object[]
+				{
+			" P ",
+			"P P",
+			'P', "sheetPlastic",
+				} ));//*/
 	}
 	
 	protected void registerVanillaImprovements()
@@ -1367,13 +1376,13 @@ public class Vanilla
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(Block.planks, 3, 3), new ItemStack(MineFactoryReloadedCore.rubberWoodBlock));
 		
-		GameRegistry.addRecipe(new ItemStack(Block.torchWood, 4), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 4), new Object[]
 				{
 			"R",
 			"S",
 			'R', MineFactoryReloadedCore.rawRubberItem,
-			'S', Item.stick
-				} );
+			'S', "stickWood",
+				} ));
 		
 		GameRegistry.addRecipe(new ItemStack(Block.pistonStickyBase), new Object[]
 				{
@@ -1404,13 +1413,13 @@ public class Vanilla
 			Item.glassBottle
 				} );
 		
-		GameRegistry.addRecipe(new ItemStack(Block.torchWood, 1), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 1), new Object[]
 				{
 			"C",
 			"S",
 			'C', MineFactoryReloadedCore.sugarCharcoalItem,
-			'S', Item.stick
-				} );
+			'S', "stickWood",
+				} ));
 	}
 	
 	protected void registerRails()
@@ -1460,6 +1469,66 @@ public class Vanilla
 			'S', "sheetPlastic",
 			'D', Block.railDetector
 				} ));
+	}
+	
+	protected void registerGuns()
+	{
+		if(_registeredGuns)
+		{
+			return;
+		}
+		_registeredGuns = true;
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunItem), new Object[]
+				{
+					"PIP",
+					"PIP",
+					"SLS",
+					'P', "sheetPlastic",
+					'I', Item.ingotIron,
+					'S', Item.slimeBall,
+					'L', MineFactoryReloadedCore.safariNetLauncherItem
+				}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoEmptyItem, 4), new Object[]
+				{
+					"P P",
+					"PIP",
+					"PPP",
+					'P', "sheetPlastic",
+					'I', Item.ingotIron,
+				}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoStandardItem), new Object[]
+				{
+					"AAA",
+					"AMA",
+					"AAA",
+					'A', Item.arrow,
+					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+				}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoAnvilItem), new Object[]
+				{
+					"SMS",
+					"SAS",
+					"SSS",
+					'A', new ItemStack(Block.anvil, 1, 0),
+					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+					'S', Item.silk
+				}));
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoFireItem, 4), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+				Item.flintAndSteel);
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoLavaItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+				Item.bucketLava);
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSludgeItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+				MineFactoryReloadedCore.sludgeBucketItem);
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSewageItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+				MineFactoryReloadedCore.sewageBucketItem);
 	}
 	
 	protected void registerRedNet()

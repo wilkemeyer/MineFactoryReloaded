@@ -38,7 +38,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 {
-	private String[] _names = new String []
+	private String[] _names = new String[]
 			{ "white", "orange", "magenta", "lightblue", "yellow", "lime", "pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default" };
 	private Icon[] _iconsActive = new Icon[_names.length];
 	private Icon[] _iconsStopped = new Icon[_names.length];
@@ -128,15 +128,18 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-                if (entity instanceof EntityPlayer && MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false)){
-                    return;
-                }
-                
-                if (entity.getClass().getName().contains("thaumcraft.common.entities.golems") && MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false)){
-                    return;
-                }
-                
-		if(!(entity instanceof EntityItem || entity instanceof EntityXPOrb || (entity instanceof EntityLiving && MFRConfig.conveyorCaptureNonItems.getBoolean(true))))
+		if(entity instanceof EntityPlayer && MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false))
+		{
+			return;
+		}
+		
+		if(entity.getClass().getName().contains("thaumcraft.common.entities.golems") && MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false))
+		{
+			return;
+		}
+		
+		if(!(entity instanceof EntityItem || entity instanceof EntityXPOrb || (entity instanceof EntityLiving && MFRConfig.conveyorCaptureNonItems
+				.getBoolean(true))))
 		{
 			return;
 		}
@@ -172,7 +175,6 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			entity.onGround = false;
 		}
 		
-		
 		if(horizDirection == 0)
 		{
 			xVelocity = 0.1D;
@@ -192,13 +194,25 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		
 		if(horizDirection == 0 || horizDirection == 2)
 		{
-			if(entity.posZ > z + 0.55D) zVelocity = -0.1D;
-			else if(entity.posZ < z + 0.45D) zVelocity = 0.1D;
+			if(entity.posZ > z + 0.55D)
+			{
+				zVelocity = -0.1D;
+			}
+			else if(entity.posZ < z + 0.45D)
+			{
+				zVelocity = 0.1D;
+			}
 		}
 		else if(horizDirection == 1 || horizDirection == 3)
 		{
-			if(entity.posX > x + 0.55D) xVelocity = -0.1D;
-			else if(entity.posX < x + 0.45D) xVelocity = 0.1D;
+			if(entity.posX > x + 0.55D)
+			{
+				xVelocity = -0.1D;
+			}
+			else if(entity.posX < x + 0.45D)
+			{
+				xVelocity = 0.1D;
+			}
 		}
 		
 		setEntityVelocity(entity, xVelocity, yVelocity, zVelocity);
@@ -289,6 +303,26 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	public boolean canBlockStay(World world, int x, int y, int z)
 	{
 		return world.isBlockSolidOnSide(x, y - 1, z, ForgeDirection.UP);
+	}
+	
+	@Override
+	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
+	{
+        if (world.isRemote)
+        {
+            return false;
+        }
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if(te != null && te instanceof IRotateableTile)
+		{
+			IRotateableTile tile = ((IRotateableTile)te);
+			if (tile.canRotate())
+			{
+				tile.rotate();
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -403,7 +437,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		}
 		else if(teBelow instanceof TileEntityItemRouter)
 		{
-			ItemStack s = ((TileEntityItemRouter)teBelow).routeItem(entityitem.getEntityItem()); 
+			ItemStack s = ((TileEntityItemRouter)teBelow).routeItem(entityitem.getEntityItem());
 			if(s == null)
 			{
 				entityitem.setDead();

@@ -18,6 +18,7 @@ import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.INeighboorUpdateTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -110,6 +111,10 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.None;
 		}
+		else if(b instanceof IRedNetNoConnection)
+		{
+			return RedNetConnectionType.None;
+		}
 		else if(b instanceof IConnectableRedNet) // API node - let them figure it out
 		{
 			RedNetConnectionType type = ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
@@ -166,8 +171,8 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		}
 		if(_needsNetworkUpdate)
 		{
-			updateNetwork();
 			_needsNetworkUpdate = false;
+			updateNetwork();
 		}
 		_network.tick();
 	}

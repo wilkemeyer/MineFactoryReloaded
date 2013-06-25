@@ -13,10 +13,12 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.IconOverlay;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +28,8 @@ public class BlockFactoryGlassPane extends BlockPane implements IConnectableRedN
 	private String[] _names = new String []
 			{ "white", "orange", "magenta", "lightblue", "yellow", "lime", "pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" };
 	private Icon[] _icons = new Icon[_names.length];
-	private Icon[] _iconsSide = new Icon[_names.length];
+	protected Icon _iconSide;
+	static Icon _overlay;
 	
 	public BlockFactoryGlassPane(int blockId)
 	{
@@ -48,8 +51,9 @@ public class BlockFactoryGlassPane extends BlockPane implements IConnectableRedN
 		for(int i = 0; i < _names.length; i++)
 		{
 			_icons[i] = ir.registerIcon("powercrystals/minefactoryreloaded/tile.mfr.stainedglass." + _names[i]);
-			_iconsSide[i] = ir.registerIcon("powercrystals/minefactoryreloaded/tile.mfr.stainedglass.pane.side." + _names[i]);
 		}
+		_iconSide = ir.registerIcon("powercrystals/minefactoryreloaded/tile.mfr.stainedglass.pane.side");
+		_overlay = ir.registerIcon("powercrystals/minefactoryreloaded/tile.mfr.stainedglass.border");
 	}
 	
 	@Override
@@ -64,9 +68,38 @@ public class BlockFactoryGlassPane extends BlockPane implements IConnectableRedN
 		return 1;
 	}
 	
-	public Icon getBlockSideTextureFromMetadata(int meta)
+	public Icon getBlockOverlayTexture()
 	{
-		return _iconsSide[Math.min(meta, _icons.length - 1)];
+		return new IconOverlay(_overlay, 8, 8, false, false, false, false, false, false, false, false);
+	}
+
+	public Icon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
+	{
+		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
+		boolean[] sides = new boolean[8];
+		bp.moveRight(1);
+		sides[0] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveDown(1);
+		sides[4] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveLeft(1);
+		sides[1] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveLeft(1);
+		sides[5] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveUp(1);
+		sides[3] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveUp(1);
+		sides[6] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveRight(1);
+		sides[2] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.moveRight(1);
+		sides[7] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		return new IconOverlay(_overlay, 8, 8, sides);
+	}
+	
+	@Override
+	public Icon getSideTextureIndex()
+	{
+		return _iconSide;
 	}
 	
 	public boolean canThisFactoryPaneConnectToThisBlockID(int blockId)
@@ -76,6 +109,24 @@ public class BlockFactoryGlassPane extends BlockPane implements IConnectableRedN
 				blockId == MineFactoryReloadedCore.factoryGlassPaneBlock.blockID ||
 				blockId == MineFactoryReloadedCore.factoryGlassBlock.blockID ||
 				(blockId == Block.thinGlass.blockID && MFRConfig.vanillaOverrideGlassPane.getBoolean(true));
+	}
+	
+	@Override
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+    {
+        int blockId = world.getBlockId(x, y, z);
+        return !((blockId == Block.glass.blockID ||
+				blockId == MineFactoryReloadedCore.factoryGlassPaneBlock.blockID ||
+				blockId == MineFactoryReloadedCore.factoryGlassBlock.blockID ||
+				(blockId == Block.thinGlass.blockID &&
+					MFRConfig.vanillaOverrideGlassPane.getBoolean(true))) ||
+					!super.shouldSideBeRendered(world, x, y, z, side));
+    }
+	
+	@Override
+	public boolean canPaneConnectTo(IBlockAccess world, int x, int y, int z, ForgeDirection dir)
+	{
+		return canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x, y, z));
 	}
 	
 	@Override

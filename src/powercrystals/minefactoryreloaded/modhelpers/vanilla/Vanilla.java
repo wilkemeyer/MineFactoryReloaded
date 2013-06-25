@@ -3,29 +3,20 @@ package powercrystals.minefactoryreloaded.modhelpers.vanilla;
 import net.minecraft.block.Block;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.monster.EntityCaveSpider;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.api.INeedleAmmo;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 import powercrystals.minefactoryreloaded.circuits.Fanout;
 import powercrystals.minefactoryreloaded.circuits.Noop;
@@ -43,6 +34,7 @@ import powercrystals.minefactoryreloaded.circuits.analog.Min4;
 import powercrystals.minefactoryreloaded.circuits.analog.Negator;
 import powercrystals.minefactoryreloaded.circuits.analog.RandomizerAnalog;
 import powercrystals.minefactoryreloaded.circuits.analog.Scaler;
+import powercrystals.minefactoryreloaded.circuits.analog.SchmittTrigger;
 import powercrystals.minefactoryreloaded.circuits.analog.Subtractor;
 import powercrystals.minefactoryreloaded.circuits.digital.AdderDigitalFull;
 import powercrystals.minefactoryreloaded.circuits.digital.AdderDigitalHalf;
@@ -83,6 +75,7 @@ import powercrystals.minefactoryreloaded.circuits.logicboolean.Less;
 import powercrystals.minefactoryreloaded.circuits.logicboolean.LessOrEqual;
 import powercrystals.minefactoryreloaded.circuits.logicboolean.NotEqual;
 import powercrystals.minefactoryreloaded.circuits.timing.Delay;
+import powercrystals.minefactoryreloaded.circuits.timing.Multipulse;
 import powercrystals.minefactoryreloaded.circuits.timing.OneShot;
 import powercrystals.minefactoryreloaded.circuits.timing.PulseLengthener;
 import powercrystals.minefactoryreloaded.circuits.wave.SawtoothFalling;
@@ -113,8 +106,7 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSap
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
 import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
-import powercrystals.minefactoryreloaded.farmables.grindables.GrindableSheep;
-import powercrystals.minefactoryreloaded.farmables.grindables.GrindableSkeleton;
+import powercrystals.minefactoryreloaded.farmables.grindables.GrindableSlime;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableStandard;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableZombiePigman;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
@@ -213,69 +205,26 @@ public class Vanilla
 		MFRRegistry.registerRanchable(new RanchableMooshroom());
 		MFRRegistry.registerRanchable(new RanchableSheep());
 		MFRRegistry.registerRanchable(new RanchableSquid());
+
+		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
+		MFRRegistry.registerGrinderBlacklist(EntityDragon.class);
+		MFRRegistry.registerGrinderBlacklist(EntityWither.class);
+		MFRRegistry.registerGrinderBlacklist(EntityVillager.class);
 		
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityChicken.class, new MobDrop[]
 				{
-			new MobDrop(10, new ItemStack(Item.feather)),
-			new MobDrop(10, new ItemStack(Item.chickenRaw)),
+			new MobDrop(30, null),
 			new MobDrop(10, new ItemStack(Item.egg))
-				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityCow.class, new MobDrop[]
-				{
-			new MobDrop(10, new ItemStack(Item.leather)),
-			new MobDrop(10, new ItemStack(Item.beefRaw))
-				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityMooshroom.class, new MobDrop[]
-				{
-			new MobDrop(10, new ItemStack(Item.leather)),
-			new MobDrop(10, new ItemStack(Item.beefRaw))
-				}));
+				}, false));
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityOcelot.class, new MobDrop[]
 				{
 			new MobDrop(10, new ItemStack(Item.fishRaw)),
 			new MobDrop(10, new ItemStack(Item.silk))
 				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityPig.class, new ItemStack(Item.porkRaw)));
-		MFRRegistry.registerGrindable(new GrindableSheep());
-		MFRRegistry.registerGrindable(new GrindableStandard(EntitySquid.class, new ItemStack(Item.dyePowder)));
-		
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityEnderman.class, new ItemStack(Item.enderPearl)));
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityWolf.class, new ItemStack(Item.bone)));
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
-		
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityBlaze.class, new ItemStack(Item.blazeRod)));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityCaveSpider.class, new MobDrop[]
-				{
-			new MobDrop(10, new ItemStack(Item.silk)),
-			new MobDrop(10, new ItemStack(Item.spiderEye))
-				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityCreeper.class, new ItemStack(Item.gunpowder)));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityGhast.class, new MobDrop[]
-				{
-			new MobDrop(10, new ItemStack(Item.gunpowder)),
-			new MobDrop(2, new ItemStack(Item.ghastTear))
-				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityMagmaCube.class, new ItemStack(Item.magmaCream)));
-		MFRRegistry.registerGrindable(new GrindableSkeleton());
-		MFRRegistry.registerGrindable(new GrindableStandard(EntitySlime.class, new ItemStack(Item.slimeBall)));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntitySpider.class, new MobDrop[]
-				{
-			new MobDrop(10, new ItemStack(Item.silk)),
-			new MobDrop(10, new ItemStack(Item.spiderEye))
-				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityWitch.class, new MobDrop[]
-				{ 
-			new MobDrop(10, new ItemStack(Item.glassBottle, 2)),
-			new MobDrop(10, new ItemStack(Item.lightStoneDust, 2)),
-			new MobDrop(10, new ItemStack(Item.gunpowder, 2)),
-			new MobDrop(10, new ItemStack(Item.redstone, 2)),
-			new MobDrop(10, new ItemStack(Item.spiderEye, 2)),
-			new MobDrop(10, new ItemStack(Item.stick, 2)),
-			new MobDrop(10, new ItemStack(Item.sugar, 2))
-				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityZombie.class, new ItemStack(Item.rottenFlesh)));
-		
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem)));
+		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Item.slimeBall), 1));
+		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem), 1));
 		
 		MFRRegistry.registerSludgeDrop(50, new ItemStack(Block.sand));
 		MFRRegistry.registerSludgeDrop(40, new ItemStack(Block.dirt));
@@ -304,6 +253,7 @@ public class Vanilla
 		MFRRegistry.registerRubberTreeBiome("Jungle");
 		MFRRegistry.registerRubberTreeBiome("JungleHills");
 		
+		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
 		MFRRegistry.registerSafariNetBlacklist(EntityDragon.class);
 		MFRRegistry.registerSafariNetBlacklist(EntityWither.class);
 		
@@ -331,6 +281,7 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new And4());
 		MFRRegistry.registerRedNetLogicCircuit(new Counter());
 		MFRRegistry.registerRedNetLogicCircuit(new DecomposeIntToDecimal());
+		MFRRegistry.registerRedNetLogicCircuit(new Delay());
 		MFRRegistry.registerRedNetLogicCircuit(new DeMux16Analog());
 		MFRRegistry.registerRedNetLogicCircuit(new DeMux4());
 		MFRRegistry.registerRedNetLogicCircuit(new Equal());
@@ -351,6 +302,7 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Min2());
 		MFRRegistry.registerRedNetLogicCircuit(new Min3());
 		MFRRegistry.registerRedNetLogicCircuit(new Min4());
+		MFRRegistry.registerRedNetLogicCircuit(new Multipulse());
 		MFRRegistry.registerRedNetLogicCircuit(new Mux4());
 		MFRRegistry.registerRedNetLogicCircuit(new Nand2());
 		MFRRegistry.registerRedNetLogicCircuit(new Nand3());
@@ -375,6 +327,7 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new SawtoothFalling());
 		MFRRegistry.registerRedNetLogicCircuit(new SawtoothRising());
 		MFRRegistry.registerRedNetLogicCircuit(new Scaler());
+		MFRRegistry.registerRedNetLogicCircuit(new SchmittTrigger());
 		MFRRegistry.registerRedNetLogicCircuit(new Sine());
 		MFRRegistry.registerRedNetLogicCircuit(new Square());
 		MFRRegistry.registerRedNetLogicCircuit(new Subtractor());
@@ -385,12 +338,11 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Xor2());
 		MFRRegistry.registerRedNetLogicCircuit(new Xor3());
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
-		MFRRegistry.registerRedNetLogicCircuit(new Delay());
 		
 		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
 		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreDiamond));
 		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreEmerald));
-		MFRRegistry.registerLaserOre(120, new ItemStack(Block.oreGold));
+		MFRRegistry.registerLaserOre(70, new ItemStack(Block.oreGold));
 		MFRRegistry.registerLaserOre(150, new ItemStack(Block.oreIron));
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.oreLapis));
 		MFRRegistry.registerLaserOre(100, new ItemStack(Block.oreRedstone));
@@ -410,5 +362,12 @@ public class Vanilla
 		MFRRegistry.setLaserPreferredOre(11, new ItemStack(Block.oreLapis));
 		MFRRegistry.setLaserPreferredOre(14, new ItemStack(Block.oreRedstone));
 		MFRRegistry.setLaserPreferredOre(0, new ItemStack(Block.oreNetherQuartz));
+		
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
 	}
 }

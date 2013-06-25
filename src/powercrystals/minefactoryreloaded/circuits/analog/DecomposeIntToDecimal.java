@@ -1,10 +1,8 @@
 package powercrystals.minefactoryreloaded.circuits.analog;
 
-
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import powercrystals.minefactoryreloaded.circuits.base.StatelessCircuit;
 
-public class DecomposeIntToDecimal extends StatelessCircuit implements IRedNetLogicCircuit
+public class DecomposeIntToDecimal extends StatelessCircuit
 {
 	@Override
 	public int getInputCount()
@@ -60,6 +58,6 @@ public class DecomposeIntToDecimal extends StatelessCircuit implements IRedNetLo
 	@Override
 	public String getOutputPinLabel(int pin)
 	{
-		return pin == 0 ? "SN" : "^" + (pin - 1);
+		return pin == 0 ? "SN" : "D" + (pin - 1);
 	}
 }

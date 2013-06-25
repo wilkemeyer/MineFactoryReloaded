@@ -27,7 +27,6 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.core.mod.BaseMod;
-import powercrystals.core.updater.IUpdateableMod;
 import powercrystals.core.updater.UpdateManager;
 import powercrystals.minefactoryreloaded.block.BlockConveyor;
 import powercrystals.minefactoryreloaded.block.BlockDecorativeStone;
@@ -63,17 +62,23 @@ import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.ItemBlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.ItemBlockVineScaffold;
+import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
 import powercrystals.minefactoryreloaded.item.ItemFactory;
 import powercrystals.minefactoryreloaded.item.ItemFactoryBucket;
+import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
 import powercrystals.minefactoryreloaded.item.ItemFactoryFood;
 import powercrystals.minefactoryreloaded.item.ItemFactoryHammer;
 import powercrystals.minefactoryreloaded.item.ItemLaserFocus;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.ItemMilkBottle;
+import powercrystals.minefactoryreloaded.item.ItemNeedleGun;
+import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoBlock;
+import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoFire;
+import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoStandard;
 import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMemoryCard;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
@@ -130,14 +135,14 @@ dependencies = "after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { MineFactoryReloadedCore.modNetworkChannel }, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = { MineFactoryReloadedCore.modNetworkChannel }, packetHandler = ServerPacketHandler.class),
 connectionHandler = ConnectionHandler.class)
-public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
+public class MineFactoryReloadedCore extends BaseMod
 {
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy", serverSide = "powercrystals.minefactoryreloaded.net.CommonProxy")
 	public static IMFRProxy proxy;
 	
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modNetworkChannel = "MFReloaded";
-	public static final String version = "1.5.1R2.6.3B1";
+	public static final String version = "1.5.1R2.7.0B2";
 	public static final String modName = "Minefactory Reloaded";
 	
 	public static final String guiFolder = "/powercrystals/minefactoryreloaded/textures/gui/";
@@ -152,6 +157,7 @@ public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
 	public static int renderIdRedNetLogic = 1004;
 	public static int renderIdVineScaffold = 1005;
 	public static int renderIdRedNetPanel = 1006;
+	public static int renderIdFactoryGlass = 1007;
 	
 	public static Map<Integer, Block> machineBlocks = new HashMap<Integer, Block>();
 	
@@ -236,6 +242,16 @@ public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
 	public static Item laserFocusItem;
 	public static Item chocolateMilkBucketItem;
 	public static Item mushroomSoupBucketItem;
+	public static Item needlegunItem;
+	public static Item needlegunAmmoEmptyItem;
+	public static Item needlegunAmmoStandardItem;
+	public static Item needlegunAmmoLavaItem;
+	public static Item needlegunAmmoSludgeItem;
+	public static Item needlegunAmmoSewageItem;
+	public static Item needlegunAmmoFireItem;
+	public static Item needlegunAmmoAnvilItem;
+	
+	public static ItemFactoryCup plasticCup;
 
 	private static MineFactoryReloadedCore instance;
 
@@ -245,6 +261,10 @@ public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
 	}
 	
 	private static int itemOffset;
+	public static int getItemOffset()
+	{
+		return itemOffset;
+	}
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent evt)
@@ -254,7 +274,7 @@ public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
 		MFRConfig.loadCommonConfig(getCommonConfig());
 		MFRConfig.loadClientConfig(getClientConfig());
 		
-		extractLang(new String[] { "en_US", "es_AR", "es_ES", "es_MX", "es_UY", "es_VE", "zh_CN", "zh_TW", "ru_RU" });
+		extractLang(new String[] { "en_US", "es_AR", "es_ES", "es_MX", "es_UY", "es_VE", "zh_CN", "zh_TW", "ru_RU", "ko_KR", "de_DE" });
 		loadLang();
 		
 		milkLiquid = new BlockFactoryFluid(MFRConfig.milkStillBlockId.getInt(), "milk");
@@ -352,6 +372,15 @@ public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
 		pinkSlimeballItem = (new ItemFactory(MFRConfig.pinkSlimeballItemId.getInt())).setUnlocalizedName("mfr.pinkslimeball");
 		safariNetJailerItem = (new ItemSafariNet(MFRConfig.safariNetJailerItemId.getInt())).setUnlocalizedName("mfr.safarinet.jailer");
 		laserFocusItem = (new ItemLaserFocus(MFRConfig.laserFocusItemId.getInt())).setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
+		needlegunItem = (new ItemNeedleGun(MFRConfig.needlegunItemId.getInt())).setUnlocalizedName("mfr.needlegun").setMaxStackSize(1);
+		needlegunAmmoEmptyItem = (new ItemFactory(MFRConfig.needlegunAmmoEmptyItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.empty");
+		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard(MFRConfig.needlegunAmmoStandardItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.standard");
+		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoLavaItemId.getInt(), Block.lavaMoving.blockID, 3)).setUnlocalizedName("mfr.needlegun.ammo.lava");
+		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoSludgeItemId.getInt(), sludgeLiquid.blockID, 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
+		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoSewageItemId.getInt(), sewageLiquid.blockID, 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
+		needlegunAmmoFireItem = (new ItemNeedlegunAmmoFire(MFRConfig.needlegunAmmoFireItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.fire");
+		needlegunAmmoAnvilItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoAnvilItemId.getInt(), Block.anvil.blockID, 2)).setUnlocalizedName("mfr.needlegun.ammo.anvil").setMaxDamage(0);
+		plasticCup = (ItemFactoryCup)new ItemFactoryCup(MFRConfig.plasticCupItemId.getInt(), 64, 16).setUnlocalizedName("mfr.bucket.plasticcup");
 
 		for(Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{
@@ -413,6 +442,7 @@ public class MineFactoryReloadedCore extends BaseMod implements IUpdateableMod
 		
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "entitySafariNet", 0, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);
+		EntityRegistry.registerModEntity(EntityNeedle.class, "mfrEntityNeedle", 2, instance, 160, 5, true);
 
 		MinecraftForge.EVENT_BUS.register(instance);
 		MinecraftForge.EVENT_BUS.register(proxy);
