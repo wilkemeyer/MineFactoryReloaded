@@ -113,7 +113,9 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 					_jammed = true;
 					break;
 				}
+				bp.free();
 			}
+			a.free();
 			
 			_nextSewerCheckTick = worldObj.getTotalWorldTime() + 800 + worldObj.rand.nextInt(800);
 		}

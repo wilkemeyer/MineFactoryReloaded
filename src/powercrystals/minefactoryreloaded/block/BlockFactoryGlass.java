@@ -112,6 +112,7 @@ public class BlockFactoryGlass extends BlockGlass implements IConnectableRedNet
 			bp.moveRight(1);
 			sides[7] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
 		}
+		bp.free();
 		return new IconOverlay(_texture, 8, 8, sides);
 	}
 

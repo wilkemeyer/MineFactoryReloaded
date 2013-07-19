@@ -47,7 +47,9 @@ public class BlockRailCargoDropoff extends BlockRailBase
 			}
 			
 			ItemStack stackToAdd = contents.getValue().copy();
-			ItemStack remaining = UtilInventory.dropStack(world, new BlockPosition(x, y, z), contents.getValue(), ForgeDirection.VALID_DIRECTIONS, ForgeDirection.UNKNOWN);
+			BlockPosition bp = BlockPosition.create().from(x, y, z);
+			ItemStack remaining = UtilInventory.dropStack(world, bp, contents.getValue(), ForgeDirection.VALID_DIRECTIONS, ForgeDirection.UNKNOWN);
+			bp.free();
 			
 			if(remaining != null)
 			{

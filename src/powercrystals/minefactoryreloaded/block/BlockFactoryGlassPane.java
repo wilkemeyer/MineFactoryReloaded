@@ -97,6 +97,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IConnectableRedN
 		sides[2] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
 		bp.moveRight(1);
 		sides[7] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		bp.free();
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, sides);
 	}
 

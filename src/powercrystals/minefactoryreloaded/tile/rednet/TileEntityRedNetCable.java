@@ -92,47 +92,50 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	
 	public RedNetConnectionType getConnectionState(ForgeDirection side)
 	{
-		BlockPosition bp = new BlockPosition(this);
+		BlockPosition bp = BlockPosition.create().from(this);
 		bp.orientation = side;
 		bp.moveForwards(1);
 		
 		int blockId = worldObj.getBlockId(bp.x, bp.y, bp.z);
 		Block b = Block.blocksList[blockId];
+		RedNetConnectionType ret;
 		
 		if(b == null) // block doesn't exist (air) - never connect
 		{
-			return RedNetConnectionType.None;
+			ret = RedNetConnectionType.None;
 		}
 		else if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID) // cables - always connect
 		{
-			return RedNetConnectionType.CableAll;
+			ret = RedNetConnectionType.CableAll;
 		}
 		else if(_mode == 2) // cable-only, and not a cable - don't connct
 		{
-			return RedNetConnectionType.None;
+			ret = RedNetConnectionType.None;
 		}
 		else if(b instanceof IRedNetNoConnection)
 		{
-			return RedNetConnectionType.None;
+			ret = RedNetConnectionType.None;
 		}
 		else if(b instanceof IConnectableRedNet) // API node - let them figure it out
 		{
-			return ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
+			ret = ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
 		}
 		else if(_mode == 0 && (blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId) || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
 			// standard connection logic, then figure out if we shouldn't connect
 			// mode 1 will skip this
 		{
-			return RedNetConnectionType.None;
+			ret = RedNetConnectionType.None;
 		}
 		else if(_mode == 0 && b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite())) // mode 1 forces plate mode for weak power
 		{
-			return RedNetConnectionType.CableSingle;
+			ret = RedNetConnectionType.CableSingle;
 		}
 		else
 		{
-			return RedNetConnectionType.PlateSingle;
+			ret = RedNetConnectionType.PlateSingle;
 		}
+		bp.free();
+		return ret;
 	}
 	
 	@Override
@@ -186,7 +189,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	public void setNetwork(RedstoneNetwork network)
 	{
 		_network = network;
-		_network.addCable(new BlockPosition(this));
+		_network.addCable(BlockPosition.create().from(this).free());
 	}
 	
 	private void updateNetwork()
@@ -196,14 +199,14 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 			return;
 		}
 		
-		BlockPosition ourbp = new BlockPosition(this);
+		BlockPosition ourbp = BlockPosition.create().from(this);
 		RedstoneNetwork.log("Cable at %s updating network", ourbp.toString());
 		
 		if(_network == null)
 		{
 			for(BlockPosition bp : ourbp.getAdjacent(true))
 			{
-				TileEntity te = bp.getTileEntity(worldObj);
+				TileEntity te = bp.free().getTileEntity(worldObj);
 				if(te instanceof TileEntityRedNetCable)
 				{
 					TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
@@ -264,7 +267,9 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 					_network.removeNode(bp);
 				}
 			}
+			bp.free();
 		}
+		ourbp.free();
 	}
 	
 	@Override

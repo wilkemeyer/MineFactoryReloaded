@@ -39,8 +39,7 @@ public class TreeHarvestManager
 			}
 			if(_isLeafPass)
 			{
-				_currentBlock = 0;
-				_treeBlocks = (_harvestMode == TreeHarvestMode.HarvestInverted ? _treeArea.getPositionsBottomFirst() : _treeArea.getPositionsTopFirst());
+				reset();
 				_isLeafPass = false;
 			}
 			else
@@ -50,11 +49,20 @@ public class TreeHarvestManager
 		}
 	}
 	
-	public void reset()
+	public void reset() { reset(true); }
+	
+	public void reset(boolean fillCache)
 	{
 		_currentBlock = 0;
 		_isLeafPass = true;
-		_treeBlocks = (_harvestMode == TreeHarvestMode.HarvestInverted ? _treeArea.getPositionsTopFirst() : _treeArea.getPositionsBottomFirst());
+		_isDone = false;
+		if (_treeBlocks != null)
+		{
+			for (BlockPosition bp : _treeBlocks)
+				bp.free();
+		}
+		if (fillCache)
+			_treeBlocks = (_harvestMode == TreeHarvestMode.HarvestInverted ? _treeArea.getPositionsTopFirst() : _treeArea.getPositionsBottomFirst());
 	}
 	
 	public boolean getIsLeafPass()

@@ -37,8 +37,10 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 				worldObj.playAuxSFXAtEntity(null, 2001, bp.x, bp.y, bp.z, blockId + (blockMeta << 12));
 			}
 			worldObj.setBlockToAir(bp.x, bp.y, bp.z);
+			bp.free();
 			return true;
 		}
+		bp.free();
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}

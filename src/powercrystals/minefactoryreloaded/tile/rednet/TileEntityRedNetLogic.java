@@ -309,7 +309,7 @@ public class TileEntityRedNetLogic extends TileEntity
 		{
 			if(!Arrays.areEqual(lastOuput[i], _buffers[i + 6]))
 			{
-				BlockPosition bp = new BlockPosition(this);
+				BlockPosition bp = BlockPosition.create().from(this);
 				bp.orientation = ForgeDirection.VALID_DIRECTIONS[i];
 				bp.moveForwards(1);
 				Block b = Block.blocksList[worldObj.getBlockId(bp.x, bp.y, bp.z)];
@@ -321,6 +321,7 @@ public class TileEntityRedNetLogic extends TileEntity
 				{
 					((IConnectableRedNet)b).onInputsChanged(worldObj, bp.x, bp.y, bp.z, bp.orientation.getOpposite(), _buffers[i + 6]);
 				}
+				bp.free();
 			}
 		}
 	}

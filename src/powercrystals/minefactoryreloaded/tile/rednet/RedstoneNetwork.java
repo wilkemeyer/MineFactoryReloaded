@@ -106,7 +106,7 @@ public class RedstoneNetwork
 		if(!_omniNodes.contains(node))
 		{
 			RedstoneNetwork.log("Network with ID %d adding omni node %s", _id, node.toString());
-			_omniNodes.add(node);
+			_omniNodes.add(node.copy());
 			notifyOmniNode(node);
 		}
 		
@@ -117,7 +117,7 @@ public class RedstoneNetwork
 			{
 				RedstoneNetwork.log("Network with ID %d:%d has omni node %s as new power provider", _id, subnet, node.toString());
 				_powerLevelOutput[subnet] = power;
-				_powerProviders[subnet] = node;
+				_powerProviders[subnet] = _powerProviders[subnet] != null ? _powerProviders[subnet].from(node) : node.copy();
 				notifyNodes(subnet);
 			}
 			else if(node.equals(_powerProviders[subnet]) && Math.abs(power) < Math.abs(_powerLevelOutput[subnet]))
@@ -140,17 +140,21 @@ public class RedstoneNetwork
 			removeNode(node);
 			RedstoneNetwork.log("Network with ID %d:%d adding node %s", _id, subnet, node.toString());
 			
-			_singleNodes.get(subnet).add(node);
+			_singleNodes.get(subnet).add(node.copy());
 			notifySingleNode(node, subnet);
 		}
 		
 		if(allowWeak)
 		{
-			_weakNodes.add(node);
+			_weakNodes.add(node.copy());
 		}
 		else
 		{
-			_weakNodes.remove(node);
+			int pos = _weakNodes.indexOf(node);
+			if (pos >= 0)
+			{
+				_weakNodes.remove(pos).free();
+			}
 		}
 		
 		int power = getSingleNodePowerLevel(node);
@@ -171,18 +175,24 @@ public class RedstoneNetwork
 	
 	public void removeNode(BlockPosition node)
 	{
-		boolean notify = _omniNodes.contains(node);
+		int pos = _omniNodes.indexOf(node);
+		boolean notify = pos >= 0;
 		
-		_omniNodes.remove(node);
-		_weakNodes.remove(node);
+		if (pos >= 0)
+			_omniNodes.remove(pos).free();
+		pos = _weakNodes.indexOf(node);
+		if (pos >= 0)
+			_weakNodes.remove(pos).free();
 		
 		for(int subnet = 0; subnet < 16; subnet++)
 		{
-			if(_singleNodes.get(subnet).contains(node))
+			List<BlockPosition> net = _singleNodes.get(subnet);
+			pos = net.indexOf(node);
+			if(pos >= 0)
 			{
 				notify = true;
 				RedstoneNetwork.log("Network with ID %d:%d removing node %s", _id, subnet, node.toString());
-				_singleNodes.get(subnet).remove(node);
+				net.remove(pos).free();
 			}
 			
 			if(node.equals(_powerProviders[subnet]))
@@ -203,7 +213,7 @@ public class RedstoneNetwork
 	{
 		if(!_cables.contains(cable))
 		{
-			_cables.add(cable);
+			_cables.add(cable.copy());
 		}
 	}
 	
@@ -225,7 +235,7 @@ public class RedstoneNetwork
 		
 		_weakNodes.addAll(network._weakNodes);
 		
-		_mustUpdate = _mustUpdate || network._mustUpdate;
+		_mustUpdate = _mustUpdate | network._mustUpdate;
 		
 		for(BlockPosition cable : network._cables)
 		{
@@ -253,6 +263,8 @@ public class RedstoneNetwork
 		int lastPower = _powerLevelOutput[subnet];
 		
 		_powerLevelOutput[subnet] = 0;
+		if (_powerProviders[subnet] != null)
+			_powerProviders[subnet].free();
 		_powerProviders[subnet] = null;
 		
 		log("Network with ID %d:%d recalculating power levels for %d single nodes and %d omni nodes", _id, subnet, _singleNodes.get(subnet).size(), _omniNodes.size());
@@ -267,7 +279,7 @@ public class RedstoneNetwork
 			if(Math.abs(power) > Math.abs(_powerLevelOutput[subnet]))
 			{
 				_powerLevelOutput[subnet] = power;
-				_powerProviders[subnet] = node;
+				_powerProviders[subnet] = _powerProviders[subnet] != null ? _powerProviders[subnet].from(node) : node.copy();
 			}
 		}
 		
@@ -281,7 +293,7 @@ public class RedstoneNetwork
 			if(Math.abs(power) > Math.abs(_powerLevelOutput[subnet]))
 			{
 				_powerLevelOutput[subnet] = power;
-				_powerProviders[subnet] = node;
+				_powerProviders[subnet] = _powerProviders[subnet] != null ? _powerProviders[subnet].from(node) : node.copy();
 			}
 			
 		}

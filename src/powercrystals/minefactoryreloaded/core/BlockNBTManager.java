@@ -27,11 +27,13 @@ public final class BlockNBTManager
 		NBTTagCompound tag = new NBTTagCompound();
 		te.writeToNBT(tag);
 		
-		setForBlock(new BlockPosition(te), tag);
+		// not using pool is intentional. behavior of map implementation-dependent.
+		_blockNbtData.put(new BlockPosition(te), tag);
 	}
 	
 	public static NBTTagCompound getForBlock(int x, int y, int z)
 	{
+		// not using pool is intentional. behavior of map implementation-dependent.
 		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.UNKNOWN);
 		NBTTagCompound tag = _blockNbtData.get(bp);
 		_blockNbtData.remove(bp);

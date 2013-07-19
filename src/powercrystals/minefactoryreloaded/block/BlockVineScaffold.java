@@ -168,7 +168,7 @@ public class BlockVineScaffold extends Block
 		}
 		for(ForgeDirection d : _attachDirections)
 		{
-			BlockPosition bp = new BlockPosition(x, y, z, d);
+			BlockPosition bp = BlockPosition.create().from(x, y, z, d);
 			for(int i = 0; i < _attachDistance; i++)
 			{
 				bp.moveForwards(1);
@@ -177,6 +177,7 @@ public class BlockVineScaffold extends Block
 					return true;
 				}
 			}
+			bp.free();
 		}
 		return false;
 	}

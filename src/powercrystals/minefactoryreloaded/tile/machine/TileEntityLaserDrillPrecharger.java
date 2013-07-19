@@ -100,12 +100,14 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		
 		if(!worldObj.isAirBlock(bp.x, bp.y, bp.z))
 		{
+			bp.free();
 			return null;
 		}
 		
 		bp.moveForwards(1);
 		
 		TileEntity te = worldObj.getBlockTileEntity(bp.x, bp.y, bp.z);
+		bp.free();
 		if(te instanceof TileEntityLaserDrill)
 		{
 			return ((TileEntityLaserDrill)te);

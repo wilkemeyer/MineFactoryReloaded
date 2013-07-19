@@ -23,9 +23,10 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	@Override
 	public void onHitBlock(EntityPlayer owner, World world, int x, int y, int z, int side, double distance)
 	{
-		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side));
+		BlockPosition bp = BlockPosition.create().from(x, y, z, ForgeDirection.getOrientation(side));
 		bp.moveForwards(1);
 		placeBlockAt(world, bp.x, bp.y, bp.z);
+		bp.free();
 	}
 	
 	@Override

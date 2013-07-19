@@ -70,10 +70,10 @@ public class MFRUtil
 	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z)
 	{
 		ArrayList<ForgeDirection> nonConveyors = new ArrayList<ForgeDirection>();
+		BlockPosition bp = new BlockPosition(x, y, z);
 		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			BlockPosition bp = new BlockPosition(x, y, z);
-			bp.orientation = direction;
+			bp.from(x, y, z, direction);
 			bp.moveForwards(1);
 			TileEntity te = world.getBlockTileEntity(bp.x, bp.y, bp.z);
 			if(te == null || !(te instanceof TileEntityConveyor))
@@ -81,6 +81,7 @@ public class MFRUtil
 				nonConveyors.add(direction);
 			}
 		}
+		bp.free();
 		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
 	}
 }

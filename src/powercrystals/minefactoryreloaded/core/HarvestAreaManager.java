@@ -168,9 +168,11 @@ public class HarvestAreaManager
 		ourpos.x += _originOffsetX;
 		ourpos.y += _originOffsetY;
 		ourpos.z += _originOffsetZ;
-		
-		_harvestArea = new Area(ourpos, radius, _areaDown, _areaUp);
+		if (_harvestArea != null)
+			_harvestArea.free();
+		_harvestArea = Area.create().from(ourpos, radius, _areaDown, _areaUp);
 		_harvestedBlocks = _harvestArea.getPositionsBottomFirst();
 		_currentBlock = 0;
+		ourpos.free();
 	}
 }

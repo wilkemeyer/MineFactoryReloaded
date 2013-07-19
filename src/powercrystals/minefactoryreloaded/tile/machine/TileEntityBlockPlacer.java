@@ -64,8 +64,10 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 				worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
 						block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 				decrStackSize(i, 1);
+				bp.free();
 				return true;
 			}
+			bp.free();
 		}
 		setIdleTicks(getIdleTicksMax());
 		return false;

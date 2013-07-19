@@ -75,6 +75,7 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered implements I
 				BlockPosition bp = BlockPosition.fromFactoryTile(this);
 				bp.moveBackwards(1);
 				a.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
+				bp.free();
 				
 				return true;
 			}

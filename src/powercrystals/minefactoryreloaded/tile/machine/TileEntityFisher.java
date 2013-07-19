@@ -73,6 +73,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered implements IHarve
 					setIdleTicks(getIdleTicksMax());
 					return false;
 				}
+				bp.free();
 			}
 		}
 		

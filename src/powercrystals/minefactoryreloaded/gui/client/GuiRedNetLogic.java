@@ -125,7 +125,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 				{
 					_selectedCircuit = _logic.getCircuitCount() - 1;
 				}
-				MineFactoryReloadedClient.prcPages.put(new BlockPosition(_logic), _selectedCircuit);
+				MineFactoryReloadedClient.prcPages.put(BlockPosition.create().from(_logic), _selectedCircuit);
 				requestCircuit();
 			}
 		};
@@ -140,7 +140,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 				{
 					_selectedCircuit = 0;
 				}
-				MineFactoryReloadedClient.prcPages.put(new BlockPosition(_logic), _selectedCircuit);
+				MineFactoryReloadedClient.prcPages.put(BlockPosition.create().from(_logic), _selectedCircuit);
 				requestCircuit();
 			}
 		};
@@ -190,7 +190,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 		}
 		
 		
-		Integer lastPage = MineFactoryReloadedClient.prcPages.get(new BlockPosition(_logic));
+		Integer lastPage = MineFactoryReloadedClient.prcPages.get(BlockPosition.create().from(_logic).free());
 		if(lastPage != null && lastPage < _logic.getCircuitCount())
 		{
 			_selectedCircuit = lastPage;

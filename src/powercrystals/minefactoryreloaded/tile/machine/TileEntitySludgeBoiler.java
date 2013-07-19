@@ -106,8 +106,8 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 			
 			if(_tick >= 23)
 			{
-				Area a = new Area(new BlockPosition(this), 3, 3, 3);
-				List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, a.toAxisAlignedBB());
+				Area a = new Area(BlockPosition.create().from(this), 3, 3, 3);
+				List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, a.free().toAxisAlignedBB());
 				for(Object o : entities)
 				{
 					if(o instanceof EntityPlayer)
