@@ -1,8 +1,11 @@
 package powercrystals.minefactoryreloaded.world;
 
+import powercrystals.core.util.UtilInventory;
+
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import skyboy.core.world.WorldProxy;
@@ -35,11 +38,17 @@ public class SmashingWorld extends WorldProxy
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public ArrayList smashBlock(Block block, int blockId, int meta, int fortune)
+	public ArrayList smashBlock(ItemStack input, Block block, int blockId, int meta, int fortune)
 	{
+		ArrayList drops = null;
 		if (block != null)
-			return block.getBlockDropped(this, x, y, z, meta, fortune);
-		return null;
+		{
+			drops = block.getBlockDropped(this, x, y, z, meta, fortune);
+			if (drops.size() == 1)
+				if (UtilInventory.stacksEqual((ItemStack)drops.get(0), input, false))
+					return null;
+		}
+		return drops;
 	}
 
 }
