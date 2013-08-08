@@ -7,6 +7,7 @@ import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -272,6 +273,40 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		{
 			_isAddedToIC2EnergyNet = false;
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+		}
+		inv: while (failedDrops.size() > 0) 
+		{
+			ItemStack itemstack = failedDrops.remove(0);
+			if (itemstack == null)
+			{
+				continue;
+			}
+			float xOffset = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+			float yOffset = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+			float zOffset = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+			do
+			{
+				if(itemstack.stackSize <= 0)
+				{
+					continue inv;
+				}
+				int amountToDrop = worldObj.rand.nextInt(21) + 10;
+				if(amountToDrop > itemstack.stackSize)
+				{
+					amountToDrop = itemstack.stackSize;
+				}
+				itemstack.stackSize -= amountToDrop;
+				EntityItem entityitem = new EntityItem(worldObj, xCoord + xOffset, yCoord + yOffset, zCoord + zOffset, new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
+				if(itemstack.getTagCompound() != null)
+				{
+					entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
+				}
+				float motionMultiplier = 0.05F;
+				entityitem.motionX = (float)worldObj.rand.nextGaussian() * motionMultiplier;
+				entityitem.motionY = (float)worldObj.rand.nextGaussian() * motionMultiplier + 0.2F;
+				entityitem.motionZ = (float)worldObj.rand.nextGaussian() * motionMultiplier;
+				worldObj.spawnEntityInWorld(entityitem);
+			} while(true);
 		}
 	}
 	
