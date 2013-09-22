@@ -20,9 +20,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityLiquidRouter extends TileEntityFactoryInventory implements ITankContainer
 {
-	private LiquidTank[] _bufferTanks = new LiquidTank[6];
 	private static final ForgeDirection[] _outputDirections = new ForgeDirection[]
 			{ ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
+	
+	protected LiquidTank[] _bufferTanks = new LiquidTank[6];
+	protected boolean[] _filledDirection = new boolean[_bufferTanks.length];
 	
 	public TileEntityLiquidRouter()
 	{
@@ -31,6 +33,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		{
 			_bufferTanks[i] = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
 			_bufferTanks[i].setTankPressure(-1);
+			_filledDirection[i] = false;
 		}
 	}
 	
@@ -40,6 +43,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		super.updateEntity();
 		for(int i = 0; i < 6; i++)
 		{
+			_filledDirection[i] = false;
 			if(_bufferTanks[i].getLiquid() != null && _bufferTanks[i].getLiquid().amount > 0)
 			{
 				_bufferTanks[i].getLiquid().amount -= pumpLiquid(_bufferTanks[i].getLiquid(), true);
@@ -175,12 +179,14 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
 	{
-		return pumpLiquid(resource, doFill);
+		return fill(from.ordinal(), resource, doFill);
 	}
 	
 	@Override
 	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
 	{
+		if (tankIndex >= _bufferTanks.length || _filledDirection[tankIndex]) return 0;
+		_filledDirection[tankIndex] = doFill;
 		return pumpLiquid(resource, doFill);
 	}
 	
@@ -205,7 +211,8 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	@Override
 	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
 	{
-		if(LiquidContainerRegistry.containsLiquid(_inventory[direction.ordinal()], type))
+		if(direction.ordinal() < _bufferTanks.length && 
+				LiquidContainerRegistry.containsLiquid(_inventory[direction.ordinal()], type))
 		{
 			return _bufferTanks[direction.ordinal()];
 		}
