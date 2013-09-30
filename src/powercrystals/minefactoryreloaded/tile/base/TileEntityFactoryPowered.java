@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
@@ -14,16 +13,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import powercrystals.core.power.PowerProviderAdvanced;
 import powercrystals.core.util.Util;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.block.IVoltage;
-import universalelectricity.core.electricity.ElectricityNetworkHelper;
+import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
-import buildcraft.api.power.IPowerProvider;
+import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
 
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
@@ -37,7 +34,7 @@ import buildcraft.api.power.IPowerReceptor;
  * progress bar correctly.
  */
 
-public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory implements IPowerReceptor, IEnergySink, IVoltage, IConnector
+public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory implements IPowerReceptor, IEnergySink, IElectrical
 {	
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
@@ -60,7 +57,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// buildcraft-related fields
 	
-	private IPowerProvider _powerProvider;
+	private PowerHandler _powerProvider;
 	
 	// IC2-related fields
 	
@@ -82,7 +79,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		super(machine);
 		_energyActivation = activationCostMJ * energyPerMJ;
-		_powerProvider = new PowerProviderAdvanced();
+		_powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
 		configurePowerProvider();
 		setIsActive(false);
 	}
@@ -93,7 +90,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{ // TODO: inline into constructor in 2.8
 		int activation = getMaxEnergyPerTick() / energyPerMJ;
 		int maxReceived = Math.min(activation * 20, 1000);
-		_powerProvider.configure(0, activation < 10 ? 1 : 10, maxReceived, 1, 1000);
+		_powerProvider.configure(activation < 10 ? 1 : 10, maxReceived, 1, 1000);
 	}
 	
 	@Override
@@ -122,13 +119,13 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		
 		if (energyRequired > 0)
 		{
-			IPowerProvider pp = getPowerProvider(); 
+			PowerHandler pp = _powerProvider; 
 			bcpower: if(pp != null)
 			{
 				int mjRequired = energyRequired / energyPerMJ;
 				if (mjRequired <= 0) break bcpower;
 				
-				pp.update(this);
+				pp.update();
 				
 				if(pp.useEnergy(0, mjRequired, false) > 0)
 				{
@@ -137,15 +134,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 					energyRequired -= mjGained;
 				}
 			}
-			
-			ElectricityPack powerRequested = new ElectricityPack(energyRequired * wPerEnergy / getVoltage(), getVoltage());
-			ElectricityPack powerPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, powerRequested);
-			_ueBuffer += powerPack.getWatts();
-			
-			int energyFromUE = Math.min(_ueBuffer / wPerEnergy, energyRequired);
-			_energyStored += energyFromUE;
-			energyRequired -= energyFromUE;
-			_ueBuffer -= (energyFromUE * wPerEnergy);
 		}
 		
 		_energyRequiredThisTick = energyRequired;
@@ -259,7 +247,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			}
 			_isAddedToIC2EnergyNet = false;
 		}
-		ElectricityNetworkHelper.invalidate(this);
 		super.invalidate();
 	}
 	
@@ -428,57 +415,38 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	// BC methods
 	
 	@Override
-	public void setPowerProvider(IPowerProvider provider)
+	public PowerReceiver getPowerReceiver(ForgeDirection side)
 	{
-		_powerProvider = provider;
+		return _powerProvider.getPowerReceiver();
 	}
 	
 	@Override
-	public IPowerProvider getPowerProvider()
-	{
-		return _powerProvider;
-	}
-	
-	@Override
-	public int powerRequest(ForgeDirection from)
-	{
-		int powerProviderPower = (int)Math.min(_powerProvider.getMaxEnergyStored() - _powerProvider.getEnergyStored(), _powerProvider.getMaxEnergyReceived());
-		return Math.max(powerProviderPower, 0);
-	}
-	
-	@Override
-	public final void doWork()
+	public final void doWork(PowerHandler workProvider)
 	{
 	}
 	
 	// IC2 methods
 	
 	@Override
-	public int demandsEnergy()
+	public double demandedEnergyUnits()
 	{
 		return Math.max(getEnergyRequired() / energyPerEU, 0);
 	}
 	
 	@Override
-	public int injectEnergy(Direction directionFrom, int amount)
+	public double injectEnergyUnits(ForgeDirection from, double amount)
 	{
-		int euInjected = Math.max(Math.min(demandsEnergy(), amount), 0);
-		int energyInjected = euInjected * energyPerEU;
+		double euInjected = Math.max(Math.min(demandedEnergyUnits(), amount), 0);
+		double energyInjected = euInjected * energyPerEU;
 		_energyStored += energyInjected;
 		_energyRequiredThisTick -= energyInjected;
 		return amount - euInjected;
 	}
 	
 	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, Direction direction)
+	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
 	{
 		return true;
-	}
-	
-	@Override
-	public boolean isAddedToEnergyNet()
-	{
-		return _isAddedToIC2EnergyNet;
 	}
 	
 	@Override
@@ -490,7 +458,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	// UE Methods
 	
 	@Override
-	public double getVoltage()
+	public float getVoltage()
 	{
 		return 120;
 	}
@@ -499,5 +467,38 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;
+	}
+
+	@Override
+	public float receiveElectricity(ForgeDirection from, ElectricityPack powerPack, boolean doReceive) {
+		int energyRequired = getEnergyRequired();
+		int buff = _ueBuffer;
+		buff += powerPack.getWatts();
+		
+		int energyFromUE = Math.min(buff / wPerEnergy, energyRequired);
+		energyRequired -= energyFromUE;
+		buff -= (energyFromUE * wPerEnergy);
+		if (doReceive)
+		{
+			_energyStored += energyFromUE;
+			_ueBuffer = buff;
+			_energyRequiredThisTick -= energyFromUE;
+		}
+		return energyFromUE * wPerEnergy;
+	}
+
+	@Override
+	public float getRequest(ForgeDirection direction) {
+		return Math.max(getEnergyRequired() * wPerEnergy, 0);
+	}
+
+	@Override
+	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide) {
+		return null;
+	}
+
+	@Override
+	public float getProvide(ForgeDirection direction) {
+		return 0;
 	}
 }

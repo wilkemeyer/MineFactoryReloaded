@@ -59,9 +59,9 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
 	{
-		_currentSubnet = pkt.customParam1.getInteger("subnet");
-		_currentValueClient = pkt.customParam1.getInteger("current");
-		rotateDirectlyTo(pkt.customParam1.getInteger("facing"));
+		_currentSubnet = pkt.data.getInteger("subnet");
+		_currentValueClient = pkt.data.getInteger("current");
+		rotateDirectlyTo(pkt.data.getInteger("facing"));
 	}
 	
 	@Override

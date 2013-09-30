@@ -6,8 +6,8 @@
 	<property name="classes.dir" value="${build.dir}/packaging" />
 	<property name="apiclasses.dir" value="${build.dir}/api-packaging" />
 	<property name="src.dir" value="src" />
-	<property name="forge.buildnum" value="733" />
-	<property name="forge.version" value="1.5.2-7.8.0.${forge.buildnum}" />
+	<property name="forge.buildnum" value="884" />
+	<property name="forge.version" value="1.6.4-9.11.0.${forge.buildnum}" />
 	<property name="forge.url" value="http://files.minecraftforge.net/minecraftforge/minecraftforge-src-${forge.version}.zip" />
 	<property name="forge.dir" value="${build.dir}/forge" />
 	<property name="mcp.dir" value="${forge.dir}/mcp" />
@@ -38,7 +38,7 @@
 			<available file="${mcpsrc.dir}/buildcraft" type="dir"/>
 			<available file="${mcpsrc.dir}/ic2" type="dir"/>
 			<available file="${mcpsrc.dir}/universalelectricity" type="dir"/>
-			<available file="${mcpsrc.dir}/thermalexpansion" type="dir"/>
+			<!--<available file="${mcpsrc.dir}/thermalexpansion" type="dir"/>-->
 			<available file="${mcpsrc.dir}/thaumcraft" type="dir"/>
 			<available file="${mcpsrc.dir}/forestry" type="dir"/>
 		</and>
@@ -46,10 +46,10 @@
 	
     <path id="mcp.classpath">
         <pathelement location="${mcp.dir}/bin/minecraft"/>
-        <pathelement location="${mcp.dir}/lib/argo-3.2.jar"/>
-        <pathelement location="${mcp.dir}/lib/asm-debug-all-4.1.jar"/>
-        <pathelement location="${mcp.dir}/lib/bcprov-debug-jdk15on-148.jar"/>
-        <pathelement location="${mcp.dir}/lib/guava-14.0-rc3.jar"/>
+        <fileset dir="${mcp.dir}/jars/libraries/">
+          <include name="**/*.jar"/>
+          <exclude name="**/*-sources.jar"/>
+        </fileset>
         <pathelement location="${mcp.dir}/jars/bin/jinput.jar"/>
         <pathelement location="${mcp.dir}/jars/bin/lwjgl.jar"/>
         <pathelement location="${mcp.dir}/jars/bin/lwjgl_util.jar"/>
@@ -57,56 +57,60 @@
 
 	<target name="get-dependencies" depends="get-version" unless="${have-apis}">
 		<echo message="Downloading IC2 API... " />
-		<get src="http://www.powercrystalsmods.com/build/ic2-api.zip" dest="${download.dir}/industrialcraft-2-api.zip" />
+		<get src="http://ic2api.player.to:8080/job/IC2_experimental/234/artifact/packages/industrialcraft-2-api_2.0.234-experimental.zip" dest="${download.dir}/industrialcraft-2-api.zip" />
 		
 		<echo message="Downloading BuildCraft API..." />
-		<get src="http://www.powercrystalsmods.com/build/buildcraft-api.zip" dest="${download.dir}/BuildCraft-master.zip"/>
-		
-		<echo message="Downloading PowerCrystalsCore... " />
-		<get src="https://github.com/powercrystals/PowerCrystalsCore/archive/master.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
+		<get src="https://github.com/BuildCraft/BuildCraft/archive/3e13bbb166568624cc918f8a9f916fa2062f6c37.zip" dest="${download.dir}/Buildcraft-master.zip"/>
 		
 		<echo message="Downloading UniversalElectricity API... " />
-		<get src="http://www.powercrystalsmods.com/build/UniversalElectricity_v1.3.1.67.zip" dest="${download.dir}/ue-api.zip" />
+		<get src="https://github.com/Universal-Electricity/Universal-Electricity/archive/642962a2654d611b8b90a32113b0ab73159d7a76.zip" dest="${download.dir}/ue-api.zip" />
 		
+		<!--
 		<echo message="Downloading ThermalExpansion API... " />
 		<get src="https://dl.dropboxusercontent.com/u/57416963/Minecraft/Mods/ThermalExpansion/api/ThermalExpansion-API-2.3.0.zip" dest="${download.dir}/te-api.zip" />
+		-->
 		
+		<!--
 		<echo message="Downloading Thaumcraft API... " />
 		<get src="http://www.powercrystalsmods.com/build/ThaumcraftAPI.zip" dest="${download.dir}/ThaumcraftAPI.zip" />
+		-->
 		
 		<echo message="Downloading Forestry API... "/>
-		<get src="https://dl.dropboxusercontent.com/u/23892866/Downloads/forestry.zip" dest="${download.dir}/ForestryAPI.zip" />
+		<get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.1/forestry-api-2.3.0.1.zip" dest="${download.dir}/ForestryAPI.zip" />
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="${have-apis}">
 		<copy todir="${mcpsrc.dir}/powercrystals/core">
-			<fileset dir="${download.dir}/PowerCrystalsCore-master/src/powercrystals/core" />
+			<fileset dir="${download.dir}/PowerCrystalsCore-1.6.4/src/powercrystals/core" />
 		</copy>
 		
 		<echo message="Extracting BuildCraft API..." />
 		<unzip src="${download.dir}/BuildCraft-master.zip" dest="${download.dir}"/>
 		<mkdir dir="${mcpsrc.dir}/buildcraft/" />
-		<move file="${download.dir}/buildcraft/api" todir="${mcpsrc.dir}/buildcraft"/>
-		<move file="${download.dir}/buildcraft/core/IMachine.java" todir="${mcpsrc.dir}/buildcraft/core"/>
+		<move file="${download.dir}/Buildcraft-3e13bbb166568624cc918f8a9f916fa2062f6c37/common/buildcraft/api" todir="${mcpsrc.dir}/buildcraft/"/>
 		
 		<echo message="Extracting IC2 API... " />
 		<unzip src="${download.dir}/industrialcraft-2-api.zip" dest="${download.dir}" />
 		<move file="${download.dir}/ic2" todir="${mcpsrc.dir}" />
 		
 		<echo message="Extracting UniversalElectricity API... " />
-		<unzip src="${download.dir}/ue-api.zip" dest="${download.dir}/universalelectricity/" />
-		<move file="${download.dir}/universalelectricity/universalelectricity" todir="${mcpsrc.dir}" />
+		<unzip src="${download.dir}/ue-api.zip" dest="${download.dir}" />
+		<move file="${download.dir}/Universal-Electricity-642962a2654d611b8b90a32113b0ab73159d7a76/src/universalelectricity" todir="${mcpsrc.dir}" />
 		<echo message="Deleting stuff from the UE API that isn't actually the API... " />
-		<delete dir="${mcpsrc.dir}/universalelectricity/components"/>
+		<delete dir="${mcpsrc.dir}/universalelectricity/compatibility"/>
 		<delete dir="${mcpsrc.dir}/universalelectricity/prefab"/>
 		
+		<!--
 		<echo message="Extracting ThermalExpansion API... " />
 		<unzip src="${download.dir}/te-api.zip" dest="${download.dir}/thermalexpansion/" />
 		<move file="${download.dir}/thermalexpansion/thermalexpansion" todir="${mcpsrc.dir}" />
+		-->
 		
+		<!--
 		<echo message="Extracting Thaumcraft API... " />
 		<unzip src="${download.dir}/ThaumcraftAPI.zip" dest="${download.dir}/thaumcraft/" />
 		<move file="${download.dir}/thaumcraft/thaumcraft" todir="${mcpsrc.dir}" />
+		-->
 		
 		<echo message="Extracting Forestry API... " />
 		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}" />
@@ -272,7 +276,7 @@
 		<!-- Change executables' permitions -->
 		<chmod file="${forge.dir}/install.sh" perm="+x"/>
 
-		<copy file="${download.dir}/PowerCrystalsCore-master/pcc_at.cfg" todir="${forge.dir}/accesstransformers/"/>
+		<copy file="${download.dir}/PowerCrystalsCore-1.6.4/pcc_at.cfg" todir="${forge.dir}/accesstransformers/"/>
 
 		<!-- Install forge -->
 		<delete dir="${mcp.dir}" failonerror="no"/>
@@ -321,7 +325,7 @@
 	
 	<target name="download-core" unless="forge-exists">
 		<echo message="Downloading PowerCrystalsCore... " />
-		<get src="https://github.com/powercrystals/PowerCrystalsCore/archive/master.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
+		<get src="https://github.com/skyboy/PowerCrystalsCore/archive/1.6.4.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
 		
 		<echo message="Extracting PowerCrystalsCore... " />
 		<unzip src="${download.dir}/PowerCrystalsCore-master.zip" dest="${download.dir}"/>

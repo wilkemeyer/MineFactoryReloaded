@@ -50,7 +50,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 		{
 			if(isBook)
 			{
-				Item.enchantedBook.func_92115_a(output, newEnchant);
+				Item.enchantedBook.addEnchantment(output, newEnchant);
 				return output;
 			}
 			else

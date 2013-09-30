@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
@@ -108,7 +109,7 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedWorldGen;
 import powercrystals.minefactoryreloaded.setup.recipe.GregTech;
-import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
+//import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
 import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
@@ -119,9 +120,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -274,7 +273,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		return itemOffset;
 	}
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		setConfigFolderBase(evt.getModConfigurationDirectory());
@@ -314,7 +313,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		}
 	}
 
-	@Init
+	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
 		instance = this;
@@ -479,8 +478,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetItem, behavior);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetSingleItem, behavior);
 		
-		DispenserBehaviors.func_96467_a(); // Work around to make the below behavior actually /exist/ before the server starts.
-		behavior = (IBehaviorDispenseItem)BlockDispenser.dispenseBehaviorRegistry.func_82594_a(Item.bucketWater);
+		DispenserBehaviors.registerDispenserBehaviours(); // Work around to make the below behavior actually /exist/ before the server starts.
+		behavior = (IBehaviorDispenseItem)BlockDispenser.dispenseBehaviorRegistry.getObject(Item.bucketWater);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(sewageBucketItem, behavior);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(sludgeBucketItem, behavior);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(mobEssenceBucketItem, behavior);
@@ -495,7 +494,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
 		
 		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
-		VillagerRegistry.instance().registerVillagerType(MFRConfig.zoolologistEntityId.getInt(), villagerFolder + "zoologist.png");
+		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoolologistEntityId.getInt(), new ResourceLocation(villagerFolder + "zoologist.png"));
 		VillagerRegistry.instance().registerVillageTradeHandler(MFRConfig.zoolologistEntityId.getInt(), new VillageTradeHandler());
 		
 		GameRegistry.registerWorldGenerator(new MineFactoryReloadedWorldGen());
@@ -503,7 +502,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		TickRegistry.registerScheduledTickHandler(new UpdateManager(this), Side.CLIENT);
 	}
 	
-	@PostInit
+	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getOrCreateLiquid("milk", new LiquidStack(milkLiquid, LiquidContainerRegistry.BUCKET_VOLUME)), new ItemStack(Item.bucketMilk), new ItemStack(Item.bucketEmpty)));
@@ -548,7 +547,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		if(MFRConfig.thermalExpansionRecipes.getBoolean(false))
 		{
-			new ThermalExpansion().registerRecipes();
+			//new ThermalExpansion().registerRecipes();
 		}
 		
 		if(MFRConfig.gregTechRecipes.getBoolean(false))

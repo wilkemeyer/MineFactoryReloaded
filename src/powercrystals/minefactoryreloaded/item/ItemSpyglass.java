@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
@@ -30,11 +31,16 @@ public class ItemSpyglass extends ItemFactory
 			MovingObjectPosition mop = rayTrace();
 			if(mop == null || (mop.typeOfHit == EnumMovingObjectType.ENTITY && mop.entityHit == null))
 			{
-				player.sendChatToPlayer("Nothing in sight");
+				player.sendChatToPlayer(new ChatMessageComponent()
+						.addKey("chat.info.mfr.spyglass.nosight"));
 			}
 			else if(mop.typeOfHit == EnumMovingObjectType.ENTITY)
 			{
-				player.sendChatToPlayer(String.format("Found a %s at %.1f, %.1f, %.1f", getEntityName(mop.entityHit), mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ));
+				player.sendChatToPlayer(new ChatMessageComponent()
+						.addText(StatCollector
+								.translateToLocalFormatted("chat.info.mfr.spyglass.hitentity",
+										getEntityName(mop.entityHit),
+										mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ)));
 			}
 			else
 			{
@@ -42,12 +48,20 @@ public class ItemSpyglass extends ItemFactory
 						mop.blockZ));
 				if(tempStack.getItem() != null)
 				{
-					player.sendChatToPlayer("Found " + tempStack.getDisplayName() + " [" + world.getBlockId(mop.blockX, mop.blockY, mop.blockZ) + ":"
-							+ world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ) + "] at " + mop.blockX + ", " + mop.blockY + ", " + mop.blockZ);
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addText(StatCollector
+									.translateToLocalFormatted("chat.info.mfr.spyglass.hitblock",
+											tempStack.getDisplayName(),
+											world.getBlockId(mop.blockX, mop.blockY, mop.blockZ),
+											world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ),
+											mop.blockX, mop.blockY, mop.blockZ)));
 				}
 				else
 				{
-					player.sendChatToPlayer("Found UNKNOWN (bugged mod?) at " + mop.blockX + ", " + mop.blockY + ", " + mop.blockZ);
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addText(StatCollector
+									.translateToLocalFormatted("chat.info.mfr.spyglass.hitunknown",
+									mop.blockX, mop.blockY, mop.blockZ)));
 				}
 			}
 		}

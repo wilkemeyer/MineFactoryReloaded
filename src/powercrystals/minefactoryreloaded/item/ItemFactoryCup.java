@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.world.World;
 import net.minecraftforge.liquids.LiquidDictionary;
@@ -42,8 +43,10 @@ public class ItemFactoryCup extends ItemFactory
 
 	public String getLocalizedName(String str)
 	{
-		Properties translator = StringTranslate.getInstance().translateTable;
-		return translator.getProperty(getUnlocalizedName() + "." + str);
+		String name = getUnlocalizedName() + "." + str;
+		if (StatCollector.func_94522_b(name))
+			return StatCollector.translateToLocal(name);
+		return null;
 	}
 
 	@Override

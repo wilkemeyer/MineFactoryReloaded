@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -216,7 +217,7 @@ public class ItemSafariNet extends ItemFactory
 					itemstack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID &&
 					itemstack.hasDisplayName())
 			{
-				((EntityLiving)spawnedCreature).func_94058_c(itemstack.getDisplayName());
+				((EntityLiving)spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
 			}
 			
 			if(isSingleUse(itemstack))
@@ -260,11 +261,6 @@ public class ItemSafariNet extends ItemFactory
 			e = EntityList.createEntityFromNBT(mobTag, world);
 			if (e != null)
 			{
-				if(e instanceof EntityLiving)
-				{
-					((EntityLiving)e).initCreature();
-				}
-				
 				e.readFromNBT(mobTag);
 			}
 		}
@@ -319,7 +315,6 @@ public class ItemSafariNet extends ItemFactory
 			if (e != null)
 			{
 				e.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360.0F, 0.0F);
-				((EntityLiving)e).initCreature();
 				world.spawnEntityInWorld(e);
 				((EntityLiving)e).playLivingSound();
 			}
@@ -329,12 +324,12 @@ public class ItemSafariNet extends ItemFactory
 	}
 	
 	@Override
-	public boolean itemInteractionForEntity(ItemStack itemstack, EntityLiving entity)
+	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity)
 	{
 		return captureEntity(itemstack, entity);
 	}
 	
-	public static boolean captureEntity(ItemStack itemstack, EntityLiving entity)
+	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity)
 	{
 		if(entity.worldObj.isRemote)
 		{

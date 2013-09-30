@@ -76,7 +76,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	protected boolean activateMachine()
 	{
 		ItemStack item = getStackInSlot(0);
-		if(!isStackValidForSlot(0, item))
+		if(!isItemValidForSlot(0, item))
 		{
 			setWorkDone(0);
 			return false;
@@ -136,7 +136,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 				spawnedLiving.readEntityFromNBT(tag);
 				for (int i = 0; i < 5; ++i)
 				{
-					spawnedLiving.func_96120_a(i, 0);
+					spawnedLiving.setEquipmentDropChance(i, 0);
 				}
 			}
 			
@@ -155,7 +155,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 			
 			if (!_spawnExact)
 			{
-				spawnedLiving.initCreature();
+				spawnedLiving.onSpawnWithEgg(null);
 			}
 			
 			worldObj.spawnEntityInWorld(spawnedLiving);
@@ -240,11 +240,11 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return isStackValidForSlot(slot, itemstack);
+		return isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack)
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return ItemSafariNet.isSafariNet(itemstack) &&
 				!ItemSafariNet.isSingleUse(itemstack) &&

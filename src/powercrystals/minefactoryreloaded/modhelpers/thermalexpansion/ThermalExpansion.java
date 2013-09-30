@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
 import net.minecraft.item.Item;
@@ -49,3 +50,4 @@ public class ThermalExpansion
 		}
 	}
 }
+//*/

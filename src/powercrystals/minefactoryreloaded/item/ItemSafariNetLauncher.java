@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -25,6 +26,7 @@ public class ItemSafariNetLauncher extends ItemFactory
 	{
 		super.addInformation(stack, player, infoList, advancedTooltips);
 		infoList.add("Sneak-click to change mode");
+		// TODO: localize ^
 	}
 	
 	@Override
@@ -37,11 +39,13 @@ public class ItemSafariNetLauncher extends ItemFactory
 			{
 				if(isCaptureMode(stack))
 				{
-					player.sendChatToPlayer("Changed to capture mode");
+					player.sendChatToPlayer(new ChatMessageComponent()
+					.addKey("chat.info.mfr.safarinet.capture"));
 				}
 				else
 				{
-					player.sendChatToPlayer("Changed to release mode");
+					player.sendChatToPlayer(new ChatMessageComponent()
+					.addKey("chat.info.mfr.safarinet.release"));
 				}
 			}
 			return stack;

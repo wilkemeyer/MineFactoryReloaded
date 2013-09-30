@@ -2,7 +2,8 @@ package powercrystals.minefactoryreloaded.core;
 
 import java.util.Random;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.StatCollector;
 
@@ -30,9 +31,9 @@ public class GrindingDamage extends DamageSource
 	}
 	
 	@Override
-    public String getDeathMessage(EntityLiving par1EntityLiving)
+    public ChatMessageComponent getDeathMessage(EntityLivingBase par1EntityLiving)
     {
-        EntityLiving entityliving1 = par1EntityLiving.func_94060_bK();
+        EntityLivingBase entityliving1 = par1EntityLiving.func_94060_bK();
         String s = "death.attack." + this.damageType;
         if (_msgCount > 0)
         {
@@ -43,6 +44,7 @@ public class GrindingDamage extends DamageSource
         	}
         }
         String s1 = s + ".player";
-        return entityliving1 != null && StatCollector.func_94522_b(s1) ? StatCollector.translateToLocalFormatted(s1, new Object[] {par1EntityLiving.getTranslatedEntityName(), entityliving1.getTranslatedEntityName()}): StatCollector.translateToLocalFormatted(s, new Object[] {par1EntityLiving.getTranslatedEntityName()});
+        // TODO: change to addKey?
+        return new ChatMessageComponent().addText(entityliving1 != null && StatCollector.func_94522_b(s1) ? StatCollector.translateToLocalFormatted(s1, new Object[] {par1EntityLiving.getTranslatedEntityName(), entityliving1.getTranslatedEntityName()}): StatCollector.translateToLocalFormatted(s, new Object[] {par1EntityLiving.getTranslatedEntityName()}));
     }
 }

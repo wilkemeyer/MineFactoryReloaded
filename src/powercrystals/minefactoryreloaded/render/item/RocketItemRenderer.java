@@ -1,11 +1,13 @@
 package powercrystals.minefactoryreloaded.render.item;
 
+import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -43,11 +45,11 @@ public class RocketItemRenderer implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		RenderEngine renderengine = Minecraft.getMinecraft().renderEngine;
+		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
 		
 		if(renderengine != null)
 		{
-			renderengine.bindTexture("/textures/itemmodels/powercrystals/minefactoryreloaded/Rocket.png");
+			renderengine.bindTexture(EntityRocketRenderer.rocket);
 		}
 		
 		GL11.glPushMatrix();

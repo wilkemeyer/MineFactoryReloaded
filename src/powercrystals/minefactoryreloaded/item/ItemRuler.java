@@ -3,8 +3,10 @@ package powercrystals.minefactoryreloaded.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
@@ -24,11 +26,13 @@ public class ItemRuler extends ItemFactory
 			MovingObjectPosition mop = player.rayTrace(MFRConfig.spyglassRange.getInt(), 1.0F);
 			if(mop == null || (mop.typeOfHit == EnumMovingObjectType.ENTITY && mop.entityHit == null))
 			{
-				player.sendChatToPlayer("Nothing in sight");
+				player.sendChatToPlayer(new ChatMessageComponent()
+						.addKey("chat.info.mfr.ruler.nosight"));
 			}
 			else if(mop.typeOfHit == EnumMovingObjectType.ENTITY)
 			{
-				player.sendChatToPlayer("Hit entity - measurement failed");
+				player.sendChatToPlayer(new ChatMessageComponent()
+						.addKey("chat.info.mfr.ruler.hitentity"));
 			}
 			else
 			{
@@ -39,7 +43,8 @@ public class ItemRuler extends ItemFactory
 					tag.setInteger("y", mop.blockY);
 					tag.setInteger("z", mop.blockZ);
 					stack.setTagCompound(tag);
-					player.sendChatToPlayer("Recorded position 1");
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addKey("chat.info.mfr.ruler.startposition"));
 				}
 				else
 				{
@@ -51,12 +56,25 @@ public class ItemRuler extends ItemFactory
 					int distY = Math.abs(mop.blockY - y);
 					int distZ = Math.abs(mop.blockZ - z);
 					
-					double distAll = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2) + Math.pow(distZ, 2));
+					double distAll = Math.sqrt(Math.pow(distX, 2) +
+							Math.pow(distY, 2) + Math.pow(distZ, 2));
 					
-					player.sendChatToPlayer("X: distance: " + distX + ", count: " + (distX + 1));
-					player.sendChatToPlayer("Y: distance: " + distY + ", count: " + (distY + 1));
-					player.sendChatToPlayer("Z: distance: " + distZ + ", count: " + (distZ + 1));
-					player.sendChatToPlayer(String.format("Total distance: %.1f", distAll));
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addText("X: ").addText(StatCollector
+									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
+											distX, distX + 1)));
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addText("Y: ").addText(StatCollector
+									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
+											distY, distY + 1)));
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addText("Z: ").addText(StatCollector
+									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
+											distZ, distZ + 1)));
+					player.sendChatToPlayer(new ChatMessageComponent()
+							.addText(StatCollector
+									.translateToLocalFormatted("chat.info.mfr.ruler.total",
+											distAll)));
 				}
 			}
 		}

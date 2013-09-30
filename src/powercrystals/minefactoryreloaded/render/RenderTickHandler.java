@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
@@ -16,6 +17,10 @@ import cpw.mods.fml.common.TickType;
 
 public class RenderTickHandler implements ITickHandler
 {
+	private static final ResourceLocation targetingBlue =
+			new ResourceLocation("minefactoryreloaded:hud/lockon_blue.png");
+	private static final ResourceLocation targetingRed  =
+			new ResourceLocation("minefactoryreloaded:hud/lockon_red.png");
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData)
 	{
@@ -50,11 +55,11 @@ public class RenderTickHandler implements ITickHandler
 			
 			if(MineFactoryReloadedClient.instance.getLockedEntity() != Integer.MIN_VALUE)
 			{
-				mc.renderEngine.bindTexture("/powercrystals/minefactoryreloaded/textures/hud/lockon_blue.png");
+				mc.renderEngine.bindTexture(targetingBlue);
 			}
 			else
 			{
-				mc.renderEngine.bindTexture("/powercrystals/minefactoryreloaded/textures/hud/lockon_red.png");
+				mc.renderEngine.bindTexture(targetingRed);
 			}
 			
 			GL11.glPushMatrix();

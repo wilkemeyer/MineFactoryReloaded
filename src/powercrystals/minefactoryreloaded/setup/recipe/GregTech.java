@@ -947,7 +947,7 @@ public class GregTech extends Vanilla
 				"LGL",
 				"IRI",
 				'P', "sheetPlastic",
-				'L', Item.lightStoneDust,
+				'L', Item.glowstone,
 				'G', Item.gunpowder,
 				'I', "plateIron",
 				'R', "craftingItemValve"

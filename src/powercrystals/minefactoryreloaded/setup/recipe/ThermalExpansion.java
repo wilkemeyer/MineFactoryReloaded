@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.setup.recipe;
 
 import net.minecraft.block.Block;
@@ -644,4 +645,4 @@ public class ThermalExpansion extends Vanilla
 			x.printStackTrace();
 		}
 	}
-}
+}//*/

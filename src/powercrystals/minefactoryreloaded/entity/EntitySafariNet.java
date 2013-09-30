@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
@@ -28,10 +29,15 @@ public class EntitySafariNet extends EntityThrowable
 		dataWatcher.addObject(13, netStack);
 	}
 	
-	public EntitySafariNet(World world, EntityLiving owner, ItemStack netStack)
+	public EntitySafariNet(World world, EntityLivingBase owner, ItemStack netStack)
 	{
 		super(world, owner);
 		dataWatcher.addObject(13, netStack);
+	}
+	
+	public ItemStack getStoredEntity()
+	{
+		return dataWatcher.getWatchableObjectItemStack(13);
 	}
 	
 	public void setStoredEntity(ItemStack s)

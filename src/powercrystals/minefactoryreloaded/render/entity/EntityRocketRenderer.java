@@ -3,10 +3,9 @@ package powercrystals.minefactoryreloaded.render.entity;
 import org.lwjgl.opengl.GL11;
 
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import cpw.mods.fml.relauncher.Side;
@@ -15,6 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRocketRenderer extends Render
 {
+	public static final ResourceLocation rocket = new ResourceLocation("minefactoryreloaded:itemmodels/Rocket.png");
 	private IModelCustom _model;
 	
 	public EntityRocketRenderer()
@@ -31,13 +31,6 @@ public class EntityRocketRenderer extends Render
 	
     public void renderRocket(EntityRocket rocket, double x, double y, double z, float yaw, float partialTicks)
     {
-		RenderEngine renderengine = Minecraft.getMinecraft().renderEngine;
-		
-		if(renderengine != null)
-		{
-			renderengine.bindTexture("/textures/itemmodels/powercrystals/minefactoryreloaded/Rocket.png");
-		}
-		
 		GL11.glPushMatrix();
 		
 		GL11.glTranslatef((float)x, (float)y, (float)z);
@@ -54,6 +47,13 @@ public class EntityRocketRenderer extends Render
     @Override
 	public void doRender(Entity entity, double x, double y, double z, float yaw, float partialTicks)
     {
+    	this.bindEntityTexture(entity);
         this.renderRocket((EntityRocket)entity, x, y, z, yaw, partialTicks);
     }
+
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
+	{
+		return rocket;
+	}
 }

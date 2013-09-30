@@ -394,8 +394,8 @@ public class WorldServerProxy extends WorldServer {
 	/**
 	 * Returns true if the given block will receive a scheduled tick in the future. Args: X, Y, Z, blockID
 	 */
-	public boolean isBlockTickScheduled(int par1, int par2, int par3, int par4) {
-		return this.proxiedWorld.isBlockTickScheduled(par1, par2, par3, par4);
+	public boolean isBlockTickScheduledThisTick(int par1, int par2, int par3, int par4) {
+		return this.proxiedWorld.isBlockTickScheduledThisTick(par1, par2, par3, par4);
 	}
 
 	@Override
@@ -521,13 +521,13 @@ public class WorldServerProxy extends WorldServer {
 	/**
 	 * ray traces all blocks, including non-collideable ones
 	 */
-	public MovingObjectPosition rayTraceBlocks(Vec3 par1Vec3, Vec3 par2Vec3) {
-		return this.proxiedWorld.rayTraceBlocks(par1Vec3, par2Vec3);
+	public MovingObjectPosition clip(Vec3 par1Vec3, Vec3 par2Vec3) {
+		return this.proxiedWorld.clip(par1Vec3, par2Vec3);
 	}
 
 	@Override
-	public MovingObjectPosition rayTraceBlocks_do(Vec3 par1Vec3, Vec3 par2Vec3, boolean par3) {
-		return this.proxiedWorld.rayTraceBlocks_do(par1Vec3, par2Vec3, par3);
+	public MovingObjectPosition clip(Vec3 par1Vec3, Vec3 par2Vec3, boolean par3) {
+		return this.proxiedWorld.clip(par1Vec3, par2Vec3, par3);
 	}
 
 	@Override
@@ -606,9 +606,9 @@ public class WorldServerProxy extends WorldServer {
 	/**
 	 * Start the skin for this entity downloading, if necessary, and increment its reference counter
 	 */
-	protected void obtainEntitySkin(Entity par1Entity) {
+	protected void onEntityAdded(Entity par1Entity) {
 		ArrayList<String> q = new ArrayList<String>();
-		q.add("obtainEntitySkin");
+		q.add("onEntityAdded");
 		q.addAll(Arrays.asList(ObfuscationReflectionHelper.remapFieldNames("net.minecraft.world.World", new String[]{"func_72923_a"})));
 		Method callable = ReflectionHelper.findMethod(World.class, this.proxiedWorld, q.toArray(new String[q.size()]), Entity.class);
 		try {
@@ -621,8 +621,8 @@ public class WorldServerProxy extends WorldServer {
 	/**
 	 * Decrement the reference counter for this entity's skin image data
 	 */
-	public void releaseEntitySkin(Entity par1Entity) {
-		this.proxiedWorld.releaseEntitySkin(par1Entity);
+	public void onEntityRemoved(Entity par1Entity) {
+		this.proxiedWorld.onEntityRemoved(par1Entity);
 	}
 
 	@Override
@@ -789,8 +789,8 @@ public class WorldServerProxy extends WorldServer {
 	}
 
 	@Override
-	public void func_82740_a(int par1, int par2, int par3, int par4, int par5, int par6) {
-		this.proxiedWorld.func_82740_a(par1, par2, par3, par4, par5, par6);
+	public void scheduleBlockUpdateWithPriority(int par1, int par2, int par3, int par4, int par5, int par6) {
+		this.proxiedWorld.scheduleBlockUpdateWithPriority(par1, par2, par3, par4, par5, par6);
 	}
 
 	@Override
@@ -995,8 +995,8 @@ public class WorldServerProxy extends WorldServer {
 	}
 
 	@Override
-	public boolean func_85174_u(int par1, int par2, int par3) {
-		return this.proxiedWorld.func_85174_u(par1, par2, par3);
+	public boolean isBlockFullCube(int par1, int par2, int par3) {
+		return this.proxiedWorld.isBlockFullCube(par1, par2, par3);
 	}
 
 	@Override
@@ -1239,8 +1239,8 @@ public class WorldServerProxy extends WorldServer {
 	/**
 	 * marks the chunk that contains this tilentity as modified and then calls worldAccesses.doNothingWithTileEntity
 	 */
-	public void updateTileEntityChunkAndDoNothing(int par1, int par2, int par3, TileEntity par4TileEntity) {
-		this.proxiedWorld.updateTileEntityChunkAndDoNothing(par1, par2, par3, par4TileEntity);
+	public void markTileEntityChunkModified(int par1, int par2, int par3, TileEntity par4TileEntity) {
+		this.proxiedWorld.markTileEntityChunkModified(par1, par2, par3, par4TileEntity);
 	}
 
 	@Override
@@ -1629,8 +1629,8 @@ public class WorldServerProxy extends WorldServer {
 	}
 
 	@Override
-	public IUpdatePlayerListBox func_82735_a(EntityMinecart par1EntityMinecart) {
-		return this.proxiedWorld.func_82735_a(par1EntityMinecart);
+	public IUpdatePlayerListBox getMinecartSoundUpdater(EntityMinecart par1EntityMinecart) {
+		return this.proxiedWorld.getMinecartSoundUpdater(par1EntityMinecart);
 	}
 
 	@Override
@@ -1720,6 +1720,28 @@ public class WorldServerProxy extends WorldServer {
 	public ILogAgent getWorldLogAgent() {
 		return this.proxiedWorld.getWorldLogAgent();
 	}
+
+    /**
+     * returns a float value that can be used to determine how likely something is to go awry in the area. It increases
+     * based on how long the player is within the vicinity, the lunar phase, and game difficulty. The value can be up to
+     * 1.5 on the highest difficulty, 1.0 otherwise.
+     */
+    @Override
+	public float getLocationTensionFactor(double par1, double par3, double par5)
+    {
+        return this.proxiedWorld.getLocationTensionFactor(par1, par3, par5);
+    }
+
+    /**
+     * returns a float value that can be used to determine how likely something is to go awry in the area. It increases
+     * based on how long the player is within the vicinity, the lunar phase, and game difficulty. The value can be up to
+     * 1.5 on the highest difficulty, 1.0 otherwise.
+     */
+    @Override
+	public float getTensionFactorForBlock(int par1, int par2, int par3)
+    {
+        return this.proxiedWorld.getTensionFactorForBlock(par1, par2, par3);
+    }
 
 	@Override
 	/**
@@ -1832,15 +1854,6 @@ public class WorldServerProxy extends WorldServer {
 
     @Override
     /**
-     * direct call to super.updateEntityWithOptionalForce
-     */
-    public void uncheckedUpdateEntity(Entity par1Entity, boolean par2)
-    {
-        this.proxiedWorld.uncheckedUpdateEntity(par1Entity, par2);
-    }
-
-    @Override
-    /**
      * pars: min x,y,z , max x,y,z
      */
     public List getAllTileEntityInBox(int par1, int par2, int par3, int par4, int par5, int par6)
@@ -1899,9 +1912,9 @@ public class WorldServerProxy extends WorldServer {
     }
 
     @Override
-    public void func_104140_m()
+    public void saveChunkData()
     {
-        this.proxiedWorld.func_104140_m();
+        this.proxiedWorld.saveChunkData();
     }
 
     @Override

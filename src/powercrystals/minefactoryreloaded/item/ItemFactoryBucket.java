@@ -30,7 +30,7 @@ public class ItemFactoryBucket extends ItemBucket
 	}
 	
 	@Override
-	public boolean tryPlaceContainedLiquid(World world, double xOffset, double yOffset, double zOffset, int x, int y, int z)
+	public boolean tryPlaceContainedLiquid(World world, int x, int y, int z)
 	{
 		if(_liquidId <= 0)
 		{

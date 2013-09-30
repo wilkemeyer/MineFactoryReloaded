@@ -12,7 +12,7 @@ public class LaserDrillPrechargerRenderer extends TileEntitySpecialRenderer
 		TileEntityLaserDrillPrecharger laserDrillPrecharger = (TileEntityLaserDrillPrecharger)tileEntity;
 		if(laserDrillPrecharger.shouldDrawBeam())
 		{
-			this.bindTextureByName("/misc/beam.png");
+			this.bindTexture(LaserDrillRenderer.beaconBeam);
 			LaserRendererBase.renderLaser(laserDrillPrecharger, x, y, z, 1, laserDrillPrecharger.getDirectionFacing(), partialTicks);
 		}
 	}

@@ -2,8 +2,11 @@ package powercrystals.minefactoryreloaded.render.entity;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -15,11 +18,23 @@ public class EntitySafariNetRenderer extends Render
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float par8, float par9)
 	{
+		ItemStack itemstack = ((EntitySafariNet)entity).getStoredEntity();
+		if (itemstack == null)
+		{
+			return;
+		}
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glScalef(0.5F, 0.5F, 0.5F);
-		this.loadTexture("/gui/items.png");
+        if (itemstack.getItemSpriteNumber() == 0)
+        {
+            this.bindTexture(TextureMap.locationBlocksTexture);
+        }
+        else
+        {
+            this.bindTexture(TextureMap.locationItemsTexture);
+        }
 		Tessellator var10 = Tessellator.instance;
 		
 		this.renderItemInFlight(var10, ((EntitySafariNet)entity).getIcon());
@@ -45,5 +60,11 @@ public class EntitySafariNetRenderer extends Render
 		par1Tessellator.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, f1, f2);
 		par1Tessellator.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, f, f2);
 		par1Tessellator.draw();
+	}
+
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

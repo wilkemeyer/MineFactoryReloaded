@@ -67,6 +67,15 @@ public class BlockFactoryGlass extends BlockGlass implements IConnectableRedNet
 	{
 		return new IconOverlay(_texture, 8, 8, 0, 0);
 	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+	{
+		if (world.getBlockMaterial(x, y, z) == Material.glass)
+			return false;
+		return super.shouldSideBeRendered(world, x, y, z, side);
+	}
 
 	public Icon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
 	{

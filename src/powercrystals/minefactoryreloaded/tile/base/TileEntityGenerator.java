@@ -3,20 +3,20 @@ package powercrystals.minefactoryreloaded.tile.base;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
-import powercrystals.core.power.PowerProviderAdvanced;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import buildcraft.api.power.IPowerProvider;
+import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
 
 public abstract class TileEntityGenerator extends TileEntityFactoryInventory implements IPowerReceptor
 {
-	private IPowerProvider _powerProvider;
+	private PowerHandler _powerProvider;
 	
 	protected TileEntityGenerator(Machine machine)
 	{
 		super(machine);
-		_powerProvider = new PowerProviderAdvanced();
-		_powerProvider.configure(0, 0, 0, 0, 0);
+		_powerProvider = new PowerHandler(this, PowerHandler.Type.ENGINE);
+		_powerProvider.configure(0, 0, 0, 0);
 	}
 	
 	protected final int producePower(int mj)
@@ -32,11 +32,11 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 			}
 			
 			IPowerReceptor ipr = ((IPowerReceptor)te);
-			IPowerProvider pp = ipr.getPowerProvider();
-			if(pp != null && pp.preConditions(ipr) && pp.getMinEnergyReceived() <= mj)
+			PowerReceiver pp = ipr.getPowerReceiver(bp.orientation);
+			if(pp != null && pp.powerRequest() > 0 && pp.getMinEnergyReceived() <= mj)
 			{
-				int mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - (int)Math.floor(pp.getEnergyStored()));
-				pp.receiveEnergy(mjUsed, bp.orientation);
+				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - (int)Math.floor(pp.getEnergyStored()));
+				pp.receiveEnergy(_powerProvider.getPowerReceiver().getType(), mjUsed, bp.orientation);
 				
 				mj -= mjUsed;
 				if(mj <= 0)
@@ -50,25 +50,13 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 	}
 	
 	@Override
-	public void setPowerProvider(IPowerProvider provider)
+	public PowerReceiver getPowerReceiver(ForgeDirection side)
 	{
-		_powerProvider = provider;
+		return _powerProvider.getPowerReceiver();
 	}
 	
 	@Override
-	public IPowerProvider getPowerProvider()
+	public void doWork(PowerHandler workProvider)
 	{
-		return _powerProvider;
-	}
-	
-	@Override
-	public void doWork()
-	{
-	}
-	
-	@Override
-	public int powerRequest(ForgeDirection from)
-	{
-		return 0;
 	}
 }

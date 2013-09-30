@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -197,15 +198,15 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 					PacketDispatcher.sendPacketToAllAround(x, y, z, 50, world.provider.dimensionId, cable.getDescriptionPacket());
 					if(mode == 0)
 					{
-						player.sendChatToPlayer("Set cable to standard connection mode");
+						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.standard"));
 					}
 					else if(mode == 1)
 					{
-						player.sendChatToPlayer("Set cable to forced-connection mode");
+						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forced"));
 					}
 					else if(mode == 2)
 					{
-						player.sendChatToPlayer("Set cable to cable-only connection mode");
+						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.cableonly"));
 					}
 				}
 			}

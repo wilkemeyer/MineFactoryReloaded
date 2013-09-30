@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import cpw.mods.fml.relauncher.Side;
@@ -27,6 +28,7 @@ public class ItemRedNetMemoryCard extends ItemFactory
 		{
 			infoList.add("Programmed, " + stack.getTagCompound().getTagList("circuits").tagCount() + " circuits");
 			infoList.add("Place in crafting grid to wipe");
+			// TODO: localize ^
 		}
 	}
 	
@@ -46,19 +48,19 @@ public class ItemRedNetMemoryCard extends ItemFactory
 				NBTTagCompound tag = new NBTTagCompound();
 				te.writeToNBT(tag);
 				itemstack.setTagCompound(tag);
-				player.sendChatToPlayer("PRC program uploaded to memory card from PRC");
+				player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.memorycard.uploaded"));
 			}
 			else
 			{
 				int circuitCount = itemstack.getTagCompound().getTagList("circuits").tagCount();
 				if(circuitCount > ((TileEntityRedNetLogic)te).getCircuitCount())
 				{
-					player.sendChatToPlayer("PRC contains insufficient circuits to hold this program");
+					player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.memorycard.error"));
 				}
 				else
 				{
 					((TileEntityRedNetLogic)te).readCircuitsOnly(itemstack.getTagCompound());
-					player.sendChatToPlayer("PRC program downloaded from memory card to PRC");
+					player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.memorycard.downloaded"));
 				}
 			}
 			

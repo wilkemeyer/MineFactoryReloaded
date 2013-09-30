@@ -465,7 +465,7 @@ public class TileEntityRedNetLogic extends TileEntity
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
 	{
-		_upgradeLevel = pkt.customParam1.getIntArray("upgrades");
+		_upgradeLevel = pkt.data.getIntArray("upgrades");
 		updateUpgradeLevels();
 	}
 	
