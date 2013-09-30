@@ -120,8 +120,8 @@ public class BlockFactoryFluid extends BlockFluidClassic implements ILiquid, ICo
 	@Override
 	public void registerIcons(IconRegister ir)
 	{
-		_iconStill = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName());
-		_iconFlowing = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName().replace(".still", ".flowing"));
+		_iconStill = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		_iconFlowing = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName().replace(".still", ".flowing"));
 	}
 	
 	@Override

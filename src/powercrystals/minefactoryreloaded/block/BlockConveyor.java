@@ -58,8 +58,8 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	{
 		for(int i = 0; i < _names.length; i++)
 		{
-			_iconsActive[i] = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName() + ".active." + _names[i]);
-			_iconsStopped[i] = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName() + ".stopped." + _names[i]);
+			_iconsActive[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".active." + _names[i]);
+			_iconsStopped[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".stopped." + _names[i]);
 		}
 	}
 	

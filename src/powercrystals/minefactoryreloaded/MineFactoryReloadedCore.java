@@ -147,13 +147,14 @@ public class MineFactoryReloadedCore extends BaseMod
 	
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modNetworkChannel = "MFReloaded";
-	public static final String version = "1.5.1R2.7.0B8";
+	public static final String version = "1.6.4R2.7.0B9";
 	public static final String modName = "Minefactory Reloaded";
 	
-	public static final String guiFolder = "/powercrystals/minefactoryreloaded/textures/gui/";
-	public static final String villagerFolder = "/powercrystals/minefactoryreloaded/textures/villager/";
-	public static final String tileEntityFolder = "/powercrystals/minefactoryreloaded/textures/tileentity/";
-	public static final String mobTextureFolder = "/textures/mob/powercrystals/minefactoryreloaded/";
+	public static final String guiFolder = "minefactoryreloaded:textures/gui/";
+	public static final String villagerFolder = "minefactoryreloaded:textures/villager/";
+	public static final String tileEntityFolder = "minefactoryreloaded:textures/tileentity/";
+	public static final String mobTextureFolder = "minefactoryreloaded:textures/mob/";
+	public static final String modelTextureFolder = "minefactoryreloaded:textures/itemmodels/";
 	
 	public static int renderIdConveyor = 1000;
 	public static int renderIdFactoryGlassPane = 1001;

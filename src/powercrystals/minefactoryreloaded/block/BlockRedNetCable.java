@@ -409,7 +409,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister ir)
 	{
-		blockIcon = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName());
+		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 	
 	@Override

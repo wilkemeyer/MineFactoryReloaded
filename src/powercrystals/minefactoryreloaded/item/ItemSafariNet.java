@@ -98,10 +98,10 @@ public class ItemSafariNet extends ItemFactory
 	@Override
 	public void registerIcons(IconRegister ir)
 	{
-		_iconEmpty = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName() + ".empty");
-		_iconBack = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName() + ".back");
-		_iconMid = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName() + ".mid");
-		_iconFront = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName() + ".front");
+		_iconEmpty = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".empty");
+		_iconBack = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".back");
+		_iconMid = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".mid");
+		_iconFront = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".front");
 		
 		itemIcon = _iconEmpty;
 	}

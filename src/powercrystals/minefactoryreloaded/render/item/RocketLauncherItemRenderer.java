@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.render.item;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -15,7 +17,7 @@ import net.minecraftforge.client.model.IModelCustom;
 @SideOnly(Side.CLIENT)
 public class RocketLauncherItemRenderer implements IItemRenderer
 {
-	private static final ResourceLocation launcher = new ResourceLocation("minefactoryreloaded:itemmodels/RocketLauncher.png");
+	private static final ResourceLocation launcher = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "RocketLauncher.png");
 	private IModelCustom _model;
 	
 	public RocketLauncherItemRenderer()

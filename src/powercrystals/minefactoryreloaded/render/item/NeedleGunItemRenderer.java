@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.render.item;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -15,7 +17,7 @@ import net.minecraftforge.client.model.IModelCustom;
 @SideOnly(Side.CLIENT)
 public class NeedleGunItemRenderer implements IItemRenderer
 {
-	private static final ResourceLocation needleGun = new ResourceLocation("minefactoryreloaded:itemmodels/NeedleGun.png");
+	private static final ResourceLocation needleGun = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "NeedleGun.png");
 	private IModelCustom _model;
 	
 	public NeedleGunItemRenderer()

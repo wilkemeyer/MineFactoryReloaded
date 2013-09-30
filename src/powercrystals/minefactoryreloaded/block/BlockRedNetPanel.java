@@ -209,6 +209,6 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	@Override
 	public void registerIcons(IconRegister ir)
 	{
-		blockIcon = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName());
+		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 }

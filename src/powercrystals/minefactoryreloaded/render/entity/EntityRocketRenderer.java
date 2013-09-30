@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -14,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRocketRenderer extends Render
 {
-	public static final ResourceLocation rocket = new ResourceLocation("minefactoryreloaded:itemmodels/Rocket.png");
+	public static final ResourceLocation rocket = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "Rocket.png");
 	private IModelCustom _model;
 	
 	public EntityRocketRenderer()

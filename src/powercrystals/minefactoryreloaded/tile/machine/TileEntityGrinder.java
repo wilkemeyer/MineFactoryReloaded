@@ -13,6 +13,7 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
@@ -50,8 +51,8 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	{
 		ArrayList<String> q = new ArrayList<String>();
 		q.add("recentlyHit");
-		q.addAll(Arrays.asList(ObfuscationReflectionHelper.remapFieldNames("net.minecraft.entity.EntityLiving", new String[] { "field_70718_bc" })));
-		recentlyHit = ReflectionHelper.findField(EntityLiving.class, q.toArray(new String[q.size()]));
+		q.addAll(Arrays.asList(ObfuscationReflectionHelper.remapFieldNames("net.minecraft.entity.EntityLivingBase", "field_70718_bc")));
+		recentlyHit = ReflectionHelper.findField(EntityLivingBase.class, q.toArray(new String[q.size()]));
 	}
 	
 	protected HarvestAreaManager _areaManager;

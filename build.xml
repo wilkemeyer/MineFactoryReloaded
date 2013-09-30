@@ -39,7 +39,7 @@
 			<available file="${mcpsrc.dir}/ic2" type="dir"/>
 			<available file="${mcpsrc.dir}/universalelectricity" type="dir"/>
 			<!--<available file="${mcpsrc.dir}/thermalexpansion" type="dir"/>-->
-			<available file="${mcpsrc.dir}/thaumcraft" type="dir"/>
+			<!--<available file="${mcpsrc.dir}/thaumcraft" type="dir"/>-->
 			<available file="${mcpsrc.dir}/forestry" type="dir"/>
 		</and>
 	</condition>
@@ -215,38 +215,13 @@
 		</copy>
 		
 		<copy todir="${classes.dir}" file="mcmod.info"/>
-
 		
-		<copy todir="${classes.dir}/textures/blocks/powercrystals/minefactoryreloaded">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/blocks/" />
-		</copy>
-		
-		<copy todir="${classes.dir}/textures/items/powercrystals/minefactoryreloaded">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/items/" />
-		</copy>
-		
-		<copy todir="${classes.dir}/textures/itemmodels/powercrystals/minefactoryreloaded">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/itemmodels/" />
-		</copy>
-		
-		<copy todir="${classes.dir}/textures/mob/powercrystals/minefactoryreloaded">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/mob/" />
-		</copy>
-		
-		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/textures/gui">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/gui" />
+		<copy todir="${classes.dir}/assets/minefactoryreloaded/textures">
+			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures" />
 		</copy>
 		
 		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/models">
 			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/models" />
-		</copy>
-		
-		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/textures/villager">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/villager" />
-		</copy>
-		
-		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/textures/tileentity">
-			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures/tileentity" />
 		</copy>
 		
 		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/lang">

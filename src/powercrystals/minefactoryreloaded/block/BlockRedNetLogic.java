@@ -217,7 +217,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister ir)
 	{
-		blockIcon = ir.registerIcon("powercrystals/minefactoryreloaded/" + getUnlocalizedName());
+		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 	
 	@Override
