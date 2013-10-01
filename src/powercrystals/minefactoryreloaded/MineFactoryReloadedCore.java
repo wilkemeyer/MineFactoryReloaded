@@ -151,6 +151,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static final String modName = "Minefactory Reloaded";
 	
 	public static final String guiFolder = "minefactoryreloaded:textures/gui/";
+	public static final String hudFolder = "minefactoryreloaded:textures/hud/";
 	public static final String villagerFolder = "minefactoryreloaded:textures/villager/";
 	public static final String tileEntityFolder = "minefactoryreloaded:textures/tileentity/";
 	public static final String mobTextureFolder = "minefactoryreloaded:textures/mob/";

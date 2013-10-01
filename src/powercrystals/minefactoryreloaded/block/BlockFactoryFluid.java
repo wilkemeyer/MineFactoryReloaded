@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -41,9 +41,9 @@ public class BlockFactoryFluid extends BlockFluidClassic implements ILiquid, ICo
 			return;
 		}
 		
-		if(entity instanceof EntityPlayer || entity instanceof EntityMob && !((EntityLiving)entity).isEntityUndead())
+		if(entity instanceof EntityPlayer || entity instanceof EntityMob && !((EntityLivingBase)entity).isEntityUndead())
 		{
-			EntityLiving ent = (EntityLiving)entity;
+			EntityLivingBase ent = (EntityLivingBase)entity;
 			if(blockID == MineFactoryReloadedCore.sludgeLiquid.blockID)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));

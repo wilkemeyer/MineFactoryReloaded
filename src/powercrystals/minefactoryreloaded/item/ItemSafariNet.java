@@ -326,10 +326,15 @@ public class ItemSafariNet extends ItemFactory
 	@Override
 	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity)
 	{
-		return captureEntity(itemstack, entity);
+		return captureEntity(itemstack, entity, player);
 	}
 	
 	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity)
+	{
+		return captureEntity(itemstack, entity, null);
+	}
+	
+	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity, EntityPlayer player)
 	{
 		if(entity.worldObj.isRemote)
 		{
@@ -345,6 +350,7 @@ public class ItemSafariNet extends ItemFactory
 		}
 		else if(!(entity instanceof EntityPlayer))
 		{
+			boolean flag = player != null && player.capabilities.isCreativeMode;
 			NBTTagCompound c = new NBTTagCompound();
 			
 			entity.writeToNBT(c);
@@ -355,8 +361,9 @@ public class ItemSafariNet extends ItemFactory
 				c.setBoolean("PersistenceRequired", true);
 			}
 			
-			entity.setDead();
-			if(entity.isDead)
+			if (!flag)
+				entity.setDead();
+			if(flag | entity.isDead)
 			{
 				itemstack.setTagCompound(c);
 				return true;
@@ -371,7 +378,7 @@ public class ItemSafariNet extends ItemFactory
 	
 	public static boolean isEmpty(ItemStack s)
 	{
-		return s == null || (s.getItemDamage() == 0 && (s.getTagCompound() == null || !s.getTagCompound().hasKey("id")));
+		return s == null || (s.getItemDamage() == 0 && (s.getTagCompound() == null || (!s.getTagCompound().hasKey("id") && !s.getTagCompound().getBoolean("hide"))));
 	}
 	
 	public static boolean isSingleUse(ItemStack s)

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
 
 import cpw.mods.fml.common.ITickHandler;
@@ -18,9 +19,9 @@ import cpw.mods.fml.common.TickType;
 public class RenderTickHandler implements ITickHandler
 {
 	private static final ResourceLocation targetingBlue =
-			new ResourceLocation("minefactoryreloaded:hud/lockon_blue.png");
+			new ResourceLocation(MineFactoryReloadedCore.hudFolder + "lockon_blue.png");
 	private static final ResourceLocation targetingRed  =
-			new ResourceLocation("minefactoryreloaded:hud/lockon_red.png");
+			new ResourceLocation(MineFactoryReloadedCore.hudFolder + "lockon_red.png");
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData)
 	{

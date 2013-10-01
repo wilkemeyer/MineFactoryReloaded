@@ -24,7 +24,8 @@ public class ItemRocketLauncher extends ItemFactory
 	{
 		if(player.inventory.hasItem(MineFactoryReloadedCore.rocketItem.itemID))
 		{
-			player.inventory.consumeInventoryItem(MineFactoryReloadedCore.rocketItem.itemID);
+			if (!player.capabilities.isCreativeMode)
+				player.inventory.consumeInventoryItem(MineFactoryReloadedCore.rocketItem.itemID);
 			
 			if(world.isRemote)
 			{
