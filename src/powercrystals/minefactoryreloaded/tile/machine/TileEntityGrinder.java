@@ -49,10 +49,8 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	
 	static
 	{
-		ArrayList<String> q = new ArrayList<String>();
-		q.add("recentlyHit");
-		q.addAll(Arrays.asList(ObfuscationReflectionHelper.remapFieldNames("net.minecraft.entity.EntityLivingBase", "field_70718_bc")));
-		recentlyHit = ReflectionHelper.findField(EntityLivingBase.class, q.toArray(new String[q.size()]));
+		String[] q = ObfuscationReflectionHelper.remapFieldNames("net.minecraft.entity.EntityLivingBase", "field_70718_bc", "recentlyHit");
+		recentlyHit = ReflectionHelper.findField(EntityLivingBase.class, q);
 	}
 	
 	protected HarvestAreaManager _areaManager;
