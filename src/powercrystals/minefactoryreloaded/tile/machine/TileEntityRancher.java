@@ -6,12 +6,14 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
+import powercrystals.minefactoryreloaded.api.RanchedItem;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -27,13 +29,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileEntityRancher extends TileEntityFactoryPowered implements ITankContainerBucketable, IHarvestAreaContainer
 {
 	private HarvestAreaManager _areaManager;
-	private LiquidTank _tank;
+	
 	
 	public TileEntityRancher()
 	{
 		super(Machine.Rancher);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
-		_tank = new LiquidTank(4 * LiquidContainerRegistry.BUCKET_VOLUME);
+		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
 	}
 	
 	@Override
@@ -62,7 +64,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public ILiquidTank getTank()
+	public IFluidTank getTank()
 	{
 		return _tank;
 	}
@@ -106,19 +108,19 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 			if(MFRRegistry.getRanchables().containsKey(e.getClass()))
 			{
 				IFactoryRanchable r = MFRRegistry.getRanchables().get(e.getClass());
-				List<ItemStack> drops = r.ranch(worldObj, e, this);
+				List<RanchedItem> drops = r.ranch(worldObj, e, this);
 				if(drops != null)
 				{
-					for(ItemStack s : drops)
+					for(RanchedItem s : drops)
 					{
-						if(LiquidContainerRegistry.isLiquid(s))
+						if(s.hasFluid())
 						{
-							_tank.fill(new LiquidStack(s.itemID, LiquidContainerRegistry.BUCKET_VOLUME, s.getItemDamage()), true);
+							_tank.fill((FluidStack)s.getResult(), true);
 							didDrop = true;
 							continue;
 						}
 						
-						doDrop(s);
+						doDrop((ItemStack)s.getResult());
 						didDrop = true;
 					}
 					if(didDrop)
@@ -141,13 +143,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		return 0;
-	}
-	
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
@@ -159,25 +155,19 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
 		return _tank;
 	}
@@ -186,5 +176,17 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	public boolean canRotate()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 }

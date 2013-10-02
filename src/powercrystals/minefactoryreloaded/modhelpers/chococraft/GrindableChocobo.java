@@ -8,10 +8,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.api.IFactoryGrindable2;
+import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 
-public class GrindableChocobo implements IFactoryGrindable2
+public class GrindableChocobo implements IFactoryGrindable
 {
 	private final int _featherItem;
 	private final int _legItem;

@@ -9,11 +9,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.core.AutoEnchantmentHelper;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoEnchanter;
@@ -28,7 +29,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 {
 	private Random _rand;
 	private int _targetLevel;
-	private LiquidTank _tank;
+	
 	
 	public TileEntityAutoEnchanter()
 	{
@@ -36,7 +37,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		_rand = new Random();
 		
 		_targetLevel = 30;
-		_tank = new LiquidTank(4 * LiquidContainerRegistry.BUCKET_VOLUME);
+		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
 	}
 	
 	@Override
@@ -115,7 +116,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 	
 	@Override
-	public ILiquidTank getTank()
+	public IFluidTank getTank()
 	{
 		return _tank;
 	}
@@ -221,7 +222,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			}
 			return true;
 		}
-		else if(_tank.getLiquid() != null && _tank.getLiquid().amount >= 4)
+		else if(_tank.getFluid() != null && _tank.getFluid().amount >= 4)
 		{
 			_tank.drain(4, true);
 			setWorkDone(getWorkDone() + 1);
@@ -292,9 +293,9 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || (resource.itemID != LiquidDictionary.getCanonicalLiquid("mobEssence").itemID))
+		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
 		{
 			return 0;
 		}
@@ -303,36 +304,36 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 	
 	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		return fill(ForgeDirection.UNKNOWN, resource, doFill);
-	}
-	
-	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if(type != null && type.itemID == LiquidDictionary.getCanonicalLiquid("mobEssence").itemID)
+		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
 		{
 			return _tank;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 }

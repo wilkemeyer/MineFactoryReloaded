@@ -1,9 +1,12 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
+import net.minecraft.block.Block;
+import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.lwjgl.opengl.GL11;
 
@@ -31,13 +34,15 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 		fontRenderer.drawString("Template", 67, 27, 4210752);
 		fontRenderer.drawString("Output", 128, 26, 4210752);
 		
+		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		for(int i = 0; i < 9; i++)
 		{
-			LiquidStack l = _crafter.getTanks(ForgeDirection.UNKNOWN)[i].getLiquid();
+			FluidStack l = tanks[i].fluid;
 			if(l != null)
 			{
-				drawTank(-50 + (i % 3 * 18), 43 + (i / 3 * 35),  l.itemID, l.itemMeta, l.amount * 33 / _crafter.getTanks(ForgeDirection.UNKNOWN)[i].getCapacity());
+				drawTank(-50 + (i % 3 * 18), 43 + (i / 3 * 35),  l, l.amount * 33 / tanks[i].capacity);
 			}
 		}
 		
@@ -60,16 +65,17 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	}
 	
 	@Override
-	protected void drawTank(int xOffset, int yOffset, int liquidId, int liquidMeta, int level)
+	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level)
 	{
-		LiquidStack stack = LiquidDictionary.getCanonicalLiquid(new LiquidStack(liquidId, 1, liquidMeta));
-		
-		if(liquidId <= 0 || stack == null)
-		{
-			return;
-		}
+		if (stack == null) return;
+		Fluid fluid = stack.getFluid();
+		if(fluid == null) return;
 		
 		int vertOffset = 0;
+		
+		Icon icon = fluid.getIcon(stack);
+		if (icon == null)
+			icon = Block.lavaMoving.getIcon(0, 0);
 		
 		while(level > 0)
 		{
@@ -85,9 +91,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 				texHeight = level;
 				level = 0;
 			}
-			
-			mc.renderEngine.bindTexture(new ResourceLocation(stack.getTextureSheet()));
-			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, stack.getRenderingIcon(), 16, texHeight);
+
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
+			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
 		

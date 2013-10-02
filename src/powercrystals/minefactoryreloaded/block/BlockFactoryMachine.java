@@ -6,7 +6,6 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,8 +22,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.IFluidTank;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
@@ -32,7 +32,6 @@ import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -250,15 +249,15 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		if (te instanceof TileEntityFactoryInventory)
 		{
 			TileEntityFactoryInventory inv = (TileEntityFactoryInventory)te;
-			ILiquidTank tank = inv.getTank();
+			IFluidTank tank = inv.getTank();
 			float tankPercent = 0, invPercent = 0;
 			boolean hasTank = false, hasInventory = false;
 			if (tank != null)
 			{
 				hasTank = true;
-				if (tank.getLiquid() != null)
+				if (tank.getFluid() != null)
 				{
-					tankPercent = ((float)tank.getLiquid().amount) / tank.getCapacity();
+					tankPercent = ((float)tank.getFluid().amount) / tank.getCapacity();
 				}
 			}
 			int[] accSlots = inv.getAccessibleSlotsFromSide(side);
@@ -287,27 +286,34 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		{
 			return false;
 		}
-		if(te instanceof ITankContainerBucketable && LiquidContainerRegistry.isEmptyContainer(entityplayer.inventory.getCurrentItem()) && ((ITankContainerBucketable)te).allowBucketDrain())
+		ItemStack ci = entityplayer.inventory.getCurrentItem();
+		if(te instanceof ITankContainerBucketable &&
+				((ITankContainerBucketable)te).allowBucketDrain() && 
+				(FluidContainerRegistry.isEmptyContainer(ci) ||
+						(ci != null && ci.getItem() instanceof IFluidContainerItem)))
 		{
 			if(MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
 			{
 				return true;
 			}
 		}
-		else if(te instanceof ITankContainerBucketable && LiquidContainerRegistry.isFilledContainer(entityplayer.inventory.getCurrentItem()) && ((ITankContainerBucketable)te).allowBucketFill())
+		else if(te instanceof ITankContainerBucketable &&
+				((ITankContainerBucketable)te).allowBucketFill() && 
+				(FluidContainerRegistry.isFilledContainer(ci) ||
+						(ci != null && ci.getItem() instanceof IFluidContainerItem)))
 		{
 			if(MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
 			{
 				return true;
 			}
-		}
+		}/*
 		if(MFRUtil.isHoldingHammer(entityplayer) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			((TileEntityFactory)te).rotate();
 			world.markBlockForUpdate(x, y, z);
 			return true;
-		}
-		else if(te instanceof TileEntityFactory && ((TileEntityFactory)te).getContainer(entityplayer.inventory) != null)
+		} else //*/ 
+		if(te instanceof TileEntityFactory && ((TileEntityFactory)te).getContainer(entityplayer.inventory) != null)
 		{
 			if(!world.isRemote)
 			{

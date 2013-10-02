@@ -1,9 +1,11 @@
 package powercrystals.minefactoryreloaded.net;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
@@ -25,14 +27,23 @@ public class ClientProxy implements IMFRProxy
 	@ForgeSubscribe
 	public void onPostTextureStitch(TextureStitchEvent.Post e)
 	{
-		LiquidDictionary.getCanonicalLiquid("milk").setRenderingIcon(MineFactoryReloadedCore.milkLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("sludge").setRenderingIcon(MineFactoryReloadedCore.sludgeLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("sewage").setRenderingIcon(MineFactoryReloadedCore.sewageLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("mobEssence").setRenderingIcon(MineFactoryReloadedCore.essenceLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("biofuel").setRenderingIcon(MineFactoryReloadedCore.biofuelLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("meat").setRenderingIcon(MineFactoryReloadedCore.meatLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("pinkslime").setRenderingIcon(MineFactoryReloadedCore.pinkSlimeLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("chocolatemilk").setRenderingIcon(MineFactoryReloadedCore.chocolateMilkLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
-		LiquidDictionary.getCanonicalLiquid("mushroomsoup").setRenderingIcon(MineFactoryReloadedCore.mushroomSoupLiquid.getBlockTextureFromSide(1)).setTextureSheet("/terrain.png");
+		setIcons("milk", MineFactoryReloadedCore.milkLiquid);
+		setIcons("sludge", MineFactoryReloadedCore.sludgeLiquid);
+		setIcons("sewage", MineFactoryReloadedCore.sewageLiquid);
+		setIcons("mobEssence", MineFactoryReloadedCore.essenceLiquid);
+		setIcons("biofuel", MineFactoryReloadedCore.biofuelLiquid);
+		setIcons("meat", MineFactoryReloadedCore.meatLiquid);
+		setIcons("pinkslime", MineFactoryReloadedCore.pinkSlimeLiquid);
+		setIcons("chocolatemilk", MineFactoryReloadedCore.chocolateMilkLiquid);
+		setIcons("mushroomsoup", MineFactoryReloadedCore.mushroomSoupLiquid);
+	}
+	
+	private void setIcons(String name, Block block)
+	{
+		Fluid fluid = FluidRegistry.getFluid(name);
+		if (fluid.getBlockID() == block.blockID)
+		{
+			fluid.setIcons(block.getBlockTextureFromSide(1), block.getBlockTextureFromSide(2));
+		}
 	}
 }

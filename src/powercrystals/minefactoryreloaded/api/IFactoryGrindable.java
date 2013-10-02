@@ -11,7 +11,7 @@ import net.minecraft.world.World;
  *
  * Defines a grindable entity for the Grinder.
  */
-@Deprecated
+@SuppressWarnings("deprecation")
 public interface IFactoryGrindable
 {
 	/**
@@ -28,4 +28,9 @@ public interface IFactoryGrindable
 	 */
 	public List<MobDrop> grind(World world, EntityLiving entity, Random random);
 
+	/**
+	 * @param entity The entity instance being ground.
+	 * @return Whether this entity has been fully processed or not.
+	 */
+	public boolean processEntity(EntityLiving entity);
 }

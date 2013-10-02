@@ -10,10 +10,10 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.api.IFactoryGrindable2;
+import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 
-public class GrindableSlime implements IFactoryGrindable2
+public class GrindableSlime implements IFactoryGrindable
 {
 	protected Class<?> grindable;
 	protected ArrayList<MobDrop> drops;

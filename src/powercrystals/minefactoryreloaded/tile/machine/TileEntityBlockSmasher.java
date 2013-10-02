@@ -11,11 +11,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiBlockSmasher;
@@ -29,8 +30,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	private LiquidTank _tank;
-	
 	private int _fortune = 0;
 	
 	private ItemStack _lastInput;
@@ -42,7 +41,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	public TileEntityBlockSmasher()
 	{
 		super(Machine.BlockSmasher);
-		_tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 4);
+		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 	}
 	
 	@Override
@@ -95,7 +94,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			setWorkDone(0);
 			return false;
 		}
-		if(_shouldWork & _fortune > 0 && (_tank.getLiquid() == null || _tank.getLiquid().amount < _fortune))
+		if(_shouldWork & _fortune > 0 && (_tank.getFluid() == null || _tank.getFluid().amount < _fortune))
 		{
 			return false;
 		}
@@ -236,9 +235,9 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || (resource.itemID != LiquidDictionary.getCanonicalLiquid("mobEssence").itemID))
+		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
 		{
 			return 0;
 		}
@@ -247,33 +246,21 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		return fill(ForgeDirection.UNKNOWN, resource, doFill);
-	}
-	
-	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if(type != null && type.itemID == LiquidDictionary.getCanonicalLiquid("mobEssence").itemID)
+		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
 		{
 			return _tank;
 		}
@@ -281,7 +268,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public ILiquidTank getTank()
+	public IFluidTank getTank()
 	{
 		return _tank;
 	}
@@ -334,5 +321,17 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 				_lastOutput = drops;
 			}
 		}
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 }

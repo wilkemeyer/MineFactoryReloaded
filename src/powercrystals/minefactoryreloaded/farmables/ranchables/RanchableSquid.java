@@ -7,9 +7,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
+import powercrystals.minefactoryreloaded.api.RanchedItem;
 
 public class RanchableSquid implements IFactoryRanchable
 {
@@ -20,10 +20,10 @@ public class RanchableSquid implements IFactoryRanchable
 	}
 	
 	@Override
-	public List<ItemStack> ranch(World world, EntityLiving entity, IInventory rancher)
+	public List<RanchedItem> ranch(World world, EntityLiving entity, IInventory rancher)
 	{
-		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(new ItemStack(Item.dyePowder, 1, 0));
+		List<RanchedItem> drops = new ArrayList<RanchedItem>();
+		drops.add(new RanchedItem(Item.dyePowder, 1, 0));
 		return drops;
 	}
 	

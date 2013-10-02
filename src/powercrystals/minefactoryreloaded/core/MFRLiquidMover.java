@@ -4,10 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -23,7 +25,7 @@ public abstract class MFRLiquidMover
 	public static boolean manuallyFillTank(ITankContainerBucketable itcb, EntityPlayer entityplayer)
 	{
 		ItemStack ci = entityplayer.inventory.getCurrentItem();
-		LiquidStack liquid = LiquidContainerRegistry.getLiquidForFilledItem(ci);
+		FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(ci);
 		if(liquid != null)
 		{
 			if(itcb.fill(ForgeDirection.UNKNOWN, liquid, false) == liquid.amount)
@@ -34,6 +36,15 @@ public abstract class MFRLiquidMover
 					entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, UtilInventory.consumeItem(ci));					
 				}
 				return true;
+			}
+		}
+		else if (ci != null && ci.getItem() instanceof IFluidContainerItem)
+		{
+			IFluidContainerItem fluidContainer = (IFluidContainerItem)ci.getItem();
+			liquid = fluidContainer.getFluid(ci);
+			if (itcb.fill(ForgeDirection.UNKNOWN, liquid, false) > 0) {
+				int amount = itcb.fill(ForgeDirection.UNKNOWN, liquid, true);
+				fluidContainer.drain(ci, amount, true);
 			}
 		}
 		return false;
@@ -48,31 +59,50 @@ public abstract class MFRLiquidMover
 	public static boolean manuallyDrainTank(ITankContainerBucketable itcb, EntityPlayer entityplayer)
 	{
 		ItemStack ci = entityplayer.inventory.getCurrentItem();
-		if(LiquidContainerRegistry.isEmptyContainer(ci))
+		boolean isSmartContainer = false;
+		IFluidContainerItem fluidContainer;
+		if(ci!= null && (FluidContainerRegistry.isEmptyContainer(ci) ||
+				(isSmartContainer = ci.getItem() instanceof IFluidContainerItem)))
 		{
-			for(ILiquidTank tank : itcb.getTanks(ForgeDirection.UNKNOWN))
+			for(FluidTankInfo tank : itcb.getTankInfo(ForgeDirection.UNKNOWN))
 			{
-				LiquidStack tankLiquid = tank.getLiquid();
-				ItemStack filledBucket = LiquidContainerRegistry.fillLiquidContainer(tankLiquid, ci);
-				if(LiquidContainerRegistry.isFilledContainer(filledBucket))
+				FluidStack tankLiquid = tank.fluid;
+				if (tankLiquid == null || tankLiquid.amount == 0)
+					continue;
+				if (isSmartContainer)
 				{
-					LiquidStack bucketLiquid = LiquidContainerRegistry.getLiquidForFilledItem(filledBucket);
-					if(entityplayer.capabilities.isCreativeMode)
-					{
-						tank.drain(bucketLiquid.amount, true);
-						return true;
+					fluidContainer = (IFluidContainerItem)ci.getItem();
+					if (fluidContainer.fill(ci, tankLiquid, false) > 0) {
+						int amount = fluidContainer.fill(ci, tankLiquid, true);
+						itcb.drain(ForgeDirection.UNKNOWN, new FluidStack(tankLiquid.fluidID, amount), true);
 					}
-					else if(ci.stackSize == 1)
+				}
+				else
+				{
+					ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(tankLiquid, ci);
+					if(FluidContainerRegistry.isFilledContainer(filledBucket))
 					{
-						tank.drain(bucketLiquid.amount, true);
-						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, filledBucket);
-						return true;
-					}
-					else if(entityplayer.inventory.addItemStackToInventory(filledBucket))
-					{
-						tank.drain(bucketLiquid.amount, true);
-						ci.stackSize -= 1;
-						return true;
+						FluidStack bucketLiquid = FluidContainerRegistry.getFluidForFilledItem(filledBucket);
+						itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, true);
+						if(entityplayer.capabilities.isCreativeMode)
+						{
+							return true;
+						}
+						else if(ci.stackSize <= 1)
+						{
+							entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, filledBucket);
+							return true;
+						}
+						else 
+						{
+							ci.stackSize -= 1;
+							if(!entityplayer.inventory.addItemStackToInventory(filledBucket))
+							{
+								// TODO: config option, continue loop if false
+								entityplayer.dropPlayerItem(filledBucket);
+							}
+							return true;
+						}
 					}
 				}
 				
@@ -81,19 +111,19 @@ public abstract class MFRLiquidMover
 		return false;
 	}
 	
-	public static void pumpLiquid(ILiquidTank tank, TileEntityFactory from)
+	public static void pumpLiquid(IFluidTank iFluidTank, TileEntityFactory from)
 	{
-		if(tank != null && tank.getLiquid() != null && tank.getLiquid().amount > 0)
+		if(iFluidTank != null && iFluidTank.getFluid() != null && iFluidTank.getFluid().amount > 0)
 		{
-			LiquidStack l = tank.getLiquid().copy();
-			l.amount = Math.min(l.amount, LiquidContainerRegistry.BUCKET_VOLUME);
+			FluidStack l = iFluidTank.getFluid().copy();
+			l.amount = Math.min(l.amount, FluidContainerRegistry.BUCKET_VOLUME);
 			for(BlockPosition adj : new BlockPosition(from).getAdjacent(true))
 			{
 				TileEntity tile = from.worldObj.getBlockTileEntity(adj.x, adj.y, adj.z);
-				if(tile instanceof ITankContainer)
+				if(tile instanceof IFluidHandler)
 				{
-					int filled = ((ITankContainer)tile).fill(adj.orientation.getOpposite(), l, true);
-					tank.drain(filled, true);
+					int filled = ((IFluidHandler)tile).fill(adj.orientation.getOpposite(), l, true);
+					iFluidTank.drain(filled, true);
 					l.amount -= filled;
 					if(l.amount <= 0)
 					{

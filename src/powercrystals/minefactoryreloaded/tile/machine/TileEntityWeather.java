@@ -6,10 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -21,13 +22,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityWeather extends TileEntityFactoryPowered implements ITankContainerBucketable
-{	
-	private LiquidTank _tank;
+{
 	
 	public TileEntityWeather()
 	{
 		super(Machine.WeatherCollector);
-		_tank = new LiquidTank(4 * LiquidContainerRegistry.BUCKET_VOLUME);
+		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 	}
 	
 	@Override
@@ -47,12 +47,6 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFactoryPowered(this, inventoryPlayer);
-	}
-	
-	@Override
-	public ILiquidTank getTank()
-	{
-		return _tank;
 	}
 	
 	@Override
@@ -92,7 +86,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 			{
 				if(bgb.getFloatTemperature() >= 0.15F)
 				{
-					if(_tank.fill(new LiquidStack(Block.waterStill.blockID, LiquidContainerRegistry.BUCKET_VOLUME), true) > 0)
+					if(_tank.fill(FluidRegistry.getFluidStack("water", FluidContainerRegistry.BUCKET_VOLUME), true) > 0)
 					{
 						setWorkDone(0);
 						return true;
@@ -135,13 +129,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		return 0;
-	}
-	
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
@@ -153,27 +141,14 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
-	
+
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
 		return null;
-	}
-	
-	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		return _tank;
 	}
 	
 	@Override
@@ -186,5 +161,15 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	public boolean manageSolids()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return false;
 	}
 }

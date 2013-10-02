@@ -6,8 +6,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,14 +18,15 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.api.IFactoryGrindable2;
+import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
@@ -54,7 +53,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	protected HarvestAreaManager _areaManager;
-	protected LiquidTank _tank;
+	protected FluidTank _tank;
 	protected Random _rand;
 	protected IGrindingWorld _grindingWorld;
 	protected GrindingDamage _damageSource;
@@ -63,7 +62,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	{
 		super(machine);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
-		_tank = new LiquidTank(4 * LiquidContainerRegistry.BUCKET_VOLUME);
+		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
 		_rand = new Random();
 	}
 	
@@ -133,7 +132,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public ILiquidTank getTank()
+	public IFluidTank getTank()
 	{
 		return _tank;
 	}
@@ -160,30 +159,22 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			boolean processMob = false;
 			processEntity:
 			{
-				if(MFRRegistry.getGrindables27().containsKey(e.getClass()))
+				if(MFRRegistry.getGrindables().containsKey(e.getClass()))
 				{
-					IFactoryGrindable2 r = MFRRegistry.getGrindables27().get(e.getClass());
+					IFactoryGrindable r = MFRRegistry.getGrindables().get(e.getClass());
 					List<MobDrop> drops = r.grind(e.worldObj, e, getRandom());
 					if(drops != null && drops.size() > 0 && WeightedRandom.getTotalWeight(drops) > 0)
 					{
 						ItemStack drop = ((MobDrop)WeightedRandom.getRandomItem(_rand, drops)).getStack();
 						doDrop(drop);
 					}
-					if(r instanceof IFactoryGrindable2)
-					{
-						if(((IFactoryGrindable2)r).processEntity(e))
-						{
-							processMob = true;
-							if(e.getHealth() <= 0)
-							{
-								continue entityList;
-							}
-							break processEntity;
-						}
-					}
-					else
+					if(r.processEntity(e))
 					{
 						processMob = true;
+						if(e.getHealth() <= 0)
+						{
+							continue entityList;
+						}
 						break processEntity;
 					}
 				}
@@ -207,7 +198,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 					damageEntity(e);
 					if(e.getHealth() <= 0)
 					{
-						_tank.fill(LiquidDictionary.getLiquid("mobEssence", 100), true);
+						_tank.fill(FluidRegistry.getFluidStack("mobEssence", 100), true);
 					}
 				}
 				finally
@@ -220,7 +211,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				_tank.fill(LiquidDictionary.getLiquid("mobEssence", 100), true);
+				_tank.fill(FluidRegistry.getFluidStack("mobEssence", 100), true);
 				setIdleTicks(20);
 			}
 			else
@@ -257,13 +248,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		return 0;
-	}
-	
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
@@ -275,25 +260,19 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
 		return _tank;
 	}
@@ -308,5 +287,17 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	public boolean canRotate()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 }

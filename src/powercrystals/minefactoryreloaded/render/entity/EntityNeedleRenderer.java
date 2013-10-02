@@ -14,7 +14,7 @@ import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 @SideOnly(Side.CLIENT)
 public class EntityNeedleRenderer extends Render
 {
-	private static final ResourceLocation needle = new ResourceLocation("/item/arrows.png");
+	private static final ResourceLocation needle = new ResourceLocation("textures/item/arrows.png");
 	public void renderNeedle(EntityNeedle needle, double par2, double par4, double par6, float par8, float par9)
 	{
 		GL11.glPushMatrix();

@@ -3,12 +3,13 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -18,14 +19,14 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityMeatPacker extends TileEntityFactoryPowered implements ITankContainer
+public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IFluidHandler
 {
-	private LiquidTank _tank;
+	
 	
 	public TileEntityMeatPacker()
 	{
 		super(Machine.MeatPacker);
-		_tank = new LiquidTank(4 * LiquidContainerRegistry.BUCKET_VOLUME);
+		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
 	}
 	
 	@Override
@@ -56,14 +57,14 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IT
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_tank.getLiquid() != null && _tank.getLiquid().amount >= 2)
+		if(_tank.getFluid() != null && _tank.getFluid().amount >= 2)
 		{
 			setWorkDone(getWorkDone() + 1);
 			
 			if(getWorkDone() >= getWorkMax())
 			{
 				ItemStack item;
-				if(_tank.getLiquid().itemID == LiquidDictionary.getCanonicalLiquid("meat").itemID)
+				if(_tank.getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
 				{
 					item = new ItemStack(MineFactoryReloadedCore.meatIngotRawItem);
 				}
@@ -107,15 +108,16 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IT
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || (resource.itemID != LiquidDictionary.getCanonicalLiquid("meat").itemID && resource.itemID != LiquidDictionary.getCanonicalLiquid("pinkslime").itemID))
+		if(resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
+				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1))))
 		{
 			return 0;
 		}
 		else
 		{
-			if(_tank.getLiquid() != null && _tank.getLiquid().amount == 1)
+			if(_tank.getFluid() != null && _tank.getFluid().amount == 1)
 			{
 				_tank.drain(1, true);
 			}
@@ -124,39 +126,22 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IT
 	}
 	
 	@Override
-	public ILiquidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
-		return fill(ForgeDirection.UNKNOWN, resource, doFill);
-	}
-	
-	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction) 
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if(type != null && type.itemID == LiquidDictionary.getCanonicalLiquid("sewage").itemID)
+		if(type != null && (type.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
+				type.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1))))
 		{
 			return _tank;
 		}
@@ -168,5 +153,17 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IT
 	public boolean manageSolids()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 }

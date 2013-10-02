@@ -1,10 +1,10 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -13,14 +13,12 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	private int _liquidId;
 	private int _liquidFabPerTick;
 	
-	private LiquidTank _tank;
-	
 	protected TileEntityLiquidFabricator(int liquidId, int liquidFabPerTick, Machine machine)
 	{
 		super(machine, machine.getActivationEnergyMJ() * liquidFabPerTick);
 		_liquidId = liquidId;
 		_liquidFabPerTick = liquidFabPerTick;
-		_tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
+		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	}
 	
 	@Override
@@ -32,12 +30,12 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 			return false;
 		}
 		
-		if(_tank.getLiquid() != null && _tank.getCapacity() - _tank.getLiquid().amount < _liquidFabPerTick)
+		if(_tank.getFluid() != null && _tank.getCapacity() - _tank.getFluid().amount < _liquidFabPerTick)
 		{
 			return false;
 		}
 		
-		_tank.fill(new LiquidStack(_liquidId, _liquidFabPerTick), true);
+		_tank.fill(new FluidStack(_liquidId, _liquidFabPerTick), true);
 		
 		return true;
 	}
@@ -61,12 +59,6 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 	
 	@Override
-	public ILiquidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	protected boolean shouldPumpLiquid()
 	{
 		return true;
@@ -79,13 +71,7 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
-	{
-		return 0;
-	}
-	
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
@@ -97,26 +83,26 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 	
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
-	
+
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
-	
+
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
+	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return new ILiquidTank[] { _tank };
+		return false;
 	}
-	
+
 	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return _tank;
+		return false;
 	}
 }

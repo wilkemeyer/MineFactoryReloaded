@@ -5,12 +5,11 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -66,10 +65,10 @@ public class GuiFactoryInventory extends GuiContainer
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		if(_tileEntity.getTank() != null && _tileEntity.getTank().getLiquid() != null)
+		if(_tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null)
 		{
-			int tankSize = _tileEntity.getTank().getLiquid().amount * _tankSizeMax / _tileEntity.getTank().getCapacity();
-			drawTank(122, 75, _tileEntity.getTank().getLiquid().itemID, _tileEntity.getTank().getLiquid().itemMeta, tankSize);
+			int tankSize = _tileEntity.getTank().getFluid().amount * _tankSizeMax / _tileEntity.getTank().getCapacity();
+			drawTank(122, 75, _tileEntity.getTank().getFluid(), tankSize);
 		}
 	}
 	
@@ -93,10 +92,10 @@ public class GuiFactoryInventory extends GuiContainer
 	
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		if(isPointInRegion(122, 15, 16, 60, mouseX, mouseY) && _tileEntity.getTank() != null && _tileEntity.getTank().getLiquid() != null && _tileEntity.getTank().getLiquid().amount > 0)
+		if(isPointInRegion(122, 15, 16, 60, mouseX, mouseY) && _tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null && _tileEntity.getTank().getFluid().amount > 0)
 		{
-			drawBarTooltip(_tileEntity.getTank().getLiquid().asItemStack().getDisplayName(),
-					"mB", _tileEntity.getTank().getLiquid().amount, _tileEntity.getTank().getCapacity(), mouseX, mouseY);
+			drawBarTooltip(_tileEntity.getTank().getFluid().getFluid().getLocalizedName(),
+					"mB", _tileEntity.getTank().getFluid().amount, _tileEntity.getTank().getCapacity(), mouseX, mouseY);
 		}
 	}
 	
@@ -108,28 +107,15 @@ public class GuiFactoryInventory extends GuiContainer
 		drawRect(xOffset, yOffset - size, xOffset + 8, yOffset, color);
 	}
 	
-	protected void drawTank(int xOffset, int yOffset, int liquidId, int liquidMeta, int level)
+	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level)
 	{
-		LiquidStack stack = LiquidDictionary.getCanonicalLiquid(new LiquidStack(liquidId, 1, liquidMeta));
+		if (stack == null) return;
+		Fluid fluid = stack.getFluid();
+		if(fluid == null) return;
 		
-		if(liquidId <= 0 || stack == null)
-		{
-			return;
-		}
-		
-		ItemStack itemStack = stack.asItemStack();
-		
-		Icon icon = stack.getRenderingIcon();
+		Icon icon = fluid.getIcon(stack);
 		if (icon == null)
-		{
-			try
-			{
-				icon = itemStack.getIconIndex();
-			}
-			catch (Throwable _) {}
-			if (icon == null)
-				icon = Block.lavaMoving.getIcon(0, 0);
-		}
+			icon = Block.lavaMoving.getIcon(0, 0);
 		
 		int vertOffset = 0;
 		
@@ -148,7 +134,7 @@ public class GuiFactoryInventory extends GuiContainer
 				level = 0;
 			}
 			
-			mc.renderEngine.bindTexture(new ResourceLocation(stack.getTextureSheet()));
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
 			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}

@@ -2,18 +2,16 @@ package powercrystals.minefactoryreloaded.tile.base;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.StringTranslate;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidTank;
 import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
@@ -28,6 +26,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	protected String _invName;
 	protected boolean _hasInvName = false;
+	
+	protected FluidTank _tank;
 	
 	protected TileEntityFactoryInventory(Machine machine)
 	{
@@ -65,9 +65,20 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 	}
 	
-	public ILiquidTank getTank()
+	public IFluidTank getTank()
 	{
-		return null;
+		return _tank;
+	}
+	
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	{
+		return _tank;
+	}
+	
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		if (_tank == null)
+			return new FluidTankInfo[] {};
+		return new FluidTankInfo[] { _tank.getInfo() };
 	}
 	
 	protected boolean shouldPumpLiquid()
@@ -197,13 +208,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		onFactoryInventoryChanged();
 		
-		boolean foundLiquid = false;
-		ILiquidTank tank = getTank();
+		IFluidTank tank = getTank();
 		
 		int tankAmount = nbttagcompound.getInteger("tankAmount");
 		if (tank != null && nbttagcompound.hasKey("tankFluidName"))
 		{
-			LiquidStack fluid = LiquidDictionary.getLiquid(nbttagcompound.getString("tankFluidName"), tankAmount);
+			FluidStack fluid = FluidRegistry.getFluidStack(nbttagcompound.getString("tankFluidName"), tankAmount);
 			if (fluid != null)
 			{
 				if(fluid.amount > tank.getCapacity())
@@ -211,24 +221,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 					fluid.amount = tank.getCapacity();
 				}
 				
-				((LiquidTank)tank).setLiquid(fluid);
-				
-				foundLiquid = true;
-			}
-		}
-		if (!foundLiquid)
-		{
-			int tankItemId = nbttagcompound.getInteger("tankItemId");
-			int tankItemMeta = nbttagcompound.getInteger("tankItemMeta");
-			
-			if(tank != null && Item.itemsList[tankItemId] != null && LiquidContainerRegistry.isLiquid(new ItemStack(tankItemId, 1, tankItemMeta)))
-			{
-				((LiquidTank)tank).setLiquid(new LiquidStack(tankItemId, tankAmount, tankItemMeta));
-				
-				if(tank.getLiquid() != null && tank.getLiquid().amount > tank.getCapacity())
-				{
-					tank.getLiquid().amount = tank.getCapacity();
-				}
+				((FluidTank)tank).setFluid(fluid);
 			}
 		}
 		
@@ -265,17 +258,15 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
-		if(getTank() != null && getTank().getLiquid() != null)
+		if(getTank() != null && getTank().getFluid() != null)
 		{
-			LiquidStack fluid = getTank().getLiquid();
+			FluidStack fluid = getTank().getFluid();
 			nbttagcompound.setInteger("tankAmount", fluid.amount);
-			String name = LiquidDictionary.findLiquidName(fluid);
+			String name = FluidRegistry.getFluidName(fluid.fluidID);
 			if (name != null)
 			{
 				nbttagcompound.setString("tankFluidName", name);
 			}
-			nbttagcompound.setInteger("tankItemId", getTank().getLiquid().itemID);
-			nbttagcompound.setInteger("tankMeta", getTank().getLiquid().itemMeta);
 		}
 		
 		if (this.isInvNameLocalized())

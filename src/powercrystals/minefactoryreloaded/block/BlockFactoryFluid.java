@@ -12,7 +12,11 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquid;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidBlock;
 import powercrystals.core.block.BlockFluidClassic;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
@@ -20,10 +24,11 @@ import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFactoryFluid extends BlockFluidClassic implements ILiquid, IConnectableRedNet
+public class BlockFactoryFluid extends BlockFluidClassic implements IFluidBlock, IConnectableRedNet
 {
 	private Icon _iconFlowing;
 	private Icon _iconStill;
+	protected String fluidName;
 	
 	public BlockFactoryFluid(int id, String liquidName)
 	{
@@ -31,6 +36,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements ILiquid, ICo
 		setUnlocalizedName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
+		fluidName = liquidName;
 	}
 	
 	@Override
@@ -98,24 +104,6 @@ public class BlockFactoryFluid extends BlockFluidClassic implements ILiquid, ICo
 		return 1;
 	}
 	
-	@Override
-	public int stillLiquidId()
-	{
-		return blockID;
-	}
-	
-	@Override
-	public boolean isMetaSensitive()
-	{
-		return false;
-	}
-	
-	@Override
-	public int stillLiquidMeta()
-	{
-		return 0;
-	}
-	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister ir)
@@ -156,5 +144,20 @@ public class BlockFactoryFluid extends BlockFluidClassic implements ILiquid, ICo
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
+	}
+
+	@Override
+	public Fluid getFluid() {
+		return FluidRegistry.getFluid(fluidName);
+	}
+
+	@Override
+	public FluidStack drain(World world, int x, int y, int z, boolean doDrain) {
+		return FluidRegistry.getFluidStack(fluidName, FluidContainerRegistry.BUCKET_VOLUME);
+	}
+
+	@Override
+	public boolean canDrain(World world, int x, int y, int z) {
+		return true; // TODO: test IFluidBlock drain
 	}
 }

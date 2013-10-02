@@ -9,11 +9,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -26,7 +27,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	private LiquidTank _tank;
 	
 	private int maximumCost;
 	private int stackSizeToBeUsedInRepair;
@@ -36,7 +36,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	public TileEntityAutoAnvil()
 	{
 		super(Machine.AutoAnvil);
-		_tank = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME * 4);
+		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		}
 		else
 		{
-			if(_tank.getLiquid() == null || _tank.getLiquid().amount < 4)
+			if(_tank.getFluid() == null || _tank.getFluid().amount < 4)
 			{
 				return false;
 			}
@@ -372,59 +372,48 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public ILiquidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	public boolean allowBucketFill()
 	{
 		return true;
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack type, boolean doFill)
 	{
-		if(resource == null || (resource.itemID != LiquidDictionary.getCanonicalLiquid("mobEssence").itemID))
-		{
-			return 0;
-		}
-		
-		return _tank.fill(resource, doFill);
+		if(type != null && FluidRegistry.getFluid("mobEssence").equals(type.getFluid()))
+			return _tank.fill(type, doFill);
+		return 0;
 	}
 	
 	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return fill(ForgeDirection.UNKNOWN, resource, doFill);
+		return null;
 	}
-	
+
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		return null;
-	}
-	
-	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { _tank };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if(type != null && type.itemID == LiquidDictionary.getCanonicalLiquid("mobEssence").itemID)
+		if(type != null && FluidRegistry.getFluid("mobEssence").equals(type.getFluid()))
 		{
 			return _tank;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return false;
 	}
 }

@@ -4,11 +4,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquidRouter;
@@ -18,12 +19,12 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityLiquidRouter extends TileEntityFactoryInventory implements ITankContainer
+public class TileEntityLiquidRouter extends TileEntityFactoryInventory implements IFluidHandler
 {
 	private static final ForgeDirection[] _outputDirections = new ForgeDirection[]
 			{ ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
 	
-	protected LiquidTank[] _bufferTanks = new LiquidTank[6];
+	protected FluidTank[] _bufferTanks = new FluidTank[6];
 	protected boolean[] _filledDirection = new boolean[_bufferTanks.length];
 	
 	public TileEntityLiquidRouter()
@@ -31,8 +32,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		super(Machine.LiquidRouter);
 		for(int i = 0; i < 6; i++)
 		{
-			_bufferTanks[i] = new LiquidTank(LiquidContainerRegistry.BUCKET_VOLUME);
-			_bufferTanks[i].setTankPressure(-1);
+			_bufferTanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 			_filledDirection[i] = false;
 		}
 	}
@@ -44,16 +44,16 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		for(int i = 0; i < 6; i++)
 		{
 			_filledDirection[i] = false;
-			if(_bufferTanks[i].getLiquid() != null && _bufferTanks[i].getLiquid().amount > 0)
+			if(_bufferTanks[i].getFluid() != null && _bufferTanks[i].getFluid().amount > 0)
 			{
-				_bufferTanks[i].getLiquid().amount -= pumpLiquid(_bufferTanks[i].getLiquid(), true);
+				_bufferTanks[i].getFluid().amount -= pumpLiquid(_bufferTanks[i].getFluid(), true);
 			}
 		}
 	}
 	
-	private int pumpLiquid(LiquidStack resource, boolean doFill)
+	private int pumpLiquid(FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.itemID <= 0 || resource.amount <= 0) return 0;
+		if(resource == null || resource.amount <= 0) return 0;
 		
 		int amountRemaining = resource.amount;
 		int[] routes = getRoutesForLiquid(resource);
@@ -71,7 +71,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		return resource.amount - amountRemaining;
 	}
 	
-	private int weightedRouteLiquid(LiquidStack resource, int[] routes, int amountRemaining, boolean doFill)
+	private int weightedRouteLiquid(FluidStack resource, int[] routes, int amountRemaining, boolean doFill)
 	{
 		if(amountRemaining >= totalWeight(routes))
 		{
@@ -80,9 +80,9 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			{
 				TileEntity te = BlockPosition.getAdjacentTileEntity(this, _outputDirections[i]);
 				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
-				if(te instanceof ITankContainer && amountForThisRoute > 0)
+				if(te instanceof IFluidHandler && amountForThisRoute > 0)
 				{
-					amountRemaining -= ((ITankContainer)te).fill(_outputDirections[i].getOpposite(),	new LiquidStack(resource.itemID, amountForThisRoute, resource.itemMeta), doFill);
+					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),	new FluidStack(resource.fluidID, amountForThisRoute), doFill);
 					if(amountRemaining <= 0)
 					{
 						break;
@@ -95,9 +95,9 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		{
 			int outdir = weightedRandomSide(routes);
 			TileEntity te = BlockPosition.getAdjacentTileEntity(this, _outputDirections[outdir]);
-			if(te instanceof ITankContainer)
+			if(te instanceof IFluidHandler)
 			{
-				amountRemaining -= ((ITankContainer)te).fill(_outputDirections[outdir].getOpposite(),	new LiquidStack(resource.itemID, amountRemaining, resource.itemMeta), doFill);
+				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(), new FluidStack(resource.fluidID, amountRemaining), doFill);
 			}
 		}
 		
@@ -140,13 +140,13 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	}
 	
 	
-	private int[] getRoutesForLiquid(LiquidStack resource)
+	private int[] getRoutesForLiquid(FluidStack resource)
 	{
 		int[] routeWeights = new int[6];
 		
 		for(int i = 0; i < 6; i++)
 		{
-			if(LiquidContainerRegistry.containsLiquid(_inventory[i], resource))
+			if(FluidContainerRegistry.containsFluid(_inventory[i], resource))
 			{
 				routeWeights[i] = _inventory[i].stackSize;
 			}
@@ -164,7 +164,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		
 		for(int i = 0; i < 6; i++)
 		{
-			if(LiquidContainerRegistry.isEmptyContainer(_inventory[i]))
+			if(FluidContainerRegistry.isEmptyContainer(_inventory[i]))
 			{
 				routeWeights[i] = _inventory[i].stackSize;
 			}
@@ -177,42 +177,31 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return fill(from.ordinal(), resource, doFill);
-	}
-	
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
-	{
+		int tankIndex = from.ordinal();
 		if (tankIndex >= _bufferTanks.length || _filledDirection[tankIndex]) return 0;
 		_filledDirection[tankIndex] = doFill;
 		return pumpLiquid(resource, doFill);
 	}
 	
 	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
 	
 	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { _bufferTanks[direction.ordinal()] };
-	}
-	
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
+	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
 		if(direction.ordinal() < _bufferTanks.length && 
-				LiquidContainerRegistry.containsLiquid(_inventory[direction.ordinal()], type))
+				FluidContainerRegistry.containsFluid(_inventory[direction.ordinal()], type))
 		{
 			return _bufferTanks[direction.ordinal()];
 		}
@@ -258,6 +247,18 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return false;
 	}

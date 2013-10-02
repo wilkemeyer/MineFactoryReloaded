@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -29,17 +29,17 @@ public class ThermalExpansion
 		}
 		try
 		{
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(Item.bucketMilk), LiquidDictionary.getLiquid("milk", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.sludgeBucketItem), LiquidDictionary.getLiquid("sludge", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.sewageBucketItem), LiquidDictionary.getLiquid("sewage", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem), LiquidDictionary.getLiquid("essence", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.bioFuelBucketItem), LiquidDictionary.getLiquid("biofuel", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.meatBucketItem), LiquidDictionary.getLiquid("meat", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.sewageBucketItem), LiquidDictionary.getLiquid("sewage", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.pinkSlimeBucketItem), LiquidDictionary.getLiquid("pinkslime", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), LiquidDictionary.getLiquid("chocolatemilk", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.mushroomSoupBucketItem), LiquidDictionary.getLiquid("mushroomsoup", LiquidContainerRegistry.BUCKET_VOLUME), true);
-			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bowlEmpty), new ItemStack(Item.bowlSoup), LiquidDictionary.getLiquid("mushroomsoup", LiquidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(Item.bucketMilk), FluidRegistry.getFluidStack("milk", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.sludgeBucketItem), FluidRegistry.getFluidStack("sludge", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.sewageBucketItem), FluidRegistry.getFluidStack("sewage", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem), FluidRegistry.getFluidStack("essence", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.bioFuelBucketItem), FluidRegistry.getFluidStack("biofuel", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.meatBucketItem), FluidRegistry.getFluidStack("meat", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.sewageBucketItem), FluidRegistry.getFluidStack("sewage", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.pinkSlimeBucketItem), FluidRegistry.getFluidStack("pinkslime", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), FluidRegistry.getFluidStack("chocolatemilk", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bucketEmpty), new ItemStack(MineFactoryReloadedCore.mushroomSoupBucketItem), FluidRegistry.getFluidStack("mushroomsoup", FluidContainerRegistry.BUCKET_VOLUME), true);
+			CraftingManagers.transposerManager.addFillRecipe(80, new ItemStack(Item.bowlEmpty), new ItemStack(Item.bowlSoup), FluidRegistry.getFluidStack("mushroomsoup", FluidContainerRegistry.BUCKET_VOLUME), true);
 			
 			CraftingManagers.pulverizerManager.addRecipe(320, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0), new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 2)); // Smooth Blackstone -> Cobble
 			CraftingManagers.pulverizerManager.addRecipe(320, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1), new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 3)); // Smooth Whitestone -> Cobble

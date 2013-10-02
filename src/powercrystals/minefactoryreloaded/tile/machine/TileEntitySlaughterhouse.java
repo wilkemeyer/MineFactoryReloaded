@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.World;
-import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
@@ -57,7 +57,7 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				_tank.fill(LiquidDictionary.getLiquid(_rand.nextInt(8) == 0 ? "pinkslime" : "meat", (int)(100 * massFound)), true);
+				_tank.fill(FluidRegistry.getFluidStack(_rand.nextInt(8) == 0 ? "pinkslime" : "meat", (int)(100 * massFound)), true);
 				setIdleTicks(10);
 			}
 			else

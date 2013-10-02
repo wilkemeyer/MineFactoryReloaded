@@ -8,10 +8,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.api.IFactoryGrindable2;
+import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 
-public class GrindableStandard implements IFactoryGrindable2
+public class GrindableStandard implements IFactoryGrindable
 {
 	private Class<?> _grindableClass;
 	private List<MobDrop> _drops;

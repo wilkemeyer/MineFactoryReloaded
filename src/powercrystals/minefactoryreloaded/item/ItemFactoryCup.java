@@ -1,25 +1,21 @@
 package powercrystals.minefactoryreloaded.item;
 
-import java.util.Properties;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.StringTranslate;
 import net.minecraft.world.World;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
-import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 
-@Implementable("net.minecraftforge.fluids.IFluidContainerItem")
-public class ItemFactoryCup extends ItemFactory
+public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 {
 	private int _maxUses = 0;
 	private boolean _prefix = false;
@@ -63,12 +59,10 @@ public class ItemFactoryCup extends ItemFactory
 				item.setItemDamage(0);
 				return super.getItemDisplayName(item);
 			}
-			LiquidStack liquid = LiquidDictionary.getLiquid(ret, 0);
+			Fluid liquid = FluidRegistry.getFluid(ret);
 			if (liquid != null)
 			{
-				ItemStack q = liquid.asItemStack();
-				Item temp = Item.itemsList[q.itemID];
-				if (temp != null) ret = temp.getItemDisplayName(q);
+				ret = liquid.getLocalizedName();
 			}
 			_prefix = true;
 			t = super.getItemDisplayName(item);
@@ -100,14 +94,7 @@ public class ItemFactoryCup extends ItemFactory
 		NBTTagCompound tag = stack.stackTagCompound;
 		return tag == null || !tag.hasKey("fluid") ? null : tag.getCompoundTag("fluid").getString("FluidName");
 	}
-
-	// shim
-	public LiquidStack getFluid(ItemStack stack)
-	{
-		return null;
-	}
-
-	/*{TODO: migrate to FluidStack/IFluidContainerItem in 1.6
+	
 	@Override
 	public FluidStack getFluid(ItemStack stack)
 	{
@@ -128,10 +115,11 @@ public class ItemFactoryCup extends ItemFactory
 		return net.minecraftforge.fluids.FluidContainerRegistry.BUCKET_VOLUME;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || resource.isGaseous())
+		if (resource == null || resource.getFluid().isGaseous())
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
 		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
@@ -167,18 +155,18 @@ public class ItemFactoryCup extends ItemFactory
 			(fluidTag = tag.getCompoundTag("fluid")) == null ||
 			(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			return null;
-		int drainAmount = Math.min(maxDrain, fluid.amount) * (Math.max(Math.random() - 0.25, 0) + 0.25);
+		int drainAmount = (int)(Math.min(maxDrain, fluid.amount) * (Math.max(Math.random() - 0.25, 0) + 0.25));
 		if (doDrain)
 		{
-			if (tag.hasKey('toDrain'))
+			if (tag.hasKey("toDrain"))
 			{
-				drainAmount = tag.getInteger('toDrain');
-				tag.removeTag('toDrain');
+				drainAmount = tag.getInteger("toDrain");
+				tag.removeTag("toDrain");
 			}
-			tag.removeTag('fluid');
+			tag.removeTag("fluid");
 		}
 		else
-			tag.setInteger('toDrain', drainAmount);
+			tag.setInteger("toDrain", drainAmount);
 		fluid.amount = drainAmount;
 		return fluid;
 	}

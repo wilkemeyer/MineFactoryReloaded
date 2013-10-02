@@ -24,10 +24,10 @@ public class GuiBioFuelGenerator extends GuiFactoryInventory
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		if(_tileEntity.getTank() != null && _tileEntity.getTank().getLiquid() != null)
+		if(_tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null)
 		{
-			int tankSize = _tileEntity.getTank().getLiquid().amount * _tankSizeMax / _tileEntity.getTank().getCapacity();
-			drawTank(142, 75, _tileEntity.getTank().getLiquid().itemID, _tileEntity.getTank().getLiquid().itemMeta, tankSize);
+			int tankSize = _tileEntity.getTank().getFluid().amount * _tankSizeMax / _tileEntity.getTank().getCapacity();
+			drawTank(142, 75, _tileEntity.getTank().getFluid(), tankSize);
 		}
 		
 		drawBar(160, 75, ((TileEntityBioFuelGenerator)_tileEntity).getBufferMax(), ((TileEntityBioFuelGenerator)_tileEntity).getBuffer(), _barColorEnergy);
@@ -36,10 +36,10 @@ public class GuiBioFuelGenerator extends GuiFactoryInventory
 	@Override
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		if(isPointInRegion(142, 15, 16, 60, mouseX, mouseY) && _tileEntity.getTank() != null && _tileEntity.getTank().getLiquid() != null && _tileEntity.getTank().getLiquid().amount > 0)
+		if(isPointInRegion(142, 15, 16, 60, mouseX, mouseY) && _tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null && _tileEntity.getTank().getFluid().amount > 0)
 		{
-			drawBarTooltip(_tileEntity.getTank().getLiquid().asItemStack().getDisplayName(),
-					"mB", _tileEntity.getTank().getLiquid().amount, _tileEntity.getTank().getCapacity(), mouseX, mouseY);
+			drawBarTooltip(_tileEntity.getTank().getFluid().getFluid().getLocalizedName(),
+					"mB", _tileEntity.getTank().getFluid().amount, _tileEntity.getTank().getCapacity(), mouseX, mouseY);
 		}
 		
 		else if(isPointInRegion(161, 15, 8, 60, mouseX, mouseY))

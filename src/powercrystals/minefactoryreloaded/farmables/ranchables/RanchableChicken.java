@@ -8,11 +8,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
+import powercrystals.minefactoryreloaded.api.RanchedItem;
 
 public class RanchableChicken implements IFactoryRanchable
 {
@@ -25,9 +25,9 @@ public class RanchableChicken implements IFactoryRanchable
 	}
 	
 	@Override
-	public List<ItemStack> ranch(World world, EntityLiving entity, IInventory rancher)
+	public List<RanchedItem> ranch(World world, EntityLiving entity, IInventory rancher)
 	{
-		List<ItemStack> drops = new LinkedList<ItemStack>();
+		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		EntityChicken chicken = ((EntityChicken)entity);
 		if (chicken.timeUntilNextEgg < 300)
 		{
@@ -37,12 +37,12 @@ public class RanchableChicken implements IFactoryRanchable
 			chicken.timeUntilNextEgg = chicken.rand.nextInt(6000) + 6200;
 			if (rand.nextInt(4) != 0)
 			{
-				drops.add(new ItemStack(Item.egg));
+				drops.add(new RanchedItem(Item.egg));
 			}
 			else
 			{
 				int k = chicken.rand.nextInt(4) + 1;
-				drops.add(new ItemStack(Item.feather, k));
+				drops.add(new RanchedItem(Item.feather, k));
 			}
 		}
 		return drops;
