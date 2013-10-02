@@ -1,10 +1,10 @@
 package powercrystals.minefactoryreloaded.api;
 
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
+
 import java.lang.reflect.Method;
 
 import net.minecraft.item.ItemStack;
-
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 
 /**
  * @author PowerCrystals
@@ -12,13 +12,11 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
  * Class used to register plants and other farming-related things with MFR. Will do nothing if MFR does not exist, but your mod should be set to load
  * after MFR or things may not work properly.
  * 
- * To avoid breaking the API, additional FactoryRegistry##s will appear on major MFR versions that contain API additions. On a Minecraft version change, 
+ * To avoid breaking the API, additional FarmingRegistry##s will appear on major MFR versions that contain API additions. On a Minecraft version change, 
  * these will be rolled back into this class.
  * 
- * This class will be replaced by FactoryRegistry in 1.6.
- * 
  */
-public class FarmingRegistry
+public class FactoryRegistry
 {
 	/**
 	 * Registers a plantable object with the Planter.
@@ -129,13 +127,13 @@ public class FarmingRegistry
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
-	 * Registers a grindable entity with the Grinder.
+	 * Registers a grindable entity with the Grinder using the new grinder interface. This method will be renamed to the standard "registerGrindable"
+	 * on MC 1.6.
 	 * 
 	 * @param grindable The entity to grind.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void registerGrindable(IFactoryGrindable grindable)
 	{
 		try
@@ -145,6 +143,29 @@ public class FarmingRegistry
 			{
 				Method reg = registry.getMethod("registerGrindable", IFactoryGrindable.class);
 				reg.invoke(registry, grindable);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Registers a grindable entity with the Grinder using the new grinder interface. This method will be renamed to the standard "registerGrindable"
+	 * on MC 1.6.
+	 * 
+	 * @param grindable The entity to grind.
+	 */
+	public static void registerGrinderBlacklist(Class<?> ...ungrindables)
+	{
+		try
+		{
+			Class<?> registry = Class.forName("powercrystals.minefactoryreloaded.MFRRegistry");
+			if(registry != null)
+			{
+				Method reg = registry.getMethod("registerGrinderBlacklist", Class[].class);
+				reg.invoke(registry, (Object[])ungrindables);
 			}
 		}
 		catch(Exception e)
@@ -191,6 +212,28 @@ public class FarmingRegistry
 			{
 				Method reg = registry.getMethod("registerBreederFood", Class.class, ItemStack.class);
 				reg.invoke(registry, entityToBreed, food);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Bans an entity class from being collected by Safari Nets
+	 * 
+	 * @param blacklistedEntity Class to blacklist
+	 */
+	public static void registerSafariNetBlacklist(Class<?> blacklistedEntity)
+	{
+		try
+		{
+			Class<?> registry = Class.forName("powercrystals.minefactoryreloaded.MFRRegistry");
+			if(registry != null)
+			{
+				Method reg = registry.getMethod("registerSafariNetBlacklist", Class.class);
+				reg.invoke(registry, blacklistedEntity);
 			}
 		}
 		catch(Exception e)
@@ -267,50 +310,6 @@ public class FarmingRegistry
 	}
 
 	/**
-	 * Bans an entity class from being collected by Safari Nets
-	 * 
-	 * @param blacklistedEntity Class to blacklist
-	 */
-	public static void registerSafariNetBlacklist(Class<?> blacklistedEntity)
-	{
-		try
-		{
-			Class<?> registry = Class.forName("powercrystals.minefactoryreloaded.MFRRegistry");
-			if(registry != null)
-			{
-				Method reg = registry.getMethod("registerSafariNetBlacklist", Class.class);
-				reg.invoke(registry, blacklistedEntity);
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Bans an entity class from being automatically ground by the Grinder
-	 * 
-	 * @param blacklistedEntity Class to blacklist
-	 */
-	/*public static void registerGrinderBlacklist(Class<?> blacklistedEntity)
-	{
-		try
-		{
-			Class<?> registry = Class.forName("powercrystals.minefactoryreloaded.MFRRegistry");
-			if(registry != null)
-			{
-				Method reg = registry.getMethod("registerGrinderBlacklist", Class.class);
-				reg.invoke(registry, blacklistedEntity);
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}//*/
-
-	/**
 	 * Registers an entity as a possible output from villager random safari nets. Note that the "id" field must be initialized
 	 * (i.e. with Entity.addEntityID()) for it to work correctly.
 	 * 
@@ -379,27 +378,25 @@ public class FarmingRegistry
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Registers a preferred ore with the laser drill. Focuses with the specified color will make the specified ore more likely.
-	 * Note that this will overwrite existing ore preferences - you may want to coordinate with PC before using this one.
 	 * Used by MFR itself for vanilla: Black (Coal), Light Blue (Diamond), Lime (Emerald), Yellow (Gold), Brown (Iron), Blue (Lapis),
 	 * Red (Redstone), and White (nether quartz).
 	 * 
-	 * In 2.7 this will be replaced by addLaserPreferredOre, because it'll no longer overwrite existing ore preferences.
+	 * This will replace setLaserPreferredOre on MC 1.6.
 	 * 
 	 * @param color The color that the preferred ore is being set for. White is 0.
 	 * @param ore The ore that will be preferred by the drill when a focus with the specified color is present.
 	 */
-	@Deprecated
-	public static void setLaserPreferredOre(int color, ItemStack ore)
+	public static void addLaserPreferredOre(int color, ItemStack ore)
 	{
 		try
 		{
 			Class<?> registry = Class.forName("powercrystals.minefactoryreloaded.MFRRegistry");
 			if(registry != null)
 			{
-				Method reg = registry.getMethod("setLaserPreferredOre", int.class, ItemStack.class);
+				Method reg = registry.getMethod("addLaserPreferredOre", int.class, ItemStack.class);
 				reg.invoke(registry, color, ore);
 			}
 		}
@@ -408,7 +405,7 @@ public class FarmingRegistry
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Registers a block ID as a fruit tree log. When the Fruit Picker sees this block on the ground, it will
 	 * begin a search in tree mode for any fruit nearby.
