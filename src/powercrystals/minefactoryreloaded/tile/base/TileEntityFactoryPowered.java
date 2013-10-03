@@ -261,7 +261,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			_isAddedToIC2EnergyNet = false;
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
-		inv: while (failedDrops.size() > 0) 
+		if (failedDrops != null)
+			inv: while (failedDrops.size() > 0) 
 		{
 			ItemStack itemstack = failedDrops.remove(0);
 			if (itemstack == null)
