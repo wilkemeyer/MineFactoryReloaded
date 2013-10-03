@@ -41,8 +41,16 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 			this.id = id;
 			this.meta = meta;
 			this.required = required;
+			isFluid = false;
 		}
-		
+		public ItemResourceTracker(FluidStack resource, int required)
+		{
+			this.fluid = resource;
+			this.required = required;
+			isFluid = true;
+		}
+		public boolean isFluid;
+		public FluidStack fluid;
 		public int id;
 		public int meta;
 		public int required;
@@ -116,31 +124,32 @@ inv:	for(int i = 0; i < 9; i++)
 		{
 			if(_inventory[i] != null)
 			{
-				if(FluidContainerRegistry.isFilledContainer(_inventory[i]))
+				liquid: if(FluidContainerRegistry.isFilledContainer(_inventory[i]))
 				{
 					FluidStack l = FluidContainerRegistry.getFluidForFilledItem(_inventory[i]);
+					if (l == null)
+						break liquid;
 					for(ItemResourceTracker t : requiredItems)
 					{
-						if(t.id == l.itemID && t.meta == l.itemMeta)
+						if(t.isFluid && t.fluid.isFluidEqual(l))
 						{
-							t.required += 1000;
+							t.required += l.amount;
 							continue inv;
 						}
 					}
-					requiredItems.add(new ItemResourceTracker(l.itemID, l.itemMeta, 1000));
+					requiredItems.add(new ItemResourceTracker(l, l.amount));
+					continue inv;
 				}
-				else
+
+				for(ItemResourceTracker t : requiredItems)
 				{
-					for(ItemResourceTracker t : requiredItems)
+					if(t.id == _inventory[i].itemID && t.meta == _inventory[i].getItemDamage())
 					{
-						if(t.id == _inventory[i].itemID && t.meta == _inventory[i].getItemDamage())
-						{
-							t.required++;
-							continue inv;
-						}
+						t.required++;
+						continue inv;
 					}
-					requiredItems.add(new ItemResourceTracker(_inventory[i].itemID, _inventory[i].getItemDamage(), 1));
 				}
+				requiredItems.add(new ItemResourceTracker(_inventory[i].itemID, _inventory[i].getItemDamage(), 1));
 			}
 		}
 		
@@ -174,7 +183,7 @@ inv:	for(int i = 0; i < 9; i++)
 			}
 			for(ItemResourceTracker t : requiredItems)
 			{
-				if(t.id == l.itemID && t.meta == l.itemMeta)
+				if(t.isFluid && l.isFluidEqual(t.fluid))
 				{
 					t.found += l.amount;
 					break;
@@ -243,7 +252,7 @@ inv:	for(int i = 0; i < 9; i++)
 			}
 			for(ItemResourceTracker t : requiredItems)
 			{
-				if(t.id == l.itemID && t.meta == l.itemMeta)
+				if(l.isFluidEqual(t.fluid))
 				{
 					int use = Math.min(t.required, l.amount);
 					_tanks[i].drain(use, true);
