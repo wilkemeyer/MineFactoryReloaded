@@ -26,7 +26,7 @@ public class ForestryPre
 		MineFactoryReloadedCore.registerFluid("milk", MineFactoryReloadedCore.milkLiquid);
 		MineFactoryReloadedCore.registerFluid("sludge", MineFactoryReloadedCore.sludgeLiquid);
 		MineFactoryReloadedCore.registerFluid("sewage", MineFactoryReloadedCore.sewageLiquid);
-		MineFactoryReloadedCore.registerFluid("essence", MineFactoryReloadedCore.essenceLiquid);
+		MineFactoryReloadedCore.registerFluid("mobessence", MineFactoryReloadedCore.essenceLiquid);
 		MineFactoryReloadedCore.registerFluid("biofuel", MineFactoryReloadedCore.biofuelLiquid);
 		MineFactoryReloadedCore.registerFluid("meat", MineFactoryReloadedCore.meatLiquid);
 		MineFactoryReloadedCore.registerFluid("pinkslime", MineFactoryReloadedCore.pinkSlimeLiquid);

@@ -33,7 +33,7 @@ public abstract class MFRLiquidMover
 				itcb.fill(ForgeDirection.UNKNOWN, liquid, true);
 				if(!entityplayer.capabilities.isCreativeMode)
 				{
-					entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, UtilInventory.consumeItem(ci));					
+					entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, UtilInventory.consumeItem(ci, entityplayer));					
 				}
 				return true;
 			}
