@@ -30,7 +30,7 @@ public class ClientProxy implements IMFRProxy
 		setIcons("milk", MineFactoryReloadedCore.milkLiquid);
 		setIcons("sludge", MineFactoryReloadedCore.sludgeLiquid);
 		setIcons("sewage", MineFactoryReloadedCore.sewageLiquid);
-		setIcons("mobEssence", MineFactoryReloadedCore.essenceLiquid);
+		setIcons("mobessence", MineFactoryReloadedCore.essenceLiquid);
 		setIcons("biofuel", MineFactoryReloadedCore.biofuelLiquid);
 		setIcons("meat", MineFactoryReloadedCore.meatLiquid);
 		setIcons("pinkslime", MineFactoryReloadedCore.pinkSlimeLiquid);

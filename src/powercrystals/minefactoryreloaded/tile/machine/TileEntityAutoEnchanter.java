@@ -295,7 +295,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
+		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return 0;
 		}
@@ -318,7 +318,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@Override
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
+		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return _tank;
 		}

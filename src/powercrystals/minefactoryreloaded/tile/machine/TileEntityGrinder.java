@@ -198,7 +198,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 					damageEntity(e);
 					if(e.getHealth() <= 0)
 					{
-						_tank.fill(FluidRegistry.getFluidStack("mobEssence", 100), true);
+						_tank.fill(FluidRegistry.getFluidStack("mobessence", 100), true);
 					}
 				}
 				finally
@@ -211,7 +211,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				_tank.fill(FluidRegistry.getFluidStack("mobEssence", 100), true);
+				_tank.fill(FluidRegistry.getFluidStack("mobessence", 100), true);
 				setIdleTicks(20);
 			}
 			else

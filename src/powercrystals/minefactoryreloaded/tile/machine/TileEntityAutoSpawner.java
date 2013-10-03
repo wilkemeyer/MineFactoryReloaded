@@ -195,7 +195,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
+		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return 0;
 		}

@@ -380,7 +380,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	@Override
 	public int fill(ForgeDirection from, FluidStack type, boolean doFill)
 	{
-		if(type != null && FluidRegistry.getFluid("mobEssence").equals(type.getFluid()))
+		if(type != null && FluidRegistry.getFluid("mobessence").equals(type.getFluid()))
 			return _tank.fill(type, doFill);
 		return 0;
 	}
@@ -400,7 +400,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	@Override
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		if(type != null && FluidRegistry.getFluid("mobEssence").equals(type.getFluid()))
+		if(type != null && FluidRegistry.getFluid("mobessence").equals(type.getFluid()))
 		{
 			return _tank;
 		}

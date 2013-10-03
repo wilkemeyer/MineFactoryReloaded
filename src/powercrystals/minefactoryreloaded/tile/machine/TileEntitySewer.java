@@ -141,7 +141,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 				_tank.fill(FluidRegistry.getFluidStack("sewage", (int)(25 * massFound)), true);
 			}
 			// TODO: add a second tank to the sewer for essence
-			else if (_tank.getFluid() == null || _tank.getFluid().isFluidEqual(FluidRegistry.getFluidStack("mobEssence", 1)))
+			else if (_tank.getFluid() == null || _tank.getFluid().isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 			{
 				int maxAmount = Math.max(_tank.getCapacity() - (_tank.getFluid() != null ? _tank.getFluid().amount : 0), 0);
 				if (maxAmount < 0)
@@ -166,7 +166,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 						{
 							found = (int)(found * 66.66666667f);
 							maxAmount -= found;
-							_tank.fill(FluidRegistry.getFluidStack("mobEssence", found), true);
+							_tank.fill(FluidRegistry.getFluidStack("mobessence", found), true);
 							if (maxAmount <= 0)
 							{
 								break;
