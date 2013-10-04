@@ -92,6 +92,12 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IFluidBlock,
 	}
 	
 	@Override
+	public String getUnlocalizedName()
+	{
+		return "fluid." + this.unlocalizedName;
+	}
+	
+	@Override
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdFluidClassic;

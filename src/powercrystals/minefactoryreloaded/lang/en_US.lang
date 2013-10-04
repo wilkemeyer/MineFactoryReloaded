@@ -145,15 +145,15 @@ tile.mfr.cable.redstone.name = RedNet Cable
 tile.mfr.rednet.logic.name = Programmable RedNet Controller
 tile.mfr.rednet.panel.historian.name = RedNet Historian
 
-tile.mfr.liquid.milk.still.name = Milk
-tile.mfr.liquid.sludge.still.name = Sludge
-tile.mfr.liquid.sewage.still.name = Sewage
-tile.mfr.liquid.essence.still.name = Essence
-tile.mfr.liquid.biofuel.still.name = BioFuel
-tile.mfr.liquid.meat.still.name = Meat
-tile.mfr.liquid.pinkslime.still.name = Pink Slime
-tile.mfr.liquid.chocolatemilk.still.name = Chocolate Milk
-tile.mfr.liquid.mushroomsoup.still.name = Mushroom Soup
+fluid.mfr.liquid.milk.still.name = Milk
+fluid.mfr.liquid.sludge.still.name = Sludge
+fluid.mfr.liquid.sewage.still.name = Sewage
+fluid.mfr.liquid.essence.still.name = Essence
+fluid.mfr.liquid.biofuel.still.name = BioFuel
+fluid.mfr.liquid.meat.still.name = Meat
+fluid.mfr.liquid.pinkslime.still.name = Pink Slime
+fluid.mfr.liquid.chocolatemilk.still.name = Chocolate Milk
+fluid.mfr.liquid.mushroomsoup.still.name = Mushroom Soup
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Pink Slime
 

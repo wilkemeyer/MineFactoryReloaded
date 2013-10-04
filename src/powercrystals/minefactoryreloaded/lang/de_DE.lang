@@ -143,15 +143,15 @@ tile.mfr.cable.redstone.name = RedNet-Kabel
 tile.mfr.rednet.logic.name = Programmierbarer RedNet-Controller
 tile.mfr.rednet.panel.historian.name = Graph
 
-tile.mfr.liquid.milk.still.name = Milch
-tile.mfr.liquid.sludge.still.name = Schlacke
-tile.mfr.liquid.sewage.still.name = G\u00fclle
-tile.mfr.liquid.essence.still.name = Essenz
-tile.mfr.liquid.biofuel.still.name = Biodiesel
-tile.mfr.liquid.meat.still.name = Fleischmasse
-tile.mfr.liquid.pinkslime.still.name = Rosa Schleim
-tile.mfr.liquid.chocolatemilk.still.name = Kakao
-tile.mfr.liquid.mushroomsoup.still.name = Pilzsuppe
+fluid.mfr.liquid.milk.still.name = Milch
+fluid.mfr.liquid.sludge.still.name = Schlacke
+fluid.mfr.liquid.sewage.still.name = G\u00fclle
+fluid.mfr.liquid.essence.still.name = Essenz
+fluid.mfr.liquid.biofuel.still.name = Biodiesel
+fluid.mfr.liquid.meat.still.name = Fleischmasse
+fluid.mfr.liquid.pinkslime.still.name = Rosa Schleim
+fluid.mfr.liquid.chocolatemilk.still.name = Kakao
+fluid.mfr.liquid.mushroomsoup.still.name = Pilzsuppe
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Rosa Schleim
 

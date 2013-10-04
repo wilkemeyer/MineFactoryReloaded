@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -516,6 +517,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	
 	public static boolean registerFluid(String name, Block block)
 	{
+		name = name.toLowerCase(Locale.ENGLISH);
 		if (!FluidRegistry.isFluidRegistered(name))
 		{
 			Fluid fluid = new Fluid(name);
@@ -526,6 +528,7 @@ public class MineFactoryReloadedCore extends BaseMod
 				fluid.setBlockID(block);
 				fluid.setLuminosity(block.getLightValue(null, 0, 0, 0));
 			}
+			fluid.setUnlocalizedName("mfr.liquid." + name + ".still");
 		}
 		return false;
 	}

@@ -43,7 +43,7 @@ public class ClientProxy implements IMFRProxy
 		Fluid fluid = FluidRegistry.getFluid(name);
 		if (fluid.getBlockID() == block.blockID)
 		{
-			fluid.setIcons(block.getBlockTextureFromSide(1), block.getBlockTextureFromSide(2));
+			fluid.setIcons(block.getIcon(1, 0), block.getIcon(2, 0));
 		}
 	}
 }

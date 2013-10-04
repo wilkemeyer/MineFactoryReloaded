@@ -143,15 +143,15 @@ tile.mfr.cable.redstone.name = RedNet Kabl
 tile.mfr.rednet.logic.name = Programerski RedNet Kontroler
 tile.mfr.rednet.panel.historian.name = RedNet Istori\u010Dar
 
-tile.mfr.liquid.milk.still.name = Mleko
-tile.mfr.liquid.sludge.still.name = Mulj
-tile.mfr.liquid.sewage.still.name = Izmet
-tile.mfr.liquid.essence.still.name = Esencija
-tile.mfr.liquid.biofuel.still.name = BioGorivo
-tile.mfr.liquid.meat.still.name = Meso
-tile.mfr.liquid.pinkslime.still.name = Roze Glib
-tile.mfr.liquid.chocolatemilk.still.name = \u010Cokoladno Mleko
-tile.mfr.liquid.mushroomsoup.still.name = \u010Corba od Pe\u010Duraka
+fluid.mfr.liquid.milk.still.name = Mleko
+fluid.mfr.liquid.sludge.still.name = Mulj
+fluid.mfr.liquid.sewage.still.name = Izmet
+fluid.mfr.liquid.essence.still.name = Esencija
+fluid.mfr.liquid.biofuel.still.name = BioGorivo
+fluid.mfr.liquid.meat.still.name = Meso
+fluid.mfr.liquid.pinkslime.still.name = Roze Glib
+fluid.mfr.liquid.chocolatemilk.still.name = \u010Cokoladno Mleko
+fluid.mfr.liquid.mushroomsoup.still.name = \u010Corba od Pe\u010Duraka
 
 item.mfr.bucket.milk.name = Kofa Mleka
 item.mfr.bucket.sewage.name = Kofa Mulja
