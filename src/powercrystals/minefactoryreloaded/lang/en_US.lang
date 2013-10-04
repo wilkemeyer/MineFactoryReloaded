@@ -351,8 +351,8 @@ chat.info.mfr.ruler.total=Total Distance: %.1f
 chat.info.mfr.rednet.meter.cable.allzero=All RedNet subnets are 0
 chat.info.mfr.rednet.meter.cable.restzero=All other RedNet subnets are 0
 chat.info.mfr.rednet.meter.varprefix=Variable
-chat.info.mfr.rednet.meter.var.allzero=All RedNet subnets are 0
-chat.info.mfr.rednet.meter.var.restzero=All other RedNet subnets are 0
+chat.info.mfr.rednet.meter.var.allzero=All variables are 0
+chat.info.mfr.rednet.meter.var.restzero=All other variables are 0
 chat.info.mfr.rednet.meter.dustprefix=Redstone Dust
 
 chat.info.mfr.rednet.memorycard.uploaded=PRC program uploaded to memory card from PRC
