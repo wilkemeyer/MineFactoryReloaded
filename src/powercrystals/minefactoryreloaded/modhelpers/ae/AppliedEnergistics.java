@@ -8,6 +8,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = "MineFactoryReloaded|CompatAppliedEnergistics", name = "MFR Compat: Applied Energistics", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:AppliedEnergistics")
@@ -24,6 +25,10 @@ public class AppliedEnergistics
 			FMLLog.warning("Applied Energistics missing - MFR Applied Energistics Compat not loading");
 			return;
 		}
+		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
+				"powercrystals.minefactoryreloaed.tile.base.TileEntityFactory");
+		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
+				"powercrystals.minefactoryreloaed.tile.conveyer.TileEntityConveyor");
 		try
 		{
 			ItemStack quartzOre = (ItemStack)Class.forName("appeng.api.Blocks").getField("blkQuartzOre").get(null);
