@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -133,14 +134,24 @@ public class GuiFactoryInventory extends GuiContainer
 				texHeight = level;
 				level = 0;
 			}
-			
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
+
+
+			bindTexture(fluid);
+					
 			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
 		
 		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground()));
 		this.drawTexturedModalRect(xOffset, yOffset - 60, 176, 0, 16, 60);
+	}
+	
+	protected void bindTexture(Fluid fluid)
+	{
+		if (fluid.getSpriteNumber() == 0)
+			this.mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+		else
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
 	}
 	
 	protected void drawBarTooltip(String name, String unit, int value, int max, int x, int y)

@@ -52,6 +52,26 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 			this.drawTexturedModalRect(-50 + (i % 3 * 18), 10 + (i / 3 * 35), 232, 0, 16, 33);
 		}
 	}
+
+	@Override
+	protected void drawTooltips(int mouseX, int mouseY)
+	{
+		if(isPointInRegion(-50, 10, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY))
+		{
+			int tankX = mouseX + 50 - this.guiLeft;
+			int tankY = mouseY - 10 - this.guiTop;
+			if (tankX % 18 > 16 | tankY % 35 > 33)
+				return;
+			tankX /= 18;
+			tankY /= 35;
+			int i = tankX + tankY * 3;
+			FluidTankInfo tank = _crafter.getTankInfo(ForgeDirection.UNKNOWN)[i];
+			if (tank.fluid == null || tank.fluid.amount == 0)
+				return;
+			drawBarTooltip(tank.fluid.getFluid().getLocalizedName(), "mB",
+					tank.fluid.amount, tank.capacity, mouseX, mouseY);
+		}
+	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY)
@@ -92,7 +112,8 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 				level = 0;
 			}
 
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
+			bindTexture(fluid);
+			
 			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
