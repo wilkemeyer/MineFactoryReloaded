@@ -1,4 +1,3 @@
-
 tile.mfr.machine.planter.name = Pflanzer
 tile.mfr.machine.fisher.name = Fischer
 tile.mfr.machine.harvester.name = Ernter
@@ -146,15 +145,15 @@ tile.mfr.cable.redstone.name = RedNet-Kabel
 tile.mfr.rednet.logic.name = Programmierbarer RedNet-Controller
 tile.mfr.rednet.panel.historian.name = Graph
 
-tile.mfr.fluid.milk.still.name = Milch
-tile.mfr.fluid.sludge.still.name = Schlacke
-tile.mfr.fluid.sewage.still.name = G\u00fclle
-tile.mfr.fluid.essence.still.name = Essenz
-tile.mfr.fluid.biofuel.still.name = Biodiesel
-tile.mfr.fluid.meat.still.name = Fleischmasse
-tile.mfr.fluid.pinkslime.still.name = Rosa Schleim
-tile.mfr.fluid.chocolatemilk.still.name = Kakao
-tile.mfr.fluid.mushroomsoup.still.name = Pilzsuppe
+fluid.mfr.liquid.milk.still.name = Milch
+fluid.mfr.liquid.sludge.still.name = Schlacke
+fluid.mfr.liquid.sewage.still.name = G\u00fclle
+fluid.mfr.liquid.mobessence.still.name = Essenz
+fluid.mfr.liquid.biofuel.still.name = Biodiesel
+fluid.mfr.liquid.meat.still.name = Fleischmasse
+fluid.mfr.liquid.pinkslime.still.name = Rosa Schleim
+fluid.mfr.liquid.chocolatemilk.still.name = Kakao
+fluid.mfr.liquid.mushroomsoup.still.name = Pilzsuppe
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Rosa Schleim
 
@@ -334,6 +333,35 @@ circuit.mfr.xnor.4 = XNOR (4 Eing\u00e4nge)
 circuit.mfr.xor.2 = XOR (2 Eing\u00e4nge)
 circuit.mfr.xor.3 = XOR (3 Eing\u00e4nge)
 circuit.mfr.xor.4 = XOR (4 Eing\u00e4nge)
+
+chat.info.mfr.safarinet.capture=Gewechselt in Fangmodus
+chat.info.mfr.safarinet.release=Gewechselt in Freilassmodus
+
+chat.info.mfr.spyglass.nosight=Nichts in Sichtweite
+chat.info.mfr.spyglass.hitentity=%s bei %.1f, %.1f, %.1f gefunden
+chat.info.mfr.spyglass.hitblock=%s [%i:%i] bei %.1f, %.1f, %.1f gefunden
+chat.info.mfr.spyglass.hitunknown=UNBEKANNTES (Bug?) bei %.1f, %.1f, %.1f gefunden
+
+chat.info.mfr.ruler.nosight=Nichts in Sichtweite
+chat.info.mfr.ruler.hitentity=Auf Wesen getroffen - Messung fehlgeschlagen
+chat.info.mfr.ruler.startposition=Startposition aufgenommen
+chat.info.mfr.ruler.distance=Entfernung: %i, Z\u00e4hlung: %i
+chat.info.mfr.ruler.total=Gesamtdistanz: %.1f
+
+chat.info.mfr.rednet.meter.cable.allzero=Alle RedNet-Subnetzwerke sind 0
+chat.info.mfr.rednet.meter.cable.restzero=Alle anderen RedNet-Subnetzwerke sind 0
+chat.info.mfr.rednet.meter.varprefix=Variable
+chat.info.mfr.rednet.meter.var.allzero=Alle Variablen sind 0
+chat.info.mfr.rednet.meter.var.restzero=Alle anderen Variablen sind 0
+chat.info.mfr.rednet.meter.dustprefix=Redstonestaub
+
+chat.info.mfr.rednet.memorycard.uploaded=PRC-Programm vom PRC auf Speicherkarte geladen
+chat.info.mfr.rednet.memorycard.downloaded=PRC-Programm von Speicherkarte auf PRC geladen
+chat.info.mfr.rednet.memorycard.error=PRC besutzt zu wenige Schaltkreise, um dieses Programm zu laden
+
+chat.info.mfr.rednet.connection.standard=Kabel auf Standard-Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.forced=Kabel auf Erzwungenen Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.cableonly=Kabel auf Nur-Kabel-Verbindungsmodus gestellt
 
 death.attack.mfr.slaughterhouse=%1$s wurde zu fl\u00fcssigem Fleisch verarbeitet
 death.attack.mfr.slaughterhouse.player=%1$s wurde von %2$s dazu verdammt, zu fl\u00fcssigem Fleisch verarbeitet zu werden
