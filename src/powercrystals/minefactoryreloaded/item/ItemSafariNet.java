@@ -88,7 +88,7 @@ public class ItemSafariNet extends ItemFactory
 	@Override
 	public Icon getIcon(ItemStack stack, int pass)
 	{
-		if(stack.getTagCompound() == null) return _iconEmpty;
+		if(isEmpty(stack)) return _iconEmpty;
 		if(pass == 0) return _iconBack;
 		else if(pass == 1) return _iconMid;
 		else if(pass == 2) return _iconFront;
@@ -250,6 +250,8 @@ public class ItemSafariNet extends ItemFactory
 				mobs.addAll(p.getRandomMobs(world));
 			}
 			e = ((RandomMob)WeightedRandom.getRandomItem(world.rand, mobs)).getMob();
+			if (e instanceof EntityLiving)
+				((EntityLiving)e).onSpawnWithEgg(null);
 		}
 		else
 		{

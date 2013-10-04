@@ -252,18 +252,11 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
-		if(itemstack == null)
+		if(itemstack == null | slot < 0 || slot > getSizeInventorySide(ForgeDirection.UNKNOWN))
 		{
 			return false;
 		}
-		for(int i = 0; i < 9; i++)
-		{
-			if(i != slot && _inventory[i] != null && UtilInventory.stacksEqual(_inventory[i], itemstack))
-			{
-				return false;
-			}
-		}
-		return true;
+		return _inventory[slot] == null || UtilInventory.stacksEqual(_inventory[slot], itemstack);
 	}
 
 	@Override

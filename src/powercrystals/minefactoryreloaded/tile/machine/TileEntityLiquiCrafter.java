@@ -36,11 +36,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	
 	private class ItemResourceTracker
 	{
-		public ItemResourceTracker(int id, int meta, int required)
+		public ItemResourceTracker(int id, int meta, NBTTagCompound nbtdata, int required)
 		{
 			this.id = id;
 			this.meta = meta;
 			this.required = required;
+			this.tag = nbtdata;
 			isFluid = false;
 		}
 		public ItemResourceTracker(FluidStack resource, int required)
@@ -53,6 +54,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		public FluidStack fluid;
 		public int id;
 		public int meta;
+		@SuppressWarnings("unused")
+		public NBTTagCompound tag; // TODO: check NBT data appropriately. via recipe?
 		public int required;
 		public int found;
 	}
@@ -149,21 +152,23 @@ inv:	for(int i = 0; i < 9; i++)
 						continue inv;
 					}
 				}
-				requiredItems.add(new ItemResourceTracker(_inventory[i].itemID, _inventory[i].getItemDamage(), 1));
+				requiredItems.add(new ItemResourceTracker(_inventory[i].itemID, _inventory[i].getItemDamage(), _inventory[i].getTagCompound(), 1));
 			}
 		}
 		
 		for(int i = 11; i < 29; i++)
 		{
-			if(_inventory[i] != null)
+			ItemStack item = _inventory[i];
+			if(item != null)
 			{
 				for(ItemResourceTracker t : requiredItems)
 				{
-					if(t.id == _inventory[i].itemID && (t.meta == _inventory[i].getItemDamage() || _inventory[i].getItem().isDamageable()))
+					if(t.id == item.itemID &&
+							(t.meta == item.getItemDamage() || item.getItem().isDamageable()))
 					{
-						if(!_inventory[i].getItem().hasContainerItem())
+						if(!item.getItem().hasContainerItem())
 						{
-							t.found += _inventory[i].stackSize;
+							t.found += item.stackSize;
 						}
 						else
 						{

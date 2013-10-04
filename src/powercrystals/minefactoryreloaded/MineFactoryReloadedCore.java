@@ -431,6 +431,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		Block.setBurnProperties(rubberLeavesBlock.blockID, 30, 20);
 		
 		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.rednetCableBlock, 0, "pickaxe", 0);
+		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.rubberWoodBlock, "axe", 0);
 		
 		if(MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
