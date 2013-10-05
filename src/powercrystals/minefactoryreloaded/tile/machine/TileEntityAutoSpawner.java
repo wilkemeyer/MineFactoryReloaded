@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -124,12 +125,12 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		{
 			Entity spawnedEntity = EntityList.createEntityByName(entityID, worldObj);
 			
-			if(!(spawnedEntity instanceof EntityLiving))
+			if(!(spawnedEntity instanceof EntityLivingBase))
 			{
 				return false;
 			}
 			
-			EntityLiving spawnedLiving = (EntityLiving)spawnedEntity;
+			EntityLivingBase spawnedLiving = (EntityLivingBase)spawnedEntity;
 			
 			if(_spawnExact)
 			{
@@ -137,7 +138,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 				spawnedLiving.readEntityFromNBT(tag);
 				for (int i = 0; i < 5; ++i)
 				{
-					spawnedLiving.setEquipmentDropChance(i, 0);
+					if (spawnedLiving instanceof EntityLiving)
+						((EntityLiving)spawnedLiving).setEquipmentDropChance(i, 0);
 				}
 			}
 			
@@ -154,15 +156,16 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 				return false;
 			}
 			
-			if (!_spawnExact)
+			if (!_spawnExact && spawnedLiving instanceof EntityLiving)
 			{
-				spawnedLiving.onSpawnWithEgg(null);
+				((EntityLiving)spawnedLiving).onSpawnWithEgg(null);
 			}
 			
 			worldObj.spawnEntityInWorld(spawnedLiving);
 			worldObj.playAuxSFX(2004, this.xCoord, this.yCoord, this.zCoord, 0);
 			
-			spawnedLiving.spawnExplosionParticle();
+			if (spawnedLiving instanceof EntityLiving)
+				((EntityLiving)spawnedLiving).spawnExplosionParticle();
 			setWorkDone(0);
 			return true;
 		}

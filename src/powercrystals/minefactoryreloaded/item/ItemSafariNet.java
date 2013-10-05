@@ -317,8 +317,11 @@ public class ItemSafariNet extends ItemFactory
 			if (e != null)
 			{
 				e.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360.0F, 0.0F);
+				if (e instanceof EntityLiving)
+					((EntityLiving)e).onSpawnWithEgg(null);
 				world.spawnEntityInWorld(e);
-				((EntityLiving)e).playLivingSound();
+				if (e instanceof EntityLiving)
+					((EntityLiving)e).playLivingSound();
 			}
 			
 			return e;

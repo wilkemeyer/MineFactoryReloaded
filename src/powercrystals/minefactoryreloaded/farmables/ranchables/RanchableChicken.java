@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -25,7 +25,7 @@ public class RanchableChicken implements IFactoryRanchable
 	}
 	
 	@Override
-	public List<RanchedItem> ranch(World world, EntityLiving entity, IInventory rancher)
+	public List<RanchedItem> ranch(World world, EntityLivingBase entity, IInventory rancher)
 	{
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		EntityChicken chicken = ((EntityChicken)entity);

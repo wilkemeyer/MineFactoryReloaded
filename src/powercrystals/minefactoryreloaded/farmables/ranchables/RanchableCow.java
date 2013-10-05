@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.farmables.ranchables;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -27,7 +27,7 @@ public class RanchableCow implements IFactoryRanchable
 	}
 	
 	@Override
-	public List<RanchedItem> ranch(World world, EntityLiving entity, IInventory rancher)
+	public List<RanchedItem> ranch(World world, EntityLivingBase entity, IInventory rancher)
 	{
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		IInventoryManager manager = InventoryManager.create(rancher, ForgeDirection.UP);

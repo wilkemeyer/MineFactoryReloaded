@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
@@ -122,17 +122,17 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		if(_tick >= 31 && !_jammed)
 		{
 			_tick = 0;
-			List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+			List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 			double massFound = 0;
 			for(Object o : entities)
 			{
 				if(o instanceof EntityAnimal || o instanceof EntityVillager)
 				{
-					massFound += Math.pow(((EntityLiving)o).boundingBox.getAverageEdgeLength(), 2);
+					massFound += Math.pow(((EntityLivingBase)o).boundingBox.getAverageEdgeLength(), 2);
 				}
 				else if(o instanceof EntityPlayer && ((EntityPlayer)o).isSneaking())
 				{
-					massFound += Math.pow(((EntityLiving)o).boundingBox.getAverageEdgeLength(), 2);
+					massFound += Math.pow(((EntityLivingBase)o).boundingBox.getAverageEdgeLength(), 2);
 				}
 			}
 			if (massFound > 0)

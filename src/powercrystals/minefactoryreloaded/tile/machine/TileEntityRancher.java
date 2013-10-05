@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import java.util.List;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
@@ -94,11 +94,11 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 		
 		boolean didDrop = false;
 		
-		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 		
 		for(Object o : entities)
 		{
-			EntityLiving e = (EntityLiving)o;
+			EntityLivingBase e = (EntityLivingBase)o;
 			if(MFRRegistry.getRanchables().containsKey(e.getClass()))
 			{
 				IFactoryRanchable r = MFRRegistry.getRanchables().get(e.getClass());

@@ -71,9 +71,9 @@ public class EntitySafariNet extends EntityThrowable
 		}
 		else
 		{
-			if(ItemSafariNet.isEmpty(storedEntity) && mop.entityHit instanceof EntityLiving)
+			if(ItemSafariNet.isEmpty(storedEntity) && mop.entityHit instanceof EntityLivingBase)
 			{
-				ItemSafariNet.captureEntity(storedEntity, (EntityLiving)mop.entityHit);
+				ItemSafariNet.captureEntity(storedEntity, (EntityLivingBase)mop.entityHit);
 				dropAsStack(storedEntity);
 			}
 			else
@@ -81,12 +81,12 @@ public class EntitySafariNet extends EntityThrowable
 				if(!ItemSafariNet.isEmpty(storedEntity))
 				{
 					Entity releasedEntity = ItemSafariNet.releaseEntity(storedEntity, worldObj, (int)mop.entityHit.posX, (int)mop.entityHit.posY, (int)mop.entityHit.posZ, 1);
-					if(mop.entityHit instanceof EntityLiving)
+					if(mop.entityHit instanceof EntityLivingBase)
 					{
 						if(releasedEntity instanceof EntityLiving)
 						{
 							//Functional for skeletons.
-							((EntityLiving)releasedEntity).setAttackTarget((EntityLiving)mop.entityHit);
+							((EntityLiving)releasedEntity).setAttackTarget((EntityLivingBase)mop.entityHit);
 						}
 						
 						if(releasedEntity instanceof EntityCreature)

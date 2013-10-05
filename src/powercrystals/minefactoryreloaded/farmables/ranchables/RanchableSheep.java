@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.world.World;
@@ -20,7 +20,7 @@ public class RanchableSheep implements IFactoryRanchable
 	}
 	
 	@Override
-	public List<RanchedItem> ranch(World world, EntityLiving entity, IInventory rancher)
+	public List<RanchedItem> ranch(World world, EntityLivingBase entity, IInventory rancher)
 	{
 		EntitySheep s = (EntitySheep)entity;
 		

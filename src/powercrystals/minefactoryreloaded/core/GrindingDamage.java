@@ -31,9 +31,9 @@ public class GrindingDamage extends DamageSource
 	}
 	
 	@Override
-    public ChatMessageComponent getDeathMessage(EntityLivingBase par1EntityLiving)
+    public ChatMessageComponent getDeathMessage(EntityLivingBase par1EntityLivingBase)
     {
-        EntityLivingBase entityliving1 = par1EntityLiving.func_94060_bK();
+        EntityLivingBase entityliving1 = par1EntityLivingBase.func_94060_bK();
         String s = "death.attack." + this.damageType;
         if (_msgCount > 0)
         {
@@ -45,6 +45,6 @@ public class GrindingDamage extends DamageSource
         }
         String s1 = s + ".player";
         // TODO: change to addKey?
-        return new ChatMessageComponent().addText(entityliving1 != null && StatCollector.func_94522_b(s1) ? StatCollector.translateToLocalFormatted(s1, new Object[] {par1EntityLiving.getTranslatedEntityName(), entityliving1.getTranslatedEntityName()}): StatCollector.translateToLocalFormatted(s, new Object[] {par1EntityLiving.getTranslatedEntityName()}));
+        return new ChatMessageComponent().addText(entityliving1 != null && StatCollector.func_94522_b(s1) ? StatCollector.translateToLocalFormatted(s1, new Object[] {par1EntityLivingBase.getTranslatedEntityName(), entityliving1.getTranslatedEntityName()}): StatCollector.translateToLocalFormatted(s, new Object[] {par1EntityLivingBase.getTranslatedEntityName()}));
     }
 }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -141,11 +140,11 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	public boolean activateMachine()
 	{
 		_grindingWorld.cleanReferences();
-		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 		
 		entityList: for(Object o : entities)
 		{
-			EntityLiving e = (EntityLiving)o;
+			EntityLivingBase e = (EntityLivingBase)o;
 			if(e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0 || e.isEntityInvulnerable() || e.getHealth() <= 0)
 			{
 				continue;
@@ -218,7 +217,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		return false;
 	}
 	
-	protected void setRecentlyHit(EntityLiving entity, int t)
+	protected void setRecentlyHit(EntityLivingBase entity, int t)
 	{
 		try
 		{
@@ -229,7 +228,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		}
 	}
 	
-	protected void damageEntity(EntityLiving entity)
+	protected void damageEntity(EntityLivingBase entity)
 	{
 		setRecentlyHit(entity, 100);
 		entity.attackEntityFrom(_damageSource, DAMAGE);

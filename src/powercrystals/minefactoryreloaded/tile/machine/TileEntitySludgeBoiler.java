@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -102,7 +102,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 			if(_tick >= 23)
 			{
 				Area a = new Area(new BlockPosition(this), 3, 3, 3);
-				List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, a.toAxisAlignedBB());
+				List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, a.toAxisAlignedBB());
 				for(Object o : entities)
 				{
 					if(o instanceof EntityPlayer)

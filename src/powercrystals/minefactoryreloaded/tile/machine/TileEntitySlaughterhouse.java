@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import java.util.List;
 
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -47,11 +47,11 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	public boolean activateMachine()
 	{
 		_grindingWorld.cleanReferences();
-		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 		
 		entityList: for(Object o : entities)
 		{
-			EntityLiving e = (EntityLiving)o;
+			EntityLivingBase e = (EntityLivingBase)o;
 			for(Class<?> t : MFRRegistry.getSlaughterhouseBlacklist())
 			{
 				if(t.isInstance(e))
@@ -85,7 +85,7 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	}
 	
 	@Override
-	protected void damageEntity(EntityLiving entity)
+	protected void damageEntity(EntityLivingBase entity)
 	{
 		setRecentlyHit(entity, 0);
 		entity.attackEntityFrom(_damageSource, DAMAGE);
