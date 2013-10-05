@@ -100,10 +100,10 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	{
 		AxisAlignedBB[] wireparts = getParts(cable);
 		
-		Vec3 playerPosition = Vec3.createVectorHelper(player.posX - cable.xCoord, player.posY - cable.yCoord + player.getEyeHeight(), player.posZ - cable.zCoord);
+		Vec3 playerPosition = player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX - cable.xCoord, player.posY - cable.yCoord + player.getEyeHeight(), player.posZ - cable.zCoord);
 		Vec3 playerLook = player.getLookVec();
 		
-		Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord + playerLook.zCoord * reachDistance);
+		Vec3 playerViewOffset = player.worldObj.getWorldVec3Pool().getVecFromPool(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord + playerLook.zCoord * reachDistance);
 		int closest = -1;
 		double closestdistance = Double.MAX_VALUE;
 		
