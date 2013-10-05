@@ -263,19 +263,17 @@ public class Vanilla
 		
 		MFRRegistry.registerRandomMobProvider(new VanillaMobProvider());
 		
-		MFRRegistry.registerLiquidDrinkHandler(Block.waterStill.blockID, new DrinkHandlerWater());
-		MFRRegistry.registerLiquidDrinkHandler(Block.waterMoving.blockID, new DrinkHandlerWater());
-		MFRRegistry.registerLiquidDrinkHandler(Block.lavaStill.blockID, new DrinkHandlerLava());
-		MFRRegistry.registerLiquidDrinkHandler(Block.lavaMoving.blockID, new DrinkHandlerLava());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.milkLiquid.blockID, new DrinkHandlerMilk());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.biofuelLiquid.blockID, new DrinkHandlerBiofuel());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.sewageLiquid.blockID, new DrinkHandlerSewage());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.sludgeLiquid.blockID, new DrinkHandlerSludge());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.essenceLiquid.blockID, new DrinkHandlerMobEssence());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.meatLiquid.blockID, new DrinkHandlerMeat());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.pinkSlimeLiquid.blockID, new DrinkHandlerPinkSlime());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.chocolateMilkLiquid.blockID, new DrinkHandlerChocolateMilk());
-		MFRRegistry.registerLiquidDrinkHandler(MineFactoryReloadedCore.mushroomSoupLiquid.blockID, new DrinkHandlerMushroomSoup());
+		MFRRegistry.registerLiquidDrinkHandler("water", new DrinkHandlerWater());
+		MFRRegistry.registerLiquidDrinkHandler("lava", new DrinkHandlerLava());
+		MFRRegistry.registerLiquidDrinkHandler("milk", new DrinkHandlerMilk());
+		MFRRegistry.registerLiquidDrinkHandler("biofuel", new DrinkHandlerBiofuel());
+		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
+		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
+		MFRRegistry.registerLiquidDrinkHandler("essence", new DrinkHandlerMobEssence());
+		MFRRegistry.registerLiquidDrinkHandler("meat", new DrinkHandlerMeat());
+		MFRRegistry.registerLiquidDrinkHandler("pinkslime", new DrinkHandlerPinkSlime());
+		MFRRegistry.registerLiquidDrinkHandler("chocolatemilk", new DrinkHandlerChocolateMilk());
+		MFRRegistry.registerLiquidDrinkHandler("mushroomsoup", new DrinkHandlerMushroomSoup());
 		
 		MFRRegistry.registerRedNetLogicCircuit(new AdderAnalog());
 		MFRRegistry.registerRedNetLogicCircuit(new AdderDigitalFull());

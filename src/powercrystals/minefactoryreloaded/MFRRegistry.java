@@ -33,7 +33,7 @@ public abstract class MFRRegistry
 	private static Map<Class<?>, IFactoryRanchable> _ranchables = new HashMap<Class<?>, IFactoryRanchable>();
 	private static Map<Class<?>, IFactoryGrindable> _grindables = new HashMap<Class<?>, IFactoryGrindable>();
 	private static Map<Class<?>, List<ItemStack>> _breederFoods = new HashMap<Class<?>, List<ItemStack>>();
-	private static Map<Integer, ILiquidDrinkHandler> _liquidDrinkHandlers = new HashMap<Integer, ILiquidDrinkHandler>();
+	private static Map<String, ILiquidDrinkHandler> _liquidDrinkHandlers = new HashMap<String, ILiquidDrinkHandler>();
 	private static Map<Integer, INeedleAmmo> _needleAmmoTypes = new HashMap<Integer, INeedleAmmo>();
 	
 	private static List<Integer> _fruitLogBlocks = new ArrayList<Integer>();
@@ -219,12 +219,12 @@ public abstract class MFRRegistry
 		return _randomMobProviders;
 	}
 
-	public static void registerLiquidDrinkHandler(int liquidId, ILiquidDrinkHandler liquidDrinkHandler)
+	public static void registerLiquidDrinkHandler(String liquidId, ILiquidDrinkHandler liquidDrinkHandler)
 	{
 		_liquidDrinkHandlers.put(liquidId, liquidDrinkHandler);
 	}
 
-	public static Map<Integer, ILiquidDrinkHandler> getLiquidDrinkHandlers()
+	public static Map<String, ILiquidDrinkHandler> getLiquidDrinkHandlers()
 	{
 		return _liquidDrinkHandlers;
 	}

@@ -64,12 +64,6 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	public int getEnergyStoredMax()
 	{
 		return 16000;

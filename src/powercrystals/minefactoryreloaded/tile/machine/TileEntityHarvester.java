@@ -93,12 +93,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	public int getEnergyStoredMax()
 	{
 		return 16000;

@@ -9,6 +9,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -112,10 +113,9 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 	@Override
 	public int getCapacity(ItemStack container)
 	{
-		return net.minecraftforge.fluids.FluidContainerRegistry.BUCKET_VOLUME;
+		return FluidContainerRegistry.BUCKET_VOLUME;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
@@ -129,8 +129,10 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 			(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			fillAmount = Math.min(capacity, resource.amount);
 		if (fluid == null)
+		{
 			if (doFill)
 				fluid = resource.copy();
+		}
 		else if (!fluid.isFluidEqual(resource))
 			return 0;
 		else
@@ -170,7 +172,6 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		fluid.amount = drainAmount;
 		return fluid;
 	}
-	//}*/
 
 	public boolean hasDrinkableLiquid(ItemStack stack)
 	{

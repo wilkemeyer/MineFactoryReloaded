@@ -9,5 +9,6 @@ public class GuiLiquidRouter extends GuiFactoryInventory
 	{
 		super(container, router);
 		ySize = 133;
+		_renderTanks = false;
 	}
 }

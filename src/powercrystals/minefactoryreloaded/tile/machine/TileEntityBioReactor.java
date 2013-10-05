@@ -176,12 +176,6 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	protected boolean shouldPumpLiquid()
 	{
 		return true;

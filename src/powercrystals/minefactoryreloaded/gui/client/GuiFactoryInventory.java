@@ -9,8 +9,10 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -28,7 +30,12 @@ public class GuiFactoryInventory extends GuiContainer
 {
 	protected TileEntityFactoryInventory _tileEntity;
 	protected int _barSizeMax = 60;
+	
 	protected int _tankSizeMax = 60;
+	protected int _tanksOffsetX = 122;
+	protected int _tanksOffsetY = 15;
+	
+	protected boolean _renderTanks = true;
 	
 	public GuiFactoryInventory(ContainerFactoryInventory container, TileEntityFactoryInventory tileentity)
 	{
@@ -65,11 +72,21 @@ public class GuiFactoryInventory extends GuiContainer
 		fontRenderer.drawString(_tileEntity.getInvName(), 8, 6, 4210752);
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		if(_tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null)
+		if (_renderTanks)
 		{
-			int tankSize = _tileEntity.getTank().getFluid().amount * _tankSizeMax / _tileEntity.getTank().getCapacity();
-			drawTank(122, 75, _tileEntity.getTank().getFluid(), tankSize);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			FluidTankInfo[] tanks = _tileEntity.getTankInfo(ForgeDirection.UNKNOWN);
+			int n = tanks.length > 3 ? 3 : tanks.length;
+			if(n > 0)
+			{
+				for (int i = 0; i < n; ++i)
+				{
+					if (tanks[i].fluid == null) continue;
+					int tankSize = tanks[i].fluid.amount * _tankSizeMax / tanks[i].capacity;
+					drawTank(_tanksOffsetX - (i * 20), _tanksOffsetY + _tankSizeMax, tanks[i].fluid,
+							tankSize);
+				}
+			}
 		}
 	}
 	
@@ -77,7 +94,8 @@ public class GuiFactoryInventory extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground()));
+		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder +
+				_tileEntity.getGuiBackground()));
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -93,10 +111,19 @@ public class GuiFactoryInventory extends GuiContainer
 	
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		if(isPointInRegion(122, 15, 16, 60, mouseX, mouseY) && _tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null && _tileEntity.getTank().getFluid().amount > 0)
+		FluidTankInfo[] tanks = _tileEntity.getTankInfo(ForgeDirection.UNKNOWN);
+		int n = tanks.length > 3 ? 3 : tanks.length;
+		tanks: if(n > 0 && isPointInRegion(_tanksOffsetX - ((n - 1) * 20), _tanksOffsetY,
+											n * 20 - n, _tankSizeMax, mouseX, mouseY))
 		{
-			drawBarTooltip(_tileEntity.getTank().getFluid().getFluid().getLocalizedName(),
-					"mB", _tileEntity.getTank().getFluid().amount, _tileEntity.getTank().getCapacity(), mouseX, mouseY);
+			int tankX = mouseX - this.guiLeft - _tanksOffsetX + (n - 1) * 20;
+			if (tankX % 20 > 16)
+				break tanks;
+			tankX /= 20;
+			tankX = n - tankX - 1;
+			if (tanks[tankX].fluid != null && tanks[tankX].fluid.amount > 0)
+				drawBarTooltip(tanks[tankX].fluid.getFluid().getLocalizedName(), "mB",
+					tanks[tankX].fluid.amount, tanks[tankX].capacity, mouseX, mouseY);
 		}
 	}
 	
@@ -142,7 +169,8 @@ public class GuiFactoryInventory extends GuiContainer
 			vertOffset = vertOffset + 16;
 		}
 		
-		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground()));
+		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder +
+				_tileEntity.getGuiBackground()));
 		this.drawTexturedModalRect(xOffset, yOffset - 60, 176, 0, 16, 60);
 	}
 	

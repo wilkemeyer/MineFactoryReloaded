@@ -64,12 +64,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	public int getEnergyStoredMax()
 	{
 		return 32000;

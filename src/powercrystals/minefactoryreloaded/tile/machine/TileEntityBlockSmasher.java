@@ -237,7 +237,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
+		if(resource == null || !resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return 0;
 		}
@@ -265,12 +265,6 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			return _tank;
 		}
 		return null;
-	}
-	
-	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
 	}
 	
 	@Override

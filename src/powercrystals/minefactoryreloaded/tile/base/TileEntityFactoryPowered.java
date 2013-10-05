@@ -20,6 +20,7 @@ import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler.PerditionCalculator;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 
 /*
@@ -86,11 +87,12 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// local methods
 	
-	private void configurePowerProvider()
-	{ // TODO: inline into constructor in 2.8
+	protected void configurePowerProvider()
+	{
 		int activation = getMaxEnergyPerTick() / energyPerMJ;
 		int maxReceived = Math.min(activation * 20, 1000);
 		_powerProvider.configure(activation < 10 ? 1 : 10, maxReceived, 1, 1000);
+		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
 	}
 	
 	@Override
@@ -379,7 +381,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		else // TODO: remove legacy code (below) in 2.8, losses from upgrades 2.6 or below acceptable
 		{
 			_powerProvider.readFromNBT(tag);
-			configurePowerProvider();
 			tag.removeTag("latency");
 			tag.removeTag("minEnergyReceived");
 			tag.removeTag("maxEnergyReceived");
@@ -387,6 +388,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			tag.removeTag("minActivationEnergy");
 			tag.removeTag("storedEnergy");
 		}
+		configurePowerProvider();
 
 		if (tag.hasKey("DropItems"))
 		{
@@ -501,5 +503,16 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public float getProvide(ForgeDirection direction) {
 		return 0;
+	}
+	
+	// BC PerditionCalculator compat
+	protected static class MFRPerdition extends PerditionCalculator
+	{
+		public static final MFRPerdition DEFAULT = new MFRPerdition();
+		@Override
+		public float applyPerdition(PowerHandler powerHandler, float current, long ticksPassed)
+		{
+			return current;
+		}
 	}
 }

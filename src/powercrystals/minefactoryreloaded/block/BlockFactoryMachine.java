@@ -244,12 +244,15 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
 	{
-		int ret = 0;
+		int ret = 0; // TODO: completely defer this to the TE
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if (te instanceof TileEntityFactoryInventory)
 		{
 			TileEntityFactoryInventory inv = (TileEntityFactoryInventory)te;
-			IFluidTank tank = inv.getTank();
+			IFluidTank[] tanks = inv.getTanks();
+			IFluidTank tank = null;
+			if (tanks.length > 0)
+				tank = tanks[0];
 			float tankPercent = 0, invPercent = 0;
 			boolean hasTank = false, hasInventory = false;
 			if (tank != null)

@@ -25,12 +25,14 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 		_crafter = router;
 		xSize = 231;
 		ySize = 214;
+		_renderTanks = false;
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+		
 		fontRenderer.drawString("Template", 67, 27, 4210752);
 		fontRenderer.drawString("Output", 128, 26, 4210752);
 		
@@ -76,7 +78,6 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY)
 	{
-		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground()));
 		int x = (width - xSize) / 2 - 56;

@@ -61,7 +61,7 @@ public abstract class MFRLiquidMover
 		ItemStack ci = entityplayer.inventory.getCurrentItem();
 		boolean isSmartContainer = false;
 		IFluidContainerItem fluidContainer;
-		if(ci!= null && (FluidContainerRegistry.isEmptyContainer(ci) ||
+		if(ci != null && (FluidContainerRegistry.isEmptyContainer(ci) ||
 				(isSmartContainer = ci.getItem() instanceof IFluidContainerItem)))
 		{
 			for(FluidTankInfo tank : itcb.getTankInfo(ForgeDirection.UNKNOWN))
@@ -75,6 +75,7 @@ public abstract class MFRLiquidMover
 					if (fluidContainer.fill(ci, tankLiquid, false) > 0) {
 						int amount = fluidContainer.fill(ci, tankLiquid, true);
 						itcb.drain(ForgeDirection.UNKNOWN, new FluidStack(tankLiquid.fluidID, amount), true);
+						return true;
 					}
 				}
 				else

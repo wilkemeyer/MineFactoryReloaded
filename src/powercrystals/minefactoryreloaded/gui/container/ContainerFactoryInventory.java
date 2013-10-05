@@ -6,8 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,6 +19,7 @@ public class ContainerFactoryInventory extends Container
 	protected TileEntityFactoryInventory _te;
 	
 	private int _tankAmount;
+	private int _tankIndex;
 	
 	public ContainerFactoryInventory(TileEntityFactoryInventory tileentity, InventoryPlayer inv)
 	{
@@ -46,17 +49,25 @@ public class ContainerFactoryInventory extends Container
 	{
 		super.detectAndSendChanges();
 		
+		FluidTankInfo[] tank = _te.getTankInfo(ForgeDirection.UNKNOWN);
+		int n = tank.length;
+		if (n == 0)
+			return;
 		for(int i = 0; i < crafters.size(); i++)
 		{
-			if(_te.getTank() != null && _te.getTank().getFluid() != null)
+			for (int j = n; j --> 0; )
 			{
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 3, _te.getTank().getFluid().amount);
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 4, _te.getTank().getFluid().fluidID);
-			}
-			else if(_te.getTank() != null)
-			{
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 3, 0);
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 4, 0);
+				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 30, j);
+				if(tank[j] != null && tank[j].fluid != null)
+				{
+					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 31, tank[j].fluid.amount);
+					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 32, tank[j].fluid.fluidID);
+				}
+				else if(tank[j] != null)
+				{
+					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 31, 0);
+					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 32, 0);
+				}
 			}
 		}
 	}
@@ -67,8 +78,9 @@ public class ContainerFactoryInventory extends Container
 	{
 		super.updateProgressBar(var, value);
 		
-		if(var == 3) _tankAmount = value;
-		else if(var == 4) ((FluidTank)_te.getTank()).setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
+		if (var == 30) _tankIndex = value;
+		else if (var == 31) _tankAmount = value;
+		else if (var == 32) ((FluidTank)_te.getTanks()[_tankIndex]).setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
 	}
 	
 	@Override

@@ -49,12 +49,6 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	protected boolean activateMachine()
 	{
 		if(_tank.getFluid() != null && _tank.getFluid().amount >= 20)
@@ -105,7 +99,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("sewage", 1)))
+		if(resource == null || !resource.isFluidEqual(FluidRegistry.getFluidStack("sewage", 1)))
 		{
 			return 0;
 		}

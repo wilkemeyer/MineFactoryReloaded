@@ -1,10 +1,12 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -82,7 +84,8 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
 				if(te instanceof IFluidHandler && amountForThisRoute > 0)
 				{
-					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),	new FluidStack(resource.fluidID, amountForThisRoute), doFill);
+					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),
+							new FluidStack(resource.fluidID, amountForThisRoute), doFill);
 					if(amountRemaining <= 0)
 					{
 						break;
@@ -97,7 +100,8 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			TileEntity te = BlockPosition.getAdjacentTileEntity(this, _outputDirections[outdir]);
 			if(te instanceof IFluidHandler)
 			{
-				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(), new FluidStack(resource.fluidID, amountRemaining), doFill);
+				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(),
+						new FluidStack(resource.fluidID, amountRemaining), doFill);
 			}
 		}
 		
@@ -146,7 +150,12 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		
 		for(int i = 0; i < 6; i++)
 		{
-			if(FluidContainerRegistry.containsFluid(_inventory[i], resource))
+			ItemStack stack = _inventory[i];
+			Item item = stack != null ? stack.getItem() : null; 
+			if(item != null &&
+					resource.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(_inventory[i])) ||
+					(item instanceof IFluidContainerItem && 
+							resource.isFluidEqual(((IFluidContainerItem)item).getFluid(stack))))
 			{
 				routeWeights[i] = _inventory[i].stackSize;
 			}
@@ -181,8 +190,9 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	{
 		int tankIndex = from.ordinal();
 		if (tankIndex >= _bufferTanks.length || _filledDirection[tankIndex]) return 0;
-		_filledDirection[tankIndex] = doFill;
-		return pumpLiquid(resource, doFill);
+		int r = pumpLiquid(resource, doFill);
+		_filledDirection[tankIndex] = doFill & r > 0;
+		return r;
 	}
 	
 	@Override
@@ -206,6 +216,12 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			return _bufferTanks[direction.ordinal()];
 		}
 		return null;
+	}
+	
+	@Override
+	public IFluidTank[] getTanks()
+	{
+		return _bufferTanks;
 	}
 	
 	@Override

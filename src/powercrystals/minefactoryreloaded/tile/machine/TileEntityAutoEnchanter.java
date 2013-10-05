@@ -116,12 +116,6 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	protected boolean activateMachine()
 	{
 		if (worldObj.isRemote)
@@ -295,7 +289,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
+		if(resource == null || !resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return 0;
 		}

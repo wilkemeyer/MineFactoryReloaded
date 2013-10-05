@@ -65,20 +65,24 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 	}
 	
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
 		return _tank;
 	}
 	
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		if (_tank == null)
-			return new FluidTankInfo[] {};
-		return new FluidTankInfo[] { _tank.getInfo() };
+		IFluidTank[] tanks = getTanks();
+		FluidTankInfo[] r = new FluidTankInfo[tanks.length];
+		for (int i = tanks.length; i --> 0; )
+			r[i] = tanks[i].getInfo();
+		return r;
+	}
+	
+	public IFluidTank[] getTanks()
+	{
+		if (_tank != null)
+			return new IFluidTank[] {_tank};
+		return new IFluidTank[] {};
 	}
 	
 	protected boolean shouldPumpLiquid()
@@ -103,7 +107,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		
 		if(!worldObj.isRemote && shouldPumpLiquid())
 		{
-			MFRLiquidMover.pumpLiquid(getTank(), this);
+			for (IFluidTank tank : getTanks())
+				MFRLiquidMover.pumpLiquid(tank, this);
 		}
 	}
 	
@@ -208,20 +213,44 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		onFactoryInventoryChanged();
 		
-		IFluidTank tank = getTank();
 		
-		int tankAmount = nbttagcompound.getInteger("tankAmount");
-		if (tank != null && nbttagcompound.hasKey("tankFluidName"))
-		{
-			FluidStack fluid = FluidRegistry.getFluidStack(nbttagcompound.getString("tankFluidName"), tankAmount);
-			if (fluid != null)
+
+		if (nbttagcompound.hasKey("mTanks")) {
+			IFluidTank[] _tanks = getTanks();
+			
+			nbttaglist = nbttagcompound.getTagList("mTanks");
+			for(int i = 0; i < nbttaglist.tagCount(); i++)
 			{
-				if(fluid.amount > tank.getCapacity())
+				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+				int j = nbttagcompound1.getByte("Tank") & 0xff;
+				if(j >= 0 && j < _tanks.length)
 				{
-					fluid.amount = tank.getCapacity();
+					FluidStack l = FluidStack.loadFluidStackFromNBT(nbttagcompound1);
+					if(l != null)
+					{
+						((FluidTank)_tanks[j]).setFluid(l);
+					}
 				}
-				
-				((FluidTank)tank).setFluid(fluid);
+			}
+		}
+		else
+		{
+			IFluidTank tank = _tank;
+			if (tank != null && nbttagcompound.hasKey("tankFluidName"))
+			{
+				int tankAmount = nbttagcompound.getInteger("tankAmount");
+				FluidStack fluid = FluidRegistry.getFluidStack(nbttagcompound.getString("tankFluidName"), tankAmount);
+				if (fluid != null)
+				{
+					if(fluid.amount > tank.getCapacity())
+					{
+						fluid.amount = tank.getCapacity();
+					}
+
+					((FluidTank)tank).setFluid(fluid);
+				}
+				nbttagcompound.removeTag("tankFluidName");
+				nbttagcompound.removeTag("tankAmount");
 			}
 		}
 		
@@ -258,16 +287,24 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
-		if(getTank() != null && getTank().getFluid() != null)
+		
+		IFluidTank[] _tanks = getTanks();
+		
+		NBTTagList tanks = new NBTTagList();
+		for(int i = 0, n = _tanks.length; i < n; i++)
 		{
-			FluidStack fluid = getTank().getFluid();
-			nbttagcompound.setInteger("tankAmount", fluid.amount);
-			String name = FluidRegistry.getFluidName(fluid.fluidID);
-			if (name != null)
+			if(_tanks[i].getFluid() != null)
 			{
-				nbttagcompound.setString("tankFluidName", name);
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Tank", (byte)i);
+				
+				FluidStack l = _tanks[i].getFluid();
+				l.writeToNBT(nbttagcompound1);
+				tanks.appendTag(nbttagcompound1);
 			}
 		}
+		
+		nbttagcompound.setTag("mTanks", tanks);
 		
 		if (this.isInvNameLocalized())
 		{

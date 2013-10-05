@@ -8,8 +8,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -187,15 +187,9 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
+		if(resource == null || !resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return 0;
 		}
@@ -223,7 +217,11 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
-		return _tank;
+		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
+		{
+			return _tank;
+		}
+		return null;
 	}
 	
 	@Override

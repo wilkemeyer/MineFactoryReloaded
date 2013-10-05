@@ -33,18 +33,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileEntitySewer extends TileEntityFactoryInventory implements ITankContainerBucketable, IHarvestAreaContainer
 {
 	private HarvestAreaManager _areaManager;
-	
 	private int _tick;
-	
 	private long _nextSewerCheckTick;
-	
 	private boolean _jammed;
+	private FluidTank[] _tanks;
 	
 	public TileEntitySewer()
 	{
 		// TODO: dual tanks on sewer
 		super(Machine.Sewer);
-		_tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
+		_tanks = new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME),
+				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
 		_areaManager = new HarvestAreaManager(this, 0, 1, 0);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
 	}
@@ -69,9 +68,9 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 	
 	@Override
-	public IFluidTank getTank()
+	public IFluidTank[] getTanks()
 	{
-		return _tank;
+		return _tanks;
 	}
 	
 	@Override
@@ -138,39 +137,35 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			}
 			if (massFound > 0)
 			{
-				_tank.fill(FluidRegistry.getFluidStack("sewage", (int)(25 * massFound)), true);
+				_tanks[0].fill(FluidRegistry.getFluidStack("sewage", (int)(25 * massFound)), true);
 			}
-			// TODO: add a second tank to the sewer for essence
-			else if (_tank.getFluid() == null || _tank.getFluid().isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
+			int maxAmount = Math.max(_tanks[1].getCapacity() - (_tanks[1].getFluidAmount()), 0);
+			if (maxAmount < 0)
 			{
-				int maxAmount = Math.max(_tank.getCapacity() - (_tank.getFluid() != null ? _tank.getFluid().amount : 0), 0);
-				if (maxAmount < 0)
+				return;
+			}
+			entities = worldObj.getEntitiesWithinAABB(EntityXPOrb.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+			for (Object o : entities)
+			{
+				Entity e = (Entity)o;
+				if (e != null & e instanceof EntityXPOrb && !e.isDead)
 				{
-					return;
-				}
-				entities = worldObj.getEntitiesWithinAABB(EntityXPOrb.class, _areaManager.getHarvestArea().toAxisAlignedBB());
-				for (Object o : entities)
-				{
-					Entity e = (Entity)o;
-					if (e != null & e instanceof EntityXPOrb && !e.isDead)
+					EntityXPOrb orb = (EntityXPOrb)o;
+					int found = Math.min(orb.xpValue, maxAmount);
+					orb.xpValue -= found;
+					if (orb.xpValue <= 0)
 					{
-						EntityXPOrb orb = (EntityXPOrb)o;
-						int found = Math.min(orb.xpValue, maxAmount);
-						orb.xpValue -= found;
-						if (orb.xpValue <= 0)
+						orb.setDead();
+						found = Math.max(found, 0);
+					}
+					if (found > 0)
+					{
+						found = (int)(found * 66.66666667f);
+						maxAmount -= found;
+						_tanks[1].fill(FluidRegistry.getFluidStack("mobessence", found), true);
+						if (maxAmount <= 0)
 						{
-							orb.setDead();
-							found = Math.max(found, 0);
-						}
-						if (found > 0)
-						{
-							found = (int)(found * 66.66666667f);
-							maxAmount -= found;
-							_tank.fill(FluidRegistry.getFluidStack("mobessence", found), true);
-							if (maxAmount <= 0)
-							{
-								break;
-							}
+							break;
 						}
 					}
 				}

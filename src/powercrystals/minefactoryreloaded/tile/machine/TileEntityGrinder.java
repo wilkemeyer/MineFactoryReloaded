@@ -132,12 +132,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
-	}
-	
-	@Override
 	public HarvestAreaManager getHAM()
 	{
 		return _areaManager;

@@ -426,6 +426,7 @@ inv:	for(int i = 0; i < 9; i++)
 		return r;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IFluidTank[] getTanks()
 	{

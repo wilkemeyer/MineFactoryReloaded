@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -199,12 +198,6 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	{
 		if(slot == 1) return true;
 		return false;
-	}
-	
-	@Override
-	public IFluidTank getTank()
-	{
-		return _tank;
 	}
 	
 	@Override

@@ -5,7 +5,10 @@ import java.util.List;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
@@ -13,10 +16,12 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public class TileEntitySlaughterhouse extends TileEntityGrinder
 {
+	protected FluidTank _tank2;
 	public TileEntitySlaughterhouse()
 	{
 		super(Machine.Slaughterhouse);
 		_damageSource = new GrindingDamage("mfr.slaughterhouse", 2);
+		_tank2 = new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME);
 	}
 	
 	@Override
@@ -24,6 +29,12 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	{
 		super.setWorldObj(world);
 		this._grindingWorld.setAllowSpawns(true);
+	}
+	
+	@Override
+	public IFluidTank[] getTanks()
+	{
+		return new IFluidTank[] {_tank, _tank2};
 	}
 	
 	@Override
@@ -57,7 +68,10 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				_tank.fill(FluidRegistry.getFluidStack(_rand.nextInt(8) == 0 ? "pinkslime" : "meat", (int)(100 * massFound)), true);
+				if (_rand.nextInt(8) != 0)
+					_tank.fill(FluidRegistry.getFluidStack("meat", (int)(100 * massFound)), true);
+				else
+					_tank2.fill(FluidRegistry.getFluidStack("pinkslime", (int)(100 * massFound)), true);
 				setIdleTicks(10);
 			}
 			else
