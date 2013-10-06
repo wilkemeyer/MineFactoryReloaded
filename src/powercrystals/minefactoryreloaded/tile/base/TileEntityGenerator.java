@@ -16,7 +16,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 	protected TileEntityGenerator(Machine machine)
 	{
 		super(machine);
-		_powerProvider = new PowerHandler(this, PowerHandler.Type.ENGINE);
+		_powerProvider = new PowerHandler(this, PowerHandler.Type.GATE);
 		_powerProvider.configure(0, 0, 0, 0);
 		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
 	}
@@ -37,7 +37,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 			PowerReceiver pp = ipr.getPowerReceiver(bp.orientation);
 			if(pp != null && pp.powerRequest() > 0 && pp.getMinEnergyReceived() <= mj)
 			{
-				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - (int)Math.floor(pp.getEnergyStored()));
+				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - pp.getEnergyStored());
 				pp.receiveEnergy(_powerProvider.getPowerReceiver().getType(), mjUsed, bp.orientation);
 				
 				mj -= mjUsed;
