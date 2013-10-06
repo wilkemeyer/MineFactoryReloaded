@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.setup.Machine;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.MFRPerdition;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
@@ -17,6 +18,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 		super(machine);
 		_powerProvider = new PowerHandler(this, PowerHandler.Type.ENGINE);
 		_powerProvider.configure(0, 0, 0, 0);
+		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
 	}
 	
 	protected final int producePower(int mj)

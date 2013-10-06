@@ -506,7 +506,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 	
 	// BC PerditionCalculator compat
-	protected static class MFRPerdition extends PerditionCalculator
+	public static class MFRPerdition extends PerditionCalculator
 	{
 		public static final MFRPerdition DEFAULT = new MFRPerdition();
 		@Override
