@@ -37,7 +37,7 @@ public class Vanilla
 		registerMiscItems();
 		registerVanillaImprovements();
 		registerRails();
-		registerGuns();
+		//registerGuns();
 		registerRedNet();
 		registerRedNetManual();
 	}
