@@ -1388,7 +1388,7 @@ public class Vanilla
 			" P ",
 			"P P",
 			'P', "sheetPlastic",
-				} ));//*/
+				} ));//*/ // TODO: enable plastic cup after fixing damage derp
 	}
 	
 	protected void registerVanillaImprovements()
