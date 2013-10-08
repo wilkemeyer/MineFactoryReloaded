@@ -42,20 +42,26 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean par4)
 	{
 		NBTTagCompound c = stack.getTagCompound();
-		if(getBlockID() == Machine.DeepStorageUnit.getBlockId() && stack.getItemDamage() == Machine.DeepStorageUnit.getMeta() && c != null)
+		if(getBlockID() == Machine.DeepStorageUnit.getBlockId() &&
+				stack.getItemDamage() == Machine.DeepStorageUnit.getMeta() && c != null)
 		{
-			ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
-			int storedQuantity = c.getInteger("storedQuantity");
-			if (storedItem != null & storedQuantity > 0)
+			if (c.hasKey("storedStack"))
 			{
-				info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() + " (" + storedItem.itemID + ":" + storedItem.getItemDamageForDisplay() + ")");
-			}
-			else
-			{
-				// info.add("Empty");
+				ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
+				int storedQuantity = c.getInteger("storedQuantity");
+				if (storedItem != null & storedQuantity > 0)
+				{
+					info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() +
+							" (" + storedItem.itemID + ":" + storedItem.getItemDamageForDisplay() + ")");
+				}
+				else
+				{
+					// info.add("Empty");
+				}
 			}
 		}
-		else if(getBlockID() == Machine.BioFuelGenerator.getBlockId() && stack.getItemDamage() == Machine.BioFuelGenerator.getMeta())
+		else if(getBlockID() == Machine.BioFuelGenerator.getBlockId() &&
+				stack.getItemDamage() == Machine.BioFuelGenerator.getMeta())
 		{
 			info.add("Produces MJ only.");
 		}

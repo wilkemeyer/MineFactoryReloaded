@@ -213,12 +213,20 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
+		int storedAdd = 0;
+		ItemStack o = _inventory[2];
+		if (o != null)
+		{
+			storedAdd = o.stackSize;
+			_inventory[2] = null;
+		}
 		super.writeToNBT(nbttagcompound);
+		_inventory[2] = o;
 		
 		if (_storedItem != null)
 		{
 			nbttagcompound.setCompoundTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
-			nbttagcompound.setInteger("storedQuantity", _storedQuantity);
+			nbttagcompound.setInteger("storedQuantity", _storedQuantity + storedAdd);
 		}
 		else
 			nbttagcompound.setInteger("storedQuantity", 0);
