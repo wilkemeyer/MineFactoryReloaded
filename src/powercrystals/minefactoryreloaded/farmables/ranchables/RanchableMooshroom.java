@@ -42,7 +42,7 @@ public class RanchableMooshroom implements IFactoryRanchable {
 		if(bucketIndex >= 0)
 		{
 			drops.add(new RanchedItem(Item.bucketMilk));
-			rancher.setInventorySlotContents(bucketIndex, null);
+			rancher.decrStackSize(bowlIndex, 1);
 		}
 		else
 		{

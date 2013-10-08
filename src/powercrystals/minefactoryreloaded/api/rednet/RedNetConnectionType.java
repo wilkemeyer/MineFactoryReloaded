@@ -14,6 +14,8 @@ import java.util.Map;
  * CableAll:			Connections permit access to all 16 bands
  * PlateAll:			Connections permit access to all 16 bands
  * 
+ * Forced connection modes are best used for decoration blocks: RedNet will not connect normally, but will if the user forces it
+ * 
  * ForcedCableSingle:	Connections permit access to a single band only when the cable is in forced connection mode
  * ForcedPlateSingle:	Connections permit access to a single band only when the cable is in forced connection mode
  * 
