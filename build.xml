@@ -81,7 +81,7 @@
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="${have-apis}">
 		<copy todir="${mcpsrc.dir}/powercrystals/core">
-			<fileset dir="${download.dir}/PowerCrystalsCore-1.6.4/src/powercrystals/core" />
+			<fileset dir="${download.dir}/PowerCrystalsCore-master/src/powercrystals/core" />
 		</copy>
 		
 		<echo message="Extracting BuildCraft API..." />
@@ -250,7 +250,7 @@
 		<!-- Change executables' permitions -->
 		<chmod file="${forge.dir}/install.sh" perm="+x"/>
 
-		<copy file="${download.dir}/PowerCrystalsCore-1.6.4/pcc_at.cfg" todir="${forge.dir}/accesstransformers/"/>
+		<copy file="${download.dir}/PowerCrystalsCore-master/pcc_at.cfg" todir="${forge.dir}/accesstransformers/"/>
 
 		<!-- Install forge -->
 		<delete dir="${mcp.dir}" failonerror="no"/>
@@ -275,6 +275,14 @@
 		<chmod file="${mcp.dir}/reobfuscate.sh" perm="+x"/>
 		<chmod file="${mcp.dir}/runtime/bin/astyle-osx" perm="+x" />
 		<chmod file="${mcp.dir}/runtime/bin/jad-osx" perm="+x" />
+		
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows" inputstring="Yes\n">
+			<arg line="/c updatemd5.bat"/>
+		</exec>
+
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix" inputstring="Yes\n">
+			<arg value="updatemd5.sh" />
+		</exec>
 
 		<!-- Copy source -->
 		<mkdir dir="${mcpsrc.dir}/powercrystals" />
@@ -299,7 +307,7 @@
 	
 	<target name="download-core" unless="forge-exists">
 		<echo message="Downloading PowerCrystalsCore... " />
-		<get src="https://github.com/skyboy/PowerCrystalsCore/archive/1.6.4.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
+		<get src="https://github.com/skyboy/PowerCrystalsCore/archive/master.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
 		
 		<echo message="Extracting PowerCrystalsCore... " />
 		<unzip src="${download.dir}/PowerCrystalsCore-master.zip" dest="${download.dir}"/>

@@ -20,7 +20,6 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoSpawner;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
@@ -77,18 +76,6 @@ public class ServerPacketHandler implements IPacketHandler
 			if(te instanceof TileEntityChronotyper)
 			{
 				((TileEntityChronotyper)te).setMoveOld(!((TileEntityChronotyper)te).getMoveOld());
-			}
-		}
-		else if(packetType == Packets.DSUButton) // client -> server: toggle DSU output side
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
-			if(te instanceof TileEntityDeepStorageUnit)
-			{
-				int side = (Integer)packetReadout[3];
-				((TileEntityDeepStorageUnit)te).setSideIsOutput(side, (!((TileEntityDeepStorageUnit)te).getIsSideOutput(side)));
 			}
 		}
 		else if(packetType == Packets.AutoJukeboxButton) // client -> server: copy record

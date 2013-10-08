@@ -23,8 +23,6 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	{
 		super(Machine.DeepStorageUnit);
 	}
-
-	private boolean[] _isSideOutput = new boolean[] { false, false, true, true, true, true };
 	
 	private int _storedQuantity;
 	private ItemStack _storedItem = null;
@@ -57,16 +55,6 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	public ContainerDeepStorageUnit getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerDeepStorageUnit(this, inventoryPlayer);
-	}
-	
-	public boolean getIsSideOutput(int side)
-	{
-		return _isSideOutput[side];
-	}
-	
-	public void setSideIsOutput(int side, boolean isOutput)
-	{
-		_isSideOutput[side] = isOutput;
 	}
 	
 	public int getQuantity()
@@ -120,11 +108,17 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		{
 			return;
 		}
-		if((_inventory[2] == null) & _storedItem != null && _storedQuantity > 0)
+		// TODO: move calculations to onFactoryInventoryChanged
+		if((_inventory[2] == null) & _storedItem != null)
 		{
-			_inventory[2] = _storedItem.copy();
-			_inventory[2].stackSize = Math.min(_storedQuantity, _storedItem.getMaxStackSize());
-			_storedQuantity -= _inventory[2].stackSize;
+			if (_storedQuantity > 0)
+			{
+				_inventory[2] = _storedItem.copy();
+				_inventory[2].stackSize = Math.min(_storedQuantity, _storedItem.getMaxStackSize());
+				_storedQuantity -= _inventory[2].stackSize;
+			}
+			else
+				_storedItem = null;
 		}
 		else if(_inventory[2] != null && _inventory[2].stackSize < _inventory[2].getMaxStackSize() && UtilInventory.stacksEqual(_storedItem, _inventory[2]) && _storedQuantity > 0)
 		{
@@ -155,7 +149,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 				_inventory[slot] = null;
 			}
 			else if(UtilInventory.stacksEqual(_inventory[slot], _storedItem) &&
-					(Integer.MAX_VALUE - _storedItem.getMaxStackSize() - 2) - _inventory[slot].stackSize > _storedQuantity)
+					(getMaxStoredCount() - _storedItem.getMaxStackSize()) - _inventory[slot].stackSize > _storedQuantity)
 			{
 				_storedQuantity += _inventory[slot].stackSize;
 				_inventory[slot] = null;
@@ -189,44 +183,31 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
-		if(side.ordinal() > 5) return 0;
-		return _isSideOutput[side.ordinal()] ? 2 : 0;
+		return 0;
 	}
 	
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		if(side.ordinal() > 5) return 0;
-		return _isSideOutput[side.ordinal()] ? 1 : 2;
+		return getSizeInventory();
 	}
 	
 	/*
-	 * Should only allow matching items to be inserted in the "in" slot. Nothing goes in the "out" slot.
+	 * Should only allow matching items to be inserted in the "in" slots. Nothing goes in the "out" slot.
 	 */
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
-		if(sideordinal > 5) return false;
-		if(!_isSideOutput[sideordinal])
-		{
-			ItemStack stored = getStoredItemType();
-			if(stored == null && _inventory[2] != null)
-			{
-				stored = _inventory[2];
-			}
-			return (!stack.hasTagCompound() && (stored == null || stack.isItemEqual(stored)));
-		}
-		return false;
+		if(slot >= 2) return false;
+		ItemStack stored = _storedItem;
+		if (stored == null) stored = _inventory[2];
+		return stored == null || UtilInventory.stacksEqual(stored, stack);
 	}
 	
-	/*
-	 * Should only allow removal from the output slot.
-	 */
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
-		if(sideordinal > 5) return false;
-		return _isSideOutput[sideordinal];
+		return true;
 	}
 	
 	@Override
@@ -241,13 +222,6 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		}
 		else
 			nbttagcompound.setInteger("storedQuantity", 0);
-		
-		nbttagcompound.setBoolean("side0output", _isSideOutput[0]);
-		nbttagcompound.setBoolean("side1output", _isSideOutput[1]);
-		nbttagcompound.setBoolean("side2output", _isSideOutput[2]);
-		nbttagcompound.setBoolean("side3output", _isSideOutput[3]);
-		nbttagcompound.setBoolean("side4output", _isSideOutput[4]);
-		nbttagcompound.setBoolean("side5output", _isSideOutput[5]);
 	}
 	
 	@Override
@@ -260,12 +234,21 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		
 		if (nbttagcompound.hasKey("storedId"))
 		{
-			int storedID = nbttagcompound.getInteger("storedId");
-			if (storedID < Item.itemsList.length && Item.itemsList[storedID] != null)
+			if (_storedQuantity != 0)
 			{
-				_storedItem = new ItemStack(storedID, 0, nbttagcompound.getInteger("storedMeta"));
+				int storedID = nbttagcompound.getInteger("storedId");
+				if (storedID < Item.itemsList.length && Item.itemsList[storedID] != null)
+				{
+					_storedItem = new ItemStack(storedID, 1, nbttagcompound.getInteger("storedMeta"));
+				}
+			}
+			else if (_inventory[2] != null)
+			{
+				_storedItem = _inventory[2].copy();
+				_storedItem.stackSize = 1;
 			}
 			nbttagcompound.removeTag("storedId");
+			nbttagcompound.removeTag("storedMeta");
 		}
 		else if (nbttagcompound.hasKey("storedStack"))
 		{

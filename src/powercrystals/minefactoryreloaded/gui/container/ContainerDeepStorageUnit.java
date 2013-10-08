@@ -78,12 +78,6 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory
 		super.detectAndSendChanges();
 		for(int i = 0; i < crafters.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, _dsu.getIsSideOutput(0) ? 1 : 0);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, _dsu.getIsSideOutput(1) ? 1 : 0);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 102, _dsu.getIsSideOutput(2) ? 1 : 0);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 103, _dsu.getIsSideOutput(3) ? 1 : 0);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 104, _dsu.getIsSideOutput(4) ? 1 : 0);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 105, _dsu.getIsSideOutput(5) ? 1 : 0);
 			
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 200, _dsu.getQuantity());
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 201, _dsu.getQuantity() >> 16);
@@ -95,13 +89,6 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory
 	public void updateProgressBar(int var, int value)
 	{
 		super.updateProgressBar(var, value);
-		
-		if(var == 100) _dsu.setSideIsOutput(0, value == 1);
-		if(var == 101) _dsu.setSideIsOutput(1, value == 1);
-		if(var == 102) _dsu.setSideIsOutput(2, value == 1);
-		if(var == 103) _dsu.setSideIsOutput(3, value == 1);
-		if(var == 104) _dsu.setSideIsOutput(4, value == 1);
-		if(var == 105) _dsu.setSideIsOutput(5, value == 1);
 		
 		if(var == 200) _tempQuantity = upcastShort(value);
 		if(var == 201) _dsu.setQuantity(_tempQuantity | (value << 16));
