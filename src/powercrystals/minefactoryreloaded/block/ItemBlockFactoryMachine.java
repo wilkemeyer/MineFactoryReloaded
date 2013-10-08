@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -45,13 +44,11 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory
 		NBTTagCompound c = stack.getTagCompound();
 		if(getBlockID() == Machine.DeepStorageUnit.getBlockId() && stack.getItemDamage() == Machine.DeepStorageUnit.getMeta() && c != null)
 		{
-			int storedId = c.getInteger("storedId");
-			int storedMeta = c.getInteger("storedMeta");
+			ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
 			int storedQuantity = c.getInteger("storedQuantity");
-			if (storedId > 0 & storedQuantity > 0)
+			if (storedItem != null & storedQuantity > 0)
 			{
-				ItemStack storedItem = new ItemStack(storedId, 1, storedMeta);
-				info.add("Contains " + storedQuantity + " " + Item.itemsList[storedId].getItemDisplayName(storedItem) + " (" + storedId + ":" + storedMeta + ")");
+				info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() + " (" + storedItem.itemID + ":" + storedItem.getItemDamageForDisplay() + ")");
 			}
 			else
 			{
