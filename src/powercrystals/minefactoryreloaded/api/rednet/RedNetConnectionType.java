@@ -3,6 +3,23 @@ package powercrystals.minefactoryreloaded.api.rednet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Defines how RedNet cable connects to a block
+ * 
+ * None:				RedNet will never connect to this block (if this is all you want: use IRedNetNoConnection)
+ * 
+ * CableSingle:			Connections will use the cable renderer with a single band, best used for whole blocks
+ * PlateSingle:			Connections will use the plate renderer with a single band, used for conveyers and rails
+ * 
+ * CableAll:			Connections permit access to all 16 bands
+ * PlateAll:			Connections permit access to all 16 bands
+ * 
+ * ForcedCableSingle:	Connections permit access to a single band only when the cable is in forced connection mode
+ * ForcedPlateSingle:	Connections permit access to a single band only when the cable is in forced connection mode
+ * 
+ * ForcedCableAll:		Connections permit access to all 16 bands only when the cable is in forced connection mode
+ * ForcedPlateAll:		Connections permit access to all 16 bands only when the cable is in forced connection mode
+ */
 public enum RedNetConnectionType
 {
 	None,				// 0
