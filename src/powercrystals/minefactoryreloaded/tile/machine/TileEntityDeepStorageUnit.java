@@ -106,42 +106,6 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		}
 	}
 	
-	/*
-	public int getId()
-	{
-		if(_storedQuantity == 0 && _inventory[2] != null)
-		{
-			return _inventory[2].itemID;
-		}
-		else
-		{
-			return _storedId;			
-		}
-	}
-	
-	public void setId(int id)
-	{
-		_storedId = id;
-	}
-	
-	public int getMeta()
-	{
-		if(_storedQuantity == 0 && _inventory[2] != null)
-		{
-			return _inventory[2].getItemDamage();
-		}
-		else
-		{
-			return _storedMeta;			
-		}
-	}
-	
-	public void setMeta(int meta)
-	{
-		_storedMeta = meta;
-	}
-	//*/
-	
 	@Override
 	public ForgeDirection getDropDirection()
 	{
