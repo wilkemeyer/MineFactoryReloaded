@@ -153,17 +153,24 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IFluidBlock,
 	}
 
 	@Override
-	public Fluid getFluid() {
+	public Fluid getFluid()
+	{
 		return FluidRegistry.getFluid(fluidName);
 	}
 
 	@Override
-	public FluidStack drain(World world, int x, int y, int z, boolean doDrain) {
+	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
+	{
+		if (doDrain)
+		{
+			world.setBlockToAir(x, y, z);
+		}
 		return FluidRegistry.getFluidStack(fluidName, FluidContainerRegistry.BUCKET_VOLUME);
 	}
 
 	@Override
-	public boolean canDrain(World world, int x, int y, int z) {
-		return true; // TODO: test IFluidBlock drain
+	public boolean canDrain(World world, int x, int y, int z)
+	{
+		return true;
 	}
 }

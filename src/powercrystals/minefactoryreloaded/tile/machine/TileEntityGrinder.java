@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -52,7 +51,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	protected HarvestAreaManager _areaManager;
-	protected FluidTank _tank;
 	protected Random _rand;
 	protected IGrindingWorld _grindingWorld;
 	protected GrindingDamage _damageSource;
@@ -262,12 +260,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
-	}
-	
-	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
-	{
-		return _tank;
 	}
 	
 	@Override
