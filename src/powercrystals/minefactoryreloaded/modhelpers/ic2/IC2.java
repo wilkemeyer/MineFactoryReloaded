@@ -78,17 +78,18 @@ public class IC2
 					Character.valueOf('L'), new ItemStack(MineFactoryReloadedCore.rubberLeavesBlock)
 					} );
 
-			Method m;
+			Method m = null;
 			ItemStack item = new ItemStack(MineFactoryReloadedCore.rubberSaplingBlock);
 			rubber.stackSize = 1;
 			try
 			{
-				m = IMachineRecipeManager.class.getDeclaredMethod("addRecipe", ItemStack.class, ItemStack.class);
+				for (Method t : IMachineRecipeManager.class.getDeclaredMethods())
+					if (t.getName().equals("addRecipe"))
+						m = t; 
 				m.invoke(Recipes.extractor, item, rubber);
 			}
 			catch (Throwable _)
 			{
-				_.printStackTrace();
 				try
 				{
 					Class<?> clazz = Class.forName("RecipeInputItemStack");
