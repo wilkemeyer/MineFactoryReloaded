@@ -16,7 +16,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerMachines()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}

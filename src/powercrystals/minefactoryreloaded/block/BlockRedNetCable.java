@@ -186,7 +186,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 					}
 				}
 			}
-			else if(MFRUtil.isHoldingHammer(player))
+			else if(MFRUtil.isHoldingHammer(player) || (s != null && s.getItem() instanceof IToolWrench))
 			{
 				byte mode = cable.getMode();
 				mode++;

@@ -295,7 +295,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 				}
 				else if(amount >= _inventory[i].stackSize)
 				{
-					amount -= _inventory[i].stackSize;					
+					amount -= _inventory[i].stackSize;
 				}
 				else if(amount < _inventory[i].stackSize)
 				{
