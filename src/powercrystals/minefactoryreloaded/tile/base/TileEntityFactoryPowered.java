@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
@@ -456,6 +457,27 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int getMaxSafeInput()
 	{
 		return 128;
+	}
+	
+	// IC2-lf methods
+	
+	public int demandsEnergy()
+	{
+		return Math.max(getEnergyRequired() / energyPerEU, 0);
+	}
+
+	public int injectEnergy(Direction directionFrom, int amount)
+	{
+		int euInjected = Math.max(Math.min(demandsEnergy(), amount), 0);
+		int energyInjected = euInjected * energyPerEU;
+		_energyStored += energyInjected;
+		_energyRequiredThisTick -= energyInjected;
+		return amount - euInjected;
+	}
+	
+	public boolean acceptsEnergyFrom(TileEntity tile, Direction side)
+	{
+		return true;
 	}
 	
 	// UE Methods

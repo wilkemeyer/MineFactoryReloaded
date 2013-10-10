@@ -1,11 +1,15 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 import ic2.api.item.Items;
-import ic2.api.recipe.RecipeInputItemStack;
+import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.Recipes;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -25,7 +29,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class IC2
 {
 	@EventHandler
-	public static void load(FMLInitializationEvent e)
+	public static void load(FMLInitializationEvent evt)
 	{
 		if(!Loader.isModLoaded("IC2"))
 		{
@@ -35,7 +39,7 @@ public class IC2
 		try
 		{
 			ItemStack crop = Items.getItem("crop");
-			ItemStack rubber = Items.getItem("rubber");
+			ItemStack rubber = Items.getItem("rubber").copy();
 			ItemStack rubberSapling = Items.getItem("rubberSapling");
 			ItemStack rubberLeaves = Items.getItem("rubberLeaves");
 			ItemStack rubberWood = Items.getItem("rubberWood");
@@ -73,8 +77,31 @@ public class IC2
 					"LLL",
 					Character.valueOf('L'), new ItemStack(MineFactoryReloadedCore.rubberLeavesBlock)
 					} );
-			
-			Recipes.extractor.addRecipe(new RecipeInputItemStack(new ItemStack(MineFactoryReloadedCore.rubberSaplingBlock)), null, rubber);
+
+			Method m;
+			ItemStack item = new ItemStack(MineFactoryReloadedCore.rubberSaplingBlock);
+			rubber.stackSize = 1;
+			try
+			{
+				m = IMachineRecipeManager.class.getDeclaredMethod("addRecipe", ItemStack.class, ItemStack.class);
+				m.invoke(Recipes.extractor, item, rubber);
+			}
+			catch (Throwable _)
+			{
+				_.printStackTrace();
+				try
+				{
+					Class<?> clazz = Class.forName("RecipeInputItemStack");
+					Constructor<?> c = clazz.getDeclaredConstructor(ItemStack.class);
+					m = IMachineRecipeManager.class.getDeclaredMethod("addRecipe", clazz, NBTTagCompound.class, ItemStack.class);
+					Object o = c.newInstance(item);
+					m.invoke(Recipes.extractor, o, null, rubber);
+				}
+				catch (Throwable e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 		catch (Exception x)
 		{
