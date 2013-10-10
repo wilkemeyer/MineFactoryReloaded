@@ -230,9 +230,9 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 			_isReversed = nbtTagCompound.getBoolean("isReversed");
 		}
 		
-		if(nbtTagCompound.hasKey("conveyorActive"))
+		if(nbtTagCompound.hasKey("redNetActive"))
 		{
-			_conveyorActive = nbtTagCompound.getBoolean("conveyorActive");
+			_conveyorActive = nbtTagCompound.getBoolean("redNetActive");
 		}
 	}
 	
@@ -390,31 +390,25 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 	public boolean canInsertItem(int slot, ItemStack stack, int side)
     {
     	int blockmeta;
-    	if(side == ForgeDirection.UP.ordinal())
+    	switch (ForgeDirection.getOrientation(side))
     	{
+    	case UP:
     		return (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 0x04) == 0;
-    	} 
-    	else if(side == ForgeDirection.EAST.ordinal())
-    	{
+    	case EAST:
     		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 || (blockmeta & 0x03) != 0; 
-    	}
-    	else if(side == ForgeDirection.SOUTH.ordinal())
-    	{
+    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 0;
+    	case SOUTH:
     		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 || (blockmeta & 0x03) != 1; 
-    	}
-    	else if(side == ForgeDirection.WEST.ordinal())
-    	{
+    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 1;
+    	case WEST:
     		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 || (blockmeta & 0x03) != 2; 
-    	}
-    	else if(side == ForgeDirection.NORTH.ordinal())
-    	{
+    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 2;
+    	case NORTH:
     		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 || (blockmeta & 0x03) != 3; 
+    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 3;
+    	default:
+    		return true;
     	}
-    	return true;
     }
     
     @Override
