@@ -87,7 +87,7 @@
 		<echo message="Extracting BuildCraft API..." />
 		<unzip src="${download.dir}/Buildcraft-master.zip" dest="${download.dir}"/>
 		<mkdir dir="${mcpsrc.dir}/buildcraft/" />
-		<move file="${download.dir}/Buildcraft-3e13bbb166568624cc918f8a9f916fa2062f6c37/common/buildcraft/api" todir="${mcpsrc.dir}/buildcraft/"/>
+		<move file="${download.dir}/BuildCraft-3e13bbb166568624cc918f8a9f916fa2062f6c37/common/buildcraft/api" todir="${mcpsrc.dir}/buildcraft/"/>
 		
 		<echo message="Extracting IC2 API... " />
 		<unzip src="${download.dir}/industrialcraft-2-api.zip" dest="${download.dir}" />

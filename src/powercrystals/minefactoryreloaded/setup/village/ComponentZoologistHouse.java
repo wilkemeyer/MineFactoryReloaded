@@ -17,6 +17,8 @@ public class ComponentZoologistHouse extends ComponentVillage
 {
 	private int averageGroundLevel = -1;
 	
+	public ComponentZoologistHouse(){}
+	
 	public ComponentZoologistHouse(ComponentVillageStartPiece startPiece, int componentType, Random rand, StructureBoundingBox sbb, int coordBaseMode)
 	{
 		super(startPiece, componentType);

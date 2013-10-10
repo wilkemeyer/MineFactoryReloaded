@@ -9,7 +9,6 @@ import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.Recipes;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -85,18 +84,20 @@ public class IC2
 			{
 				for (Method t : IMachineRecipeManager.class.getDeclaredMethods())
 					if (t.getName().equals("addRecipe"))
-						m = t; 
+					{
+						m = t;
+						break;
+					}
 				m.invoke(Recipes.extractor, item, rubber);
 			}
 			catch (Throwable _)
 			{
 				try
 				{
-					Class<?> clazz = Class.forName("RecipeInputItemStack");
+					Class<?> clazz = Class.forName("ic2.api.recipe.RecipeInputItemStack");
 					Constructor<?> c = clazz.getDeclaredConstructor(ItemStack.class);
-					m = IMachineRecipeManager.class.getDeclaredMethod("addRecipe", clazz, NBTTagCompound.class, ItemStack.class);
 					Object o = c.newInstance(item);
-					m.invoke(Recipes.extractor, o, null, rubber);
+					m.invoke(Recipes.extractor, o, null, new ItemStack[] {rubber});
 				}
 				catch (Throwable e)
 				{

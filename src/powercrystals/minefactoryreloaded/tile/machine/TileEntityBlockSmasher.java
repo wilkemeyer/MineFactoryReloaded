@@ -273,7 +273,8 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		super.writeToNBT(tag);
 		tag.setInteger("fortune", _fortune);
 		tag.setBoolean("shouldWork", _shouldWork);
-		tag.setTag("stack", _lastInput != null ? _lastInput.writeToNBT(new NBTTagCompound()) : null);
+		if (_lastInput != null)
+			tag.setTag("stack", _lastInput.writeToNBT(new NBTTagCompound()));
 		
 		if (_lastOutput != null)
 		{
