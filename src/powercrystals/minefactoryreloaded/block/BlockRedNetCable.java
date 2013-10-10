@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
+import buildcraft.api.tools.IToolWrench;
+
 import java.util.List;
 
 import net.minecraft.block.BlockContainer;
@@ -154,7 +156,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 			
 			if(side >= 0)
 			{
-				if(MFRUtil.isHoldingHammer(player))
+				if(MFRUtil.isHoldingHammer(player) || (s != null && s.getItem() instanceof IToolWrench))
 				{
 					if(!world.isRemote)
 					{
