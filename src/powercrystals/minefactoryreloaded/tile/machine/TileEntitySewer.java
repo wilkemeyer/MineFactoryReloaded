@@ -40,7 +40,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	
 	public TileEntitySewer()
 	{
-		// TODO: dual tanks on sewer
 		super(Machine.Sewer);
 		_tanks = new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME),
 				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
