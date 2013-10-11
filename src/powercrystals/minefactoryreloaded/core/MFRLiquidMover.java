@@ -80,12 +80,12 @@ public abstract class MFRLiquidMover
 				{
 					fluidContainer = (IFluidContainerItem)ci.getItem();
 					if (fluidContainer.fill(ci, tankLiquid, false) > 0) {
-						filledBucket = ci.splitStack(1);
+						filledBucket = ci.copy();
+						filledBucket.stackSize = 1;
 						int amount = fluidContainer.fill(filledBucket, tankLiquid, true);
 						if (itcb.drain(ForgeDirection.UNKNOWN, new FluidStack(tankLiquid.fluidID, amount), true) == null)
 						{
 							filledBucket = null;
-							ci.stackSize++;
 						}
 					}
 				}
