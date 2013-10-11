@@ -173,7 +173,7 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 			(fluidTag = tag.getCompoundTag("fluid")) == null ||
 			(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			return null;
-		int drainAmount = (int)(Math.min(maxDrain, fluid.amount) * (Math.max(Math.random() - 0.25, 0) + 0.25));
+		int drainAmount = (int)(Math.min(maxDrain, fluid.amount) * (Math.max(Math.random() - 0.75, 0) + 0.75));
 		if (doDrain)
 		{
 			if (tag.hasKey("toDrain"))
