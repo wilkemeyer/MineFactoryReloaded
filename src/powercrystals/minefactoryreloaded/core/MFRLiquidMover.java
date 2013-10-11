@@ -118,7 +118,7 @@ public abstract class MFRLiquidMover
 		return false;
 	}
 	
-	private static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack, EntityPlayer entityplayer, boolean avoidDrop)
+	private static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack, EntityPlayer entityplayer, boolean allowDrop)
 	{
 		if (entityplayer.capabilities.isCreativeMode)
 			return true;
@@ -127,7 +127,7 @@ public abstract class MFRLiquidMover
 			entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, dropStack);
 			return true;
 		}
-		else if (!avoidDrop)
+		else if (allowDrop)
 		{
 			stack.stackSize -= 1;
 			if(!entityplayer.inventory.addItemStackToInventory(dropStack))
