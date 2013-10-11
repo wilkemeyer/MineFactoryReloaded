@@ -156,6 +156,8 @@ public class MFRConfig
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
 	
+	public static Property dropFilledContainers;
+	
 	// recipes config
 	public static Property vanillaRecipes;
 	public static Property thermalExpansionRecipes;
@@ -355,6 +357,10 @@ public class MFRConfig
 		{
 			machine.load(c);
 		}
+		
+		// TODO: make this config per-player
+		dropFilledContainers = c.get(Configuration.CATEGORY_GENERAL, "Tanks.FillWithoutEmptySlots", true);
+		dropFilledContainers.comment = "If true, when you have no empty slots in your inventory, you will continue filling buckets from tanks and drop them on the ground.";
 		
 		c.save();
 	}

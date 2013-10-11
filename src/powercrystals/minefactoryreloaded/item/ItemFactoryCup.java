@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
@@ -27,6 +26,7 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 	private boolean _prefix = false;
     @SideOnly(Side.CLIENT)
     protected Icon fillIcon;
+    protected static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 
 	public ItemFactoryCup(int id, int stackSize, int maxUses)
 	{
@@ -37,25 +37,11 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		this.setHasSubtypes(true);
 	}
 	
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void setDamage(ItemStack stack, int damage)
 	{
-		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(ItemStack stack, int pass) {
-		switch (pass)
-		{
-		case 1:
-			return this.fillIcon;
-		case 0:
-		default:
-			return this.itemIcon;
-		}
+		super.setDamage(stack, damage);
+		new Throwable().printStackTrace();
 	}
 
 	@Override
@@ -85,7 +71,6 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 				return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
 			if (ret == null)
 			{
-				item.setItemDamage(0);
 				return super.getItemDisplayName(item);
 			}
 			Fluid liquid = FluidRegistry.getFluid(ret);
@@ -147,7 +132,8 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || resource.getFluid().isGaseous())
+		if (resource == null || resource.getFluid().isGaseous(resource)
+				|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
 		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
@@ -172,6 +158,8 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 				tag = stack.stackTagCompound = new NBTTagCompound();
 			fluid.amount = fillAmount;
 			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
+			tag.setLong("uniqifier", (System.identityHashCode(resource) << 32) |
+					System.identityHashCode(stack));
 		}
 		return fillAmount;
 	}
@@ -194,6 +182,8 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 				tag.removeTag("toDrain");
 			}
 			tag.removeTag("fluid");
+			tag.removeTag("uniqifier");
+			stack.setItemDamage(stack.getItemDamage() + 1);
 		}
 		else
 			tag.setInteger("toDrain", drainAmount);
@@ -218,22 +208,11 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 
 		if(!player.capabilities.isCreativeMode)
 		{
+			stack.damageItem(1, player);
 			ItemStack drop = item.getContainerItemStack(stack);
 			if (drop != null)
 			{
-				if (stack.stackSize-- > 1)
-				{
-					if (!player.inventory.addItemStackToInventory(drop))
-						player.dropPlayerItem(drop);
-				}
-				else if (stack.stackSize == 0)
-					return drop;
-			}
-			else
-			{
-				--stack.stackSize;
-				player.renderBrokenItemStack(stack);
-				player.addStat(StatList.objectBreakStats[item.itemID], 1);
+				return drop;
 			}
 		}
 
@@ -260,5 +239,27 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		if (hasDrinkableLiquid(stack))
 			player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 		return stack;
+	}
+
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IconRegister par1IconRegister)
+	{
+		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(ItemStack stack, int pass) {
+		switch (pass)
+		{
+		case 1:
+			return this.fillIcon;
+		case 0:
+		default:
+			return this.itemIcon;
+		}
 	}
 }
