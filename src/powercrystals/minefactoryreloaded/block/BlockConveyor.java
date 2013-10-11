@@ -48,7 +48,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		super(id, Material.circuits);
 		setHardness(0.5F);
 		setUnlocalizedName("mfr.conveyor");
-		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.1F, 0.1F);
+		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.01F, 0.1F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 	
@@ -168,7 +168,11 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		
 		if(isUphill)
 		{
-			yVelocity = 0.25D;
+			yVelocity = 0.1405D;
+		}
+		else if (entity.posY - y < 0.1)
+		{
+			entity.posY = y + 0.1;
 		}
 		
 		if(isUphill || isDownhill)
@@ -235,18 +239,27 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		
 		if((md & 0x0C) == 0)
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x + 0.05F, y, z + 0.05F, (x + 1) - 0.05F, y + 0.1F, z + 1 - 0.05F);
+			return AxisAlignedBB.getAABBPool().getAABB(x + 0.05F, y, z + 0.05F, x + 1 - 0.05F, y + 0.01F, z + 1 - 0.05F);
 		}
 		else
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x + 0.2F, y, z + 0.2F, (x + 1) - 0.2F, y + 0.1F, z + 1 - 0.2F);
+			return AxisAlignedBB.getAABBPool().getAABB(x + 0.1F, y, z + 0.1F, x + 1 - 0.1F, y + 0.01F, z + 1 - 0.1F);
 		}
 	}
 	
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		return getCollisionBoundingBoxFromPool(world, x, y, z);
+		int md = world.getBlockMetadata(x, y, z);
+		
+		if((md & 0x0C) == 0)
+		{
+			return AxisAlignedBB.getAABBPool().getAABB(x + 0.05F, y, z + 0.05F, x + 1 - 0.05F, y + 0.1F, z + 1 - 0.05F);
+		}
+		else
+		{
+			return AxisAlignedBB.getAABBPool().getAABB(x + 0.1F, y, z + 0.1F, x + 1 - 0.1F, y + 0.1F, z + 1 - 0.1F);
+		}
 	}
 	
 	@Override
