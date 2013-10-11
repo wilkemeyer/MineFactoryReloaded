@@ -76,26 +76,31 @@ public abstract class MFRLiquidMover
 				if (tankLiquid == null || tankLiquid.amount == 0)
 					continue;
 				ItemStack filledBucket = null;
+				FluidStack bucketLiquid = null;
 				if (isSmartContainer)
 				{
 					fluidContainer = (IFluidContainerItem)ci.getItem();
-					if (fluidContainer.fill(ci, tankLiquid, false) > 0) {
-						filledBucket = ci.copy();
-						filledBucket.stackSize = 1;
+					filledBucket = ci.copy();
+					filledBucket.stackSize = 1;
+					if (fluidContainer.fill(filledBucket, tankLiquid, false) > 0) {
 						int amount = fluidContainer.fill(filledBucket, tankLiquid, true);
-						if (itcb.drain(ForgeDirection.UNKNOWN, new FluidStack(tankLiquid.fluidID, amount), true) == null)
-						{
+						bucketLiquid = new FluidStack(tankLiquid.fluidID, amount);
+						FluidStack l = itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, false); 
+						if (l == null || l.amount < amount)
 							filledBucket = null;
-						}
 					}
+					else
+						filledBucket = null;
 				}
 				else
 				{
 					filledBucket = FluidContainerRegistry.fillFluidContainer(tankLiquid, ci);
 					if(FluidContainerRegistry.isFilledContainer(filledBucket))
 					{
-						FluidStack bucketLiquid = FluidContainerRegistry.getFluidForFilledItem(filledBucket);
-						itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, true);
+						bucketLiquid = FluidContainerRegistry.getFluidForFilledItem(filledBucket);
+						FluidStack l = itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, false);
+						if (l == null || l.amount < bucketLiquid.amount)
+							filledBucket = null;
 					}
 					else
 						filledBucket = null;
@@ -103,7 +108,10 @@ public abstract class MFRLiquidMover
 				if (filledBucket != null)
 				{
 					if (disposePlayerItem(ci, filledBucket, entityplayer, MFRConfig.dropFilledContainers.getBoolean(true)))
+					{
+						itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, true);
 						return true;
+					}
 				}
 			}
 		}
