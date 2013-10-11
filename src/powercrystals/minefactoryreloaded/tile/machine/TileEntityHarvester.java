@@ -138,9 +138,9 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(new Integer(harvestedBlockId));
 		
-		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, ImmutableMap.copyOf(_settings), targetCoords.x, targetCoords.y, targetCoords.z);
-		
 		harvestable.preHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
+		
+		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, ImmutableMap.copyOf(_settings), targetCoords.x, targetCoords.y, targetCoords.z);
 		
 		doDrop(drops);
 		

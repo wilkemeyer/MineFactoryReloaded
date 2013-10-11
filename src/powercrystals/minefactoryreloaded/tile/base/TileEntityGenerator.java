@@ -36,11 +36,11 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 			}
 			
 			IPowerReceptor ipr = ((IPowerReceptor)te);
-			PowerReceiver pp = ipr.getPowerReceiver(bp.orientation);
+			PowerReceiver pp = ipr.getPowerReceiver(bp.orientation.getOpposite());
 			if(pp != null && pp.powerRequest() > 0 && pp.getMinEnergyReceived() <= mj)
 			{
 				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - pp.getEnergyStored());
-				pp.receiveEnergy(_powerProvider.getPowerReceiver().getType(), mjUsed, bp.orientation);
+				pp.receiveEnergy(_powerProvider.getPowerReceiver().getType(), mjUsed, bp.orientation.getOpposite());
 				
 				mj -= mjUsed;
 				if(mj <= 0)

@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -849,12 +850,18 @@ public class Vanilla
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 4), new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 1));
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 1), new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 4));
+
+		String[] dyes = { "Black", "Red", "Green", "Brown", "Blue", "Purple",
+				"Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow",
+				"LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 		
 		for(int i = 0; i < 16; i++)
 		{
-			// TODO: due this ore the oredict dye<color> entries instead
-			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i), new ItemStack(Item.clay), new ItemStack(Item.dyePowder, 1, 15 - i));
-			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i), new ItemStack(Block.glass), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i), new ItemStack(Item.clay), "dye" + dyes[15 - i]));
+			ItemStack glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, "glass", new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i)));
+			GameRegistry.addShapelessRecipe(glassStack, new ItemStack(Block.glass), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
+			OreDictionary.registerOre("glass" + dyes[15 - i], glassStack);
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i), new ItemStack(Block.thinGlass), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
 			
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 16, i), new Object[]
