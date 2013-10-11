@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import buildcraft.api.transport.IPipeConnection;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,7 +21,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class TileEntityFactory extends TileEntity implements IRotateableTile
+public abstract class TileEntityFactory extends TileEntity implements IRotateableTile, IPipeConnection
 {
 	// first index is rotation, second is side
 	private static final int[][] _textureSelection = new int[][]

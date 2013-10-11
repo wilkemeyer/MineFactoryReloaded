@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import buildcraft.api.transport.IPipeTile.PipeType;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -55,5 +57,10 @@ public class TileEntityMobCounter extends TileEntityFactory implements IHarvestA
 	public int getRedNetOutput(ForgeDirection side)
 	{
 		return _lastMobCount;
+	}
+
+	@Override
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		return ConnectOverride.DISCONNECT;
 	}
 }

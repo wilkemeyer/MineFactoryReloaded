@@ -5,11 +5,13 @@ import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.MFRPerdition;
+import buildcraft.api.power.IPowerEmitter;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.transport.IPipeTile.PipeType;
 
-public abstract class TileEntityGenerator extends TileEntityFactoryInventory implements IPowerReceptor
+public abstract class TileEntityGenerator extends TileEntityFactoryInventory implements IPowerReceptor, IPowerEmitter
 {
 	private PowerHandler _powerProvider;
 	
@@ -60,5 +62,15 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 	@Override
 	public void doWork(PowerHandler workProvider)
 	{
+	}
+
+	@Override
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		return ConnectOverride.DEFAULT;
+	}
+
+	@Override
+	public boolean canEmitPowerFrom(ForgeDirection side) {
+		return true;
 	}
 }

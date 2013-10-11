@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import buildcraft.api.transport.IPipeTile.PipeType;
+
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -75,5 +77,12 @@ public class TileEntityEjector extends TileEntityFactory
 	public boolean canRotate()
 	{
 		return true;
+	}
+
+	@Override
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		if (type == PipeType.STRUCTURE)
+			return ConnectOverride.CONNECT;
+		return ConnectOverride.DISCONNECT;
 	}
 }

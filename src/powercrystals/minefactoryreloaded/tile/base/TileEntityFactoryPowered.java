@@ -23,6 +23,7 @@ import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler.PerditionCalculator;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.transport.IPipeTile.PipeType;
 
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
@@ -427,6 +428,13 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public final void doWork(PowerHandler workProvider)
 	{
+	}
+
+	@Override
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		if (type == PipeType.POWER && this.machine.getActivationEnergyMJ() > 0)
+			return ConnectOverride.CONNECT;
+		return super.overridePipeConnection(type, with);
 	}
 	
 	// IC2 methods
