@@ -654,7 +654,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerMachineUpgrades()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}
@@ -805,7 +805,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerConveyors()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}
@@ -834,7 +834,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerSyringes()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}
@@ -886,7 +886,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerMiscItems()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}
@@ -1029,6 +1029,13 @@ public class GregTech extends Vanilla
 					} );
 			
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Item.bucketMilk, Item.bucketEmpty, new ItemStack(Item.dyePowder, 1, 3));
+			
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticCup, 16), new Object[]
+					{
+				" P ",
+				"P P",
+				'P', "sheetPlastic",
+					} ));
 		}
 		catch (Exception x)
 		{
@@ -1039,7 +1046,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerRails()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}
@@ -1094,7 +1101,7 @@ public class GregTech extends Vanilla
 	@Override
 	protected void registerRedNet()
 	{
-		if(!Loader.isModLoaded("GregTech_Addon") || !Loader.isModLoaded("IC2"))
+		if(!Loader.isModLoaded("gregtech_addon") || !Loader.isModLoaded("IC2"))
 		{
 			return;
 		}

@@ -1391,12 +1391,12 @@ public class Vanilla
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Item.bucketMilk, Item.bucketEmpty, new ItemStack(Item.dyePowder, 1, 3));
 		
-		/*GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.emptyPlasticCup, 16), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticCup, 16), new Object[]
 				{
 			" P ",
 			"P P",
 			'P', "sheetPlastic",
-				} ));//*/ // TODO: enable plastic cup after fixing damage derp
+				} ));
 	}
 	
 	protected void registerVanillaImprovements()
