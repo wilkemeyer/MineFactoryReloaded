@@ -208,8 +208,8 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 
 		if(!player.capabilities.isCreativeMode)
 		{
-			stack.damageItem(1, player);
 			ItemStack drop = item.getContainerItemStack(stack);
+			stack.damageItem(1, player);
 			if (drop != null)
 			{
 				return drop;
