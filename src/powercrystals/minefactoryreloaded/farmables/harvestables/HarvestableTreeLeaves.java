@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IShearable;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 
 public class HarvestableTreeLeaves extends HarvestableStandard
@@ -23,9 +24,19 @@ public class HarvestableTreeLeaves extends HarvestableStandard
 	{
 		if(harvesterSettings.get("silkTouch") != null && harvesterSettings.get("silkTouch"))
 		{
+			int blockId = world.getBlockId(x, y, z);
+			Block block = Block.blocksList[blockId];
+			if (block instanceof IShearable)
+			{
+				ItemStack stack = new ItemStack(Item.shears, 1, 0);
+				if (((IShearable)block).isShearable(stack, world, x, y, z))
+				{
+					return ((IShearable)block).onSheared(stack, world, x, y, z, 0);
+				}
+			}
 			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 			int meta = world.getBlockMetadata(x, y, z);
-			if(world.getBlockId(x, y, z) == Block.leaves.blockID)
+			if(blockId == Block.leaves.blockID)
 			{
 				meta = meta & 0x03;
 			}
