@@ -303,12 +303,14 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return null;
+		return _tank.drain(maxDrain, doDrain);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
+		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
+			return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	
@@ -355,12 +357,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public boolean manageSolids()
-	{
-		return true;
-	}
-	
-	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 0;
@@ -373,7 +369,13 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public boolean canRotate()
+	public boolean manageSolids()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean manageLiquids()
 	{
 		return true;
 	}
@@ -387,6 +389,12 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return false;
+		return true;
+	}
+	
+	@Override
+	public boolean canRotate()
+	{
+		return true;
 	}
 }

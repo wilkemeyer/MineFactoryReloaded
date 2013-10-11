@@ -187,12 +187,17 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			return _tank.drain(maxDrain, doDrain);
 		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (resource != null && resource.isFluidEqual(_tank.getFluid()))
+				return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	
@@ -200,6 +205,12 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	public int getSizeInventory()
 	{
 		return 1;
+	}
+	
+	@Override
+	public boolean manageLiquids()
+	{
+		return true;
 	}
 
 	@Override
@@ -209,6 +220,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return false;
+		return true;
 	}
 }

@@ -245,21 +245,23 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
-	{
-		return true;
-	}
-	
-	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return null;
+		return _tank.drain(maxDrain, doDrain);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
+		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
+			return _tank.drain(resource.amount, doDrain);
 		return null;
+	}
+	
+	@Override
+	public boolean allowBucketDrain()
+	{
+		return true;
 	}
 	
 	@Override
@@ -269,7 +271,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public boolean canRotate()
+	public boolean manageLiquids()
 	{
 		return true;
 	}
@@ -283,6 +285,12 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return false;
+		return true;
+	}
+	
+	@Override
+	public boolean canRotate()
+	{
+		return true;
 	}
 }

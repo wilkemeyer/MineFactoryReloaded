@@ -260,11 +260,13 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	{
 		return _tank.drain(maxDrain, doDrain);
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return _tank.drain(resource.amount, doDrain);
+		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
+			return _tank.drain(resource.amount, doDrain);
+		return null;
 	}
 
 	@Override

@@ -143,11 +143,14 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return null;
+		return _tank.drain(maxDrain, doDrain);
 	}
-
+	
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
+			return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	
@@ -162,6 +165,12 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	{
 		return true;
 	}
+	
+	@Override
+	public boolean manageLiquids()
+	{
+		return true;
+	}
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
@@ -170,6 +179,6 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return false;
+		return true;
 	}
 }
