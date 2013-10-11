@@ -273,10 +273,11 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public ItemStack getStoredItemType()
 	{
-		if(_storedQuantity > 0 & _storedItem != null)
+		int quantity = getQuantityAdjusted();
+		if((quantity != 0) & _storedItem != null)
 		{
 			ItemStack stack = _storedItem.copy();
-			stack.stackSize = getQuantityAdjusted();
+			stack.stackSize = quantity;
 			return stack;
 		}
 		return null;
