@@ -45,6 +45,15 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
+	protected void configurePowerProvider()
+	{
+		int activation = getMaxEnergyPerTick() / energyPerMJ;
+		int maxReceived = Math.min(activation * 20, 1000);
+		_powerProvider.configure(10, maxReceived, 1, 1000);
+		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
+	}
+	
+	@Override
 	public void setWorldObj(World world)
 	{
 		super.setWorldObj(world);

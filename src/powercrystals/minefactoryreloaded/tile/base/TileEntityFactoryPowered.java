@@ -60,7 +60,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// buildcraft-related fields
 	
-	private PowerHandler _powerProvider;
+	protected PowerHandler _powerProvider;
 	
 	// IC2-related fields
 	
