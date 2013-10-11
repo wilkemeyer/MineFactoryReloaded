@@ -1,11 +1,16 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -20,6 +25,8 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 {
 	private int _maxUses = 0;
 	private boolean _prefix = false;
+    @SideOnly(Side.CLIENT)
+    protected Icon fillIcon;
 
 	public ItemFactoryCup(int id, int stackSize, int maxUses)
 	{
@@ -28,6 +35,27 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		this._maxUses = maxUses;
 		this.setMaxDamage(maxUses);
 		this.setHasSubtypes(true);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IconRegister par1IconRegister)
+	{
+		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(ItemStack stack, int pass) {
+		switch (pass)
+		{
+		case 1:
+			return this.fillIcon;
+		case 0:
+		default:
+			return this.itemIcon;
+		}
 	}
 
 	@Override
