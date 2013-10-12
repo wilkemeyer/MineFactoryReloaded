@@ -46,15 +46,16 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 		
 		if(MFRConfig.mfrLakeWorldGen.getBoolean(true) && world.provider.canRespawnHere())
 		{
-			if(random.nextInt(MFRConfig.mfrLakeSludgeRarity.getInt()) == 0)
+			int rarity = MFRConfig.mfrLakeSludgeRarity.getInt();
+			if(rarity > 0 && random.nextInt(rarity) == 0)
 			{
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(128);
 				int lakeZ = z - 8 + random.nextInt(16);
 				new WorldGenLakesMeta(MineFactoryReloadedCore.sludgeLiquid.blockID, 7).generate(world, random, lakeX, lakeY, lakeZ);
 			}
-			
-			if(random.nextInt(MFRConfig.mfrLakeSewageRarity.getInt()) == 0)
+			rarity = MFRConfig.mfrLakeSewageRarity.getInt();
+			if(rarity > 0 && random.nextInt(rarity) == 0)
 			{
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(128);
