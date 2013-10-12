@@ -80,6 +80,7 @@ import powercrystals.minefactoryreloaded.item.ItemLaserFocus;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.ItemMilkBottle;
 import powercrystals.minefactoryreloaded.item.ItemNeedleGun;
+import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoAnvil;
 import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoBlock;
 import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoFire;
 import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoStandard;
@@ -388,7 +389,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoSludgeItemId.getInt(), sludgeLiquid.blockID, 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
 		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoSewageItemId.getInt(), sewageLiquid.blockID, 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
 		needlegunAmmoFireItem = (new ItemNeedlegunAmmoFire(MFRConfig.needlegunAmmoFireItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.fire");
-		needlegunAmmoAnvilItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoAnvilItemId.getInt(), Block.anvil.blockID, 2)).setUnlocalizedName("mfr.needlegun.ammo.anvil").setMaxDamage(0);
+		needlegunAmmoAnvilItem = (new ItemNeedlegunAmmoAnvil(MFRConfig.needlegunAmmoAnvilItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.anvil");
 		plasticCup = (ItemFactoryCup)new ItemFactoryCup(MFRConfig.plasticCupItemId.getInt(), 24, 16).setUnlocalizedName("mfr.bucket.plasticcup");
 		rocketLauncherItem = (new ItemRocketLauncher(MFRConfig.rocketLauncherItemId.getInt())).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket(MFRConfig.rocketItemId.getInt())).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);

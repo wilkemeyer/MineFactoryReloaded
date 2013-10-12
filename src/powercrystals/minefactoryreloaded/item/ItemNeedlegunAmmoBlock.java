@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
 import powercrystals.core.position.BlockPosition;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -29,7 +30,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	{
 		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side));
 		bp.moveForwards(1);
-		placeBlockAt(world, bp.x, bp.y, bp.z);
+		placeBlockAt(world, bp.x, bp.y, bp.z, distance);
 	}
 
 	protected Vec3 calculatePlacement(Entity hit)
@@ -46,7 +47,8 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	public boolean onHitEntity(EntityPlayer owner, Entity hit, double distance)
 	{
 		Vec3 placement = calculatePlacement(hit);
-		placeBlockAt(hit.worldObj, (int)placement.xCoord, (int)placement.yCoord, (int)placement.zCoord);
+		placeBlockAt(hit.worldObj, (int)placement.xCoord, (int)placement.yCoord, (int)placement.zCoord,
+				distance);
 		return true;
 	}
 
@@ -56,9 +58,11 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 		return 0.5F;
 	}
 
-	protected void placeBlockAt(World world, int x, int y, int z)
+	protected void placeBlockAt(World world, int x, int y, int z, double distance)
 	{
-		if(!world.isRemote && world.isAirBlock(x, y, z))
+		Block block = Block.blocksList[world.getBlockId(x, y, z)];
+		if(!world.isRemote && (block == null || block.isAirBlock(world, x, y, z) ||
+				(block.isBlockReplaceable(world, x, y, z) && !block.blockMaterial.isLiquid())))
 		{
 			world.setBlock(x, y, z, _blockId, _blockMeta, 3);
 		}
