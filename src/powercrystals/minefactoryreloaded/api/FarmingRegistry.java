@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.api;
 
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
+
 import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 
@@ -10,24 +13,30 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 @Deprecated
 public class FarmingRegistry
 {
-	public static void registerPlantable(IFactoryPlantable plantable){}
-	public static void registerHarvestable(IFactoryHarvestable harvestable){}
-	public static void registerFertilizable(IFactoryFertilizable fertilizable){}
-	public static void registerFertilizer(IFactoryFertilizer fertilizer){}
-	public static void registerRanchable(IFactoryRanchable ranchable){}
-	public static void registerGrindable(IFactoryGrindable grindable){}
-	public static void registerSludgeDrop(int weight, ItemStack drop){}
-	public static void registerBreederFood(Class<?> entityToBreed, ItemStack food){}
-	public static void registerSafariNetHandler(ISafariNetHandler handler){}
-	public static void registerMobEggHandler(IMobEggHandler handler){}
-	public static void registerRubberTreeBiome(String biome){}
-	public static void registerSafariNetBlacklist(Class<?> blacklistedEntity){}
-	public static void registerVillagerTradeMob(IRandomMobProvider mobProvider){}
-	public static void registerLiquidDrinkHandler(int liquidId, ILiquidDrinkHandler liquidDrinkHandler){}
-	public static void registerLaserOre(int weight, ItemStack drop){}
-	public static void setLaserPreferredOre(int color, ItemStack ore){}
-	public static void registerFruitLogBlockId(Integer fruitLogBlockId){}
-	public static void registerFruit(IFactoryFruit fruit){}
-	public static void registerAutoSpawnerBlacklist(String entityString){}
-	public static void registerRedNetLogicCircuit(IRedNetLogicCircuit circuit){}
+	private static void alert()
+	{
+		FMLLog.severe("%s is using an outdated API and may crash the game.", 
+				Loader.instance().activeModContainer().getName());
+		new Throwable().printStackTrace();
+	}
+	public static void registerPlantable(IFactoryPlantable plantable) { alert(); }
+	public static void registerHarvestable(IFactoryHarvestable harvestable) { alert(); }
+	public static void registerFertilizable(IFactoryFertilizable fertilizable) { alert(); }
+	public static void registerFertilizer(IFactoryFertilizer fertilizer) { alert(); }
+	public static void registerRanchable(IFactoryRanchable ranchable) { alert(); }
+	public static void registerGrindable(IFactoryGrindable grindable) { alert(); }
+	public static void registerSludgeDrop(int weight, ItemStack drop) { alert(); }
+	public static void registerBreederFood(Class<?> entityToBreed, ItemStack food) { alert(); }
+	public static void registerSafariNetHandler(ISafariNetHandler handler) { alert(); }
+	public static void registerMobEggHandler(IMobEggHandler handler) { alert(); }
+	public static void registerRubberTreeBiome(String biome) { alert(); }
+	public static void registerSafariNetBlacklist(Class<?> blacklistedEntity) { alert(); }
+	public static void registerVillagerTradeMob(IRandomMobProvider mobProvider) { alert(); }
+	public static void registerLiquidDrinkHandler(int liquidId, ILiquidDrinkHandler liquidDrinkHandler) { alert(); }
+	public static void registerLaserOre(int weight, ItemStack drop) { alert(); }
+	public static void setLaserPreferredOre(int color, ItemStack ore) { alert(); }
+	public static void registerFruitLogBlockId(Integer fruitLogBlockId) { alert(); }
+	public static void registerFruit(IFactoryFruit fruit) { alert(); }
+	public static void registerAutoSpawnerBlacklist(String entityString) { alert(); }
+	public static void registerRedNetLogicCircuit(IRedNetLogicCircuit circuit) { alert(); }
 }
