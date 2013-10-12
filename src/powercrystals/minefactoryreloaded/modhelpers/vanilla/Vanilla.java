@@ -12,6 +12,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -342,14 +343,28 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
 		
 		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
-		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreDiamond));
-		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreEmerald));
 		MFRRegistry.registerLaserOre(70, new ItemStack(Block.oreGold));
 		MFRRegistry.registerLaserOre(150, new ItemStack(Block.oreIron));
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.oreLapis));
+		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreDiamond));
 		MFRRegistry.registerLaserOre(100, new ItemStack(Block.oreRedstone));
-		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreNetherQuartz));
+		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreEmerald));
+		MFRRegistry.registerLaserOre(70, new ItemStack(Block.oreNetherQuartz));
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.glowStone));
+		registerOreDictLaserOre(75, "oreCopper", "oreNetherCopper");
+		registerOreDictLaserOre(75 / 3, "oreTin", "oreNetherTin");
+		registerOreDictLaserOre(30, "oreSilver", "oreNetherSilver");
+		registerOreDictLaserOre(60, "oreLead", "oreNetherLead");
+		registerOreDictLaserOre(40, "oreNickel", "oreNetherNickel");
+		registerOreDictLaserOre(20, "oreUranium", "oreNetherUranium");
+		registerOreDictLaserOre(20, "MonazitOre", null);
+		registerOreDictLaserOre(50, "oreCertusQuartz", null);
+		registerOreDictLaserOre(30, "oreApatite", null);
+		registerOreDictLaserOre(40, "oreSulfur", null);
+		registerOreDictLaserOre(40, "oreSaltpeter", null);
+		registerOreDictLaserOre(60, "oreNaturalAluminum", null);
+		registerOreDictLaserOre(10, "oreArdite", null);
+		registerOreDictLaserOre(10, "oreCobalt", null);
 		
 		MFRRegistry.registerFruitLogBlockId(Block.wood.blockID);
 		MFRRegistry.registerFruit(new FruitCocoa());
@@ -371,5 +386,21 @@ public class Vanilla
 		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
 		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
 		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
+	}
+	
+	private void registerOreDictLaserOre(int weight, String name, String netherName)
+	{
+		for (ItemStack ore : OreDictionary.getOres(name))
+			if (ore != null)
+			{
+				ore = ore.copy();
+				ore.stackSize = 1;
+				MFRRegistry.registerLaserOre(weight, ore);
+				if (netherName != null)
+				{
+					registerOreDictLaserOre(weight / 2, netherName, null);
+				}
+				return;
+			}
 	}
 }
