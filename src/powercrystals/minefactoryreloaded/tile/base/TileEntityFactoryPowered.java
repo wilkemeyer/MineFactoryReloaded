@@ -449,7 +449,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public double injectEnergyUnits(ForgeDirection from, double amount)
 	{
 		double euInjected = Math.max(Math.min(demandedEnergyUnits(), amount), 0);
-		double energyInjected = euInjected * energyPerEU;
+		int energyInjected = (int)(euInjected * energyPerEU);
 		_energyStored += energyInjected;
 		_energyRequiredThisTick -= energyInjected;
 		return amount - euInjected;

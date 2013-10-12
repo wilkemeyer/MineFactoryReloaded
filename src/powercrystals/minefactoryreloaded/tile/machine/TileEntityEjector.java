@@ -83,6 +83,8 @@ public class TileEntityEjector extends TileEntityFactory
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
+		if (type == PipeType.ITEM && with == getDirectionFacing())
+			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
 	}
 }

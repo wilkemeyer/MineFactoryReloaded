@@ -93,7 +93,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			setWorkDone(0);
 			return false;
 		}
-		if(_lastInput == null || !UtilInventory.stacksEqual(_lastInput, _inventory[0]))
+		if(_inventory[0] != null && (_lastInput == null || !UtilInventory.stacksEqual(_lastInput, _inventory[0])))
 		{
 			_lastInput = _inventory[0].copy(); // protect against amorphous itemstacks
 			_lastOutput = getOutput(_lastInput);

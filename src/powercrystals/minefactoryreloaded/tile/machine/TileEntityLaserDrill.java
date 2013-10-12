@@ -29,14 +29,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityLaserDrill extends TileEntityFactoryInventory
 {
-	private static final int _energyPerWork = Machine.LaserDrillPrecharger.getActivationEnergyMJ() * TileEntityFactoryPowered.energyPerMJ;
-	private static final int _energyDrawMax = 10000;
+	private static final int _energyPerWork = (Machine.LaserDrillPrecharger.getActivationEnergyMJ() * TileEntityFactoryPowered.energyPerMJ) * 4;
+	private static final int _energyDrawMax = 20000;
 	
 	private static final int _energyStoredMax = 1000000;
 	private int _energyStored;
 	
 	private int _workStoredMax = MFRConfig.laserdrillCost.getInt();
-	private int _workStored;
+	private float _workStored;
 	
 	private int _bedrockLevel;
 	
@@ -103,10 +103,10 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MineFactoryReloadedCore.fakeLaserBlock.blockID);
 		}
 		
-		int energyToDraw = Math.min(_energyDrawMax, _energyStored / 4);
-		int energyPerWorkHere = (int)(_energyPerWork * (1 - 0.2 * Math.min(yCoord - _bedrockLevel, 128.0) / 128.0));
+		int energyToDraw = Math.min(_energyDrawMax, _energyStored);
+		float energyPerWorkHere = (float)(_energyPerWork * (1 - 0.2 * Math.min(yCoord - _bedrockLevel, 128.0) / 128.0));
 		
-		int workDone = energyToDraw / energyPerWorkHere;
+		float workDone = energyToDraw / energyPerWorkHere;
 		_workStored += workDone;
 		_energyStored -= workDone * energyPerWorkHere;
 		
@@ -119,7 +119,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 	
 	public int getWorkDone()
 	{
-		return _workStored;
+		return (int)_workStored;
 	}
 	
 	public void setWorkDone(int work)
