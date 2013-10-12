@@ -18,12 +18,13 @@ import net.minecraft.world.World;
 
 public class EntityNeedle extends Entity implements IProjectile
 {
-	private EntityPlayer _owner;
+	private String _owner;
 	private int ticksInAir = 0;
 	private int _ammoItemId;
 	private double _xStart;
 	private double _yStart;
 	private double _zStart;
+	private boolean _falling;
 	
 	public EntityNeedle(World world)
 	{
@@ -42,7 +43,8 @@ public class EntityNeedle extends Entity implements IProjectile
 	public EntityNeedle(World world, EntityPlayer owner, ItemStack ammoSource, float spread)
 	{
 		this(world);
-		_owner = owner;
+		if (owner != null)
+			_owner = owner.getCommandSenderName();
 		_ammoItemId = ammoSource.itemID;
 		
 		this.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw, owner.rotationPitch);
@@ -139,12 +141,13 @@ public class EntityNeedle extends Entity implements IProjectile
 		List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,	this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 		double closestRange = 0.0D;
 		double collisionRange = 0.3D;
+		EntityPlayer owner = _owner == null ? null : this.worldObj.getPlayerEntityByName(_owner);
 		
 		for(int l = 0; l < list.size(); ++l)
 		{
 			Entity e = (Entity)list.get(l);
 			
-			if(e.canBeCollidedWith() && (e != _owner || this.ticksInAir >= 5))
+			if((e != owner | this.ticksInAir >= 5) && e.canBeCollidedWith())
 			{
 				AxisAlignedBB entitybb = e.boundingBox.expand(collisionRange, collisionRange, collisionRange);
 				MovingObjectPosition entityHitPos = entitybb.calculateIntercept(pos, nextPos);
@@ -171,7 +174,7 @@ public class EntityNeedle extends Entity implements IProjectile
 		{
 			EntityPlayer entityplayer = (EntityPlayer)hit.entityHit;
 			
-			if(entityplayer.capabilities.disableDamage || (_owner != null && !_owner.canAttackPlayer(entityplayer)))
+			if(entityplayer.capabilities.disableDamage || (owner != null && !owner.canAttackPlayer(entityplayer)))
 			{
 				hit = null;
 			}
@@ -183,11 +186,11 @@ public class EntityNeedle extends Entity implements IProjectile
 		{
 			if(hit.entityHit != null && MFRRegistry.getNeedleAmmoTypes().get(_ammoItemId) != null)
 			{
-				MFRRegistry.getNeedleAmmoTypes().get(_ammoItemId).onHitEntity(_owner, hit.entityHit, Math.sqrt((_xStart - hit.blockX) * (_yStart - hit.blockY) * (_zStart - hit.blockZ)));
+				MFRRegistry.getNeedleAmmoTypes().get(_ammoItemId).onHitEntity(owner, hit.entityHit, Math.sqrt((_xStart - hit.blockX) * (_yStart - hit.blockY) * (_zStart - hit.blockZ)));
 			}
 			else
 			{
-				MFRRegistry.getNeedleAmmoTypes().get(_ammoItemId).onHitBlock(_owner, worldObj, hit.blockX, hit.blockY, hit.blockZ, hit.sideHit,
+				MFRRegistry.getNeedleAmmoTypes().get(_ammoItemId).onHitBlock(owner, worldObj, hit.blockX, hit.blockY, hit.blockZ, hit.sideHit,
 						Math.sqrt((_xStart - hit.blockX) * (_yStart - hit.blockY) * (_zStart - hit.blockZ)));
 			}
 			setDead();
@@ -235,8 +238,9 @@ public class EntityNeedle extends Entity implements IProjectile
 			speedDropoff = 0.8F;
 		}
 		
-		if (this.motionY < 0.05)
+		if (_falling | speed < 0.05)
 		{
+			_falling = true;
 			this.motionY -= 0.01;
 		}
 		
@@ -248,23 +252,29 @@ public class EntityNeedle extends Entity implements IProjectile
 	}
 	
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+	public void writeEntityToNBT(NBTTagCompound tag)
 	{
-		nbttagcompound.setInteger("ammoItemId", _ammoItemId);
-		nbttagcompound.setDouble("xStart", _xStart);
-		nbttagcompound.setDouble("yStart", _yStart);
-		nbttagcompound.setDouble("zStart", _zStart);
+		tag.setInteger("ammoItemId", _ammoItemId);
+		tag.setDouble("xStart", _xStart);
+		tag.setDouble("yStart", _yStart);
+		tag.setDouble("zStart", _zStart);
+		tag.setBoolean("falling", _falling);
+		if (_owner != null)
+			tag.setString("owner", _owner);
 	}
 	
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+	public void readEntityFromNBT(NBTTagCompound tag)
 	{
-		if(nbttagcompound.hasKey("ammoItemId"))
+		if(tag.hasKey("ammoItemId"))
 		{
-			_ammoItemId = nbttagcompound.getInteger("ammoItemId");
-			_xStart = nbttagcompound.getDouble("xStart");
-			_yStart = nbttagcompound.getDouble("yStart");
-			_zStart = nbttagcompound.getDouble("zStart");
+			_ammoItemId = tag.getInteger("ammoItemId");
+			_xStart = tag.getDouble("xStart");
+			_yStart = tag.getDouble("yStart");
+			_zStart = tag.getDouble("zStart");
+			_falling = tag.getBoolean("falling");
+			if (tag.hasKey("owner"))
+				_owner = tag.getString("owner");
 		}
 	}
 	
