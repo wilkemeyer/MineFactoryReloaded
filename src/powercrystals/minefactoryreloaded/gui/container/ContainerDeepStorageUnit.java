@@ -75,12 +75,19 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory
 	@Override
 	public void detectAndSendChanges()
 	{
-		super.detectAndSendChanges();
 		for(int i = 0; i < crafters.size(); i++)
 		{
-			
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 200, _dsu.getQuantity());
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 201, _dsu.getQuantity() >> 16);
+		}
+
+		for (Object object : inventorySlots)
+		{
+			Slot slotObject = (Slot)object;
+			if (slotObject != null)
+				for (int j = 0; j < this.crafters.size(); ++j)
+					((ICrafting)this.crafters.get(j)).
+						sendSlotContents(this, slotObject.slotNumber, slotObject.getStack());
 		}
 	}
 	

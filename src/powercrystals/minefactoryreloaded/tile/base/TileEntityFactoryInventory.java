@@ -169,6 +169,13 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		onFactoryInventoryChanged();
 	}
 	
+	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
+		onFactoryInventoryChanged();
+	}
+	
 	protected void onFactoryInventoryChanged()
 	{
 	}

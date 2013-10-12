@@ -27,7 +27,21 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	private int _storedQuantity;
 	private ItemStack _storedItem = null;
 	
-	private boolean _canUpdate = true;
+	private boolean _ignoreChanges = true;
+	
+	@Override
+	public void validate()
+	{
+		super.validate();
+		_ignoreChanges = false;
+	}
+	
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		_ignoreChanges = true;
+	}
 	
 	@Override
 	public String getGuiBackground()
@@ -108,30 +122,34 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		{
 			return;
 		}
-		// TODO: move calculations to onFactoryInventoryChanged
-		if((_inventory[2] == null) & _storedItem != null)
+		
+		onFactoryInventoryChanged();
+	}
+	
+	@Override
+	protected void onFactoryInventoryChanged()
+	{
+		if (_ignoreChanges | worldObj == null || worldObj.isRemote)
+			return;
+		
+		if((_inventory[2] == null) & _storedItem != null & _storedQuantity == 0)
 		{
-			if (_storedQuantity > 0)
-			{
-				_inventory[2] = _storedItem.copy();
-				_inventory[2].stackSize = Math.min(_storedQuantity, _storedItem.getMaxStackSize());
-				_storedQuantity -= _inventory[2].stackSize;
-			}
-			else
-				_storedItem = null;
-		}
-		else if(_inventory[2] != null && _inventory[2].stackSize < _inventory[2].getMaxStackSize() && UtilInventory.stacksEqual(_storedItem, _inventory[2]) && _storedQuantity > 0)
-		{
-			int amount = Math.min(_inventory[2].getMaxStackSize() - _inventory[2].stackSize, _storedQuantity);
-			_inventory[2].stackSize += amount;
-			_storedQuantity -= amount;
+			_storedItem = null;
 		}
 		checkInput(0);
 		checkInput(1);
 		
-		if(_inventory[0] == null && _inventory[1] == null)
+		if((_inventory[2] == null) & _storedItem != null)
 		{
-			_canUpdate = false;
+			_inventory[2] = _storedItem.copy();
+			_inventory[2].stackSize = Math.min(_storedQuantity, _storedItem.getMaxStackSize());
+			_storedQuantity -= _inventory[2].stackSize;
+		}
+		else if(_inventory[2] != null && _inventory[2].stackSize < _inventory[2].getMaxStackSize() && UtilInventory.stacksEqual(_storedItem, _inventory[2]) & _storedQuantity > 0)
+		{
+			int amount = Math.min(_inventory[2].getMaxStackSize() - _inventory[2].stackSize, _storedQuantity);
+			_inventory[2].stackSize += amount;
+			_storedQuantity -= amount;
 		}
 	}
 	
@@ -158,6 +176,11 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			else if (!UtilInventory.stacksEqual(_inventory[slot], _storedItem))
 			{
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
+			}
+			// internal inventory is full
+			else
+			{
+				// _inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 			}
 		}
 	}
@@ -235,6 +258,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
+		_ignoreChanges = true;
 		super.readFromNBT(nbttagcompound);
 		
 		_storedQuantity = nbttagcompound.getInteger("storedQuantity");
@@ -268,6 +292,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		{
 			_storedQuantity = 0;
 		}
+		_ignoreChanges = false;
 	}
 	
 	@Override
@@ -306,7 +331,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			}
 		}
 		_storedQuantity = amount;
-		_canUpdate = true;
+		onFactoryInventoryChanged();
 	}
 	
 	@Override
@@ -315,28 +340,16 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		clearSlots();
 		_storedQuantity = amount;
 		_storedItem = null;
-		_canUpdate = true;
 		if (type == null)
 			return;
 		_storedItem = type.copy();
 		_storedItem.stackSize = 1;
+		onFactoryInventoryChanged();
 	}
 	
 	@Override
 	public int getMaxStoredCount()
 	{
 		return Integer.MAX_VALUE;
-	}
-	
-	@Override
-	public boolean canUpdate()
-	{
-		return _canUpdate;
-	}
-	
-	@Override
-	protected void onFactoryInventoryChanged()
-	{
-		_canUpdate = true;
 	}
 }
