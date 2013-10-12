@@ -38,7 +38,7 @@ public class Vanilla
 		registerMiscItems();
 		registerVanillaImprovements();
 		registerRails();
-		//registerGuns();
+		registerGuns();
 		registerRedNet();
 		registerRedNetManual();
 	}
@@ -1526,6 +1526,18 @@ public class Vanilla
 					'L', MineFactoryReloadedCore.safariNetLauncherItem
 				}));
 		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketLauncherItem), new Object[]
+				{
+					"PRP",
+					"ILI",
+					"PCP",
+					'P', "sheetPlastic",
+					'I', Block.blockIron,
+					'L', MineFactoryReloadedCore.needlegunItem,
+					'R', MineFactoryReloadedCore.rednetLogicBlock,
+					'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2)
+				}));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoEmptyItem, 4), new Object[]
 				{
 					"P P",
@@ -1535,29 +1547,43 @@ public class Vanilla
 					'I', Item.ingotIron,
 				}));
 		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2), new Object[]
+				{
+					"PCP",
+					"PTP",
+					"IMI",
+					'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0),
+					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+					'P', "sheetPlastic",
+					'T', Block.tnt,
+					'I', Item.firework
+				}));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoStandardItem), new Object[]
 				{
 					"AAA",
+					"AGA",
 					"AMA",
-					"AAA",
 					'A', Item.arrow,
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+					'G', Item.gunpowder
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoAnvilItem), new Object[]
 				{
 					"SMS",
 					"SAS",
-					"SSS",
+					"STS",
 					'A', new ItemStack(Block.anvil, 1, 0),
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
-					'S', Item.silk
+					'S', Item.silk,
+					'T', Block.tnt
 				}));
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoFireItem, 4), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoFireItem), MineFactoryReloadedCore.needlegunAmmoStandardItem,
 				Item.flintAndSteel);
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoLavaItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoLavaItem), MineFactoryReloadedCore.needlegunAmmoFireItem,
 				Item.bucketLava);
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSludgeItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
