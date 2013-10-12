@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.conveyor;
 
 import buildcraft.api.gates.IAction;
+import buildcraft.api.transport.IPipeConnection;
+import buildcraft.api.transport.IPipeTile.PipeType;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.core.util.Util;
@@ -21,8 +22,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-@Implementable("buildcraft.core.IMachine")
-public class TileEntityConveyor extends TileEntity implements IRotateableTile, ISidedInventory
+public class TileEntityConveyor extends TileEntity implements IRotateableTile, ISidedInventory, IPipeConnection
 {
 	private int _dye = -1;
 	private boolean _isReversed = false;
@@ -505,5 +505,12 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 		}
 		
 		return slopeComponent * 4 + directionComponent;
+	}
+
+	@Override
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		if (type == PipeType.ITEM)
+			return ConnectOverride.CONNECT;
+		return ConnectOverride.DISCONNECT;
 	}
 }
