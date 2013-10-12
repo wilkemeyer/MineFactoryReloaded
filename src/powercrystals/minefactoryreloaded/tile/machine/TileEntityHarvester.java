@@ -375,7 +375,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public boolean manageLiquids()
+	public boolean manageFluids()
 	{
 		return true;
 	}

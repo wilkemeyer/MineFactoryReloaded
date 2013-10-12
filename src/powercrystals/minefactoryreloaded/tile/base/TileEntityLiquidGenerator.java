@@ -125,6 +125,12 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		_ticksSinceLastConsumption = nbttagcompound.getInteger("ticksSinceLastConsumption");
 		_buffer = nbttagcompound.getInteger("buffer");
 	}
+	
+	@Override
+	public boolean manageFluids()
+	{
+		return true;
+	}
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)

@@ -175,7 +175,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public boolean manageLiquids()
+	public boolean manageFluids()
 	{
 		return true;
 	}

@@ -390,7 +390,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return false;
 	}
 	
-	public boolean manageLiquids()
+	public boolean manageFluids()
 	{
 		return false;
 	}
@@ -412,7 +412,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	@Override
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		if (type == PipeType.FLUID && this.manageLiquids())
+		if (type == PipeType.FLUID && this.manageFluids())
 			return ConnectOverride.CONNECT;
 		if (type == PipeType.ITEM && this.manageSolids())
 			return ConnectOverride.CONNECT;

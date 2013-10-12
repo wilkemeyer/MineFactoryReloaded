@@ -97,7 +97,7 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 	
 	@Override
-	public boolean manageLiquids()
+	public boolean manageFluids()
 	{
 		return true;
 	}

@@ -167,7 +167,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public boolean manageLiquids()
+	public boolean manageFluids()
 	{
 		return true;
 	}
