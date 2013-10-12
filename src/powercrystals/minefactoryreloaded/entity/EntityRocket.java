@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.entity;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,12 +19,14 @@ import net.minecraft.world.World;
 public class EntityRocket extends Entity
 {
 	private int _ticksAlive = 0;
-	private EntityLivingBase _owner;
+	private String _owner;
 	private Entity _target;
+	private NBTTagCompound _lostTarget;
 	
 	public EntityRocket(World world)
 	{
 		super(world);
+		_lostTarget = null;
 	}
 	
 	public EntityRocket(World world, EntityLivingBase owner)
@@ -32,7 +36,8 @@ public class EntityRocket extends Entity
 		setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw, owner.rotationPitch);
 		setPosition(posX, posY, posZ);
 		recalculateVelocity();
-		_owner = owner;
+		if (owner instanceof EntityPlayer)
+			_owner = ((EntityPlayer)owner).getCommandSenderName();
 	}
 	
 	public EntityRocket(World world, EntityLivingBase owner, Entity target)
@@ -59,8 +64,9 @@ public class EntityRocket extends Entity
 		super.onUpdate();
 		
 		_ticksAlive++;
-		if(_ticksAlive > 200)
+		if(_ticksAlive > 600)
 		{
+			// TODO: config option for exploding
 			setDead();
 		}
 		
@@ -90,12 +96,13 @@ public class EntityRocket extends Entity
 			List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,	this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double closestRange = 0.0D;
 			double collisionRange = 0.3D;
+			EntityPlayer owner = _owner == null ? null : this.worldObj.getPlayerEntityByName(_owner);
 			
 			for(int i = 0, end = list.size(); i < end; ++i)
 			{
 				Entity e = (Entity)list.get(i);
 				
-				if(e.canBeCollidedWith() && (e != _owner))
+				if((e != owner | _ticksAlive > 5) && e.canBeCollidedWith())
 				{
 					AxisAlignedBB entitybb = e.boundingBox.expand(collisionRange, collisionRange, collisionRange);
 					MovingObjectPosition entityHitPos = entitybb.calculateIntercept(pos, nextPos);
@@ -122,7 +129,7 @@ public class EntityRocket extends Entity
 			{
 				EntityPlayer entityplayer = (EntityPlayer)hit.entityHit;
 				
-				if(entityplayer.capabilities.disableDamage || (_owner instanceof EntityPlayer && !((EntityPlayer)_owner).canAttackPlayer(entityplayer)))
+				if(entityplayer.capabilities.disableDamage || (owner != null && !owner.canAttackPlayer(entityplayer)))
 				{
 					hit = null;
 				}
@@ -131,22 +138,23 @@ public class EntityRocket extends Entity
 			if(hit != null && !worldObj.isRemote)
 			{
 				if(hit.entityHit != null)
-				{ // why not spawn explosion at nextPos x/y/z?
-					worldObj.newExplosion(this, hit.entityHit.posX, hit.entityHit.posY, hit.entityHit.posZ, 4.0F, true, true);
+				{
+					worldObj.newExplosion(this, nextPos.xCoord, nextPos.yCoord, nextPos.zCoord,
+							4.0F, true, true);
 				}
 				else
-				{
+				{ // spawn explosion at nextPos x/y/z?
 					worldObj.newExplosion(this, hit.blockX, hit.blockY, hit.blockZ, 4.0F, true, true);
 				}
 				setDead();
 			}
 		}
 		
-		if(_target != null)
+		Vec3 targetVector = findTarget();
+		if (targetVector != null)
 		{
 			// At this point, I suspect literally no one on this project actually understands what this does or how it works
 			
-			Vec3 targetVector = worldObj.getWorldVec3Pool().getVecFromPool(_target.posX - posX, _target.posY - posY, _target.posZ - posZ);
 			float targetYaw = clampAngle(360 - (float)(Math.atan2(targetVector.xCoord, targetVector.zCoord) * 180.0D / Math.PI), 360, false);
 			float targetPitch = clampAngle(-(float)(Math.atan2(targetVector.yCoord, Math.sqrt(targetVector.xCoord * targetVector.xCoord + targetVector.zCoord * targetVector.zCoord)) * 180.0D / Math.PI), 360, false);
 			
@@ -223,13 +231,66 @@ public class EntityRocket extends Entity
 		}
 	}
 	
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
+	@SuppressWarnings("rawtypes")
+	private Vec3 findTarget()
 	{
+		findTarget: if (_lostTarget != null)
+		{
+            UUID uuid = new UUID(_lostTarget.getLong("UUIDMost"), _lostTarget.getLong("UUIDLeast"));
+            double x = _lostTarget.getDouble("xTarget");
+            double y = _lostTarget.getDouble("yTarget");
+            double z = _lostTarget.getDouble("zTarget");
+            List list = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.
+            		getAABBPool().getAABB(x - 5, y - 5, z - 5, x + 5, y + 5, z + 5));
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext())
+            {
+            	Entity e = (Entity)iterator.next();
+
+                if (e.getUniqueID().equals(uuid))
+                {
+                    _target = e;
+                    _lostTarget = null;
+                    break findTarget;
+                }
+            }
+            return worldObj.getWorldVec3Pool().getVecFromPool(x - posX, y - posY, z - posZ);
+		}
+		if (_target != null)
+		{
+			return worldObj.getWorldVec3Pool().getVecFromPool(_target.posX - posX,
+					_target.posY - posY, _target.posZ - posZ);
+		}
+		return null;
 	}
 	
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbttagcompound)
+	protected void writeEntityToNBT(NBTTagCompound tag)
 	{
+		if (_target != null)
+		{
+			NBTTagCompound target = new NBTTagCompound("target");
+			tag.setDouble("xTarget", _target.posX);
+			tag.setDouble("yTarget", _target.posY);
+			tag.setDouble("zTarget", _target.posZ);
+			UUID uuid = _target.getUniqueID();
+			tag.setLong("UUIDMost", uuid.getMostSignificantBits());
+			tag.setLong("UUIDLeast", uuid.getLeastSignificantBits());
+			tag.setCompoundTag("target", target);
+		}
+		if (_owner != null)
+			tag.setString("owner", _owner);
+	}
+	
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound tag)
+	{
+		if(tag.hasKey("target"))
+		{
+			_lostTarget = tag.getCompoundTag("target");
+		}
+		if (tag.hasKey("owner"))
+			_owner = tag.getString("owner");
 	}
 }
