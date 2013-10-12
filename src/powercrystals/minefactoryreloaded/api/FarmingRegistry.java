@@ -15,7 +15,7 @@ public class FarmingRegistry
 {
 	private static void alert()
 	{
-		FMLLog.severe("%s is using an outdated API and may crash the game.", 
+		FMLLog.severe("%s is using a removed API and may crash the game.", 
 				Loader.instance().activeModContainer().getName());
 		new Throwable().printStackTrace();
 	}
