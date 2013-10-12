@@ -365,6 +365,14 @@ public class Vanilla
 		registerOreDictLaserOre(60, "oreNaturalAluminum", null);
 		registerOreDictLaserOre(10, "oreArdite", null);
 		registerOreDictLaserOre(10, "oreCobalt", null);
+		registerOreDictLaserOre(50, "oreOsmium", "oreNetherOsmium");
+		registerOreDictLaserOre(80, "oreForce", null);
+		registerOreDictLaserOre(40, "oreRuby", "oreNetherRuby");
+		registerOreDictLaserOre(40, "oreSapphire", "oreNetherSapphire");
+		registerOreDictLaserOre(30, "oreGalena", null);
+		registerOreDictLaserOre(50, "oreBauxite", null);
+		registerOreDictLaserOre(50, "oreTetrahedrite", null);
+		registerOreDictLaserOre(50, "oreCassiterite", null);
 		
 		MFRRegistry.registerFruitLogBlockId(Block.wood.blockID);
 		MFRRegistry.registerFruit(new FruitCocoa());
