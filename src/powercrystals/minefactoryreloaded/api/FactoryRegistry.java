@@ -152,10 +152,9 @@ public class FactoryRegistry
 	}
 	
 	/**
-	 * Registers a grindable entity with the Grinder using the new grinder interface. This method will be renamed to the standard "registerGrindable"
-	 * on MC 1.6.
+	 * Bans an entity class from being automatically ground by the Grinder
 	 * 
-	 * @param grindable The entity to grind.
+	 * @param blacklistedEntity Class to blacklist
 	 */
 	public static void registerGrinderBlacklist(Class<?> ...ungrindables)
 	{
