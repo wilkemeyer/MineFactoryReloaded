@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.NeedlegunContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptNeedlegunAmmo;
 import powercrystals.minefactoryreloaded.gui.slot.SlotViewOnly;
@@ -56,7 +57,10 @@ public class ContainerNeedlegun extends Container
 	@Override
 	public void onContainerClosed(EntityPlayer player)
 	{
+		if (UtilInventory.stacksEqual(player.inventory.mainInventory[_nsi], _ncw.getStack(), false))
+			player.inventory.mainInventory[_nsi] = _ncw.getStack();
+		else
+			player.dropPlayerItem(((Slot)inventorySlots.get(0)).getStack());
 		super.onContainerClosed(player);
-		player.inventory.mainInventory[_nsi] = _ncw.getStack();
 	}
 }
