@@ -139,8 +139,8 @@ public class EntityRocket extends Entity
 			{
 				if(hit.entityHit != null)
 				{
-					worldObj.newExplosion(this, nextPos.xCoord, nextPos.yCoord, nextPos.zCoord,
-							4.0F, true, true);
+					worldObj.newExplosion(this, hit.entityHit.posX, hit.entityHit.posY,
+							hit.entityHit.posZ, 4.0F, true, true);
 				}
 				else
 				{ // spawn explosion at nextPos x/y/z?
@@ -260,7 +260,7 @@ public class EntityRocket extends Entity
 		if (_target != null)
 		{
 			return worldObj.getWorldVec3Pool().getVecFromPool(_target.posX - posX,
-					_target.posY - posY, _target.posZ - posZ);
+					_target.posY - posY + _target.getEyeHeight(), _target.posZ - posZ);
 		}
 		return null;
 	}
