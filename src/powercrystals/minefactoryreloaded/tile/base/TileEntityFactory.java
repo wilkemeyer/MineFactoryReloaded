@@ -59,6 +59,13 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	public void invalidate()
 	{
 		super.invalidate();
+		this.onChunkUnload();
+	}
+	
+	@Override
+	public void onChunkUnload()
+	{
+		super.onChunkUnload();
 		if(worldObj.isRemote && this instanceof IHarvestAreaContainer)
 		{
 			MineFactoryReloadedClient.removeTileFromAreaList((IHarvestAreaContainer)this);

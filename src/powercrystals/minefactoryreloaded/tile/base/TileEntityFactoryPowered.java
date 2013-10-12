@@ -241,8 +241,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 	
 	@Override
-	public void invalidate()
+	public void onChunkUnload()
 	{
+		super.onChunkUnload();
 		if(_isAddedToIC2EnergyNet)
 		{
 			if(!worldObj.isRemote)
@@ -251,7 +252,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			}
 			_isAddedToIC2EnergyNet = false;
 		}
-		super.invalidate();
 	}
 	
 	protected abstract boolean activateMachine();
