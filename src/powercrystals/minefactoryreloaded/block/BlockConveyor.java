@@ -168,9 +168,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		
 		if(isUphill)
 		{
-			yVelocity = 0.1405D;
+			yVelocity = 0.17D;
 		}
-		else if (entity.posY - y < 0.1)
+		else if (entity.posY - y < 0.1 & entity.posY - y > 0)
 		{
 			entity.posY = y + 0.1;
 		}
