@@ -26,9 +26,9 @@ public class AppliedEnergistics
 			return;
 		}
 		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
-				"powercrystals.minefactoryreloaed.tile.base.TileEntityFactory");
+				"powercrystals.minefactoryreloaded.tile.base.TileEntityFactory");
 		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
-				"powercrystals.minefactoryreloaed.tile.conveyer.TileEntityConveyor");
+				"powercrystals.minefactoryreloaded.tile.conveyer.TileEntityConveyor");
 		try
 		{
 			ItemStack quartzOre = (ItemStack)Class.forName("appeng.api.Blocks").getField("blkQuartzOre").get(null);
