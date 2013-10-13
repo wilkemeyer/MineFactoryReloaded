@@ -339,13 +339,13 @@ chat.info.mfr.safarinet.release=Changed to release mode
 
 chat.info.mfr.spyglass.nosight=Nothing in sight
 chat.info.mfr.spyglass.hitentity=Found a %s at %.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitblock=Found %s [%i:%i] at %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitblock=Found %s [%d:%d] at %.1f, %.1f, %.1f
 chat.info.mfr.spyglass.hitunknown=Found UNKNOWN (bugged mod?) at %.1f, %.1f, %.1f
 
 chat.info.mfr.ruler.nosight=Nothing in sight
 chat.info.mfr.ruler.hitentity=Hit entity - measurement failed
 chat.info.mfr.ruler.startposition=Recorded start position
-chat.info.mfr.ruler.distance=distance: %i, count: %i
+chat.info.mfr.ruler.distance=distance: %d, count: %d
 chat.info.mfr.ruler.total=Total Distance: %.1f
 
 chat.info.mfr.rednet.meter.cable.allzero=All RedNet subnets are 0

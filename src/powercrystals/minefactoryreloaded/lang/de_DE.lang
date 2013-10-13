@@ -339,13 +339,13 @@ chat.info.mfr.safarinet.release=Gewechselt in Freilassmodus
 
 chat.info.mfr.spyglass.nosight=Nichts in Sichtweite
 chat.info.mfr.spyglass.hitentity=%s bei %.1f, %.1f, %.1f gefunden
-chat.info.mfr.spyglass.hitblock=%s [%i:%i] bei %.1f, %.1f, %.1f gefunden
+chat.info.mfr.spyglass.hitblock=%s [%d:%d] bei %.1f, %.1f, %.1f gefunden
 chat.info.mfr.spyglass.hitunknown=UNBEKANNTES (Bug?) bei %.1f, %.1f, %.1f gefunden
 
 chat.info.mfr.ruler.nosight=Nichts in Sichtweite
 chat.info.mfr.ruler.hitentity=Auf Wesen getroffen - Messung fehlgeschlagen
 chat.info.mfr.ruler.startposition=Startposition aufgenommen
-chat.info.mfr.ruler.distance=Entfernung: %i, Z\u00e4hlung: %i
+chat.info.mfr.ruler.distance=Entfernung: %d, Z\u00e4hlung: %d
 chat.info.mfr.ruler.total=Gesamtdistanz: %.1f
 
 chat.info.mfr.rednet.meter.cable.allzero=Alle RedNet-Subnetzwerke sind 0
