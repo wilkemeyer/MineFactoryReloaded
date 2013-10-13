@@ -54,14 +54,14 @@ public class ItemSpyglass extends ItemFactory
 											tempStack.getDisplayName(),
 											world.getBlockId(mop.blockX, mop.blockY, mop.blockZ),
 											world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ),
-											mop.blockX, mop.blockY, mop.blockZ)));
+											(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				}
 				else
 				{
 					player.sendChatToPlayer(new ChatMessageComponent()
 							.addText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitunknown",
-									mop.blockX, mop.blockY, mop.blockZ)));
+										(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				}
 			}
 		}
