@@ -121,14 +121,13 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.None;
 		}
+		else if (_mode == 2 && b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
+		{
+			return RedNetConnectionType.ForcedCableSingle;
+		}
 		else if(_mode == 1) // mode 1 forces plate mode for weak power
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
-		}
-		else if (_mode == 2)
-		{
-			return b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()) ?
-					RedNetConnectionType.ForcedCableSingle : RedNetConnectionType.None;
 		}
 		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId))
 			// standard connection logic, then figure out if we shouldn't connect
