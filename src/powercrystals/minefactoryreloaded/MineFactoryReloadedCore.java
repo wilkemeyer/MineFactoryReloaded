@@ -275,6 +275,41 @@ public class MineFactoryReloadedCore extends BaseMod
 	{
 		return itemOffset;
 	}
+	
+	public static void registerFluids()
+	{
+		registerFluid("milk", MFRConfig.milkStillBlockId.getInt());
+		registerFluid("sludge", MFRConfig.sludgeStillBlockId.getInt());
+		registerFluid("sewage", MFRConfig.sewageStillBlockId.getInt());
+		registerFluid("mobessence", MFRConfig.essenceStillBlockId.getInt(), 7, 310);
+		registerFluid("biofuel", MFRConfig.biofuelStillBlockId.getInt());
+		registerFluid("meat", MFRConfig.meatStillBlockId.getInt());
+		registerFluid("pinkslime", MFRConfig.pinkslimeStillBlockId.getInt());
+		registerFluid("chocolatemilk", MFRConfig.chocolateMilkStillBlockId.getInt());
+		registerFluid("mushroomsoup", MFRConfig.mushroomSoupStillBlockId.getInt());
+	}
+	
+	public static boolean registerFluid(String name, int blockId)
+	{
+		return registerFluid(name, blockId, 0, -1);
+	}
+	
+	public static boolean registerFluid(String name, int blockId, int lightValue, int temp)
+	{
+		name = name.toLowerCase(Locale.ENGLISH);
+		if (!FluidRegistry.isFluidRegistered(name))
+		{
+			Fluid fluid = new Fluid(name);
+			if (!FluidRegistry.registerFluid(fluid))
+				return false;
+			fluid.setBlockID(blockId);
+			fluid.setLuminosity(lightValue);
+			if (temp > 0)
+				fluid.setTemperature(temp);
+			fluid.setUnlocalizedName("mfr.liquid." + name + ".still");
+		}
+		return false;
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -286,6 +321,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		extractLang(new String[] { "en_US", "es_AR", "es_ES", "es_MX", "es_UY", "es_VE", "zh_CN", "zh_TW", "ru_RU", "ko_KR", "de_DE" });
 		loadLang();
+		
+		registerFluids();
 		
 		milkLiquid = new BlockFactoryFluid(MFRConfig.milkStillBlockId.getInt(), "milk");
 		sludgeLiquid = new BlockFactoryFluid(MFRConfig.sludgeStillBlockId.getInt(), "sludge");
@@ -504,34 +541,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerWorldGenerator(new MineFactoryReloadedWorldGen());
 		
 		TickRegistry.registerScheduledTickHandler(new UpdateManager(this), Side.CLIENT);
-		
-		registerFluid("milk", milkLiquid);
-		registerFluid("sludge", sludgeLiquid);
-		registerFluid("sewage", sewageLiquid);
-		registerFluid("mobessence", essenceLiquid);
-		registerFluid("biofuel", biofuelLiquid);
-		registerFluid("meat", meatLiquid);
-		registerFluid("pinkslime", pinkSlimeLiquid);
-		registerFluid("chocolatemilk", chocolateMilkLiquid);
-		registerFluid("mushroomsoup", mushroomSoupLiquid);
-	}
-	
-	public static boolean registerFluid(String name, Block block)
-	{
-		name = name.toLowerCase(Locale.ENGLISH);
-		if (!FluidRegistry.isFluidRegistered(name))
-		{
-			Fluid fluid = new Fluid(name);
-			if (!FluidRegistry.registerFluid(fluid))
-				return false;
-			if (block != null)
-			{
-				fluid.setBlockID(block);
-				fluid.setLuminosity(block.getLightValue(null, 0, 0, 0));
-			}
-			fluid.setUnlocalizedName("mfr.liquid." + name + ".still");
-		}
-		return false;
 	}
 	
 	@EventHandler

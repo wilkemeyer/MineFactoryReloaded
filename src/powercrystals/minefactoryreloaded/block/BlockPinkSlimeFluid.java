@@ -12,13 +12,13 @@ public class BlockPinkSlimeFluid extends BlockFactoryFluid
 	@Override
 	public void updateTick(net.minecraft.world.World world, int x, int y, int z, java.util.Random rand)
 	{
-		if(world.getBlockMetadata(x, y, z) == (quantaPerBlock - 1))
+		if(isSourceBlock(world, x, y, z))
 		{
 			world.setBlockToAir(x, y, z);
 			EntityPinkSlime s = new EntityPinkSlime(world);
 			s.onSpawnWithEgg(null);
 			s.setSlimeSize(1);
-			s.setPosition(x, y + 0.5, z);
+			s.setPosition(x + 0.5, y + 0.5, z + 0.5);
 			world.spawnEntityInWorld(s);
 		}
 		else

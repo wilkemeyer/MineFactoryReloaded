@@ -9,30 +9,25 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
-import powercrystals.core.block.BlockFluidClassic;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFactoryFluid extends BlockFluidClassic implements IFluidBlock, IConnectableRedNet
-{
+public class BlockFactoryFluid extends BlockFluidClassic implements IConnectableRedNet
+{ // TODO: convert to BlockFluidFinite
 	private Icon _iconFlowing;
 	private Icon _iconStill;
 	protected String fluidName;
 	
 	public BlockFactoryFluid(int id, String liquidName)
 	{
-		super(id, Material.water);
+		super(id, FluidRegistry.getFluid(liquidName), Material.water);
 		setUnlocalizedName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
@@ -79,35 +74,9 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IFluidBlock,
 	}
 	
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z)
-	{
-		if(blockID == MineFactoryReloadedCore.essenceLiquid.blockID)
-		{
-			return 7;
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	
-	@Override
 	public String getUnlocalizedName()
 	{
 		return "fluid." + this.unlocalizedName;
-	}
-	
-	@Override
-	public int getRenderType()
-	{
-		return MineFactoryReloadedCore.renderIdFluidClassic;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderBlockPass()
-	{
-		return 1;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -150,27 +119,5 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IFluidBlock,
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
-	}
-
-	@Override
-	public Fluid getFluid()
-	{
-		return FluidRegistry.getFluid(fluidName);
-	}
-
-	@Override
-	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
-	{
-		if (doDrain)
-		{
-			world.setBlockToAir(x, y, z);
-		}
-		return FluidRegistry.getFluidStack(fluidName, FluidContainerRegistry.BUCKET_VOLUME);
-	}
-
-	@Override
-	public boolean canDrain(World world, int x, int y, int z)
-	{
-		return true;
 	}
 }
