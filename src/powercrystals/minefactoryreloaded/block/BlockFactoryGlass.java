@@ -1,10 +1,12 @@
 package powercrystals.minefactoryreloaded.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemDye;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -72,10 +74,22 @@ public class BlockFactoryGlass extends BlockGlass implements IConnectableRedNet
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		if (world.getBlockMaterial(x, y, z) == Material.glass)
+		if (world.getBlockMaterial(x, y, z) == Material.glass && isBlockFullCube(world, x, y, z))
 			return false;
 		return super.shouldSideBeRendered(world, x, y, z, side);
 	}
+
+    public boolean isBlockFullCube(IBlockAccess world, int x, int y, int z)
+    {
+        Block block = Block.blocksList[world.getBlockId(x, y, z)];
+        if (block == null)
+        	return false;
+        block.setBlockBoundsBasedOnState(world, x, y, z);
+        return AxisAlignedBB.getAABBPool().getAABB(block.getBlockBoundsMinX(),
+        		block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(),
+        		block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(),
+        		block.getBlockBoundsMaxZ()).getAverageEdgeLength() >= 1.0D;
+    }
 
 	public Icon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
