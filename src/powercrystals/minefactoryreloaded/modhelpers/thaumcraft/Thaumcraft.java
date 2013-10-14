@@ -10,7 +10,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -19,7 +19,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class Thaumcraft
 {
 	@EventHandler
-	public static void load(FMLInitializationEvent e)
+	public static void load(FMLPostInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("Thaumcraft"))
 		{
@@ -29,10 +29,10 @@ public class Thaumcraft
 		
 		try
 		{
-			Block tcSapling = GameRegistry.findBlock("Thaumcraft", "tile.blockCustomPlant");
-			Block tcLog = GameRegistry.findBlock("Thaumcraft", "tile.blockMagicalLog");
-			Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "tile.blockMagicalLeaves");
-			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "tile.blockTaintFibres");
+			Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
+			Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
+			Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
+			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));
