@@ -190,7 +190,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 			{
 				byte mode = cable.getMode();
 				mode++;
-				if(mode > 2)
+				if(mode > 3)
 				{
 					mode = 0;
 				}
@@ -207,6 +207,10 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forced"));
 					}
 					else if(mode == 2)
+					{
+						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forcedstrong"));
+					}
+					else if(mode == 3)
 					{
 						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.cableonly"));
 					}
@@ -340,14 +344,14 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 		{
 			TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
 			RedNetConnectionType state = cable.getConnectionState(ForgeDirection.getOrientation(side).getOpposite());
-			if(cable.getNetwork() == null || !state.isConnected || state.isAllSubnets)
+			if(cable.getNetwork() == null || !state.isConnected | !state.isSingleSubnet)
 			{
 				return 0;
 			}
 			
 			int subnet = ((TileEntityRedNetCable)te).getSideColor(ForgeDirection.getOrientation(side).getOpposite());
 			power = Math.min(Math.max(((TileEntityRedNetCable)te).getNetwork().getPowerLevelOutput(subnet), 0), 15);
-			RedstoneNetwork.log("Asked for weak power at " + x + "," + y + "," + z + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
+			RedstoneNetwork.log("Asked for weak power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
 		}
 		return power;
 	}
@@ -361,7 +365,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 		{
 			TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
 			RedNetConnectionType state = cable.getConnectionState(ForgeDirection.getOrientation(side).getOpposite());
-			if(cable.getNetwork() == null || !state.isConnected || state.isAllSubnets)
+			if(cable.getNetwork() == null || !state.isConnected | !state.isSingleSubnet)
 			{
 				return 0;
 			}
@@ -374,12 +378,12 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 			if(cable.getNetwork().isWeakNode(nodebp))
 			{
 				power = 0;
-				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + " - weak node, power 0");
+				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - weak node, power 0");
 			}
 			else
 			{
 				power = Math.min(Math.max(cable.getNetwork().getPowerLevelOutput(subnet), 0), 15);
-				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
+				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
 			}
 		}
 		return power;

@@ -361,6 +361,7 @@ chat.info.mfr.rednet.memorycard.error=PRC contains insufficient circuits to hold
 
 chat.info.mfr.rednet.connection.standard=Set cable to standard connection mode
 chat.info.mfr.rednet.connection.forced=Set cable to forced-connection mode
+chat.info.mfr.rednet.connection.forcedstrong=Set cable to strong-connection mode
 chat.info.mfr.rednet.connection.cableonly=Set cable to cable-only connection mode
 
 death.attack.mfr.slaughterhouse=%1$s was processed into Liquid Meat

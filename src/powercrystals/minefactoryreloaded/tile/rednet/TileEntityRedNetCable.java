@@ -107,24 +107,30 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.CableAll;
 		}
-		else if(_mode == 2) // cable-only, and not a cable - don't connct
-		{
-			return RedNetConnectionType.None;
-		}
-		else if(b instanceof IRedNetNoConnection)
+		else if(_mode == 3) // cable-only, and not a cable - don't connect
 		{
 			return RedNetConnectionType.None;
 		}
 		else if(b instanceof IConnectableRedNet) // API node - let them figure it out
 		{
 			RedNetConnectionType type = ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
-			return type.isConnectionForced && _mode != 1 ? RedNetConnectionType.None : type; 
+			return type.isConnectionForced && !(_mode == 1 | _mode == 2) ?
+					RedNetConnectionType.None : type; 
+		}
+		else if(b instanceof IRedNetNoConnection || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
+		{
+			return RedNetConnectionType.None;
 		}
 		else if(_mode == 1) // mode 1 forces plate mode for weak power
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
 		}
-		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId) || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
+		else if (_mode == 2)
+		{
+			return b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()) ?
+					RedNetConnectionType.ForcedCableSingle : RedNetConnectionType.None;
+		}
+		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId))
 			// standard connection logic, then figure out if we shouldn't connect
 			// mode 1 will skip this
 		{
@@ -273,23 +279,33 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setIntArray("sideSubnets", _sideColors);
-		nbttagcompound.setByte("mode", _mode);
+		super.writeToNBT(tag);
+		tag.setIntArray("sideSubnets", _sideColors);
+		tag.setByte("mode", _mode);
+		tag.setByte("v", (byte)1);
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
-		_sideColors = nbttagcompound.getIntArray("sideSubnets");
+		super.readFromNBT(tag);
+		_sideColors = tag.getIntArray("sideSubnets");
 		if(_sideColors.length == 0)
 		{
 			_sideColors = new int[6];
 		}
-		_mode = nbttagcompound.getByte("mode");
+		_mode = tag.getByte("mode");
+		switch (tag.getByte("v"))
+		{
+		case 0:
+			if (_mode == 2)
+				_mode = 3;
+			break;
+		default:
+			break;
+		}
 	}
 	
 	@Override
