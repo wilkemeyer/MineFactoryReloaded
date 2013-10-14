@@ -26,7 +26,7 @@ public class HarvestableThaumcraftLeaves extends HarvestableTreeLeaves
 		if(harvesterSettings.get("silkTouch") != null && harvesterSettings.get("silkTouch"))
 		{
 			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-			drops.add(new ItemStack(getPlantId(), 1, world.getBlockMetadata(x, y, z)));
+			drops.add(new ItemStack(getPlantId(), 1, world.getBlockMetadata(x, y, z) & 0x01));
 			return drops;
 		}
 		else

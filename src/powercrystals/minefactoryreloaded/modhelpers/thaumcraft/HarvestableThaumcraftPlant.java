@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +18,10 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 	private int _blockId;
 	private ItemStack _quickSilver;
 	
-	public HarvestableThaumcraftPlant(int blockId) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, ClassNotFoundException
+	public HarvestableThaumcraftPlant(int blockId)
 	{
 		_blockId = blockId;
-		_quickSilver = new ItemStack((Item)Class.forName("thaumcraft.common.Config").getField("itemResource").get(null), 1, 3);
+		_quickSilver = new ItemStack(GameRegistry.findItem("Thaumcraft", "ItemResource"), 1, 3);
 	}
 	
 	@Override
