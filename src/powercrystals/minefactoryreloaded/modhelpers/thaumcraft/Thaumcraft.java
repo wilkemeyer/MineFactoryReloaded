@@ -5,6 +5,7 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -27,9 +28,9 @@ public class Thaumcraft
 		
 		try
 		{
-			Block tcSapling = (Block)Class.forName("thaumcraft.common.Config").getField("blockCustomPlant").get(null);
-			Block tcLog = (Block)Class.forName("thaumcraft.common.Config").getField("blockMagicalLog").get(null);
-			Block tcLeaves = (Block)Class.forName("thaumcraft.common.Config").getField("blockMagicalLeaves").get(null);
+			Block tcSapling = (Block)Class.forName("thaumcraft.common.config.Config").getField("blockCustomPlant").get(null);
+			Block tcLog = (Block)Class.forName("thaumcraft.common.config.Config").getField("blockMagicalLog").get(null);
+			Block tcLeaves = (Block)Class.forName("thaumcraft.common.config.Config").getField("blockMagicalLeaves").get(null);
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));
@@ -41,6 +42,11 @@ public class Thaumcraft
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			
 			MFRRegistry.registerGrinderBlacklist(golem);
+			
+			if (MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false))
+			{
+				MFRRegistry.registerConveyerBlacklist(golem);
+			}
 		}
 		catch(Exception x)
 		{

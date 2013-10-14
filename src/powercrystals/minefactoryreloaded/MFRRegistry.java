@@ -51,6 +51,7 @@ public abstract class MFRRegistry
 	private static List<String> _autoSpawnerBlacklist = new ArrayList<String>();
 	private static List<Class<?>> _autoSpawnerClassBlacklist = new ArrayList<Class<?>>();
 	private static List<Class<?>> _slaughterhouseBlacklist = new ArrayList<Class<?>>();
+	private static List<Class<?>> _conveyerBlacklist = new ArrayList<Class<?>>();
 
 	private static Map<Integer, List<ItemStack>> _laserPreferredOres = new HashMap<Integer, List<ItemStack>>(16);
 
@@ -287,6 +288,16 @@ public abstract class MFRRegistry
 	public static List<String> getAutoSpawnerBlacklist()
 	{
 		return _autoSpawnerBlacklist;
+	}
+	
+	public static void registerConveyerBlacklist(Class<?> entityClass)
+	{
+		_conveyerBlacklist.add(entityClass);
+	}
+
+	public static List<Class<?>> getConveyerBlacklist()
+	{
+		return _conveyerBlacklist;
 	}
 	
 	@Deprecated

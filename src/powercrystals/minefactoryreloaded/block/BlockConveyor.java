@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -24,12 +25,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.IRotateableTile;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityCollector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
@@ -128,22 +129,14 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		if(entity instanceof EntityPlayer && MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false))
-		{
-			return;
-		}
+		boolean isItem = entity instanceof EntityItem || entity instanceof EntityXPOrb;
+		if (!isItem)
+			for (Class<?> blacklist : MFRRegistry.getConveyerBlacklist())
+				if (blacklist.isInstance(entity))
+					return;
 		
-		// TODO: add conveyer entity blacklist: these two cases will be covered conditionally elsewhere
-		if(entity.getClass().getName().contains("thaumcraft.common.entities.golems") && MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false))
-		{
+		if (!(isItem || entity instanceof EntityLivingBase || entity instanceof EntityTNTPrimed))
 			return;
-		}
-		
-		if(!(entity instanceof EntityItem || entity instanceof EntityXPOrb || (entity instanceof EntityLivingBase && MFRConfig.conveyorCaptureNonItems
-				.getBoolean(true))))
-		{
-			return;
-		}
 		
 		TileEntity conveyor = world.getBlockTileEntity(x, y, z);
 		if(!(conveyor instanceof TileEntityConveyor && ((TileEntityConveyor)conveyor).getConveyorActive()))

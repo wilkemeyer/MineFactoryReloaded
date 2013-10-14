@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.vanilla;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.monster.EntitySlime;
@@ -209,6 +210,16 @@ public class Vanilla
 		MFRRegistry.registerRanchable(new RanchableSheep());
 		MFRRegistry.registerRanchable(new RanchableSquid());
 		MFRRegistry.registerRanchable(new RanchableChicken());
+		
+		if (MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false))
+		{
+			MFRRegistry.registerConveyerBlacklist(EntityPlayer.class);
+		}
+		
+		if (!MFRConfig.conveyorCaptureNonItems.getBoolean(true))
+		{
+			MFRRegistry.registerConveyerBlacklist(Entity.class);
+		}
 
 		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
 		MFRRegistry.registerGrinderBlacklist(EntityDragon.class);
