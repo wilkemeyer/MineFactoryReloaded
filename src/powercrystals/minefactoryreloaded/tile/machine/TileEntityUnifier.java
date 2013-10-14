@@ -43,7 +43,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	public static void updateUnifierLiquids()
 	{
 		_biofuel = FluidRegistry.getFluidStack("biofuel", 1);
-		_ethanol = FluidRegistry.getFluidStack("ethanol", 1);
+		_ethanol = FluidRegistry.getFluidStack("bioethanol", 1);
 		_essence = FluidRegistry.getFluidStack("mobessence", 1);
 		_liquidxp = FluidRegistry.getFluidStack("immibis.liquidxp", 1);
 	}
