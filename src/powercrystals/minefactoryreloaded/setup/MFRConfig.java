@@ -137,7 +137,6 @@ public class MFRConfig
 	public static Property vanillaOverrideIce;
 	public static Property vanillaOverrideMilkBucket;
 	
-	public static Property enableCompatibleAutoEnchanter;
 	public static Property enableSlipperyRoads;
 	
 	public static Property redNetConnectionBlacklist;
@@ -326,9 +325,6 @@ public class MFRConfig
 		vanillaOverrideIce.comment = "If true, enables MFR unmelting ice as well as vanilla ice.";
 		vanillaOverrideMilkBucket = c.get(Configuration.CATEGORY_GENERAL, "VanillaOverride.MilkBucket", true);
 		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
-		
-		enableCompatibleAutoEnchanter = c.get(Configuration.CATEGORY_GENERAL, "AutoEnchanter.EnableSafeMode", false);
-		enableCompatibleAutoEnchanter.comment = "This was provided to workaround a BuildCraft issue in 1.4 and no longer has any effect.";
 		
 		redNetDebug = c.get(Configuration.CATEGORY_GENERAL, "RedNet.Debug", false);
 		redNetDebug.comment = "If true, RedNet cables will dump a massive amount of data to the log file. You should probably only use this if PC tells you to.";
