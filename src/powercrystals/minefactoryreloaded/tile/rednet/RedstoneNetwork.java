@@ -225,7 +225,7 @@ public class RedstoneNetwork
 		
 		_weakNodes.addAll(network._weakNodes);
 		
-		_mustUpdate = _mustUpdate || network._mustUpdate;
+		_mustUpdate = _mustUpdate | network._mustUpdate;
 		
 		for(BlockPosition cable : network._cables)
 		{
@@ -387,15 +387,21 @@ public class RedstoneNetwork
 			offset = -1;
 		}
 		
+		int ret = 0;
+		
 		if(_weakNodes.contains(node) || Block.blocksList[blockId] instanceof IConnectableRedNet)
 		{
 			int weakPower = _world.getIndirectPowerLevelTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
 			int strongPower = _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
-			return Math.abs(weakPower) > Math.abs(strongPower) ? weakPower : strongPower;
+			ret = Math.abs(weakPower) > Math.abs(strongPower) ? weakPower : strongPower;
 		}
 		else
 		{
-			return _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
+			ret =  _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
 		}
+		
+		if (offset == ret)
+			return 0;
+		return ret;
 	}
 }
