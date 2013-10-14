@@ -92,7 +92,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	protected void configurePowerProvider()
 	{
 		int activation = getMaxEnergyPerTick() / energyPerMJ;
-		int maxReceived = Math.min(activation * 20, 1000);
+		int maxReceived = getMaxEnergyPerTickAdjusted() / energyPerMJ;
 		_powerProvider.configure(activation < 10 ? 1 : 10, maxReceived, 1, 1000);
 		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
 	}
@@ -140,7 +140,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			}
 		}
 		
-		_energyRequiredThisTick = energyRequired;
+		_energyRequiredThisTick = Math.max(_energyRequiredThisTick + energyRequired,
+				getMaxEnergyPerTickAdjusted());
 		
 		setIsActive(_energyStored >= _energyActivation * 2);
 		
@@ -307,6 +308,11 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return _energyActivation;
 	}
 	
+	public int getMaxEnergyPerTickAdjusted()
+	{
+		return Math.min(_energyActivation * 5, 1000);
+	}
+	
 	public int getEnergyStored()
 	{
 		return _energyStored;
@@ -417,6 +423,14 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return Math.min(getEnergyStoredMax() - getEnergyStored(), _energyRequiredThisTick);
 	}
 	
+	public int storeEnergy(int energy)
+	{
+		int energyInjected = Math.max(Math.min(energy, getEnergyRequired()), 0);
+		_energyStored += energyInjected;
+		_energyRequiredThisTick -= energyInjected;
+		return energyInjected;
+	}
+	
 	// BC methods
 	
 	@Override
@@ -442,17 +456,15 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public double demandedEnergyUnits()
 	{
-		return Math.max(getEnergyRequired() / energyPerEU, 0);
+		return Math.max(Math.ceil(getEnergyRequired() / (double)energyPerEU), 0);
 	}
 	
 	@Override
 	public double injectEnergyUnits(ForgeDirection from, double amount)
 	{
-		double euInjected = Math.max(Math.min(demandedEnergyUnits(), amount), 0);
-		int energyInjected = (int)(euInjected * energyPerEU);
-		_energyStored += energyInjected;
-		_energyRequiredThisTick -= energyInjected;
-		return amount - euInjected;
+		double euLeftOver = Math.max(amount, 0);
+		euLeftOver -= storeEnergy((int)(euLeftOver * energyPerEU)) / (double)energyPerEU;
+		return euLeftOver;
 	}
 	
 	@Override
@@ -476,11 +488,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 
 	public int injectEnergy(Direction directionFrom, int amount)
 	{
-		int euInjected = Math.max(Math.min(demandsEnergy(), amount), 0);
-		int energyInjected = euInjected * energyPerEU;
-		_energyStored += energyInjected;
-		_energyRequiredThisTick -= energyInjected;
-		return amount - euInjected;
+		int euLeftOver = Math.max(amount, 0);
+		euLeftOver -= storeEnergy(euLeftOver * energyPerEU) / energyPerEU;
+		return euLeftOver;
 	}
 	
 	public boolean acceptsEnergyFrom(TileEntity tile, Direction side)
@@ -513,9 +523,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		buff -= (energyFromUE * wPerEnergy);
 		if (doReceive)
 		{
-			_energyStored += energyFromUE;
+			storeEnergy(energyFromUE);
 			_ueBuffer = buff;
-			_energyRequiredThisTick -= energyFromUE;
 		}
 		return energyFromUE * wPerEnergy;
 	}
