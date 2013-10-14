@@ -194,9 +194,9 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 				{
 					mode = 0;
 				}
-				cable.setMode(mode);
 				if(!world.isRemote)
 				{
+					cable.setMode(mode);
 					PacketDispatcher.sendPacketToAllAround(x, y, z, 50, world.provider.dimensionId, cable.getDescriptionPacket());
 					switch (mode)
 					{
