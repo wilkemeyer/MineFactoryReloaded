@@ -29,10 +29,10 @@ public class Thaumcraft
 		
 		try
 		{
-			Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
-			Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
-			Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
-			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
+			Block tcSapling = GameRegistry.findBlock("Thaumcraft", "tile.blockCustomPlant");
+			Block tcLog = GameRegistry.findBlock("Thaumcraft", "tile.blockMagicalLog");
+			Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "tile.blockMagicalLeaves");
+			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "tile.blockTaintFibres");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));

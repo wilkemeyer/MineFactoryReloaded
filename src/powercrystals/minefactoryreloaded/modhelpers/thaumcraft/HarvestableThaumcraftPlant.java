@@ -21,7 +21,7 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 	public HarvestableThaumcraftPlant(int blockId)
 	{
 		_blockId = blockId;
-		_quickSilver = new ItemStack(GameRegistry.findItem("Thaumcraft", "ItemResource"), 1, 3);
+		_quickSilver = new ItemStack(GameRegistry.findItem("Thaumcraft", "item.ItemResource"), 1, 3);
 	}
 	
 	@Override
