@@ -354,13 +354,14 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
 		
 		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
-		MFRRegistry.registerLaserOre(70, new ItemStack(Block.oreGold));
-		MFRRegistry.registerLaserOre(150, new ItemStack(Block.oreIron));
-		MFRRegistry.registerLaserOre(80, new ItemStack(Block.oreLapis));
-		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreDiamond));
-		MFRRegistry.registerLaserOre(100, new ItemStack(Block.oreRedstone));
-		MFRRegistry.registerLaserOre(50, new ItemStack(Block.oreEmerald));
-		MFRRegistry.registerLaserOre(70, new ItemStack(Block.oreNetherQuartz));
+		registerOreDictLaserOre(175 / 2, "oreNetherCoal", null); // coal isn't in the oredict??
+		registerOreDictLaserOre(70, "oreGold", "oreNetherGold");
+		registerOreDictLaserOre(150, "oreIron", "oreNetherIron");
+		registerOreDictLaserOre(80, "oreLapis", "oreNetherLapis");
+		registerOreDictLaserOre(50, "oreDiamond", "oreNetherDiamond");
+		registerOreDictLaserOre(100, "oreRedstone", "oreNetherRedstone");
+		registerOreDictLaserOre(50, "oreEmerald", "oreNetherEmerald");
+		registerOreDictLaserOre(70, "oreQuartz", null);
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.glowStone));
 		registerOreDictLaserOre(75, "oreCopper", "oreNetherCopper");
 		registerOreDictLaserOre(75 / 3, "oreTin", "oreNetherTin");

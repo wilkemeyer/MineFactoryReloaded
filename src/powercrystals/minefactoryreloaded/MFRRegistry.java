@@ -242,6 +242,13 @@ public abstract class MFRRegistry
 
 	public static void registerLaserOre(int weight, ItemStack ore)
 	{
+		for (WeightedRandomItem item : _laserOres)
+			if (UtilInventory.stacksEqual(((WeightedRandomItemStack)item).getStack(), ore))
+			{
+				item.itemWeight += weight;
+				item.itemWeight /= 2;
+				return;
+			}
 		_laserOres.add(new WeightedRandomItemStack(weight, ore.copy()));
 	}
 
