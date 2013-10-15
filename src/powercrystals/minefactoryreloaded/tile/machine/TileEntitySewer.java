@@ -188,7 +188,8 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		for (FluidTank _tank : (FluidTank[])getTanks())
-			return _tank.drain(maxDrain, doDrain);
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
 		return null;
 	}
 	
