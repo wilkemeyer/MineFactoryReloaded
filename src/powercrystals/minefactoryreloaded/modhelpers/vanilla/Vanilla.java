@@ -138,6 +138,7 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = "MineFactoryReloaded|CompatVanilla", name = "MFR Compat: Vanilla", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded")
@@ -353,6 +354,23 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Xor3());
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
 		
+		MFRRegistry.registerFruitLogBlockId(Block.wood.blockID);
+		MFRRegistry.registerFruit(new FruitCocoa());
+		
+		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
+		
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
+	}
+	
+	@EventHandler
+	public void postLoad(FMLPostInitializationEvent event)
+	{
+		
 		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
 		registerOreDictLaserOre(175 / 2, "oreNetherCoal", null); // coal isn't in the oredict??
 		registerOreDictLaserOre(70, "oreGold", "oreNetherGold");
@@ -386,11 +404,6 @@ public class Vanilla
 		registerOreDictLaserOre(50, "oreTetrahedrite", null);
 		registerOreDictLaserOre(50, "oreCassiterite", null);
 		
-		MFRRegistry.registerFruitLogBlockId(Block.wood.blockID);
-		MFRRegistry.registerFruit(new FruitCocoa());
-		
-		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
-		
 		MFRRegistry.addLaserPreferredOre(15, new ItemStack(Block.oreCoal));
 		MFRRegistry.addLaserPreferredOre(3, new ItemStack(Block.oreDiamond));
 		MFRRegistry.addLaserPreferredOre(5, new ItemStack(Block.oreEmerald));
@@ -399,13 +412,6 @@ public class Vanilla
 		MFRRegistry.addLaserPreferredOre(11, new ItemStack(Block.oreLapis));
 		MFRRegistry.addLaserPreferredOre(14, new ItemStack(Block.oreRedstone));
 		MFRRegistry.addLaserPreferredOre(0, new ItemStack(Block.oreNetherQuartz));
-		
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
 	}
 	
 	private void registerOreDictLaserOre(int weight, String name, String netherName)
