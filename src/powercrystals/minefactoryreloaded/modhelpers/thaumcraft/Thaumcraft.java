@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 
@@ -68,6 +69,7 @@ public class Thaumcraft
 			registerEntity = ThaumcraftApi.getDeclaredMethod("registerObjectTag",
 					String.class, AspectList, NBTBase[].class);
 			addAspect = AspectList.getDeclaredMethod("add", Aspect, Integer.class);
+			newAspectList = AspectList.getDeclaredConstructor(Integer.class, Integer.class);
 			
 			//doAspects();
 		}
@@ -81,12 +83,17 @@ public class Thaumcraft
 	private static Method registerItem = null;
 	private static Method registerEntity = null;
 	private static Class<?> AspectList = null;
+	private static Constructor<?> newAspectList = null;
 	private static Method addAspect = null;
 	
-	private static void parseAspects(ItemStack item, String toadd) throws Throwable
+	private static void parseAspects(ItemStack item, String toadd, boolean c) throws Throwable
 	{
 		String[] list = toadd.split(",");
-		Object aspectList = AspectList.newInstance();
+		Object aspectList;
+		if (c)
+			aspectList = newAspectList.newInstance(item.itemID, item.getItemDamage());
+		else
+			aspectList = AspectList.newInstance();
 		for (int i = list.length; i --> 0; )
 		{
 			String[] temp = list[i].trim().split(" ");
@@ -113,17 +120,17 @@ public class Thaumcraft
 	
 	private static void parseAspects(Item item, String toadd) throws Throwable
 	{
-		parseAspects(new ItemStack(item, 1, 0), toadd);
+		parseAspects(new ItemStack(item, 1, 0), toadd, false);
 	}
 	
 	private static void parseAspects(Block item, String toadd) throws Throwable
 	{
-		parseAspects(new ItemStack(item, 1, 0), toadd);
+		parseAspects(new ItemStack(item, 1, 0), toadd, false);
 	}
 	
 	private static void parseAspects(Machine item, String toadd) throws Throwable
 	{
-		parseAspects(new ItemStack(item.getBlockId(), 1, item.getMeta()), toadd);
+		parseAspects(new ItemStack(item.getBlockId(), 1, item.getMeta()), toadd, false);
 	}
 	
 	private static void doAspects() throws Throwable
@@ -200,7 +207,7 @@ public class Thaumcraft
 		parseAspects(MineFactoryReloadedCore.rawPlasticItem, "1 Fabrico, 1 ignis, 1 Ordo, 1 Perditio");
 		parseAspects(MineFactoryReloadedCore.rawRubberItem, "1 Limus, 2 Arbor");
 		parseAspects(MineFactoryReloadedCore.rednetCableBlock, "1 Cognito, 1 Machina");
-		parseAspects(MineFactoryReloadedCore.rednetLogicBlock, "10 Cogntio, 5 Machina");
+		parseAspects(MineFactoryReloadedCore.rednetLogicBlock, "15 Cogntio, 5 Machina");
 		parseAspects(MineFactoryReloadedCore.rednetMemoryCardItem, "3 Cognito, 1 Machina");
 		parseAspects(MineFactoryReloadedCore.rednetMeterItem, "1 Instrumentum, 1 Sensus, 1 Machina");
 		parseAspects(MineFactoryReloadedCore.rednetPanelBlock, "2 Sensus, 2 Cognito, 2 Machina");
@@ -230,6 +237,14 @@ public class Thaumcraft
 		parseAspects(MineFactoryReloadedCore.xpExtractorItem, "1 Praecantio, 1 Permutatio, 1 Vacuous, 1 Instrumentum, 1 Meto");
 		//parseAspects(Tracks, "Tracks Currently Have No Aspects.");
 		
+		Item item = MineFactoryReloadedCore.upgradeItem;
+		
+		for (int i = 0, n = 10; i <= n; ++i)
+			parseAspects(new ItemStack(item, 1, i), "2 Cogntio", true);
+		parseAspects(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0), "4 Cognitio", true);
+		parseAspects(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2), "7 Cognitio", true);
+		parseAspects(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 3), "10 Cognitio", true);
+		
 		/*
 		parseAspects(MineFactoryReloadedCore.cookedMeatBlock, "10 Corpus, 7 Famus, 5 Fabrico");
 		parseAspects(MineFactoryReloadedCore.glowstoneBricks, "1 Terra, 1 ignis, 2 Lux, 2 Sensus");
@@ -243,13 +258,6 @@ public class Thaumcraft
 		parseAspects(MineFactoryReloadedCore.road, "1 Itor, 1 Saxum");
 		parseAspects(MineFactoryReloadedCore.roadLight, "1 Itor, 1 Saxum, 1 Lux");
 		parseAspects(MineFactoryReloadedCore.roadLightInverted, "1 Itor, 1 Saxum, 1 Lux");
-		//*/
-		
-		/*
-		parseAspects(MineFactoryReloadedCore.upgradeMaterial, "Material *2+ 2 Cogntio");
-		parseAspects(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0), "3 Cognitio");
-		parseAspects(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2), "5 Cognitio");
-		parseAspects(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 3), "7 Cognitio");
 		//*/
 		
 	}
