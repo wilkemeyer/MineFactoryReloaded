@@ -23,9 +23,11 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
 	}
 	
-	protected final int producePower(int mj)
+	protected final int producePower(int energy)
 	{
 		BlockPosition ourbp = BlockPosition.fromFactoryTile(this);
+		
+		int mjS = energy / TileEntityFactoryPowered.energyPerMJ, mj = mjS;
 		
 		for(BlockPosition bp : ourbp.getAdjacent(true))
 		{
@@ -50,7 +52,9 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 			}
 		}
 		
-		return mj;
+		energy -= mjS - mj;
+		
+		return energy;
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBioFuelGenerator;
 
 public class GuiBioFuelGenerator extends GuiFactoryInventory
@@ -27,7 +28,10 @@ public class GuiBioFuelGenerator extends GuiFactoryInventory
 	{
 		if(isPointInRegion(161, 15, 8, 60, mouseX, mouseY))
 		{
-			drawBarTooltip("Energy", "MJ", ((TileEntityBioFuelGenerator)_tileEntity).getBuffer(), ((TileEntityBioFuelGenerator)_tileEntity).getBufferMax(), mouseX, mouseY);
+			int buffer = ((TileEntityBioFuelGenerator)_tileEntity).getBuffer();
+			int bufferMax = ((TileEntityBioFuelGenerator)_tileEntity).getBufferMax();
+			int energyPerMJ = TileEntityFactoryPowered.energyPerMJ;
+			drawBarTooltip("Energy", "MJ", buffer / energyPerMJ, bufferMax / energyPerMJ, mouseX, mouseY);
 		}
 		else
 			super.drawTooltips(mouseX, mouseY);

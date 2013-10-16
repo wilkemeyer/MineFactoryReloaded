@@ -14,6 +14,7 @@ import net.minecraftforge.common.Property;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoBrewer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
@@ -227,6 +228,11 @@ public class Machine
 	public int getActivationEnergyMJ()
 	{
 		return _activationEnergyMJ;
+	}
+	
+	public int getActivationEnergy()
+	{
+		return _activationEnergyMJ * TileEntityFactoryPowered.energyPerMJ;
 	}
 	
 	public void load(Configuration c)

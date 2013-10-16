@@ -18,7 +18,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	private int _outputPulseSize;
 	
 	private int _ticksSinceLastConsumption = 0;
-	private int _bufferMax = 1000;
+	private int _bufferMax = 10000;
 	private int _buffer;
 	
 	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick, int powerProducedPerConsumption, int ticksBetweenConsumption)
@@ -57,15 +57,12 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		{
 			setIsActive(_buffer > _outputPulseSize * 2);
 			
-			int mjPulse = Math.min(_buffer, _outputPulseSize);
-			_buffer -= mjPulse;
-			_buffer += producePower(mjPulse);
+			int pulse = Math.min(_buffer, _outputPulseSize);
+			_buffer -= pulse;
+			_buffer += producePower(pulse);
 			
-			if(_ticksSinceLastConsumption < _ticksBetweenConsumption)
-			{
-				_ticksSinceLastConsumption++;
+			if (++_ticksSinceLastConsumption < _ticksBetweenConsumption)
 				return;
-			}
 			_ticksSinceLastConsumption = 0;
 			
 			if(Util.isRedstonePowered(this))
