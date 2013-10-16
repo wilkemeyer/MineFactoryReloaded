@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -16,12 +17,10 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 {
 	private int _blockId;
-	private ItemStack _quickSilver;
 	
 	public HarvestableThaumcraftPlant(int blockId)
 	{
 		_blockId = blockId;
-		_quickSilver = new ItemStack(GameRegistry.findItem("Thaumcraft", "ItemResource"), 1, 3);
 	}
 	
 	@Override
@@ -51,17 +50,7 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		List<ItemStack> drops = new ArrayList<ItemStack>();
-		int md = world.getBlockMetadata(x, y, z);
-		if(md == 2)
-		{
-			drops.add(new ItemStack(Item.blazePowder));
-		}
-		else if(md == 3)
-		{
-			drops.add(_quickSilver);
-		}
-		return drops;
+		return Block.blocksList[sourceId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);;
 	}
 	
 	@Override
