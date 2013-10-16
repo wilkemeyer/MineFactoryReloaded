@@ -135,6 +135,16 @@ public class Thaumcraft
 		parseAspects(item, 0, toadd);
 	}
 	
+	private static void parseAspects(Block item, int meta, String toadd, boolean craftedAspects) throws Throwable
+	{
+		parseAspects(new ItemStack(item, 1, meta), toadd, craftedAspects);
+	}
+	
+	private static void parseAspects(Block item, String toadd, boolean craftedAspects) throws Throwable
+	{
+		parseAspects(item, 0, toadd, craftedAspects);
+	}
+	
 	private static void parseAspects(Machine item, String toadd) throws Throwable
 	{
 		parseAspects(new ItemStack(item.getBlockId(), 1, item.getMeta()), toadd, false);
@@ -151,6 +161,7 @@ public class Thaumcraft
 		parseAspects(Machine.BioFuelGenerator, "5 Potentia, 3 Herba, 5 Machina, 3 permutatio");
 		parseAspects(Machine.BioReactor, "4 Herba, 2 Potentia, 5 Machina, 5 permutatio");
 		parseAspects(Machine.BlockBreaker, "15 Perfodio, 5 Machina, 5 metallum, 3 Lucrum");
+		parseAspects(Machine.BlockPlacer, "1 motus, 1 ordo, 5 Machina, 5 metallum, 3 Lucrum");
 		parseAspects(Machine.BlockSmasher, "5 Perditio, 5 Machina, 3 permutatio, 3 praecantatio");
 		parseAspects(Machine.Breeder, "2 bestia, 2 fames, 5 Machina");
 		parseAspects(Machine.Chronotyper, "3 Tempus, 3 bestia, 5 Machina, 3 Sensus");
@@ -170,7 +181,7 @@ public class Thaumcraft
 		parseAspects(Machine.LiquiCrafter, "5 Aqua, 5 Fabrico, 5 Machina");
 		parseAspects(Machine.LiquidRouter, "1 Motus, 4 iter, 2 Sensus, 5 Machina, 1 Aqua");
 		parseAspects(Machine.MeatPacker, "2 Ordo, 2 Corpus, 2 fames, 5 Machina");
-		//parseAspects(Machine.OilFabricator, "Not Sure What Aspects Oil Is Getting. Wait On Other Mods I Recommend.");
+		//parseAspects(Machine.OilFabricator, "Not Sure What Aspects Oil Is Getting.");
 		parseAspects(Machine.Planter, "4 Herba, 2 Granum, 4 messis, 5 Machina");
 		parseAspects(Machine.Rancher, "6 Meto, 5 Machina, 4 metallum, 2 Instrumentum");
 		parseAspects(Machine.RedNote, "4 Aer, 4 Sensus, 5 Machina");
@@ -213,8 +224,8 @@ public class Thaumcraft
 		parseAspects(MineFactoryReloadedCore.portaSpawnerItem, "8 Alienis, 4 bestia, 4 exanimis, 4 iter, 8 praecantatio, 8 Permutatio");
 		parseAspects(MineFactoryReloadedCore.rawPlasticItem, "1 Fabrico, 1 ignis, 1 Ordo, 1 Perditio");
 		parseAspects(MineFactoryReloadedCore.rawRubberItem, "1 Limus, 2 Arbor");
-		parseAspects(MineFactoryReloadedCore.rednetCableBlock, "1 cognitio, 1 Machina");
-		parseAspects(MineFactoryReloadedCore.rednetLogicBlock, "15 cognitio, 5 Machina");
+		parseAspects(MineFactoryReloadedCore.rednetCableBlock, "1 cognitio, 1 Machina", true);
+		parseAspects(MineFactoryReloadedCore.rednetLogicBlock, "15 cognitio, 5 Machina", true);
 		parseAspects(MineFactoryReloadedCore.rednetMemoryCardItem, "3 cognitio, 1 Machina");
 		parseAspects(MineFactoryReloadedCore.rednetMeterItem, "1 Instrumentum, 1 Sensus, 1 Machina");
 		parseAspects(MineFactoryReloadedCore.rednetPanelBlock, "2 Sensus, 2 cognitio, 2 Machina");
