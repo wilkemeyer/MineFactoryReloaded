@@ -254,23 +254,23 @@ public class Thaumcraft
 		
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, "3 Lux, 2 Sensus");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 6, "1 Terra, 3 Lux, 2 Sensus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 3, "1 Terra, 3 ignis, 1 Saxum, 1 Tenebre");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 9, "3 ignis, 2 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 3, "1 Terra, 3 ignis, 1 Saxum, 1 tenebrae");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 9, "3 ignis, 2 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 4, "2 Terra, 1 Saxum");
 		//parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 4, "2 Saxum");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 0, "2 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 0, "2 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, "2 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 2, "1 perditio, 1 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 2, "1 perditio, 1 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 3, "1 perditio, 1 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, "2 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, "2 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 5, "2 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 6, "2 Terra, 1 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 6, "2 Terra, 1 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 7, "2 Terra, 1 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, "1 Terra, 1 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, "1 Terra, 1 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 9, "1 Terra, 1 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 10, "3 Saxum, 1 Tenebre");
+		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 10, "3 Saxum, 1 tenebrae");
 		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 11, "3 Saxum, 1 Victus");
-		//parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 12, "2 Saxum, 1 Tenebre");
+		//parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 12, "2 Saxum, 1 tenebrae");
 		//parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 13, "2 Saxum, 1 Victus");
 
 		parseAspects(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11), "1 cognitio, 3 Machina", true);
