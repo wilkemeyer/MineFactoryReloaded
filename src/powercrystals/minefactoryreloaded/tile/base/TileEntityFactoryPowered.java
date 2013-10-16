@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.core.util.Util;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -37,6 +38,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
  * progress bar correctly.
  */
 
+@Implementable("cofh.api.energy.IEnergyHandler")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory implements IPowerReceptor, IEnergySink, IElectrical
 {	
 	public static final int energyPerEU = 4;
@@ -423,12 +425,49 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return Math.min(getEnergyStoredMax() - getEnergyStored(), _energyRequiredThisTick);
 	}
 	
-	public int storeEnergy(int energy)
+	public int storeEnergy(int energy, boolean doStore)
 	{
 		int energyInjected = Math.max(Math.min(energy, getEnergyRequired()), 0);
-		_energyStored += energyInjected;
-		_energyRequiredThisTick -= energyInjected;
+		if (doStore)
+		{
+			_energyStored += energyInjected;
+			_energyRequiredThisTick -= energyInjected;
+		}
 		return energyInjected;
+	}
+	
+	public int storeEnergy(int energy) { return storeEnergy(energy, true); }
+	
+	// TE methods
+	
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean doReceive)
+	{
+		return storeEnergy(maxReceive, doReceive);
+	}
+
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean doExtract)
+	{
+		return 0;
+	}
+
+	public boolean canReceiveEnergy(ForgeDirection from)
+	{
+		return getEnergyRequired() > 0;
+	}
+
+	public boolean canExtractEnergy(ForgeDirection from)
+	{
+		return false;
+	}
+
+	public int getEnergyStored(ForgeDirection from)
+	{
+		return getEnergyStored();
+	}
+
+    public int getMaxEnergyStored(ForgeDirection from)
+	{
+		return getEnergyStoredMax();
 	}
 	
 	// BC methods
