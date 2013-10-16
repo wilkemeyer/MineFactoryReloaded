@@ -1,14 +1,10 @@
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -50,7 +46,7 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return Block.blocksList[sourceId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);;
+		return Block.blocksList[_blockId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 	
 	@Override
