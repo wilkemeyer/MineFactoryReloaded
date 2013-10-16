@@ -42,7 +42,7 @@ public class ItemFactoryBucket extends ItemBucket
 		}
 		else
 		{
-			world.setBlock(x, y, z, _liquidId, 7, 3);
+			world.setBlock(x, y, z, _liquidId, 0, 3);
 			return true;
 		}
 	}

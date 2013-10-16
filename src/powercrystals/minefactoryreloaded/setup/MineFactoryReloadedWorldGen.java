@@ -52,7 +52,7 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(128);
 				int lakeZ = z - 8 + random.nextInt(16);
-				new WorldGenLakesMeta(MineFactoryReloadedCore.sludgeLiquid.blockID, 7).generate(world, random, lakeX, lakeY, lakeZ);
+				new WorldGenLakesMeta(MineFactoryReloadedCore.sludgeLiquid.blockID, 70).generate(world, random, lakeX, lakeY, lakeZ);
 			}
 			rarity = MFRConfig.mfrLakeSewageRarity.getInt();
 			if(rarity > 0 && random.nextInt(rarity) == 0)
@@ -62,11 +62,11 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 				int lakeZ = z - 8 + random.nextInt(16);
 				if(b.biomeName.toLowerCase().contains("mushroom"))
 				{
-					new WorldGenLakesMeta(MineFactoryReloadedCore.mushroomSoupLiquid.blockID, 7).generate(world, random, lakeX, lakeY, lakeZ);
+					new WorldGenLakesMeta(MineFactoryReloadedCore.mushroomSoupLiquid.blockID, 0).generate(world, random, lakeX, lakeY, lakeZ);
 				}
 				else
 				{
-					new WorldGenLakesMeta(MineFactoryReloadedCore.sewageLiquid.blockID, 7).generate(world, random, lakeX, lakeY, lakeZ);
+					new WorldGenLakesMeta(MineFactoryReloadedCore.sewageLiquid.blockID, 0).generate(world, random, lakeX, lakeY, lakeZ);
 				}
 			}
 		}
