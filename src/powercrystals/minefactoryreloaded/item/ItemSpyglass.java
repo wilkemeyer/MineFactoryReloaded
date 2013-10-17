@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.item;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -44,9 +45,15 @@ public class ItemSpyglass extends ItemFactory
 			}
 			else
 			{
-				ItemStack tempStack = new ItemStack(world.getBlockId(mop.blockX, mop.blockY, mop.blockZ), 1, world.getBlockMetadata(mop.blockX, mop.blockY,
-						mop.blockZ));
-				if(tempStack.getItem() != null)
+				int blockId = world.getBlockId(mop.blockX, mop.blockY, mop.blockZ);
+				Block block = Block.blocksList[blockId];
+				ItemStack tempStack = null;
+				if (block != null)
+					tempStack = block.getPickBlock(mop, world, mop.blockX, mop.blockY, mop.blockZ);
+				if (tempStack == null)
+					tempStack = new ItemStack(blockId, 1, world.getBlockMetadata(mop.blockX, mop.blockY,
+							mop.blockZ));
+				if (tempStack.getItem() != null)
 				{
 					player.sendChatToPlayer(new ChatMessageComponent()
 							.addText(StatCollector
