@@ -127,6 +127,19 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
+    public int getDamageValue(World world, int x, int y, int z)
+    {
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		int dyeColor = 16;
+		if(te instanceof TileEntityConveyor)
+		{
+			dyeColor = ((TileEntityConveyor)te).getDyeColor();
+			if(dyeColor == -1) dyeColor = 16;
+		}
+		return dyeColor;
+    }
+	
+	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		boolean isItem = entity instanceof EntityItem || entity instanceof EntityXPOrb;
@@ -381,17 +394,17 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{
+		if (player.capabilities.isCreativeMode)
+			world.setBlockMetadataWithNotify(x, y, z, 15, 4);
+	}
+	
+	@Override
 	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
-		int dyeColor = 16;
-		if(te instanceof TileEntityConveyor)
-		{
-			dyeColor = ((TileEntityConveyor)te).getDyeColor();
-			if(dyeColor == -1) dyeColor = 16;
-		}
-		
-		dropBlockAsItem_do(world, x, y, z, new ItemStack(blockID, 1, dyeColor));
+		if (meta != 15)
+			dropBlockAsItem_do(world, x, y, z, new ItemStack(blockID, 1, getDamageValue(world, x, y, z)));
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 	
