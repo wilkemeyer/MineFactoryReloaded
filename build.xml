@@ -29,7 +29,7 @@
 		<equals arg1="${forge.build.number}" arg2="${forge.buildnum}" />
 	</condition>
 
-	<property name="verclass.dir" value="${mcpsrc.dir}/powercrystals/minefactoryreloaded" />
+	<property name="verclass.dir" value="${src.dir}/powercrystals/minefactoryreloaded" />
 	<property name="verclass.name" value="MineFactoryReloadedCore.java"/>
 	
 	<condition property="have-apis">
