@@ -16,6 +16,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	{
 		super(Machine.BlockBreaker);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -60,11 +61,5 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 }

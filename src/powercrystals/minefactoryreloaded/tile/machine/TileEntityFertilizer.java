@@ -31,6 +31,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered implements IH
 		_rand = new Random();
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -137,11 +138,5 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered implements IH
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 9;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 }

@@ -62,6 +62,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		_settings.put("harvestJungleWood", false);
 		
 		_rand = new Random();
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -372,12 +373,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean canRotate()
 	{
 		return true;
 	}

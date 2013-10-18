@@ -37,6 +37,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
 		setManageFluids(true);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -161,12 +162,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
 	{
 		return _tank;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 
 	@Override

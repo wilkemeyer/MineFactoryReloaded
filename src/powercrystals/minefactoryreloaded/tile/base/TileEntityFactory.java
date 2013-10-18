@@ -36,6 +36,7 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 			};
 	
 	private ForgeDirection _forwardDirection;
+	private boolean _canRotate = false;
 	
 	private boolean _isActive = false;
 	private boolean _manageFluids = false;
@@ -89,7 +90,12 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	@Override
 	public boolean canRotate()
 	{
-		return false;
+		return _canRotate;
+	}
+	
+	public void setCanRotate(boolean canRotate)
+	{
+		_canRotate = canRotate;
 	}
 	
 	@Override

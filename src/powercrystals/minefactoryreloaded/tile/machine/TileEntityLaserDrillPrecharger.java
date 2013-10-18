@@ -17,6 +17,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	public TileEntityLaserDrillPrecharger()
 	{
 		super(Machine.LaserDrillPrecharger);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -36,12 +37,6 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFactoryPowered(this, inventoryPlayer);
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 	
 	@Override

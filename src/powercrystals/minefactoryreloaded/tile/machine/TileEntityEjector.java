@@ -22,6 +22,7 @@ public class TileEntityEjector extends TileEntityFactory
 	public TileEntityEjector()
 	{
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -76,12 +77,6 @@ public class TileEntityEjector extends TileEntityFactory
 			}
 		}
 		_lastRedstoneState = redstoneState;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 
 	@Override

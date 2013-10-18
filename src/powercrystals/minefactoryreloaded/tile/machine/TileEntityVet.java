@@ -28,6 +28,7 @@ public class TileEntityVet extends TileEntityFactoryPowered implements IHarvestA
 		super(Machine.Vet);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -103,12 +104,6 @@ public class TileEntityVet extends TileEntityFactoryPowered implements IHarvestA
 	public int getSizeInventory()
 	{
 		return 9;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 	
 	@Override

@@ -63,6 +63,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		_rand = new Random();
 		setManageFluids(true);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	public TileEntityGrinder()
@@ -268,12 +269,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean canRotate()
 	{
 		return true;
 	}

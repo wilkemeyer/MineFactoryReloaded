@@ -25,6 +25,7 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered implements I
 	{
 		super(Machine.Chronotyper);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -118,11 +119,5 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered implements I
 	{
 		super.readFromNBT(nbttagcompound);
 		_moveOld = nbttagcompound.getByte("moveOld") == 0 ? false : true;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 }

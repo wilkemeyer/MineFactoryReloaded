@@ -19,6 +19,7 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 	{
 		super(Machine.BlockPlacer);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -88,11 +89,5 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return itemstack != null && itemstack.getItem() instanceof ItemBlock;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 }

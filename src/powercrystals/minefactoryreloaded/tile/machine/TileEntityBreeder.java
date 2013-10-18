@@ -32,6 +32,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered implements IHarv
 		super(Machine.Breeder);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 	
 	@Override
@@ -133,11 +134,5 @@ public class TileEntityBreeder extends TileEntityFactoryPowered implements IHarv
 	public int getSizeInventory()
 	{
 		return 9;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 }

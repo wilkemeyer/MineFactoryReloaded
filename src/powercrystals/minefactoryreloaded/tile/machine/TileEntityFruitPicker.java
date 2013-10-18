@@ -37,6 +37,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
 		_rand = new Random();
 		setManageSolids(true);
+		setCanRotate(true);
 	}
 
 	@Override
@@ -188,12 +189,6 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
-	}
-	
-	@Override
-	public boolean canRotate()
-	{
-		return true;
 	}
 	
 	@Override
