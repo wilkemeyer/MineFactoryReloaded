@@ -79,7 +79,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		if(te instanceof TileEntityFactory)
 		{
 			side = ((TileEntityFactory)te).getRotatedSide(side);
-			isActive = ((TileEntityFactory)te).getIsActive();
+			isActive = ((TileEntityFactory)te).isActive();
 		}
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, md).getIcon(side, isActive);
 	}

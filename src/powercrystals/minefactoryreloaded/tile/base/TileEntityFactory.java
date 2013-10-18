@@ -139,7 +139,7 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 		return getDirectionFacing().getOpposite();
 	}
 	
-	public boolean getIsActive()
+	public boolean isActive()
 	{
 		return _isActive;
 	}

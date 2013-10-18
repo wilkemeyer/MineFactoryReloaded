@@ -392,11 +392,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return ret / len;
 	}
 	
-	public boolean isActive()
-	{
-		return false;
-	}
-	
 	public boolean manageFluids()
 	{
 		return false;
@@ -407,14 +402,9 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return false;
 	}
 	
-	public boolean allowActions()
-	{
-		return false;
-	}
-	
 	public boolean allowAction(IAction _)
 	{
-		return this.allowActions();
+		return false;
 	}
 
 	@Override
