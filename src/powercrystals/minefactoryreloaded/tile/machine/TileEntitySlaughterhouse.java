@@ -39,12 +39,6 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "slaughterhouse.png";
-	}
-	
-	@Override
 	public boolean activateMachine()
 	{
 		_grindingWorld.cleanReferences();

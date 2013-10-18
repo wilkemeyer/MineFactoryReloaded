@@ -36,12 +36,6 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "meatpacker.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

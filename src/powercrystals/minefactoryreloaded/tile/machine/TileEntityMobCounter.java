@@ -15,6 +15,7 @@ public class TileEntityMobCounter extends TileEntityFactory implements IHarvestA
 	
 	public TileEntityMobCounter()
 	{
+		super(Machine.MobCounter);
 		_ham = new HarvestAreaManager(this, 2, 2, 1);
 		setCanRotate(true);
 	}

@@ -32,12 +32,6 @@ public class TileEntityVet extends TileEntityFactoryPowered implements IHarvestA
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "vet.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

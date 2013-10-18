@@ -18,12 +18,6 @@ public class TileEntityLavaFabricator extends TileEntityLiquidFabricator
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "lavafab.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

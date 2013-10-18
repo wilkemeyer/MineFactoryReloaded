@@ -18,6 +18,7 @@ import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.net.Packets;
+import powercrystals.minefactoryreloaded.setup.Machine;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -44,8 +45,11 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	
 	protected int _rednetState;
 	
-	protected TileEntityFactory()
+	protected Machine _machine;
+	
+	protected TileEntityFactory(Machine machine)
 	{
+		this._machine = machine;
 		_forwardDirection = ForgeDirection.NORTH;
 	}
 	
@@ -176,7 +180,9 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	
 	public String getGuiBackground()
 	{
-		return null;
+		if (_machine == null)
+			return null;
+		return _machine.getName().toLowerCase() + ".png";
 	}
 	
 	@Override

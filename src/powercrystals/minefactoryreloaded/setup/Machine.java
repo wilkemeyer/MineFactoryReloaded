@@ -61,6 +61,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Machine
 {
+	private static List<Machine> _machines = new LinkedList<Machine>();
+	private static Map<Integer, Machine> _machineMappings = new HashMap<Integer, Machine>();
+	private static Map<Integer, Integer> _highestMetas = new HashMap<Integer, Integer>();
+	
 	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, "factoryPlanter", 160, 8000);
 	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, "factoryFisher", 20, 16000);
 	public static Machine Harvester = new Machine(0, 2, "Harvester", TileEntityHarvester.class, "factoryHarvester", 240, 16000);
@@ -105,12 +109,9 @@ public class Machine
 	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 10, 16000);
 	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter");
 	
-	private static List<Machine> _machines;
-	private static Map<Integer, Machine> _machineMappingss;
-	private static Map<Integer, Integer> _highestMetas;
-	
 	private int _blockIndex;
 	private int _meta;
+	private int _machineIndex;
 	
 	private Icon[] _iconsActive = new Icon[6];
 	private Icon[] _iconsIdle = new Icon[6];
@@ -137,18 +138,23 @@ public class Machine
 	{
 		_blockIndex = blockIndex;
 		_meta = meta;
+		_machineIndex = _meta | (_blockIndex << 4);
+		
+		if (_machineMappings.containsKey(_machineIndex))
+		{
+			throw new IllegalArgumentException("Machine with index " + blockIndex + " and meta " +
+												_meta + " already exists.");
+		}
+				
 		_name = name;
 		_internalName = "tile.mfr.machine." + name.toLowerCase();
-		_tileEntityClass = tileEntityClass;
 		_tileEntityName = tileEntityName;
+		_tileEntityClass = tileEntityClass;
+		
 		_activationEnergy = activationEnergyMJ;
 		_energyStoredMax = energyStoredMax;
 		
-		if(_machines == null) _machines = new LinkedList<Machine>();
-		if(_machineMappingss == null) _machineMappingss = new HashMap<Integer, Machine>();
-		if(_highestMetas == null) _highestMetas = new HashMap<Integer, Integer>();
-		
-		_machineMappingss.put(_meta | (_blockIndex << 4), this);
+		_machineMappings.put(_machineIndex, this);
 		_machines.add(this);
 		
 		if(_highestMetas.get(_blockIndex) == null || _highestMetas.get(_blockIndex) < _meta)
@@ -159,12 +165,12 @@ public class Machine
 	
 	public static Machine getMachineFromIndex(int blockIndex, int meta)
 	{
-		return _machineMappingss.get(meta | (blockIndex << 4));
+		return _machineMappings.get(meta | (blockIndex << 4));
 	}
 	
 	public static Machine getMachineFromId(int blockId, int meta)
 	{
-		return  _machineMappingss.get(meta | (((BlockFactoryMachine)Block.blocksList[blockId]).getBlockIndex() << 4));
+		return  _machineMappings.get(meta | (((BlockFactoryMachine)Block.blocksList[blockId]).getBlockIndex() << 4));
 	}
 	
 	public static int getHighestMetadata(int blockIndex)

@@ -238,12 +238,6 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "liquidrouter.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

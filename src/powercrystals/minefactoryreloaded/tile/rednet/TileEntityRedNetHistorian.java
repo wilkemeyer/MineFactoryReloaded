@@ -42,6 +42,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	
 	public TileEntityRedNetHistorian()
 	{
+		super(null);
 		/*for(int i = 0; i < 16; i++)
 		{
 			_data.put(i, new ArrayBlockingQueue<HistorianData>(100));

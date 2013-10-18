@@ -220,12 +220,6 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "itemrouter.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

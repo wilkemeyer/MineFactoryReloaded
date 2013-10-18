@@ -47,12 +47,6 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "fruitpicker.png";
-	}
-	
-	@Override
 	public ContainerFruitPicker getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFruitPicker(this, inventoryPlayer);

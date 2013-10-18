@@ -21,12 +21,6 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "laserdrillprecharger.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

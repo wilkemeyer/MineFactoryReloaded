@@ -33,12 +33,6 @@ public class TileEntityPlanter extends TileEntityFactoryPowered implements IHarv
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "planter.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

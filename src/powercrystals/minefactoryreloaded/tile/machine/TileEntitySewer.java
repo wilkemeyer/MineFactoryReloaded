@@ -49,12 +49,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "sewagecollector.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

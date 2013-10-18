@@ -50,12 +50,6 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "laserdrill.png";
-	}
-	
-	@Override
 	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerLaserDrill(this, inventoryPlayer);

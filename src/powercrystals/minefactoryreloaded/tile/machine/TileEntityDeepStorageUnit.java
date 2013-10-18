@@ -45,12 +45,6 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "dsu.png";
-	}
-	
-	@Override
 	public void onBlockBroken()
 	{
 		if (getQuantityAdjusted() > 0 || isInvNameLocalized())

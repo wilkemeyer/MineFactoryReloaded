@@ -29,12 +29,12 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
  * 
- * Energy is stored and used when the machine activates. The energy stored must be >= energyActivation for the activateMachine() method to be called.
+ * Energy is stored and used when the _machine activates. The energy stored must be >= energyActivation for the activateMachine() method to be called.
  * If activateMachine() returns true, energy will be drained.
  * 
  * Work is built up and then when at 100% something happens. This is tracked/used entirely by the derived class. If not used (f.ex. harvester), return max 1.
  * 
- * Idle ticks cause an artificial delay before activateMachine() is called again. Max should be the highest value the machine will use, to draw the
+ * Idle ticks cause an artificial delay before activateMachine() is called again. Max should be the highest value the _machine will use, to draw the
  * progress bar correctly.
  */
 

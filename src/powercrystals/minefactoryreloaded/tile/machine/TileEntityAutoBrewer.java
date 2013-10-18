@@ -39,12 +39,6 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "autobrewer.png";
-	}
-	
-	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerAutoBrewer(this, inventoryPlayer);

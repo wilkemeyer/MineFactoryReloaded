@@ -25,12 +25,6 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "autodisenchanter.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

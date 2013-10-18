@@ -13,6 +13,7 @@ import powercrystals.core.inventory.IInventoryManager;
 import powercrystals.core.inventory.InventoryManager;
 import powercrystals.core.util.Util;
 import powercrystals.core.util.UtilInventory;
+import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
 public class TileEntityEjector extends TileEntityFactory
@@ -21,6 +22,7 @@ public class TileEntityEjector extends TileEntityFactory
 	
 	public TileEntityEjector()
 	{
+		super(Machine.Ejector);
 		setManageSolids(true);
 		setCanRotate(true);
 	}

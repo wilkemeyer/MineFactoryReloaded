@@ -54,12 +54,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "liquicrafter.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

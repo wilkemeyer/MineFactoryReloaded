@@ -22,8 +22,6 @@ import buildcraft.api.gates.IAction;
 @Implementable("buildcraft.core.IMachine")
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
 {
-	protected Machine machine;
-	
 	protected String _invName;
 	protected boolean _hasInvName = false;
 	
@@ -31,14 +29,14 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	protected TileEntityFactoryInventory(Machine machine)
 	{
+		super(machine);
 		_inventory = new ItemStack[getSizeInventory()];
-		this.machine = machine;
 	}
 	
 	@Override
 	public String getInvName()
 	{
-		return _hasInvName ? _invName : StatCollector.translateToLocal(machine.getInternalName() + ".name");
+		return _hasInvName ? _invName : StatCollector.translateToLocal(_machine.getInternalName() + ".name");
 	}
 	
 	@Override

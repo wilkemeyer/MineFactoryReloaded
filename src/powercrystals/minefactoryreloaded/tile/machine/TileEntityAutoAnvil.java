@@ -27,7 +27,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	
 	private int maximumCost;
 	private int stackSizeToBeUsedInRepair;
 	
@@ -65,12 +64,6 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	public int getInventoryStackLimit()
 	{
 		return 1;
-	}
-	
-	@Override
-	public String getGuiBackground()
-	{
-		return "autoanvil.png";
 	}
 	
 	@Override

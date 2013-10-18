@@ -30,12 +30,6 @@ public class TileEntityFisher extends TileEntityFactoryPowered implements IHarve
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "fisher.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

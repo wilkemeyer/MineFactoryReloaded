@@ -36,12 +36,6 @@ public class TileEntityBreeder extends TileEntityFactoryPowered implements IHarv
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "breeder.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

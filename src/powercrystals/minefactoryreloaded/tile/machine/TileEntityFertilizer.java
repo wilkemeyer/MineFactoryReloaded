@@ -41,12 +41,6 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered implements IH
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "fertilizer.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

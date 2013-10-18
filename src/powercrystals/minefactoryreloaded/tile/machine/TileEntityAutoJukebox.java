@@ -19,20 +19,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 {
-	public TileEntityAutoJukebox()
-	{
-		super(Machine.AutoJukebox);
-		setManageSolids(true);
-	}
-
 	private boolean _lastRedstoneState;
 	private boolean _canCopy;
 	private boolean _canPlay;
 	
-	@Override
-	public String getGuiBackground()
+	public TileEntityAutoJukebox()
 	{
-		return "autojukebox.png";
+		super(Machine.AutoJukebox);
+		setManageSolids(true);
 	}
 	
 	@Override

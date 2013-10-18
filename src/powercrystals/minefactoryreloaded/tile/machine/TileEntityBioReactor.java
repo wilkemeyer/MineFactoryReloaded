@@ -24,7 +24,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityBioReactor extends TileEntityFactoryInventory implements ITankContainerBucketable
 {
-	
 	private int _burnTime;
 	private static final int _burnTimeMax = 8000;
 	private static final int _bioFuelPerTick = 1;
@@ -156,12 +155,6 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 			}
 		}
 		return -1;
-	}
-	
-	@Override
-	public String getGuiBackground()
-	{
-		return "bioreactor.png";
 	}
 	
 	@Override

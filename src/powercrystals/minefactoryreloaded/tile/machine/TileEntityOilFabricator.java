@@ -19,12 +19,6 @@ public class TileEntityOilFabricator extends TileEntityLiquidFabricator
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "oilfab.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

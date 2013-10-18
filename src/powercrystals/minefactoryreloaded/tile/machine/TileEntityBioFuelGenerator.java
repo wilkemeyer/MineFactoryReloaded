@@ -36,12 +36,6 @@ public class TileEntityBioFuelGenerator extends TileEntityLiquidGenerator
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "biofuelgenerator.png";
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{

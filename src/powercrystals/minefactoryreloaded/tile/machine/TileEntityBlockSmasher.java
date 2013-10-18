@@ -69,12 +69,6 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public String getGuiBackground()
-	{
-		return "blocksmasher.png";
-	}
-	
-	@Override
 	public ContainerBlockSmasher getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerBlockSmasher(this, inventoryPlayer);

@@ -1,12 +1,18 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import net.minecraftforge.common.ForgeDirection;
+import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
 public class TileEntityRedNote extends TileEntityFactory
 {
 	private static final String[] _noteNames = new String[] { "harp", "bd", "snare", "hat", "bassattack" };
 	private boolean _playedLastChange = true;
+	
+	public TileEntityRedNote()
+	{
+		super(Machine.RedNote);
+	}
 	
 	@Override
 	public void onRedNetChanged(ForgeDirection side, int value)
