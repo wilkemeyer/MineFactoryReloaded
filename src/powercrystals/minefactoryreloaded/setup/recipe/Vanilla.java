@@ -59,9 +59,9 @@ public class Vanilla
 			'S', Block.stone,
 				} ));
 		
-		if(Machine.Planter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 0), new Object[]
+		// regex: if\s*\((Machine\.\w+)[^\n]+\n[^\n]+\n[^\n]+\n\s+(\{[^}]+\} \))[^\n]+\n[^\n]+
+		
+		registerMachine(Machine.Planter, new Object[]
 					{
 				"GGG",
 				"CPC",
@@ -70,12 +70,9 @@ public class Vanilla
 				'P', Block.pistonBase,
 				'C', Item.flowerPot,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Fisher.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 1), new Object[]
+		registerMachine(Machine.Fisher, new Object[]
 					{
 				"GGG",
 				"RRR",
@@ -84,12 +81,9 @@ public class Vanilla
 				'R', Item.fishingRod,
 				'B', Item.bucketEmpty,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Harvester.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 2), new Object[]
+		registerMachine(Machine.Harvester, new Object[]
 					{
 				"GGG",
 				"SXS",
@@ -98,12 +92,9 @@ public class Vanilla
 				'X', Item.axeGold,
 				'S', Item.shears,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Rancher.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 3), new Object[]
+		registerMachine(Machine.Rancher, new Object[]
 					{
 				"GGG",
 				"SBS",
@@ -112,12 +103,9 @@ public class Vanilla
 				'B', Item.bucketEmpty,
 				'S', Item.shears,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Fertilizer.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 4), new Object[]
+		registerMachine(Machine.Fertilizer, new Object[]
 					{
 				"GGG",
 				"LBL",
@@ -126,12 +114,9 @@ public class Vanilla
 				'L', Item.leather,
 				'B', Item.glassBottle,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Vet.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 5), new Object[]
+		registerMachine(Machine.Vet, new Object[]
 					{
 				"GGG",
 				"SSS",
@@ -140,12 +125,9 @@ public class Vanilla
 				'E', Item.spiderEye,
 				'S', MineFactoryReloadedCore.syringeEmptyItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.ItemCollector.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 8, 6), new Object[]
+		registerMachine(Machine.ItemCollector, 8, new Object[]
 					{
 				"GGG",
 				" C ",
@@ -153,12 +135,9 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'C', Block.chest,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.BlockBreaker.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 7), new Object[]
+		registerMachine(Machine.BlockBreaker, new Object[]
 					{
 				"GGG",
 				"PHS",
@@ -168,12 +147,9 @@ public class Vanilla
 				'H', MineFactoryReloadedCore.factoryHammerItem,
 				'S', Item.shovelGold,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.WeatherCollector.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 8), new Object[]
+		registerMachine(Machine.WeatherCollector, new Object[]
 					{
 				"GGG",
 				"BBB",
@@ -182,12 +158,9 @@ public class Vanilla
 				'B', Block.fenceIron,
 				'U', Item.bucketEmpty,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.SludgeBoiler.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 9), new Object[]
+		registerMachine(Machine.SludgeBoiler, new Object[]
 					{
 				"GGG",
 				"FFF",
@@ -195,12 +168,9 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'F', Block.furnaceIdle,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Sewer.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 4, 10), new Object[]
+		registerMachine(Machine.Sewer, 4, new Object[]
 					{
 				"GGG",
 				"BUB",
@@ -209,12 +179,9 @@ public class Vanilla
 				'B', Item.brick,
 				'U', Item.bucketEmpty,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Composter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 11), new Object[]
+		registerMachine(Machine.Composter, new Object[]
 					{
 				"GGG",
 				"PFP",
@@ -223,12 +190,9 @@ public class Vanilla
 				'P', Block.pistonBase,
 				'F', Block.furnaceIdle,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Breeder.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 12), new Object[]
+		registerMachine(Machine.Breeder, new Object[]
 					{
 				"GGG",
 				"CAC",
@@ -238,12 +202,9 @@ public class Vanilla
 				'C', Item.goldenCarrot,
 				'A', Item.appleGold,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Grinder.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 13), new Object[]
+		registerMachine(Machine.Grinder, new Object[]
 					{
 				"GGG",
 				"BSP",
@@ -253,12 +214,9 @@ public class Vanilla
 				'B', Item.book,
 				'S', Item.swordGold,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.AutoEnchanter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 14), new Object[]
+		registerMachine(Machine.AutoEnchanter, new Object[]
 					{
 				"GGG",
 				"BBB",
@@ -267,12 +225,9 @@ public class Vanilla
 				'B', Item.book,
 				'D', Item.diamond,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Chronotyper.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 15), new Object[]
+		registerMachine(Machine.Chronotyper, new Object[]
 					{
 				"GGG",
 				"EEE",
@@ -281,12 +236,9 @@ public class Vanilla
 				'E', Item.emerald,
 				'P', new ItemStack(Item.dyePowder, 1, 5),
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Ejector.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 8, 0), new Object[]
+		registerMachine(Machine.Ejector, 8, new Object[]
 					{
 				"GGG",
 				" D ",
@@ -295,12 +247,9 @@ public class Vanilla
 				'D', Block.dispenser,
 				'R', Item.redstone,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.ItemRouter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 8, 1), new Object[]
+		registerMachine(Machine.ItemRouter, 8, new Object[]
 					{
 				"GGG",
 				"RCR",
@@ -309,12 +258,9 @@ public class Vanilla
 				'C', Block.chest,
 				'R', Item.redstoneRepeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.LiquidRouter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 8, 2), new Object[]
+		registerMachine(Machine.LiquidRouter, 8, new Object[]
 					{
 				"GGG",
 				"RBR",
@@ -323,13 +269,10 @@ public class Vanilla
 				'B', Item.bucketEmpty,
 				'R', Item.redstoneRepeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.DeepStorageUnit.getIsRecipeEnabled())
-		{
-			int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), dsuCount, 3), new Object[]
+		int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
+		registerMachine(Machine.DeepStorageUnit, dsuCount, new Object[]
 					{
 				"GGG",
 				"PPP",
@@ -338,25 +281,22 @@ public class Vanilla
 				'P', Item.enderPearl,
 				'E', Item.eyeOfEnder,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
+					} );
 			
-			if(MFRConfig.enableCheapDSU.getBoolean(false))
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 3), new Object[]
-						{
-					"GGG",
-					"CCC",
-					"CMC",
-					'G', "sheetPlastic",
-					'C', Block.chest,
-					'M', MineFactoryReloadedCore.machineBaseItem,
-						} ));
-			}
+		if(MFRConfig.enableCheapDSU.getBoolean(false))
+		{
+			registerMachine(Machine.DeepStorageUnit, new Object[]
+					{
+				"GGG",
+				"CCC",
+				"CMC",
+				'G', "sheetPlastic",
+				'C', Block.chest,
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
 		}
 		
-		if(Machine.LiquiCrafter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 4), new Object[]
+		registerMachine(Machine.LiquiCrafter, new Object[]
 					{
 				"GGG",
 				"BWB",
@@ -366,12 +306,9 @@ public class Vanilla
 				'W', Block.workbench,
 				'F', Item.itemFrame,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.LavaFabricator.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 5), new Object[]
+		registerMachine(Machine.LavaFabricator, new Object[]
 					{
 				"GGG",
 				"OBO",
@@ -381,12 +318,9 @@ public class Vanilla
 				'B', Item.blazeRod,
 				'C', Item.magmaCream,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.OilFabricator.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 6), new Object[]
+		registerMachine(Machine.OilFabricator, new Object[]
 					{
 				"GGG",
 				"OTO",
@@ -395,12 +329,9 @@ public class Vanilla
 				'O', Block.obsidian,
 				'T', Block.tnt,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.AutoJukebox.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 7), new Object[]
+		registerMachine(Machine.AutoJukebox, new Object[]
 					{
 				"GGG",
 				" J ",
@@ -408,12 +339,9 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'J', Block.jukebox,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Unifier.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 8), new Object[]
+		registerMachine(Machine.Unifier, new Object[]
 					{
 				"GGG",
 				"CBC",
@@ -422,12 +350,9 @@ public class Vanilla
 				'B', Item.book,
 				'C', Item.comparator,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.AutoSpawner.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 9), new Object[]
+		registerMachine(Machine.AutoSpawner, new Object[]
 					{
 				"GGG",
 				"ECE",
@@ -438,12 +363,9 @@ public class Vanilla
 				'N', Item.netherStalkSeeds,
 				'S', Item.sugar,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.BioReactor.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 10), new Object[]
+		registerMachine(Machine.BioReactor, new Object[]
 					{
 				"GGG",
 				"UEU",
@@ -453,12 +375,9 @@ public class Vanilla
 				'E', Item.fermentedSpiderEye,
 				'S', Item.slimeBall,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.BioFuelGenerator.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 11), new Object[]
+		registerMachine(Machine.BioFuelGenerator, new Object[]
 					{
 				"GGG",
 				"PFP",
@@ -468,12 +387,9 @@ public class Vanilla
 				'P', Block.pistonBase,
 				'R', Item.blazeRod,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.AutoDisenchanter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 12), new Object[]
+		registerMachine(Machine.AutoDisenchanter, new Object[]
 					{
 				"GGG",
 				"RDR",
@@ -483,12 +399,9 @@ public class Vanilla
 				'D', Item.diamond,
 				'R', Block.netherBrick,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.Slaughterhouse.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 13), new Object[]
+		registerMachine(Machine.Slaughterhouse, new Object[]
 					{
 				"GGG",
 				"SSS",
@@ -497,12 +410,9 @@ public class Vanilla
 				'S', Item.swordGold,
 				'X', Item.axeGold,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.MeatPacker.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 14), new Object[]
+		registerMachine(Machine.MeatPacker, new Object[]
 					{
 				"GGG",
 				"BFB",
@@ -511,12 +421,9 @@ public class Vanilla
 				'B', Block.brick,
 				'F', Item.flintAndSteel,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.EnchantmentRouter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 15), new Object[]
+		registerMachine(Machine.EnchantmentRouter, new Object[]
 					{
 				"GGG",
 				"RBR",
@@ -525,12 +432,9 @@ public class Vanilla
 				'B', Item.book,
 				'R', Item.redstoneRepeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.LaserDrill.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 0), new Object[]
+		registerMachine(Machine.LaserDrill, new Object[]
 					{
 				"GGG",
 				"LLL",
@@ -539,12 +443,9 @@ public class Vanilla
 				'L', Block.glowStone,
 				'D', Item.diamond,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.LaserDrillPrecharger.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 1), new Object[]
+		registerMachine(Machine.LaserDrillPrecharger, new Object[]
 					{
 				"GGG",
 				"LSL",
@@ -554,12 +455,9 @@ public class Vanilla
 				'D', Item.diamond,
 				'S', MineFactoryReloadedCore.pinkSlimeballItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.AutoAnvil.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 2), new Object[]
+		registerMachine(Machine.AutoAnvil, new Object[]
 					{
 				"GGG",
 				"AAA",
@@ -567,12 +465,9 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'A', Block.anvil,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.BlockSmasher.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 3), new Object[]
+		registerMachine(Machine.BlockSmasher, new Object[]
 					{
 				"GGG",
 				"HHH",
@@ -581,12 +476,9 @@ public class Vanilla
 				'H', MineFactoryReloadedCore.factoryHammerItem,
 				'B', Item.book,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.RedNote.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 4), new Object[]
+		registerMachine(Machine.RedNote, new Object[]
 					{
 				"GGG",
 				"CNC",
@@ -595,12 +487,9 @@ public class Vanilla
 				'C', MineFactoryReloadedCore.rednetCableBlock,
 				'N', Block.music,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.AutoBrewer.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 5), new Object[]
+		registerMachine(Machine.AutoBrewer, new Object[]
 					{
 				"GGG",
 				"CBC",
@@ -610,12 +499,9 @@ public class Vanilla
 				'B', Item.brewingStand,
 				'R', Item.redstoneRepeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.FruitPicker.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 6), new Object[]
+		registerMachine(Machine.FruitPicker, new Object[]
 					{
 				"GGG",
 				"SXS",
@@ -624,12 +510,9 @@ public class Vanilla
 				'X', Item.axeGold,
 				'S', Item.shears,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.BlockPlacer.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 6), new Object[]
+		registerMachine(Machine.BlockPlacer, new Object[]
 					{
 				"GGG",
 				"DDD",
@@ -637,12 +520,9 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'D', Block.dropper,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
-		}
+					} );
 		
-		if(Machine.MobCounter.getIsRecipeEnabled())
-		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 6), new Object[]
+		registerMachine(Machine.MobCounter, new Object[]
 					{
 				"GGG",
 				"RCR",
@@ -652,7 +532,21 @@ public class Vanilla
 				'C', Item.comparator,
 				'S', MineFactoryReloadedCore.spyglassItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
-					} ));
+					} );
+	}
+	
+	private void registerMachine(Machine machine, Object... recipe)
+	{
+		registerMachine(machine, 1, recipe);
+	}
+	
+	private void registerMachine(Machine machine, int amount, Object... recipe)
+	{
+		if(machine.getIsRecipeEnabled())
+		{
+			ItemStack item = machine.getItemStack();
+			item.stackSize = amount;
+			GameRegistry.addRecipe(new ShapedOreRecipe(item, recipe));
 		}
 	}
 	

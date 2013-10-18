@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -208,6 +209,11 @@ public class Machine
 	public int getBlockId()
 	{
 		return MineFactoryReloadedCore.machineBlocks.get(_blockIndex).blockID;
+	}
+	
+	public ItemStack getItemStack()
+	{
+		return new ItemStack(MineFactoryReloadedCore.machineBlocks.get(_blockIndex), 1, _meta);
 	}
 	
 	public int getMeta()
