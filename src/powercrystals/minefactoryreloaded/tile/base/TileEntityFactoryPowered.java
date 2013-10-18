@@ -46,6 +46,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public static final int wPerEnergy = 7;
 	
 	private int _energyStored;
+	private int _maxEnergyStored;
 	protected int _energyActivation;
 	
 	protected int _energyRequiredThisTick = 0;
@@ -83,6 +84,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	protected TileEntityFactoryPowered(Machine machine, int activationCostMJ)
 	{
 		super(machine);
+		_maxEnergyStored = machine.getMaxEnergyStorage();
 		_energyActivation = activationCostMJ * energyPerMJ;
 		_powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
 		configurePowerProvider();
@@ -320,7 +322,10 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return _energyStored;
 	}
 	
-	public abstract int getEnergyStoredMax();
+	public int getEnergyStoredMax()
+	{
+		return _maxEnergyStored;
+	}
 	
 	public void setEnergyStored(int energy)
 	{

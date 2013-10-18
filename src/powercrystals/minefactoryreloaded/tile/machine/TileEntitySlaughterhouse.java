@@ -91,10 +91,4 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		setRecentlyHit(entity, 0);
 		entity.attackEntityFrom(_damageSource, DAMAGE);
 	}
-	
-	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
 }

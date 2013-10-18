@@ -208,12 +208,6 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 160;

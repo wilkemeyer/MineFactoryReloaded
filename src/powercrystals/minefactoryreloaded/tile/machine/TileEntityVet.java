@@ -50,12 +50,6 @@ public class TileEntityVet extends TileEntityFactoryPowered implements IHarvestA
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 32000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 1;

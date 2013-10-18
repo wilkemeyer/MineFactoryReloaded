@@ -113,12 +113,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 32000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 1;

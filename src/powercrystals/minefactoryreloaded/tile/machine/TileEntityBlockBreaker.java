@@ -45,12 +45,6 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 64000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 1;

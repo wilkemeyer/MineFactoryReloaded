@@ -42,12 +42,6 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 0;

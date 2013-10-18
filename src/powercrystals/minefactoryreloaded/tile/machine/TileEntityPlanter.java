@@ -143,12 +143,6 @@ public class TileEntityPlanter extends TileEntityFactoryPowered implements IHarv
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 8000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 1;

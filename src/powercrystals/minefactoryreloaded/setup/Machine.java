@@ -61,49 +61,49 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Machine
 {
-	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, "factoryPlanter", 16);
-	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, "factoryFisher", 2);
-	public static Machine Harvester = new Machine(0, 2, "Harvester", TileEntityHarvester.class, "factoryHarvester", 24);
-	public static Machine Rancher = new Machine(0, 3, "Rancher", TileEntityRancher.class, "factoryRancher", 32);
-	public static Machine Fertilizer = new Machine(0, 4, "Fertilizer", TileEntityFertilizer.class, "factoryFertilizer", 96);
-	public static Machine Vet = new Machine(0, 5, "Vet", TileEntityVet.class, "factoryVet", 32);
-	public static Machine ItemCollector = new Machine(0, 6, "ItemCollector", TileEntityCollector.class, "factoryItemCollector", 0);
-	public static Machine BlockBreaker = new Machine(0, 7, "BlockBreaker", TileEntityBlockBreaker.class, "factoryBlockBreaker", 96);
-	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, "factoryWeather", 4);
-	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, "factorySludgeBoiler", 2);
-	public static Machine Sewer = new Machine(0, 10, "Sewer", TileEntitySewer.class, "factorySewer", 0);
-	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, "factoryComposter", 2);
-	public static Machine Breeder = new Machine(0, 12, "Breeder", TileEntityBreeder.class, "factoryBreeder", 64);
-	public static Machine Grinder = new Machine(0, 13, "Grinder", TileEntityGrinder.class, "factoryGrinder", 320);
-	public static Machine AutoEnchanter = new Machine(0, 14, "AutoEnchanter", TileEntityAutoEnchanter.class, "factoryEnchanter", 16);
-	public static Machine Chronotyper = new Machine(0, 15, "Chronotyper", TileEntityChronotyper.class, "factoryChronotyper", 128);
+	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, "factoryPlanter", 160, 8000);
+	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, "factoryFisher", 20, 16000);
+	public static Machine Harvester = new Machine(0, 2, "Harvester", TileEntityHarvester.class, "factoryHarvester", 240, 16000);
+	public static Machine Rancher = new Machine(0, 3, "Rancher", TileEntityRancher.class, "factoryRancher", 320, 32000);
+	public static Machine Fertilizer = new Machine(0, 4, "Fertilizer", TileEntityFertilizer.class, "factoryFertilizer", 960, 32000);
+	public static Machine Vet = new Machine(0, 5, "Vet", TileEntityVet.class, "factoryVet", 320, 32000);
+	public static Machine ItemCollector = new Machine(0, 6, "ItemCollector", TileEntityCollector.class, "factoryItemCollector");
+	public static Machine BlockBreaker = new Machine(0, 7, "BlockBreaker", TileEntityBlockBreaker.class, "factoryBlockBreaker", 960, 64000);
+	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, "factoryWeather", 40, 16000);
+	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, "factorySludgeBoiler", 20, 16000);
+	public static Machine Sewer = new Machine(0, 10, "Sewer", TileEntitySewer.class, "factorySewer");
+	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, "factoryComposter", 20, 16000);
+	public static Machine Breeder = new Machine(0, 12, "Breeder", TileEntityBreeder.class, "factoryBreeder", 640, 16000);
+	public static Machine Grinder = new Machine(0, 13, "Grinder", TileEntityGrinder.class, "factoryGrinder", 3200, 32000);
+	public static Machine AutoEnchanter = new Machine(0, 14, "AutoEnchanter", TileEntityAutoEnchanter.class, "factoryEnchanter", 160, 16000);
+	public static Machine Chronotyper = new Machine(0, 15, "Chronotyper", TileEntityChronotyper.class, "factoryChronotyper", 1280, 16000);
 	
-	public static Machine Ejector = new Machine(1, 0, "Ejector", TileEntityEjector.class, "factoryEjector", 0);
-	public static Machine ItemRouter = new Machine(1, 1, "ItemRouter", TileEntityItemRouter.class, "factoryItemRouter", 0);
-	public static Machine LiquidRouter = new Machine(1, 2, "LiquidRouter", TileEntityLiquidRouter.class, "factoryLiquidRouter", 0);
-	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class, "factoryDeepStorageUnit", 0);
-	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class, "factoryLiquiCrafter", 0);
-	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, "factoryLavaFabricator", 20);
-	public static Machine OilFabricator = new Machine(1, 6, "OilFabricator", TileEntityOilFabricator.class, "factoryOilFabricator", 588);
-	public static Machine AutoJukebox = new Machine(1, 7, "AutoJukebox", TileEntityAutoJukebox.class, "factoryAutoJukebox", 0);
-	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class, "factoryUnifier", 0);
-	public static Machine AutoSpawner = new Machine(1, 9, "AutoSpawner", TileEntityAutoSpawner.class, "factoryAutoSpawner", 60);
-	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class, "factoryBioReactor", 0);
-	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, "factoryBioFuelGenerator", 16);
-	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, "factoryDisenchanter", 32);
-	public static Machine Slaughterhouse = new Machine(1, 13, "Slaughterhouse", TileEntitySlaughterhouse.class, "factorySlaughterhouse", 100);
-	public static Machine MeatPacker = new Machine(1, 14, "MeatPacker", TileEntityMeatPacker.class, "factoryMeatPacker", 2);
-	public static Machine EnchantmentRouter = new Machine(1, 15, "EnchantmentRouter", TileEntityEnchantmentRouter.class, "factoryEnchantmentRouter", 0);
+	public static Machine Ejector = new Machine(1, 0, "Ejector", TileEntityEjector.class, "factoryEjector");
+	public static Machine ItemRouter = new Machine(1, 1, "ItemRouter", TileEntityItemRouter.class, "factoryItemRouter");
+	public static Machine LiquidRouter = new Machine(1, 2, "LiquidRouter", TileEntityLiquidRouter.class, "factoryLiquidRouter");
+	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class, "factoryDeepStorageUnit");
+	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class, "factoryLiquiCrafter");
+	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, "factoryLavaFabricator", 200, 16000);
+	public static Machine OilFabricator = new Machine(1, 6, "OilFabricator", TileEntityOilFabricator.class, "factoryOilFabricator", 5880, 16000);
+	public static Machine AutoJukebox = new Machine(1, 7, "AutoJukebox", TileEntityAutoJukebox.class, "factoryAutoJukebox");
+	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class, "factoryUnifier");
+	public static Machine AutoSpawner = new Machine(1, 9, "AutoSpawner", TileEntityAutoSpawner.class, "factoryAutoSpawner", 600, 32000);
+	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class, "factoryBioReactor");
+	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, "factoryBioFuelGenerator", 160, 10000);
+	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, "factoryDisenchanter", 320, 16000);
+	public static Machine Slaughterhouse = new Machine(1, 13, "Slaughterhouse", TileEntitySlaughterhouse.class, "factorySlaughterhouse", 1000, 16000);
+	public static Machine MeatPacker = new Machine(1, 14, "MeatPacker", TileEntityMeatPacker.class, "factoryMeatPacker", 20, 16000);
+	public static Machine EnchantmentRouter = new Machine(1, 15, "EnchantmentRouter", TileEntityEnchantmentRouter.class, "factoryEnchantmentRouter");
 	
-	public static Machine LaserDrill = new Machine(2, 0, "LaserDrill", TileEntityLaserDrill.class, "factoryLaserDrill", 0);
-	public static Machine LaserDrillPrecharger = new Machine(2, 1, "LaserDrillPrecharger", TileEntityLaserDrillPrecharger.class, "factoryLaserDrillPrecharger", 500);
-	public static Machine AutoAnvil = new Machine(2, 2, "AutoAnvil", TileEntityAutoAnvil.class, "factoryAnvil", 16);
-	public static Machine BlockSmasher = new Machine(2, 3, "BlockSmasher", TileEntityBlockSmasher.class, "factoryBlockSmasher", 1);
-	public static Machine RedNote = new Machine(2, 4, "RedNote", TileEntityRedNote.class, "factoryRedNote", 0);
-	public static Machine AutoBrewer = new Machine(2, 5, "AutoBrewer", TileEntityAutoBrewer.class, "factoryAutoBrewer", 4);
-	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, "factoryFruitPicker", 32);
-	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 1);
-	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter", 0);
+	public static Machine LaserDrill = new Machine(2, 0, "LaserDrill", TileEntityLaserDrill.class, "factoryLaserDrill");
+	public static Machine LaserDrillPrecharger = new Machine(2, 1, "LaserDrillPrecharger", TileEntityLaserDrillPrecharger.class, "factoryLaserDrillPrecharger", 5000, 16000);
+	public static Machine AutoAnvil = new Machine(2, 2, "AutoAnvil", TileEntityAutoAnvil.class, "factoryAnvil", 160, 16000);
+	public static Machine BlockSmasher = new Machine(2, 3, "BlockSmasher", TileEntityBlockSmasher.class, "factoryBlockSmasher", 10, 16000);
+	public static Machine RedNote = new Machine(2, 4, "RedNote", TileEntityRedNote.class, "factoryRedNote");
+	public static Machine AutoBrewer = new Machine(2, 5, "AutoBrewer", TileEntityAutoBrewer.class, "factoryAutoBrewer", 40, 16000);
+	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, "factoryFruitPicker", 320, 16000);
+	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 10, 16000);
+	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter");
 	
 	private static List<Machine> _machines;
 	private static Map<Integer, Machine> _machineMappingss;
@@ -111,17 +111,29 @@ public class Machine
 	
 	private int _blockIndex;
 	private int _meta;
-	private String _name;
-	private String _internalName;
-	private Class<? extends TileEntityFactory> _tileEntityClass;
-	private String _tileEntityName;
+	
 	private Icon[] _iconsActive = new Icon[6];
 	private Icon[] _iconsIdle = new Icon[6];
-	private int _activationEnergyMJ;
+	
+	private String _name;
+	private String _internalName;
+	private String _tileEntityName;
+	private Class<? extends TileEntityFactory> _tileEntityClass;
+	
+	private int _activationEnergy;
+	private int _energyStoredMax;
 	
 	private Property _isRecipeEnabled;
 	
-	private Machine(int blockIndex, int meta, String name, Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName, int activationEnergyMJ)
+	private Machine(int blockIndex, int meta, String name,
+			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName)
+	{
+		this(blockIndex, meta, name, tileEntityClass, tileEntityName, 0, 0);
+	}
+	
+	private Machine(int blockIndex, int meta, String name,
+			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName,
+			int activationEnergyMJ, int energyStoredMax)
 	{
 		_blockIndex = blockIndex;
 		_meta = meta;
@@ -129,7 +141,8 @@ public class Machine
 		_internalName = "tile.mfr.machine." + name.toLowerCase();
 		_tileEntityClass = tileEntityClass;
 		_tileEntityName = tileEntityName;
-		_activationEnergyMJ = activationEnergyMJ;
+		_activationEnergy = activationEnergyMJ;
+		_energyStoredMax = energyStoredMax;
 		
 		if(_machines == null) _machines = new LinkedList<Machine>();
 		if(_machineMappingss == null) _machineMappingss = new HashMap<Integer, Machine>();
@@ -227,20 +240,25 @@ public class Machine
 	
 	public int getActivationEnergyMJ()
 	{
-		return _activationEnergyMJ;
+		return _activationEnergy / TileEntityFactoryPowered.energyPerMJ;
 	}
 	
 	public int getActivationEnergy()
 	{
-		return _activationEnergyMJ * TileEntityFactoryPowered.energyPerMJ;
+		return _activationEnergy;
+	}
+	
+	public int getMaxEnergyStorage()
+	{
+		return _energyStoredMax;
 	}
 	
 	public void load(Configuration c)
 	{
 		_isRecipeEnabled = c.get("Machine", _name + ".Recipe.Enabled", true);
-		if(_activationEnergyMJ > 0)
+		if(_activationEnergy > 0)
 		{
-			_activationEnergyMJ = c.get("Machine", _name + ".ActivationCostMJ", _activationEnergyMJ).getInt();
+			_activationEnergy = c.get("Machine", _name + ".ActivationCostMJ", getActivationEnergyMJ()).getInt() * TileEntityFactoryPowered.energyPerMJ;
 		}
 		
 		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.machineBlocks.get(_blockIndex), _meta, "pickaxe", 0);

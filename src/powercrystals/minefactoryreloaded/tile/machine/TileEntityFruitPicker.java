@@ -167,12 +167,6 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 1;

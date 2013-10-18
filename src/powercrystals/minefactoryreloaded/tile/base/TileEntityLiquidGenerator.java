@@ -18,7 +18,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	private int _outputPulseSize;
 	
 	private int _ticksSinceLastConsumption = 0;
-	private int _bufferMax = 10000;
+	private int _bufferMax;
 	private int _buffer;
 	
 	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick, int powerProducedPerConsumption, int ticksBetweenConsumption)
@@ -27,7 +27,8 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		_liquidConsumedPerTick = liquidConsumedPerTick;
 		_powerProducedPerConsumption = powerProducedPerConsumption;
 		_ticksBetweenConsumption = ticksBetweenConsumption;
-		_outputPulseSize = machine.getActivationEnergyMJ() * TileEntityFactoryPowered.energyPerMJ;
+		_outputPulseSize = machine.getActivationEnergy();
+		_bufferMax = machine.getMaxEnergyStorage();
 		
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 		setManageFluids(true);

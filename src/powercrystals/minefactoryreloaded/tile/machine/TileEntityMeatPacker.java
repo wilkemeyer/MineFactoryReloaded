@@ -84,12 +84,6 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 50;

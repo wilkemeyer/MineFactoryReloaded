@@ -116,12 +116,6 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered implements IH
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 32000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 1;

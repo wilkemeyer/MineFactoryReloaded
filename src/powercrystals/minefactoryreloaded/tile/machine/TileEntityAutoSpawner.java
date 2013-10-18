@@ -173,12 +173,6 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 32000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return _spawnExact ? MFRConfig.autospawnerCostExact.getInt() : MFRConfig.autospawnerCostStandard.getInt();

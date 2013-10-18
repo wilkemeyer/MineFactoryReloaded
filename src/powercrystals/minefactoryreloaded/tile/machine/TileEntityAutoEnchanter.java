@@ -90,12 +90,6 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getIdleTicksMax()
 	{
 		return 1;

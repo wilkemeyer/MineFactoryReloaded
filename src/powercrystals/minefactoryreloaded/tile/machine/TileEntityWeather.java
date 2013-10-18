@@ -52,12 +52,6 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 50;

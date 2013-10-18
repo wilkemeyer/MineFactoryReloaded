@@ -356,12 +356,6 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public int getEnergyStoredMax()
-	{
-		return 16000;
-	}
-	
-	@Override
 	public int getWorkMax()
 	{
 		return 100 * maximumCost;

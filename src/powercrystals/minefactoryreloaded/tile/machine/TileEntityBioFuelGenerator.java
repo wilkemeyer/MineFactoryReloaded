@@ -1,9 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import buildcraft.api.transport.IPipeTile.PipeType;
-
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.gui.client.GuiBioFuelGenerator;
