@@ -361,6 +361,7 @@ chat.info.mfr.rednet.memorycard.error=PRC besutzt zu wenige Schaltkreise, um die
 
 chat.info.mfr.rednet.connection.standard=Kabel auf Standard-Verbindungsmodus gestellt
 chat.info.mfr.rednet.connection.forced=Kabel auf Erzwungenen Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.forcedstrong=Kabel auf Starken Verbindungsmodus gestellt
 chat.info.mfr.rednet.connection.cableonly=Kabel auf Nur-Kabel-Verbindungsmodus gestellt
 
 death.attack.mfr.slaughterhouse=%1$s wurde zu fl\u00fcssigem Fleisch verarbeitet
