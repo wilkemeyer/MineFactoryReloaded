@@ -37,6 +37,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	{
 		super(Machine.AutoAnvil);
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override

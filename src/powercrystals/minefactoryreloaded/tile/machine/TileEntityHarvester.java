@@ -53,8 +53,10 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		super(Machine.Harvester);
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		_settings = new HashMap<String, Boolean>();
+		setManageFluids(true);
+		setManageSolids(true);
 		
+		_settings = new HashMap<String, Boolean>();
 		_settings.put("silkTouch", false);
 		_settings.put("harvestSmallMushrooms", false);
 		_settings.put("harvestJungleWood", false);
@@ -366,18 +368,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean manageFluids()
-	{
-		return true;
 	}
 
 	@Override

@@ -22,6 +22,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	public TileEntityDeepStorageUnit()
 	{
 		super(Machine.DeepStorageUnit);
+		setManageSolids(true);
 	}
 	
 	private int _storedQuantity;

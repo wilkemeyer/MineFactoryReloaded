@@ -29,6 +29,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered implements IHarv
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
 		_areaManager.setOriginOffset(0, 1, 0);
+		setManageSolids(true);
 	}
 	
 	@Override

@@ -31,6 +31,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered implements IHarv
 	{
 		super(Machine.Breeder);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		setManageSolids(true);
 	}
 	
 	@Override

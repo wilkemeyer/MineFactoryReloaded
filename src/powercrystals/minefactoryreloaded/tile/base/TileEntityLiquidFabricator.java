@@ -19,6 +19,7 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 		_liquidId = liquidId;
 		_liquidFabPerTick = liquidFabPerTick;
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+		setManageFluids(true);
 	}
 	
 	@Override
@@ -94,12 +95,6 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
 			return _tank.drain(resource.amount, doDrain);
 		return null;
-	}
-	
-	@Override
-	public boolean manageFluids()
-	{
-		return true;
 	}
 
 	@Override

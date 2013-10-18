@@ -30,6 +30,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered implements IH
 		super(Machine.Fertilizer);
 		_rand = new Random();
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+		setManageSolids(true);
 	}
 	
 	@Override

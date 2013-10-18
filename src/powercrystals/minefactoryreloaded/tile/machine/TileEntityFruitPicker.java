@@ -36,6 +36,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		super(Machine.FruitPicker);
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
 		_rand = new Random();
+		setManageSolids(true);
 	}
 
 	@Override

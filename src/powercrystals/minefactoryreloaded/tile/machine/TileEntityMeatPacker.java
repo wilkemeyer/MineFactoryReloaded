@@ -21,12 +21,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IFluidHandler
 {
-	
-	
 	public TileEntityMeatPacker()
 	{
 		super(Machine.MeatPacker);
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -146,13 +146,6 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 			return _tank;
 		}
 		return null;
-	}
-	
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 
 	@Override

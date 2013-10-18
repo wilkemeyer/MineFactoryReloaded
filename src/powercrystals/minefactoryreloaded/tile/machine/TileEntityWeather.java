@@ -28,6 +28,8 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	{
 		super(Machine.WeatherCollector);
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -158,18 +160,6 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean manageFluids()
-	{
-		return true;
 	}
 
 	@Override

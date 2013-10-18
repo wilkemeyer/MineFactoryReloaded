@@ -61,6 +61,8 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
 		_rand = new Random();
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	public TileEntityGrinder()
@@ -260,18 +262,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	
 	@Override
 	public boolean allowBucketDrain()
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean manageFluids()
 	{
 		return true;
 	}

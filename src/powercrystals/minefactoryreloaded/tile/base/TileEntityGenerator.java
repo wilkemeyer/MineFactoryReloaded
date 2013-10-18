@@ -70,7 +70,9 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 
 	@Override
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		return ConnectOverride.DEFAULT;
+		if (type == PipeType.POWER)
+			return ConnectOverride.CONNECT;
+		return super.overridePipeConnection(type, with);
 	}
 
 	@Override

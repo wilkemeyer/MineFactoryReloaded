@@ -30,6 +30,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		_outputPulseSize = machine.getActivationEnergyMJ() * TileEntityFactoryPowered.energyPerMJ;
 		
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		setManageFluids(true);
 	}
 	
 	protected abstract FluidStack getLiquidType();
@@ -121,12 +122,6 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		
 		_ticksSinceLastConsumption = nbttagcompound.getInteger("ticksSinceLastConsumption");
 		_buffer = nbttagcompound.getInteger("buffer");
-	}
-	
-	@Override
-	public boolean manageFluids()
-	{
-		return true;
 	}
 
 	@Override

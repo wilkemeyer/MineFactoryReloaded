@@ -18,7 +18,6 @@ import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import buildcraft.api.gates.IAction;
-import buildcraft.api.transport.IPipeTile.PipeType;
 
 @Implementable("buildcraft.core.IMachine")
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
@@ -392,27 +391,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return ret / len;
 	}
 	
-	public boolean manageFluids()
-	{
-		return false;
-	}
-	
-	public boolean manageSolids()
-	{
-		return false;
-	}
-	
 	public boolean allowAction(IAction _)
 	{
 		return false;
-	}
-
-	@Override
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		if (type == PipeType.FLUID && this.manageFluids())
-			return ConnectOverride.CONNECT;
-		if (type == PipeType.ITEM && this.manageSolids())
-			return ConnectOverride.CONNECT;
-		return ConnectOverride.DEFAULT;
 	}
 }

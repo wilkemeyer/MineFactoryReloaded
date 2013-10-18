@@ -22,6 +22,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	public TileEntityAutoJukebox()
 	{
 		super(Machine.AutoJukebox);
+		setManageSolids(true);
 	}
 
 	private boolean _lastRedstoneState;

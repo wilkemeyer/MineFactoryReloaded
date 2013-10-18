@@ -38,6 +38,8 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		
 		_targetLevel = 30;
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override

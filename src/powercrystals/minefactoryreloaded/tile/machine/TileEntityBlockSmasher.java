@@ -42,6 +42,8 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	{
 		super(Machine.BlockSmasher);
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override

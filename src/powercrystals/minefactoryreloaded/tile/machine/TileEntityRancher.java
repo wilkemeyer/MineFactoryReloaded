@@ -30,12 +30,13 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 {
 	private HarvestAreaManager _areaManager;
 	
-	
 	public TileEntityRancher()
 	{
 		super(Machine.Rancher);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -170,12 +171,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	
 	@Override
 	public boolean canRotate()
-	{
-		return true;
-	}
-	
-	@Override
-	public boolean manageFluids()
 	{
 		return true;
 	}

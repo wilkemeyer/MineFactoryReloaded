@@ -26,6 +26,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered implements IHarve
 	{
 		super(Machine.Fisher);
 		_ham = new HarvestAreaManager(this, 1, 0, 0);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -116,11 +117,5 @@ public class TileEntityFisher extends TileEntityFactoryPowered implements IHarve
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 }

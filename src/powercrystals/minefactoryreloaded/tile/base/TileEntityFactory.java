@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import buildcraft.api.transport.IPipeConnection;
+import buildcraft.api.transport.IPipeTile.PipeType;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -36,7 +37,9 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	
 	private ForgeDirection _forwardDirection;
 	
-	private boolean _isActive;
+	private boolean _isActive = false;
+	private boolean _manageFluids = false;
+	private boolean _manageSolids = false;
 	
 	protected int _rednetState;
 	
@@ -205,5 +208,42 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	public int getRedNetOutput(ForgeDirection side)
 	{
 		return 0;
+	}
+	
+	// hoisted IMachine methods
+	
+	public void setManageFluids(boolean manageFluids)
+	{
+		_manageFluids = manageFluids;
+	}
+	
+	public boolean manageFluids()
+	{
+		return _manageFluids;
+	}
+	
+	public void setManageSolids(boolean manageSolids)
+	{
+		_manageSolids = manageSolids;
+	}
+	
+	public boolean manageSolids()
+	{
+		return _manageSolids;
+	}
+
+	@Override
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		switch (type)
+		{
+		case FLUID:
+			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
+		case ITEM: 
+			return manageSolids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
+		case STRUCTURE:
+			return ConnectOverride.CONNECT;
+		default:
+			return ConnectOverride.DISCONNECT;
+		}
 	}
 }

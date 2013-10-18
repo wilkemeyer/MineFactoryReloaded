@@ -13,6 +13,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory
 	public TileEntityCollector()
 	{
 		super(Machine.ItemCollector);
+		setManageSolids(true);
 	}
 
 	public void addToChests(EntityItem i)
@@ -42,11 +43,5 @@ public class TileEntityCollector extends TileEntityFactoryInventory
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 }

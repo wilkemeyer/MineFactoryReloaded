@@ -15,6 +15,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	public TileEntityBlockBreaker()
 	{
 		super(Machine.BlockBreaker);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -65,12 +66,6 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 	
 	@Override

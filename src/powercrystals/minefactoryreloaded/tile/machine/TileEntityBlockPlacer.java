@@ -18,6 +18,7 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 	public TileEntityBlockPlacer()
 	{
 		super(Machine.BlockPlacer);
+		setManageSolids(true);
 	}
 	
 	@Override

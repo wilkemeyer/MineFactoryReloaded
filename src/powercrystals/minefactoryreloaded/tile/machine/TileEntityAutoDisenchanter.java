@@ -21,6 +21,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	public TileEntityAutoDisenchanter()
 	{
 		super(Machine.AutoDisenchanter);
+		setManageSolids(true);
 	}
 	
 	@Override

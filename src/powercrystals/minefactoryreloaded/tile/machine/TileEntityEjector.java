@@ -19,6 +19,11 @@ public class TileEntityEjector extends TileEntityFactory
 {
 	private boolean _lastRedstoneState;
 	
+	public TileEntityEjector()
+	{
+		setManageSolids(true);
+	}
+	
 	@Override
 	public void updateEntity()
 	{
@@ -83,8 +88,8 @@ public class TileEntityEjector extends TileEntityFactory
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
-		if (type == PipeType.ITEM && with == getDirectionFacing())
-			return ConnectOverride.CONNECT;
+		if (with == getDirectionFacing())
+			return super.overridePipeConnection(type, with);
 		return ConnectOverride.DISCONNECT;
 	}
 }

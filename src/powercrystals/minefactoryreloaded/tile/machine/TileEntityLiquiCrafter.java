@@ -34,32 +34,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	private boolean _lastRedstoneState;
 	private boolean _resourcesChangedSinceLastFailedCraft = true;
 	
-	private class ItemResourceTracker
-	{
-		public ItemResourceTracker(int id, int meta, NBTTagCompound nbtdata, int required)
-		{
-			this.id = id;
-			this.meta = meta;
-			this.required = required;
-			this.tag = nbtdata;
-			isFluid = false;
-		}
-		public ItemResourceTracker(FluidStack resource, int required)
-		{
-			this.fluid = resource;
-			this.required = required;
-			isFluid = true;
-		}
-		public boolean isFluid;
-		public FluidStack fluid;
-		public int id;
-		public int meta;
-		@SuppressWarnings("unused")
-		public NBTTagCompound tag; // TODO: check NBT data appropriately. via recipe?
-		public int required;
-		public int found;
-	}
-	
 	private FluidTank[] _tanks = new FluidTank[9];
 	
 	public TileEntityLiquiCrafter()
@@ -69,6 +43,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		{
 			_tanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
 		}
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -541,5 +517,31 @@ inv:	for(int i = 0; i < 9; i++)
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return true;
+	}
+	
+	private static class ItemResourceTracker
+	{
+		public ItemResourceTracker(int id, int meta, NBTTagCompound nbtdata, int required)
+		{
+			this.id = id;
+			this.meta = meta;
+			this.required = required;
+			this.tag = nbtdata;
+			isFluid = false;
+		}
+		public ItemResourceTracker(FluidStack resource, int required)
+		{
+			this.fluid = resource;
+			this.required = required;
+			isFluid = true;
+		}
+		public boolean isFluid;
+		public FluidStack fluid;
+		public int id;
+		public int meta;
+		@SuppressWarnings("unused")
+		public NBTTagCompound tag; // TODO: check NBT data appropriately. via recipe?
+		public int required;
+		public int found;
 	}
 }

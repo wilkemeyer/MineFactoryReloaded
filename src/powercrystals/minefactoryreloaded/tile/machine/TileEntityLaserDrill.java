@@ -46,6 +46,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 	{
 		super(Machine.LaserDrill);
 		_rand = new Random();
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -264,11 +265,5 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return false;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 }

@@ -23,6 +23,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	public TileEntityAutoBrewer()
 	{
 		super(Machine.AutoBrewer);
+		setManageSolids(true);
 	}
 	
 	private int getProcessSlot(int row) { return row * 5; }

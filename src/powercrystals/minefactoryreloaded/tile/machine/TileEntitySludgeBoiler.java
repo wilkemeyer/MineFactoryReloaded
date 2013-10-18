@@ -40,6 +40,8 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	{
 		super(Machine.SludgeBoiler);
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
+		setManageFluids(true);
+		setManageSolids(true);
 		
 		_rand = new Random();
 	}
@@ -168,12 +170,6 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 
 	@Override

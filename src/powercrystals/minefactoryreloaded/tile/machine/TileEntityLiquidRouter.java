@@ -37,6 +37,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			_bufferTanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 			_filledDirection[i] = false;
 		}
+		setManageFluids(true);
 	}
 	
 	@Override

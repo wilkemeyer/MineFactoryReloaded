@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import buildcraft.api.transport.IPipeTile.PipeType;
-
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
@@ -34,10 +32,5 @@ public class TileEntityRedNote extends TileEntityFactory
 		float f = (float)Math.pow(2.0D, (note - 12) / 12.0D);
 		
 		worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, "note." + _noteNames[instrument], 3.0F, f);
-	}
-
-	@Override
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		return ConnectOverride.DISCONNECT;
 	}
 }

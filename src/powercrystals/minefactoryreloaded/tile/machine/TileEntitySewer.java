@@ -45,6 +45,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
 		_areaManager = new HarvestAreaManager(this, 0, 1, 0);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		setManageFluids(true);
 	}
 	
 	@Override
@@ -206,12 +207,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	public int getSizeInventory()
 	{
 		return 1;
-	}
-	
-	@Override
-	public boolean manageFluids()
-	{
-		return true;
 	}
 
 	@Override

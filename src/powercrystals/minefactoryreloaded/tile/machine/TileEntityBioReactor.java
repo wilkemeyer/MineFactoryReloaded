@@ -37,6 +37,8 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	{
 		super(Machine.BioReactor);
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	public int getBurnTime()

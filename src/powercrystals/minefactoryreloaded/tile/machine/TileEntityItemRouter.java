@@ -18,12 +18,13 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory
 {
 	public TileEntityItemRouter()
 	{
-		super(Machine.ItemRouter);
+		this(Machine.ItemRouter);
 	}
 
 	public TileEntityItemRouter(Machine machine)
 	{
 		super(machine);
+		setManageSolids(true);
 	}
 
 	protected static final int[] _invOffsets = new int[] { 0, 0, 9, 18, 36, 27 };

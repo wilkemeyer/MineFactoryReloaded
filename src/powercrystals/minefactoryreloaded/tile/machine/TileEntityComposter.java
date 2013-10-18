@@ -21,12 +21,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityComposter extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	
-	
 	public TileEntityComposter()
 	{
 		super(Machine.Composter);
 		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
+		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	@Override
@@ -135,12 +135,6 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	public int getSizeInventory()
 	{
 		return 0;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return true;
 	}
 
 	@Override

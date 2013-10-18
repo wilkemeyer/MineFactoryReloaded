@@ -22,6 +22,7 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		super(Machine.Slaughterhouse);
 		_damageSource = new GrindingDamage("mfr.slaughterhouse", 2);
 		_tank2 = new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME);
+		setManageSolids(false);
 	}
 	
 	@Override
@@ -95,11 +96,5 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	public int getEnergyStoredMax()
 	{
 		return 16000;
-	}
-	
-	@Override
-	public boolean manageSolids()
-	{
-		return false;
 	}
 }

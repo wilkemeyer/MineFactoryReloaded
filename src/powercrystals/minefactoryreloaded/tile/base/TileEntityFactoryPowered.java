@@ -485,7 +485,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 
 	@Override
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		if (type == PipeType.POWER && this.machine.getActivationEnergyMJ() > 0)
+		if (type == PipeType.POWER && getMaxEnergyPerTick() > 0)
 			return ConnectOverride.CONNECT;
 		return super.overridePipeConnection(type, with);
 	}

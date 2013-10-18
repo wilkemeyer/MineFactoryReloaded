@@ -37,20 +37,6 @@ public class TileEntityBioFuelGenerator extends TileEntityLiquidGenerator
 	{
 		return 0;
 	}
-
-	@Override
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		switch(type)
-		{
-		case FLUID:
-		case POWER:
-			return ConnectOverride.CONNECT;
-		case STRUCTURE:
-			return ConnectOverride.DEFAULT;
-		default:
-			return ConnectOverride.DISCONNECT;
-		}
-	}
 	
 	@Override
 	public String getGuiBackground()
