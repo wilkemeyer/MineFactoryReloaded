@@ -403,6 +403,7 @@ public class Vanilla
 		registerOreDictLaserOre(50, "oreBauxite", null);
 		registerOreDictLaserOre(50, "oreTetrahedrite", null);
 		registerOreDictLaserOre(50, "oreCassiterite", null);
+		registerOreDictLaserOre(20, "oreFirestone", null);
 		
 		MFRRegistry.addLaserPreferredOre(15, new ItemStack(Block.oreCoal));
 		MFRRegistry.addLaserPreferredOre(3, new ItemStack(Block.oreDiamond));
