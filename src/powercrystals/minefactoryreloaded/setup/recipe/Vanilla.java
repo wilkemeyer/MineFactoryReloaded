@@ -244,7 +244,7 @@ public class Vanilla
 				" D ",
 				"RMR",
 				'G', "sheetPlastic",
-				'D', Block.dispenser,
+				'D', Block.dropper,
 				'R', Item.redstone,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -518,7 +518,7 @@ public class Vanilla
 				"DDD",
 				" M ",
 				'G', "sheetPlastic",
-				'D', Block.dropper,
+				'D', Block.dispenser,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		

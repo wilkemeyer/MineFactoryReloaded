@@ -38,6 +38,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		super(Machine.Unifier);
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 		_roundingCompensation = 1;
+		setManageSolids(true);
+		setManageFluids(true);
 	}
 
 	public static void updateUnifierLiquids()
