@@ -3,11 +3,14 @@ package powercrystals.minefactoryreloaded.modhelpers.vanilla;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
@@ -15,18 +18,23 @@ import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.RandomMob;
+import powercrystals.minefactoryreloaded.core.AutoEnchantmentHelper;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public class VanillaMobProvider implements IRandomMobProvider
@@ -46,10 +54,11 @@ public class VanillaMobProvider implements IRandomMobProvider
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityPig.class, world), 100));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCreeper.class, world), 25));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySquid.class, world), 30));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMinecartHopper.class, world), 15));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityOcelot.class, world), 20));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWolf.class, world), 20));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityBat.class, world), 35));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityHorse.class, world), 20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMinecartHopper.class, world), 15));
 		
 		EntityCreeper chargedCreeper = (EntityCreeper)MFRUtil.prepareMob(EntityCreeper.class, world);
 		NBTTagCompound creeperNBT = new NBTTagCompound(); 
@@ -71,6 +80,17 @@ public class VanillaMobProvider implements IRandomMobProvider
 		invisishroom.addPotionEffect(new PotionEffect(Potion.invisibility.id, 120 * 20));
 		mobs.add(new RandomMob(invisishroom, 5));
 		
+		EntityWolf invisiwolf = (EntityWolf)MFRUtil.prepareMob(EntityWolf.class, world);
+		invisiwolf.addPotionEffect(new PotionEffect(Potion.invisibility.id, 120 * 20));
+		invisiwolf.setAngry(true);
+		mobs.add(new RandomMob(invisiwolf, 5));
+
+		EntityTNTPrimed tntJockey = (EntityTNTPrimed)MFRUtil.prepareMob(EntityTNTPrimed.class, world);
+		EntityBat tntMount = (EntityBat)MFRUtil.prepareMob(EntityBat.class, world);
+		tntJockey.fuse = 120;
+		tntJockey.mountEntity(tntMount);
+		mobs.add(new RandomMob(tntMount, 2));
+		
 		EntitySkeleton skeleton1 = (EntitySkeleton)MFRUtil.prepareMob(EntitySkeleton.class, world);
 		EntitySkeleton skeleton2 = (EntitySkeleton)MFRUtil.prepareMob(EntitySkeleton.class, world);
 		EntitySkeleton skeleton3 = (EntitySkeleton)MFRUtil.prepareMob(EntitySkeleton.class, world);
@@ -89,6 +109,29 @@ public class VanillaMobProvider implements IRandomMobProvider
 		EntityCaveSpider creeperMount = (EntityCaveSpider)MFRUtil.prepareMob(EntityCaveSpider.class, world);
 		creeperJockey.mountEntity(creeperMount);
 		mobs.add(new RandomMob(creeperMount, 2));
+
+		EntityEnderman direBane = (EntityEnderman)MFRUtil.prepareMob(EntityEnderman.class, world);
+		direBane.addPotionEffect(new PotionEffect(Potion.regeneration.id, 120 * 20));
+		direBane.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 120 * 20));
+		direBane.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(120);
+		direBane.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.7);
+		direBane.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(15);
+		direBane.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32);
+		direBane.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(1);
+		direBane.stepHeight = 2;
+		EntityPlayer player = world.getPlayerEntityByName("direwolf20");
+		if (player != null)
+		{
+			direBane.setCustomNameTag("Bane of direwolf");
+			direBane.setAlwaysRenderNameTag(true);
+			direBane.func_110163_bv();
+			ItemStack armor = new ItemStack(Item.plateGold);
+			AutoEnchantmentHelper.addRandomEnchantment(direBane.getRNG(), armor, 60);
+			int i = EntityLiving.getArmorPosition(armor);
+			direBane.setCurrentItemOrArmor(i, armor);
+			direBane.setEquipmentDropChance(i, 2.0F);
+		}
+		mobs.add(new RandomMob(direBane, 1));
 		
 		return mobs;
 	}
