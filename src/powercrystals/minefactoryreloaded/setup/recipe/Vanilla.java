@@ -563,7 +563,7 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', "dyeBlue",
+			'I', new ItemStack(Item.dyePowder, 1, 4),
 			'P', "dustPlastic",
 			'R', Item.redstone,
 			'G', Item.goldNugget,
