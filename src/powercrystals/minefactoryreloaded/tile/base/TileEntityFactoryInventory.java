@@ -36,7 +36,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public String getInvName()
 	{
-		return _hasInvName ? _invName : StatCollector.translateToLocal(_machine.getInternalName() + ".name");
+		return _hasInvName ? _invName : StatCollector.
+				translateToLocal(_machine.getInternalName() + ".name");
 	}
 	
 	@Override
@@ -207,18 +208,14 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		_inventory = new ItemStack[getSizeInventory()];
 		for(int i = 0; i < nbttaglist.tagCount(); i++)
 		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 0xff;
+			NBTTagCompound slot = (NBTTagCompound)nbttaglist.tagAt(i);
+			int j = slot.getByte("Slot") & 0xff;
 			if(j >= 0 && j < _inventory.length)
 			{
-				ItemStack s = new ItemStack(0, 0, 0);
-				s.readFromNBT(nbttagcompound1);
-				_inventory[j] = s;
+				_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
 			}
 		}
 		onFactoryInventoryChanged();
-		
-		
 
 		if (nbttagcompound.hasKey("mTanks")) {
 			IFluidTank[] _tanks = getTanks();
@@ -244,7 +241,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			if (tank != null && nbttagcompound.hasKey("tankFluidName"))
 			{
 				int tankAmount = nbttagcompound.getInteger("tankAmount");
-				FluidStack fluid = FluidRegistry.getFluidStack(nbttagcompound.getString("tankFluidName"), tankAmount);
+				FluidStack fluid = FluidRegistry.
+						getFluidStack(nbttagcompound.getString("tankFluidName"), tankAmount);
 				if (fluid != null)
 				{
 					if(fluid.amount > tank.getCapacity())
@@ -256,14 +254,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				}
 				nbttagcompound.removeTag("tankFluidName");
 				nbttagcompound.removeTag("tankAmount");
-			}
-		}
-		
-		for(int i = 0; i < getSizeInventory(); i++)
-		{
-			if(_inventory[i] != null && _inventory[i].getItem() == null)
-			{
-				_inventory[i] = null;
 			}
 		}
 		
@@ -286,12 +276,13 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		{
 			if(_inventory[i] != null)
 			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte)i);
-				_inventory[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
+				NBTTagCompound slot = new NBTTagCompound();
+				slot.setByte("Slot", (byte)i);
+				_inventory[i].writeToNBT(slot);
+				nbttaglist.appendTag(slot);
 			}
 		}
+		nbttagcompound.setTag("Items", nbttaglist);
 		
 		IFluidTank[] _tanks = getTanks();
 		
@@ -317,8 +308,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			display.setString("Name", getInvName());
 			nbttagcompound.setCompoundTag("display", display);
 		}
-		
-		nbttagcompound.setTag("Items", nbttaglist);
 	}
 	
 	@Override

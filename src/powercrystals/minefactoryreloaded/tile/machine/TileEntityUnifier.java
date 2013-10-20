@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.oredict.OreDictionary;
 import powercrystals.core.oredict.OreDictTracker;
+import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUnifier;
@@ -67,7 +68,13 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if(!worldObj.isRemote)
+		if (_inventory[0] != null)
+			unifyInventory();
+	}
+	
+	private void unifyInventory()
+	{
+		if(worldObj != null && !worldObj.isRemote)
 		{
 			ItemStack output = null;
 			if(_inventory[0] != null)
@@ -107,23 +114,25 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		{
 			amt = Math.min(getInventoryStackLimit(), source.getMaxStackSize());
 		}
-		else if(source.itemID != _inventory[1].itemID || source.getItemDamage() != _inventory[1].getItemDamage())
+		else if(!UtilInventory.stacksEqual(source, _inventory[1], false))
 		{
 			return;
 		}
-		else if(source.getTagCompound() != null || _inventory[1].getTagCompound() != null)
+		else if(source.getTagCompound() != null | _inventory[1].getTagCompound() != null)
 		{
 			return;
 		}
 		else
 		{
-			amt = Math.min(_inventory[0].stackSize, _inventory[1].getMaxStackSize() - _inventory[1].stackSize);
+			amt = Math.min(_inventory[0].stackSize,
+					_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
 		}
 		
 		if(_inventory[1] == null)
 		{
 			_inventory[1] = source.copy();
-			_inventory[0].stackSize -= source.stackSize;
+			_inventory[1].stackSize = amt;
+			_inventory[0].stackSize -= amt;
 		}
 		else
 		{
@@ -156,6 +165,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 				}
 			}
 		}
+		unifyInventory();
 	}
 	
 	@Override
@@ -219,7 +229,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		}
 		else
 		{
-			return filled * resource.amount / converted.amount + (resource.amount & _roundingCompensation);
+			return filled * resource.amount / converted.amount +
+					(resource.amount & _roundingCompensation);
 		}
 	}
 	
@@ -239,7 +250,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			else if (_liquidxp.isFluidEqual(resource))
 			{
 				if(doFill) _roundingCompensation ^= (resource.amount & 1);
-				return new FluidStack(_essence.fluidID, resource.amount / 2 + (resource.amount & _roundingCompensation));
+				return new FluidStack(_essence.fluidID, 
+						resource.amount / 2 + (resource.amount & _roundingCompensation));
 			}
 		}
 		return null;

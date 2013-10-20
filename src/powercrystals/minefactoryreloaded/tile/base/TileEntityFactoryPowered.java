@@ -38,7 +38,8 @@ import buildcraft.api.transport.IPipeTile.PipeType;
  */
 
 @Implementable("cofh.api.energy.IEnergyHandler")
-public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory implements IPowerReceptor, IEnergySink, IElectrical
+public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
+												implements IPowerReceptor, IEnergySink, IElectrical
 {	
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
@@ -558,7 +559,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public float receiveElectricity(ForgeDirection from, ElectricityPack powerPack, boolean doReceive) {
+	public float receiveElectricity(ForgeDirection from, ElectricityPack powerPack, boolean doReceive)
+	{
 		int energyRequired = getEnergyRequired();
 		int buff = _ueBuffer;
 		buff += powerPack.getWatts();
@@ -580,7 +582,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide) {
+	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request,
+			boolean doProvide) {
 		return null;
 	}
 
