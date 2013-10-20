@@ -4,30 +4,24 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.MFRPerdition;
 import buildcraft.api.power.IPowerEmitter;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-public abstract class TileEntityGenerator extends TileEntityFactoryInventory implements IPowerReceptor, IPowerEmitter
+public abstract class TileEntityGenerator extends TileEntityFactoryInventory implements IPowerEmitter
 {
-	private PowerHandler _powerProvider;
-	
 	protected TileEntityGenerator(Machine machine)
 	{
 		super(machine);
-		_powerProvider = new PowerHandler(this, PowerHandler.Type.GATE);
-		_powerProvider.configure(0, 0, 0, 0);
-		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
 	}
 	
 	protected final int producePower(int energy)
 	{
 		BlockPosition ourbp = BlockPosition.fromFactoryTile(this);
 		
-		int mjS = energy / TileEntityFactoryPowered.energyPerMJ, mj = mjS;
+		float mjS = energy / (float)TileEntityFactoryPowered.energyPerMJ, mj = mjS;
 		
 		for(BlockPosition bp : ourbp.getAdjacent(true))
 		{
@@ -41,8 +35,9 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 			PowerReceiver pp = ipr.getPowerReceiver(bp.orientation.getOpposite());
 			if(pp != null && pp.powerRequest() > 0 && pp.getMinEnergyReceived() <= mj)
 			{
-				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - pp.getEnergyStored());
-				pp.receiveEnergy(_powerProvider.getPowerReceiver().getType(), mjUsed, bp.orientation.getOpposite());
+				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj),
+						pp.getMaxEnergyStored() - pp.getEnergyStored());
+				pp.receiveEnergy(PowerHandler.Type.GATE, mjUsed, bp.orientation.getOpposite());
 				
 				mj -= mjUsed;
 				if(mj <= 0)
@@ -55,17 +50,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory imp
 		energy -= mjS - mj;
 		
 		return energy;
-	}
-	
-	@Override
-	public PowerReceiver getPowerReceiver(ForgeDirection side)
-	{
-		return _powerProvider.getPowerReceiver();
-	}
-	
-	@Override
-	public void doWork(PowerHandler workProvider)
-	{
 	}
 
 	@Override

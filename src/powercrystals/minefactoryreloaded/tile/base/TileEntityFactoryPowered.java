@@ -47,9 +47,10 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	private int _energyStored;
 	private int _maxEnergyStored;
-	protected int _energyActivation;
+	private int _maxEnergyTick;
+	private int _energyRequiredThisTick = 0;
 	
-	protected int _energyRequiredThisTick = 0;
+	private int _energyActivation;
 	
 	private int _workDone;
 	
@@ -78,14 +79,15 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	protected TileEntityFactoryPowered(Machine machine)
 	{
-		this(machine, machine.getActivationEnergyMJ());
+		this(machine, machine.getActivationEnergy());
 	}
 	
-	protected TileEntityFactoryPowered(Machine machine, int activationCostMJ)
+	protected TileEntityFactoryPowered(Machine machine, int activationCost)
 	{
 		super(machine);
 		_maxEnergyStored = machine.getMaxEnergyStorage();
-		_energyActivation = activationCostMJ * energyPerMJ;
+		_energyActivation = activationCost;
+		_maxEnergyTick = Math.min(activationCost * 5, 1000);
 		_powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
 		configurePowerProvider();
 		setIsActive(false);
@@ -95,10 +97,11 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	protected void configurePowerProvider()
 	{
-		int activation = getMaxEnergyPerTick() / energyPerMJ;
-		int maxReceived = getMaxEnergyPerTickAdjusted() / energyPerMJ;
-		_powerProvider.configure(activation < 10 ? 1 : 10, maxReceived, 1, 1000);
-		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
+		int activation = getActivationEnergy() / energyPerMJ;
+		int maxReceived = getMaxEnergyPerTick() / energyPerMJ;
+		_powerProvider.configure(activation < 10 ? 0.1f : 10, maxReceived,
+				0.1f, getMaxEnergyPerTick());
+		_powerProvider.configurePowerPerdition(0, 0);
 	}
 	
 	@Override
@@ -123,29 +126,10 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			_isAddedToIC2EnergyNet = true;
 		}
 		
-		int energyRequired = Math.min(getEnergyStoredMax() - getEnergyStored(), getMaxEnergyPerTick());
-		
-		if (energyRequired > 0)
-		{
-			PowerHandler pp = _powerProvider; 
-			bcpower: if(pp != null)
-			{
-				int mjRequired = energyRequired / energyPerMJ;
-				if (mjRequired <= 0) break bcpower;
-				
-				pp.update();
-				
-				if(pp.useEnergy(0, mjRequired, false) > 0)
-				{
-					int mjGained = (int)(pp.useEnergy(0, mjRequired, true) * energyPerMJ);
-					_energyStored += mjGained;
-					energyRequired -= mjGained;
-				}
-			}
-		}
+		int energyRequired = Math.min(getEnergyStoredMax() - getEnergyStored(), getActivationEnergy());
 		
 		_energyRequiredThisTick = Math.max(_energyRequiredThisTick + energyRequired,
-				getMaxEnergyPerTickAdjusted());
+				getMaxEnergyPerTick());
 		
 		setIsActive(_energyStored >= _energyActivation * 2);
 		
@@ -307,14 +291,14 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		}
 	}
 	
-	public int getMaxEnergyPerTick()
+	public int getActivationEnergy()
 	{
 		return _energyActivation;
 	}
 	
-	public int getMaxEnergyPerTickAdjusted()
+	public int getMaxEnergyPerTick()
 	{
-		return Math.min(_energyActivation * 5, 1000);
+		return _maxEnergyTick;
 	}
 	
 	public int getEnergyStored()
@@ -478,19 +462,37 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	// BC methods
 	
 	@Override
-	public PowerReceiver getPowerReceiver(ForgeDirection side)
+	public final PowerReceiver getPowerReceiver(ForgeDirection side)
 	{
-		return _powerProvider.getPowerReceiver();
+		if (getEnergyRequired() > 0)
+		{
+			_powerProvider.configure(_powerProvider.getMinEnergyReceived(),
+					getEnergyRequired() * energyPerMJ, 0.1f, getMaxEnergyPerTick() * energyPerMJ);
+			return _powerProvider.getPowerReceiver();
+		}
+		_powerProvider.configure(0, 0, 1, 1000);
+		return null;
 	}
 	
 	@Override
-	public final void doWork(PowerHandler workProvider)
+	public final void doWork(PowerHandler pp)
 	{
+		bcpower: if(pp != null)
+		{
+			float mjRequired = getEnergyRequired() / (float)energyPerMJ;
+			if (mjRequired <= 0) break bcpower;
+			
+			if(pp.useEnergy(0, mjRequired, false) > 0)
+			{
+				int energyGained = (int)(pp.useEnergy(0, mjRequired, true) * energyPerMJ);
+				storeEnergy(energyGained);
+			}
+		}
 	}
 
 	@Override
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		if (type == PipeType.POWER && getMaxEnergyPerTick() > 0)
+		if (type == PipeType.POWER && getActivationEnergy() > 0)
 			return ConnectOverride.CONNECT;
 		return super.overridePipeConnection(type, with);
 	}
