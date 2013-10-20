@@ -49,10 +49,9 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	@Override
 	protected void configurePowerProvider()
 	{
-		int activation = getActivationEnergy() / energyPerMJ;
-		int maxReceived = Math.min(activation * 20, 1000);
-		_powerProvider.configure(10, maxReceived, 1, 1000);
-		_powerProvider.setPerdition(MFRPerdition.DEFAULT);
+		super.configurePowerProvider();
+		_powerProvider.configure(10, _powerProvider.getMaxEnergyReceived(),
+				_powerProvider.getActivationEnergy(), _powerProvider.getMaxEnergyStored());
 	}
 	
 	@Override

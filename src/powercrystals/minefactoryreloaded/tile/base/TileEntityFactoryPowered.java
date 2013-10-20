@@ -22,7 +22,6 @@ import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler.PerditionCalculator;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
@@ -588,16 +587,5 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public float getProvide(ForgeDirection direction) {
 		return 0;
-	}
-	
-	// BC PerditionCalculator compat
-	public static class MFRPerdition extends PerditionCalculator
-	{
-		public static final MFRPerdition DEFAULT = new MFRPerdition();
-		@Override
-		public float applyPerdition(PowerHandler powerHandler, float current, long ticksPassed)
-		{
-			return current;
-		}
 	}
 }
