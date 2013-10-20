@@ -28,7 +28,7 @@ public class AppliedEnergistics
 		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
 				"powercrystals.minefactoryreloaded.tile.base.TileEntityFactory");
 		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
-				"powercrystals.minefactoryreloaded.tile.conveyer.TileEntityConveyor");
+				"powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor");
 		try
 		{
 			ItemStack quartzOre = (ItemStack)Class.forName("appeng.api.Blocks").getField("blkQuartzOre").get(null);
