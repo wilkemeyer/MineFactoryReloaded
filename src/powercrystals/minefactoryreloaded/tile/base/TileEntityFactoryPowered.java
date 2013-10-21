@@ -577,18 +577,21 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public float getRequest(ForgeDirection direction) {
+	public float getRequest(ForgeDirection direction)
+	{
 		return Math.max(getEnergyRequired() * wPerEnergy, 0);
 	}
 
 	@Override
 	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request,
-			boolean doProvide) {
+			boolean doProvide)
+	{
 		return null;
 	}
 
 	@Override
-	public float getProvide(ForgeDirection direction) {
+	public float getProvide(ForgeDirection direction)
+	{
 		return 0;
 	}
 }

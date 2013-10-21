@@ -141,10 +141,15 @@ public class Machine
 		_meta = meta;
 		_machineIndex = _meta | (_blockIndex << 4);
 		
+		if (_meta > 15)
+		{
+			throw new IllegalArgumentException("Maximum meta value for machines is 15");
+		}
+		
 		if (_machineMappings.containsKey(_machineIndex))
 		{
 			throw new IllegalArgumentException("Machine with index " + blockIndex + " and meta " +
-												_meta + " already exists.");
+												meta + " already exists.");
 		}
 				
 		_name = name;
