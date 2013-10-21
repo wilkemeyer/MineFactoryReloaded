@@ -149,7 +149,9 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	
 	public ForgeDirection getDropDirection()
 	{
-		return getDirectionFacing().getOpposite();
+		if (canRotate())
+			return getDirectionFacing().getOpposite();
+		return ForgeDirection.UP;
 	}
 	
 	public boolean isActive()

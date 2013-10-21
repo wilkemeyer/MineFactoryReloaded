@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomItem;
-import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.random.WeightedRandomItemStack;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -106,7 +105,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 		while(_workStored >= _workStoredMax)
 		{
 			_workStored -= _workStoredMax;
-			UtilInventory.dropStack(this, getRandomDrop(), ForgeDirection.UP);
+			doDrop(getRandomDrop());
 		}
 	}
 	

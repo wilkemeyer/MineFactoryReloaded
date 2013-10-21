@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -14,6 +17,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.core.position.BlockPosition;
+import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -24,6 +28,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 {
 	protected String _invName;
 	protected boolean _hasInvName = false;
+	
+	protected List<ItemStack> failedDrops = null;
+	private List<ItemStack> missedDrops = new ArrayList<ItemStack>();
+	
+	protected int _failedDropTicksMax = 20;
+	private int _failedDropTicks = 0;
 	
 	protected FluidTank _tank;
 	
@@ -109,6 +119,74 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			for (IFluidTank tank : getTanks())
 				MFRLiquidMover.pumpLiquid(tank, this);
 		}
+		
+		if (failedDrops != null)
+		{
+			if (_failedDropTicks < _failedDropTicksMax)
+			{
+				_failedDropTicks++;
+				return;
+			}
+			_failedDropTicks = 0;
+			if (!doDrop(failedDrops))
+			{
+				return;
+			}
+			failedDrops = null;
+		}
+	}
+
+	public boolean doDrop(ItemStack drop)
+	{
+		drop = UtilInventory.dropStack(this, drop, this.getDropDirection());
+		if (drop != null && drop.stackSize > 0)
+		{
+			if (failedDrops == null)
+			{
+				failedDrops = new ArrayList<ItemStack>();
+			}
+			failedDrops.add(drop);
+		}
+		return true;
+	}
+	
+	public boolean doDrop(List<ItemStack> drops)
+	{
+		if (drops == null || drops.size() <= 0)
+		{
+			return true;
+		}
+		List<ItemStack> missed = missedDrops;
+		missed.clear();
+		for (int i = drops.size(); i --> 0; )
+		{
+			ItemStack dropStack = drops.get(i);
+			dropStack = UtilInventory.dropStack(this, dropStack, this.getDropDirection());
+			if (dropStack != null && dropStack.stackSize > 0)
+			{
+				missed.add(dropStack);
+			}
+		}
+		
+		if (missed.size() != 0)
+		{
+			if (drops != failedDrops)
+			{
+				if (failedDrops == null)
+				{
+					failedDrops = new ArrayList<ItemStack>();
+				}
+				failedDrops.addAll(missed);
+			}
+			else
+			{
+				failedDrops.clear();
+				failedDrops.addAll(missed);
+			}
+			return false;
+		}
+		
+		return true;
 	}
 	
 	protected ItemStack[] _inventory;
@@ -201,10 +279,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
-		NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+		super.readFromNBT(tag);
+		NBTTagList nbttaglist = tag.getTagList("Items");
 		_inventory = new ItemStack[getSizeInventory()];
 		for(int i = 0; i < nbttaglist.tagCount(); i++)
 		{
@@ -217,10 +295,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		onFactoryInventoryChanged();
 
-		if (nbttagcompound.hasKey("mTanks")) {
+		if (tag.hasKey("mTanks")) {
 			IFluidTank[] _tanks = getTanks();
 			
-			nbttaglist = nbttagcompound.getTagList("mTanks");
+			nbttaglist = tag.getTagList("mTanks");
 			for(int i = 0; i < nbttaglist.tagCount(); i++)
 			{
 				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
@@ -238,11 +316,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		else
 		{
 			IFluidTank tank = _tank;
-			if (tank != null && nbttagcompound.hasKey("tankFluidName"))
+			if (tank != null && tag.hasKey("tankFluidName"))
 			{
-				int tankAmount = nbttagcompound.getInteger("tankAmount");
+				int tankAmount = tag.getInteger("tankAmount");
 				FluidStack fluid = FluidRegistry.
-						getFluidStack(nbttagcompound.getString("tankFluidName"), tankAmount);
+						getFluidStack(tag.getString("tankFluidName"), tankAmount);
 				if (fluid != null)
 				{
 					if(fluid.amount > tank.getCapacity())
@@ -252,25 +330,44 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 					((FluidTank)tank).setFluid(fluid);
 				}
-				nbttagcompound.removeTag("tankFluidName");
-				nbttagcompound.removeTag("tankAmount");
+				tag.removeTag("tankFluidName");
+				tag.removeTag("tankAmount");
 			}
 		}
 		
-		if (nbttagcompound.hasKey("display"))
+		if (tag.hasKey("display"))
 		{
-			NBTTagCompound display = nbttagcompound.getCompoundTag("display");
+			NBTTagCompound display = tag.getCompoundTag("display");
 			if (display.hasKey("Name"))
 			{
 				this.setInvName(display.getString("Name"));
 			}
 		}
+
+		if (tag.hasKey("DropItems"))
+		{
+			List<ItemStack> drops = new ArrayList<ItemStack>();
+			nbttaglist = tag.getTagList("DropItems");
+			for (int i = nbttaglist.tagCount(); i --> 0; )
+			{
+				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+				ItemStack item = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+				if (item != null && item.stackSize > 0)
+				{
+					drops.add(item);
+				}
+			}
+			if (drops.size() != 0)
+			{
+				failedDrops = drops;
+			}
+		}
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeToNBT(tag);
 		NBTTagList nbttaglist = new NBTTagList();
 		for(int i = 0; i < _inventory.length; i++)
 		{
@@ -282,7 +379,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				nbttaglist.appendTag(slot);
 			}
 		}
-		nbttagcompound.setTag("Items", nbttaglist);
+		tag.setTag("Items", nbttaglist);
 		
 		IFluidTank[] _tanks = getTanks();
 		
@@ -300,13 +397,25 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			}
 		}
 		
-		nbttagcompound.setTag("mTanks", tanks);
+		tag.setTag("mTanks", tanks);
 		
 		if (this.isInvNameLocalized())
 		{
 			NBTTagCompound display = new NBTTagCompound();
 			display.setString("Name", getInvName());
-			nbttagcompound.setCompoundTag("display", display);
+			tag.setCompoundTag("display", display);
+		}
+		
+		if (failedDrops != null)
+		{
+			nbttaglist = new NBTTagList();
+			for (ItemStack item : failedDrops)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				item.writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
+			}
+			tag.setTag("DropItems", nbttaglist);
 		}
 	}
 	
