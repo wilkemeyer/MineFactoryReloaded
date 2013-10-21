@@ -189,6 +189,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return true;
 	}
 	
+	public boolean hasDrops()
+	{
+		return failedDrops != null;
+	}
+	
 	protected ItemStack[] _inventory;
 	
 	@Override

@@ -37,8 +37,12 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 		{
 			IronEngineFuel.addFuel("biofuel", 4, 15000);
 			
-			ActionManager.registerActionProvider(this);
+			isBackstuffed = new TriggerIsBackstuffed();
+			isRunning = new TriggerIsRunning();
+			isReversed = new TriggerIsReversed();
+			
 			ActionManager.registerTriggerProvider(this);
+			ActionManager.registerActionProvider(this);
 		}
 		catch (Throwable _)
 		{
@@ -54,15 +58,32 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 		return null;
 	}
 
+	private static MFRBCTrigger isBackstuffed;
+	private static MFRBCTrigger isRunning;
+	private static MFRBCTrigger isReversed;
+
 	@Override
 	public LinkedList<ITrigger> getNeighborTriggers(Block block, TileEntity tile)
 	{
-		return null;
+		LinkedList<ITrigger> triggers = new LinkedList<ITrigger>();
+		addTrigger(triggers, isBackstuffed, tile);
+		addTrigger(triggers, isRunning, tile);
+		addTrigger(triggers, isReversed, tile);
+		return triggers;
+	}
+	
+	private void addTrigger(LinkedList<ITrigger> triggers, MFRBCTrigger t, TileEntity tile)
+	{
+		if (t.canApplyTo(tile))
+			triggers.add(t);
 	}
 
 	@Override
 	public LinkedList<IAction> getNeighborActions(Block block, TileEntity tile)
 	{
+		/* TODO:
+		 * Conveyor: reverse
+		 */
 		return null;
 	}
 }
