@@ -1196,18 +1196,6 @@ public class Vanilla
 			'I', Block.fenceIron
 				} );
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetLauncherItem, 1), new Object[]
-				{
-			"PGP",
-			"LGL",
-			"IRI",
-			'P', "sheetPlastic",
-			'L', Item.glowstone,
-			'G', Item.gunpowder,
-			'I', Item.ingotIron,
-			'R', Item.redstone,
-				} ));
-		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryHammerItem, 1), new Object[]
 				{
 			"PPP",
@@ -1301,18 +1289,13 @@ public class Vanilla
 		}
 		_registeredVanillaImprovements = true;
 		
-		FurnaceRecipes.smelting().addSmelting(MineFactoryReloadedCore.rawRubberItem.itemID, 0, new ItemStack(MineFactoryReloadedCore.rubberBarItem), 0.1F);
-		FurnaceRecipes.smelting().addSmelting(MineFactoryReloadedCore.rubberWoodBlock.blockID, 0, new ItemStack(Item.coal, 1, 1), 0.1F);
+		FurnaceRecipes.smelting().addSmelting(MineFactoryReloadedCore.rawRubberItem.itemID, 0,
+				new ItemStack(MineFactoryReloadedCore.rubberBarItem), 0.1F);
+		FurnaceRecipes.smelting().addSmelting(MineFactoryReloadedCore.rubberWoodBlock.blockID, 0,
+				new ItemStack(Item.coal, 1, 1), 0.1F);
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(Block.planks, 3, 3), new ItemStack(MineFactoryReloadedCore.rubberWoodBlock));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 4), new Object[]
-				{
-			"R",
-			"S",
-			'R', MineFactoryReloadedCore.rawRubberItem,
-			'S', "stickWood",
-				} ));
+		GameRegistry.addShapelessRecipe(new ItemStack(Block.planks, 3, 3),
+				new ItemStack(MineFactoryReloadedCore.rubberWoodBlock));
 		
 		GameRegistry.addRecipe(new ItemStack(Block.pistonStickyBase), new Object[]
 				{
@@ -1343,13 +1326,46 @@ public class Vanilla
 			Item.glassBottle
 				} );
 		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 4), new Object[]
+				{
+			"R",
+			"S",
+			'R', MineFactoryReloadedCore.rawRubberItem,
+			'S', "stickWood",
+				} ));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 1), new Object[]
 				{
 			"C",
 			"S",
-			'C', MineFactoryReloadedCore.sugarCharcoalItem,
+			'C', "itemCharcoalSugar",
 			'S', "stickWood",
 				} ));
+		
+		for (ItemStack torchStone : OreDictionary.getOres("torchStone"))
+		{
+			if (torchStone == null)
+				continue;
+			torchStone = torchStone.copy();
+			torchStone.stackSize = 4;
+			GameRegistry.addRecipe(new ShapedOreRecipe(torchStone, new Object[]
+					{
+				"R",
+				"S",
+				'R', MineFactoryReloadedCore.rawRubberItem,
+				'S', "stoneRod",
+					} ));
+			torchStone = torchStone.copy();
+			torchStone.stackSize = 1;
+			
+			GameRegistry.addRecipe(new ShapedOreRecipe(torchStone, new Object[]
+					{
+				"C",
+				"S",
+				'C', "itemCharcoalSugar",
+				'S', "stoneRod",
+					} ));
+		}
 	}
 	
 	protected void registerRails()
@@ -1408,6 +1424,18 @@ public class Vanilla
 			return;
 		}
 		_registeredGuns = true;
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetLauncherItem, 1), new Object[]
+				{
+			"PGP",
+			"LGL",
+			"IRI",
+			'P', "sheetPlastic",
+			'L', Item.glowstone,
+			'G', Item.gunpowder,
+			'I', Item.ingotIron,
+			'R', Item.redstone,
+				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunItem), new Object[]
 				{
