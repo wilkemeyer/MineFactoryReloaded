@@ -135,7 +135,7 @@ public class Machine
 	
 	private Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName,
-			int activationEnergyMJ, int energyStoredMax)
+			int activationEnergy, int energyStoredMax)
 	{
 		_blockIndex = blockIndex;
 		_meta = meta;
@@ -157,7 +157,7 @@ public class Machine
 		_tileEntityName = tileEntityName;
 		_tileEntityClass = tileEntityClass;
 		
-		_activationEnergy = activationEnergyMJ;
+		_activationEnergy = activationEnergy;
 		_energyStoredMax = energyStoredMax;
 		
 		_machineMappings.put(_machineIndex, this);
