@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.item;
 
 import buildcraft.api.tools.IToolWrench;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -46,4 +47,32 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 	{
 		return true;
 	}
+
+    @Override
+	public boolean canHarvestBlock(Block par1Block)
+    {
+    	return par1Block != null && 
+    			par1Block.blockMaterial == Material.rock |
+    			par1Block.blockMaterial == Material.iron |
+    			par1Block.blockMaterial == Material.wood |
+    			par1Block.blockMaterial == Material.glass | 
+    			par1Block.blockMaterial == Material.anvil |
+    			par1Block.blockMaterial == Material.piston |
+    			par1Block.blockMaterial == Material.plants |
+    			par1Block.blockMaterial == Material.pumpkin |
+    			par1Block.blockMaterial == Material.circuits;
+    }
+
+    @Override
+	public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
+    {
+        return canHarvestBlock(par2Block) ? 1.35f : 0.15f;
+    }
+	
+    @Override
+    public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player)
+    {
+    	Block block = Block.blocksList[player.worldObj.getBlockId(x, y, z)];
+    	return block == null || block.getBlockHardness(player.worldObj, x, y, z) > 2.9f;
+    }
 }
