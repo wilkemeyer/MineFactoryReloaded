@@ -78,6 +78,25 @@
         "description": "Compatibility addon for BackTools"
     }, 
     {
+        "name": "MFR Compat: BuildCraft", 
+        "parent": "MineFactoryReloaded", 
+        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
+        "logoFile": "", 
+        "updateUrl": "", 
+        "credits": "All the contributors", 
+        "version": "2.7.2B1", 
+        "modid": "MineFactoryReloaded|CompatBuildCraft", 
+        "authors": [
+            "PowerCrystals"
+        ], 
+        "mcversion": "1.6.2", 
+        "screenshots": [], 
+        "dependencies": [
+            "MineFactoryReloaded"
+        ], 
+        "description": "Compatibility addon for BuildCraft"
+    }, 
+    {
         "name": "MFR Compat: Chococraft", 
         "parent": "MineFactoryReloaded", 
         "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
