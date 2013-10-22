@@ -70,6 +70,10 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
     @Override
 	public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
+    	if (par2Block == null)
+    		return 0;
+    	if (par2Block.blockMaterial == Material.pumpkin)
+    		return 15f;
         return canHarvestBlock(par2Block) ? 1.35f : 0.15f;
     }
 	
