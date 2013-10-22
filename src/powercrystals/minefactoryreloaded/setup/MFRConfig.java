@@ -120,9 +120,6 @@ public class MFRConfig
 	public static Property treeSearchMaxHorizontal;
 	public static Property verticalHarvestSearchMaxVertical;
 	public static Property enableBonemealFertilizing;
-	public static Property enableCheapDSU;
-	public static Property craftSingleDSU;
-	public static Property enableMossyCobbleRecipe;
 	public static Property conveyorCaptureNonItems;
 	public static Property conveyorNeverCapturesPlayers;
 	public static Property conveyorNeverCapturesTCGolems;
@@ -141,6 +138,14 @@ public class MFRConfig
 	
 	public static Property enableSlipperyRoads;
 	
+	public static Property enableCheapDSU;
+	public static Property craftSingleDSU;
+	public static Property enableMossyCobbleRecipe;
+	public static Property enablePortaSpawner;
+	public static Property enableSyringes;
+	public static Property enableGuns;
+	public static Property enableNetLauncher;
+	
 	public static Property redNetConnectionBlacklist;
 	
 	public static Property redNetDebug;
@@ -157,11 +162,6 @@ public class MFRConfig
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
 	
-	public static Property enablePortaSpawner;
-	public static Property enableSyringes;
-	public static Property enableGuns;
-	public static Property enableNetLauncher;
-	
 	// recipes config
 	public static Property vanillaRecipes;
 	public static Property thermalExpansionRecipes;
@@ -177,10 +177,13 @@ public class MFRConfig
 		c.save();
 	}
 	
+	private static Configuration config;
+	
 	public static void loadCommonConfig(File configFile)
 	{
 		Configuration c = new Configuration(configFile);
 		c.load();
+		config = c;
 		machineBlock0Id = c.getBlock("ID.MachineBlock", 3120);
 		conveyorBlockId = c.getBlock("ID.ConveyorBlock", 3121);
 		rubberWoodBlockId = c.getBlock("ID.RubberWood", 3122);
@@ -279,9 +282,9 @@ public class MFRConfig
 		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
 		treeSearchMaxHorizontal = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxHoriztonal", 8);
 		treeSearchMaxHorizontal.comment = "When searching for parts of a tree, how far out to the sides (radius) to search";
-		treeSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxVertical", 40);
+		treeSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxVertical", 80);
 		treeSearchMaxVertical.comment = "When searching for parts of a tree, how far up to search";
-		verticalHarvestSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.StackingBlockMaxVertical", 3);
+		verticalHarvestSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.StackingBlockMaxVertical", 5);
 		verticalHarvestSearchMaxVertical.comment = "How far upward to search for members of \"stacking\" blocks, like cactus and sugarcane";
 		passengerRailSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.PassengerRailMaxVertical", 2);
 		passengerRailSearchMaxVertical.comment = "When searching for players or dropoff locations, how far up to search";
@@ -293,12 +296,6 @@ public class MFRConfig
 		mfrLakeWorldGen.comment = "Whether or not to generate MFR lakes during map generation";
 		enableBonemealFertilizing = c.get(Configuration.CATEGORY_GENERAL, "Fertilizer.EnableBonemeal", false);
 		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
-		enableCheapDSU = c.get(Configuration.CATEGORY_GENERAL, "DSU.EnableCheaperRecipe", false);
-		enableCheapDSU.comment = "If true, DSU can be built out of chests instead of ender pearls. Does nothing if the DSU recipe is disabled.";
-		craftSingleDSU = c.get(Configuration.CATEGORY_GENERAL, "DSU.CraftSingle", false);
-		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, GT recipes, etc).";
-		enableMossyCobbleRecipe = c.get(Configuration.CATEGORY_GENERAL, "EnableMossyCobbleRecipe", true);
-		enableMossyCobbleRecipe.comment = "If true, mossy cobble can be crafted.";
 		conveyorCaptureNonItems = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.CaptureNonItems", true);
 		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
 		conveyorNeverCapturesPlayers = c.get(Configuration.CATEGORY_GENERAL, "Conveyor.NeverCapturePlayers", false);
@@ -354,6 +351,15 @@ public class MFRConfig
 		gregTechRecipes = c.get("RecipeSets", "EnableGregTechRecipes", false);
 		gregTechRecipes.comment = "If true, MFR will register its GregTech-based recipes.";
 		
+		enableCheapDSU = loadLegacy(Configuration.CATEGORY_ITEM, "Recipe.CheaperDSU",
+				Configuration.CATEGORY_GENERAL, "DSU.EnableCheaperRecipe", false);
+		enableCheapDSU.comment = "If true, DSU can be built out of chests instead of ender pearls. Does nothing if the DSU recipe is disabled.";
+		craftSingleDSU = loadLegacy(Configuration.CATEGORY_ITEM, "Recipe.SingleDSU",
+				Configuration.CATEGORY_GENERAL, "DSU.CraftSingle", false);
+		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, GT recipes, etc).";
+		enableMossyCobbleRecipe = loadLegacy(Configuration.CATEGORY_ITEM, "Recipe.MossyCobble",
+				Configuration.CATEGORY_GENERAL, "EnableMossyCobbleRecipe", false);
+		enableMossyCobbleRecipe.comment = "If true, mossy cobble can be crafted.";
 		enablePortaSpawner = c.get(Configuration.CATEGORY_ITEM, "Recipe.PortaSpawner", true);
 		enablePortaSpawner.comment = "If true, the PortaSpawner will be craftable.";
 		enableSyringes = c.get(Configuration.CATEGORY_ITEM, "Recipe.Syringes", true);
@@ -373,6 +379,18 @@ public class MFRConfig
 		dropFilledContainers.comment = "If true, when you have no empty slots in your inventory, you will continue filling buckets from tanks and drop them on the ground.";
 		
 		c.save();
+	}
+	
+	private static Property loadLegacy(String category, String name,
+						String oldCategory, String oldName, boolean def)
+	{
+		Property r = null;
+		
+		if (config.hasKey(oldCategory, oldName))
+				r = config.get(oldCategory, oldName, def);
+		
+		r = config.get(category, name, r != null ? r.getBoolean(def) : def);
+		return r;
 	}
 	
 }
