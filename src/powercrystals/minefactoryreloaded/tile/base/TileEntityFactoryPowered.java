@@ -88,8 +88,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		int activation = getActivationEnergy() / energyPerMJ;
 		int maxReceived = getMaxEnergyPerTick() / energyPerMJ;
-		_powerProvider.configure(activation < 10 ? 0.1f : 10, maxReceived,
-				0.1f, getMaxEnergyPerTick());
+		_powerProvider.configure(activation < 100 ? 0.1f : 10, maxReceived,
+				0.1f, 1000);
 		_powerProvider.configurePowerPerdition(0, 0);
 	}
 	
@@ -362,10 +362,11 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		if (getEnergyRequired() > 0)
 		{
 			_powerProvider.configure(_powerProvider.getMinEnergyReceived(),
-					getEnergyRequired() * energyPerMJ, 0.1f, getMaxEnergyPerTick() * energyPerMJ);
+					getEnergyRequired() * energyPerMJ, 0.1f, 1000);
 			return _powerProvider.getPowerReceiver();
 		}
-		_powerProvider.configure(0, 0, 1, 1000);
+		_powerProvider.configure(_powerProvider.getMinEnergyReceived(),
+				getEnergyRequired() * energyPerMJ, 1, 0);
 		return null;
 	}
 	
@@ -379,7 +380,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			
 			if(pp.useEnergy(0, mjRequired, false) > 0)
 			{
-				int energyGained = (int)(pp.useEnergy(0, mjRequired, true) * energyPerMJ);
+				int energyGained = (int)((pp.useEnergy(0, mjRequired, true) + 0.001) * energyPerMJ);
 				storeEnergy(energyGained);
 			}
 		}
