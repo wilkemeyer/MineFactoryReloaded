@@ -10,6 +10,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.modhelpers.forestry.fertilizer.FertilizerForestry;
 import powercrystals.minefactoryreloaded.modhelpers.forestry.leaves.FertilizableForestryLeaves;
 import powercrystals.minefactoryreloaded.modhelpers.forestry.leaves.FruitForestry;
+import powercrystals.minefactoryreloaded.modhelpers.forestry.leaves.HarvestableLeaves;
 import powercrystals.minefactoryreloaded.modhelpers.forestry.trees.FertilizableForestryTree;
 import powercrystals.minefactoryreloaded.modhelpers.forestry.trees.HarvestableForestryTree;
 import powercrystals.minefactoryreloaded.modhelpers.forestry.trees.PlantableForestryTree;
@@ -65,6 +66,7 @@ public class Forestry
 					Block leaves = ((Block)f.get(null));
 					if(leaves != null)
 					{
+						MFRRegistry.registerHarvestable(new HarvestableLeaves(leaves.blockID));
 						MFRRegistry.registerFruit(new FruitForestry(leaves.blockID));
 						MFRRegistry.registerFertilizable(new FertilizableForestryLeaves(leaves.blockID));
 					}
