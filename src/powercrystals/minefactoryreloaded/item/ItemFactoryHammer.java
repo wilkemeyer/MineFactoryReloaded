@@ -56,11 +56,12 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 	public boolean canHarvestBlock(Block par1Block)
     {
     	return par1Block != null && 
-    			par1Block.blockMaterial == Material.rock |
+    			par1Block.blockMaterial == Material.cake |
     			par1Block.blockMaterial == Material.iron |
+    			par1Block.blockMaterial == Material.rock |
     			par1Block.blockMaterial == Material.wood |
-    			par1Block.blockMaterial == Material.glass | 
     			par1Block.blockMaterial == Material.anvil |
+    			par1Block.blockMaterial == Material.glass | 
     			par1Block.blockMaterial == Material.piston |
     			par1Block.blockMaterial == Material.plants |
     			par1Block.blockMaterial == Material.pumpkin |
