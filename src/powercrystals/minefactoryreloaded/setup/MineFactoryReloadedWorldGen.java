@@ -52,7 +52,7 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(128);
 				int lakeZ = z - 8 + random.nextInt(16);
-				new WorldGenLakesMeta(MineFactoryReloadedCore.sludgeLiquid.blockID, 70).generate(world, random, lakeX, lakeY, lakeZ);
+				new WorldGenLakesMeta(MineFactoryReloadedCore.sludgeLiquid.blockID, 0).generate(world, random, lakeX, lakeY, lakeZ);
 			}
 			rarity = MFRConfig.mfrLakeSewageRarity.getInt();
 			if(rarity > 0 && random.nextInt(rarity) == 0)
