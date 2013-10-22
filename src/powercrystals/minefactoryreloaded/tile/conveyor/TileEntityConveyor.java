@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.conveyor;
 
-import buildcraft.api.gates.IAction;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
@@ -218,7 +217,7 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 		nbtTagCompound.setInteger("dyeColor", _dye);
 		nbtTagCompound.setBoolean("isReversed", _isReversed);
 		nbtTagCompound.setBoolean("redNetActive", _conveyorActive);
-		nbtTagCompound.setBoolean("gateActive", _gateReversed);
+		nbtTagCompound.setBoolean("gateActive", _gateAllowsActive);
 		nbtTagCompound.setBoolean("redNetReversed", _rednetReversed);
 		nbtTagCompound.setBoolean("gateReversed", _gateReversed);
 	}
@@ -439,32 +438,6 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
     {
     	return false;
     }
-    
-    //IMachine
-	public boolean isActive()
-	{
-		return false;
-	}
-	
-	public boolean manageLiquids()
-	{
-		return false;
-	}
-	
-	public boolean manageSolids()
-	{
-		return true;
-	}
-	
-	public boolean allowActions()
-	{
-		return false;
-	}
-	
-	public boolean allowAction(IAction _)
-	{
-		return this.allowActions();
-	}
 	
 	// RedNet
 	public void onRedNetChanged(int value)
