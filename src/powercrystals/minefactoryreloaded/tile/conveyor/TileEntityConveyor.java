@@ -528,6 +528,8 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		if (type == PipeType.ITEM)
 			return ConnectOverride.CONNECT;
+		if (with == ForgeDirection.DOWN & type == PipeType.STRUCTURE)
+			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
 	}
 }
