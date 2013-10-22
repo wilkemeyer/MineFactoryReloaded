@@ -1,8 +1,12 @@
 package powercrystals.minefactoryreloaded.item;
 
+import com.google.common.collect.Multimap;
+
 import buildcraft.api.tools.IToolWrench;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -74,5 +78,14 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
     {
     	Block block = Block.blocksList[player.worldObj.getBlockId(x, y, z)];
     	return block == null || block.getBlockHardness(player.worldObj, x, y, z) > 2.9f;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public Multimap getItemAttributeModifiers()
+    {
+        Multimap multimap = super.getItemAttributeModifiers();
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", 1, 0));
+        return multimap;
     }
 }
