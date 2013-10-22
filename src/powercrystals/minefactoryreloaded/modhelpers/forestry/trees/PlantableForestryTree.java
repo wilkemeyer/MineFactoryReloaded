@@ -28,6 +28,7 @@ public class PlantableForestryTree implements IFactoryPlantable
 		}
 		catch(Throwable s)
 		{
+			s.printStackTrace();
 		}
 	}
 	
@@ -39,6 +40,7 @@ public class PlantableForestryTree implements IFactoryPlantable
 		}
 		catch(Throwable ex)
 		{
+			ex.printStackTrace();
 		}
 		return null;
 	}
@@ -53,6 +55,7 @@ public class PlantableForestryTree implements IFactoryPlantable
 		}
 		catch(Throwable stuff)
 		{
+			stuff.printStackTrace();
 		}
 	}
 	
@@ -117,6 +120,7 @@ public class PlantableForestryTree implements IFactoryPlantable
 				}
 				catch(Throwable TREE)
 				{
+					TREE.printStackTrace();
 				}
 			}
 		}
