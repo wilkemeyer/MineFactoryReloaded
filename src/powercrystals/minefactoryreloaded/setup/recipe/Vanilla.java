@@ -34,11 +34,13 @@ public class Vanilla
 		registerMachineUpgrades();
 		registerConveyors();
 		registerDecorative();
-		registerSyringes();
+		if (MFRConfig.enableSyringes.getBoolean(true))
+				registerSyringes();
 		registerMiscItems();
 		registerVanillaImprovements();
 		registerRails();
-		registerGuns();
+		if (MFRConfig.enableGuns.getBoolean(true))
+			registerGuns();
 		registerRedNet();
 		registerRedNetManual();
 	}
@@ -1196,6 +1198,19 @@ public class Vanilla
 			'I', Block.fenceIron
 				} );
 		
+		if (MFRConfig.enableNetLauncher.getBoolean(true))
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetLauncherItem, 1), new Object[]
+				{
+			"PGP",
+			"LGL",
+			"IRI",
+			'P', "sheetPlastic",
+			'L', Item.glowstone,
+			'G', Item.gunpowder,
+			'I', Item.ingotIron,
+			'R', Item.redstone,
+				} ));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryHammerItem, 1), new Object[]
 				{
 			"PPP",
@@ -1225,7 +1240,8 @@ public class Vanilla
 			'S', "stickWood",
 				} ));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.portaSpawnerItem), new Object[]
+		if (MFRConfig.enablePortaSpawner.getBoolean(true))
+			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.portaSpawnerItem), new Object[]
 				{
 			"GLG",
 			"DND",
@@ -1424,18 +1440,6 @@ public class Vanilla
 			return;
 		}
 		_registeredGuns = true;
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetLauncherItem, 1), new Object[]
-				{
-			"PGP",
-			"LGL",
-			"IRI",
-			'P', "sheetPlastic",
-			'L', Item.glowstone,
-			'G', Item.gunpowder,
-			'I', Item.ingotIron,
-			'R', Item.redstone,
-				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunItem), new Object[]
 				{

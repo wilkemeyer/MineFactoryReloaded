@@ -11,6 +11,8 @@ public class MFRConfig
 	public static Property spyglassRange;
 	
 	// common config
+	public static Property dropFilledContainers;
+	
 	public static Property machineBlock0Id;
 	public static Property machineBlock1Id;
 	public static Property machineBlock2Id;
@@ -155,7 +157,10 @@ public class MFRConfig
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
 	
-	public static Property dropFilledContainers;
+	public static Property enablePortaSpawner;
+	public static Property enableSyringes;
+	public static Property enableGuns;
+	public static Property enableNetLauncher;
 	
 	// recipes config
 	public static Property vanillaRecipes;
@@ -348,6 +353,15 @@ public class MFRConfig
 		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
 		gregTechRecipes = c.get("RecipeSets", "EnableGregTechRecipes", false);
 		gregTechRecipes.comment = "If true, MFR will register its GregTech-based recipes.";
+		
+		enablePortaSpawner = c.get(Configuration.CATEGORY_ITEM, "Recipe.PortaSpawner", true);
+		enablePortaSpawner.comment = "If true, the PortaSpawner will be craftable.";
+		enableSyringes = c.get(Configuration.CATEGORY_ITEM, "Recipe.Syringes", true);
+		enableSyringes.comment = "If true, the Syringes will be craftable.";
+		enableGuns = c.get(Configuration.CATEGORY_ITEM, "Recipe.Guns", true);
+		enableGuns.comment = "If true, the Guns will be craftable.";
+		enableNetLauncher = c.get(Configuration.CATEGORY_ITEM, "Recipe.NetLauncher", true);
+		enableNetLauncher.comment = "If true, the safarinet launcher will be craftable.";
 		
 		for(Machine machine : Machine.values())
 		{
