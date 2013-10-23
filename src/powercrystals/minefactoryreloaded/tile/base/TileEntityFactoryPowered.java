@@ -84,15 +84,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// local methods
 	
-	protected void configurePowerProvider()
-	{
-		int activation = getActivationEnergy() / energyPerMJ;
-		int maxReceived = getMaxEnergyPerTick() / energyPerMJ;
-		_powerProvider.configure(activation < 100 ? 0.1f : 10, maxReceived,
-				0.1f, 1000);
-		_powerProvider.configurePowerPerdition(0, 0);
-	}
-	
 	@Override
 	public void updateEntity()
 	{
@@ -356,17 +347,27 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// BC methods
 	
+	protected void configurePowerProvider()
+	{
+		int maxReceived = getMaxEnergyPerTick() / energyPerMJ;
+		_powerProvider.configure(getMinMJ(), maxReceived, 0.1f, 1000);
+		_powerProvider.configurePowerPerdition(0, 0);
+	}
+	
+	protected float getMinMJ()
+	{
+		return getActivationEnergy() < 100 ? 0.1f : 10f;
+	}
+	
 	@Override
 	public final PowerReceiver getPowerReceiver(ForgeDirection side)
 	{
 		if (getEnergyRequired() > 0)
 		{
-			_powerProvider.configure(_powerProvider.getMinEnergyReceived(),
-					getEnergyRequired() * energyPerMJ, 0.1f, 1000);
+			_powerProvider.configure(getMinMJ(), getEnergyRequired() / energyPerMJ, 0.1f, 1000);
 			return _powerProvider.getPowerReceiver();
 		}
-		_powerProvider.configure(_powerProvider.getMinEnergyReceived(),
-				getEnergyRequired() * energyPerMJ, 1, 0);
+		_powerProvider.configure(0, 0, 1, 1000);
 		return null;
 	}
 	

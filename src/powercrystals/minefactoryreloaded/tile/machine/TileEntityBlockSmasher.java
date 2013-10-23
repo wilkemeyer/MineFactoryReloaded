@@ -47,11 +47,9 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	protected void configurePowerProvider()
+	protected float getMinMJ()
 	{
-		super.configurePowerProvider();
-		_powerProvider.configure(10, _powerProvider.getMaxEnergyReceived(),
-				_powerProvider.getActivationEnergy(), _powerProvider.getMaxEnergyStored());
+		return 10f;
 	}
 	
 	@Override
