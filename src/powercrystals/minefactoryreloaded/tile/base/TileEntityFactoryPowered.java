@@ -32,7 +32,6 @@ import buildcraft.api.transport.IPipeTile.PipeType;
  * progress bar correctly.
  */
 
-@Implementable("cofh.api.energy.IEnergyHandler")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
 												implements IPowerReceptor, IEnergySink, IElectrical
 {	
