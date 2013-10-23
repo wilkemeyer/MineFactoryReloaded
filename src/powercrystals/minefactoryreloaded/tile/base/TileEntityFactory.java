@@ -105,26 +105,28 @@ public abstract class TileEntityFactory extends TileEntity implements IRotateabl
 	@Override
 	public void rotate()
 	{
-		if(!worldObj.isRemote)
+		rotate(false);
+	}
+	
+	public void rotate(boolean reverse)
+	{
+		if (worldObj != null && !worldObj.isRemote)
 		{
-			if(_forwardDirection == ForgeDirection.NORTH)
+			switch (reverse ? _forwardDirection.getOpposite() : _forwardDirection)
 			{
+			case NORTH:
 				_forwardDirection = ForgeDirection.EAST;
-			}
-			else if(_forwardDirection == ForgeDirection.EAST)
-			{
+				break;
+			case EAST:
 				_forwardDirection = ForgeDirection.SOUTH;
-			}
-			else if(_forwardDirection == ForgeDirection.SOUTH)
-			{
+				break;
+			case SOUTH:
 				_forwardDirection = ForgeDirection.WEST;
-			}
-			else if(_forwardDirection == ForgeDirection.WEST)
-			{
+				break;
+			case WEST:
 				_forwardDirection = ForgeDirection.NORTH;
-			}
-			else
-			{
+				break;
+			default:
 				_forwardDirection = ForgeDirection.NORTH;
 			}
 			
