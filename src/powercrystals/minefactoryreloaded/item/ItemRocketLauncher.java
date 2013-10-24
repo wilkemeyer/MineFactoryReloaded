@@ -22,15 +22,30 @@ public class ItemRocketLauncher extends ItemFactory
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		if(player.inventory.hasItem(MineFactoryReloadedCore.rocketItem.itemID))
+		int slot = -1, id = MineFactoryReloadedCore.rocketItem.itemID;
+		ItemStack[] mainInventory = player.inventory.mainInventory;
+        for (int j = 0, e = mainInventory.length; j < e; ++j)
+        {
+            if (mainInventory[j] != null && mainInventory[j].itemID == id)
+            {
+                slot = j;
+                break;
+            }
+        }
+		if(slot > 0)
 		{
+			int damage = mainInventory[slot].getItemDamage();
 			if (!player.capabilities.isCreativeMode)
-				player.inventory.consumeInventoryItem(MineFactoryReloadedCore.rocketItem.itemID);
+				if (--mainInventory[slot].stackSize <= 0)
+					mainInventory[slot] = null;
 			
 			if(world.isRemote)
 			{
-				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RocketLaunchWithLock, new Object[]
-						{ player.entityId, MineFactoryReloadedClient.instance.getLockedEntity()	}));
+				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(
+					MineFactoryReloadedCore.modNetworkChannel, Packets.RocketLaunchWithLock,
+					new Object[] { player.entityId,
+					damage == 0 ? MineFactoryReloadedClient.instance.getLockedEntity() : Integer.MIN_VALUE
+				}));
 			}
 		}
 		return stack;

@@ -9,6 +9,8 @@ public class ItemRocket extends ItemFactory
 	public ItemRocket(int id)
 	{
 		super(id);
+		setHasSubtypes(true);
+		setMetaMax(1);
 	}
 	
 	@Override

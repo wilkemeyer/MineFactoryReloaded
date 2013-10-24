@@ -1473,12 +1473,23 @@ public class Vanilla
 					'I', Item.ingotIron,
 				}));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2, 0), new Object[]
 				{
 					"PCP",
 					"PTP",
 					"IMI",
 					'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0),
+					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+					'P', "sheetPlastic",
+					'T', Block.tnt,
+					'I', Item.firework
+				}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2, 1), new Object[]
+				{
+					"PPP",
+					"PTP",
+					"IMI",
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
 					'P', "sheetPlastic",
 					'T', Block.tnt,
