@@ -24,14 +24,14 @@ import cpw.mods.fml.common.network.NetworkMod;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-@Mod(modid = "MineFactoryReloaded|CompatBuildCraft", name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:BuildCraft")
+@Mod(modid = "MineFactoryReloaded|CompatBuildCraft", name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Buildcraft implements IActionProvider, ITriggerProvider
 {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		if (!Loader.isModLoaded("BuildCraft"))
+		if (!Loader.isModLoaded("BuildCraft|Core"))
 			return;
 		try
 		{
