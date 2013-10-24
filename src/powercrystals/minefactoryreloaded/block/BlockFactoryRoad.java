@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -87,6 +88,12 @@ public class BlockFactoryRoad extends Block
 			}
 		}
 	}
+	
+	@Override
+    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+    {
+		return false;
+    }
 	
 	@Override
 	public int damageDropped(int meta)
