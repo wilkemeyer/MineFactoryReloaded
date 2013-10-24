@@ -28,7 +28,7 @@ public class Mystcraft
 		try
 		{
 			Class entityLinkbook = Class.forName("com.xcompwiz.mystcraft.entity.EntityLinkbook");
-			MFRRegistry.registerSafariNetBlacklist(entityLinkbook);
+			MFRRegistry.registerAutoSpawnerBlacklistClass(entityLinkbook);
 		}
 		catch (Exception x)
 		{
