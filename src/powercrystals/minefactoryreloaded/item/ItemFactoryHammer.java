@@ -93,4 +93,10 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", 1, 0));
         return multimap;
     }
+    
+	@Override
+    public boolean isFull3D()
+    {
+        return true;
+    }
 }
