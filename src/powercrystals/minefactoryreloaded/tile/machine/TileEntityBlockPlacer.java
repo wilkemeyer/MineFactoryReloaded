@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.FakePlayerFactory;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -46,21 +47,38 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 	{
 		for(int i = 0; i < getSizeInventory(); i++)
 		{
-			if(_inventory[i] == null || !(_inventory[i].getItem() instanceof ItemBlock))
+			ItemStack stack = _inventory[i];
+			if(stack == null || !(stack.getItem() instanceof ItemBlock))
 			{
 				continue;
 			}
+			ItemBlock item = (ItemBlock)stack.getItem();
+			if (item.getBlockID() > Block.blocksList.length)
+				continue;
+            Block block = Block.blocksList[item.getBlockID()];
+            if (block == null)
+            	continue;
 			
 			BlockPosition bp = BlockPosition.fromFactoryTile(this);
 			bp.moveForwards(1);
-			if(worldObj.isAirBlock(bp.x, bp.y, bp.z))
+			if (worldObj.isAirBlock(bp.x, bp.y, bp.z) &&
+					block.canPlaceBlockOnSide(worldObj, bp.x, bp.y, bp.z, 0))
 			{
-				worldObj.setBlock(bp.x, bp.y, bp.z, _inventory[i].itemID, _inventory[i].getItemDamage(), 3);
-				Block block = Block.blocksList[_inventory[i].itemID];
-				worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
-						block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-				decrStackSize(i, 1);
-				return true;
+	            int j1 = item.getMetadata(stack.getItemDamage());
+	            int meta = block.onBlockPlaced(worldObj, bp.x, bp.y, bp.z, 0, bp.x, bp.y, bp.z, j1);
+				if (worldObj.setBlock(bp.x, bp.y, bp.z, block.blockID, meta, 3) &&
+						worldObj.getBlockId(bp.x, bp.y, bp.z) == block.blockID)
+				{
+					block.onBlockPlacedBy(worldObj, bp.x, bp.y, bp.z,
+							FakePlayerFactory.getMinecraft(worldObj), stack);
+					block.onPostBlockPlaced(worldObj, bp.x, bp.y, bp.z, meta);
+					worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
+							block.stepSound.getPlaceSound(),
+							(block.stepSound.getVolume() + 1.0F) / 2.0F,
+							block.stepSound.getPitch() * 0.8F);
+					decrStackSize(i, 1);
+					return true;
+				}
 			}
 		}
 		setIdleTicks(getIdleTicksMax());
