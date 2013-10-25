@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.ae;
 
-import net.minecraft.item.ItemStack;
-import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -15,8 +13,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class AppliedEnergistics
 {
-	private static final String lastUpdated = "Applied Energistics rv10.n, current release as of May 22 2013";
-	
 	@EventHandler
 	public static void load(FMLInitializationEvent e)
 	{
@@ -29,16 +25,5 @@ public class AppliedEnergistics
 				"powercrystals.minefactoryreloaded.tile.base.TileEntityFactory");
 		FMLInterModComms.sendMessage("AppliedEnergistics", "movabletile",
 				"powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor");
-		try
-		{
-			ItemStack quartzOre = (ItemStack)Class.forName("appeng.api.Blocks").getField("blkQuartzOre").get(null);
-			MFRRegistry.registerLaserOre(60, quartzOre);
-			MFRRegistry.addLaserPreferredOre(0, quartzOre);
-		}
-		catch (Exception x)
-		{
-			System.out.println("Last updated for " + lastUpdated);
-			x.printStackTrace();
-		}
 	}
 }
