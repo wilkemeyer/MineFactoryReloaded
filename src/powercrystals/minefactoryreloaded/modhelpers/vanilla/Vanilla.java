@@ -372,50 +372,47 @@ public class Vanilla
 	{
 		
 		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
-		registerOreDictLaserOre(175 / 2, "oreNetherCoal", null); // coal isn't in the oredict??
-		registerOreDictLaserOre(70, "oreGold", "oreNetherGold");
-		registerOreDictLaserOre(150, "oreIron", "oreNetherIron");
-		registerOreDictLaserOre(80, "oreLapis", "oreNetherLapis");
-		registerOreDictLaserOre(50, "oreDiamond", "oreNetherDiamond");
-		registerOreDictLaserOre(100, "oreRedstone", "oreNetherRedstone");
-		registerOreDictLaserOre(50, "oreEmerald", "oreNetherEmerald");
-		registerOreDictLaserOre(70, "oreQuartz", null);
+		registerOreDictLaserOre(175 / 2, "oreNetherCoal", black, null); // coal isn't in the oredict??
+		registerOreDictLaserOre(70, "oreGold", yellow, "oreNetherGold");
+		registerOreDictLaserOre(150, "oreIron", brown, "oreNetherIron");
+		registerOreDictLaserOre(80, "oreLapis", blue, "oreNetherLapis");
+		registerOreDictLaserOre(50, "oreDiamond", lightBlue, "oreNetherDiamond");
+		registerOreDictLaserOre(100, "oreRedstone", red, "oreNetherRedstone");
+		registerOreDictLaserOre(50, "oreEmerald", lime, "oreNetherEmerald");
+		registerOreDictLaserOre(70, "oreQuartz", white, null);
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.glowStone));
-		registerOreDictLaserOre(75, "oreCopper", "oreNetherCopper");
-		registerOreDictLaserOre(75 / 3, "oreTin", "oreNetherTin");
-		registerOreDictLaserOre(30, "oreSilver", "oreNetherSilver");
-		registerOreDictLaserOre(60, "oreLead", "oreNetherLead");
-		registerOreDictLaserOre(40, "oreNickel", "oreNetherNickel");
-		registerOreDictLaserOre(20, "oreUranium", "oreNetherUranium");
-		registerOreDictLaserOre(20, "MonazitOre", null);
-		registerOreDictLaserOre(50, "oreCertusQuartz", null);
-		registerOreDictLaserOre(30, "oreApatite", null);
-		registerOreDictLaserOre(40, "oreSulfur", null);
-		registerOreDictLaserOre(40, "oreSaltpeter", null);
-		registerOreDictLaserOre(60, "oreNaturalAluminum", null);
-		registerOreDictLaserOre(10, "oreArdite", null);
-		registerOreDictLaserOre(10, "oreCobalt", null);
-		registerOreDictLaserOre(50, "oreOsmium", "oreNetherOsmium");
-		registerOreDictLaserOre(80, "oreForce", null);
-		registerOreDictLaserOre(40, "oreRuby", "oreNetherRuby");
-		registerOreDictLaserOre(40, "oreSapphire", "oreNetherSapphire");
-		registerOreDictLaserOre(30, "oreGalena", null);
-		registerOreDictLaserOre(50, "oreBauxite", null);
-		registerOreDictLaserOre(50, "oreTetrahedrite", null);
-		registerOreDictLaserOre(50, "oreCassiterite", null);
-		registerOreDictLaserOre(20, "oreFirestone", null);
+		registerOreDictLaserOre(75, "oreCopper", orange, "oreNetherCopper");
+		registerOreDictLaserOre(75 / 3, "oreTin", silver, "oreNetherTin");
+		registerOreDictLaserOre(30, "oreSilver", gray, "oreNetherSilver");
+		registerOreDictLaserOre(60, "oreLead", purple, "oreNetherLead");
+		registerOreDictLaserOre(40, "oreNickel", yellow, "oreNetherNickel");
+		registerOreDictLaserOre(20, "oreUranium", lime, "oreNetherUranium");
+		registerOreDictLaserOre(20, "MonazitOre", green, null);
+		registerOreDictLaserOre(50, "oreCertusQuartz", cyan, null);
+		registerOreDictLaserOre(30, "oreApatite", blue, null);
+		registerOreDictLaserOre(40, "oreSulfur", yellow, null);
+		registerOreDictLaserOre(40, "oreSaltpeter", white, null);
+		registerOreDictLaserOre(60, "oreNaturalAluminum", white, null);
+		registerOreDictLaserOre(10, "oreArdite", orange, null);
+		registerOreDictLaserOre(10, "oreCobalt", blue, null);
+		registerOreDictLaserOre( 5, "oreIridium", white, "oreNetherIridium");
+		registerOreDictLaserOre(50, "oreOsmium", lightBlue, "oreNetherOsmium");
+		registerOreDictLaserOre(50, "orePlatinum", lightBlue, "oreNetherPlatinum");
+		registerOreDictLaserOre(80, "oreForce", yellow, null);
+		registerOreDictLaserOre(40, "oreRuby", red, "oreNetherRuby");
+		registerOreDictLaserOre(40, "oreSapphire", blue, "oreNetherSapphire");
+		registerOreDictLaserOre(40, "oreGreenSapphire", green, "oreNetherGreenSapphire");
+		registerOreDictLaserOre(30, "oreGalena", -1, null);
+		registerOreDictLaserOre(50, "oreBauxite", brown, null);
+		registerOreDictLaserOre(50, "oreTetrahedrite", -1, null);
+		registerOreDictLaserOre(50, "oreCassiterite", -1, null);
+		registerOreDictLaserOre(20, "oreFirestone", red, null);
 		
-		MFRRegistry.addLaserPreferredOre(15, new ItemStack(Block.oreCoal));
-		MFRRegistry.addLaserPreferredOre(3, new ItemStack(Block.oreDiamond));
-		MFRRegistry.addLaserPreferredOre(5, new ItemStack(Block.oreEmerald));
-		MFRRegistry.addLaserPreferredOre(4, new ItemStack(Block.oreGold));
-		MFRRegistry.addLaserPreferredOre(12, new ItemStack(Block.oreIron));
-		MFRRegistry.addLaserPreferredOre(11, new ItemStack(Block.oreLapis));
-		MFRRegistry.addLaserPreferredOre(14, new ItemStack(Block.oreRedstone));
-		MFRRegistry.addLaserPreferredOre(0, new ItemStack(Block.oreNetherQuartz));
+		MFRRegistry.addLaserPreferredOre(black, new ItemStack(Block.oreCoal));
+		MFRRegistry.addLaserPreferredOre(yellow, new ItemStack(Block.glowStone));
 	}
 	
-	private void registerOreDictLaserOre(int weight, String name, String netherName)
+	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName)
 	{
 		for (ItemStack ore : OreDictionary.getOres(name))
 			if (ore != null)
@@ -423,11 +420,31 @@ public class Vanilla
 				ore = ore.copy();
 				ore.stackSize = 1;
 				MFRRegistry.registerLaserOre(weight, ore);
+				if (focus >= 0)
+					MFRRegistry.addLaserPreferredOre(focus, ore);
 				if (netherName != null)
 				{
-					registerOreDictLaserOre(weight / 2, netherName, null);
+					registerOreDictLaserOre(weight / 2, netherName, focus, null);
 				}
 				return;
 			}
 	}
+	private static final int black = 15;
+	private static final int red = 14;
+	private static final int green = 13;
+	private static final int brown = 12;
+	private static final int blue = 11;
+	private static final int purple = 10;
+	private static final int cyan = 9;
+	private static final int silver = 8;
+	private static final int gray = 7;
+	@SuppressWarnings("unused")
+	private static final int pink = 6;
+	private static final int lime = 5;
+	private static final int yellow = 4;
+	private static final int lightBlue = 3;
+	@SuppressWarnings("unused")
+	private static final int magenta = 2;
+	private static final int orange = 1;
+	private static final int white = 0;
 }
