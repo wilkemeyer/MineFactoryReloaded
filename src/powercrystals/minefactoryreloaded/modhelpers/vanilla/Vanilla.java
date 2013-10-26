@@ -280,6 +280,7 @@ public class Vanilla
 		MFRRegistry.registerLiquidDrinkHandler("lava", new DrinkHandlerLava());
 		MFRRegistry.registerLiquidDrinkHandler("milk", new DrinkHandlerMilk());
 		MFRRegistry.registerLiquidDrinkHandler("biofuel", new DrinkHandlerBiofuel());
+		MFRRegistry.registerLiquidDrinkHandler("bioethanol", new DrinkHandlerBiofuel());
 		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
 		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
 		MFRRegistry.registerLiquidDrinkHandler("essence", new DrinkHandlerMobEssence());
@@ -382,7 +383,7 @@ public class Vanilla
 		registerOreDictLaserOre(70, "oreQuartz", white, null);
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.glowStone));
 		registerOreDictLaserOre(75, "oreCopper", orange, "oreNetherCopper");
-		registerOreDictLaserOre(75 / 3, "oreTin", silver, "oreNetherTin");
+		registerOreDictLaserOre(60, "oreTin", silver, "oreNetherTin");
 		registerOreDictLaserOre(30, "oreSilver", gray, "oreNetherSilver");
 		registerOreDictLaserOre(60, "oreLead", purple, "oreNetherLead");
 		registerOreDictLaserOre(40, "oreNickel", yellow, "oreNetherNickel");
