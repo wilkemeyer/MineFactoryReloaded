@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileEntityBioFuelGenerator extends TileEntityLiquidGenerator
 {
 	public static final int liquidConsumedPerTick = 1;
-	public static final int ticksBetweenConsumption = 10;
+	public static final int ticksBetweenConsumption = 5;
 	public static final int energyProducedPerConsumption = Machine.BioFuelGenerator.
 			getActivationEnergy() * ticksBetweenConsumption;
 	
