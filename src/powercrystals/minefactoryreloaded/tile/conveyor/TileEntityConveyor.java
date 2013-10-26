@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.conveyor;
 
+import buildcraft.api.gates.IAction;
+import buildcraft.api.gates.IActionReceptor;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
@@ -17,11 +19,13 @@ import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.modhelpers.buildcraft.Buildcraft;
 import powercrystals.minefactoryreloaded.net.Packets;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityConveyor extends TileEntity implements IRotateableTile, ISidedInventory, IPipeConnection
+public class TileEntityConveyor extends TileEntity
+			implements IRotateableTile, ISidedInventory, IPipeConnection, IActionReceptor
 {
 	private int _dye = -1;
 	
@@ -498,7 +502,7 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 		}
 	}
 	
-	public void reverseConveyor()
+	private void reverseConveyor()
 	{
 		setReversed(_rednetReversed | (_gateReversed = !_isReversed));
 	}
@@ -531,5 +535,12 @@ public class TileEntityConveyor extends TileEntity implements IRotateableTile, I
 		if (with == ForgeDirection.DOWN & type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
+	}
+
+	@Override
+	public void actionActivated(IAction action)
+	{
+		if (action != null && action == Buildcraft.reverse)
+			reverseConveyor();
 	}
 }

@@ -40,9 +40,14 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 			isBackstuffed = new TriggerIsBackstuffed();
 			isRunning = new TriggerIsRunning();
 			isReversed = new TriggerIsReversed();
+			reverse = new ActionReverse();
 			
 			ActionManager.registerTriggerProvider(this);
+			ActionManager.registerTrigger(isBackstuffed);
+			ActionManager.registerTrigger(isRunning);
+			ActionManager.registerTrigger(isReversed);
 			ActionManager.registerActionProvider(this);
+			ActionManager.registerAction(reverse);
 		}
 		catch (Throwable _)
 		{
@@ -61,6 +66,7 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 	private static MFRBCTrigger isBackstuffed;
 	private static MFRBCTrigger isRunning;
 	private static MFRBCTrigger isReversed;
+	public static MFRBCAction reverse;
 
 	@Override
 	public LinkedList<ITrigger> getNeighborTriggers(Block block, TileEntity tile)
@@ -81,9 +87,14 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 	@Override
 	public LinkedList<IAction> getNeighborActions(Block block, TileEntity tile)
 	{
-		/* TODO:
-		 * Conveyor: reverse
-		 */
-		return null;
+		LinkedList<IAction> triggers = new LinkedList<IAction>();
+		addAction(triggers, reverse, tile);
+		return triggers;
+	}
+	
+	private void addAction(LinkedList<IAction> triggers, MFRBCAction t, TileEntity tile)
+	{
+		if (t.canApplyTo(tile))
+			triggers.add(t);
 	}
 }
