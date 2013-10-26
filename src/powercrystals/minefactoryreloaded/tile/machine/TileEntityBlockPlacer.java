@@ -11,6 +11,7 @@ import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -72,10 +73,13 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 					block.onBlockPlacedBy(worldObj, bp.x, bp.y, bp.z,
 							FakePlayerFactory.getMinecraft(worldObj), stack);
 					block.onPostBlockPlaced(worldObj, bp.x, bp.y, bp.z, meta);
-					worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
-							block.stepSound.getPlaceSound(),
-							(block.stepSound.getVolume() + 1.0F) / 2.0F,
-							block.stepSound.getPitch() * 0.8F);
+					if(MFRConfig.playSounds.getBoolean(true))
+					{
+						worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
+								block.stepSound.getPlaceSound(),
+								(block.stepSound.getVolume() + 1.0F) / 2.0F,
+								block.stepSound.getPitch() * 0.8F);
+					}
 					decrStackSize(i, 1);
 					return true;
 				}
