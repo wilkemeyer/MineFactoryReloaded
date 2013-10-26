@@ -30,15 +30,14 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 		Block b = Block.blocksList[blockId];
 		if(b != null && !b.isAirBlock(worldObj, bp.x, bp.y, bp.z) && !Util.isBlockUnbreakable(worldObj, bp.x, bp.y, bp.z) && b.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0)
 		{
+			worldObj.setBlockToAir(bp.x, bp.y, bp.z);
 			List<ItemStack> drops = b.getBlockDropped(worldObj, bp.x, bp.y, bp.z, blockMeta, 0);
-			
 			doDrop(drops);
 			
 			if(MFRConfig.playSounds.getBoolean(true))
 			{
 				worldObj.playAuxSFXAtEntity(null, 2001, bp.x, bp.y, bp.z, blockId + (blockMeta << 12));
 			}
-			worldObj.setBlockToAir(bp.x, bp.y, bp.z);
 			return true;
 		}
 		setIdleTicks(getIdleTicksMax());
