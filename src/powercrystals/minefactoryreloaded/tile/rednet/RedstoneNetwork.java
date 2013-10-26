@@ -171,9 +171,11 @@ public class RedstoneNetwork
 	
 	public void removeNode(BlockPosition node)
 	{
-		boolean notify = _omniNodes.contains(node);
+		boolean notify = false;
+		boolean omniNode = _omniNodes.contains(node);
 		
-		_omniNodes.remove(node);
+		if (omniNode)
+			_omniNodes.remove(node);
 		_weakNodes.remove(node);
 		
 		for(int subnet = 0; subnet < 16; subnet++)
@@ -192,11 +194,25 @@ public class RedstoneNetwork
 			}
 		}
 		
+		int blockId = _world.getBlockId(node.x, node.y, node.z);
 		if(notify)
 		{
-			_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
-			_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+			if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID)
+			{
+				return;
+			}
+			else if(Block.blocksList[blockId] instanceof IConnectableRedNet)
+			{
+				((IConnectableRedNet)Block.blocksList[blockId]).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
+			}
+			else
+			{
+				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+			}
 		}
+		else if (omniNode)
+			((IConnectableRedNet)Block.blocksList[blockId]).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
 	}
 	
 	public void addCable(BlockPosition cable)
