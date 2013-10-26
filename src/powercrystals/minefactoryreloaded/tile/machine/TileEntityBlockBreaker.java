@@ -28,7 +28,10 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 		int blockMeta = worldObj.getBlockMetadata(bp.x, bp.y, bp.z);
 		
 		Block b = Block.blocksList[blockId];
-		if(b != null && !b.isAirBlock(worldObj, bp.x, bp.y, bp.z) && !Util.isBlockUnbreakable(worldObj, bp.x, bp.y, bp.z) && b.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0)
+		if(b != null && !b.isAirBlock(worldObj, bp.x, bp.y, bp.z) &&
+				!b.blockMaterial.isLiquid() &&
+				!Util.isBlockUnbreakable(worldObj, bp.x, bp.y, bp.z) &&
+				b.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0)
 		{
 			worldObj.setBlockToAir(bp.x, bp.y, bp.z);
 			List<ItemStack> drops = b.getBlockDropped(worldObj, bp.x, bp.y, bp.z, blockMeta, 0);
