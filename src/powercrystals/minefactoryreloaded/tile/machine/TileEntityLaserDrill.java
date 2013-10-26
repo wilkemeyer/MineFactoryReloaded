@@ -150,7 +150,15 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 		for(y = yCoord - 1; y >= 0; y--)
 		{
 			int id = worldObj.getBlockId(xCoord, y, zCoord);
-			if(id != MineFactoryReloadedCore.fakeLaserBlock.blockID && id != Block.bedrock.blockID && id != 0)
+			Block block = Block.blocksList[id];
+			if (block != null && block.getBlockHardness(worldObj, xCoord, y, zCoord) == 0)
+			{
+				worldObj.setBlockToAir(xCoord, y, zCoord);
+				id = worldObj.getBlockId(xCoord, y, zCoord);
+			}
+			if (id != MineFactoryReloadedCore.fakeLaserBlock.blockID &&
+					id != Block.bedrock.blockID &&
+					!worldObj.isAirBlock(xCoord, y, zCoord))
 			{
 				_bedrockLevel = -1;
 				return;
