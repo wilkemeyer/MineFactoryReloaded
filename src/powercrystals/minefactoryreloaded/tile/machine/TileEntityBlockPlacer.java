@@ -65,8 +65,8 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 			if (worldObj.isAirBlock(bp.x, bp.y, bp.z) &&
 					block.canPlaceBlockOnSide(worldObj, bp.x, bp.y, bp.z, 0))
 			{
-	            int j1 = item.getMetadata(stack.getItemDamage());
-	            int meta = block.onBlockPlaced(worldObj, bp.x, bp.y, bp.z, 0, bp.x, bp.y, bp.z, j1);
+				int j1 = item.getMetadata(stack.getItemDamage());
+				int meta = block.onBlockPlaced(worldObj, bp.x, bp.y, bp.z, 0, bp.x, bp.y, bp.z, j1);
 				if (worldObj.setBlock(bp.x, bp.y, bp.z, block.blockID, meta, 3) &&
 						worldObj.getBlockId(bp.x, bp.y, bp.z) == block.blockID)
 				{
