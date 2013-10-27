@@ -2,7 +2,7 @@
 
 	<property environment="env" />
 
-	<property name="build.dir" value="build" />
+	<property name="build.dir" value="${basedir}/build" />
 	<property name="classes.dir" value="${build.dir}/packaging" />
 	<property name="apiclasses.dir" value="${build.dir}/api-packaging" />
 	<property name="src.dir" value="src" />
@@ -170,12 +170,27 @@
 		<delete dir="{$apiclasses.dir}" />
 		<delete dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded" />
 	</target>
+        
+    <target name="MFR-Forestry">
+        <!-- MFR-Forestry Setup Start -->
+        <echo message="Starting MFR-Forestry submodule build..."/>
+        <exec dir="${basedir}" executable="sh" failonerror="true">
+            <arg value="setup_submodule.sh" />
+        </exec>
+		<ant antfile="${basedir}/MFR-Forestry/build.xml" target="main" inheritAll="false" useNativeBasedir="true"/>
+		<copy todir="${classes.dir}">
+			<fileset dir="${basedir}/MFR-Forestry/build/classes"/>
+		</copy>
+        <echo message="MFR-Forestry submodule build complete."/>
+        <!-- MFR-Forestry Setup End -->
+    </target>
 
 	<target name="build" depends="extract-dependencies" unless="already-compiled">
 		<!-- Recompile -->
 		<depend srcdir="${mcpsrc.dir}" destdir="${mcp.dir}/bin/minecraft">
 			<include name="powercrystals/minefactoryreloaded/**/*.java"/>
 		</depend>
+		
 		<javac srcdir="${mcpsrc.dir}" destdir="${mcp.dir}/bin/minecraft" target="1.6" source="1.6"
 			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
 			<include name="powercrystals/minefactoryreloaded/**/*.java"/>
@@ -226,6 +241,9 @@
 		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/lang">
 			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/lang" />
 		</copy>
+                
+                <antcall target="MFR-Forestry"/>
+                
 	</target>
 
 	<target name="build-number-there" if="env.BUILD_NUMBER" >
@@ -336,6 +354,10 @@
 
 	<target name="clean" >
 		<delete dir="${build.dir}" />
+                <delete dir="${basedir}/MFR-Forestry"/>
 	</target>
+        
+        <!-- Needed for NetBeans. -->
+        <target name="jar" depends ="install"/>
 
 </project>
