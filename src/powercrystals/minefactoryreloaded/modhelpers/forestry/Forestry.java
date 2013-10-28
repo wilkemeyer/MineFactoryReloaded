@@ -31,7 +31,7 @@ public class Forestry
 			if(forestryItems != null)
 			{
 				Item peat = (Item)forestryItems.getField("peat").get(null);
-				MFRRegistry.registerSludgeDrop(5, new ItemStack(peat));
+				MFRRegistry.registerSludgeDrop(10, new ItemStack(peat));
 			}
 		}
 		catch(Exception x)
