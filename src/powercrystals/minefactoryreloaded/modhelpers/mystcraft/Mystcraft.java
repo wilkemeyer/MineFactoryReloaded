@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.mystcraft;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import cpw.mods.fml.common.FMLLog;
@@ -7,6 +9,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.network.NetworkMod;
 
 
@@ -27,6 +30,7 @@ public class Mystcraft
 		}
 		try
 		{
+			blackListFluid("mobessence");
 			Class entityLinkbook = Class.forName("com.xcompwiz.mystcraft.entity.EntityLinkbook");
 			MFRRegistry.registerAutoSpawnerBlacklistClass(entityLinkbook);
 		}
@@ -35,5 +39,16 @@ public class Mystcraft
 			System.out.println("Last updated for " + lastUpdated);
 			x.printStackTrace();
 		}
+	}
+	
+	public static void blackListFluid(String FluidName){
+		NBTTagCompound NBTMsg = new NBTTagCompound();
+		NBTTagCompound fluidMsg = new NBTTagCompound();
+		fluidMsg.setFloat("rarity", 0.0F);
+		fluidMsg.setFloat("grammarweight", 0.0F);
+		fluidMsg.setFloat("instabilityPerBlock", 1000000F);
+		fluidMsg.setString("fluidname", FluidName);
+		NBTMsg.setCompoundTag("fluidsymbol", fluidMsg);
+		FMLInterModComms.sendMessage("Mystcraft", "fluidsymbol", NBTMsg);
 	}
 }
