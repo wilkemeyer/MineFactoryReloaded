@@ -18,6 +18,7 @@ import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.INeighboorUpdateTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -129,7 +130,9 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
 		}
-		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) || _connectionBlackList.contains(blockId))
+		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) ||
+				_connectionBlackList.contains(blockId) ||
+				b instanceof IRedNetDecorative)
 			// standard connection logic, then figure out if we shouldn't connect
 			// mode 1 will skip this
 		{
