@@ -33,7 +33,7 @@ public class BlockVineScaffold extends Block
 		setUnlocalizedName("mfr.vinescaffold");
 		setStepSound(soundGrassFootstep);
 		setHardness(0.1F);
-		setBlockBounds(0F, 0.01F, 0F, 1F, 0.99F, 1F);
+		setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
 		setTickRandomly(true);
 	}
 	
@@ -41,16 +41,32 @@ public class BlockVineScaffold extends Block
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		if(entity instanceof EntityPlayerMP)
-		{
 			((EntityPlayerMP)entity).playerNetServerHandler.ticksForFloatKick = 0;
-			entity.fallDistance = 0;
+		entity.fallDistance = 0;
+		if (entity.isCollidedHorizontally)
+		{
+			entity.motionY = 0.2D;
+		}
+		else if (entity.isSneaking())
+		{
+			double diff = entity.prevPosY - entity.posY;
+			entity.boundingBox.minY += diff;
+			entity.boundingBox.maxY += diff;
+			entity.posY = entity.prevPosY;
+		}
+		else
+		{
+			entity.motionY = -0.10D;
 		}
 	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		return AxisAlignedBB.getAABBPool().getAABB(x + 0.05, y, z + 0.05, x + 0.95, y + 1, z + 0.95);
+		float shrinkAmount = 0.125F;
+		return AxisAlignedBB.getBoundingBox(x + this.minX + shrinkAmount, y + this.minY,
+				z + this.minZ + shrinkAmount, x + this.maxX - shrinkAmount,
+				y + this.maxY, z + this.maxZ - shrinkAmount);
 	}
 	
 	@Override
@@ -90,7 +106,7 @@ public class BlockVineScaffold extends Block
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return true;
+		return !world.isBlockOpaqueCube(x, y, z);
 	}
 	
 	@Override

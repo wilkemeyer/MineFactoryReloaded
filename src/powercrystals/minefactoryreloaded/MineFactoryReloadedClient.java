@@ -17,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -152,27 +151,6 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 			return;
 		}
 		EntityPlayerSP player = (EntityPlayerSP)tickData[0];
-		int frontX = MathHelper.floor_double(player.posX + player.getLookVec().xCoord);
-		int frontY = MathHelper.floor_double(player.boundingBox.minY);
-		int frontZ = MathHelper.floor_double(player.posZ + player.getLookVec().zCoord);
-		
-		int blockId = player.worldObj.getBlockId(frontX, frontY, frontZ);
-		if(blockId == MineFactoryReloadedCore.vineScaffoldBlock.blockID)
-		{
-			if(player.movementInput.moveForward > 0)
-			{
-				player.motionY = 0.2D;
-			}
-			else if(player.isSneaking())
-			{
-				player.motionY = 0.0D;
-			}
-			else
-			{
-				player.motionY = -0.15D;
-			}
-		}
-		
 		ItemStack equipped = player.inventory.getCurrentItem();
 		if(equipped != null && equipped.getItem() instanceof ItemRocketLauncher)
 		{
