@@ -141,7 +141,7 @@ public class BlockVineScaffold extends Block
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
-		if(!world.isRemote && player.inventory.mainInventory[player.inventory.currentItem] != null && player.inventory.mainInventory[player.inventory.currentItem].itemID == blockID)
+		if (player.inventory.mainInventory[player.inventory.currentItem] != null && player.inventory.mainInventory[player.inventory.currentItem].itemID == blockID)
 		{
 			for(int i = y + 1, e = world.getActualHeight(); i < e; ++i)
 			{
@@ -149,7 +149,7 @@ public class BlockVineScaffold extends Block
 				Block block = Block.blocksList[blockId];
 				if(block == null || world.isAirBlock(x, i, z) || block.isBlockReplaceable(world, x, i, z))
 				{
-					if (world.setBlock(x, i, z, blockID, 0, 3))
+					if (!world.isRemote && world.setBlock(x, i, z, blockID, 0, 3))
 					{
 						player.inventory.mainInventory[player.inventory.currentItem].stackSize--;
 						if(player.inventory.mainInventory[player.inventory.currentItem].stackSize == 0)
@@ -157,14 +157,13 @@ public class BlockVineScaffold extends Block
 							player.inventory.mainInventory[player.inventory.currentItem] = null;
 						}
 					}
-					break;
+					return true;
 				}
 				else if (blockId != blockID)
 				{
-					break;
+					return false;
 				}
 			}
-			return true;
 		}
 		return false;
 	}
