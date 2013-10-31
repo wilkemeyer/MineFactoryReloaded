@@ -150,7 +150,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 				Block block = Block.blocksList[blockId];
 				if(block == null || world.isAirBlock(x, i, z) || block.isBlockReplaceable(world, x, i, z))
 				{
-					if (!world.isRemote && world.setBlock(x, i, z, blockID, 0, 3))
+					if (!world.isRemote && world.setBlock(x, i, z, blockID, 0, 3) &
+							!player.capabilities.isCreativeMode)
 					{
 						player.inventory.mainInventory[player.inventory.currentItem].stackSize--;
 						if(player.inventory.mainInventory[player.inventory.currentItem].stackSize == 0)
