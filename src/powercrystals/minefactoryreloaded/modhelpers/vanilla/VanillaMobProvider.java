@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -109,6 +110,25 @@ public class VanillaMobProvider implements IRandomMobProvider
 		EntityCaveSpider creeperMount = (EntityCaveSpider)MFRUtil.prepareMob(EntityCaveSpider.class, world);
 		creeperJockey.mountEntity(creeperMount);
 		mobs.add(new RandomMob(creeperMount, 2));
+
+		tntJockey = (EntityTNTPrimed)MFRUtil.prepareMob(EntityTNTPrimed.class, world);
+		EntityXPOrb tntMount2 = (EntityXPOrb)MFRUtil.prepareMob(EntityXPOrb.class, world);
+		tntJockey.fuse = 120;
+		tntMount2.xpValue = 1;
+		tntMount2.xpOrbAge = Short.MIN_VALUE;
+		tntMount2.field_70532_c = Short.MAX_VALUE;
+		tntJockey.mountEntity(tntMount2);
+		mobs.add(new RandomMob(tntMount2, 2));
+		
+		creeperJockey = (EntityCreeper)MFRUtil.prepareMob(EntityCreeper.class, world);
+		EntityXPOrb creeperMount2 = (EntityXPOrb)MFRUtil.prepareMob(EntityXPOrb.class, world);
+		creeperMount2.xpValue = 1;
+		creeperMount2.xpOrbAge = Short.MIN_VALUE;
+		creeperMount2.field_70532_c = Short.MAX_VALUE;
+		creeperJockey.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 20));
+		creeperJockey.onStruckByLightning(null);
+		creeperJockey.mountEntity(creeperMount2);
+		mobs.add(new RandomMob(creeperMount2, 1));
 
 		EntityEnderman direBane = (EntityEnderman)MFRUtil.prepareMob(EntityEnderman.class, world);
 		direBane.addPotionEffect(new PotionEffect(Potion.regeneration.id, 120 * 20));

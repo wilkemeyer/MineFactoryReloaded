@@ -10,16 +10,14 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFactoryFluid extends BlockFluidClassic implements IConnectableRedNet
+public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoConnection
 { // TODO: convert to BlockFluidFinite
 	private Icon _iconFlowing;
 	private Icon _iconStill;
@@ -91,33 +89,5 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IConnectable
 	public Icon getIcon(int side, int meta)
 	{
 		return side <= 1 ? _iconStill : _iconFlowing;
-	}
-	
-	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return RedNetConnectionType.None;
-	}
-	
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return null;
-	}
-	
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
-	{
-		return 0;
-	}
-	
-	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
-	{
-	}
-	
-	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
-	{
 	}
 }

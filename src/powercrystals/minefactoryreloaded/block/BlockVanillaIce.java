@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -11,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
 
-public class BlockVanillaIce extends BlockIce
+public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 {
 	public BlockVanillaIce()
 	{

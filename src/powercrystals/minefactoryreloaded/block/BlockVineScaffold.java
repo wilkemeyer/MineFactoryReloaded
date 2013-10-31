@@ -16,10 +16,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockVineScaffold extends Block
+public class BlockVineScaffold extends Block implements IRedNetDecorative
 {
 	private Icon _sideIcon;
 	private Icon _topIcon;
@@ -33,7 +34,7 @@ public class BlockVineScaffold extends Block
 		setUnlocalizedName("mfr.vinescaffold");
 		setStepSound(soundGrassFootstep);
 		setHardness(0.1F);
-		setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+		setBlockBounds(0F, 1 / 48f, 0F, 1F, 1f - 1 / 48f, 1F);
 		setTickRandomly(true);
 	}
 	

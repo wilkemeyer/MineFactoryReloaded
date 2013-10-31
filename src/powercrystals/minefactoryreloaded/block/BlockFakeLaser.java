@@ -13,9 +13,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-public class BlockFakeLaser extends Block
+public class BlockFakeLaser extends Block implements IRedNetNoConnection
 {
 	public BlockFakeLaser(int id)
 	{

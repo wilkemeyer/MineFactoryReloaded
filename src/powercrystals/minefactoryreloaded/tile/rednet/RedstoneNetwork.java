@@ -205,14 +205,13 @@ public class RedstoneNetwork
 			{
 				((IConnectableRedNet)Block.blocksList[blockId]).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
 			}
-			else
-			{
-				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
-				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
-			}
 		}
-		else if (omniNode)
+		else if (omniNode && Block.blocksList[blockId] instanceof IConnectableRedNet)
+		{
 			((IConnectableRedNet)Block.blocksList[blockId]).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
+		}
+		_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+		_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
 	}
 	
 	public void addCable(BlockPosition cable)

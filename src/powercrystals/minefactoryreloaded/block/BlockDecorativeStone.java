@@ -9,14 +9,12 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityFallingSand;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockDecorativeStone extends Block implements IConnectableRedNet
+public class BlockDecorativeStone extends Block implements IRedNetDecorative
 {
 	private String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
 			"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
@@ -147,32 +145,4 @@ public class BlockDecorativeStone extends Block implements IConnectableRedNet
 		// called after entity plays step sound
 	}
 	//*/
-
-	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return RedNetConnectionType.ForcedPlateSingle;
-	}
-	
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return null;
-	}
-	
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
-	{
-		return 0;
-	}
-	
-	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
-	{
-	}
-	
-	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
-	{
-	}
 }

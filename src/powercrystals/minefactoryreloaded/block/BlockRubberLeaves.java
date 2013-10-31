@@ -12,15 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockRubberLeaves extends BlockLeaves implements IConnectableRedNet
+public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
 	private Icon _iconOpaque;
 	private Icon _iconTransparent;
@@ -97,33 +95,5 @@ public class BlockRubberLeaves extends BlockLeaves implements IConnectableRedNet
 	public void getSubBlocks(int blockId, CreativeTabs creativeTab, List subTypes)
 	{
 		subTypes.add(new ItemStack(blockId, 1, 0));
-	}
-	
-	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return RedNetConnectionType.None;
-	}
-	
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return null;
-	}
-	
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
-	{
-		return 0;
-	}
-	
-	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
-	{
-	}
-	
-	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
-	{
 	}
 }
