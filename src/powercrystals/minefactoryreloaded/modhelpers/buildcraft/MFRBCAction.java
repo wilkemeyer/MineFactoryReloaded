@@ -21,7 +21,7 @@ public abstract class MFRBCAction implements IAction
 	{
 		_tag = tag;
 		_desc = desc;
-		_iconName = "minefactoryreloaded:" + icon;
+		_iconName = "minefactoryreloaded:buildcraft/action/" + icon;
 	}
 	
 	@Override

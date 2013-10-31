@@ -11,7 +11,7 @@ public class TriggerIsReversed extends TriggerIsRunning
 {
 	public TriggerIsReversed()
 	{
-		super("MFR:ConveyorIsReversed", "Is Reversed", "buildcraft_trigger_conveyorreversed");
+		super("MFR:ConveyorIsReversed", "Is Reversed", "ConveyorReversed");
 	}
 
 	@Override

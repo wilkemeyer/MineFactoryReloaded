@@ -1,14 +1,19 @@
 package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 
 import buildcraft.api.gates.ITriggerParameter;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
 public class TriggerIsRunning extends MFRBCTrigger
 {
+	private boolean ownIcon = false;
 	public TriggerIsRunning(String id, String desc, String icon)
 	{
 		super(id, desc, icon);
@@ -16,7 +21,20 @@ public class TriggerIsRunning extends MFRBCTrigger
 	
 	public TriggerIsRunning()
 	{
-		this("MFR:ConveyorIsRunning", "Is Running", "buildcraft_trigger_conveyoractive");
+		this("MFR:ConveyorIsRunning", "Is Running", "ConveyorActive");
+		ownIcon = true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconRegister)
+	{
+		if (!ownIcon)
+		{
+			super.registerIcons(iconRegister);
+			return;
+		}
+		_icon = iconRegister.registerIcon("buildcraft:triggers/action_machinecontrol_on");
 	}
 
 	@Override

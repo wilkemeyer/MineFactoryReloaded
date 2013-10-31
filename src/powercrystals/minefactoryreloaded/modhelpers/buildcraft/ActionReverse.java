@@ -8,7 +8,7 @@ public class ActionReverse extends MFRBCAction
 {
 	public ActionReverse()
 	{
-		super("MFR:ConveyorReverse", "Reverse Conveyor", "buildcraft_action_reverseconveyor");
+		super("MFR:ConveyorReverse", "Reverse Conveyor", "ReverseConveyor");
 	}
 
 	@Override

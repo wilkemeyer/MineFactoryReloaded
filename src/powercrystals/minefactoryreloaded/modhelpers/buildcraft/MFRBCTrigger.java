@@ -23,7 +23,7 @@ public abstract class MFRBCTrigger implements ITrigger
 	{
 		_tag = tag;
 		_desc = desc;
-		_iconName = "minefactoryreloaded:" + icon;
+		_iconName = "minefactoryreloaded:buildcraft/trigger/" + icon;
 	}
 	
 	@Override

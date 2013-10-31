@@ -1,7 +1,11 @@
 package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import buildcraft.api.gates.ITriggerParameter;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -11,7 +15,14 @@ public class TriggerIsBackstuffed extends MFRBCTrigger
 {
 	public TriggerIsBackstuffed()
 	{
-		super("MFR:IsBackstuffed", "Has Drops", "buildcraft_trigger_machinecandrop");
+		super("MFR:IsBackstuffed", "Has Drops", "MachineHasDrops");
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconRegister)
+	{
+		_icon = iconRegister.registerIcon("buildcraft:triggers/guitriggers_3_4");
 	}
 
 	@Override
