@@ -225,7 +225,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				return itemstack;
 			}
 			ItemStack itemstack1 = _inventory[slot].splitStack(size);
-			if(_inventory[slot].stackSize == 0)
+			if(_inventory[slot].stackSize <= 0)
 			{
 				_inventory[slot] = null;
 			}
@@ -242,11 +242,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		_inventory[i] = itemstack;
-		if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
 		{
 			itemstack.stackSize = getInventoryStackLimit();
 		}
+		_inventory[i] = itemstack;
 		onFactoryInventoryChanged();
 	}
 	
@@ -270,7 +270,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return true;
+		ItemStack slotContent = this.getStackInSlot(i);
+		return slotContent == null || UtilInventory.stacksEqual(itemstack, slotContent);
 	}
 	
 	@Override
@@ -462,7 +463,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isItemValidForSlot(slot, itemstack);
+		ForgeDirection dir = ForgeDirection.getOrientation(side);
+		int start = getStartInventorySide(dir);
+		return slot >= start && slot < (start + getSizeInventorySide(dir)) &&
+				this.isItemValidForSlot(slot, itemstack) &&
+				itemstack.stackSize < Math.min(itemstack.getMaxStackSize(), getInventoryStackLimit());
 	}
 	
 	@Override
