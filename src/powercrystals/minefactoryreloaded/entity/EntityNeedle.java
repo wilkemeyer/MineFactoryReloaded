@@ -230,8 +230,15 @@ public class EntityNeedle extends Entity implements IProjectile
 		
 		this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
 		this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-		float speedDropoff = 0.99F;
+		float speedDropoff = 0.995F;
 		collisionRange = 0.05F;
+		
+		if (_falling | speed < 0.05)
+		{
+			_falling = true;
+			this.motionY -= 0.01;
+			speedDropoff = 0.99F;
+		}
 		
 		if(this.isInWater())
 		{
@@ -242,12 +249,6 @@ public class EntityNeedle extends Entity implements IProjectile
 			}
 			
 			speedDropoff = 0.8F;
-		}
-		
-		if (_falling | speed < 0.05)
-		{
-			_falling = true;
-			this.motionY -= 0.01;
 		}
 		
 		this.motionX *= speedDropoff;
