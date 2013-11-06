@@ -388,6 +388,7 @@ public class Vanilla
 		registerOreDictLaserOre(60, "oreLead", purple, "oreNetherLead");
 		registerOreDictLaserOre(40, "oreNickel", yellow, "oreNetherNickel");
 		registerOreDictLaserOre(20, "oreUranium", lime, "oreNetherUranium");
+		registerOreDictLaserOre(20, "oreYellorite", yellow, null);
 		registerOreDictLaserOre(20, "MonazitOre", green, null);
 		registerOreDictLaserOre(50, "oreCertusQuartz", cyan, null);
 		registerOreDictLaserOre(30, "oreApatite", blue, null);
@@ -403,6 +404,7 @@ public class Vanilla
 		registerOreDictLaserOre(40, "oreRuby", red, "oreNetherRuby");
 		registerOreDictLaserOre(40, "oreSapphire", blue, "oreNetherSapphire");
 		registerOreDictLaserOre(40, "oreGreenSapphire", green, "oreNetherGreenSapphire");
+		registerOreDictLaserOre(40, "orePeridot", green, "oreNetherPeridot");
 		registerOreDictLaserOre(30, "oreGalena", -1, null);
 		registerOreDictLaserOre(50, "oreBauxite", brown, null);
 		registerOreDictLaserOre(50, "oreTetrahedrite", -1, null);
