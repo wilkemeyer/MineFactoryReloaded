@@ -38,15 +38,17 @@ public class TileEntityEjector extends TileEntityFactory
 		boolean redstoneState = Util.isRedstonePowered(this);
 		if(redstoneState && !_lastRedstoneState)
 		{
-			Map<ForgeDirection, IInventory> chests = UtilInventory.findChests(worldObj, xCoord, yCoord, zCoord);
-			inv:		for(Entry<ForgeDirection, IInventory> chest : chests.entrySet())
+			Map<ForgeDirection, IInventory> chests = UtilInventory.
+					findChests(worldObj, xCoord, yCoord, zCoord);
+			inv: for(Entry<ForgeDirection, IInventory> chest : chests.entrySet())
 			{
 				if(chest.getKey() == getDirectionFacing())
 				{
 					continue;
 				}
 				
-				IInventoryManager inventory = InventoryManager.create(chest.getValue(), chest.getKey());
+				IInventoryManager inventory = InventoryManager.create(chest.getValue(),
+						chest.getKey().getOpposite());
 				Map<Integer, ItemStack> contents = inventory.getContents();
 				
 				for(Entry<Integer, ItemStack> stack : contents.entrySet())
@@ -57,9 +59,10 @@ public class TileEntityEjector extends TileEntityFactory
 					}
 					
 					if(chest.getValue() instanceof ISidedInventory)
-					{
+					{ // TODO: expose canRemoveItem in IInventoryManager
 						ISidedInventory sided = (ISidedInventory)chest.getValue();
-						if(!sided.canExtractItem(stack.getKey(), stack.getValue(), chest.getKey().ordinal()))
+						if(!sided.canExtractItem(stack.getKey(), stack.getValue(),
+								chest.getKey().getOpposite().ordinal()))
 						{
 							continue;
 						}
@@ -67,7 +70,8 @@ public class TileEntityEjector extends TileEntityFactory
 					
 					ItemStack stackToDrop = stack.getValue().copy();
 					stackToDrop.stackSize = 1;
-					ItemStack remaining = UtilInventory.dropStack(this, stackToDrop, this.getDirectionFacing(), this.getDirectionFacing());
+					ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
+							this.getDirectionFacing(), this.getDirectionFacing());
 					
 					// remaining == null if dropped successfully.
 					if(remaining == null)
