@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import universalelectricity.core.block.IElectrical;
@@ -31,6 +32,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
  * progress bar correctly.
  */
 
+@Implementable("cofh.api.energy.IEnergyHandler")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
 												implements IPowerReceptor, IEnergySink, IElectrical
 {	
@@ -313,9 +315,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// TE methods
 	
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean doReceive)
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
 	{
-		return storeEnergy(maxReceive, doReceive);
+		return storeEnergy(maxReceive, !simulate);
 	}
 
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean doExtract)
@@ -323,14 +325,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return 0;
 	}
 
-	public boolean canReceiveEnergy(ForgeDirection from)
+	public boolean canInterface(ForgeDirection from)
 	{
-		return getEnergyRequired() > 0;
-	}
-
-	public boolean canExtractEnergy(ForgeDirection from)
-	{
-		return false;
+		return true;
 	}
 
 	public int getEnergyStored(ForgeDirection from)
