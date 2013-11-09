@@ -537,12 +537,12 @@ public class Vanilla
 					} );
 	}
 	
-	private void registerMachine(Machine machine, Object... recipe)
+	protected void registerMachine(Machine machine, Object... recipe)
 	{
 		registerMachine(machine, 1, recipe);
 	}
 	
-	private void registerMachine(Machine machine, int amount, Object... recipe)
+	protected void registerMachine(Machine machine, int amount, Object... recipe)
 	{
 		if(machine.getIsRecipeEnabled())
 		{

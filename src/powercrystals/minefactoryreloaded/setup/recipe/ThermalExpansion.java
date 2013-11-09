@@ -1,14 +1,11 @@
-/*
 package powercrystals.minefactoryreloaded.setup.recipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import thermalexpansion.api.item.ItemRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -23,20 +20,20 @@ public class ThermalExpansion extends Vanilla
 		}
 		try
 		{
-			ItemStack conduitLiquid = ItemRegistry.getItem("conduitLiquid", 1);
-			ItemStack lamp = ItemRegistry.getItem("lamp", 1);
-			ItemStack hardenedGlass = ItemRegistry.getItem("hardenedGlass", 1);
-			ItemStack machineFrame = ItemRegistry.getItem("machineFrame", 1);
-			ItemStack pneumaticServo = ItemRegistry.getItem("pneumaticServo", 1);
-			ItemStack powerCoilElectrum = ItemRegistry.getItem("powerCoilElectrum", 1);
-			ItemStack powerCoilGold = ItemRegistry.getItem("powerCoilGold", 1);
-			ItemStack powerCoilSilver = ItemRegistry.getItem("powerCoilSilver", 1);
-			ItemStack tesseractFrameFull = ItemRegistry.getItem("tesseractFrameFull", 1);
+			ItemStack conduitLiquid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
+			ItemStack tankBasic = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
+			ItemStack lamp = GameRegistry.findItemStack("ThermalExpansion", "lamp", 1);
+			ItemStack hardenedGlass = GameRegistry.findItemStack("ThermalExpansion", "hardenedGlass", 1);
+			ItemStack machineFrame = GameRegistry.findItemStack("ThermalExpansion", "machineFrame", 1);
+			ItemStack pneumaticServo = GameRegistry.findItemStack("ThermalExpansion", "pneumaticServo", 1);
+			ItemStack powerCoilElectrum = GameRegistry.findItemStack("ThermalExpansion", "powerCoilElectrum", 1);
+			ItemStack powerCoilGold = GameRegistry.findItemStack("ThermalExpansion", "powerCoilGold", 1);
+			ItemStack powerCoilSilver = GameRegistry.findItemStack("ThermalExpansion", "powerCoilSilver", 1);
+			ItemStack tesseractFrameFull = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameFull", 1);
+			ItemStack strongBox = GameRegistry.findItemStack("ThermalExpansion", "strongboxReinforced", 1);
+			ItemStack strongBoxBasic = GameRegistry.findItemStack("ThermalExpansion", "strongboxBasic", 1);
 			
-			if(Machine.Planter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 0), new Object[]
-						{
+			registerMachine(Machine.Planter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -46,13 +43,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotCopper",
 					'C', powerCoilGold,
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Fisher.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 1), new Object[]
-						{
+			registerMachine(Machine.Fisher, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -62,13 +55,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Harvester.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 2), new Object[]
-						{
+			registerMachine(Machine.Harvester, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -78,13 +67,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotGold",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Rancher.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 3), new Object[]
-						{
+			registerMachine(Machine.Rancher, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -94,13 +79,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotTin",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Fertilizer.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 4), new Object[]
-						{
+			registerMachine(Machine.Fertilizer, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -110,13 +91,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotSilver",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Vet.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 5), new Object[]
-						{
+			registerMachine(Machine.Vet, new Object[] {
 					"PTP",
 					"TFT",
 					"OCO",
@@ -125,26 +102,18 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotCopper",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.ItemCollector.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 8, 6), new Object[]
-						{
+			registerMachine(Machine.ItemCollector, 8, new Object[] {
 					"P P",
 					" F ",
 					"PCP",
 					'P', "sheetPlastic",
 					'F', machineFrame,
 					'C', Block.chest
-						} ));
-			}
+						} ); 
 			
-			if(Machine.BlockBreaker.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 7), new Object[]
-						{
+			registerMachine(Machine.BlockBreaker, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -154,13 +123,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.WeatherCollector.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 8), new Object[]
-						{
+			registerMachine(Machine.WeatherCollector, new Object[] {
 					"PTP",
 					" F ",
 					"OCO",
@@ -169,13 +134,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotTin",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.SludgeBoiler.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 9), new Object[]
-						{
+			registerMachine(Machine.SludgeBoiler, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -185,27 +146,20 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Sewer.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 4, 10), new Object[]
-						{
+			registerMachine(Machine.Sewer, 4, new Object[] {
 					"PTP",
 					"SFS",
-					"SSS",
+					"SQS",
 					'P', "sheetPlastic",
 					'T', Item.bucketEmpty,
 					'S', Item.brick,
 					'F', machineFrame,
-						} ));
-			}
+					'Q', pneumaticServo,
+						} ); 
 			
-			if(Machine.Composter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 11), new Object[]
-						{
+			registerMachine(Machine.Composter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -215,13 +169,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.brick,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Breeder.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 12), new Object[]
-						{
+			registerMachine(Machine.Breeder, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -231,13 +181,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', new ItemStack(Item.dyePowder, 1, 5),
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Grinder.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 13), new Object[]
-						{
+			registerMachine(Machine.Grinder, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -247,13 +193,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.book,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.AutoEnchanter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 14), new Object[]
-						{
+			registerMachine(Machine.AutoEnchanter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -263,13 +205,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.diamond,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Chronotyper.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 15), new Object[]
-						{
+			registerMachine(Machine.Chronotyper, new Object[] {
 					"PTP",
 					"TFT",
 					"OCO",
@@ -278,13 +216,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', new ItemStack(Item.dyePowder, 1, 5),
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Ejector.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 8, 0), new Object[]
-						{							
+			registerMachine(Machine.Ejector, 8, new Object[] {							
 					"PTP",
 					" F ",
 					"OOO",
@@ -292,13 +226,9 @@ public class ThermalExpansion extends Vanilla
 					'T', pneumaticServo,
 					'F', machineFrame,
 					'O', Item.redstone
-						} ));
-			}
+						} ); 
 			
-			if(Machine.ItemRouter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 8, 1), new Object[]
-						{					
+			registerMachine(Machine.ItemRouter, 8, new Object[] {					
 					"PTP",
 					"SFS",
 					"PSP",
@@ -306,13 +236,9 @@ public class ThermalExpansion extends Vanilla
 					'T', Block.chest,
 					'S', Item.redstoneRepeater,
 					'F', machineFrame
-						} ));
-			}
+						} ); 
 			
-			if(Machine.LiquidRouter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 8, 2), new Object[]
-						{					
+			registerMachine(Machine.LiquidRouter, 8, new Object[] {					
 					"PTP",
 					"SFS",
 					"PSP",
@@ -320,56 +246,43 @@ public class ThermalExpansion extends Vanilla
 					'T', conduitLiquid,
 					'S', Item.redstoneRepeater,
 					'F', machineFrame
-						} ));
-			}
+						} ); 
 			
-			if(Machine.DeepStorageUnit.getIsRecipeEnabled())
+			int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
+			registerMachine(Machine.DeepStorageUnit, dsuCount, new Object[] {					
+				"PCP",
+				"CFC",
+				"PCP",
+				'P', "sheetPlastic",
+				'C', strongBox,
+				'F', tesseractFrameFull
+					} );
+			
+			if(MFRConfig.enableCheapDSU.getBoolean(false))
 			{
-				int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), dsuCount, 3), new Object[]
-						{					
+				registerMachine(Machine.DeepStorageUnit, new Object[] {					
 					"PCP",
 					"CFC",
 					"PCP",
 					'P', "sheetPlastic",
-					'C', Block.chest,
-					'F', tesseractFrameFull
-						} ));
-				
-				if(MFRConfig.enableCheapDSU.getBoolean(false))
-				{
-					GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 3), new Object[]
-							{					
-						"PCP",
-						"CFC",
-						"PCP",
-						'P', "sheetPlastic",
-						'C', Block.chest,
-						'F', machineFrame
-							} ));
-				}
+					'C', strongBoxBasic,
+					'F', machineFrame
+						} );
 			}
 			
-			if(Machine.LiquiCrafter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 4), new Object[]
-						{						
+			registerMachine(Machine.LiquiCrafter, new Object[] {						
 					"PTP",
 					"SFS",
 					"OCO",
 					'P', "sheetPlastic",
 					'T', Block.workbench,
-					'S', conduitLiquid,
+					'S', tankBasic,
 					'F', machineFrame,
 					'O', Item.book,
 					'C', pneumaticServo
-						} ));
-			}
+						} ); 
 			
-			if(Machine.LavaFabricator.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 5), new Object[]
-						{
+			registerMachine(Machine.LavaFabricator, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -379,13 +292,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.blazeRod,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.OilFabricator.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 6), new Object[]
-						{
+			registerMachine(Machine.OilFabricator, new Object[] {
 					"PTP",
 					"OFO",
 					"OCO",
@@ -394,26 +303,18 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Block.obsidian,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.AutoJukebox.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 7), new Object[]
-						{
+			registerMachine(Machine.AutoJukebox, new Object[] {
 					"PJP",
 					" F ",
 					" P ",
 					'P', "sheetPlastic",
 					'J', Block.jukebox,
 					'F', machineFrame
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Unifier.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 8), new Object[]
-						{
+			registerMachine(Machine.Unifier, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -423,13 +324,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.comparator,
 					'C', Item.book
-						} ));
-			}
+						} ); 
 			
-			if(Machine.AutoSpawner.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 9), new Object[]
-						{
+			registerMachine(Machine.AutoSpawner, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -439,13 +336,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.emerald,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.BioReactor.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 10), new Object[]
-						{
+			registerMachine(Machine.BioReactor, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -455,13 +348,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.brick,
 					'C', Item.sugar
-						} ));
-			}
+						} ); 
 			
-			if(Machine.BioFuelGenerator.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 11), new Object[]
-						{
+			registerMachine(Machine.BioFuelGenerator, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -471,13 +360,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.blazeRod,
 					'C', powerCoilSilver
-						} ));
-			}
+						} ); 
 			
-			if(Machine.AutoDisenchanter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 12), new Object[]
-						{
+			registerMachine(Machine.AutoDisenchanter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -487,13 +372,9 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.diamond,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.Slaughterhouse.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 13), new Object[]
-						{
+			registerMachine(Machine.Slaughterhouse, new Object[] {
 					"GIG",
 					"SFS",
 					"XCX",
@@ -503,13 +384,9 @@ public class ThermalExpansion extends Vanilla
 					'I', "gearInvar",
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.MeatPacker.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 14), new Object[]
-						{
+			registerMachine(Machine.MeatPacker, new Object[] {
 					"GSG",
 					"BFB",
 					"BCB",
@@ -518,13 +395,9 @@ public class ThermalExpansion extends Vanilla
 					'S', Item.flintAndSteel,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.EnchantmentRouter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 15), new Object[]
-						{					
+			registerMachine(Machine.EnchantmentRouter, new Object[] {					
 					"PBP",
 					"SFS",
 					"PSP",
@@ -532,13 +405,9 @@ public class ThermalExpansion extends Vanilla
 					'B', Item.book,
 					'S', Item.redstoneRepeater,
 					'F', machineFrame
-						} ));
-			}
+						} ); 
 			
-			if(Machine.LaserDrill.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 0), new Object[]
-						{
+			registerMachine(Machine.LaserDrill, new Object[] {
 					"GFG",
 					"CFC",
 					"DHD",
@@ -547,13 +416,9 @@ public class ThermalExpansion extends Vanilla
 					'H', hardenedGlass,
 					'F', lamp,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.LaserDrillPrecharger.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 1), new Object[]
-						{
+			registerMachine(Machine.LaserDrillPrecharger, new Object[] {
 					"GSG",
 					"HFH",
 					"DCD",
@@ -563,13 +428,9 @@ public class ThermalExpansion extends Vanilla
 					'H', hardenedGlass,
 					'F', lamp,
 					'C', powerCoilElectrum
-						} ));
-			}
+						} ); 
 			
-			if(Machine.AutoAnvil.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 2), new Object[]
-						{
+			registerMachine(Machine.AutoAnvil, new Object[] {
 					"GAG",
 					"AFA",
 					" C ",
@@ -577,13 +438,9 @@ public class ThermalExpansion extends Vanilla
 					'A', Block.anvil,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.BlockSmasher.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 3), new Object[]
-						{
+			registerMachine(Machine.BlockSmasher, new Object[] {
 					"GPG",
 					"HFH",
 					"BCB",
@@ -593,26 +450,18 @@ public class ThermalExpansion extends Vanilla
 					'B', Item.book,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.RedNote.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 4), new Object[]
-						{
+			registerMachine(Machine.RedNote, new Object[] {
 					"GNG",
 					"CFC",
 					'G', "sheetPlastic",
 					'C', MineFactoryReloadedCore.rednetCableBlock,
 					'N', Block.music,
 					'F', machineFrame
-						} ));
-			}
+						} ); 
 			
-			if(Machine.AutoBrewer.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 5), new Object[]
-						{
+			registerMachine(Machine.AutoBrewer, new Object[] {
 					"GBG",
 					"CFC",
 					"RCR",
@@ -622,13 +471,9 @@ public class ThermalExpansion extends Vanilla
 					'R', Item.redstoneRepeater,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 			
-			if(Machine.FruitPicker.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 6), new Object[]
-						{
+			registerMachine(Machine.FruitPicker, new Object[] {
 					"GXG",
 					"SFS",
 					"SCS",
@@ -637,8 +482,7 @@ public class ThermalExpansion extends Vanilla
 					'S', Item.shears,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ));
-			}
+						} ); 
 		}
 		catch (Exception x)
 		{

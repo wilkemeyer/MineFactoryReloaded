@@ -110,7 +110,7 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedWorldGen;
 import powercrystals.minefactoryreloaded.setup.recipe.GregTech;
-//import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
+import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
 import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
@@ -591,7 +591,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		if(MFRConfig.thermalExpansionRecipes.getBoolean(false))
 		{
-			//new ThermalExpansion().registerRecipes();
+			new ThermalExpansion().registerRecipes();
 		}
 		
 		if(MFRConfig.gregTechRecipes.getBoolean(false))
