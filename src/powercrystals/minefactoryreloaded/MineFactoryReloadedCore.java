@@ -282,7 +282,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerFluid("milk", MFRConfig.milkStillBlockId.getInt());
 		registerFluid("sludge", MFRConfig.sludgeStillBlockId.getInt());
 		registerFluid("sewage", MFRConfig.sewageStillBlockId.getInt());
-		registerFluid("mobessence", MFRConfig.essenceStillBlockId.getInt(), 7, 310);
+		registerFluid("mobessence", MFRConfig.essenceStillBlockId.getInt(), 9, 310);
 		registerFluid("biofuel", MFRConfig.biofuelStillBlockId.getInt());
 		registerFluid("meat", MFRConfig.meatStillBlockId.getInt());
 		registerFluid("pinkslime", MFRConfig.pinkslimeStillBlockId.getInt());
