@@ -34,7 +34,7 @@ public class ThermalExpansion
 			sendFill(emptyBucket, new ItemStack(Item.bucketMilk), "milk");
 			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.sludgeBucketItem), "sludge");
 			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.sewageBucketItem), "sewage");
-			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem), "essence");
+			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem), "mobessence");
 			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.bioFuelBucketItem), "biofuel");
 			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.meatBucketItem), "meat");
 			sendFill(emptyBucket, new ItemStack(MineFactoryReloadedCore.sewageBucketItem), "sewage");
