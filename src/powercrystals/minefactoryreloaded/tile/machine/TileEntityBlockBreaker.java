@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.FakePlayerFactory;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -30,8 +29,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 		Block b = Block.blocksList[blockId];
 		if(b != null && !b.isAirBlock(worldObj, bp.x, bp.y, bp.z) &&
 				!b.blockMaterial.isLiquid() &&
-				b.getPlayerRelativeBlockHardness(FakePlayerFactory.getMinecraft(worldObj),
-						worldObj, bp.x, bp.y, bp.z) >= 0)
+				b.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0)
 		{
 			worldObj.setBlockToAir(bp.x, bp.y, bp.z);
 			List<ItemStack> drops = b.getBlockDropped(worldObj, bp.x, bp.y, bp.z, blockMeta, 0);
