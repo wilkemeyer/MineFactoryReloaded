@@ -360,59 +360,64 @@ public class Vanilla
 		
 		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
 		
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID, (INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID,
+				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem.itemID,
+				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem.itemID,
+				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID,
+				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID,
+				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID,
+				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
 	}
 	
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
 		
-		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
-		registerOreDictLaserOre(175 / 2, "oreNetherCoal", black, null); // coal isn't in the oredict??
-		registerOreDictLaserOre(70, "oreGold", yellow, "oreNetherGold");
-		registerOreDictLaserOre(150, "oreIron", brown, "oreNetherIron");
-		registerOreDictLaserOre(80, "oreLapis", blue, "oreNetherLapis");
-		registerOreDictLaserOre(50, "oreDiamond", lightBlue, "oreNetherDiamond");
-		registerOreDictLaserOre(100, "oreRedstone", red, "oreNetherRedstone");
-		registerOreDictLaserOre(50, "oreEmerald", lime, "oreNetherEmerald");
-		registerOreDictLaserOre(70, "oreQuartz", white, null);
 		MFRRegistry.registerLaserOre(80, new ItemStack(Block.glowStone));
-		registerOreDictLaserOre(75, "oreCopper", orange, "oreNetherCopper");
-		registerOreDictLaserOre(60, "oreTin", silver, "oreNetherTin");
-		registerOreDictLaserOre(30, "oreSilver", gray, "oreNetherSilver");
-		registerOreDictLaserOre(60, "oreLead", purple, "oreNetherLead");
-		registerOreDictLaserOre(40, "oreNickel", yellow, "oreNetherNickel");
-		registerOreDictLaserOre(20, "oreUranium", lime, "oreNetherUranium");
-		registerOreDictLaserOre(20, "oreYellorite", yellow, null);
-		registerOreDictLaserOre(20, "MonazitOre", green, null);
-		registerOreDictLaserOre(50, "oreCertusQuartz", cyan, null);
-		registerOreDictLaserOre(30, "oreApatite", blue, null);
-		registerOreDictLaserOre(40, "oreSulfur", yellow, null);
-		registerOreDictLaserOre(40, "oreSaltpeter", white, null);
-		registerOreDictLaserOre(60, "oreNaturalAluminum", white, null);
-		registerOreDictLaserOre(10, "oreArdite", orange, null);
-		registerOreDictLaserOre(10, "oreCobalt", blue, null);
-		registerOreDictLaserOre( 5, "oreIridium", white, "oreNetherIridium");
-		registerOreDictLaserOre(50, "oreOsmium", lightBlue, "oreNetherOsmium");
-		registerOreDictLaserOre(50, "orePlatinum", lightBlue, "oreNetherPlatinum");
-		registerOreDictLaserOre(80, "oreForce", yellow, null);
-		registerOreDictLaserOre(40, "oreRuby", red, "oreNetherRuby");
-		registerOreDictLaserOre(40, "oreSapphire", blue, "oreNetherSapphire");
-		registerOreDictLaserOre(40, "oreGreenSapphire", green, "oreNetherGreenSapphire");
-		registerOreDictLaserOre(40, "orePeridot", green, "oreNetherPeridot");
-		registerOreDictLaserOre(30, "oreGalena", -1, null);
-		registerOreDictLaserOre(50, "oreBauxite", brown, null);
-		registerOreDictLaserOre(50, "oreTetrahedrite", -1, null);
-		registerOreDictLaserOre(50, "oreCassiterite", -1, null);
-		registerOreDictLaserOre(20, "oreFirestone", red, null);
-		
+		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
 		MFRRegistry.addLaserPreferredOre(black, new ItemStack(Block.oreCoal));
 		MFRRegistry.addLaserPreferredOre(yellow, new ItemStack(Block.glowStone));
+		registerOreDictLaserOre(175 / 2, "oreNetherCoal", black, null); // coal isn't in the oredict??
+		registerOreDictLaserOre(150, "oreIron", brown, "oreNetherIron");
+		registerOreDictLaserOre(100, "oreRedstone", red, "oreNetherRedstone");
+		registerOreDictLaserOre( 90, "oreCopper", orange, "oreNetherCopper");
+		registerOreDictLaserOre( 85, "oreTin", silver, "oreNetherTin");
+		registerOreDictLaserOre( 85, "oreForce", yellow, null);
+		registerOreDictLaserOre( 80, "oreLapis", blue, "oreNetherLapis");
+		registerOreDictLaserOre( 70, "oreGold", yellow, "oreNetherGold");
+		registerOreDictLaserOre( 70, "oreQuartz", white, null);
+		registerOreDictLaserOre( 60, "oreLead", purple, "oreNetherLead");
+		registerOreDictLaserOre( 60, "oreNaturalAluminum", white, null);
+		registerOreDictLaserOre( 55, "oreDiamond", lightBlue, "oreNetherDiamond");
+		registerOreDictLaserOre( 50, "oreEmerald", lime, "oreNetherEmerald");
+		registerOreDictLaserOre( 50, "oreCertusQuartz", cyan, null);
+		registerOreDictLaserOre( 50, "oreOsmium", lightBlue, "oreNetherOsmium");
+		registerOreDictLaserOre( 50, "oreBauxite", brown, null);
+		registerOreDictLaserOre( 40, "oreNickel", yellow, "oreNetherNickel");
+		registerOreDictLaserOre( 40, "oreSulfur", yellow, null);
+		registerOreDictLaserOre( 40, "oreSaltpeter", white, null);
+		registerOreDictLaserOre( 35, "oreRuby", red, "oreNetherRuby");
+		registerOreDictLaserOre( 35, "oreSapphire", blue, "oreNetherSapphire");
+		registerOreDictLaserOre( 35, "oreGreenSapphire", green, "oreNetherGreenSapphire");
+		registerOreDictLaserOre( 35, "orePeridot", green, "oreNetherPeridot");
+		registerOreDictLaserOre( 30, "oreSilver", gray, "oreNetherSilver");
+		registerOreDictLaserOre( 30, "oreGalena", purple, null);
+		registerOreDictLaserOre( 30, "oreApatite", blue, null);
+		registerOreDictLaserOre( 20, "oreUranium", lime, "oreNetherUranium");
+		registerOreDictLaserOre( 20, "oreYellorite", yellow, null);
+		registerOreDictLaserOre( 20, "oreFirestone", red, null);
+		registerOreDictLaserOre( 20, "MonazitOre", green, null);
+		registerOreDictLaserOre( 15, "orePlatinum", lightBlue, "oreNetherPlatinum");
+		registerOreDictLaserOre( 10, "oreArdite", orange, null);
+		registerOreDictLaserOre( 10, "oreCobalt", blue, null);
+		registerOreDictLaserOre(  5, "oreIridium", white, "oreNetherIridium");
+		registerOreDictLaserOre( 50, "oreTetrahedrite", -1, null);
+		registerOreDictLaserOre( 50, "oreCassiterite", -1, null);
 	}
 	
 	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName)
