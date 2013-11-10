@@ -1,24 +1,29 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.transport.IPipeTile.PipeType;
+
+import cofh.api.energy.IEnergyHandler;
+
 import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import powercrystals.core.asm.relauncher.Implementable;
+
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.setup.Machine;
+
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.transport.IPipeTile.PipeType;
 
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
@@ -32,9 +37,9 @@ import buildcraft.api.transport.IPipeTile.PipeType;
  * progress bar correctly.
  */
 
-@Implementable("cofh.api.energy.IEnergyHandler")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-												implements IPowerReceptor, IEnergySink, IElectrical
+											implements IPowerReceptor, IEnergySink, IElectrical,
+														IEnergyHandler
 {	
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
@@ -194,7 +199,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 					amountToDrop = itemstack.stackSize;
 				}
 				itemstack.stackSize -= amountToDrop;
-				EntityItem entityitem = new EntityItem(worldObj, xCoord + xOffset, yCoord + yOffset, zCoord + zOffset, new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
+				EntityItem entityitem = new EntityItem(worldObj,
+						xCoord + xOffset, yCoord + yOffset, zCoord + zOffset,
+						new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
 				if(itemstack.getTagCompound() != null)
 				{
 					entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
@@ -315,27 +322,32 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// TE methods
 	
+	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
 	{
 		return storeEnergy(maxReceive, !simulate);
 	}
 
+	@Override
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean doExtract)
 	{
 		return 0;
 	}
 
+	@Override
 	public boolean canInterface(ForgeDirection from)
 	{
 		return true;
 	}
 
+	@Override
 	public int getEnergyStored(ForgeDirection from)
 	{
 		return getEnergyStored();
 	}
 
-    public int getMaxEnergyStored(ForgeDirection from)
+    @Override
+	public int getMaxEnergyStored(ForgeDirection from)
 	{
 		return getEnergyStoredMax();
 	}
