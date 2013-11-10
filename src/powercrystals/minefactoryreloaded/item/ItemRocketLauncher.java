@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +47,11 @@ public class ItemRocketLauncher extends ItemFactory
 					new Object[] { player.entityId,
 					damage == 0 ? MineFactoryReloadedClient.instance.getLockedEntity() : Integer.MIN_VALUE
 				}));
+			}
+			else if (player.getCommandSenderName().equals("[CoFH]"))
+			{
+				EntityRocket r = new EntityRocket(world, player, null);
+				world.spawnEntityInWorld(r);
 			}
 		}
 		return stack;
