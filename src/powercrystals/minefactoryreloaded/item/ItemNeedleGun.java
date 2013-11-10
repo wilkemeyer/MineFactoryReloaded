@@ -31,7 +31,7 @@ public class ItemNeedleGun extends ItemFactory
 			ItemStack ammo = new ItemStack(0, 0, 0);
 			ammo.readFromNBT(stack.getTagCompound().getCompoundTag("ammo"));
 			
-			if(!player.worldObj.isRemote)
+			if(!world.isRemote)
 			{
 				EntityNeedle needle = new EntityNeedle(world, player, ammo, 1.0F);
 				world.spawnEntityInWorld(needle);
