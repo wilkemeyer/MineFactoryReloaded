@@ -43,13 +43,6 @@ public class Thaumcraft
 			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			
-			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));
-			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres.blockID, HarvestType.Normal));
-			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves.blockID, tcSapling.blockID));
-			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling.blockID));
-			
-			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling.blockID, tcSapling.blockID));
-			
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			
 			MFRRegistry.registerGrinderBlacklist(golem);
@@ -58,6 +51,13 @@ public class Thaumcraft
 			{
 				MFRRegistry.registerConveyerBlacklist(golem);
 			}
+			
+			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));
+			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres.blockID, HarvestType.Normal));
+			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves.blockID, tcSapling.blockID));
+			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling.blockID));
+			
+			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling.blockID, tcSapling.blockID));
 			
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
 			aspects = (LinkedHashMap<String, ? extends Object>)Aspect.
