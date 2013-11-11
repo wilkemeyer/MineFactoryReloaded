@@ -43,7 +43,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotCopper",
 					'C', powerCoilGold,
-						} ); 
+						} );
 			
 			registerMachine(Machine.Fisher, new Object[] {
 					"PTP",
@@ -55,7 +55,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Harvester, new Object[] {
 					"PTP",
@@ -67,7 +67,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotGold",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Rancher, new Object[] {
 					"PTP",
@@ -79,7 +79,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotTin",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Fertilizer, new Object[] {
 					"PTP",
@@ -91,7 +91,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotSilver",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Vet, new Object[] {
 					"PTP",
@@ -102,7 +102,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotCopper",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.ItemCollector, 8, new Object[] {
 					"P P",
@@ -111,7 +111,7 @@ public class ThermalExpansion extends Vanilla
 					'P', "sheetPlastic",
 					'F', machineFrame,
 					'C', Block.chest
-						} ); 
+						} );
 			
 			registerMachine(Machine.BlockBreaker, new Object[] {
 					"PTP",
@@ -123,7 +123,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.WeatherCollector, new Object[] {
 					"PTP",
@@ -134,7 +134,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotTin",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.SludgeBoiler, new Object[] {
 					"PTP",
@@ -146,7 +146,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Sewer, 4, new Object[] {
 					"PTP",
@@ -157,7 +157,7 @@ public class ThermalExpansion extends Vanilla
 					'S', Item.brick,
 					'F', machineFrame,
 					'Q', pneumaticServo,
-						} ); 
+						} );
 			
 			registerMachine(Machine.Composter, new Object[] {
 					"PTP",
@@ -169,7 +169,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.brick,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Breeder, new Object[] {
 					"PTP",
@@ -181,7 +181,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', new ItemStack(Item.dyePowder, 1, 5),
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Grinder, new Object[] {
 					"PTP",
@@ -193,7 +193,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.book,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.AutoEnchanter, new Object[] {
 					"PTP",
@@ -205,7 +205,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.diamond,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Chronotyper, new Object[] {
 					"PTP",
@@ -216,7 +216,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', new ItemStack(Item.dyePowder, 1, 5),
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Ejector, 8, new Object[] {							
 					"PTP",
@@ -226,7 +226,7 @@ public class ThermalExpansion extends Vanilla
 					'T', pneumaticServo,
 					'F', machineFrame,
 					'O', Item.redstone
-						} ); 
+						} );
 			
 			registerMachine(Machine.ItemRouter, 8, new Object[] {					
 					"PTP",
@@ -236,7 +236,7 @@ public class ThermalExpansion extends Vanilla
 					'T', Block.chest,
 					'S', Item.redstoneRepeater,
 					'F', machineFrame
-						} ); 
+						} );
 			
 			registerMachine(Machine.LiquidRouter, 8, new Object[] {					
 					"PTP",
@@ -246,7 +246,7 @@ public class ThermalExpansion extends Vanilla
 					'T', conduitLiquid,
 					'S', Item.redstoneRepeater,
 					'F', machineFrame
-						} ); 
+						} );
 			
 			int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
 			registerMachine(Machine.DeepStorageUnit, dsuCount, new Object[] {					
@@ -280,7 +280,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.book,
 					'C', pneumaticServo
-						} ); 
+						} );
 			
 			registerMachine(Machine.LavaFabricator, new Object[] {
 					"PTP",
@@ -292,7 +292,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.blazeRod,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.OilFabricator, new Object[] {
 					"PTP",
@@ -303,7 +303,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Block.obsidian,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.AutoJukebox, new Object[] {
 					"PJP",
@@ -312,7 +312,7 @@ public class ThermalExpansion extends Vanilla
 					'P', "sheetPlastic",
 					'J', Block.jukebox,
 					'F', machineFrame
-						} ); 
+						} );
 			
 			registerMachine(Machine.Unifier, new Object[] {
 					"PTP",
@@ -324,7 +324,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.comparator,
 					'C', Item.book
-						} ); 
+						} );
 			
 			registerMachine(Machine.AutoSpawner, new Object[] {
 					"PTP",
@@ -336,7 +336,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.emerald,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.BioReactor, new Object[] {
 					"PTP",
@@ -348,7 +348,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.brick,
 					'C', Item.sugar
-						} ); 
+						} );
 			
 			registerMachine(Machine.BioFuelGenerator, new Object[] {
 					"PTP",
@@ -360,7 +360,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.blazeRod,
 					'C', powerCoilSilver
-						} ); 
+						} );
 			
 			registerMachine(Machine.AutoDisenchanter, new Object[] {
 					"PTP",
@@ -372,7 +372,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', Item.diamond,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.Slaughterhouse, new Object[] {
 					"GIG",
@@ -384,7 +384,7 @@ public class ThermalExpansion extends Vanilla
 					'I', "gearInvar",
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.MeatPacker, new Object[] {
 					"GSG",
@@ -395,7 +395,7 @@ public class ThermalExpansion extends Vanilla
 					'S', Item.flintAndSteel,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.EnchantmentRouter, new Object[] {					
 					"PBP",
@@ -405,7 +405,7 @@ public class ThermalExpansion extends Vanilla
 					'B', Item.book,
 					'S', Item.redstoneRepeater,
 					'F', machineFrame
-						} ); 
+						} );
 			
 			registerMachine(Machine.LaserDrill, new Object[] {
 					"GFG",
@@ -416,7 +416,7 @@ public class ThermalExpansion extends Vanilla
 					'H', hardenedGlass,
 					'F', lamp,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.LaserDrillPrecharger, new Object[] {
 					"GSG",
@@ -428,7 +428,7 @@ public class ThermalExpansion extends Vanilla
 					'H', hardenedGlass,
 					'F', lamp,
 					'C', powerCoilElectrum
-						} ); 
+						} );
 			
 			registerMachine(Machine.AutoAnvil, new Object[] {
 					"GAG",
@@ -438,7 +438,7 @@ public class ThermalExpansion extends Vanilla
 					'A', Block.anvil,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.BlockSmasher, new Object[] {
 					"GPG",
@@ -450,7 +450,7 @@ public class ThermalExpansion extends Vanilla
 					'B', Item.book,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.RedNote, new Object[] {
 					"GNG",
@@ -459,7 +459,7 @@ public class ThermalExpansion extends Vanilla
 					'C', MineFactoryReloadedCore.rednetCableBlock,
 					'N', Block.music,
 					'F', machineFrame
-						} ); 
+						} );
 			
 			registerMachine(Machine.AutoBrewer, new Object[] {
 					"GBG",
@@ -471,7 +471,7 @@ public class ThermalExpansion extends Vanilla
 					'R', Item.redstoneRepeater,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ); 
+						} );
 			
 			registerMachine(Machine.FruitPicker, new Object[] {
 					"GXG",
@@ -482,7 +482,30 @@ public class ThermalExpansion extends Vanilla
 					'S', Item.shears,
 					'F', machineFrame,
 					'C', powerCoilGold
-						} ); 
+						} );
+			
+			registerMachine(Machine.BlockPlacer, new Object[]
+						{
+					"GSG",
+					"DDD",
+					" M ",
+					'G', "sheetPlastic",
+					'D', Block.dispenser,
+					'S', pneumaticServo,
+					'M', machineFrame,
+						} );
+			
+			registerMachine(Machine.MobCounter, new Object[]
+						{
+					"GGG",
+					"RCR",
+					"SMS",
+					'G', "sheetPlastic",
+					'R', Item.redstoneRepeater,
+					'C', Item.comparator,
+					'S', MineFactoryReloadedCore.spyglassItem,
+					'M', machineFrame,
+						} );
 		}
 		catch (Exception x)
 		{
