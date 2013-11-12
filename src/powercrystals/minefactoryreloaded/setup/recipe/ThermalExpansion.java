@@ -32,6 +32,7 @@ public class ThermalExpansion extends Vanilla
 			ItemStack tesseractFrameFull = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameFull", 1);
 			ItemStack strongBox = GameRegistry.findItemStack("ThermalExpansion", "strongboxReinforced", 1);
 			ItemStack strongBoxBasic = GameRegistry.findItemStack("ThermalExpansion", "strongboxBasic", 1);
+			ItemStack multimeter = GameRegistry.findItemStack("ThermalExpansion", "multimeter", 1);
 			
 			registerMachine(Machine.Planter, new Object[] {
 					"PTP",
@@ -503,7 +504,7 @@ public class ThermalExpansion extends Vanilla
 					'G', "sheetPlastic",
 					'R', Item.redstoneRepeater,
 					'C', Item.comparator,
-					'S', MineFactoryReloadedCore.spyglassItem, // multimeter instead?
+					'S', multimeter,
 					'M', machineFrame,
 						} );
 		}
