@@ -67,10 +67,7 @@
 		<get src="https://github.com/Universal-Electricity/Universal-Electricity/archive/642962a2654d611b8b90a32113b0ab73159d7a76.zip" dest="${download.dir}/ue-api.zip" />
 		
 		<echo message="Downloading ThermalExpansion API... " />
-		<mkdir dir="${download.dir}/cofh/" />
-		<mkdir dir="${download.dir}/cofh/api/" />
-		<mkdir dir="${download.dir}/cofh/api/energy/" />
-		<get src="https://raw.github.com/KingLemming/CoFHLib/master/cofh/api/energy/IEnergyHandler.java" dest="${download.dir}/cofh/api/energy/IEnergyHandler.java" />
+		<get src="https://github.com/KingLemming/CoFHLib/archive/1848fb59f53f72dfd4b416ecfd89c26c1a9a80c5.zip" dest="${download.dir}/cofh-api.zip" />
 		<!--
 		<get src="https://dl.dropboxusercontent.com/u/57416963/Minecraft/Mods/ThermalExpansion/api/ThermalExpansion-API-2.3.0.zip" dest="${download.dir}/te-api.zip" />
 		-->
@@ -106,7 +103,9 @@
 		<delete dir="${mcpsrc.dir}/universalelectricity/prefab"/>
 		
 		<echo message="Extracting ThermalExpansion API... " />
-		<move file="${download.dir}/cofh" todir="${mcpsrc.dir}" />
+		<unzip src="${download.dir}/cofh-api.zip" dest="${download.dir}" />
+		<mkdir dir="${mcpsrc.dir}/cofh" />
+		<move file="${download.dir}/CoFHLib-1848fb59f53f72dfd4b416ecfd89c26c1a9a80c5/cofh/api" todir="${mcpsrc.dir}/cofh" />
 		<!--
 		<unzip src="${download.dir}/te-api.zip" dest="${download.dir}/thermalexpansion/" />
 		<move file="${download.dir}/thermalexpansion/thermalexpansion" todir="${mcpsrc.dir}" />
