@@ -6,6 +6,7 @@ import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.tileentity.IEnergyInfo;
 
 import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -39,7 +40,7 @@ import universalelectricity.core.electricity.ElectricityPack;
 
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
 											implements IPowerReceptor, IEnergySink, IElectrical,
-														IEnergyHandler
+														IEnergyHandler, IEnergyInfo
 {	
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
@@ -220,6 +221,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return _energyActivation;
 	}
 	
+	@Override // internal method and a TE method. used for the same thing
 	public int getMaxEnergyPerTick()
 	{
 		return _maxEnergyTick;
@@ -321,6 +323,24 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int storeEnergy(int energy) { return storeEnergy(energy, true); }
 	
 	// TE methods
+
+	@Override
+	public int getEnergyPerTick()
+	{
+		return getEnergyRequired();
+	}
+
+	@Override
+	public int getEnergy()
+	{
+		return getEnergyStored();
+	}
+
+	@Override
+	public int getMaxEnergy()
+	{
+		return getEnergyStoredMax();
+	}
 	
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
