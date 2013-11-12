@@ -47,8 +47,13 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		_outputPulseSize = machine.getActivationEnergy();
 		_bufferMax = machine.getMaxEnergyStorage();
 		
-		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		_tank = createTank();
 		setManageFluids(true);
+	}
+	
+	protected FluidTank createTank()
+	{
+		return new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 	}
 	
 	protected abstract boolean isFluidFuel(FluidStack fuel);
