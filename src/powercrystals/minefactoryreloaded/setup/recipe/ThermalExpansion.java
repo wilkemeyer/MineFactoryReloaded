@@ -33,6 +33,7 @@ public class ThermalExpansion extends Vanilla
 			ItemStack strongBox = GameRegistry.findItemStack("ThermalExpansion", "strongboxReinforced", 1);
 			ItemStack strongBoxBasic = GameRegistry.findItemStack("ThermalExpansion", "strongboxBasic", 1);
 			ItemStack multimeter = GameRegistry.findItemStack("ThermalExpansion", "multimeter", 1);
+			// maybe invar tools in place of gold?
 			
 			registerMachine(Machine.Planter, new Object[] {
 					"PTP",

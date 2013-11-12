@@ -40,6 +40,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 			int powerProducedPerConsumption, int ticksBetweenConsumption)
 	{
 		super(machine);
+		assert machine.getActivationEnergy() != 0 : "Generators cannot produce 0 energy.";
 		_liquidConsumedPerTick = liquidConsumedPerTick;
 		_powerProducedPerConsumption = powerProducedPerConsumption;
 		_ticksBetweenConsumption = ticksBetweenConsumption;
@@ -50,7 +51,17 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		setManageFluids(true);
 	}
 	
-	protected abstract boolean isLiquidFuel(FluidStack liquid);
+	protected abstract boolean isFluidFuel(FluidStack fuel);
+	
+	protected String getFluidName(FluidStack fluid)
+	{
+		if (fluid == null || fluid.getFluid() == null)
+			return null;
+		String name = fluid.getFluid().getName();
+		if (name == null)
+			return null;
+		return name.trim().toLowerCase();
+	}
 	
 	public int getBuffer()
 	{
@@ -133,7 +144,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (isLiquidFuel(resource))
+		if (isFluidFuel(resource))
 			return _tank.fill(resource, doFill);
 		return 0;
 	}

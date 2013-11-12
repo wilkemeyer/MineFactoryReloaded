@@ -16,14 +16,11 @@ public class TileEntityBioFuelGenerator extends TileEntityLiquidGenerator
 	}
 	
 	@Override
-	protected boolean isLiquidFuel(FluidStack fuel)
+	protected boolean isFluidFuel(FluidStack fuel)
 	{
-		if (fuel == null || fuel.getFluid() == null)
-			return false;
-		String name = fuel.getFluid().getName();
+		String name = getFluidName(fuel);
 		if (name == null)
 			return false;
-		name = name.trim().toLowerCase();
 		return name.equals("biofuel") || name.equals("bioethanol");
 	}
 }
