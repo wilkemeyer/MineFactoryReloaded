@@ -93,4 +93,12 @@ public class TileEntityEjector extends TileEntityFactory
 			return super.overridePipeConnection(type, with);
 		return ConnectOverride.DISCONNECT;
 	}
+
+	@Override
+	public boolean canConduitConnect(ForgeDirection side)
+	{
+		if (side == getDirectionFacing())
+			return super.canConduitConnect(side);
+		return false;
+	}
 }
