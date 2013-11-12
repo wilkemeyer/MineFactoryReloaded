@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.api.block.IDismantleable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.ArrayList;
 
 import net.minecraft.block.BlockContainer;
@@ -26,6 +30,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidTank;
+
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
@@ -37,14 +42,10 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityCollector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
-import cofh.api.block.IDismantleable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryMachine extends BlockContainer implements IConnectableRedNet, IDismantleable
 {
@@ -212,11 +213,6 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 			((TileEntityFactoryInventory)te).onBlockBroken();
 		}
 
-		if(te instanceof TileEntityAutoJukebox)
-		{
-			((TileEntityAutoJukebox)te).stopRecord();
-		}
-
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 
@@ -234,7 +230,8 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 
 	@Override
 	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
-			boolean returnBlock) {
+			boolean returnBlock)
+	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if (te instanceof TileEntityFactory)
 		{
@@ -259,7 +256,8 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+	{
 		return world.getBlockTileEntity(x, y, z) instanceof TileEntityFactory;
 	}
 
@@ -280,25 +278,24 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 			te.readFromNBT(stack.getTagCompound());
 		}
 
-		if(te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
+		if(te instanceof TileEntityFactory)
 		{
-			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
-			if(facing == 0)
-			{
-				((TileEntityFactory)te).rotateDirectlyTo(3);
-			}
-			else if(facing == 1)
-			{
-				((TileEntityFactory)te).rotateDirectlyTo(4);
-			}
-			else if(facing == 2)
-			{
-				((TileEntityFactory)te).rotateDirectlyTo(2);
-			}
-			else if(facing == 3)
-			{
-				((TileEntityFactory)te).rotateDirectlyTo(5);
-			}
+			if (((TileEntityFactory)te).canRotate())
+				switch (MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3)
+				{
+				case 0:
+					((TileEntityFactory)te).rotateDirectlyTo(3);
+					break;
+				case 1:
+					((TileEntityFactory)te).rotateDirectlyTo(4);
+					break;
+				case 2:
+					((TileEntityFactory)te).rotateDirectlyTo(2);
+					break;
+				case 3:
+					((TileEntityFactory)te).rotateDirectlyTo(5);
+					break;
+				}
 
 			if (te instanceof TileEntityFactoryInventory)
 			{

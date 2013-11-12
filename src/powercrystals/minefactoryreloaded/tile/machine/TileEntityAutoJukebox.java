@@ -105,6 +105,13 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	}
 	
 	@Override
+	public void onBlockBroken()
+	{
+		stopRecord();
+		super.onBlockBroken();
+	}
+	
+	@Override
 	public int getSizeInventory()
 	{
 		return 2;
