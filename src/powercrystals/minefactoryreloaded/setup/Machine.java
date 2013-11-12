@@ -54,6 +54,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityRedNote;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntitySewer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntitySlaughterhouse;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntitySludgeBoiler;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntitySteamTurbine;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityVet;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityWeather;
@@ -109,6 +110,7 @@ public class Machine
 	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, "factoryFruitPicker", 320, 16000);
 	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 10, 16000);
 	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter");
+	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 80, 10000);
 	
 	private int _blockIndex;
 	private int _meta;
