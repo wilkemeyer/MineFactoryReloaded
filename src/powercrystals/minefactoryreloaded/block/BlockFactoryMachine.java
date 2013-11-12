@@ -11,6 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -41,13 +42,14 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityCollector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
+import cofh.api.block.IDismantleable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFactoryMachine extends BlockContainer implements IConnectableRedNet
+public class BlockFactoryMachine extends BlockContainer implements IConnectableRedNet, IDismantleable
 {
 	private int _mfrMachineBlockIndex;
-	
+
 	public BlockFactoryMachine(int blockId, int index)
 	{
 		super(blockId, Material.clay);
@@ -57,19 +59,19 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		setUnlocalizedName("mfr.machine." + index);
 		_mfrMachineBlockIndex = index;
 	}
-	
+
 	public int getBlockIndex()
 	{
 		return _mfrMachineBlockIndex;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister ir)
 	{
 		Machine.LoadTextures(_mfrMachineBlockIndex, ir);
 	}
-	
+
 	@Override
 	public Icon getBlockTexture(IBlockAccess iblockaccess, int x, int y, int z, int side)
 	{
@@ -83,7 +85,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, md).getIcon(side, isActive);
 	}
-	
+
 	@Override
 	public Icon getIcon(int side, int meta)
 	{
@@ -97,7 +99,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getIcon(side, false);
 	}
-	
+
 	@Override
 	public int getLightOpacity(World world, int x, int y, int z)
 	{
@@ -107,7 +109,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return super.getLightOpacity(world, x, y, z);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
@@ -123,7 +125,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 			return super.getCollisionBoundingBoxFromPool(world, x, y, z);
 		}
 	}
-	
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
@@ -150,9 +152,120 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 	}
-	
+
+	private void dropContents(TileEntity te)
+	{
+		if(te instanceof IInventory && !(te instanceof TileEntityDeepStorageUnit))
+		{
+			World world = te.worldObj;
+			IInventory inventory = ((IInventory)te);
+			inv: for(int i = 0; i < inventory.getSizeInventory(); i++)
+			{
+				if(te instanceof TileEntityFactoryInventory && !((TileEntityFactoryInventory)te).shouldDropSlotWhenBroken(i))
+				{
+					continue;
+				}
+
+				ItemStack itemstack = inventory.getStackInSlot(i);
+				if(itemstack == null)
+				{
+					continue;
+				}
+				float xOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+				float yOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+				float zOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+				do
+				{
+					if(itemstack.stackSize <= 0)
+					{
+						continue inv;
+					}
+					int amountToDrop = world.rand.nextInt(21) + 10;
+					if(amountToDrop > itemstack.stackSize)
+					{
+						amountToDrop = itemstack.stackSize;
+					}
+					itemstack.stackSize -= amountToDrop;
+					EntityItem entityitem = new EntityItem(world, te.xCoord + xOffset, te.yCoord + yOffset, te.zCoord + zOffset, new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
+					if(itemstack.getTagCompound() != null)
+					{
+						entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
+					}
+					float motionMultiplier = 0.05F;
+					entityitem.motionX = (float)world.rand.nextGaussian() * motionMultiplier;
+					entityitem.motionY = (float)world.rand.nextGaussian() * motionMultiplier + 0.2F;
+					entityitem.motionZ = (float)world.rand.nextGaussian() * motionMultiplier;
+					world.spawnEntityInWorld(entityitem);
+				} while(true);
+			}
+		}
+	}
+
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
+	{
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		dropContents(te);
+
+		if(te instanceof TileEntityFactoryInventory)
+		{
+			((TileEntityFactoryInventory)te).onBlockBroken();
+		}
+
+		if(te instanceof TileEntityAutoJukebox)
+		{
+			((TileEntityAutoJukebox)te).stopRecord();
+		}
+
+		super.breakBlock(world, x, y, z, blockId, meta);
+	}
+
+	@Override
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata,
+			int fortune)
+	{
+		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+		ItemStack machine = new ItemStack(idDropped(blockID, world.rand, fortune), 1,
+				damageDropped(metadata));
+		machine.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
+		drops.add(machine);
+		return drops;
+	}
+
+	@Override
+	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
+			boolean returnBlock) {
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if (te instanceof TileEntityFactory)
+		{
+			ItemStack machine = new ItemStack(idDropped(blockID, world.rand, 0), 1,
+					damageDropped(world.getBlockMetadata(x, y, z)));
+			dropContents(te);
+			NBTTagCompound tag = new NBTTagCompound();
+			te.writeToNBT(tag);
+			if (te instanceof IInventory && ((IInventory)te).isInvNameLocalized())
+			{
+				NBTTagCompound name = new NBTTagCompound();
+				name.setString("Name", ((IInventory)te).getInvName());
+				tag.setTag("display", name);
+			}
+			machine.setTagCompound(tag);
+			world.setBlockToAir(x, y, z);
+			if (!returnBlock)
+				dropBlockAsItem_do(world, x, y, z, machine);
+			return machine;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+		return world.getBlockTileEntity(x, y, z) instanceof TileEntityFactory;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity,
+			ItemStack stack)
 	{
 		if(entity == null)
 		{
@@ -166,7 +279,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 			stack.getTagCompound().setInteger("z", z);
 			te.readFromNBT(stack.getTagCompound());
 		}
-		
+
 		if(te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
@@ -186,42 +299,42 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 			{
 				((TileEntityFactory)te).rotateDirectlyTo(5);
 			}
-			
+
 			if (te instanceof TileEntityFactoryInventory)
 			{
-		        if (stack.hasDisplayName())
-		        {
-		            ((TileEntityFactoryInventory)te).setInvName(stack.getDisplayName());
-		        }
+				if (stack.hasDisplayName())
+				{
+					((TileEntityFactoryInventory)te).setInvName(stack.getDisplayName());
+				}
 			}
 		}
 	}
-	
+
 	@Override
 	public int damageDropped(int i)
 	{
 		return i;
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(World world, int md)
 	{
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, md).getNewTileEntity();
 	}
-	
+
 	@Override
 	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
 	{
-        if (world.isRemote)
-        {
-            return false;
-        }
+		if (world.isRemote)
+		{
+			return false;
+		}
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if(te instanceof IRotateableTile)
 		{
@@ -234,13 +347,13 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean hasComparatorInputOverride()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
 	{
@@ -274,16 +387,18 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return ret;
 	}
-	
+
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float xOffset, float yOffset, float zOffset)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer,
+			int side, float xOffset, float yOffset, float zOffset)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(entityplayer, Action.RIGHT_CLICK_BLOCK, x, y, z, side);
+		PlayerInteractEvent e = new PlayerInteractEvent(entityplayer, Action.RIGHT_CLICK_BLOCK,
+				x, y, z, side);
 		if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
 		{
 			return false;
 		}
-		
+
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if(te == null)
 		{
@@ -310,13 +425,15 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 				return true;
 			}
 		}/*
-		if(MFRUtil.isHoldingHammer(entityplayer) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
+		if(MFRUtil.isHoldingHammer(entityplayer) && te instanceof TileEntityFactory &&
+		 		((TileEntityFactory)te).canRotate())
 		{
 			((TileEntityFactory)te).rotate();
 			world.markBlockForUpdate(x, y, z);
 			return true;
 		} else //*/ 
-		if(te instanceof TileEntityFactory && ((TileEntityFactory)te).getContainer(entityplayer.inventory) != null)
+		if(te instanceof TileEntityFactory &&
+				((TileEntityFactory)te).getContainer(entityplayer.inventory) != null)
 		{
 			if(!world.isRemote)
 			{
@@ -326,96 +443,25 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return false;
 	}
-	
-	@Override
-	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
-	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te instanceof IInventory && !(te instanceof TileEntityDeepStorageUnit))
-		{
-			IInventory inventory = ((IInventory)te);
-			inv: for(int i = 0; i < inventory.getSizeInventory(); i++)
-			{
-				if(te instanceof TileEntityFactoryInventory && !((TileEntityFactoryInventory)te).shouldDropSlotWhenBroken(i))
-				{
-					continue;
-				}
-				
-				ItemStack itemstack = inventory.getStackInSlot(i);
-				if(itemstack == null)
-				{
-					continue;
-				}
-				float xOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-				float yOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-				float zOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-				do
-				{
-					if(itemstack.stackSize <= 0)
-					{
-						continue inv;
-					}
-					int amountToDrop = world.rand.nextInt(21) + 10;
-					if(amountToDrop > itemstack.stackSize)
-					{
-						amountToDrop = itemstack.stackSize;
-					}
-					itemstack.stackSize -= amountToDrop;
-					EntityItem entityitem = new EntityItem(world, x + xOffset, y + yOffset, z + zOffset, new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
-					if(itemstack.getTagCompound() != null)
-					{
-						entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
-					}
-					float motionMultiplier = 0.05F;
-					entityitem.motionX = (float)world.rand.nextGaussian() * motionMultiplier;
-					entityitem.motionY = (float)world.rand.nextGaussian() * motionMultiplier + 0.2F;
-					entityitem.motionZ = (float)world.rand.nextGaussian() * motionMultiplier;
-					world.spawnEntityInWorld(entityitem);
-				} while(true);
-			}
-		}
-		
-		if(te instanceof TileEntityFactoryInventory)
-		{
-			((TileEntityFactoryInventory)te).onBlockBroken();
-		}
-		
-		if(te instanceof TileEntityAutoJukebox)
-		{
-			((TileEntityAutoJukebox)te).stopRecord();
-		}
-		
-		super.breakBlock(world, x, y, z, blockId, meta);
-	}
-	
-	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
-	{
-		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-		ItemStack machine = new ItemStack(idDropped(blockID, world.rand, fortune), 1, damageDropped(metadata));
-		machine.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
-		drops.add(machine);
-		return drops;
-	}
-	
+
 	@Override
 	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean isBlockNormalCube(World world, int x, int y, int z)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canProvidePower()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
 	{
@@ -426,36 +472,36 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return isProvidingWeakPower(world, x, y, z, side);
 	}
-	
+
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return RedNetConnectionType.CableSingle;
 	}
-	
+
 	@Override
 	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
 	}
-	
+
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
