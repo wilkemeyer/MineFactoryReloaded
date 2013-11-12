@@ -22,7 +22,8 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 	}
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
+			int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
 		Block block = Block.blocksList[world.getBlockId(x, y, z)];
 		if (block != null)
@@ -30,7 +31,8 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 			if (player.isSneaking() && block instanceof IDismantleable &&
 					((IDismantleable)block).canDismantle(player, world, x, y, z))
 			{
-				((IDismantleable)block).dismantleBlock(player, world, x, y, z, false);
+				if (!world.isRemote)
+					((IDismantleable)block).dismantleBlock(player, world, x, y, z, false);
 				player.swingItem();
 				return !world.isRemote;
 			}
