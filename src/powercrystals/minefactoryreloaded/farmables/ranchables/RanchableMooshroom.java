@@ -8,6 +8,7 @@ import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -28,8 +29,12 @@ public class RanchableMooshroom implements IFactoryRanchable {
 	@Override
 	public List<RanchedItem> ranch(World world, EntityLivingBase entity, IInventory rancher)
 	{
-		List<RanchedItem> drops = new LinkedList<RanchedItem>();
+		NBTTagCompound tag = entity.getEntityData();
+		if (tag.getLong("mfr:lastRanched") > world.getWorldTime())
+			return null;
+		tag.setLong("mfr:lastRanched", world.getWorldTime() + 20 * 5);
 		
+		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		IInventoryManager manager = InventoryManager.create(rancher, ForgeDirection.UP);
 		int bowlIndex = manager.findItem(new ItemStack(Item.bowlEmpty));
 		if(bowlIndex >= 0)
