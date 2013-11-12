@@ -486,12 +486,12 @@ public class ThermalExpansion extends Vanilla
 			
 			registerMachine(Machine.BlockPlacer, new Object[]
 						{
+					"GDG",
+					"DMD",
 					"GSG",
-					"DDD",
-					" M ",
 					'G', "sheetPlastic",
 					'D', Block.dispenser,
-					'S', pneumaticServo,
+					'S', powerCoilGold,
 					'M', machineFrame,
 						} );
 			
@@ -503,7 +503,7 @@ public class ThermalExpansion extends Vanilla
 					'G', "sheetPlastic",
 					'R', Item.redstoneRepeater,
 					'C', Item.comparator,
-					'S', MineFactoryReloadedCore.spyglassItem,
+					'S', MineFactoryReloadedCore.spyglassItem, // multimeter instead?
 					'M', machineFrame,
 						} );
 		}

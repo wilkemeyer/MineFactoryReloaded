@@ -108,7 +108,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	public boolean canThisFactoryPaneConnectToThisBlockID(int blockId)
 	{
 		return Block.opaqueCubeLookup[blockId] ||
-				blockId == Block.glass.blockID ||
+				blockId == Block.glass.blockID || // connect to glass material?
 				blockId == MineFactoryReloadedCore.factoryGlassPaneBlock.blockID ||
 				blockId == MineFactoryReloadedCore.factoryGlassBlock.blockID ||
 				(blockId == Block.thinGlass.blockID && MFRConfig.vanillaOverrideGlassPane.getBoolean(true));
