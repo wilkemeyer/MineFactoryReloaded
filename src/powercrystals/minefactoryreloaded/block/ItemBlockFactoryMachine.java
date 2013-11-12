@@ -54,16 +54,14 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory
 					info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() +
 							" (" + storedItem.itemID + ":" + storedItem.getItemDamageForDisplay() + ")");
 				}
-				else
-				{
-					// info.add("Empty");
-				}
 			}
 		}
-		else if(getBlockID() == Machine.BioFuelGenerator.getBlockId() &&
-				stack.getItemDamage() == Machine.BioFuelGenerator.getMeta())
+		else if ((getBlockID() == Machine.BioFuelGenerator.getBlockId() &&
+				stack.getItemDamage() == Machine.BioFuelGenerator.getMeta()) ||
+				(getBlockID() == Machine.SteamTurbine.getBlockId() &&
+				stack.getItemDamage() == Machine.SteamTurbine.getMeta()))
 		{
-			info.add("Produces MJ only.");
+			info.add("Produces MJ and RF.");
 		}
 	}
 }
