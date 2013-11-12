@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -8,6 +12,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.gui.client.GuiLiquidGenerator;
+import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
+import powercrystals.minefactoryreloaded.gui.container.ContainerLiquidGenerator;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityLiquidGenerator extends TileEntityGenerator implements ITankContainerBucketable
@@ -21,7 +28,16 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	private int _bufferMax;
 	private int _buffer;
 	
-	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick, int powerProducedPerConsumption, int ticksBetweenConsumption)
+	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick,
+			int ticksBetweenConsumption)
+	{
+		this(machine, liquidConsumedPerTick,
+				machine.getActivationEnergy() * ticksBetweenConsumption,
+				ticksBetweenConsumption);
+	}
+	
+	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick,
+			int powerProducedPerConsumption, int ticksBetweenConsumption)
 	{
 		super(machine);
 		_liquidConsumedPerTick = liquidConsumedPerTick;
@@ -34,7 +50,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		setManageFluids(true);
 	}
 	
-	protected abstract FluidStack getLiquidType();
+	protected abstract boolean isLiquidFuel(FluidStack liquid);
 	
 	public int getBuffer()
 	{
@@ -84,6 +100,31 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
+	{
+		return new GuiLiquidGenerator(getContainer(inventoryPlayer), this);
+	}
+	
+	@Override
+	public ContainerLiquidGenerator getContainer(InventoryPlayer inventoryPlayer)
+	{
+		return new ContainerLiquidGenerator(this, inventoryPlayer);
+	}
+	
+	@Override
+	public String getGuiBackground()
+	{
+		return "biofuelgenerator.png";
+	}
+	
+	@Override
+	public int getSizeInventory()
+	{
+		return 0;
+	}
+	
+	@Override
 	public boolean allowBucketFill()
 	{
 		return true;
@@ -92,7 +133,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (getLiquidType().isFluidEqual(resource))
+		if (isLiquidFuel(resource))
 			return _tank.fill(resource, doFill);
 		return 0;
 	}

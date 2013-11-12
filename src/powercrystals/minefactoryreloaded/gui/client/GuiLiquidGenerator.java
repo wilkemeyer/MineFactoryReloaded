@@ -2,13 +2,13 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityBioFuelGenerator;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityLiquidGenerator;
 
-public class GuiBioFuelGenerator extends GuiFactoryInventory
+public class GuiLiquidGenerator extends GuiFactoryInventory
 {
 	private static final int _barColorEnergy = (0)   | (0 << 8)   | (255 << 16) | (255 << 24);
 	
-	public GuiBioFuelGenerator(ContainerFactoryInventory container, TileEntityBioFuelGenerator tileentity)
+	public GuiLiquidGenerator(ContainerFactoryInventory container, TileEntityLiquidGenerator tileentity)
 	{
 		super(container, tileentity);
 		ySize = 165;
@@ -20,7 +20,7 @@ public class GuiBioFuelGenerator extends GuiFactoryInventory
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		drawBar(160, 75, ((TileEntityBioFuelGenerator)_tileEntity).getBufferMax(), ((TileEntityBioFuelGenerator)_tileEntity).getBuffer(), _barColorEnergy);
+		drawBar(160, 75, ((TileEntityLiquidGenerator)_tileEntity).getBufferMax(), ((TileEntityLiquidGenerator)_tileEntity).getBuffer(), _barColorEnergy);
 	}
 	
 	@Override
@@ -28,8 +28,8 @@ public class GuiBioFuelGenerator extends GuiFactoryInventory
 	{
 		if(isPointInRegion(161, 15, 8, 60, mouseX, mouseY))
 		{
-			int buffer = ((TileEntityBioFuelGenerator)_tileEntity).getBuffer();
-			int bufferMax = ((TileEntityBioFuelGenerator)_tileEntity).getBufferMax();
+			int buffer = ((TileEntityLiquidGenerator)_tileEntity).getBuffer();
+			int bufferMax = ((TileEntityLiquidGenerator)_tileEntity).getBufferMax();
 			int energyPerMJ = TileEntityFactoryPowered.energyPerMJ;
 			drawBarTooltip("Energy", "MJ", buffer / energyPerMJ, bufferMax / energyPerMJ, mouseX, mouseY);
 		}

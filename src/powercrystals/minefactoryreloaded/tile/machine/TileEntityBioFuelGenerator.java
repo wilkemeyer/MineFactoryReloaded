@@ -1,50 +1,29 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import powercrystals.minefactoryreloaded.gui.client.GuiBioFuelGenerator;
-import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
-import powercrystals.minefactoryreloaded.gui.container.ContainerBioFuelGenerator;
+
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityLiquidGenerator;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityBioFuelGenerator extends TileEntityLiquidGenerator
 {
 	public static final int liquidConsumedPerTick = 1;
 	public static final int ticksBetweenConsumption = 5;
-	public static final int energyProducedPerConsumption = Machine.BioFuelGenerator.
-			getActivationEnergy() * ticksBetweenConsumption;
 	
 	public TileEntityBioFuelGenerator()
 	{
-		super(Machine.BioFuelGenerator, liquidConsumedPerTick, energyProducedPerConsumption, ticksBetweenConsumption);
+		super(Machine.BioFuelGenerator, liquidConsumedPerTick, ticksBetweenConsumption);
 	}
 	
 	@Override
-	protected FluidStack getLiquidType()
+	protected boolean isLiquidFuel(FluidStack fuel)
 	{
-		return FluidRegistry.getFluidStack("biofuel", 1);
-	}
-	
-	@Override
-	public int getSizeInventory()
-	{
-		return 0;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
-		return new GuiBioFuelGenerator(getContainer(inventoryPlayer), this);
-	}
-	
-	@Override
-	public ContainerBioFuelGenerator getContainer(InventoryPlayer inventoryPlayer)
-	{
-		return new ContainerBioFuelGenerator(this, inventoryPlayer);
+		if (fuel == null || fuel.getFluid() == null)
+			return false;
+		String name = fuel.getFluid().getName();
+		if (name == null)
+			return false;
+		name = name.trim().toLowerCase();
+		return name.equals("biofuel") || name.equals("bioethanol");
 	}
 }
