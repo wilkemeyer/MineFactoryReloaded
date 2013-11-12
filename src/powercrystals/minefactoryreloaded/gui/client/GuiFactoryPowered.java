@@ -33,16 +33,19 @@ public class GuiFactoryPowered extends GuiFactoryInventory
 	@Override
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		super.drawTooltips(mouseX, mouseY);
-		
 		if(isPointInRegion(141, 15, 8, 60, mouseX, mouseY))
 		{
+			int energyPerMJ = TileEntityFactoryPowered.energyPerMJ;
+			int energyPerEU = TileEntityFactoryPowered.energyPerEU;
+			int wPerEnergy = TileEntityFactoryPowered.wPerEnergy;
+			int stored = _tePowered.getEnergyStored();
+			int storedMax = _tePowered.getEnergyStoredMax();
 			List<String> lines = new ArrayList<String>();
 			lines.add("Energy");
-			lines.add(_tePowered.getEnergyStored() / TileEntityFactoryPowered.energyPerMJ + " / " + _tePowered.getEnergyStoredMax() / TileEntityFactoryPowered.energyPerMJ + " " + "MJ");
-			lines.add(_tePowered.getEnergyStored() / TileEntityFactoryPowered.energyPerEU + " / " + _tePowered.getEnergyStoredMax() / TileEntityFactoryPowered.energyPerEU + " " + "EU");
-			lines.add(_tePowered.getEnergyStored() * TileEntityFactoryPowered.wPerEnergy / 1000 + " / " +
-					_tePowered.getEnergyStoredMax() * TileEntityFactoryPowered.wPerEnergy / 1000 + " " + "KJ");
+			lines.add(stored + " / " + storedMax + " " + "RF");
+			lines.add(stored / energyPerMJ + " / " + storedMax / energyPerMJ + " " + "MJ");
+			lines.add(stored / energyPerEU + " / " + storedMax / energyPerEU + " " + "EU");
+			lines.add(stored * wPerEnergy / 1000 + " / " + storedMax * wPerEnergy / 1000 + " " + "KJ");
 			drawTooltip(lines, mouseX, mouseY);
 		}
 		else if(isPointInRegion(151, 15, 8, 60, mouseX, mouseY))
@@ -53,5 +56,7 @@ public class GuiFactoryPowered extends GuiFactoryInventory
 		{
 			drawBarTooltip("Idle", "t", _tePowered.getIdleTicks(), _tePowered.getIdleTicksMax(), mouseX, mouseY);
 		}
+		else
+			super.drawTooltips(mouseX, mouseY);
 	}
 }
