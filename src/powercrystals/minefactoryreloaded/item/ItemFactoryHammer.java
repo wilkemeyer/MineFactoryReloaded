@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cofh.api.block.IDismantleable;
 import com.google.common.collect.Multimap;
 
 import buildcraft.api.tools.IToolWrench;
@@ -26,7 +27,14 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 		Block block = Block.blocksList[world.getBlockId(x, y, z)];
 		if (block != null)
 		{
-			if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) 
+			if (player.isSneaking() && block instanceof IDismantleable &&
+					((IDismantleable)block).canDismantle(player, world, x, y, z))
+			{
+				((IDismantleable)block).dismantleBlock(player, world, x, y, z, false);
+				player.swingItem();
+				return !world.isRemote;
+			}
+			else if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) 
 			{
 				player.swingItem();
 				return !world.isRemote;
