@@ -47,7 +47,8 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-public class BlockFactoryMachine extends BlockContainer implements IConnectableRedNet, IDismantleable
+public class BlockFactoryMachine extends BlockContainer
+							implements IConnectableRedNet, IDismantleable//, IEnergyContainerItem
 {
 	private int _mfrMachineBlockIndex;
 
@@ -237,7 +238,11 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 		{
 			ItemStack machine = new ItemStack(idDropped(blockID, world.rand, 0), 1,
 					damageDropped(world.getBlockMetadata(x, y, z)));
+			
 			dropContents(te);
+			if(te instanceof TileEntityFactoryInventory)
+				((TileEntityFactoryInventory)te).onDisassembled();
+			
 			NBTTagCompound tag = new NBTTagCompound();
 			te.writeToNBT(tag);
 			if (te instanceof IInventory && ((IInventory)te).isInvNameLocalized())
@@ -247,6 +252,7 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 				tag.setTag("display", name);
 			}
 			machine.setTagCompound(tag);
+			
 			world.setBlockToAir(x, y, z);
 			if (!returnBlock)
 				dropBlockAsItem_do(world, x, y, z, machine);
@@ -402,33 +408,27 @@ public class BlockFactoryMachine extends BlockContainer implements IConnectableR
 			return false;
 		}
 		ItemStack ci = entityplayer.inventory.getCurrentItem();
-		if(te instanceof ITankContainerBucketable &&
-				((ITankContainerBucketable)te).allowBucketDrain() && 
-				(FluidContainerRegistry.isEmptyContainer(ci) ||
-						(ci != null && ci.getItem() instanceof IFluidContainerItem)))
+		if(te instanceof ITankContainerBucketable)
 		{
-			if(MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
+			boolean isFluidContainer = ci != null && ci.getItem() instanceof IFluidContainerItem;
+			if(((ITankContainerBucketable)te).allowBucketDrain() &&
+				(isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)))
 			{
-				return true;
+				if(MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
+				{
+					return true;
+				}
+			}
+			else if(((ITankContainerBucketable)te).allowBucketFill() &&
+					(isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)))
+			{
+				if(MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
+				{
+					return true;
+				}
 			}
 		}
-		else if(te instanceof ITankContainerBucketable &&
-				((ITankContainerBucketable)te).allowBucketFill() && 
-				(FluidContainerRegistry.isFilledContainer(ci) ||
-						(ci != null && ci.getItem() instanceof IFluidContainerItem)))
-		{
-			if(MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
-			{
-				return true;
-			}
-		}/*
-		if(MFRUtil.isHoldingHammer(entityplayer) && te instanceof TileEntityFactory &&
-		 		((TileEntityFactory)te).canRotate())
-		{
-			((TileEntityFactory)te).rotate();
-			world.markBlockForUpdate(x, y, z);
-			return true;
-		} else //*/ 
+		
 		if(te instanceof TileEntityFactory &&
 				((TileEntityFactory)te).getContainer(entityplayer.inventory) != null)
 		{
