@@ -7,7 +7,9 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -87,7 +89,24 @@ public class Machine
 	public static Machine Ejector = new Machine(1, 0, "Ejector", TileEntityEjector.class, "factoryEjector");
 	public static Machine ItemRouter = new Machine(1, 1, "ItemRouter", TileEntityItemRouter.class, "factoryItemRouter");
 	public static Machine LiquidRouter = new Machine(1, 2, "LiquidRouter", TileEntityLiquidRouter.class, "factoryLiquidRouter");
-	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class, "factoryDeepStorageUnit");
+	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class, "factoryDeepStorageUnit") {
+		@Override
+		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
+		{
+			NBTTagCompound c = stack.getTagCompound();
+			if (c.hasKey("storedStack"))
+			{
+				ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
+				int storedQuantity = c.getInteger("storedQuantity");
+				if (storedItem != null & storedQuantity > 0)
+				{
+					info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() +
+							(adv ? " (" + storedItem.itemID + ":" +
+							storedItem.getItemDamageForDisplay() + ")" : ""));
+				}
+			}
+		}
+	};
 	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class, "factoryLiquiCrafter");
 	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, "factoryLavaFabricator", 200, 16000);
 	public static Machine OilFabricator = new Machine(1, 6, "OilFabricator", TileEntityOilFabricator.class, "factoryOilFabricator", 5880, 16000);
@@ -95,7 +114,13 @@ public class Machine
 	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class, "factoryUnifier");
 	public static Machine AutoSpawner = new Machine(1, 9, "AutoSpawner", TileEntityAutoSpawner.class, "factoryAutoSpawner", 600, 32000);
 	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class, "factoryBioReactor");
-	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, "factoryBioFuelGenerator", 160, 10000);
+	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, "factoryBioFuelGenerator", 160, 10000) {
+		@Override
+		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
+		{
+			info.add("Produces MJ, and RF.");
+		}
+	};
 	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, "factoryDisenchanter", 320, 16000);
 	public static Machine Slaughterhouse = new Machine(1, 13, "Slaughterhouse", TileEntitySlaughterhouse.class, "factorySlaughterhouse", 1000, 16000);
 	public static Machine MeatPacker = new Machine(1, 14, "MeatPacker", TileEntityMeatPacker.class, "factoryMeatPacker", 20, 16000);
@@ -109,8 +134,22 @@ public class Machine
 	public static Machine AutoBrewer = new Machine(2, 5, "AutoBrewer", TileEntityAutoBrewer.class, "factoryAutoBrewer", 40, 16000);
 	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, "factoryFruitPicker", 320, 16000);
 	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 10, 16000);
-	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter");
-	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 80, 10000);
+	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter") {
+		@Override
+		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
+		{
+			info.add("Emits an analog redstone signal");
+			info.add("proportional to the count of");
+			info.add("mobs that are within range.");
+		}
+	};
+	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 80, 10000) {
+		@Override
+		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
+		{
+			info.add("Produces MJ, and RF.");
+		}
+	};
 	
 	private int _blockIndex;
 	private int _meta;
@@ -202,6 +241,7 @@ public class Machine
 		}
 	}
 	
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {}
 	
 	public String getName()
 	{

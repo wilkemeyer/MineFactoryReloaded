@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,32 +35,12 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean par4)
+	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
 	{
-		NBTTagCompound c = stack.getTagCompound();
-		if(getBlockID() == Machine.DeepStorageUnit.getBlockId() &&
-				stack.getItemDamage() == Machine.DeepStorageUnit.getMeta() && c != null)
-		{
-			if (c.hasKey("storedStack"))
-			{
-				ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
-				int storedQuantity = c.getInteger("storedQuantity");
-				if (storedItem != null & storedQuantity > 0)
-				{
-					info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() +
-							" (" + storedItem.itemID + ":" + storedItem.getItemDamageForDisplay() + ")");
-				}
-			}
-		}
-		else if ((getBlockID() == Machine.BioFuelGenerator.getBlockId() &&
-				stack.getItemDamage() == Machine.BioFuelGenerator.getMeta()) ||
-				(getBlockID() == Machine.SteamTurbine.getBlockId() &&
-				stack.getItemDamage() == Machine.SteamTurbine.getMeta()))
-		{
-			info.add("Produces MJ and RF.");
-		}
+		Machine.getMachineFromId(getBlockID(), stack.getItemDamage()).
+				addInformation(stack, player, info, adv);
 	}
 }
