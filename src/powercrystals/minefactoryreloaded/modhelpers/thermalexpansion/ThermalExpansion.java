@@ -1,4 +1,3 @@
-
 package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
 import cpw.mods.fml.common.FMLLog;
@@ -28,8 +27,12 @@ public class ThermalExpansion
 		}
 		try
 		{
-			sendPulv(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0), new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 2)); // Smooth Blackstone -> Cobble
-			sendPulv(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1), new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 3)); // Smooth Whitestone -> Cobble
+			// Smooth Blackstone -> Cobble
+			sendPulv(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0),
+					new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 2));
+			// Smooth Whitestone -> Cobble
+			sendPulv(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1),
+					new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 3));
 		}
 		catch (Exception x)
 		{
@@ -41,10 +44,9 @@ public class ThermalExpansion
 	{
 		NBTTagCompound toSend = new NBTTagCompound();
 		toSend.setInteger("energy", 3200);
-		toSend.setCompoundTag("input", new NBTTagCompound());
-		toSend.setCompoundTag("primaryOutput", new NBTTagCompound());
-		input.writeToNBT(toSend.getCompoundTag("input"));
-		output.writeToNBT(toSend.getCompoundTag("primaryOutput"));
+		toSend.setCompoundTag("input", input.writeToNBT(new NBTTagCompound()));
+		toSend.setCompoundTag("primaryOutput", output.writeToNBT(new NBTTagCompound()));
+		FMLLog.fine("Sending %s -> %s for pulverizer.", input, output);
 		sendComm("PulverizerRecipe", toSend);
 	}
 	
