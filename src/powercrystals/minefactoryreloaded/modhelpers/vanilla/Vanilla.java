@@ -283,7 +283,7 @@ public class Vanilla
 		MFRRegistry.registerLiquidDrinkHandler("bioethanol", new DrinkHandlerBiofuel());
 		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
 		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
-		MFRRegistry.registerLiquidDrinkHandler("essence", new DrinkHandlerMobEssence());
+		MFRRegistry.registerLiquidDrinkHandler("mobessence", new DrinkHandlerMobEssence());
 		MFRRegistry.registerLiquidDrinkHandler("meat", new DrinkHandlerMeat());
 		MFRRegistry.registerLiquidDrinkHandler("pinkslime", new DrinkHandlerPinkSlime());
 		MFRRegistry.registerLiquidDrinkHandler("chocolatemilk", new DrinkHandlerChocolateMilk());
