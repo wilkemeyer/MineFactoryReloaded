@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -62,6 +63,47 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		this._hasInvName = name != null && name.length() > 0;
 	}
 	
+	public void onDisassembled()
+	{
+		if (failedDrops != null)
+			inv: while (failedDrops.size() > 0) 
+		{
+			ItemStack itemstack = failedDrops.remove(0);
+			if (itemstack == null)
+			{
+				continue;
+			}
+			float xOffset = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+			float yOffset = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+			float zOffset = worldObj.rand.nextFloat() * 0.8F + 0.1F;
+			do
+			{
+				if(itemstack.stackSize <= 0)
+				{
+					continue inv;
+				}
+				int amountToDrop = worldObj.rand.nextInt(21) + 10;
+				if(amountToDrop > itemstack.stackSize)
+				{
+					amountToDrop = itemstack.stackSize;
+				}
+				itemstack.stackSize -= amountToDrop;
+				EntityItem entityitem = new EntityItem(worldObj,
+						xCoord + xOffset, yCoord + yOffset, zCoord + zOffset,
+						new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
+				if(itemstack.getTagCompound() != null)
+				{
+					entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
+				}
+				float motionMultiplier = 0.05F;
+				entityitem.motionX = (float)worldObj.rand.nextGaussian() * motionMultiplier;
+				entityitem.motionY = (float)worldObj.rand.nextGaussian() * motionMultiplier + 0.2F;
+				entityitem.motionZ = (float)worldObj.rand.nextGaussian() * motionMultiplier;
+				worldObj.spawnEntityInWorld(entityitem);
+			} while(true);
+		}
+	}
+	
 	public void onBlockBroken()
 	{
 		if (isInvNameLocalized())
@@ -72,6 +114,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			tag.setTag("display", name);
 			BlockNBTManager.setForBlock(new BlockPosition(xCoord, yCoord, zCoord), tag);
 		}
+		onDisassembled();
 	}
 	
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
