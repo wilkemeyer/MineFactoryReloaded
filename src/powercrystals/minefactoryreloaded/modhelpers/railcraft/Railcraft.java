@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.railcraft;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -15,8 +16,12 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.GameRegistry;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 
 @Mod(modid = "MineFactoryReloaded|CompatRailcraft", name = "MFR Compat: Railcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Railcraft")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
@@ -36,6 +41,17 @@ public class Railcraft {
 			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 8));
 			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 9));
 			// white sand? black sand?
+			
+			/*
+			 * Type mods.railcraft.common.blocks.hidden.BlockHidden,
+			 * owned by Railcraft,
+			 * ordinal 0,
+			 * name tile.railcraft.hidden,
+			 * claimedModId null
+			 */
+			Block air = GameRegistry.findBlock("Railcraft", "tile.railcraft.hidden");
+			if (air != null && air.blockID > 0)
+				MFRRegistry.registerHarvestable(new HarvestableStandard(air.blockID, HarvestType.Normal));
 
 			Object rockCrusher = Class.forName("mods.railcraft.api.crafting.RailcraftCraftingManager").getField("rockCrusher").get(null);
 			Method createNewRecipe = Class.forName("mods.railcraft.api.crafting.IRockCrusherCraftingManager").getMethod("createNewRecipe", ItemStack.class, boolean.class, boolean.class);
