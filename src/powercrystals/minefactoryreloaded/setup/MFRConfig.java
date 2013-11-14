@@ -344,7 +344,7 @@ public class MFRConfig
 		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk.";
 		mfrLakeSewageRarity = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.LakeRarity.Sewage", 32);
 		mfrLakeSewageRarity.comment = "Higher numbers make sewage lakes rarer. A value of one will be approximately one per chunk.";
-		unifierBlacklist = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.DimensionBlacklist", "");
+		unifierBlacklist = c.get(Configuration.CATEGORY_GENERAL, "Unifier.Blacklist", "dyeBlue,dyeWhite");
 		unifierBlacklist.comment = "A comma-separated list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
