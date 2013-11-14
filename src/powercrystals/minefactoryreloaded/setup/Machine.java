@@ -94,7 +94,7 @@ public class Machine
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
 			NBTTagCompound c = stack.getTagCompound();
-			if (c.hasKey("storedStack"))
+			if (c != null && c.hasKey("storedStack"))
 			{
 				ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
 				int storedQuantity = c.getInteger("storedQuantity");
