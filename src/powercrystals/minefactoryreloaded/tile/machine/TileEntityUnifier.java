@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.oredict.OreDictionary;
 import powercrystals.core.oredict.OreDictTracker;
 import powercrystals.core.util.UtilInventory;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUnifier;
@@ -81,7 +82,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			{
 				List<String> names = OreDictTracker.getNamesFromItem(_inventory[0]);
 				
-				if(names == null || names.size() != 1)
+				if(names == null || names.size() != 1 || MFRRegistry.getUnifierBlacklist().containsKey(names.get(0)))
 				{
 					output = _inventory[0].copy();
 				}

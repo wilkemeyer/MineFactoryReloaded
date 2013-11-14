@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomItem;
@@ -52,6 +53,7 @@ public abstract class MFRRegistry
 	private static List<Class<?>> _autoSpawnerClassBlacklist = new ArrayList<Class<?>>();
 	private static List<Class<?>> _slaughterhouseBlacklist = new ArrayList<Class<?>>();
 	private static List<Class<?>> _conveyerBlacklist = new ArrayList<Class<?>>();
+	private static Map<String, Boolean> _unifierBlacklist  = new TreeMap<String, Boolean>();
 
 	private static Map<Integer, List<ItemStack>> _laserPreferredOres = new HashMap<Integer, List<ItemStack>>(16);
 
@@ -295,6 +297,16 @@ public abstract class MFRRegistry
 	public static List<String> getAutoSpawnerBlacklist()
 	{
 		return _autoSpawnerBlacklist;
+	}
+
+	public static void registerUnifierBlacklist(String string)
+	{
+		_unifierBlacklist.put(string, null);
+	}
+
+	public static Map<String, Boolean> getUnifierBlacklist()
+	{
+		return _unifierBlacklist;
 	}
 	
 	public static void registerConveyerBlacklist(Class<?> entityClass)

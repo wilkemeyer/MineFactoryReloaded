@@ -584,6 +584,12 @@ public class MineFactoryReloadedCore extends BaseMod
 			MFRRegistry.getRubberTreeBiomes().remove(biome);
 		}
 		
+		biomeWhitelist = MFRConfig.unifierBlacklist.getString().split(",");
+		for(String entry : biomeWhitelist)
+		{
+			MFRRegistry.registerUnifierBlacklist(entry);
+		}
+		
 		if(MFRConfig.vanillaRecipes.getBoolean(true))
 		{
 			new Vanilla().registerRecipes();

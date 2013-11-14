@@ -42,7 +42,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 {	
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
-	public static final int wPerEnergy = 7;
+	public static final int wPerEnergy = 17;
 	
 	private int _energyStored;
 	private int _maxEnergyStored;
@@ -449,12 +449,10 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public float receiveElectricity(ForgeDirection from, ElectricityPack powerPack, boolean doReceive)
 	{
-		int energyRequired = getEnergyRequired();
 		int buff = _ueBuffer;
 		buff += powerPack.getWatts();
 		
-		int energyFromUE = Math.min(buff / wPerEnergy, energyRequired);
-		energyRequired -= energyFromUE;
+		int energyFromUE = Math.min(buff / wPerEnergy, getEnergyRequired());
 		buff -= (energyFromUE * wPerEnergy);
 		if (doReceive)
 		{
