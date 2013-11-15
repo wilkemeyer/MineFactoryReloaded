@@ -255,16 +255,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		{
 			_powerProvider.readFromNBT(tag.getCompoundTag("powerProvider"));
 		}
-		else // TODO: remove legacy code (below) in 2.8, losses from upgrades 2.6 or below acceptable
-		{
-			_powerProvider.readFromNBT(tag);
-			tag.removeTag("latency");
-			tag.removeTag("minEnergyReceived");
-			tag.removeTag("maxEnergyReceived");
-			tag.removeTag("maxStoreEnergy");
-			tag.removeTag("minActivationEnergy");
-			tag.removeTag("storedEnergy");
-		}
 		configurePowerProvider();
 	}
 	
