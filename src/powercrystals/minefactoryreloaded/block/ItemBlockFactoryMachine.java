@@ -40,7 +40,7 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
 	{
-		Machine.getMachineFromId(getBlockID(), stack.getItemDamage()).
+		Machine.getMachineFromIndex(_machineBlockIndex, stack.getItemDamage()).
 				addInformation(stack, player, info, adv);
 	}
 }
