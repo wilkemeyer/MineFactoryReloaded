@@ -359,12 +359,15 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		{
 			float mjRequired = getEnergyRequired() / (float)energyPerMJ;
 			if (mjRequired <= 0) break bcpower;
+			float mjGain = 0.002f;
 			
 			if(pp.useEnergy(0, mjRequired, false) > 0)
 			{
-				int energyGained = (int)((pp.useEnergy(0, mjRequired, true) + 0.001) * energyPerMJ);
+				int energyGained = (int)((pp.useEnergy(0, mjRequired, true) + 0.009) * energyPerMJ);
 				storeEnergy(energyGained);
+				mjGain += 0.001f;
 			}
+			pp.addEnergy(mjGain);
 		}
 	}
 
