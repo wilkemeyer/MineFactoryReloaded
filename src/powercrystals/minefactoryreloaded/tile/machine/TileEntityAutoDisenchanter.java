@@ -134,7 +134,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 					}
 				}
 				
-				if(!_repeatDisenchant || (_inventory[0] != null && _inventory[0].getTagCompound() == null || _inventory[0].getTagCompound().getTag("ench") == null))
+				if(!_repeatDisenchant || (_inventory[0] != null && (_inventory[0].getTagCompound() == null || _inventory[0].getTagCompound().getTag("ench") == null)))
 				{
 					_inventory[2] = _inventory[0];
 					_inventory[0] = null;
