@@ -500,6 +500,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		MinecraftForge.EVENT_BUS.register(proxy);
 		
 		OreDictionary.registerOre("itemRubber", MineFactoryReloadedCore.rubberBarItem);
+		OreDictionary.registerOre("itemRawRubber", MineFactoryReloadedCore.rawRubberItem);
 		OreDictionary.registerOre("woodRubber", MineFactoryReloadedCore.rubberWoodBlock);
 		OreDictionary.registerOre("sheetPlastic", MineFactoryReloadedCore.plasticSheetItem);
 		OreDictionary.registerOre("dustPlastic", MineFactoryReloadedCore.rawPlasticItem);
