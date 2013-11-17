@@ -20,18 +20,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = "MineFactoryReloaded|CompatPams", name = "MFR Compat: Pam's Mods", version = MineFactoryReloadedCore.version,
-dependencies = "after:MineFactoryReloaded;after:PamHCAsparagus;after:PamHCBean;after:PamHCBeet;after:PamHCBellpepper;"
-		+ "after:PamHCBlackberry;after:PamHCBlueberry;after:PamHCBroccoli;after:PamHCCactusfruit;after:PamHCCandle;"
-		+ "after:PamHCCantaloupe;after:PamHCCelery;after:PamHCChilipepper;after:PamHCCoffee;after:PamHCCorn;after:PamHCCotton;"
-		+ "after:PamHCCranberry;after:PamHCCucumber;after:PamHCEggplant;after:PamHCGarlic;after:PamHCGinger;"
-		+ "after:PamHCGrape;after:PamHCKiwi;after:PamHCLettuce;after:PamHCMustard;after:PamHCOnion;"
-		+ "after:PamHCPeanut;after:PamHCPeas;after:PamHCPineapple;after:PamHCRadish;after:PamHCRaspberry;"
-		+ "after:PamHCRice;after:PamHCRotten;after:PamHCSpiceleaf;after:PamHCStrawberry;after:PamHCSunflower;"
-		+ "after:PamHCSweetpotato;after:PamHCTea;after:PamHCTomato;after:PamHCTurnip;after:PamHCWhitemushroom;"
-		+ "after:PamHCZucchini;after:PamHarvestCraft;after:PamWeeeFlowers;after:PamHCApple;after:PamHCAvocado;after:PamHCBanana;"
-		+ "after:PamHCCherry;after:PamHCCinnamon;after:PamHCCoconut;after:PamHCLemon;after:PamHCLime;after:PamHCMango;after:PamHCNutmeg;"
-		+ "after:PamHCOlive;after:PamHCOrange;after:PamHCPapaya;after:PamHCPeach;after:PamHCPear;after:PamHCPeppercorn;after:PamHCPlum;"
-		+ "after:PamHCPomegranate;after:PamHCStarfruit;after:PamHCVanillabean;after:PamHCWalnut")
+dependencies = "after:MineFactoryReloaded;after:pamharvestcraft")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Pam
 {
@@ -57,12 +46,108 @@ public class Pam
 	@EventHandler
 	public static void load(FMLInitializationEvent e)
 	{
-		if(!Loader.isModLoaded("PamHarvestCraft"))
+		if(!Loader.isModLoaded("pamharvestcraft"))
 		{
 			FMLLog.warning("Pam's HC base missing - MFR Pam HC Compat not loading");
 		}
 		else
 		{
+			/*
+Class: PamHarvestCraft
+
+	(this block uses tile entities, the rest don't)
+	public static Block pamCrop;
+
+
+	public static Block pamblackberryWild;
+	public static Block pamblueberryWild;
+	public static Block pamcactusfruitWild;
+	public static Block pamcandleberryWild;
+	public static Block pamcottonWild;
+	public static Block pamcranberryWild;
+	public static Block pamgrapeWild;
+	public static Block pamkiwiWild;
+	public static Block pamraspberryWild;
+	public static Block pamrhubarbWild;
+	public static Block pamrutabagaWild;
+	public static Block pamseaweedWild;
+	public static Block pamspiceleafWild;
+	public static Block pamstrawberryWild;
+	public static Block pamsunflowerWild;
+	public static Block pamwhitemushroomWild;
+	public static Block pambambooshootWild;
+
+	(Some of these are food items but couldn't be bother separating them)
+	public static Item asparagusItem;
+	public static Item asparagusseedItem;
+	public static Item grilledasparagusItem;
+	public static Item barleyItem;
+	public static Item barleyseedItem;
+	public static Item beanItem;
+	public static Item beanseedItem;
+	public static Item beetItem;
+	public static Item beetseedItem;
+	public static Item broccoliItem;
+	public static Item broccoliseedItem;
+	public static Item cauliflowerItem;
+	public static Item cauliflowerseedItem;
+	public static Item celeryItem;
+	public static Item celeryseedItem;
+	public static Item cranberryItem;
+	public static Item cranberryseedItem;
+	public static Item garlicItem;
+	public static Item garlicseedItem;
+	public static Item gingerItem;
+	public static Item gingerseedItem;
+	public static Item leekItem;
+	public static Item leekseedItem;
+	public static Item lettuceItem;
+	public static Item lettuceseedItem;
+	public static Item oatsItem;
+	public static Item oatsseedItem;
+	public static Item onionItem;
+	public static Item onionseedItem;
+	public static Item parsnipItem;
+	public static Item parsnipseedItem;
+	public static Item peanutItem;
+	public static Item peanutseedItem;
+	public static Item pineappleItem;
+	public static Item pineappleseedItem;
+	public static Item radishItem;
+	public static Item radishseedItem;
+	public static Item riceItem;
+	public static Item riceseedItem;
+	public static Item ricecakeItem;
+	public static Item rutabagaItem;
+	public static Item rutabagaseedItem;
+	public static Item ryeItem;
+	public static Item ryeseedItem;
+	public static Item scallionItem;
+	public static Item scallionseedItem;
+	public static Item soybeanItem;
+	public static Item soybeanseedItem;
+	public static Item spiceleafItem;
+	public static Item spiceleafseedItem;
+	public static Item sunflowerseedsItem;
+	public static Item sunflowerseedItem;
+	public static Item sweetpotatoItem;
+	public static Item sweetpotatoseedItem;
+	public static Item bakedsweetpotatoItem;
+	public static Item tealeafItem;
+	public static Item teaseedItem;
+	public static Item teaItem;
+	public static Item turnipItem;
+	public static Item turnipseedItem;
+	public static Item whitemushroomItem;
+	public static Item whitemushroomseedItem;
+
+
+
+Class: TileEntityPamCrop
+
+   public int cropID;
+   public int growthStage;*/
+			
 			// Bushes
 			registerBush("Blackberry", true, true); 
 			registerBush("Blueberry", true, true);
