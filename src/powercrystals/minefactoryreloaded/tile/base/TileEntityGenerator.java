@@ -59,10 +59,11 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 			IPowerReceptor ipr = (IPowerReceptor)te;
 			ForgeDirection from = ForgeDirection.VALID_DIRECTIONS[i];
 			PowerReceiver pp = ipr.getPowerReceiver(from);
-			if(pp != null && Math.min(pp.getMaxEnergyReceived(), 
-				pp.getMaxEnergyStored() - pp.getEnergyStored()) > 0 && pp.getMinEnergyReceived() <= mj)
+			float max;
+			if(pp != null && Math.min((max = pp.getMaxEnergyReceived()), 
+				pp.getMaxEnergyStored() - pp.getEnergyStored()) > 0)
 			{
-				float mjUsed = Math.min(Math.min(pp.getMaxEnergyReceived(), mj),
+				float mjUsed = Math.min(Math.min(max, mj),
 						pp.getMaxEnergyStored() - pp.getEnergyStored());
 				pp.receiveEnergy(PowerHandler.Type.GATE, mjUsed, from);
 				
