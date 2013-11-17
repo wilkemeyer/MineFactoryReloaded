@@ -511,7 +511,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return slot >= start && slot < (start + getSizeInventorySide(dir)) &&
 				itemstack == null ||
 				(this.isItemValidForSlot(slot, itemstack) &&
-				itemstack.stackSize < Math.min(itemstack.getMaxStackSize(), getInventoryStackLimit()));
+				itemstack.stackSize <= Math.min(itemstack.getMaxStackSize(), getInventoryStackLimit()));
 	}
 	
 	@Override
