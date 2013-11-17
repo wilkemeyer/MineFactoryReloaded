@@ -509,8 +509,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
 		int start = getStartInventorySide(dir);
 		return slot >= start && slot < (start + getSizeInventorySide(dir)) &&
-				this.isItemValidForSlot(slot, itemstack) &&
-				(itemstack == null ||
+				itemstack == null ||
+				(this.isItemValidForSlot(slot, itemstack) &&
 				itemstack.stackSize < Math.min(itemstack.getMaxStackSize(), getInventoryStackLimit()));
 	}
 	
