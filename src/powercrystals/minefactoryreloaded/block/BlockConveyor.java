@@ -14,6 +14,7 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.AxisAlignedBB;
@@ -24,11 +25,13 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
@@ -63,6 +66,8 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			_iconsStopped[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".stopped." + _names[i]);
 		}
 	}
+	
+	// TODO: recolourBlock, addBlockDestroyEffects, addBlockHitEffects
 	
 	@Override
 	public Icon getBlockTexture(IBlockAccess iblockaccess, int x, int y, int z, int side)
@@ -390,7 +395,15 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
 	{
-		return new ArrayList<ItemStack>();
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		NBTTagCompound tag = BlockNBTManager.getForBlock(x, y, z);
+		if (tag != null)
+		{
+			ItemStack r = ItemStack.loadItemStackFromNBT(tag);
+			if (r != null)
+				ret.add(r);
+		}
+		return ret;
 	}
 	
 	@Override
@@ -404,7 +417,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
 	{
 		if (meta != 15)
-			dropBlockAsItem_do(world, x, y, z, new ItemStack(blockID, 1, getDamageValue(world, x, y, z)));
+			BlockNBTManager.setForBlock(new BlockPosition(x, y, z),
+					new ItemStack(blockID, 1, getDamageValue(world, x, y, z)).
+					writeToNBT(new NBTTagCompound()));
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 	
