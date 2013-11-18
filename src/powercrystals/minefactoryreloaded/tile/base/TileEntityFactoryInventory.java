@@ -264,7 +264,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				ItemStack itemstack = _inventory[slot];
 				_inventory[slot] = null;
-				onFactoryInventoryChanged();
+				onInventoryChanged();
 				return itemstack;
 			}
 			ItemStack itemstack1 = _inventory[slot].splitStack(size);
@@ -272,12 +272,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				_inventory[slot] = null;
 			}
-			onFactoryInventoryChanged();
+			onInventoryChanged();
 			return itemstack1;
 		}
 		else
 		{
-			onFactoryInventoryChanged();
+			onInventoryChanged();
 			return null;
 		}
 	}
@@ -290,7 +290,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			itemstack.stackSize = getInventoryStackLimit();
 		}
 		_inventory[i] = itemstack;
-		onFactoryInventoryChanged();
+		onInventoryChanged();
 	}
 	
 	@Override
@@ -342,7 +342,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
 			}
 		}
-		onFactoryInventoryChanged();
+		onInventoryChanged();
 
 		if (tag.hasKey("mTanks")) {
 			IFluidTank[] _tanks = getTanks();
