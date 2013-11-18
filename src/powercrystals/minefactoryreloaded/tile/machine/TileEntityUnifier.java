@@ -237,14 +237,14 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	
 	private FluidStack unifierTransformLiquid(FluidStack resource, boolean doFill)
 	{
-		if(_ethanol != null && _biofuel != null)
+		if(_ethanol != null & _biofuel != null)
 		{
 			if (_ethanol.isFluidEqual(resource))
 				return new FluidStack(_biofuel.fluidID, resource.amount);
 			else if (_biofuel.isFluidEqual(resource))
 				return new FluidStack(_ethanol.fluidID, resource.amount);
 		}
-		else if(_essence != null && _liquidxp != null)
+		if(_essence != null & _liquidxp != null)
 		{
 			if (_essence.isFluidEqual(resource))
 				return new FluidStack(_liquidxp.fluidID, resource.amount * 2);
