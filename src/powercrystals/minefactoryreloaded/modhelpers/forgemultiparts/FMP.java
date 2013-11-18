@@ -20,7 +20,7 @@ import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-@Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock", name = "MFR Compat: ForgeMicroblock", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ForgeMicroblock")
+@Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock", name = "MFR Compat: ForgeMicroblock", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class FMP
 {
