@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.setup;
+package powercrystals.minefactoryreloaded.world;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class MineFactoryReloadedWorldGen implements IWorldGenerator

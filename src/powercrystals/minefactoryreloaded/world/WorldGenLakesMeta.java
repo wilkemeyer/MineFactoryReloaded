@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.setup;
+package powercrystals.minefactoryreloaded.world;
 
 import java.util.Random;
 
