@@ -753,12 +753,25 @@ public class Vanilla
 		
 		for(int i = 0; i < 16; i++)
 		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i), new ItemStack(Item.clay), "dye" + dyes[15 - i]));
+			ItemStack dye = new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(dye, new ItemStack(Item.clay), "dye" + dyes[15 - i]));
 			ItemStack glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i);
-			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, "glass", new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i)));
-			GameRegistry.addShapelessRecipe(glassStack, new ItemStack(Block.glass), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
+			ItemStack glass = new ItemStack(Block.glass);
+			ItemStack paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i);
+			ItemStack pane = new ItemStack(Block.thinGlass);
 			OreDictionary.registerOre("glass" + dyes[15 - i], glassStack);
-			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i), new ItemStack(Block.thinGlass), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
+			OreDictionary.registerOre("glassPane" + dyes[15 - i], glassStack);
+			dye.stackSize = 1;
+			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, "glass"));
+			GameRegistry.addShapelessRecipe(glassStack.copy(), dye, glass);
+			glassStack.stackSize = 3;
+			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, "glass", "glass", "glass"));
+			GameRegistry.addShapelessRecipe(glassStack.copy(), dye, glass, glass, glass);
+			GameRegistry.addShapelessRecipe(paneStack.copy(), dye, pane);
+			paneStack.stackSize = 3;
+			GameRegistry.addShapelessRecipe(paneStack.copy(), dye, pane, pane, pane);
+			paneStack.stackSize = 8;
+			GameRegistry.addShapelessRecipe(paneStack.copy(), dye, pane, pane, pane, pane, pane, pane, pane, pane);
 			
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 16, i), new Object[]
 					{
