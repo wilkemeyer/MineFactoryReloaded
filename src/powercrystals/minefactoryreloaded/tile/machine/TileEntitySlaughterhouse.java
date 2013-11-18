@@ -29,7 +29,8 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	public void setWorldObj(World world)
 	{
 		super.setWorldObj(world);
-		this._grindingWorld.setAllowSpawns(true);
+		if (_grindingWorld != null)
+			this._grindingWorld.setAllowSpawns(true);
 	}
 	
 	@Override

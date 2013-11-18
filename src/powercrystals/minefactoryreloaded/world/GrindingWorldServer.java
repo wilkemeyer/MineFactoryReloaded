@@ -11,7 +11,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 import skyboy.core.world.WorldServerProxy;
 
-public class GrindingWorldServer extends WorldServerProxy implements IGrindingWorld
+public class GrindingWorldServer extends WorldServerProxy
 {
 	protected TileEntityFactoryPowered grinder;
 	protected boolean allowSpawns;
@@ -29,10 +29,14 @@ public class GrindingWorldServer extends WorldServerProxy implements IGrindingWo
 		this.allowSpawns = allowSpawns;
 	}
 	
-	@Override
 	public void setAllowSpawns(boolean allow)
 	{
 		this.allowSpawns = allow;
+	}
+	
+	public void setMachine(TileEntityFactoryPowered machine)
+	{
+		this.grinder = machine;
 	}
 	
 	@Override
@@ -55,7 +59,6 @@ public class GrindingWorldServer extends WorldServerProxy implements IGrindingWo
 		return true;
 	}
 	
-	@Override
 	public boolean addEntityForGrinding(Entity entity)
 	{
 		if(entity.worldObj == this) return true;
@@ -68,7 +71,6 @@ public class GrindingWorldServer extends WorldServerProxy implements IGrindingWo
 		return false;
 	}
 	
-	@Override
 	public void clearReferences()
 	{
 		for(Entity ent : entitiesToGrind)
@@ -78,10 +80,9 @@ public class GrindingWorldServer extends WorldServerProxy implements IGrindingWo
 		entitiesToGrind.clear();
 	}
 	
-	@Override
 	public void cleanReferences()
 	{
-		for(int i = entitiesToGrind.size(); i-- > 0;)
+		for(int i = entitiesToGrind.size(); i --> 0;)
 		{
 			Entity ent = entitiesToGrind.get(i);
 			if(ent.isDead) entitiesToGrind.remove(ent);

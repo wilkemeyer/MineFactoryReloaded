@@ -35,9 +35,7 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import powercrystals.minefactoryreloaded.world.GrindingWorld;
 import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
-import powercrystals.minefactoryreloaded.world.IGrindingWorld;
 
 public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable, IHarvestAreaContainer
 {
@@ -52,7 +50,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	
 	protected HarvestAreaManager _areaManager;
 	protected Random _rand;
-	protected IGrindingWorld _grindingWorld;
+	protected GrindingWorldServer _grindingWorld;
 	protected GrindingDamage _damageSource;
 	
 	protected TileEntityGrinder(Machine machine)
@@ -92,8 +90,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		if(_grindingWorld != null) _grindingWorld.clearReferences();
 		if(this.worldObj instanceof WorldServer)
 			_grindingWorld = new GrindingWorldServer((WorldServer)this.worldObj, this);
-		else
-			_grindingWorld = new GrindingWorld(this.worldObj, this);
 	}
 	
 	public Random getRandom()
