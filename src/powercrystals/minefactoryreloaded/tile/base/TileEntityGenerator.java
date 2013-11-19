@@ -51,8 +51,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	public void onNeighborTileChange(int x, int y, int z)
 	{
 		TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
-		if (tile == null)
-			return;
 		
 		if (x < xCoord)
 			addCache(tile, 4);
@@ -74,6 +72,11 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 			energyHandleCache[side] = (IEnergyHandler)tile;
 		else if (tile instanceof IPowerReceptor)
 			powerReceptorCache[side] = (IPowerReceptor)tile;
+		else
+		{
+			energyHandleCache[side] = null;
+			powerReceptorCache[side] = null;
+		}
 	}
 	
 	protected final int producePower(int energy)
