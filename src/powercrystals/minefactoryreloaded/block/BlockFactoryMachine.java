@@ -154,6 +154,17 @@ public class BlockFactoryMachine extends BlockContainer
 		}
 		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 	}
+	
+	@Override
+	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		
+		if(te instanceof TileEntityFactory)
+		{
+			((TileEntityFactory)te).onNeighborTileChange(tileX, tileY, tileZ);
+		}
+    }
 
 	private void dropContents(TileEntity te)
 	{

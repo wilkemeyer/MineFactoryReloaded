@@ -198,6 +198,8 @@ public abstract class TileEntityFactory extends TileEntity
 		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.TileDescription, toSend);
 	}
 	
+	public void onNeighborTileChange(int x, int y, int z) {}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
