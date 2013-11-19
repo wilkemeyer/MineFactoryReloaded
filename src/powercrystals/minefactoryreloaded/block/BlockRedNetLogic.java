@@ -52,6 +52,8 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 		if(te instanceof TileEntityRedNetLogic)
 		{
 			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
+			world.setBlockMetadataWithNotify(x, y, z, (facing + 3) & 3, 3);
+			/*
 			if(facing == 0)
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 3, 3);
@@ -67,7 +69,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 			else if(facing == 3)
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 2, 3);
-			}
+			}//*/
 			
 			if(stack.hasTagCompound())
 			{
