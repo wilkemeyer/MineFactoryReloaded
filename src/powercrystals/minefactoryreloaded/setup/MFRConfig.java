@@ -388,11 +388,18 @@ public class MFRConfig
 						String oldCategory, String oldName, boolean def)
 	{
 		Property r = null;
+		String old = null;
 		
 		if (config.hasKey(oldCategory, oldName))
+		{
 				r = config.get(oldCategory, oldName, def);
+				old = r.getString();
+				config.getCategory(oldCategory).remove(oldName);
+		}
 		
-		r = config.get(category, name, r != null ? r.getBoolean(def) : def);
+		r = config.get(category, name, def);
+		if (old != null)
+			r.set(old);
 		return r;
 	}
 	
