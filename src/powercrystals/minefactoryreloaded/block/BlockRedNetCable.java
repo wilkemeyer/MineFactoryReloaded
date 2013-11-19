@@ -315,6 +315,27 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 			((TileEntityRedNetCable)te).onNeighboorChanged();
 		}
 	}
+
+	@Override
+    public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+		int blockId = world.getBlockId(tileX, tileY, tileZ);
+		if(blockId == blockID || world.isRemote)
+		{
+			return;
+		}
+		RedstoneNetwork.log("Cable block at %d, %d, %d got update from ID %d (%d, %d, %d)", x, y, z, blockId, tileX, tileY, tileZ);
+		
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if(te instanceof TileEntityRedNetCable)
+			((TileEntityRedNetCable)te).onNeighboorChanged();
+    }
+	
+	@Override
+	public boolean weakTileChanges()
+    {
+        return false; // true to update through blocks
+    }
 	
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int id, int meta)
@@ -423,20 +444,29 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	@Override
 	public void updateNetwork(World world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		final TileEntity te = world.getBlockTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
 		{
-			((TileEntityRedNetCable)te).getNetwork().updatePowerLevels();
+			((TileEntityRedNetCable)te).getNetwork().markUpdate();
+			world.markTileEntityForDespawn(new TileEntity() {
+				@Override
+				public void onChunkUnload()
+				{
+					te.updateEntity();
+				}
+				public TileEntity set()
+				{
+					xCoord = te.xCoord; yCoord = te.yCoord; zCoord = te.zCoord;
+					worldObj = te.worldObj;
+					return this;
+				}
+			}.set());
 		}
 	}
 	
 	@Override
 	public void updateNetwork(World world, int x, int y, int z, int subnet)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
-		{
-			((TileEntityRedNetCable)te).getNetwork().updatePowerLevels(subnet);
-		}
+		updateNetwork(world, x, y, z);
 	}
 }

@@ -70,6 +70,11 @@ public class RedstoneNetwork
 		}
 	}
 	
+	public void markUpdate()
+	{
+		_mustUpdate = true;
+	}
+	
 	public void setInvalid()
 	{
 		_invalid = true;
