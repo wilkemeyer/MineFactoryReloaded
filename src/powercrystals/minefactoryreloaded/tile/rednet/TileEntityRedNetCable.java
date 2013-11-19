@@ -167,11 +167,8 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();
 		if(worldObj.isRemote)
-		{
 			return;
-		}
 		if(_network != null && _network.isInvalid())
 		{
 			_network = null;
