@@ -1,8 +1,11 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -16,10 +19,9 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
-import org.bouncycastle.util.Arrays;
-
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.BlockPosition;
+import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
@@ -27,11 +29,10 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.net.Packets;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class TileEntityRedNetLogic extends TileEntity
+public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 {
-	public class PinMapping
+	public static class PinMapping
 	{
 		public PinMapping(int pin, int buffer)
 		{
@@ -48,12 +49,16 @@ public class TileEntityRedNetLogic extends TileEntity
 	private int _variableCount = 16;
 	
 	private IRedNetLogicCircuit[] _circuits = new IRedNetLogicCircuit[_circuitCount];
+	private boolean[] _updatable = new boolean[_circuitCount];
 	
 	// 0-5 in, 6-11 out, 12 const, 13 var, 14 null
 	private int[][] _buffers = new int[15][];
+	private int[][] _backBuffer = new int[6][];
 	
-	private PinMapping[][] _pinMappingInputs = new PinMapping[_circuits.length][];
-	private PinMapping[][] _pinMappingOutputs = new PinMapping[_circuits.length][];
+	private BlockPosition bp = new BlockPosition(0, 0, 0);
+	
+	private PinMapping[][] _pinMappingInputs = new PinMapping[_circuitCount][];
+	private PinMapping[][] _pinMappingOutputs = new PinMapping[_circuitCount][];
 	
 	private int[] _upgradeLevel = new int[6];
 	
@@ -65,6 +70,11 @@ public class TileEntityRedNetLogic extends TileEntity
 		for(int i = 0; i < 12; i++)
 		{
 			_buffers[i] = new int[16];
+		}
+		
+		for(int i = 0; i < 6; i++)
+		{
+			_backBuffer[i] = new int[16];
 		}
 		
 		// init constant buffer
@@ -152,6 +162,7 @@ public class TileEntityRedNetLogic extends TileEntity
 	
 	private void initCircuit(int index, IRedNetLogicCircuit circuit)
 	{
+		_updatable[index] = !(circuit instanceof Noop);
 		_circuits[index] = circuit;
 		if(_pinMappingInputs[index] == null)
 		{
@@ -159,7 +170,7 @@ public class TileEntityRedNetLogic extends TileEntity
 		}
 		else
 		{
-			_pinMappingInputs[index] = java.util.Arrays.copyOf(_pinMappingInputs[index], _circuits[index].getInputCount());
+			_pinMappingInputs[index] = Arrays.copyOf(_pinMappingInputs[index], _circuits[index].getInputCount());
 		}
 		
 		if(_pinMappingOutputs[index] == null)
@@ -168,7 +179,7 @@ public class TileEntityRedNetLogic extends TileEntity
 		}
 		else
 		{
-			_pinMappingOutputs[index] = java.util.Arrays.copyOf(_pinMappingOutputs[index], _circuits[index].getOutputCount());
+			_pinMappingOutputs[index] = Arrays.copyOf(_pinMappingOutputs[index], _circuits[index].getOutputCount());
 		}
 		
 		for(int i = 0; i < _pinMappingInputs[index].length; i++)
@@ -278,39 +289,41 @@ public class TileEntityRedNetLogic extends TileEntity
 			return;
 		}
 		
-		int[][] lastOuput = new int[6][]; 
 		for(int i = 0; i < 6; i++)
 		{
-			lastOuput[i] = _buffers[i + 6];
-			_buffers[i + 6] = new int[16];
+			System.arraycopy(_buffers[i + 6], 0, _backBuffer[i], 0, 16);
 		}
 		
-		for(int circuitNum = 0; circuitNum < _circuits.length; circuitNum++)
+		for (int circuitNum = 0, e = _circuits.length; circuitNum < e; ++circuitNum)
 		{	
-			if(_circuits[circuitNum] instanceof Noop)
+			if (_updatable[circuitNum])
 			{
-				continue;
-			}
-			int[] input = new int[_circuits[circuitNum].getInputCount()];
-			for(int pinNum = 0; pinNum < input.length; pinNum++)
-			{
-				input[pinNum] = _buffers[_pinMappingInputs[circuitNum][pinNum].buffer][_pinMappingInputs[circuitNum][pinNum].pin];
-			}
-			
-			int[] output = _circuits[circuitNum].recalculateOutputValues(worldObj.getTotalWorldTime(), input);
-			
-			for(int pinNum = 0; pinNum < output.length; pinNum++)
-			{
-				_buffers[_pinMappingOutputs[circuitNum][pinNum].buffer][_pinMappingOutputs[circuitNum][pinNum].pin] = output[pinNum];
+				IRedNetLogicCircuit circuit = _circuits[circuitNum];
+				PinMapping[] mappings = _pinMappingInputs[circuitNum];
+				int[] input = new int[circuit.getInputCount()];
+				for(int pinNum = 0, j = input.length; pinNum < j; ++pinNum)
+				{
+					PinMapping mapping = mappings[pinNum];
+					input[pinNum] = _buffers[mapping.buffer][mapping.pin];
+				}
+				
+				int[] output = circuit.recalculateOutputValues(worldObj.getTotalWorldTime(), input);
+				mappings = _pinMappingOutputs[circuitNum];
+				for(int pinNum = 0, j = output.length; pinNum < j; ++pinNum)
+				{
+					PinMapping mapping = mappings[pinNum];
+					_buffers[mapping.buffer][mapping.pin] = output[pinNum];
+				}
 			}
 		}
 		
 		for(int i = 0; i < 6; i++)
 		{
-			if(!Arrays.areEqual(lastOuput[i], _buffers[i + 6]))
+			if(!areEqual(_backBuffer[i], _buffers[i + 6]))
 			{
-				BlockPosition bp = new BlockPosition(this);
-				bp.orientation = ForgeDirection.VALID_DIRECTIONS[i];
+				bp.x = xCoord; bp.y = yCoord; bp.z = zCoord;
+				ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i]; 
+				bp.orientation = o;
 				bp.moveForwards(1);
 				Block b = Block.blocksList[worldObj.getBlockId(bp.x, bp.y, bp.z)];
 				if(b instanceof IRedNetNetworkContainer)
@@ -319,7 +332,8 @@ public class TileEntityRedNetLogic extends TileEntity
 				}
 				else if(b instanceof IConnectableRedNet)
 				{
-					((IConnectableRedNet)b).onInputsChanged(worldObj, bp.x, bp.y, bp.z, bp.orientation.getOpposite(), _buffers[i + 6]);
+					((IConnectableRedNet)b).onInputsChanged(worldObj, bp.x, bp.y, bp.z,
+							o.getOpposite(), _buffers[i + 6]);					
 				}
 			}
 		}
@@ -327,14 +341,18 @@ public class TileEntityRedNetLogic extends TileEntity
 	
 	public int getOutputValue(ForgeDirection side, int subnet)
 	{
-		return getOutputValues(side)[subnet];
+		if(side == ForgeDirection.UNKNOWN)
+		{
+			return 0;
+		}
+		return _buffers[side.ordinal() + 6][subnet];
 	}
 	
 	public int[] getOutputValues(ForgeDirection side)
 	{
 		if(side == ForgeDirection.UNKNOWN)
 		{
-			return null;
+			return new int[16];
 		}
 		return _buffers[side.ordinal() + 6];
 	}
@@ -444,7 +462,8 @@ public class TileEntityRedNetLogic extends TileEntity
 					}
 				}
 				
-				NBTTagCompound circuitState = ((NBTTagCompound)circuits.tagAt(c)).getCompoundTag("state");
+				NBTTagCompound circuitState = ((NBTTagCompound)circuits.tagAt(c)).
+						getCompoundTag("state");
 				if(circuitState != null)
 				{
 					_circuits[c].readFromNBT(circuitState);
@@ -512,7 +531,8 @@ public class TileEntityRedNetLogic extends TileEntity
 		_variableCount = variableCount;
 		
 		// re-init circuit array and variable buffer
-		_circuits = java.util.Arrays.copyOf(_circuits, _circuitCount);
+		_circuits = Arrays.copyOf(_circuits, _circuitCount);
+		_updatable = Arrays.copyOf(_updatable, _circuitCount);
 		_buffers[13] = Arrays.copyOf(_buffers[13], _variableCount);
 		
 		// re-init pinmapping arrays
@@ -545,4 +565,42 @@ public class TileEntityRedNetLogic extends TileEntity
 			}
 		}
 	}
+	
+	@Override
+	public boolean canRotate()
+	{
+		return crafters == 0;
+	}
+
+	@Override
+	public void rotate()
+	{
+		if (canRotate())
+		{
+			int nextMeta = (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) + 1) & 3; // % 4
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nextMeta, 3);
+		}
+	}
+
+	@Override
+	public ForgeDirection getDirectionFacing() {
+		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
+		return ForgeDirection.getOrientation(meta + 2);
+	}
+
+	private static boolean areEqual(int[] a, int[] b)
+	{
+		if ((a == null | b == null) ||
+				a.length != b.length)
+			return false;
+		
+		//if (a == b) return true;
+
+		for (int i = a.length; i --> 0; )
+			if (a[i] != b[i])
+				return false;
+
+		return true;
+	}
+
 }
