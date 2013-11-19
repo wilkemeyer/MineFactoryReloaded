@@ -29,6 +29,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	private ItemStack _storedItem = null;
 	
 	private boolean _ignoreChanges = true;
+	private boolean _shouldTick = true;
 	
 	@Override
 	public void validate()
@@ -110,13 +111,19 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 	
 	@Override
+	public boolean hasWorldObj()
+	{
+		return _shouldTick & worldObj != null;
+	}
+	
+	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
+		_shouldTick = false;
+		
 		if(worldObj.isRemote)
-		{
 			return;
-		}
 		
 		onFactoryInventoryChanged();
 	}
@@ -175,6 +182,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			// internal inventory is full
 			else
 			{
+				_shouldTick = true;
 				// _inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 			}
 		}
@@ -326,7 +334,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			}
 		}
 		_storedQuantity = amount;
-		onFactoryInventoryChanged();
+		onInventoryChanged();
 	}
 	
 	@Override
@@ -339,7 +347,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			return;
 		_storedItem = type.copy();
 		_storedItem.stackSize = 1;
-		onFactoryInventoryChanged();
+		onInventoryChanged();
 	}
 	
 	@Override
