@@ -46,7 +46,6 @@ public class ThermalExpansion
 		toSend.setInteger("energy", 3200);
 		toSend.setCompoundTag("input", input.writeToNBT(new NBTTagCompound()));
 		toSend.setCompoundTag("primaryOutput", output.writeToNBT(new NBTTagCompound()));
-		FMLLog.fine("Sending %s -> %s for pulverizer.", input, output);
 		sendComm("PulverizerRecipe", toSend);
 	}
 	
