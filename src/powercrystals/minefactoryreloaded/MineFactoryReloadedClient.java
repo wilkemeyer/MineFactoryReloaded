@@ -23,6 +23,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.render.RenderBlockFluidClassic;
@@ -214,7 +215,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		return 0;
 	}
 	
-	@ForgeSubscribe
+	@ForgeSubscribe(priority=EventPriority.HIGHEST) // first to render, so everything else is overlayed
 	public void renderWorldLast(RenderWorldLastEvent e)
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -227,28 +228,32 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		float playerOffsetY = -(float)(player.lastTickPosY + (player.posY - player.lastTickPosY) * e.partialTicks);
 		float playerOffsetZ = -(float)(player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * e.partialTicks);
 		
+        GL11.glColorMask(true, true, true, true);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+    	GL11.glDisable(GL11.GL_FOG);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+			
 		for(IHarvestAreaContainer c : _areaTileEntities)
 		{
 			if(((TileEntity)c).isInvalid())
-			{
 				continue;
-			}
 			
-			float r = (Math.abs(c.getHAM().getOriginX()) % 16) / 16.0F;
-			float g = (Math.abs(c.getHAM().getOriginY()) % 16) / 16.0F;
-			float b = (Math.abs(c.getHAM().getOriginZ()) % 16) / 16.0F;
-			
+			float r = (c.getHAM().getOriginX() & 15) / 16.0F;
+			float g = (c.getHAM().getOriginY() & 15) / 16.0F;
+			float b = (c.getHAM().getOriginZ() & 15) / 16.0F;
+
 			GL11.glPushMatrix();
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor4f(r, g, b, 0.4F);
 			GL11.glTranslatef(playerOffsetX, playerOffsetY, playerOffsetZ);
 			renderAABB(c.getHAM().getHarvestArea().toAxisAlignedBB());
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glPopMatrix();
 		}
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	public static void addTileToAreaList(IHarvestAreaContainer tile)
