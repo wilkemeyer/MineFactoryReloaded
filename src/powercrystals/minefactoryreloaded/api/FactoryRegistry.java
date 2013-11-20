@@ -5,6 +5,8 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import java.lang.reflect.Method;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 /**
  * @author PowerCrystals
@@ -330,6 +332,19 @@ public class FactoryRegistry
 		{
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Registers a handler for drinking liquids with the straw.
+	 * 
+	 * @param liquidId The liquid id the handler handles.
+	 * @param liquidDrinkHandler The drink handler instance.
+	 */
+	@Deprecated
+	public static void registerLiquidDrinkHandler(int liquidId, ILiquidDrinkHandler liquidDrinkHandler)
+	{
+		Fluid fluid = FluidRegistry.getFluid(liquidId);
+		registerLiquidDrinkHandler(fluid.getName(), liquidDrinkHandler);
 	}
 
 	/**
