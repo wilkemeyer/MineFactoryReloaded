@@ -73,6 +73,12 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			unifyInventory();
 	}
 	
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
+	}
+	
 	private void unifyInventory()
 	{
 		if(worldObj != null && !worldObj.isRemote)
