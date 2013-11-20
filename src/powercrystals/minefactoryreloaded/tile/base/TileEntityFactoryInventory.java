@@ -340,6 +340,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			if(j >= 0 && j < _inventory.length)
 			{
 				_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
+				if (_inventory[j].stackSize <= 0)
+					_inventory[j] = null;
 			}
 		}
 		onInventoryChanged();
@@ -420,7 +422,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		NBTTagList nbttaglist = new NBTTagList();
 		for(int i = 0; i < _inventory.length; i++)
 		{
-			if(_inventory[i] != null)
+			if (_inventory[i] != null && _inventory[i].stackSize > 0)
 			{
 				NBTTagCompound slot = new NBTTagCompound();
 				slot.setByte("Slot", (byte)i);
