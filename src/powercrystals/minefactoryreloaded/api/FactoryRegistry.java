@@ -335,17 +335,17 @@ public class FactoryRegistry
 	/**
 	 * Registers a handler for drinking liquids with the straw.
 	 * 
-	 * @param liquidId The block ID the handler handles.
+	 * @param liquidId The liquid string name the handler handles.
 	 * @param liquidDrinkHandler The drink handler instance.
 	 */
-	public static void registerLiquidDrinkHandler(int liquidId, ILiquidDrinkHandler liquidDrinkHandler)
+	public static void registerLiquidDrinkHandler(String liquidId, ILiquidDrinkHandler liquidDrinkHandler)
 	{
 		try
 		{
 			Class<?> registry = Class.forName("powercrystals.minefactoryreloaded.MFRRegistry");
 			if(registry != null)
 			{
-				Method reg = registry.getMethod("registerLiquidDrinkHandler", int.class, ILiquidDrinkHandler.class);
+				Method reg = registry.getMethod("registerLiquidDrinkHandler", String.class, ILiquidDrinkHandler.class);
 				reg.invoke(registry, liquidId, liquidDrinkHandler);
 			}
 		}
