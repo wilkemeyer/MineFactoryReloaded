@@ -48,7 +48,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFactoryMachine extends BlockContainer
-							implements IConnectableRedNet, IDismantleable//, IEnergyContainerItem
+							implements IConnectableRedNet, IDismantleable
 {
 	private int _mfrMachineBlockIndex;
 
