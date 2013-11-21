@@ -36,13 +36,6 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		this.setMaxDamage(maxUses);
 		this.setHasSubtypes(true);
 	}
-	
-	@Override
-	public void setDamage(ItemStack stack, int damage)
-	{
-		super.setDamage(stack, damage);
-		new Throwable().printStackTrace();
-	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
