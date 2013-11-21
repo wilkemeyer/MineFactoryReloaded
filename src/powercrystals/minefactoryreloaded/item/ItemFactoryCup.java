@@ -56,32 +56,27 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 	@Override
 	public String getItemDisplayName(ItemStack item)
 	{
-		int id = item.getItemDamage();
-		if (id != 0)
+		String ret = getFluidName(item), t = getLocalizedName(ret);
+		if (t != null && !t.isEmpty())
+			return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
+		if (ret == null)
 		{
-			String ret = getFluidName(item), t = getLocalizedName(ret);
-			if (t != null && !t.isEmpty())
-				return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
-			if (ret == null)
-			{
-				return super.getItemDisplayName(item);
-			}
-			Fluid liquid = FluidRegistry.getFluid(ret);
-			if (liquid != null)
-			{
-				ret = liquid.getLocalizedName();
-			}
-			_prefix = true;
-			t = super.getItemDisplayName(item);
-			_prefix = false;
-			t = t != null ? t.trim() : "";
-			ret = (t.isEmpty() ? "" : t + " ") + ret;
-			t = super.getItemDisplayName(item);
-			t = t != null ? t.trim() : "";
-			ret += t.isEmpty() ? " Cup" : " " + t;
-			return ret;
+			return super.getItemDisplayName(item);
 		}
-		return super.getItemDisplayName(item);
+		Fluid liquid = FluidRegistry.getFluid(ret);
+		if (liquid != null)
+		{
+			ret = liquid.getLocalizedName();
+		}
+		_prefix = true;
+		t = super.getItemDisplayName(item);
+		_prefix = false;
+		t = t != null ? t.trim() : "";
+		ret = (t.isEmpty() ? "" : t + " ") + ret;
+		t = super.getItemDisplayName(item);
+		t = t != null ? t.trim() : "";
+		ret += t.isEmpty() ? " Cup" : " " + t;
+		return ret;
 	}
 
 	@Override
@@ -125,8 +120,8 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || resource.getFluid().isGaseous(resource)
-				|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
+		if (resource == null || resource.getFluid().isGaseous(resource))
+				//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
 		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
@@ -186,7 +181,7 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 
 	public boolean hasDrinkableLiquid(ItemStack stack)
 	{
-		return MFRRegistry.getLiquidDrinkHandlers().containsKey(getFluidName(stack));
+		return MFRRegistry.getLiquidDrinkHandlers().containsKey(getFluidName(stack)) && getFluid(stack).amount == getCapacity(stack);
 	}
 
 	@Override
