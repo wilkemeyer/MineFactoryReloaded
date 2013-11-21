@@ -25,6 +25,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.render.RenderBlockFluidClassic;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
@@ -42,7 +43,7 @@ import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntitySafariNetRenderer;
-import powercrystals.minefactoryreloaded.render.item.FactoryCupRenderer;
+import powercrystals.minefactoryreloaded.render.item.FactoryFluidOverlayRenderer;
 import powercrystals.minefactoryreloaded.render.item.FactoryGlassPaneItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.RocketItemRenderer;
@@ -105,7 +106,9 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdFactoryGlass, new FactoryGlassRenderer());
 		
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.factoryGlassPaneBlock.blockID, new FactoryGlassPaneItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCup.itemID, new FactoryCupRenderer());
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCup.itemID, new FactoryFluidOverlayRenderer());
+		if (MineFactoryReloadedCore.syringeEmptyItem instanceof IFluidContainerItem)
+			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem.itemID, new FactoryFluidOverlayRenderer());
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
 			MinecraftForgeClient.registerItemRenderer(Block.thinGlass.blockID, new FactoryGlassPaneItemRenderer());			

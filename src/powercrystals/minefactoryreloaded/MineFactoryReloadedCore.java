@@ -97,6 +97,7 @@ import powercrystals.minefactoryreloaded.item.ItemStraw;
 import powercrystals.minefactoryreloaded.item.ItemSyringeCure;
 import powercrystals.minefactoryreloaded.item.ItemSyringeGrowth;
 import powercrystals.minefactoryreloaded.item.ItemSyringeHealth;
+import powercrystals.minefactoryreloaded.item.ItemSyringeLiquid;
 import powercrystals.minefactoryreloaded.item.ItemSyringeSlime;
 import powercrystals.minefactoryreloaded.item.ItemSyringeZombie;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
@@ -389,7 +390,10 @@ public class MineFactoryReloadedCore extends BaseMod
 		plasticSheetItem = (new ItemFactory(MFRConfig.plasticSheetItemId.getInt())).setUnlocalizedName("mfr.plastic.sheet");
 		rawPlasticItem = (new ItemFactory(MFRConfig.rawPlasticItemId.getInt())).setUnlocalizedName("mfr.plastic.raw");
 		rubberBarItem = (new ItemFactory(MFRConfig.rubberBarItemId.getInt())).setUnlocalizedName("mfr.rubber.bar");
-		syringeEmptyItem = (new ItemFactory(MFRConfig.syringeEmptyItemId.getInt())).setUnlocalizedName("mfr.syringe.empty");
+		if (MFRConfig.enableLiquidSyringe.getBoolean(true))
+			syringeEmptyItem = (new ItemSyringeLiquid(MFRConfig.syringeEmptyItemId.getInt())).setUnlocalizedName("mfr.syringe.empty");
+		else
+			syringeEmptyItem = (new ItemFactory(MFRConfig.syringeEmptyItemId.getInt())).setUnlocalizedName("mfr.syringe.empty");
 		syringeHealthItem = (new ItemSyringeHealth()).setUnlocalizedName("mfr.syringe.health").setContainerItem(syringeEmptyItem);
 		syringeGrowthItem = (new ItemSyringeGrowth()).setUnlocalizedName("mfr.syringe.growth").setContainerItem(syringeEmptyItem);
 		rawRubberItem = (new ItemFactory(MFRConfig.rawRubberItemId.getInt())).setUnlocalizedName("mfr.rubber.raw");
