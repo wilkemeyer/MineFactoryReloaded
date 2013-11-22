@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.oredict.OreDictionary;
+
 import powercrystals.core.oredict.OreDictTracker;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -22,8 +26,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiUnifier;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUnifier;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityUnifier extends TileEntityFactoryInventory implements ITankContainerBucketable
 {
@@ -32,6 +34,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	private static FluidStack _essence;
 	private static FluidStack _liquidxp;
 	private int _roundingCompensation;
+	private boolean ignoreChange = false;
 	
 	private Map<String, ItemStack> _preferredOutputs = new HashMap<String, ItemStack>();
 	
@@ -63,14 +66,6 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	public ContainerUnifier getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerUnifier(this, inventoryPlayer);
-	}
-	
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-		if (_inventory[0] != null)
-			unifyInventory();
 	}
 	
 	@Override
@@ -119,7 +114,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		
 		if(_inventory[1] == null)
 		{
-			amt = Math.min(getInventoryStackLimit(), source.getMaxStackSize());
+			amt = Math.min(Math.min(getInventoryStackLimit(), source.getMaxStackSize()),
+					source.stackSize);
 		}
 		else if(!UtilInventory.stacksEqual(source, _inventory[1], false))
 		{
@@ -131,7 +127,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		}
 		else
 		{
-			amt = Math.min(_inventory[0].stackSize,
+			amt = Math.min(source.stackSize,
 					_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
 		}
 		
@@ -154,7 +150,20 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 	
 	@Override
-	protected void onFactoryInventoryChanged()
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
+		_inventory[slot] = stack;
+		if (slot > 1)
+			updatePreferredOutput();
+		if (stack != null && stack.stackSize <= 0)
+			_inventory[slot] = null;
+		unifyInventory();
+		ignoreChange = true;
+		onInventoryChanged();
+		ignoreChange = false;
+	}
+	
+	protected void updatePreferredOutput()
 	{
 		_preferredOutputs.clear();
 		for(int i = 2; i < 11; i++)
@@ -172,7 +181,16 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 				}
 			}
 		}
-		unifyInventory();
+	}
+	
+	@Override
+	protected void onFactoryInventoryChanged()
+	{
+		if (!ignoreChange)
+		{
+			updatePreferredOutput();
+			unifyInventory();
+		}
 	}
 	
 	@Override
@@ -196,21 +214,19 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
-		return 11;
+		return 2;
 	}
 	
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
-		if(slot == 0) return true;
-		return false;
+		return slot == 0;
 	}
 	
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
-		if(slot == 1) return true;
-		return false;
+		return slot == 1;
 	}
 	
 	@Override
