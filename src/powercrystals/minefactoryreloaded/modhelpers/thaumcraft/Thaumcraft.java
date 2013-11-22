@@ -166,7 +166,7 @@ public class Thaumcraft
 		parseAspects(Machine.Breeder, "2 bestia, 2 fames, 5 Machina");
 		parseAspects(Machine.Chronotyper, "3 Tempus, 3 bestia, 5 Machina, 3 Sensus");
 		parseAspects(Machine.Composter, "2 bestia, 2 Aqua, 5 Machina");
-		parseAspects(Machine.DeepStorageUnit, "20 vacuos, 5 Machina, 5 Alienis");
+		parseAspects(Machine.DeepStorageUnit, "4971027 vacuos, 5 Machina, 5 Alienis");
 		parseAspects(Machine.Ejector, "4 Motus, 5 Machina");
 		parseAspects(Machine.EnchantmentRouter, "1 Motus, 4 iter, 2 Sensus, 5 Machina, 1 praecantatio");
 		parseAspects(Machine.Fertilizer, "6 Herba, 5 Machina, 1 Vitreus, 3 Victus");
