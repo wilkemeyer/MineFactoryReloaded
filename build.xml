@@ -178,9 +178,10 @@
 		<zip destfile="${dist.dir}/MFR-API-${python.out}-${build.number}.zip" basedir="${apiclasses.dir}" />
 		<jar destfile="${dist.dir}/MineFactoryReloaded-${python.out}-${build.number}.jar" compress="true" level="9" basedir="${classes.dir}"/>
 		<delete dir="${classes.dir}" />
-		<delete dir="${mcp.dir}/reobf"/>
 		<delete dir="{$apiclasses.dir}" />
+		<delete dir="${mcp.dir}/reobf"/>
 		<delete dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded" />
+		<delete dir="${mcp.dir}/bin/minecraft/powercrystals/minefactoryreloaded" />
 	</target>
 
 	<target name="MFR-Forestry" depends="download-jgit">
