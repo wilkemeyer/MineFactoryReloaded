@@ -21,7 +21,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 		super(machine);
 	}
 	
-	private IEnergyHandler[] energyHandleCache;
+	private IEnergyHandler[] energyHandlerCache;
 	private IPowerReceptor[] powerReceptorCache;
 	private boolean deadCache;
 	
@@ -30,7 +30,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	{
 		super.validate();
 		deadCache = true;
-		energyHandleCache = new IEnergyHandler[6];
+		energyHandlerCache = new IEnergyHandler[6];
 		powerReceptorCache = new IPowerReceptor[6];
 	}
 	
@@ -69,21 +69,21 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	private void addCache(TileEntity tile, int side)
 	{
 		if (tile instanceof IEnergyHandler)
-			energyHandleCache[side] = (IEnergyHandler)tile;
+			energyHandlerCache[side] = (IEnergyHandler)tile;
 		else if (tile instanceof IPowerReceptor)
 			powerReceptorCache[side] = (IPowerReceptor)tile;
 		else
 		{
-			energyHandleCache[side] = null;
+			energyHandlerCache[side] = null;
 			powerReceptorCache[side] = null;
 		}
 	}
 	
 	protected final int producePower(int energy)
 	{
-		for (int i = energyHandleCache.length; i --> 0; )
+		for (int i = energyHandlerCache.length; i --> 0; )
 		{
-			IEnergyHandler tile = energyHandleCache[i];
+			IEnergyHandler tile = energyHandlerCache[i];
 			if (tile == null)
 				continue;
 			
