@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -65,6 +67,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Machine
 {
+	public static final Material MATERIAL = new MachineMaterial(MapColor.ironColor);
 	private static List<Machine> _machines = new LinkedList<Machine>();
 	private static Map<Integer, Machine> _machineMappings = new HashMap<Integer, Machine>();
 	private static Map<Integer, Integer> _highestMetas = new HashMap<Integer, Integer>();

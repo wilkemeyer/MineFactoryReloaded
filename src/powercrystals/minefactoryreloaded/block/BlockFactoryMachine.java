@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,7 +53,7 @@ public class BlockFactoryMachine extends BlockContainer
 
 	public BlockFactoryMachine(int blockId, int index)
 	{
-		super(blockId, Material.clay);
+		super(blockId, Machine.MATERIAL);
 		setHardness(0.5F);
 		setStepSound(soundMetalFootstep);
 		setCreativeTab(MFRCreativeTab.tab);
