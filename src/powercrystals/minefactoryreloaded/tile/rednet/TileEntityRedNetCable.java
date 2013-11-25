@@ -247,33 +247,46 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 			}
 			else
 			{
-				int subnet = getSideColor(bp.orientation);
-				RedNetConnectionType connectionType = getConnectionState(bp.orientation);
-				
-				if(!worldObj.isAirBlock(bp.x, bp.y, bp.z))
-				{
-					if(connectionType.isAllSubnets)
-					{
-						_network.addOrUpdateNode(bp);
-					}
-					else if(connectionType.isCable)
-					{
-						_network.addOrUpdateNode(bp, subnet, false);
-					}
-					else if(connectionType.isPlate)
-					{
-						_network.addOrUpdateNode(bp, subnet, true);
-					}
-					else
-					{
-						_network.removeNode(bp);
-					}
-				}
-				else
-				{
-					_network.removeNode(bp);
-				}
+				updateNearbyNode(bp);
 			}
+		}
+	}
+	
+	public void updateNodes()
+	{
+		for(BlockPosition bp : new BlockPosition(this).getAdjacent(true))
+		{
+			updateNearbyNode(bp);
+		}
+	}
+	
+	private void updateNearbyNode(BlockPosition bp)
+	{
+		int subnet = getSideColor(bp.orientation);
+		RedNetConnectionType connectionType = getConnectionState(bp.orientation);
+		
+		if(!worldObj.isAirBlock(bp.x, bp.y, bp.z))
+		{
+			if(connectionType.isAllSubnets)
+			{
+				_network.addOrUpdateNode(bp);
+			}
+			else if(connectionType.isCable)
+			{
+				_network.addOrUpdateNode(bp, subnet, false);
+			}
+			else if(connectionType.isPlate)
+			{
+				_network.addOrUpdateNode(bp, subnet, true);
+			}
+			else
+			{
+				_network.removeNode(bp);
+			}
+		}
+		else
+		{
+			_network.removeNode(bp);
 		}
 	}
 	
