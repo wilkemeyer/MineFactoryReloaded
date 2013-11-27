@@ -33,6 +33,9 @@ public class ThermalExpansion extends Vanilla
 			ItemStack strongBox = GameRegistry.findItemStack("ThermalExpansion", "strongboxReinforced", 1);
 			ItemStack strongBoxBasic = GameRegistry.findItemStack("ThermalExpansion", "strongboxBasic", 1);
 			ItemStack multimeter = GameRegistry.findItemStack("ThermalExpansion", "multimeter", 1);
+			ItemStack invarAxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarAxe", 1);
+			ItemStack invarSword = GameRegistry.findItemStack("ThermalExpansion", "toolInvarSword", 1);
+			ItemStack invarPickaxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarPickaxe", 1);
 			// maybe invar tools in place of gold?
 			
 			registerMachine(Machine.Planter, new Object[] {
@@ -64,7 +67,7 @@ public class ThermalExpansion extends Vanilla
 					"SFS",
 					"OCO",
 					'P', "sheetPlastic",
-					'T', Item.axeIron,
+					'T', invarAxe,
 					'S', Item.shears,
 					'F', machineFrame,
 					'O', "ingotGold",
@@ -121,7 +124,7 @@ public class ThermalExpansion extends Vanilla
 					"OCO",
 					'P', "sheetPlastic",
 					'T', "gearInvar",
-					'S', Item.pickaxeIron,
+					'S', invarPickaxe,
 					'F', machineFrame,
 					'O', "ingotIron",
 					'C', powerCoilGold
@@ -190,7 +193,7 @@ public class ThermalExpansion extends Vanilla
 					"SFS",
 					"OCO",
 					'P', "sheetPlastic",
-					'T', Item.swordGold,
+					'T', invarSword,
 					'S', "gearTin",
 					'F', machineFrame,
 					'O', Item.book,
@@ -381,8 +384,8 @@ public class ThermalExpansion extends Vanilla
 					"SFS",
 					"XCX",
 					'G', "sheetPlastic",
-					'S', Item.swordGold,
-					'X', Item.axeGold,
+					'S', invarSword,
+					'X', invarAxe,
 					'I', "gearInvar",
 					'F', machineFrame,
 					'C', powerCoilGold
@@ -480,7 +483,7 @@ public class ThermalExpansion extends Vanilla
 					"SFS",
 					"SCS",
 					'G', "sheetPlastic",
-					'X', Item.axeGold,
+					'X', invarAxe,
 					'S', Item.shears,
 					'F', machineFrame,
 					'C', powerCoilGold
