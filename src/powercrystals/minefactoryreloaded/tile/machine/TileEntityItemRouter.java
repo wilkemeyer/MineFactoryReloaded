@@ -251,6 +251,34 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory
 	}
 	
 	@Override
+	public void setInventorySlotContents(int i, ItemStack stack)
+	{
+		if (worldObj != null && !worldObj.isRemote)
+		{
+			int start = getStartInventorySide(ForgeDirection.UNKNOWN);
+			if (stack != null && i >= start && i <= (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
+			{
+				stack = routeItem(stack);
+				if (stack == null)
+					return;
+				if (stack.stackSize > getInventoryStackLimit())
+				{
+					stack.stackSize = getInventoryStackLimit();
+				}
+				_inventory[i] = stack;
+				return;
+			}
+		}
+		super.setInventorySlotContents(i, stack);
+	}
+	
+	@Override
+	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	{
+		return false;
+	}
+	
+	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		recalculateDefaultRoutes();
