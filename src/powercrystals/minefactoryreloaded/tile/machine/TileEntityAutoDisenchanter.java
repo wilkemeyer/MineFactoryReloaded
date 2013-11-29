@@ -83,13 +83,19 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_inventory[0] != null && _inventory[0].getEnchantmentTagList() == null && _inventory[2] == null)
+		if (_inventory[0] == null)
+			return false;
+		
+		NBTTagList list = _inventory[0].getEnchantmentTagList(); 
+		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null)
 		{
 			_inventory[2] = _inventory[0];
 			_inventory[0] = null;
 		}
-		else if(_inventory[0] != null && _inventory[0].getEnchantmentTagList() != null && _inventory[1] != null &&
-				_inventory[1].itemID == Item.book.itemID && _inventory[2] == null && _inventory[3] == null)
+		else if ((list != null && list.tagCount() > 0) &&
+				(_inventory[1] != null && _inventory[1].itemID == Item.book.itemID) &
+				_inventory[2] == null &
+				_inventory[3] == null)
 		{
 			if(getWorkDone() >= getWorkMax())
 			{
@@ -98,23 +104,20 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 				NBTTagCompound enchTag;
 				if(_inventory[0].itemID == Item.enchantedBook.itemID)
 				{
-					if((NBTTagList)_inventory[0].getTagCompound().getTag("ench") != null)
+					enchTag = (NBTTagCompound)list.tagAt(0);
+					list.removeTag(0);
+					if(list.tagCount() == 0)
 					{
-						enchTag = (NBTTagCompound)((NBTTagList)_inventory[0].getTagCompound().getTag("ench")).tagAt(0);
 						_inventory[0] = new ItemStack(Item.book);
-					}
-					else
-					{
-						enchTag = (NBTTagCompound)((NBTTagList)_inventory[0].getTagCompound().getTag("StoredEnchantments")).tagAt(0);
 					}
 				}
 				else
 				{
-					int enchIndex = worldObj.rand.nextInt(((NBTTagList)_inventory[0].getTagCompound().getTag("ench")).tagCount());
-					enchTag = (NBTTagCompound)((NBTTagList)_inventory[0].getTagCompound().getTag("ench")).tagAt(enchIndex);
+					int enchIndex = worldObj.rand.nextInt(list.tagCount());
+					enchTag = (NBTTagCompound)list.tagAt(enchIndex);
 					
-					((NBTTagList)_inventory[0].getTagCompound().getTag("ench")).removeTag(enchIndex);
-					if(((NBTTagList)_inventory[0].getTagCompound().getTag("ench")).tagCount() == 0)
+					list.removeTag(enchIndex);
+					if(list.tagCount() == 0)
 					{
 						_inventory[0].getTagCompound().removeTag("ench");
 						if(_inventory[0].getTagCompound().hasNoTags())
