@@ -30,10 +30,13 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 		for(int i = 0; i <= highestMeta; i++)
 		{
 			names[i] = Machine.getMachineFromIndex(_machineBlockIndex, i).getInternalName();
+		}
+		setNames(names);
+		for(int i = 0; i <= highestMeta; i++)
+		{
 			ItemStack item = new ItemStack(this, 1, i);
 			GameRegistry.registerCustomItemStack(item.getUnlocalizedName(), item);
 		}
-		setNames(names);
 	}
 	
 	@Override
