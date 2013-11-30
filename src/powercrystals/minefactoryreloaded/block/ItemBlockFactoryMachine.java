@@ -1,15 +1,18 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.api.energy.IEnergyContainerItem;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import powercrystals.minefactoryreloaded.setup.Machine;
-import cofh.api.energy.IEnergyContainerItem;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergyContainerItem
 {
@@ -27,6 +30,8 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 		for(int i = 0; i <= highestMeta; i++)
 		{
 			names[i] = Machine.getMachineFromIndex(_machineBlockIndex, i).getInternalName();
+			ItemStack item = new ItemStack(this, 1, i);
+			GameRegistry.registerCustomItemStack(item.getUnlocalizedName(), item);
 		}
 		setNames(names);
 	}
