@@ -1,22 +1,24 @@
 package powercrystals.minefactoryreloaded.modhelpers.magicalcrops;
 
-import java.lang.reflect.Method;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.FertilizerType;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCropPlant;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+
+import java.lang.reflect.Method;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
+
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.FertilizerType;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCropPlant;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 
 @Mod(modid = "MineFactoryReloaded|CompatMagicalCrops", name = "MFR Compat: Magical Crops", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:magicalcrops")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)

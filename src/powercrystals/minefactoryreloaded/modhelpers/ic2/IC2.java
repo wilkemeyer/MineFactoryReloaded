@@ -1,20 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
-import ic2.api.item.Items;
-import ic2.api.recipe.IMachineRecipeManager;
-import ic2.api.recipe.Recipes;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -22,6 +7,25 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
+
+import ic2.api.item.Items;
+import ic2.api.recipe.IMachineRecipeManager;
+import ic2.api.recipe.Recipes;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 
 @Mod(modid = "MineFactoryReloaded|CompatIC2", name = "MFR Compat: IC2", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:IC2")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
@@ -37,6 +41,10 @@ public class IC2
 		}
 		try
 		{
+			ItemStack booties = new ItemStack(Item.bootsLeather, 64, 0);
+			Item.bootsLeather.func_82813_b(booties, 0x3479F2);
+			OreDictionary.registerOre("greggy_greg_please_stick_a_sock_in_it", booties);
+			
 			ItemStack crop = Items.getItem("crop");
 			ItemStack rubber = Items.getItem("rubber").copy();
 			ItemStack rubberSapling = Items.getItem("rubberSapling");

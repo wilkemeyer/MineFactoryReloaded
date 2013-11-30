@@ -1,11 +1,26 @@
 package powercrystals.minefactoryreloaded;
 
+import buildcraft.api.transport.FacadeManager;
+
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
+import cpw.mods.fml.relauncher.Side;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import buildcraft.api.transport.FacadeManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
@@ -34,20 +49,20 @@ import powercrystals.core.updater.UpdateManager;
 import powercrystals.minefactoryreloaded.block.BlockConveyor;
 import powercrystals.minefactoryreloaded.block.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.BlockFactoryDecorativeBricks;
+import powercrystals.minefactoryreloaded.block.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
-import powercrystals.minefactoryreloaded.block.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.BlockPinkSlimeFluid;
 import powercrystals.minefactoryreloaded.block.BlockRailCargoDropoff;
 import powercrystals.minefactoryreloaded.block.BlockRailCargoPickup;
 import powercrystals.minefactoryreloaded.block.BlockRailPassengerDropoff;
 import powercrystals.minefactoryreloaded.block.BlockRailPassengerPickup;
-import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
-import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.BlockRedNetCable;
+import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
+import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
 import powercrystals.minefactoryreloaded.block.BlockRubberSapling;
 import powercrystals.minefactoryreloaded.block.BlockRubberWood;
@@ -116,25 +131,10 @@ import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
-
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
 dependencies = "required-after:PowerCrystalsCore@[1.1.7,);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")

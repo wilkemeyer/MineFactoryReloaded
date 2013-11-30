@@ -1,16 +1,18 @@
 package powercrystals.minefactoryreloaded.modhelpers.chococraft;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 
 @Mod(modid="MineFactoryReloaded|CompatChococraft", name = "MFR Compat: Chococraft",
 version = MineFactoryReloadedCore.version,

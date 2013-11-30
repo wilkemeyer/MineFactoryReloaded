@@ -1,17 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.twilightforest;
 
-import java.util.HashMap;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -21,6 +9,19 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
+import java.util.HashMap;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 
 @Mod(modid = "MineFactoryReloaded|CompatTwilightForest", name = "MFR Compat: TwilightForest", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:TwilightForest")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
