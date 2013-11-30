@@ -18,9 +18,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-@Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock", name = "MFR Compat: ForgeMicroblock", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;")
+@Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock",
+name = "MFR Compat: ForgeMicroblock",
+version = MineFactoryReloadedCore.version,
+dependencies = "after:MineFactoryReloaded")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class FMP
 {
@@ -31,10 +35,10 @@ public class FMP
 			return;
 		try
 		{
-			addSubtypes(Item.itemsList[MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID]);
-			addSubtypes(Item.itemsList[MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID]);
-			addSubtypes(Item.itemsList[MineFactoryReloadedCore.factoryGlassBlock.blockID]);
-			addSubtypes(Item.itemsList[MineFactoryReloadedCore.factoryRoadBlock.blockID]);
+			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID]);
+			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID]);
+			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryGlassBlock.blockID]);
+			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryRoadBlock.blockID]);
 			if (MFRConfig.vanillaOverrideIce.getBoolean(true))
 				sendComm(new ItemStack(Block.ice, 1, 1));
 			sendComm(new ItemStack(MineFactoryReloadedCore.rubberWoodBlock, 1, 0));
@@ -47,10 +51,10 @@ public class FMP
 		}
 	}
 	
-	private void addSubtypes(Item item)
+	private void addSubtypes(ItemBlockFactory item)
 	{
 		List<ItemStack> items = new LinkedList<ItemStack>();
-		item.getSubItems(item.itemID, null, items);
+		item.getSubItems(item.itemID, items);
 		for (int i = items.size(); i --> 0; )
 			sendComm(items.get(i));
 	}

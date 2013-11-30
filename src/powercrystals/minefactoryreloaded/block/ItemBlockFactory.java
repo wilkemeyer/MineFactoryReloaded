@@ -43,13 +43,18 @@ public class ItemBlockFactory extends ItemBlock
 		return getUnlocalizedName() + "." + _names[Math.min(stack.getItemDamage(), _names.length - 1)];
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	public void getSubItems(int itemId, List<ItemStack> subTypes)
 	{
 		for(int i = 0; i < _names.length; i++)
 		{
 			subTypes.add(new ItemStack(itemId, 1, i));
 		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	{
+		getSubItems(itemId, subTypes);
 	}
 }
