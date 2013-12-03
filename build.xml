@@ -173,15 +173,19 @@
 			<available file="${download.dir}/jgit/jsch.jar"/>
 		</and>
 	</condition>
-
+	
 	<target name="install" depends="build">
 		<zip destfile="${dist.dir}/MFR-API-${python.out}-${build.number}.zip" basedir="${apiclasses.dir}" />
-		<jar destfile="${dist.dir}/MineFactoryReloaded-${python.out}-${build.number}.jar" compress="true" level="9" basedir="${classes.dir}"/>
-		<delete dir="${classes.dir}" />
-		<delete dir="{$apiclasses.dir}" />
-		<delete dir="${mcp.dir}/reobf"/>
+		<antcall target="install-lite" />
+		<delete dir="${apiclasses.dir}" />
+		<delete dir="${mcp.dir}/reobf" />
 		<delete dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded" />
 		<delete dir="${mcp.dir}/bin/minecraft/powercrystals/minefactoryreloaded" />
+	</target>
+
+	<target name="install-lite">
+		<jar destfile="${dist.dir}/MineFactoryReloaded-${python.out}-${build.number}.jar" compress="true" level="9" basedir="${classes.dir}"/>
+		<delete dir="${classes.dir}" />
 	</target>
 
 	<target name="MFR-Forestry" depends="download-jgit">
@@ -235,14 +239,23 @@
 			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
 			<include name="powercrystals/minefactoryreloaded/**/*.java"/>
 		</javac>
-		<!--<exec dir="${mcp.dir}" executable="${windows.python}"
-			osfamily="windows" failonerror="true">
-			<arg line="runtime/recompile.py" />
-		</exec>
-
-		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
-			<arg value="recompile.sh" />
-		</exec>-->
+		
+		<!-- Dev jar -->
+		<copy todir="${classes.dir}">
+			<fileset dir="${mcp.dir}/bin/minecraft">
+				<include name="powercrystals/minefactoryreloaded/**/*.class" />
+				<include name="skyboy/**/*.class" />
+				<include name="cofh/**/*.class" />
+				<include name="ic2/**/*.class" />
+				<include name="universalelectricity/**/*.class" />
+				<include name="buildcraft/**/*.class" />
+			</fileset>
+		</copy>
+		
+		<antcall target="copy-assets" />
+		<antcall target="install-lite">
+			<param name="build.number" value="dev-${build.number}" />
+		</antcall>
 
 		<!-- Reobf -->
 		<exec dir="${mcp.dir}" executable="${windows.python}"
@@ -254,20 +267,36 @@
 			<arg value="reobfuscate.sh" />
 			<arg value="--srgnames" />
 		</exec>
-
-		<delete dir="${mcp.dir}/reobf/minecraft/thaumcraft"/>
-		<delete dir="${mcp.dir}/reobf/minecraft/forestry"/>
-		<delete dir="${mcp.dir}/reobf/minecraft/thermalexpansion"/>
-		<delete dir="${mcp.dir}/reobf/minecraft/powercrystals/core"/>
 		
+		<!-- Copy API -->
 		<copy todir="${apiclasses.dir}/powercrystals/minefactoryreloaded/api">
 			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/api" />
 		</copy>
 		
+		<!-- Forestry compat submodule -->
+		<antcall target="MFR-Forestry"/>
+
+		<!-- Forestry submodule cleanup -->
+		<delete dir="${classes.dir}/net"/>
+		<delete dir="${classes.dir}/cpw"/>
+		<delete file="${classes.dir}/dummy.txt"/>
+
+		<!-- Copy classes -->
 		<copy todir="${classes.dir}">
-			<fileset dir="${mcp.dir}/reobf/minecraft"/>
+			<fileset dir="${mcp.dir}/reobf/minecraft">
+				<include name="powercrystals/minefactoryreloaded/**/*.class" />
+				<include name="skyboy/**/*.class" />
+				<include name="cofh/**/*.class" />
+				<include name="ic2/**/*.class" />
+				<include name="universalelectricity/**/*.class" />
+				<include name="buildcraft/**/*.class" />
+			</fileset>
 		</copy>
 		
+		<antcall target="copy-assets" />
+	</target>
+	
+	<target name="copy-assets">
 		<copy todir="${classes.dir}" file="mcmod.info"/>
 		
 		<copy todir="${classes.dir}/assets/minefactoryreloaded/textures">
@@ -281,8 +310,6 @@
 		<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/lang">
 			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/lang" />
 		</copy>
-		
-		<antcall target="MFR-Forestry"/>
 	</target>
 
 	<target name="build-number-there" if="env.BUILD_NUMBER" >
