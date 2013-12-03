@@ -8,7 +8,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
-import net.minecraft.item.Item;
+import forestry.api.core.ItemInterface;
+
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -29,17 +30,18 @@ public class Forestry
 		}
 		try
 		{
-			Class<?> forestryItems = Class.forName("forestry.core.config.ForestryItem");
-			if(forestryItems != null)
-			{
-				Item peat = (Item)forestryItems.getField("peat").get(null);
-				MFRRegistry.registerSludgeDrop(10, new ItemStack(peat));
-			}
+			regsiterSludgeDrop();
 		}
 		catch(Exception x)
 		{
 			x.printStackTrace();
 		}
+	}
+	
+	private static void regsiterSludgeDrop()
+	{
+		ItemStack peat = ItemInterface.getItem("peat");
+		MFRRegistry.registerSludgeDrop(10, peat);
 	}
 	
 	@EventHandler
