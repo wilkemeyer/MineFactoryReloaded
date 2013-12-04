@@ -37,7 +37,6 @@ public class GuiFactoryPowered extends GuiFactoryInventory
 		{
 			int energyPerMJ = TileEntityFactoryPowered.energyPerMJ;
 			int energyPerEU = TileEntityFactoryPowered.energyPerEU;
-			int wPerEnergy = TileEntityFactoryPowered.wPerEnergy;
 			int stored = _tePowered.getEnergyStored();
 			int storedMax = _tePowered.getEnergyStoredMax();
 			List<String> lines = new ArrayList<String>();
@@ -45,7 +44,6 @@ public class GuiFactoryPowered extends GuiFactoryInventory
 			lines.add(stored + " / " + storedMax + " " + "RF");
 			lines.add(stored / energyPerMJ + " / " + storedMax / energyPerMJ + " " + "MJ");
 			lines.add(stored / energyPerEU + " / " + storedMax / energyPerEU + " " + "EU");
-			lines.add(stored * wPerEnergy / 1000 + " / " + storedMax * wPerEnergy / 1000 + " " + "KJ");
 			drawTooltip(lines, mouseX, mouseY);
 		}
 		else if(isPointInRegion(151, 15, 8, 60, mouseX, mouseY))

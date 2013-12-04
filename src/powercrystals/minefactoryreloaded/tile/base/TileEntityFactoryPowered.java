@@ -21,9 +21,6 @@ import net.minecraftforge.common.MinecraftForge;
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-import universalelectricity.core.block.IElectrical;
-import universalelectricity.core.electricity.ElectricityPack;
-
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
  * 
@@ -37,12 +34,11 @@ import universalelectricity.core.electricity.ElectricityPack;
  */
 
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-											implements IPowerReceptor, IEnergySink, IElectrical,
+											implements IPowerReceptor, IEnergySink,
 														IEnergyHandler, IEnergyInfo
 {	
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
-	public static final int wPerEnergy = 17;
 	
 	private int _energyStored;
 	private int _maxEnergyStored;
@@ -63,10 +59,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	private boolean _isAddedToIC2EnergyNet;
 	private boolean _addToNetOnNextTick;
-	
-	// UE-related fields
-	
-	private int _ueBuffer;
 	
 	// constructors
 	
@@ -237,7 +229,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		
 		tag.setInteger("energyStored", _energyStored);
 		tag.setInteger("workDone", _workDone);
-		tag.setInteger("ueBuffer", _ueBuffer);
 		NBTTagCompound pp = new NBTTagCompound();
 		_powerProvider.writeToNBT(pp);
 		tag.setCompoundTag("powerProvider", pp);
@@ -250,7 +241,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		
 		_energyStored = Math.min(tag.getInteger("energyStored"), getEnergyStoredMax());
 		_workDone = Math.min(tag.getInteger("workDone"), getWorkMax());
-		_ueBuffer = tag.getInteger("ueBuffer");
 		if (tag.hasKey("powerProvider"))
 		{
 			_powerProvider.readFromNBT(tag.getCompoundTag("powerProvider"));
@@ -423,54 +413,5 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public boolean acceptsEnergyFrom(TileEntity tile, Direction side)
 	{
 		return true;
-	}
-	
-	// UE Methods
-	
-	@Override
-	public float getVoltage()
-	{
-		return 120;
-	}
-	
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return true;
-	}
-
-	@Override
-	public float receiveElectricity(ForgeDirection from, ElectricityPack powerPack, boolean doReceive)
-	{
-		int buff = _ueBuffer;
-		buff += powerPack.getWatts();
-		
-		int energyFromUE = Math.min(buff / wPerEnergy, getEnergyRequired());
-		buff -= (energyFromUE * wPerEnergy);
-		if (doReceive)
-		{
-			storeEnergy(energyFromUE);
-			_ueBuffer = buff;
-		}
-		return energyFromUE * wPerEnergy;
-	}
-
-	@Override
-	public float getRequest(ForgeDirection direction)
-	{
-		return Math.max(getEnergyRequired() * wPerEnergy, 0);
-	}
-
-	@Override
-	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request,
-			boolean doProvide)
-	{
-		return null;
-	}
-
-	@Override
-	public float getProvide(ForgeDirection direction)
-	{
-		return 0;
 	}
 }

@@ -37,12 +37,15 @@ public class GuiLaserDrill extends GuiFactoryInventory
 		
 		if(isPointInRegion(151, 15, 8, 60, mouseX, mouseY))
 		{
+			int energyPerMJ = TileEntityFactoryPowered.energyPerMJ;
+			int energyPerEU = TileEntityFactoryPowered.energyPerEU;
+			int stored = _drill.getEnergyStored();
+			int storedMax = _drill.getEnergyMax();
 			List<String> lines = new ArrayList<String>();
 			lines.add("Energy");
-			lines.add(_drill.getEnergyStored() / TileEntityFactoryPowered.energyPerMJ + " / " + _drill.getEnergyMax() / TileEntityFactoryPowered.energyPerMJ + " " + "MJ");
-			lines.add(_drill.getEnergyStored() / TileEntityFactoryPowered.energyPerEU + " / " + _drill.getEnergyMax() / TileEntityFactoryPowered.energyPerEU + " " + "EU");
-			lines.add(_drill.getEnergyStored() * TileEntityFactoryPowered.wPerEnergy / 1000 + " / " +
-					_drill.getEnergyMax() * TileEntityFactoryPowered.wPerEnergy / 1000 + " " + "KJ");
+			lines.add(stored + " / " + storedMax + " " + "RF");
+			lines.add(stored / energyPerMJ + " / " + storedMax / energyPerMJ + " " + "MJ");
+			lines.add(stored / energyPerEU + " / " + storedMax / energyPerEU + " " + "EU");
 			drawTooltip(lines, mouseX, mouseY);
 		}
 		else if(isPointInRegion(161, 15, 8, 60, mouseX, mouseY))

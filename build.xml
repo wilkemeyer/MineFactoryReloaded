@@ -35,10 +35,10 @@
 	<condition property="have-apis">
 		<and>
 			<available file="${mcpsrc.dir}/powercrystals/core" type="dir"/>
+			<available file="${mcpsrc.dir}/cofh" type="dir"/>
 			<available file="${mcpsrc.dir}/buildcraft" type="dir"/>
 			<available file="${mcpsrc.dir}/ic2" type="dir"/>
-			<available file="${mcpsrc.dir}/universalelectricity" type="dir"/>
-			<available file="${mcpsrc.dir}/cofh" type="dir"/>
+			<!--<available file="${mcpsrc.dir}/universalelectricity" type="dir"/>-->
 			<!--<available file="${mcpsrc.dir}/thermalexpansion" type="dir"/>-->
 			<!--<available file="${mcpsrc.dir}/thaumcraft" type="dir"/>-->
 			<available file="${mcpsrc.dir}/forestry" type="dir"/>
@@ -63,8 +63,10 @@
 		<echo message="Downloading BuildCraft API..." />
 		<get src="https://github.com/BuildCraft/BuildCraft/archive/3e13bbb166568624cc918f8a9f916fa2062f6c37.zip" dest="${download.dir}/Buildcraft-master.zip"/>
 		
+		<!--
 		<echo message="Downloading UniversalElectricity API... " />
 		<get src="https://github.com/Universal-Electricity/Universal-Electricity/archive/642962a2654d611b8b90a32113b0ab73159d7a76.zip" dest="${download.dir}/ue-api.zip" />
+		-->
 		
 		<echo message="Downloading ThermalExpansion API... " />
 		<get src="https://github.com/KingLemming/CoFHLib/archive/1848fb59f53f72dfd4b416ecfd89c26c1a9a80c5.zip" dest="${download.dir}/cofh-api.zip" />
@@ -95,12 +97,13 @@
 		<unzip src="${download.dir}/industrialcraft-2-api.zip" dest="${download.dir}" />
 		<move file="${download.dir}/ic2" todir="${mcpsrc.dir}" />
 		
+		<!--
 		<echo message="Extracting UniversalElectricity API... " />
 		<unzip src="${download.dir}/ue-api.zip" dest="${download.dir}" />
 		<move file="${download.dir}/Universal-Electricity-642962a2654d611b8b90a32113b0ab73159d7a76/src/universalelectricity" todir="${mcpsrc.dir}" />
 		<echo message="Deleting stuff from the UE API that isn't actually the API... " />
 		<delete dir="${mcpsrc.dir}/universalelectricity/compatibility"/>
-		<delete dir="${mcpsrc.dir}/universalelectricity/prefab"/>
+		<delete dir="${mcpsrc.dir}/universalelectricity/prefab"/>-->
 		
 		<echo message="Extracting ThermalExpansion API... " />
 		<unzip src="${download.dir}/cofh-api.zip" dest="${download.dir}" />
@@ -247,7 +250,6 @@
 				<include name="skyboy/**/*.class" />
 				<include name="cofh/**/*.class" />
 				<include name="ic2/**/*.class" />
-				<include name="universalelectricity/**/*.class" />
 				<include name="buildcraft/**/*.class" />
 			</fileset>
 		</copy>
@@ -288,7 +290,6 @@
 				<include name="skyboy/**/*.class" />
 				<include name="cofh/**/*.class" />
 				<include name="ic2/**/*.class" />
-				<include name="universalelectricity/**/*.class" />
 				<include name="buildcraft/**/*.class" />
 			</fileset>
 		</copy>
