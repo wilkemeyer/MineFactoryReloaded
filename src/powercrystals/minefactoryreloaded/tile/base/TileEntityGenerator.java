@@ -53,17 +53,17 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 		TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
 		
 		if (x < xCoord)
-			addCache(tile, 4);
-		else if (x > xCoord)
 			addCache(tile, 5);
+		else if (x > xCoord)
+			addCache(tile, 4);
 		else if (z < zCoord)
-			addCache(tile, 2);
-		else if (z > zCoord)
 			addCache(tile, 3);
+		else if (z > zCoord)
+			addCache(tile, 2);
 		else if (y < yCoord)
-			addCache(tile, 0);
-		else if (y > yCoord)
 			addCache(tile, 1);
+		else if (y > yCoord)
+			addCache(tile, 0);
 	}
 	
 	private void addCache(TileEntity tile, int side)
