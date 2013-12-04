@@ -11,7 +11,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 
 public class ItemRedNetMeter extends ItemFactory
 {
-	private static String[] _colorNames = new String[] { "White", "Orange", "Magenta", "LightBlue",
+	public static String[] _colorNames = new String[] { "White", "Orange", "Magenta", "LightBlue",
 					"Yellow", "Lime", "Pink", "Gray", "LightGray", "Cyan", "Purple",
 					"Blue", "Brown", "Green", "Red", "Black" };
 	

@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
-import buildcraft.api.tools.IToolWrench;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -23,17 +25,16 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkContainer
 {
@@ -134,19 +135,19 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
 		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side);
-		if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
+		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
 		{
 			return false;
 		}
 		
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable)
+		if (te instanceof TileEntityRedNetCable)
 		{
 			TileEntityRedNetCable cable = (TileEntityRedNetCable)te;
 			
 			int subHit = getPartClicked(player, 3.0F, cable);
 			
-			if(subHit < 0)
+			if (subHit < 0)
 			{
 				return false;
 			}
@@ -154,11 +155,11 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 
 			ItemStack s = player.inventory.getCurrentItem();
 			
-			if(side >= 0)
+			if (side >= 0)
 			{
-				if(MFRUtil.isHoldingHammer(player) || (s != null && s.getItem() instanceof IToolWrench))
+				if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
-					if(!world.isRemote)
+					if (!world.isRemote)
 					{
 						int nextColor;
 						if(!player.isSneaking())
@@ -176,9 +177,19 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 						return true;
 					}
 				}
-				else if(s != null && s.itemID == Item.dyePowder.itemID)
+				else if (s != null && s.itemID == MineFactoryReloadedCore.rednetMeterItem.itemID)
 				{
-					if(!world.isRemote)
+					// TODO: move to client-side when forge fixes player.getEyeHeight on client
+					if (!world.isRemote)
+					{
+						// TODO: localize
+						player.sendChatToPlayer(new ChatMessageComponent().addText("Side is " + 
+								ItemRedNetMeter._colorNames[cable.getSideColor(ForgeDirection.getOrientation(side))]));
+					}
+				}
+				else if (s != null && s.itemID == Item.dyePowder.itemID)
+				{
+					if (!world.isRemote)
 					{
 						cable.setSideColor(ForgeDirection.getOrientation(side), 15 - s.getItemDamage());
 						world.markBlockForUpdate(x, y, z);
@@ -186,15 +197,15 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 					}
 				}
 			}
-			else if(MFRUtil.isHoldingHammer(player) || (s != null && s.getItem() instanceof IToolWrench))
+			else if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 			{
 				byte mode = cable.getMode();
 				mode++;
-				if(mode > 3)
+				if (mode > 3)
 				{
 					mode = 0;
 				}
-				if(!world.isRemote)
+				if (!world.isRemote)
 				{
 					cable.setMode(mode);
 					PacketDispatcher.sendPacketToAllAround(x, y, z, 50, world.provider.dimensionId, cable.getDescriptionPacket());

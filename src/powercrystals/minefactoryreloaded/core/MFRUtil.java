@@ -1,12 +1,16 @@
 package powercrystals.minefactoryreloaded.core;
 
+import buildcraft.api.tools.IToolWrench;
+
 import java.util.ArrayList;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.api.IToolHammer;
 import powercrystals.minefactoryreloaded.api.IToolHammerAdvanced;
@@ -14,18 +18,41 @@ import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 
 public class MFRUtil
 {
-	public static boolean isHoldingHammer(EntityPlayer player)
+	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z)
 	{
-		if(player.inventory.getCurrentItem() == null)
+		if (player.inventory.getCurrentItem() == null)
 		{
 			return false;
 		}
 		Item currentItem = Item.itemsList[player.inventory.getCurrentItem().itemID];
-		if(currentItem instanceof IToolHammerAdvanced)
+		if (currentItem instanceof IToolHammerAdvanced)
 		{
 			return ((IToolHammerAdvanced)currentItem).isActive(player.inventory.getCurrentItem());
 		}
-		else if(currentItem instanceof IToolHammer)
+		else if (currentItem instanceof IToolHammer)
+		{
+			return true;
+		}
+		else if (currentItem instanceof IToolWrench)
+		{
+			return ((IToolWrench)currentItem).canWrench(player, x, y, z);
+		}
+		
+		return false;
+	}
+	
+	public static boolean isHoldingHammer(EntityPlayer player)
+	{
+		if (player.inventory.getCurrentItem() == null)
+		{
+			return false;
+		}
+		Item currentItem = Item.itemsList[player.inventory.getCurrentItem().itemID];
+		if (currentItem instanceof IToolHammerAdvanced)
+		{
+			return ((IToolHammerAdvanced)currentItem).isActive(player.inventory.getCurrentItem());
+		}
+		else if (currentItem instanceof IToolHammer)
 		{
 			return true;
 		}
