@@ -13,6 +13,10 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		{
 			return 300;
 		}
+		if(fuel.itemID == MineFactoryReloadedCore.rubberLeavesBlock.blockID)
+		{
+			return 4;
+		}
 		else if(fuel.itemID == MineFactoryReloadedCore.rubberSaplingBlock.blockID)
 		{
 			return 100;
@@ -20,6 +24,14 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		else if(fuel.itemID == MineFactoryReloadedCore.sugarCharcoalItem.itemID)
 		{
 			return 400;
+		}
+		else if(fuel.itemID == MineFactoryReloadedCore.rawRubberItem.itemID)
+		{
+			return 20;
+		}
+		else if(fuel.itemID == MineFactoryReloadedCore.bioFuelBucketItem.itemID)
+		{
+			return 20000;
 		}
 		
 		return 0;

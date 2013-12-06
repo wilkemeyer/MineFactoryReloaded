@@ -11,6 +11,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ic2.api.item.Items;
 import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.Recipes;
+import ic2.api.recipe.ISemiFluidFuelManager.BurnProperty;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -18,6 +19,7 @@ import java.lang.reflect.Method;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -112,10 +114,20 @@ public class IC2
 					e.printStackTrace();
 				}
 			}
+			copyEthanol();
 		}
 		catch (Exception x)
 		{
 			x.printStackTrace();
 		}
+	}
+	
+	private static void copyEthanol()
+	{
+		BurnProperty q = Recipes.semiFluidGenerator.getBurnProperty(FluidRegistry.getFluid("bioethanol"));
+		if (q != null)
+			Recipes.semiFluidGenerator.addFluid("biofuel", q.amount, q.power);
+		else if (FluidRegistry.getFluid("bioethanol") == null)
+			Recipes.semiFluidGenerator.addFluid("biofuel", 10, 16);
 	}
 }

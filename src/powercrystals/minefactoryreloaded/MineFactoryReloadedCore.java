@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded;
 
 import buildcraft.api.transport.FacadeManager;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -17,6 +18,7 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -135,6 +137,8 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
+
+import skyboy.core.fluid.LiquidRegistry;
 
 @Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
 dependencies = "required-after:PowerCrystalsCore@[1.1.7,);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
@@ -314,7 +318,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	}
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent evt)
+	public void preInit(FMLPreInitializationEvent evt) throws IOException
 	{
 		setConfigFolderBase(evt.getModConfigurationDirectory());
 		
@@ -323,6 +327,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		extractLang(new String[] { "en_US", "es_AR", "es_ES", "es_MX", "es_UY", "es_VE", "zh_CN", "zh_TW", "ru_RU", "ko_KR", "de_DE" });
 		loadLang();
+		
+		MinecraftForge.EVENT_BUS.register(new LiquidRegistry(_configFolder,
+				Loader.instance().activeModContainer()));
 		
 		registerFluids();
 		
@@ -506,6 +513,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("itemRubber", MineFactoryReloadedCore.rubberBarItem);
 		OreDictionary.registerOre("itemRawRubber", MineFactoryReloadedCore.rawRubberItem);
 		OreDictionary.registerOre("woodRubber", MineFactoryReloadedCore.rubberWoodBlock);
+		OreDictionary.registerOre("leavesRubber", MineFactoryReloadedCore.rubberLeavesBlock);
 		OreDictionary.registerOre("sheetPlastic", MineFactoryReloadedCore.plasticSheetItem);
 		OreDictionary.registerOre("dustPlastic", MineFactoryReloadedCore.rawPlasticItem);
 		OreDictionary.registerOre("ingotMeat", MineFactoryReloadedCore.meatIngotCookedItem);
