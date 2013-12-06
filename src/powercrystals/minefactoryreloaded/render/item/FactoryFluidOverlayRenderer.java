@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.render.item;
 
+import skyboy.core.container.CarbonContainer;
+import skyboy.core.fluid.LiquidRegistry;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,6 +24,18 @@ import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
 public class FactoryFluidOverlayRenderer implements IItemRenderer {
+	
+	private boolean canFlip;
+	
+	public FactoryFluidOverlayRenderer()
+	{
+		this(true);
+	}
+	
+	public FactoryFluidOverlayRenderer(boolean canFlip)
+	{
+		this.canFlip = canFlip;
+	}
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -33,16 +48,30 @@ public class FactoryFluidOverlayRenderer implements IItemRenderer {
 	}
 
 	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		Item iconItem = item.getItem();
-		IFluidContainerItem fluidItem = (IFluidContainerItem)iconItem;
+	public void renderItem(ItemRenderType type, ItemStack itemstack, Object... data) {
+		Item item = itemstack.getItem();
+		FluidStack liquid = null;
+		if (item instanceof IFluidContainerItem)
+		{
+			IFluidContainerItem fluidItem = (IFluidContainerItem)item;
+			liquid = fluidItem.getFluid(itemstack);
+		}
+		else if (item instanceof CarbonContainer)
+		{
+			liquid = LiquidRegistry.getLiquid(itemstack.getItemDamage());
+		}
+		doRenderItem(type, itemstack, item, liquid);
+	}
+	
+	protected void doRenderItem(ItemRenderType type, ItemStack item, Item iconItem, FluidStack liquid) {
 		Icon icon = iconItem.getIcon(item, 0);
 		Icon mask = iconItem.getIcon(item, 1);
-		FluidStack liquid = fluidItem.getFluid(item);
 		boolean hasLiquid = liquid != null;
 		Icon fluid = hasLiquid ? liquid != null ? liquid.getFluid().getIcon(liquid) : null : mask;
 		int liquidSheet = hasLiquid & liquid != null ? liquid.getFluid().getSpriteNumber() : 0;
 		int colorMult = hasLiquid & liquid != null ? liquid.getFluid().getColor(liquid) : 0xFFFFFF;
+		boolean isFloaty = hasLiquid & liquid != null ? liquid.getFluid().getDensity(liquid) < 0 : false;
+		
 		if (fluid == null) {
 			fluid = Block.lavaMoving.getIcon(2, 0);
 			liquidSheet = 0;
@@ -68,6 +97,17 @@ public class FactoryFluidOverlayRenderer implements IItemRenderer {
 		float fluidMaxX = fluid.getMaxU();
 		float fluidMinY = fluid.getMinV();
 		float fluidMaxY = fluid.getMaxV();
+		
+		if (isFloaty & canFlip) {
+			iconMaxY = icon.getMinV();
+			iconMinY = icon.getMaxV();
+			
+			maskMaxY = mask.getMinV();
+			maskMinY = mask.getMaxV();
+			
+			fluidMaxY = fluid.getMinV();
+			fluidMinY = fluid.getMaxV();
+		}
 
 		if (type == ItemRenderType.INVENTORY) {
 			GL11.glDisable(GL11.GL_LIGHTING);

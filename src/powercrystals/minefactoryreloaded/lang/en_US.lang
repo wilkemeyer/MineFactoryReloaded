@@ -171,6 +171,9 @@ item.mfr.bucket.mushroomsoup.name = Mushroom Soup Bucket
 item.mfr.bucket.plasticcup.name = Plastic Cup
 item.mfr.bucket.plasticcup.prefix.name =
 item.mfr.bucket.plasticcup.suffix.name = Cup
+item.mfr.bucket.plasticcell.name = Plastic Cell
+item.mfr.bucket.plasticcell.prefix.name =
+item.mfr.bucket.plasticcell.suffix.name = Cell
 
 item.mfr.hammer.name = Precision Sledgehammer
 item.mfr.fertilizer.name = Industrial Fertilizer

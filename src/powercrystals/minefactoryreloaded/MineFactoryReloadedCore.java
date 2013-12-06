@@ -138,6 +138,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 
+import skyboy.core.container.CarbonContainer;
 import skyboy.core.fluid.LiquidRegistry;
 
 @Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
@@ -266,8 +267,8 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Item needlegunAmmoAnvilItem;
 	public static Item rocketLauncherItem;
 	public static Item rocketItem;
-	
-	public static ItemFactoryCup plasticCup;
+	public static ItemFactoryCup plasticCupItem;
+	public static Item plasticCellItem;
 
 	private static MineFactoryReloadedCore instance;
 
@@ -327,6 +328,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		extractLang(new String[] { "en_US", "es_AR", "es_ES", "es_MX", "es_UY", "es_VE", "zh_CN", "zh_TW", "ru_RU", "ko_KR", "de_DE" });
 		loadLang();
+		
+		CarbonContainer.cell = new CarbonContainer(MFRConfig.plasticCellItemId.getInt(), 64, "mfr.bucket.plasticcell", false);
+		CarbonContainer.cell.setFilledItem(CarbonContainer.cell).setEmptyItem(CarbonContainer.cell);
 		
 		MinecraftForge.EVENT_BUS.register(new LiquidRegistry(_configFolder,
 				Loader.instance().activeModContainer()));
@@ -439,9 +443,10 @@ public class MineFactoryReloadedCore extends BaseMod
 		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(MFRConfig.needlegunAmmoSewageItemId.getInt(), sewageLiquid.blockID, 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
 		needlegunAmmoFireItem = (new ItemNeedlegunAmmoFire(MFRConfig.needlegunAmmoFireItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.fire");
 		needlegunAmmoAnvilItem = (new ItemNeedlegunAmmoAnvil(MFRConfig.needlegunAmmoAnvilItemId.getInt())).setUnlocalizedName("mfr.needlegun.ammo.anvil");
-		plasticCup = (ItemFactoryCup)new ItemFactoryCup(MFRConfig.plasticCupItemId.getInt(), 24, 16).setUnlocalizedName("mfr.bucket.plasticcup");
+		plasticCupItem = (ItemFactoryCup)new ItemFactoryCup(MFRConfig.plasticCupItemId.getInt(), 24, 16).setUnlocalizedName("mfr.bucket.plasticcup");
 		rocketLauncherItem = (new ItemRocketLauncher(MFRConfig.rocketLauncherItemId.getInt())).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket(MFRConfig.rocketItemId.getInt())).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
+		plasticCellItem = CarbonContainer.cell;
 
 		for(Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{

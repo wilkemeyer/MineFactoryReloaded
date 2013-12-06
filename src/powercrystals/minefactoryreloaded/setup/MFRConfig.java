@@ -112,6 +112,7 @@ public class MFRConfig
 	public static Property plasticCupItemId;
 	public static Property rocketLauncherItemId;
 	public static Property rocketItemId;
+	public static Property plasticCellItemId;
 	
 	public static Property zoolologistEntityId;
 	
@@ -277,6 +278,7 @@ public class MFRConfig
 		plasticCupItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.PlasticCup", 12044);
 		rocketLauncherItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.RocketLauncher", 12045);
 		rocketItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Rocket", 12046);
+		plasticCellItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.PlasticCell", 12047);
 		
 		zoolologistEntityId = c.get("Entity", "ID.Zoologist", 330);
 		
