@@ -173,6 +173,44 @@
         "description": "Compatibility addon for Forestry (part 2)"
     }, 
     {
+        "name": "MFR Compat: ForgeMicroblock", 
+        "parent": "MineFactoryReloaded", 
+        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
+        "logoFile": "", 
+        "updateUrl": "", 
+        "credits": "All the contributors", 
+        "version": "2.7.4B1", 
+        "modid": "MineFactoryReloaded|CompatForgeMicroblock", 
+        "authors": [
+            "PowerCrystals"
+        ], 
+        "mcversion": "1.6.2", 
+        "screenshots": [], 
+        "dependencies": [
+            "MineFactoryReloaded"
+        ], 
+        "description": "Compatibility addon for ForgeMicroblock"
+    }, 
+    {
+        "name": "MFR Compat: IC2", 
+        "parent": "MineFactoryReloaded", 
+        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
+        "logoFile": "", 
+        "updateUrl": "", 
+        "credits": "All the contributors", 
+        "version": "2.7.4B1", 
+        "modid": "MineFactoryReloaded|CompatIC2", 
+        "authors": [
+            "PowerCrystals"
+        ], 
+        "mcversion": "1.6.2", 
+        "screenshots": [], 
+        "dependencies": [
+            "MineFactoryReloaded"
+        ], 
+        "description": "Compatibility addon for IndustrialCraft2"
+    }, 
+    {
         "name": "MFR Compat: Magical Crops", 
         "parent": "MineFactoryReloaded", 
         "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
@@ -209,25 +247,6 @@
             "MineFactoryReloaded"
         ], 
         "description": "Compatibility addon for Mystcraft"
-    }, 
-    {
-        "name": "MFR Compat: IC2", 
-        "parent": "MineFactoryReloaded", 
-        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
-        "logoFile": "", 
-        "updateUrl": "", 
-        "credits": "All the contributors", 
-        "version": "2.7.4B1", 
-        "modid": "MineFactoryReloaded|CompatIC2", 
-        "authors": [
-            "PowerCrystals"
-        ], 
-        "mcversion": "1.6.2", 
-        "screenshots": [], 
-        "dependencies": [
-            "MineFactoryReloaded"
-        ], 
-        "description": "Compatibility addon for IndustrialCraft2"
     }, 
     {
         "name": "MFR Compat: Pam's Mods", 
@@ -285,25 +304,6 @@
             "MineFactoryReloaded"
         ], 
         "description": "Compatibility addon for RedPower2"
-    }, 
-    {
-        "name": "MFR Compat: SoulShards", 
-        "parent": "MineFactoryReloaded", 
-        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
-        "logoFile": "", 
-        "updateUrl": "", 
-        "credits": "All the contributors", 
-        "version": "2.7.4B1", 
-        "modid": "MineFactoryReloaded|CompatSoulShards", 
-        "authors": [
-            "PowerCrystals"
-        ], 
-        "mcversion": "1.6.2", 
-        "screenshots": [], 
-        "dependencies": [
-            "MineFactoryReloaded"
-        ], 
-        "description": "Compatibility addon for SoulShards"
     }, 
     {
         "name": "MFR Compat: Sufficient Biomes", 
@@ -418,5 +418,43 @@
             "MineFactoryReloaded"
         ], 
         "description": "Compatibility addon for XyCraft"
+    }, 
+    {
+        "name": "MFR Compat Extra Trees", 
+        "parent": "MineFactoryReloaded", 
+        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
+        "logoFile": "", 
+        "updateUrl": "", 
+        "credits": "All the contributors", 
+        "version": "2.7.4B1", 
+        "modid": "MFR Compat Extra Trees", 
+        "authors": [
+            "PowerCrystals"
+        ], 
+        "mcversion": "1.6.2", 
+        "screenshots": [], 
+        "dependencies": [
+            "MineFactoryReloaded"
+        ], 
+        "description": "Compatibility addon for Extra Trees"
+    }, 
+    {
+        "name": "MFR Compat Forestry Trees", 
+        "parent": "MineFactoryReloaded", 
+        "url": "http://minecraft.curseforge.com/mc-mods/minefactory-reloaded/", 
+        "logoFile": "", 
+        "updateUrl": "", 
+        "credits": "All the contributors", 
+        "version": "2.7.4B1", 
+        "modid": "MFR Compat Forestry Trees", 
+        "authors": [
+            "PowerCrystals"
+        ], 
+        "mcversion": "1.6.2", 
+        "screenshots": [], 
+        "dependencies": [
+            "MineFactoryReloaded"
+        ], 
+        "description": "Compatibility addon for Forestry Trees"
     }
 ]
