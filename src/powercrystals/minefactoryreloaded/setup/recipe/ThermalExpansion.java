@@ -36,7 +36,6 @@ public class ThermalExpansion extends Vanilla
 			ItemStack invarAxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarAxe", 1);
 			ItemStack invarSword = GameRegistry.findItemStack("ThermalExpansion", "toolInvarSword", 1);
 			ItemStack invarPickaxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarPickaxe", 1);
-			// maybe invar tools in place of gold?
 			
 			registerMachine(Machine.Planter, new Object[] {
 					"PTP",

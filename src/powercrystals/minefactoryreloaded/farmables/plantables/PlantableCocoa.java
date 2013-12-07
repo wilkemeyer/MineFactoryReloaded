@@ -31,7 +31,7 @@ public class PlantableCocoa implements IFactoryPlantable
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{
-		return world.isAirBlock(x, y, z) && isNextToJungleLog(world, x, y, z);
+		return stack.getItemDamage() == 3 && world.isAirBlock(x, y, z) && isNextToJungleLog(world, x, y, z);
 	}
 	
 	private boolean isNextToJungleLog(World world, int x, int y, int z)
