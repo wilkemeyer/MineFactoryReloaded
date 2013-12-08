@@ -38,6 +38,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		super(Machine.AutoSpawner);
 		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 		setManageFluids(true);
+		setManageSolids(true);
 	}
 	
 	public boolean getSpawnExact()
