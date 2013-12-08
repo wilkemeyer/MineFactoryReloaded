@@ -20,6 +20,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoSpawner;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityEjector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
@@ -159,7 +160,7 @@ public class ServerPacketHandler implements IPacketHandler
 		}
 		else if(packetType == Packets.RouterButton) // client -> server: toggle 'levels'/'reject unmapped' mode
 		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class };
+			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class };
 			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
 			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
@@ -170,6 +171,21 @@ public class ServerPacketHandler implements IPacketHandler
 			else if(te instanceof TileEntityItemRouter)
 			{
 				((TileEntityItemRouter)te).setRejectUnmapped(!((TileEntityItemRouter)te).getRejectUnmapped());
+			}
+			else if(te instanceof TileEntityEjector)
+			{
+				switch ((Integer)packetReadout[3])
+				{
+				case 1:
+					((TileEntityEjector)te).setIsWhitelist(!((TileEntityEjector)te).getIsWhitelist());
+					break;
+				case 2:
+					((TileEntityEjector)te).setIsNBTMatch(!((TileEntityEjector)te).getIsNBTMatch());
+					break;
+				case 3:
+					((TileEntityEjector)te).setIsIDMatch(!((TileEntityEjector)te).getIsIDMatch());
+					break;
+				}
 			}
 		}
 		else if(packetType == Packets.FakeSlotChange) // client -> server: client clicked on a fake slot

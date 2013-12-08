@@ -331,17 +331,21 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		NBTTagList nbttaglist = tag.getTagList("Items");
 		_inventory = new ItemStack[getSizeInventory()];
-		for(int i = 0; i < nbttaglist.tagCount(); i++)
+		NBTTagList nbttaglist;
+		if (tag.hasKey("Items"))
 		{
-			NBTTagCompound slot = (NBTTagCompound)nbttaglist.tagAt(i);
-			int j = slot.getByte("Slot") & 0xff;
-			if(j >= 0 && j < _inventory.length)
+			nbttaglist = tag.getTagList("Items");
+			for (int i = nbttaglist.tagCount(); i --> 0; )
 			{
-				_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
-				if (_inventory[j].stackSize <= 0)
-					_inventory[j] = null;
+				NBTTagCompound slot = (NBTTagCompound)nbttaglist.tagAt(i);
+				int j = slot.getByte("Slot") & 0xff;
+				if(j >= 0 && j < _inventory.length)
+				{
+					_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
+					if (_inventory[j].stackSize <= 0)
+						_inventory[j] = null;
+				}
 			}
 		}
 		onInventoryChanged();
@@ -433,22 +437,23 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		tag.setTag("Items", nbttaglist);
 		
 		IFluidTank[] _tanks = getTanks();
-		
-		NBTTagList tanks = new NBTTagList();
-		for(int i = 0, n = _tanks.length; i < n; i++)
+		if (_tanks.length > 0)
 		{
-			if(_tanks[i].getFluid() != null)
+			NBTTagList tanks = new NBTTagList();
+			for(int i = 0, n = _tanks.length; i < n; i++)
 			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Tank", (byte)i);
-				
-				FluidStack l = _tanks[i].getFluid();
-				l.writeToNBT(nbttagcompound1);
-				tanks.appendTag(nbttagcompound1);
+				if(_tanks[i].getFluid() != null)
+				{
+					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+					nbttagcompound1.setByte("Tank", (byte)i);
+					
+					FluidStack l = _tanks[i].getFluid();
+					l.writeToNBT(nbttagcompound1);
+					tanks.appendTag(nbttagcompound1);
+				}
 			}
+			tag.setTag("mTanks", tanks);
 		}
-		
-		tag.setTag("mTanks", tanks);
 		
 		if (this.isInvNameLocalized())
 		{

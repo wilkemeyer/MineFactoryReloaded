@@ -48,7 +48,7 @@ public class GuiItemRouter extends GuiFactoryInventory
 		if(button.id == 1)
 		{
 			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
-					new Object[] { _router.xCoord, _router.yCoord, _router.zCoord }));
+					new Object[] { _router.xCoord, _router.yCoord, _router.zCoord, 1 }));
 		}
 	}
 }
