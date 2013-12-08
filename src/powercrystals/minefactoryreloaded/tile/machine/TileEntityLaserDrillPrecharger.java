@@ -51,14 +51,20 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		}
 		else
 		{
-			int power = getActivationEnergy();
+			int energy = getActivationEnergy();
 			ForgeDirection facing = getDirectionFacing().getOpposite();
 			if (drill.canFormBeamWith(facing))
 			{
-				if (drill.addEnergy(facing, power, true) == 0)
+				int excess = drill.addEnergy(facing, energy, true);
+				if (excess == 0)
 				{
-					drill.addEnergy(facing, power, false);
+					drill.addEnergy(facing, energy, false);
 					return true;
+				}
+				else
+				{
+					excess = drill.addEnergy(facing, energy, false);
+					drainEnergy(energy - excess);
 				}
 			}
 		}

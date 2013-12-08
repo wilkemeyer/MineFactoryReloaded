@@ -198,6 +198,11 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		_energyStored = energy;
 	}
 	
+	public void drainEnergy(int drainAmount)
+	{
+		_energyStored -= drainAmount;
+	}
+	
 	public int getWorkDone()
 	{
 		return _workDone;
