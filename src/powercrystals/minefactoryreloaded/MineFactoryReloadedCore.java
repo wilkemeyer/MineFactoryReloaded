@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded;
 
-import buildcraft.api.transport.FacadeManager;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -622,20 +620,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		{
 			new GregTech().registerRecipes();
 		}
-		
-		for(int i = 0; i < 14; i++)
-		{
-			FacadeManager.addFacade(new ItemStack(factoryDecorativeBrickBlock.blockID, 1, i));
-		}
-		
-		for(int i = 0; i < 12; i++)
-		{
-			FacadeManager.addFacade(new ItemStack(factoryDecorativeStoneBlock.blockID, 1, i));
-		}
-		
-		FacadeManager.addFacade(new ItemStack(factoryRoadBlock.blockID, 1, 0));
-		FacadeManager.addFacade(new ItemStack(factoryRoadBlock.blockID, 1, 1));
-		FacadeManager.addFacade(new ItemStack(factoryRoadBlock.blockID, 1, 4));
 	}
 	
 	@ForgeSubscribe

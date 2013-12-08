@@ -19,6 +19,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
@@ -33,6 +34,18 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 	{
 		if (!Loader.isModLoaded("BuildCraft|Core"))
 			return;
+		
+		for (int[] q : new int[][]{ {14, MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID},
+									{12, MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID}})
+			for(int i = q[0]; i --> 0; )
+				FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", q[1] + "@" + i);
+		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
+				MineFactoryReloadedCore.factoryRoadBlock.blockID + "@0");
+		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
+				MineFactoryReloadedCore.factoryRoadBlock.blockID + "@1");
+		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
+				MineFactoryReloadedCore.factoryRoadBlock.blockID + "@4");
+		
 		try
 		{
 			IronEngineFuel.addFuel("biofuel", 4, 15000);
