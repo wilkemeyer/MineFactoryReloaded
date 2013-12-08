@@ -681,6 +681,17 @@ public class Vanilla
 			'G', Item.goldNugget,
 				} ));
 		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 11), new Object[]
+				{
+			"III",
+			"PPP",
+			"RGR",
+			'I', "cobblestone",
+			'P', "dustPlastic",
+			'R', Item.redstone,
+			'G', Item.goldNugget,
+				} ));
+		
 		for(int i = 0; i < 16; i++)
 		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.laserFocusItem, 1, i), new Object[]

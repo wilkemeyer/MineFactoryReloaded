@@ -11,7 +11,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemUpgrade extends ItemFactory
 {
-	private static String[] _upgradeNames = { "lapis", "iron", "tin", "copper", "bronze", "silver", "gold", "quartz", "diamond", "platinum", "emerald" };
+	private static String[] _upgradeNames = { "lapis", "iron", "tin", "copper",
+											  "bronze", "silver", "gold", "quartz",
+											  "diamond", "platinum", "emerald", "cobble" };
 	private static Icon[] _upgradeIcons = new Icon[_upgradeNames.length];
 	
 	public ItemUpgrade(int id)
@@ -19,7 +21,7 @@ public class ItemUpgrade extends ItemFactory
 		super(id);
 		setHasSubtypes(true);
 		setMaxDamage(0);
-		setMetaMax(10);
+		setMetaMax(_upgradeNames.length);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -33,7 +35,14 @@ public class ItemUpgrade extends ItemFactory
 	
 	public int getUpgradeLevel(ItemStack s)
 	{
-		return Math.min(s.getItemDamage(), 10) + 1;
+		int dmg = s.getItemDamage();
+		switch (dmg)
+		{
+		case 11:
+			return -1;
+		default:
+			return dmg + 1;
+		}
 	}
 	
 	@Override
