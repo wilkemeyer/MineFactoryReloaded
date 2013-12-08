@@ -8,13 +8,16 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomItem;
+import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.random.WeightedRandomItemStack;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLaserDrill;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
@@ -25,7 +28,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityLaserDrill extends TileEntityFactoryInventory
+public class TileEntityLaserDrill extends TileEntityFactoryInventory implements IFactoryLaserTarget
 {
 	private static final int _energyPerWork = Machine.LaserDrillPrecharger.getActivationEnergy() * 4;
 	private static final int _energyStoredMax = 1000000;
@@ -59,20 +62,35 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 		return new GuiLaserDrill(getContainer(inventoryPlayer), this);
 	}
 	
-	public int addEnergy(int energy)
+	@Override
+	public boolean canFormBeamWith(ForgeDirection from)
 	{
+		return from.ordinal() > 1 && from.ordinal() < 6;
+	}
+	
+	@Override
+	public int addEnergy(ForgeDirection from, int energy, boolean simulate)
+	{
+		if (!canFormBeamWith(from))
+			return energy;
 		int energyToAdd = Math.min(energy, _energyStoredMax - _energyStored);
-		_energyStored += energyToAdd;
+		if (!simulate)
+			_energyStored += energyToAdd;
 		return energy - energyToAdd;
 	}
 	
 	@Override
 	public void updateEntity()
 	{
-		if(worldObj.isRemote || isInvalid())
+		if (isInvalid() || worldObj.isRemote)
 		{
 			return;
 		}
+		
+		super.updateEntity();
+		
+		if (hasDrops())
+			return;
 		
 		if(shouldCheckDrill())
 		{
@@ -228,6 +246,24 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory
 	public int getBeamHeight()
 	{
 		return yCoord - _bedrockLevel;
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		
+		tag.setInteger("energyStored", _energyStored);
+		tag.setFloat("workDone", _workStored);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		
+		_energyStored = Math.min(tag.getInteger("energyStored"), _energyStoredMax);
+		_workStored = Math.min(tag.getFloat("workDone"), getWorkMax());
 	}
 	
 	@Override

@@ -3,7 +3,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
+import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -42,18 +44,23 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	@Override
 	protected boolean activateMachine()
 	{
-		TileEntityLaserDrill drill = getDrill();
+		IFactoryLaserTarget drill = getDrill();
 		if(drill == null)
 		{
 			setIdleTicks(getIdleTicksMax());
 		}
 		else
 		{
-			if(drill.addEnergy(getActivationEnergy()) == 0)
+			int power = getActivationEnergy();
+			ForgeDirection facing = getDirectionFacing().getOpposite();
+			if (drill.canFormBeamWith(facing))
 			{
-				return true;
+				if (drill.addEnergy(facing, power, true) == 0)
+				{
+					drill.addEnergy(facing, power, false);
+					return true;
+				}
 			}
-			return false;
 		}
 		return false;
 	}
@@ -75,7 +82,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		return getDrill() != null;
 	}
 	
-	private TileEntityLaserDrill getDrill()
+	private IFactoryLaserTarget getDrill()
 	{
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = getDirectionFacing();
@@ -89,9 +96,9 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		bp.moveForwards(1);
 		
 		TileEntity te = worldObj.getBlockTileEntity(bp.x, bp.y, bp.z);
-		if(te instanceof TileEntityLaserDrill)
+		if(te instanceof IFactoryLaserTarget)
 		{
-			return ((TileEntityLaserDrill)te);
+			return ((IFactoryLaserTarget)te);
 		}
 		
 		return null;
