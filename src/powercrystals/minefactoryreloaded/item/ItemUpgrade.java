@@ -24,7 +24,7 @@ public class ItemUpgrade extends ItemFactory implements IUpgrade
 		super(id);
 		setHasSubtypes(true);
 		setMaxDamage(0);
-		setMetaMax(_upgradeNames.length);
+		setMetaMax(_upgradeNames.length - 1);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
