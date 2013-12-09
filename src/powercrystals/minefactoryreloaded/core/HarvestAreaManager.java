@@ -5,10 +5,12 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.IRotateableTile;
-import powercrystals.minefactoryreloaded.item.ItemUpgrade;
+import powercrystals.minefactoryreloaded.api.IUpgrade;
+import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 
 public class HarvestAreaManager
 {
@@ -33,14 +35,23 @@ public class HarvestAreaManager
 	private int _currentBlock;
 	
 	private int _upgradeLevel;
+	private float _upgradeModifier;
 	
-	public HarvestAreaManager(IRotateableTile owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown)
+	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
+			int harvestAreaUp, int harvestAreaDown)
 	{
+		this(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f);
+	}
+	
+	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
+			int harvestAreaUp, int harvestAreaDown, float upgradeModifier)
+	{
+		_owner = owner;
 		_overrideDirection = ForgeDirection.UNKNOWN;
 		_radius = harvestRadius;
 		_areaUp = harvestAreaUp;
 		_areaDown = harvestAreaDown;
-		_owner = owner;
+		_upgradeModifier = upgradeModifier;
 		
 		_originX = ((TileEntity)owner).xCoord;
 		_originY = ((TileEntity)owner).yCoord;
@@ -111,10 +122,19 @@ public class HarvestAreaManager
 	
 	public void updateUpgradeLevel(ItemStack stack)
 	{
-		int newUpgradeLevel = 0;
-		if(stack != null && stack.getItem() instanceof ItemUpgrade)
+		if (stack == null)
 		{
-			newUpgradeLevel = ((ItemUpgrade)stack.getItem()).getUpgradeLevel(stack);
+			_upgradeLevel = 0;
+			recalculateArea();
+			return;
+		}
+		int newUpgradeLevel = 0;
+		
+		if (stack.getItem() instanceof IUpgrade)
+		{
+			IUpgrade upgrade = (IUpgrade)stack.getItem();
+			if (upgrade.isApplicableFor(UpgradeType.RADIUS, stack))
+				newUpgradeLevel = (int)(upgrade.getUpgradeLevel(UpgradeType.RADIUS, stack) * _upgradeModifier);
 		}
 		if(newUpgradeLevel != _upgradeLevel)
 		{
