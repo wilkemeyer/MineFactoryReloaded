@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -7,22 +10,18 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.ISyringe;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityVet extends TileEntityFactoryPowered implements IHarvestAreaContainer
+public class TileEntityVet extends TileEntityFactoryPowered
 {
-	private HarvestAreaManager _areaManager;
-	
 	public TileEntityVet()
 	{
 		super(Machine.Vet);
@@ -54,12 +53,6 @@ public class TileEntityVet extends TileEntityFactoryPowered implements IHarvestA
 	public int getIdleTicksMax()
 	{
 		return 200;
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

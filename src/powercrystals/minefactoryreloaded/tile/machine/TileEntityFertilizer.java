@@ -1,29 +1,28 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.Random;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizer;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityFertilizer extends TileEntityFactoryPowered implements IHarvestAreaContainer
+public class TileEntityFertilizer extends TileEntityFactoryPowered
 {
 	private Random _rand;
-	
-	private HarvestAreaManager _areaManager;
 	
 	public TileEntityFertilizer()
 	{
@@ -51,12 +50,6 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered implements IH
 	public ContainerUpgradable getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerUpgradable(this, inventoryPlayer);
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

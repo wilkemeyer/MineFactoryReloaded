@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -11,28 +14,25 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
+
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSewer;
 import powercrystals.minefactoryreloaded.gui.container.ContainerSewer;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntitySewer extends TileEntityFactoryInventory implements ITankContainerBucketable, IHarvestAreaContainer
+public class TileEntitySewer extends TileEntityFactoryInventory implements ITankContainerBucketable
 {
-	private HarvestAreaManager _areaManager;
 	private int _tick;
 	private long _nextSewerCheckTick;
 	private boolean _jammed;
@@ -77,12 +77,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[0]);
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

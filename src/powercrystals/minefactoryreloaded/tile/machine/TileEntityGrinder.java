@@ -28,7 +28,6 @@ import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -37,7 +36,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
 
-public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable, IHarvestAreaContainer
+public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	public static final int DAMAGE = 500000; 
 	private static Field recentlyHit;
@@ -48,7 +47,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		recentlyHit = ReflectionHelper.findField(EntityLivingBase.class, q);
 	}
 	
-	protected HarvestAreaManager _areaManager;
 	protected Random _rand;
 	protected GrindingWorldServer _grindingWorld;
 	protected GrindingDamage _damageSource;
@@ -113,12 +111,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	public int getIdleTicksMax()
 	{
 		return 200;
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

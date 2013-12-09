@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import com.google.common.collect.ImmutableMap;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,18 +15,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
+
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.TreeHarvestManager;
 import powercrystals.minefactoryreloaded.core.TreeHarvestMode;
@@ -33,18 +37,12 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-import com.google.common.collect.ImmutableMap;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-public class TileEntityHarvester extends TileEntityFactoryPowered implements ITankContainerBucketable, IHarvestAreaContainer
+public class TileEntityHarvester extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	private Map<String, Boolean> _settings;
 	
 	private Random _rand;
 	
-	private HarvestAreaManager _areaManager;
 	private TreeHarvestManager _treeManager;
 	private BlockPosition _lastTree;
 	
@@ -111,12 +109,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[0]);
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

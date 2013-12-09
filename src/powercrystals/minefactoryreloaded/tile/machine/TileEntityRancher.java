@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -7,15 +10,15 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -23,13 +26,9 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityRancher extends TileEntityFactoryPowered implements ITankContainerBucketable, IHarvestAreaContainer
+public class TileEntityRancher extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	private HarvestAreaManager _areaManager;
-	
 	public TileEntityRancher()
 	{
 		super(Machine.Rancher);
@@ -69,12 +68,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	public int getIdleTicksMax()
 	{
 		return 200;
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

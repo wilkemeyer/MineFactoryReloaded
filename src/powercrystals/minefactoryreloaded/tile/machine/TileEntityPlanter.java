@@ -1,14 +1,17 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiPlanter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerPlanter;
@@ -16,13 +19,9 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityPlanter extends TileEntityFactoryPowered implements IHarvestAreaContainer
+public class TileEntityPlanter extends TileEntityFactoryPowered
 {
-	private HarvestAreaManager _areaManager;
-	
 	public TileEntityPlanter() 
 	{
 		super(Machine.Planter);
@@ -49,12 +48,6 @@ public class TileEntityPlanter extends TileEntityFactoryPowered implements IHarv
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[9]);
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _areaManager;
 	}
 	
 	@Override

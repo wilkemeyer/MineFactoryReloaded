@@ -14,6 +14,7 @@ import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
@@ -25,7 +26,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class TileEntityFactory extends TileEntity
-									implements IRotateableTile, IPipeConnection, IItemConduitConnection
+									 implements IRotateableTile, IPipeConnection,
+												IItemConduitConnection, IHarvestAreaContainer
 {
 	// first index is rotation, second is side
 	private static final int[][] _textureSelection = new int[][]
@@ -47,6 +49,7 @@ public abstract class TileEntityFactory extends TileEntity
 	
 	protected int _rednetState;
 	
+	protected HarvestAreaManager _areaManager;
 	protected Machine _machine;
 	
 	protected TileEntityFactory(Machine machine)
@@ -59,9 +62,9 @@ public abstract class TileEntityFactory extends TileEntity
 	public void validate()
 	{
 		super.validate();
-		if(worldObj.isRemote && this instanceof IHarvestAreaContainer)
+		if (worldObj.isRemote && hasHAM())
 		{
-			MineFactoryReloadedClient.addTileToAreaList((IHarvestAreaContainer)this);
+			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
 	}
 	
@@ -76,10 +79,22 @@ public abstract class TileEntityFactory extends TileEntity
 	public void onChunkUnload()
 	{
 		super.onChunkUnload();
-		if(worldObj.isRemote && this instanceof IHarvestAreaContainer)
+		if (worldObj.isRemote && hasHAM())
 		{
-			MineFactoryReloadedClient.removeTileFromAreaList((IHarvestAreaContainer)this);
+			MineFactoryReloadedClient.removeTileFromAreaList(this);
 		}
+	}
+	
+	@Override
+	public boolean hasHAM()
+	{
+		return getHAM() != null;
+	}
+	
+	@Override
+	public HarvestAreaManager getHAM()
+	{
+		return _areaManager;
 	}
 	
 	public World getWorld()

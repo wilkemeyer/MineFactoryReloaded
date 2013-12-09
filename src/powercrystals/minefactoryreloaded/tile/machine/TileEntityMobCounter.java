@@ -2,28 +2,21 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
-import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
-public class TileEntityMobCounter extends TileEntityFactory implements IHarvestAreaContainer
+public class TileEntityMobCounter extends TileEntityFactory
 {
-	private HarvestAreaManager _ham;
 	private int _lastMobCount;
 	
 	public TileEntityMobCounter()
 	{
 		super(Machine.MobCounter);
-		_ham = new HarvestAreaManager(this, 2, 2, 1);
+		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
 		setCanRotate(true);
-	}
-	
-	@Override
-	public HarvestAreaManager getHAM()
-	{
-		return _ham;
 	}
 	
 	@Override
@@ -36,7 +29,7 @@ public class TileEntityMobCounter extends TileEntityFactory implements IHarvestA
 			return;
 		}
 		
-		int mobCount = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _ham.getHarvestArea().toAxisAlignedBB()).size();
+		int mobCount = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB()).size();
 		if(mobCount != _lastMobCount)
 		{
 			_lastMobCount = mobCount;
