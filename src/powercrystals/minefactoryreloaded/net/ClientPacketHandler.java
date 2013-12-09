@@ -31,57 +31,58 @@ public class ClientPacketHandler implements IPacketHandler
 		DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
 		int packetType = PacketWrapper.readPacketID(data);
 		
-		if(packetType == Packets.TileDescription) // server -> client; server propagating machine rotation; args X Y Z rotation isActive
+		Class[] decodeAs;
+		Object[] packetReadout;
+		TileEntity te;
+		
+		switch (packetType)
 		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class, Boolean.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+		case Packets.TileDescription: // server -> client; server propagating machine rotation; args X Y Z rotation isActive
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Boolean.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityFactory)
 			{
 				TileEntityFactory tef = (TileEntityFactory) te;
 				tef.rotateDirectlyTo((Integer)packetReadout[3]);
 				tef.setIsActive((Boolean)packetReadout[4]);
 			}
-		}
-		else if (packetType == Packets.ConveyorDescription) // server -> client; server propagating conveyor color, activity state
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class, Boolean.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			break;
+		case Packets.ConveyorDescription: // server -> client; server propagating conveyor color, activity state
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Boolean.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if (te instanceof TileEntityConveyor)
 			{
 				TileEntityConveyor tec = (TileEntityConveyor) te;
 				tec.setDyeColor((Integer)packetReadout[3]);
 				tec.setConveyorActive((Boolean)packetReadout[4]);
 			}
-		}
-		else if (packetType == Packets.AutoJukeboxPlay) // server -> client; server playing a record
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			break;
+		case Packets.AutoJukeboxPlay: // server -> client; server playing a record
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityAutoJukebox)
 			{
 				Minecraft.getMinecraft().ingameGUI.setRecordPlayingMessage(((ItemRecord)Item.itemsList[(Integer)packetReadout[3]]).recordName);
 			}
-		}
-		else if (packetType == Packets.RoadBlockUpdate) // server -> client; road block light changed
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			break;
+		case Packets.RoadBlockUpdate: // server -> client; road block light changed
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
 			((EntityPlayer)player).worldObj.setBlock((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2], MineFactoryReloadedCore.factoryRoadBlock.blockID, (Integer)packetReadout[3], 6);
 			((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
-		}
-		else if (packetType == Packets.CableDescription) // server -> client; cable side colors
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Byte.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			break;
+		case Packets.CableDescription: // server -> client; cable side colors
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Byte.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetCable)
 			{
 				TileEntityRedNetCable tec = (TileEntityRedNetCable) te;
@@ -93,27 +94,36 @@ public class ClientPacketHandler implements IPacketHandler
 				tec.setSideColor(ForgeDirection.EAST, (Integer)packetReadout[8]);
 				tec.setMode((Byte)packetReadout[9]);
 			}
-		}
-		else if(packetType == Packets.LogicCircuitDefinition) // server -> client: logic circuit (class and pins)
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			break;
+		case Packets.LogicCircuitDefinition: // server -> client: logic circuit (class and pins)
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetLogic)
 			{
 				((TileEntityRedNetLogic)te).setCircuitFromPacket(data);
 			}
-		}
-		else if(packetType == Packets.HistorianValueChanged)
-		{
-			Class[] decodeAs = { Integer.class, Integer.class, Integer.class, Integer.class };
-			Object[] packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			break;
+		case Packets.HistorianValueChanged:
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetHistorian)
 			{
 				((TileEntityRedNetHistorian)te).setClientValue((Integer)packetReadout[3]);
+			}
+			break;
+		case Packets.HAMUpdate:
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
+			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+
+			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			if (te instanceof TileEntityFactory)
+			{
+				if (((TileEntityFactory)te).hasHAM())
+					((TileEntityFactory)te).getHAM().setUpgradeLevel((Integer)packetReadout[3]);
 			}
 		}
 	}

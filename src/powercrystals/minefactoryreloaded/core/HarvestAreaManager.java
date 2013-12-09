@@ -3,14 +3,18 @@ package powercrystals.minefactoryreloaded.core;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
+import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.IRotateableTile;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
+import powercrystals.minefactoryreloaded.net.Packets;
 
 public class HarvestAreaManager
 {
@@ -36,6 +40,7 @@ public class HarvestAreaManager
 	
 	private int _upgradeLevel;
 	private float _upgradeModifier;
+	private boolean hasDirtyUpgrade;
 	
 	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
 			int harvestAreaUp, int harvestAreaDown)
@@ -57,6 +62,7 @@ public class HarvestAreaManager
 		_originY = ((TileEntity)owner).yCoord;
 		_originZ = ((TileEntity)owner).zCoord;
 		_originOrientation = owner.getDirectionFacing();
+		hasDirtyUpgrade = false;
 	}
 	
 	public void setOriginOffset(int x, int y, int z)
@@ -120,27 +126,43 @@ public class HarvestAreaManager
 		_overrideDirection = dir;
 	}
 	
+	public void setUpgradeLevel(int level)
+	{
+		_upgradeLevel = level;
+		recalculateArea();
+		hasDirtyUpgrade = true;
+	}
+	
+	public Packet getUpgradePacket(TileEntity e)
+	{
+		if (hasDirtyUpgrade)
+		{
+			hasDirtyUpgrade = false;
+			return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
+					Packets.HAMUpdate, new Object[]{e.xCoord, e.yCoord, e.zCoord, _upgradeLevel});
+		}
+		return null;
+	}
+	
 	public void updateUpgradeLevel(ItemStack stack)
 	{
 		if (stack == null)
 		{
-			_upgradeLevel = 0;
-			recalculateArea();
+			if (_upgradeLevel != 0)
+				setUpgradeLevel(0);
 			return;
 		}
-		int newUpgradeLevel = 0;
 		
+		int newUpgradeLevel = 0;
 		if (stack.getItem() instanceof IUpgrade)
 		{
 			IUpgrade upgrade = (IUpgrade)stack.getItem();
 			if (upgrade.isApplicableFor(UpgradeType.RADIUS, stack))
 				newUpgradeLevel = (int)(upgrade.getUpgradeLevel(UpgradeType.RADIUS, stack) * _upgradeModifier);
 		}
+		
 		if(newUpgradeLevel != _upgradeLevel)
-		{
-			_upgradeLevel = newUpgradeLevel;
-			recalculateArea();
-		}
+			setUpgradeLevel(newUpgradeLevel);
 	}
 	
 	private void checkRecalculate()

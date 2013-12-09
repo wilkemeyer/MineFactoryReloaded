@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -180,10 +179,11 @@ public abstract class TileEntityFactory extends TileEntity
 	
 	public void setIsActive(boolean isActive)
 	{
-		if(worldObj != null && !worldObj.isRemote && _isActive != isActive)
+		if (_isActive != isActive & worldObj != null && !worldObj.isRemote)
 		{
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
+					50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 		_isActive = isActive;
 	}
@@ -204,6 +204,19 @@ public abstract class TileEntityFactory extends TileEntity
 		if (_machine == null)
 			return null;
 		return _machine.getName().toLowerCase() + ".png";
+	}
+	
+	@Override
+	public void onInventoryChanged()
+	{
+		if (worldObj != null && !worldObj.isRemote && hasHAM())
+		{
+			Packet packet = getHAM().getUpgradePacket(this);
+			if (packet != null)
+				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
+						50, worldObj.provider.dimensionId, packet);
+		}
+		super.onInventoryChanged();
 	}
 	
 	@Override
@@ -228,11 +241,6 @@ public abstract class TileEntityFactory extends TileEntity
 	{
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("rotation", getDirectionFacing().ordinal());
-	}
-	
-	public void onEntityCollidedWithBlock(Entity entity)
-	{
-		
 	}
 	
 	public void onRedNetChanged(ForgeDirection side, int value)
