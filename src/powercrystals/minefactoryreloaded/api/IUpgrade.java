@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.api;
 import net.minecraft.item.ItemStack;
 
 /**
- * @author PowerCrystals
+ * @author skyboy
  *
  * Defines an upgrade item for use in various MFR machines.
  */

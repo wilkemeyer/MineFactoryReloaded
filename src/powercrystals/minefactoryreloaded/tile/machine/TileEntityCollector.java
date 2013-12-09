@@ -13,10 +13,13 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntityCollector extends TileEntityFactoryInventory implements IEntityCollidable
 {
+	protected boolean stuffedChests;
+	
 	public TileEntityCollector()
 	{
 		super(Machine.ItemCollector);
 		setManageSolids(true);
+		stuffedChests = false;
 	}
 
 	@Override
@@ -35,10 +38,18 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 		s = UtilInventory.dropStack(this, s, MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), ForgeDirection.UNKNOWN);
 		if(s == null)
 		{
+			stuffedChests = false;
 			i.setDead();
 			return;
 		}
+		stuffedChests = true;
 		i.setEntityItemStack(s);
+	}
+
+	@Override
+	public int getComparatorOutput(int side)
+	{
+		return stuffedChests ? 15 : 0;
 	}
 	
 	@Override

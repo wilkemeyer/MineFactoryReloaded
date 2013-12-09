@@ -527,25 +527,46 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return true;
 	}
 
-	public float getComparatorOutput(int side)
+	public int getComparatorOutput(int side)
 	{
-		int[] slots = getAccessibleSlotsFromSide(side);
-		int len = 0;
-		float ret = 0;
-		for (int i = slots.length; i --> 0; )
+		IFluidTank[] tanks = getTanks();
+		IFluidTank tank = null;
+		if (tanks.length > 0)
+			tank = tanks[0];
+		float tankPercent = 0, invPercent = 0;
+		boolean hasTank = false, hasInventory = false;
+		if (tank != null)
 		{
-			if (canInsertItem(slots[i], null, side))
+			hasTank = true;
+			if (tank.getFluid() != null)
 			{
-				ItemStack stack = getStackInSlot(slots[i]);
-				if (stack != null)
-				{
-					float maxStack = Math.min(stack.getMaxStackSize(), getInventoryStackLimit()); 
-					ret += Math.max(Math.min(stack.stackSize / maxStack, 1), 0);
-				}
-				++len;
+				tankPercent = ((float)tank.getFluid().amount) / tank.getCapacity();
 			}
 		}
-		return ret / len;
+		int[] accSlots = getAccessibleSlotsFromSide(side);
+		if (accSlots.length > 0)
+		{
+			hasInventory = true;
+			int[] slots = accSlots;
+			int len = 0;
+			float ret = 0;
+			for (int i = slots.length; i --> 0; )
+			{
+				if (canInsertItem(slots[i], null, side))
+				{
+					ItemStack stack = getStackInSlot(slots[i]);
+					if (stack != null)
+					{
+						float maxStack = Math.min(stack.getMaxStackSize(), getInventoryStackLimit()); 
+						ret += Math.max(Math.min(stack.stackSize / maxStack, 1), 0);
+					}
+					++len;
+				}
+			}
+			invPercent = ret / len;
+		}
+		float mult = hasTank & hasInventory ? (tankPercent + invPercent) / 2 : hasTank ? tankPercent : hasInventory ? invPercent : 0f;
+		return (int)Math.ceil(15 * mult);
 	}
 	
 	public boolean allowAction(IAction _)

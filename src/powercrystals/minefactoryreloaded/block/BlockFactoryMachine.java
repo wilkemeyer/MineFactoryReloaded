@@ -28,7 +28,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -355,35 +354,10 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
 	{
-		int ret = 0; // TODO: completely defer this to the TE
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if (te instanceof TileEntityFactoryInventory)
-		{
-			TileEntityFactoryInventory inv = (TileEntityFactoryInventory)te;
-			IFluidTank[] tanks = inv.getTanks();
-			IFluidTank tank = null;
-			if (tanks.length > 0)
-				tank = tanks[0];
-			float tankPercent = 0, invPercent = 0;
-			boolean hasTank = false, hasInventory = false;
-			if (tank != null)
-			{
-				hasTank = true;
-				if (tank.getFluid() != null)
-				{
-					tankPercent = ((float)tank.getFluid().amount) / tank.getCapacity();
-				}
-			}
-			int[] accSlots = inv.getAccessibleSlotsFromSide(side);
-			if (accSlots.length > 0)
-			{
-				hasInventory = true;
-				invPercent = inv.getComparatorOutput(side);
-			}
-			float mult = hasTank & hasInventory ? (tankPercent + invPercent) / 2 : hasTank ? tankPercent : hasInventory ? invPercent : 0f;
-			ret = (int)Math.ceil(15 * mult);
-		}
-		return ret;
+			return ((TileEntityFactoryInventory)te).getComparatorOutput(side);
+		return 0;
 	}
 
 	@Override
