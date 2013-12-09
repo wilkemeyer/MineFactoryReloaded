@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 
-import powercrystals.minefactoryreloaded.api.IUseHandler;
+import powercrystals.minefactoryreloaded.core.IUseHandler;
 
 import skyboy.core.fluid.LiquidRegistry;
 
