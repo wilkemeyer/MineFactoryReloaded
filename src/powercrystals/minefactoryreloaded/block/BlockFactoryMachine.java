@@ -35,15 +35,14 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
+import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityCollector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFactoryMachine extends BlockContainer
@@ -115,7 +114,7 @@ public class BlockFactoryMachine extends BlockContainer
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te instanceof TileEntityItemRouter || te instanceof TileEntityCollector)
+		if (te instanceof IEntityCollidable)
 		{
 			float shrinkAmount = 0.125F;
 			return AxisAlignedBB.getBoundingBox(x + shrinkAmount, y + shrinkAmount, z + shrinkAmount,
@@ -130,27 +129,13 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		if(world.isRemote)
-		{
+		if (world.isRemote)
 			return;
-		}
+
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te instanceof TileEntityItemRouter && entity instanceof EntityItem && !entity.isDead)
-		{
-			ItemStack s = ((TileEntityItemRouter)te).routeItem(((EntityItem)entity).getEntityItem()); 
-			if(s == null)
-			{
-				entity.setDead();
-			}
-			else
-			{
-				((EntityItem)entity).setEntityItemStack(s);
-			}
-		}
-		else if(te instanceof TileEntityCollector && entity instanceof EntityItem && !entity.isDead)
-		{
-			((TileEntityCollector)te).addToChests((EntityItem)entity);
-		}
+		if (te instanceof IEntityCollidable)
+			((IEntityCollidable)te).onEntityCollided(entity);
+		
 		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 	}
 	

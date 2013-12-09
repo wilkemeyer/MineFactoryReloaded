@@ -1,20 +1,25 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.util.UtilInventory;
+import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiItemRouter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerItemRouter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityItemRouter extends TileEntityFactoryInventory
+public class TileEntityItemRouter extends TileEntityFactoryInventory implements IEntityCollidable
 {
 	public TileEntityItemRouter()
 	{
@@ -48,15 +53,28 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if(!worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			for(int i = 45; i < getSizeInventory(); i++)
+			for (int i = 45; i < getSizeInventory(); i++)
 			{
-				if(_inventory[i] != null)
+				if (_inventory[i] != null)
 				{
 					_inventory[i] = routeItem(_inventory[i]);
 				}
 			}
+		}
+	}
+
+	@Override
+	public void onEntityCollided(Entity entity)
+	{
+		if (entity instanceof EntityItem && !entity.isDead)
+		{
+			ItemStack s = routeItem(((EntityItem)entity).getEntityItem());
+			if(s == null)
+				entity.setDead();
+			else
+				((EntityItem)entity).setEntityItemStack(s);
 		}
 	}
 	

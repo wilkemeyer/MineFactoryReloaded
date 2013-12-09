@@ -32,11 +32,10 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
+import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityCollector;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -470,22 +469,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		{
 			return;
 		}
-		else if(teBelow instanceof TileEntityItemRouter)
+		else if (teBelow instanceof IEntityCollidable)
 		{
-			ItemStack s = ((TileEntityItemRouter)teBelow).routeItem(entityitem.getEntityItem());
-			if(s == null)
-			{
-				entityitem.setDead();
-				return;
-			}
-			else
-			{
-				entityitem.setEntityItemStack(s);
-			}
-		}
-		else if(teBelow instanceof TileEntityCollector)
-		{
-			((TileEntityCollector)teBelow).addToChests(entityitem);
+				((IEntityCollidable)teBelow).onEntityCollided(entityitem);
 		}
 		else if(teBelow instanceof TileEntityHopper)
 		{

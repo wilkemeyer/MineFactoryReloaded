@@ -1,14 +1,17 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.util.UtilInventory;
+import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityCollector extends TileEntityFactoryInventory
+public class TileEntityCollector extends TileEntityFactoryInventory implements IEntityCollidable
 {
 	public TileEntityCollector()
 	{
@@ -16,12 +19,17 @@ public class TileEntityCollector extends TileEntityFactoryInventory
 		setManageSolids(true);
 	}
 
-	public void addToChests(EntityItem i)
+	@Override
+	public void onEntityCollided(Entity entity)
 	{
-		if(i.isDead)
-		{
+		if (entity instanceof EntityItem && !entity.isDead)
+			addToChests((EntityItem)entity);
+	}
+
+	protected void addToChests(EntityItem i)
+	{
+		if (i.isDead)
 			return;
-		}
 		
 		ItemStack s = i.getEntityItem();
 		s = UtilInventory.dropStack(this, s, MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), ForgeDirection.UNKNOWN);
