@@ -14,7 +14,8 @@ public interface IUpgrade
 		RADIUS,
 		SPEED,
 		EFFICENCY,
-		STRENGTH;
+		STRENGTH,
+		ENERGY;
 	}
 	
 	/**
