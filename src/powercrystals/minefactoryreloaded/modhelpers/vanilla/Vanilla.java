@@ -393,6 +393,7 @@ public class Vanilla
 		registerOreDictLaserOre(100, "oreNikolite", lightBlue, "oreNetherNikolite", "dustNikolite");
 		registerOreDictLaserOre( 90, "oreCopper", orange, "oreNetherCopper", "dustCopper");
 		registerOreDictLaserOre( 85, "oreTin", silver, "oreNetherTin", "dustTin");
+		registerOreDictLaserOre( 85, "oreCheese", yellow, null);
 		registerOreDictLaserOre( 85, "oreForce", yellow, null);
 		registerOreDictLaserOre( 80, "oreLapis", blue, "oreNetherLapis");
 		registerOreDictLaserOre( 70, "oreGold", yellow, "oreNetherGold");
