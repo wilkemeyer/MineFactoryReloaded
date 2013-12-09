@@ -82,12 +82,12 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	{
 		int[] filteredRoutes = getRoutesForItem(stack);
 		
-		if(hasRoutes(filteredRoutes))
+		if (hasRoutes(filteredRoutes))
 		{
 			stack = weightedRouteItem(stack, filteredRoutes);
 			return (stack == null || stack.stackSize == 0) ? null : stack;
 		}
-		else if(hasRoutes(_defaultRoutes) && !_rejectUnmapped)
+		else if (!_rejectUnmapped && hasRoutes(_defaultRoutes))
 		{
 			stack = weightedRouteItem(stack, _defaultRoutes);
 			return (stack == null || stack.stackSize == 0) ? null : stack;

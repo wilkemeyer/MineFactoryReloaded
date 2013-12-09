@@ -7,14 +7,12 @@ import java.util.ArrayList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-import powercrystals.core.position.BlockPosition;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IToolHammer;
 import powercrystals.minefactoryreloaded.api.IToolHammerAdvanced;
-import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 
 public class MFRUtil
 {
@@ -92,17 +90,15 @@ public class MFRUtil
 	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z)
 	{
 		ArrayList<ForgeDirection> nonConveyors = new ArrayList<ForgeDirection>();
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		int id = MineFactoryReloadedCore.conveyorBlock.blockID;
+		
+		for (int i = 0, e = ForgeDirection.VALID_DIRECTIONS.length; i < e; ++i)
 		{
-			BlockPosition bp = new BlockPosition(x, y, z);
-			bp.orientation = direction;
-			bp.moveForwards(1);
-			TileEntity te = world.getBlockTileEntity(bp.x, bp.y, bp.z);
-			if(te == null || !(te instanceof TileEntityConveyor))
-			{
+			ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[i];
+			if (id != world.getBlockId(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
 				nonConveyors.add(direction);
-			}
 		}
+		
 		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
 	}
 }
