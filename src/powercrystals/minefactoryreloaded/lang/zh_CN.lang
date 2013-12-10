@@ -186,6 +186,9 @@ item.mfr.bucket.mushroomsoup.name = \u8611\u83c7\u6c64\u6876
 item.mfr.bucket.plasticcup.name = \u5851\u6599\u676f
 item.mfr.bucket.plasticcup.prefix.name =
 item.mfr.bucket.plasticcup.suffix.name =\u676f
+item.mfr.bucket.plasticcell.name = \u5851\u6599\u5355\u5143
+item.mfr.bucket.plasticcell.prefix.name =
+item.mfr.bucket.plasticcell.suffix.name =\u5355\u5143
 
 item.mfr.syringe.cure.name = \u50f5\u5c38\u75c5\u6bd2\u6297\u4f53\u6ce8\u5c04\u5668
 item.mfr.syringe.empty.name = \u7a7a\u6ce8\u5c04\u5668
@@ -252,6 +255,7 @@ item.mfr.laserfocus.green.name = \u956d\u5c04\u805a\u7126\u900f\u955c  (\u7eff\u
 item.mfr.laserfocus.red.name = \u956d\u5c04\u805a\u7126\u900f\u955c  (\u7ea2\u8272)
 item.mfr.laserfocus.black.name = \u956d\u5c04\u805a\u7126\u900f\u955c  (\u9ed1\u8272)
 
+item.mfr.upgrade.radius.cobble.name = \u5347\u7ea7\u63d2\u4ef6(\u5706\u77f3)
 item.mfr.upgrade.radius.lapis.name = \u5347\u7ea7\u63d2\u4ef6(\u9752\u91d1\u77f3)
 item.mfr.upgrade.radius.iron.name = \u5347\u7ea7\u63d2\u4ef6(\u94c1)
 item.mfr.upgrade.radius.tin.name = \u5347\u7ea7\u63d2\u4ef6(\u9521)
@@ -381,3 +385,5 @@ death.attack.mfr.slaughterhouse.1=%1$s\u88ab\u52a0\u5de5\u6210\u4e86\u8089\u9171
 death.attack.mfr.slaughterhouse.1.player=%1$s\u88ab%2$s\u52a0\u5de5\u6210\u4e86\u8089\u9171\u3002
 death.attack.mfr.grinder=%1$s\u88ab\u78e8\u788e\u6210\u4e86\u6e23\u6e23\u3002
 death.attack.mfr.grinder.player=%2$s\u786e\u4fe1%1$s\u5df2\u7ecf\u88ab\u78e8\u788e\u6210\u4e86\u6e23\u6e23\u3002
+death.attack.mfr.laser=%1$s\u88ab\u6fc0\u5149\u5206\u89e3\u4e86.
+death.attack.mfr.laser.player=%2$s\u786e\u4fe1%1$s\u5df2\u7ecf\u88ab\u6fc0\u5149\u5206\u89e3\u6389\u4e86.
