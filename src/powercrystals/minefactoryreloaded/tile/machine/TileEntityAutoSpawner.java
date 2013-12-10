@@ -159,11 +159,13 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 			{
 				if (spawnedLiving instanceof EntityLiving)
 					((EntityLiving)spawnedLiving).onSpawnWithEgg(null);
-				handler.onMobSpawn(spawnedLiving);
+				if (handler != null)
+					handler.onMobSpawn(spawnedLiving);
 			}
 			else
 			{
-				handler.onMobExactSpawn(spawnedLiving);
+				if (handler != null)
+					handler.onMobExactSpawn(spawnedLiving);
 			}
 			
 			worldObj.spawnEntityInWorld(spawnedLiving);

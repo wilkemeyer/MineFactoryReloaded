@@ -27,6 +27,7 @@ public class ItemSyringeZombie extends ItemSyringe
 	@Override
 	public boolean inject(World world, EntityLivingBase entity, ItemStack syringe)
 	{
+		((EntityAgeable)entity).setGrowingAge(0);
 		if(world.rand.nextInt(100) < 5)
 		{
 			Entity e = null;
@@ -58,10 +59,6 @@ public class ItemSyringeZombie extends ItemSyringe
 				world.spawnEntityInWorld(e);
 				entity.setDead();
 			}
-		}
-		else
-		{
-			((EntityAgeable)entity).setGrowingAge(0);
 		}
 		return true;
 	}
