@@ -37,18 +37,18 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 		{
 			for(int j = 0; j < 3; j++)
 			{
-				addSlotToContainer(new SlotFake(_te, j + i * 3, 8 + j * 18, 20 + i * 18));
+				addSlotToContainer(new SlotFake(_te, j + i * 3, 28 + 8 + j * 18, 20 + i * 18));
 			}
 		}
 		
-		addSlotToContainer(new SlotViewOnly(_te, 9, 80, 38));
-		addSlotToContainer(new SlotRemoveOnly(_te, 10, 134, 38));
+		addSlotToContainer(new SlotViewOnly(_te, 9, 28 + 80, 38));
+		addSlotToContainer(new SlotRemoveOnly(_te, 10, 28 + 134, 38));
 		
 		for(int i = 0; i < 2; i++)
 		{
 			for(int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(_te, 11 + j + i * 9, 8 + j * 18, 79 + i * 18));
+				addSlotToContainer(new Slot(_te, 11 + j + i * 9, 28 + 8 + j * 18, 79 + i * 18));
 			}
 		}
 	}
@@ -138,5 +138,11 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 	protected int getPlayerInventoryVerticalOffset()
 	{
 		return 133;
+	}
+	
+	@Override
+	protected int getPlayerInventoryHorizontalOffset()
+	{
+		return 8 + 28;
 	}
 }

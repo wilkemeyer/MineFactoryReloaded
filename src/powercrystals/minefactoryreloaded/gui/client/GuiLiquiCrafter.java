@@ -18,13 +18,15 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 {
 	private static final ResourceLocation background = new ResourceLocation(MineFactoryReloadedCore.guiFolder + "liquicrafter.png");
 	private TileEntityLiquiCrafter _crafter;
+	private static int TANK_OFFSET_X = -22;
 	
 	public GuiLiquiCrafter(ContainerLiquiCrafter container, TileEntityLiquiCrafter router)
 	{
 		super(container, router);
 		_crafter = router;
-		xSize = 231;
+		xSize = 232;
 		ySize = 214;
+		_xOffset = _xOffset + 27;
 		_renderTanks = false;
 	}
 	
@@ -33,8 +35,8 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		fontRenderer.drawString("Template", 67, 27, 4210752);
-		fontRenderer.drawString("Output", 128, 26, 4210752);
+		fontRenderer.drawString("Template", 67 + 27, 27, 4210752);
+		fontRenderer.drawString("Output", 128 + 27, 26, 4210752);
 		
 		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
 		
@@ -44,23 +46,23 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 			FluidStack l = tanks[i].fluid;
 			if(l != null)
 			{
-				drawTank(-50 + (i % 3 * 18), 43 + (i / 3 * 35),  l, l.amount * 33 / tanks[i].capacity);
+				drawTank(TANK_OFFSET_X + (i % 3 * 18), 43 + (i / 3 * 35),  l, l.amount * 33 / tanks[i].capacity);
 			}
 		}
 		
 		this.mc.renderEngine.bindTexture(background);
 		for(int i = 0; i < 8; i++)
 		{
-			this.drawTexturedModalRect(-50 + (i % 3 * 18), 10 + (i / 3 * 35), 232, 0, 16, 33);
+			this.drawTexturedModalRect(TANK_OFFSET_X + (i % 3 * 18), 10 + (i / 3 * 35), 232, 0, 16, 33);
 		}
 	}
 
 	@Override
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		if(isPointInRegion(-50, 10, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY))
+		if(isPointInRegion(TANK_OFFSET_X, 10, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY))
 		{
-			int tankX = mouseX + 50 - this.guiLeft;
+			int tankX = mouseX - TANK_OFFSET_X - this.guiLeft;
 			int tankY = mouseY - 10 - this.guiTop;
 			if (tankX % 18 > 16 | tankY % 35 > 33)
 				return;
@@ -80,7 +82,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground()));
-		int x = (width - xSize) / 2 - 56;
+		int x = (width - xSize - 56) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}

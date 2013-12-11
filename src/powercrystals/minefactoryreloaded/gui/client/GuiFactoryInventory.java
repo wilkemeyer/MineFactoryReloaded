@@ -34,6 +34,7 @@ public class GuiFactoryInventory extends GuiContainer
 	protected int _tankSizeMax = 60;
 	protected int _tanksOffsetX = 122;
 	protected int _tanksOffsetY = 15;
+	protected int _xOffset = 8;
 	
 	protected boolean _renderTanks = true;
 	
@@ -69,8 +70,8 @@ public class GuiFactoryInventory extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRenderer.drawString(_tileEntity.getInvName(), 8, 6, 4210752);
-		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(_tileEntity.getInvName(), _xOffset, 6, 4210752);
+		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 2, 4210752);
 		
 		if (_renderTanks)
 		{

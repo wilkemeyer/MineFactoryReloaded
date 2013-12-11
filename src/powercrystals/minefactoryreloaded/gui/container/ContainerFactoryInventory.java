@@ -138,19 +138,26 @@ public class ContainerFactoryInventory extends Container
 		return 84;
 	}
 	
+	protected int getPlayerInventoryHorizontalOffset()
+	{
+		return 8;
+	}
+	
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
 	{
+		int yOff = getPlayerInventoryVerticalOffset();
+		int xOff = getPlayerInventoryHorizontalOffset();
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, getPlayerInventoryVerticalOffset() + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, xOff + j * 18, yOff + i * 18));
 			}
 		}
 		
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, getPlayerInventoryVerticalOffset() + 58));
+			addSlotToContainer(new Slot(inventoryPlayer, i, xOff + i * 18, yOff + 58));
 		}
 	}
 	
