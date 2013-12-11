@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 {
-	private boolean _matchLevels = false;
+	protected boolean _matchLevels = false;
 	
 	public TileEntityEnchantmentRouter()
 	{
