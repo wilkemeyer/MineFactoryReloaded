@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.net;
 
+import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.Player;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
@@ -12,6 +15,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
@@ -25,9 +29,6 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRoute
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.IPacketHandler;
-import cpw.mods.fml.common.network.Player;
 
 public class ServerPacketHandler implements IPacketHandler
 {
@@ -167,13 +168,10 @@ public class ServerPacketHandler implements IPacketHandler
 			TileEntity te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityEnchantmentRouter)
 			{
-				FMLLog.severe("%s", (Integer)packetReadout[3]);
 				switch ((Integer)packetReadout[3])
 				{
 				case 2:
-					FMLLog.severe("%s - %s", te, ((TileEntityItemRouter)te).getRejectUnmapped());
 					((TileEntityItemRouter)te).setRejectUnmapped(!((TileEntityItemRouter)te).getRejectUnmapped());
-					FMLLog.severe("%s - %s", te, ((TileEntityItemRouter)te).getRejectUnmapped());
 					break;
 				case 1:
 					((TileEntityEnchantmentRouter)te).setMatchLevels(!((TileEntityEnchantmentRouter)te).getMatchLevels());
