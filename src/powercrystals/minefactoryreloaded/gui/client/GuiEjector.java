@@ -49,9 +49,9 @@ public class GuiEjector extends GuiFactoryInventory
 	
 	private void updateButtons()
 	{
-		_whitelist.displayString    = _ejector.getIsWhitelist() ? "Whitelist"  : "Blacklist";
-		_ignoreNBT.displayString    = _ejector.getIsNBTMatch() ? "Match NBT"  : "Ignore NBT";
-		_ignoreDamage.displayString = _ejector.getIsIDMatch() ? "Match Meta" : "Ignore Meta";
+		_whitelist.displayString    =  _ejector.getIsWhitelist() ? "Whitelist"  : "Blacklist";
+		_ignoreNBT.displayString    =  _ejector.getIsNBTMatch() ? "Match NBT"  : "Ignore NBT";
+		_ignoreDamage.displayString = !_ejector.getIsIDMatch() ? "Match Meta" : "Ignore Meta";
 	}
 	
 	@Override
