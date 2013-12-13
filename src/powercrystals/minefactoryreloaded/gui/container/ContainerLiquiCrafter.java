@@ -109,7 +109,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 					return null;
 				}
 			}
-			else if(slot != 9 && !mergeItemStack(stackInSlot, 11, 18, false))
+			else if(slot != 9 && !mergeItemStack(stackInSlot, 11, 29, false))
 			{
 				return null;
 			}
