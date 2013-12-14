@@ -106,15 +106,21 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	public void onBlockBroken()
 	{
+		NBTTagCompound tag = new NBTTagCompound();
+		writeItemNBT(tag);
+		if (!tag.hasNoTags())
+			BlockNBTManager.setForBlock(new BlockPosition(xCoord, yCoord, zCoord), tag);
+		onDisassembled();
+	}
+	
+	protected void writeItemNBT(NBTTagCompound tag)
+	{
 		if (isInvNameLocalized())
 		{
-			NBTTagCompound tag = new NBTTagCompound();
 			NBTTagCompound name = new NBTTagCompound();
 			name.setString("Name", getInvName());
 			tag.setTag("display", name);
-			BlockNBTManager.setForBlock(new BlockPosition(xCoord, yCoord, zCoord), tag);
 		}
-		onDisassembled();
 	}
 	
 	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
@@ -176,12 +182,13 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				return;
 			}
 			failedDrops = null;
+			onInventoryChanged();
 		}
 	}
 
 	public boolean doDrop(ItemStack drop)
 	{
-		drop = UtilInventory.dropStack(this, drop, this.getDropDirection());
+		drop = UtilInventory.dropStack(this, drop, this.getDropDirections(), this.getDropDirection());
 		if (drop != null && drop.stackSize > 0)
 		{
 			if (failedDrops == null)
@@ -189,6 +196,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				failedDrops = new ArrayList<ItemStack>();
 			}
 			failedDrops.add(drop);
+			onInventoryChanged();
 		}
 		return true;
 	}
@@ -204,7 +212,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		for (int i = drops.size(); i --> 0; )
 		{
 			ItemStack dropStack = drops.get(i);
-			dropStack = UtilInventory.dropStack(this, dropStack, this.getDropDirection());
+			dropStack = UtilInventory.dropStack(this, dropStack, this.getDropDirections(), this.getDropDirection());
 			if (dropStack != null && dropStack.stackSize > 0)
 			{
 				missed.add(dropStack);
@@ -226,6 +234,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				failedDrops.clear();
 				failedDrops.addAll(missed);
 			}
+			onInventoryChanged();
 			return false;
 		}
 		
@@ -423,18 +432,22 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		NBTTagList nbttaglist = new NBTTagList();
-		for(int i = 0; i < _inventory.length; i++)
+		NBTTagList nbttaglist;
+		if (_inventory.length > 0)
 		{
-			if (_inventory[i] != null && _inventory[i].stackSize > 0)
+			nbttaglist = new NBTTagList();
+			for(int i = 0; i < _inventory.length; i++)
 			{
-				NBTTagCompound slot = new NBTTagCompound();
-				slot.setByte("Slot", (byte)i);
-				_inventory[i].writeToNBT(slot);
-				nbttaglist.appendTag(slot);
+				if (_inventory[i] != null && _inventory[i].stackSize > 0)
+				{
+					NBTTagCompound slot = new NBTTagCompound();
+					slot.setByte("Slot", (byte)i);
+					_inventory[i].writeToNBT(slot);
+					nbttaglist.appendTag(slot);
+				}
 			}
+			tag.setTag("Items", nbttaglist);
 		}
-		tag.setTag("Items", nbttaglist);
 		
 		IFluidTank[] _tanks = getTanks();
 		if (_tanks.length > 0)

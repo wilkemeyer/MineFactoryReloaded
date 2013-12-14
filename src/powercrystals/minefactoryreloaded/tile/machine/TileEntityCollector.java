@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 
 import powercrystals.core.util.UtilInventory;
@@ -13,19 +14,19 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntityCollector extends TileEntityFactoryInventory implements IEntityCollidable
 {
-	protected boolean stuffedChests;
+	protected boolean canStuff;
 	
 	public TileEntityCollector()
 	{
 		super(Machine.ItemCollector);
 		setManageSolids(true);
-		stuffedChests = false;
+		canStuff = false;
 	}
 
 	@Override
 	public void onEntityCollided(Entity entity)
 	{
-		if (entity instanceof EntityItem && !entity.isDead)
+		if (failedDrops == null && entity instanceof EntityItem)
 			addToChests((EntityItem)entity);
 	}
 
@@ -34,33 +35,70 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 		if (i.isDead)
 			return;
 		
-		ItemStack s = i.getEntityItem();
-		s = UtilInventory.dropStack(this, s, MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), ForgeDirection.UNKNOWN);
-		if(s == null)
+		ItemStack s = addToChests(i.getEntityItem());
+		if (s == null)
 		{
-			stuffedChests = false;
 			i.setDead();
 			return;
 		}
-		stuffedChests = true;
 		i.setEntityItemStack(s);
+	}
+	
+	protected ItemStack addToChests(ItemStack s)
+	{
+		s = UtilInventory.dropStack(this, s,
+				MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), ForgeDirection.UNKNOWN);
+		if (canStuff & failedDrops == null & s != null)
+		{
+			doDrop(s);
+			s = null;
+		}
+		return s;
 	}
 
 	@Override
 	public int getComparatorOutput(int side)
 	{
-		return stuffedChests ? 15 : 0;
+		return failedDrops != null ? 15 : 0;
 	}
 	
 	@Override
-	public boolean canUpdate()
+	public ForgeDirection getDropDirection()
 	{
-		return false;
+		return ForgeDirection.UNKNOWN;
+	}
+	
+	@Override
+	public ForgeDirection[] getDropDirections()
+	{
+		return MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord);
 	}
 	
 	@Override
 	public int getSizeInventory()
 	{
 		return 0;
+	}
+	
+	@Override
+	protected void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
+		if (canStuff)
+			tag.setBoolean("hasTinkerStuff", true);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		canStuff = tag.getBoolean("hasTinkerStuff");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		tag.setBoolean("hasTinkerStuff", canStuff);
 	}
 }

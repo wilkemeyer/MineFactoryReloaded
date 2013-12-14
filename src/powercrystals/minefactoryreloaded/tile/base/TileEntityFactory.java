@@ -172,6 +172,11 @@ public abstract class TileEntityFactory extends TileEntity
 		return ForgeDirection.UP;
 	}
 	
+	public ForgeDirection[] getDropDirections()
+	{
+		return ForgeDirection.VALID_DIRECTIONS;
+	}
+	
 	public boolean isActive()
 	{
 		return _isActive;

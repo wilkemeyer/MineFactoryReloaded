@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -11,6 +12,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
+import powercrystals.minefactoryreloaded.setup.recipe.handler.ShapelessMachineTinker;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Vanilla
@@ -18,6 +20,7 @@ public class Vanilla
 	// prevent derived recipe sets from double-registering this one if multiple sets are enabled
 	private static boolean _registeredMachines;
 	private static boolean _registeredMachineUpgrades;
+	private static boolean _registeredMachineTinkers;
 	private static boolean _registeredConveyors;
 	private static boolean _registeredDecorative;
 	private static boolean _registeredSyringes;
@@ -32,6 +35,7 @@ public class Vanilla
 	{
 		registerMachines();
 		registerMachineUpgrades();
+		registerMachineTinkers();
 		registerConveyors();
 		registerDecorative();
 		if (MFRConfig.enableSyringes.getBoolean(true))
@@ -704,6 +708,33 @@ public class Vanilla
 				'G', new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i)
 					} ));
 		}
+	}
+
+	protected void registerMachineTinkers()
+	{
+		if(_registeredMachineTinkers)
+		{
+			return;
+		}
+		_registeredMachineTinkers = true;
+		
+		GameRegistry.addRecipe(new ShapelessMachineTinker(Machine.ItemCollector, new ItemStack(Item.goldNugget)) {
+			@Override
+			protected boolean isMachineTinkerable(ItemStack machine)
+			{
+				return !machine.hasTagCompound() || !machine.getTagCompound().hasKey("hasTinkerStuff");
+			}
+
+			@Override
+			protected ItemStack getTinkeredMachine(ItemStack machine)
+			{
+				machine = machine.copy();
+				NBTTagCompound tag = machine.getTagCompound();
+				if (tag == null) machine.setTagCompound(tag = new NBTTagCompound());
+				tag.setBoolean("hasTinkerStuff", true);
+				return machine;
+			}
+		});
 	}
 	
 	protected void registerConveyors()
