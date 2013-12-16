@@ -46,12 +46,20 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 	
 	@Override
-	public void onBlockBroken()
+	protected void writeItemNBT(NBTTagCompound tag)
 	{
-		if (getQuantityAdjusted() > 0 || isInvNameLocalized())
+		if (getQuantityAdjusted() > 0)
 		{
 			BlockNBTManager.setForBlock(this);
 		}
+		else
+			super.writeItemNBT(tag);
+	}
+	
+	@Override
+	public boolean shouldDropSlotWhenBroken(int slot)
+	{
+		return slot < 2;
 	}
 	
 	@Override
@@ -144,10 +152,13 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		if((_inventory[2] == null) & _storedItem != null)
 		{
 			_inventory[2] = _storedItem.copy();
-			_inventory[2].stackSize = Math.min(_storedQuantity, _storedItem.getMaxStackSize());
+			_inventory[2].stackSize = Math.min(_storedQuantity,
+					Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
 			_storedQuantity -= _inventory[2].stackSize;
 		}
-		else if(_inventory[2] != null && _inventory[2].stackSize < _inventory[2].getMaxStackSize() && UtilInventory.stacksEqual(_storedItem, _inventory[2]) & _storedQuantity > 0)
+		else if(_inventory[2] != null & _storedQuantity > 0 &&
+				_inventory[2].stackSize < _inventory[2].getMaxStackSize() &&
+				UtilInventory.stacksEqual(_storedItem, _inventory[2]))
 		{
 			int amount = Math.min(_inventory[2].getMaxStackSize() - _inventory[2].stackSize, _storedQuantity);
 			_inventory[2].stackSize += amount;
@@ -182,8 +193,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			// internal inventory is full
 			else
 			{
-				_shouldTick = true;
-				// _inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
+				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 			}
 		}
 	}

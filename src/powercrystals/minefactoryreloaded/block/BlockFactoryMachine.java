@@ -41,7 +41,6 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFactoryMachine extends BlockContainer
@@ -151,46 +150,45 @@ public class BlockFactoryMachine extends BlockContainer
 
 	private void dropContents(TileEntity te)
 	{
-		if(te instanceof IInventory && !(te instanceof TileEntityDeepStorageUnit))
+		if (te instanceof IInventory)
 		{
 			World world = te.worldObj;
 			IInventory inventory = ((IInventory)te);
-			inv: for(int i = 0; i < inventory.getSizeInventory(); i++)
+			TileEntityFactoryInventory factoryInv = null;
+			if (te instanceof TileEntityFactoryInventory)
+				factoryInv = (TileEntityFactoryInventory)te;
+			
+			inv: for (int i = inventory.getSizeInventory(); i --> 0 ; )
 			{
-				if(te instanceof TileEntityFactoryInventory && !((TileEntityFactoryInventory)te).shouldDropSlotWhenBroken(i))
-				{
-					continue;
-				}
+				if (factoryInv != null)
+					if (!factoryInv.shouldDropSlotWhenBroken(i))
+						continue;
 
 				ItemStack itemstack = inventory.getStackInSlot(i);
-				if(itemstack == null)
-				{
+				if (itemstack == null)
 					continue;
-				}
-				float xOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-				float yOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-				float zOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+				inventory.setInventorySlotContents(i, null);
+
 				do
 				{
-					if(itemstack.stackSize <= 0)
-					{
+					if (itemstack.stackSize <= 0)
 						continue inv;
-					}
-					int amountToDrop = world.rand.nextInt(21) + 10;
-					if(amountToDrop > itemstack.stackSize)
-					{
-						amountToDrop = itemstack.stackSize;
-					}
-					itemstack.stackSize -= amountToDrop;
-					EntityItem entityitem = new EntityItem(world, te.xCoord + xOffset, te.yCoord + yOffset, te.zCoord + zOffset, new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
-					if(itemstack.getTagCompound() != null)
-					{
-						entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
-					}
+					
+					float xOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+					float yOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+					float zOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+					
+					int amountToDrop = Math.min(world.rand.nextInt(21) + 10, itemstack.stackSize);
+					
+					EntityItem entityitem = new EntityItem(world,
+							te.xCoord + xOffset, te.yCoord + yOffset, te.zCoord + zOffset,
+							itemstack.splitStack(amountToDrop));
+
 					float motionMultiplier = 0.05F;
 					entityitem.motionX = (float)world.rand.nextGaussian() * motionMultiplier;
 					entityitem.motionY = (float)world.rand.nextGaussian() * motionMultiplier + 0.2F;
 					entityitem.motionZ = (float)world.rand.nextGaussian() * motionMultiplier;
+					
 					world.spawnEntityInWorld(entityitem);
 				} while(true);
 			}
@@ -203,10 +201,8 @@ public class BlockFactoryMachine extends BlockContainer
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		dropContents(te);
 
-		if(te instanceof TileEntityFactoryInventory)
-		{
+		if (te instanceof TileEntityFactoryInventory)
 			((TileEntityFactoryInventory)te).onBlockBroken();
-		}
 
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
