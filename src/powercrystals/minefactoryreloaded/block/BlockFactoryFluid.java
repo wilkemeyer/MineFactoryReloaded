@@ -35,7 +35,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		if (world.isRemote)
+		if (world.isRemote | world.getTotalWorldTime() % 10 == 0)
 		{
 			return;
 		}
@@ -45,7 +45,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 			EntityLivingBase ent = (EntityLivingBase)entity;
 			if(blockID == MineFactoryReloadedCore.sludgeLiquid.blockID)
 			{
-				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.wither.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 12 * 20, 0));
 			}
