@@ -718,7 +718,8 @@ public class Vanilla
 		}
 		_registeredMachineTinkers = true;
 		
-		GameRegistry.addRecipe(new ShapelessMachineTinker(Machine.ItemCollector, new ItemStack(Item.goldNugget)) {
+		GameRegistry.addRecipe(new ShapelessMachineTinker(Machine.ItemCollector, "Emits comparator signal",
+				new ItemStack(Item.goldNugget)) {
 			@Override
 			protected boolean isMachineTinkerable(ItemStack machine)
 			{

@@ -1,11 +1,15 @@
 package powercrystals.minefactoryreloaded.setup.recipe.handler;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -16,19 +20,39 @@ public abstract class ShapelessMachineTinker extends ShapelessRecipes
 {
 	protected List<List<ItemStack>> _tinkerItems;
 	protected ItemStack _machine;
-
-	public ShapelessMachineTinker(Machine machine, String... tinkerItems)
+	
+	private static ItemStack createMachineWithLore(Machine machine, String lore)
 	{
-		super(null, null);
+		ItemStack o = machine.getItemStack();
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setCompoundTag("display", new NBTTagCompound());
+		NBTTagList list = new NBTTagList();
+		tag.getCompoundTag("display").setTag("Lore", list);
+		list.appendTag(new NBTTagString("0", lore));
+		o.setTagCompound(tag);
+		return o;
+	}
+	
+	private static List<ItemStack> createIngredientListforNEI(Machine machine, ItemStack... items)
+	{
+		List<ItemStack> r = new LinkedList<ItemStack>();
+		r.addAll(Arrays.asList(items));
+		r.add(machine.getItemStack());
+		return r;
+	}
+
+	public ShapelessMachineTinker(Machine machine, String lore, String... tinkerItems)
+	{
+		super(createMachineWithLore(machine, lore), null);
 		_machine = machine.getItemStack();
 		_tinkerItems = new LinkedList<List<ItemStack>>();
 		for (String s : tinkerItems)
 			_tinkerItems.add(OreDictionary.getOres(s));
 	}
 
-	public ShapelessMachineTinker(Machine machine, ItemStack... tinkerItems)
+	public ShapelessMachineTinker(Machine machine, String lore, ItemStack... tinkerItems)
 	{
-		super(null, null);
+		super(createMachineWithLore(machine, lore), createIngredientListforNEI(machine, tinkerItems));
 		_machine = machine.getItemStack();
 		_tinkerItems = new LinkedList<List<ItemStack>>();
 		for (ItemStack s : tinkerItems)

@@ -32,7 +32,7 @@ public class GuiEjector extends GuiFactoryInventory
 		
 		_whitelist    = new GuiButton(1, guiLeft + 70, guiTop + 14, 70, 18,  "Blacklist");
 		_ignoreNBT    = new GuiButton(2, guiLeft + 70, guiTop + 32, 70, 18,  "Match NBT");
-		_ignoreDamage = new GuiButton(3, guiLeft + 70, guiTop + 50, 70, 18, "Match Meta");
+		_ignoreDamage = new GuiButton(3, guiLeft + 70, guiTop + 50, 70, 20, "Match Meta");
 		updateButtons();
 		
 		buttonList.add(_whitelist);

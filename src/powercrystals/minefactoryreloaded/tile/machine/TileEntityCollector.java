@@ -57,6 +57,12 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	}
 
 	@Override
+	public boolean hasWorldObj()
+	{
+		return worldObj != null & failedDrops != null;
+	}
+
+	@Override
 	public int getComparatorOutput(int side)
 	{
 		return failedDrops != null ? 15 : 0;
