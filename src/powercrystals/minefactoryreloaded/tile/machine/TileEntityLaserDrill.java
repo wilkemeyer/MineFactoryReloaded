@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomItem;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.random.WeightedRandomItemStack;
 import powercrystals.core.util.UtilInventory;
@@ -41,6 +42,11 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	private int _bedrockLevel;
 	
 	private Random _rand;
+	
+	public static boolean canReplaceBlock(Block block, World world, int x, int y, int z)
+	{
+		return block == null || block.getBlockHardness(world, x, y, z) == 0 || block.isAirBlock(world, x, y, z);
+	}
 	
 	public TileEntityLaserDrill()
 	{
@@ -168,23 +174,24 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		for(y = yCoord - 1; y >= 0; y--)
 		{
 			int id = worldObj.getBlockId(xCoord, y, zCoord);
-			Block block = Block.blocksList[id];
-			if (block != null && block.getBlockHardness(worldObj, xCoord, y, zCoord) == 0)
+			if (id != MineFactoryReloadedCore.fakeLaserBlock.blockID)
 			{
-				worldObj.setBlockToAir(xCoord, y, zCoord);
-				id = worldObj.getBlockId(xCoord, y, zCoord);
-			}
-			if (id != MineFactoryReloadedCore.fakeLaserBlock.blockID &&
-					id != Block.bedrock.blockID &&
-					!worldObj.isAirBlock(xCoord, y, zCoord))
-			{
-				_bedrockLevel = -1;
-				return;
-			}
-			else if(id == Block.bedrock.blockID)
-			{
-				_bedrockLevel = y;
-				return;
+				Block block = Block.blocksList[id];
+				if (canReplaceBlock(block, worldObj, xCoord, y, zCoord))
+					if (worldObj.setBlock(xCoord, y, zCoord, MineFactoryReloadedCore.fakeLaserBlock.blockID))
+						continue;
+				
+				if(id == Block.bedrock.blockID)
+				{
+					_bedrockLevel = y;
+					return;
+				}
+				else if (!worldObj.isAirBlock(xCoord, y, zCoord))
+				{
+					_bedrockLevel = -1;
+					return;
+				}
+
 			}
 		}
 		

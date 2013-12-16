@@ -1,10 +1,12 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -55,6 +57,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 			ForgeDirection facing = getDirectionFacing().getOpposite();
 			if (drill.canFormBeamWith(facing))
 			{
+				stripBlock();
 				int excess = drill.addEnergy(facing, energy, true);
 				if (excess == 0)
 				{
@@ -85,36 +88,49 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	
 	public boolean shouldDrawBeam()
 	{
-		return getDrill() != null;
+		IFactoryLaserTarget drill = getDrill();
+		return drill != null && drill.canFormBeamWith(getDirectionFacing().getOpposite());
 	}
 	
-	private IFactoryLaserTarget getDrill()
+	protected IFactoryLaserTarget getDrill()
 	{
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
 		
-		if(!worldObj.isAirBlock(bp.x, bp.y, bp.z))
-		{
+		int midId = worldObj.getBlockId(bp.x, bp.y, bp.z);
+		if (!TileEntityLaserDrill.canReplaceBlock(Block.blocksList[midId], worldObj, bp.x, bp.y, bp.z))
 			return null;
-		}
 		
 		bp.moveForwards(1);
 		
 		TileEntity te = worldObj.getBlockTileEntity(bp.x, bp.y, bp.z);
-		if(te instanceof IFactoryLaserTarget)
-		{
+		if (te instanceof IFactoryLaserTarget)
 			return ((IFactoryLaserTarget)te);
-		}
 		
 		return null;
 	}
 	
+	private int stripTick = 0;
+	protected void stripBlock()
+	{
+		if (stripTick > 0)
+		{
+			--stripTick;
+			return;
+		}
+		stripTick = 20;
+		BlockPosition bp = new BlockPosition(this);
+		bp.orientation = getDirectionFacing();
+		bp.moveForwards(1);
+		if (worldObj.getBlockId(bp.x, bp.y, bp.z) != MineFactoryReloadedCore.fakeLaserBlock.blockID)
+			worldObj.setBlock(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock.blockID, 1, 3);
+	}
 
 	@Override
 	public int getMaxSafeInput()
 	{
-		return 2048;
+		return Integer.MAX_VALUE;
 	}
 	
 	@Override

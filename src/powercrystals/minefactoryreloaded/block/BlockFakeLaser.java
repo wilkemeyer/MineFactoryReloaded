@@ -87,15 +87,18 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
-		if (world.isRemote) return;
-		int upperId = world.getBlockId(x, y + 1, z);
-		int lowerId = world.getBlockId(x, y - 1, z);
+		if (world.isRemote || world.getBlockMetadata(x, y, z) != 0) return;
 		
+		int upperId = world.getBlockId(x, y + 1, z);
 		if (upperId != blockID && !(world.getBlockTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill))
 		{
 			world.setBlockToAir(x, y, z);
+			return;
 		}
-		else if (lowerId != blockID && (Block.blocksList[lowerId] == null || Block.blocksList[lowerId].isAirBlock(world, x, y - 1, z)))
+		
+		int lowerId = world.getBlockId(x, y - 1, z);
+		if ((lowerId != blockID || world.getBlockMetadata(x, y - 1, z) != 0) &&
+				TileEntityLaserDrill.canReplaceBlock(Block.blocksList[lowerId], world, x, y - 1, z))
 		{
 			world.setBlock(x, y - 1, z, blockID);
 		}
