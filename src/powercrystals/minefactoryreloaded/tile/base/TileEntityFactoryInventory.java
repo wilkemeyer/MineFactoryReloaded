@@ -316,7 +316,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 64;
+		return 127;
 	}
 	
 	@Override
