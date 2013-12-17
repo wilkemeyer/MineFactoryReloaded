@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -135,9 +134,6 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
-
-import skyboy.core.container.CarbonContainer;
-import skyboy.core.fluid.LiquidRegistry;
 
 @Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
 dependencies = "required-after:PowerCrystalsCore@[1.1.7,);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
@@ -331,8 +327,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		CarbonContainer.cell = new CarbonContainer(MFRConfig.plasticCellItemId.getInt(), 64, "mfr.bucket.plasticcell", false);
 		CarbonContainer.cell.setFilledItem(CarbonContainer.cell).setEmptyItem(CarbonContainer.cell);//*/
 		
-		MinecraftForge.EVENT_BUS.register(new LiquidRegistry(_configFolder,
-				Loader.instance().activeModContainer()));
+		/*MinecraftForge.EVENT_BUS.register(new LiquidRegistry(_configFolder,
+				Loader.instance().activeModContainer()));//*/
 		
 		registerFluids();
 		
@@ -445,7 +441,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		plasticCupItem = (ItemFactoryCup)new ItemFactoryCup(MFRConfig.plasticCupItemId.getInt(), 24, 16).setUnlocalizedName("mfr.bucket.plasticcup");
 		rocketLauncherItem = (new ItemRocketLauncher(MFRConfig.rocketLauncherItemId.getInt())).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket(MFRConfig.rocketItemId.getInt())).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
-		plasticCellItem = CarbonContainer.cell;
+		//plasticCellItem = CarbonContainer.cell;
 
 		for(Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{

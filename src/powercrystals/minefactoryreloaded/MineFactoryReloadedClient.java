@@ -109,7 +109,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCupItem.itemID, new FactoryFluidOverlayRenderer());
 		if (MineFactoryReloadedCore.syringeEmptyItem instanceof IFluidContainerItem)
 			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem.itemID, new FactoryFluidOverlayRenderer(false));
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID, new FactoryFluidOverlayRenderer());
+		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID, new FactoryFluidOverlayRenderer());
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
 			MinecraftForgeClient.registerItemRenderer(Block.thinGlass.blockID, new FactoryGlassPaneItemRenderer());			
