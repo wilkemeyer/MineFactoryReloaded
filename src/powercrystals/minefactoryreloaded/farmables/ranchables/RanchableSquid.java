@@ -24,9 +24,9 @@ public class RanchableSquid implements IFactoryRanchable
 	public List<RanchedItem> ranch(World world, EntityLivingBase entity, IInventory rancher)
 	{
 		NBTTagCompound tag = entity.getEntityData();
-		if (tag.getLong("mfr:lastRanched") > world.getWorldTime())
+		if (tag.getLong("mfr:lastRanched") > world.getTotalWorldTime())
 			return null;
-		tag.setLong("mfr:lastRanched", world.getWorldTime() + 20 * 5);
+		tag.setLong("mfr:lastRanched", world.getTotalWorldTime() + 20 * 5);
 		
 		List<RanchedItem> drops = new ArrayList<RanchedItem>();
 		drops.add(new RanchedItem(Item.dyePowder, 1, 0));
