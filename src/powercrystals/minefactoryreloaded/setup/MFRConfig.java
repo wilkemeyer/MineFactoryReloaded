@@ -147,6 +147,7 @@ public class MFRConfig
 	public static Property enableLiquidSyringe;
 	public static Property enableGuns;
 	public static Property enableNetLauncher;
+	public static Property enableSPAMRExploding;
 	
 	public static Property redNetConnectionBlacklist;
 	
@@ -351,6 +352,8 @@ public class MFRConfig
 		unifierBlacklist.comment = "A comma-separated list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
 		enableLiquidSyringe = c.get(Configuration.CATEGORY_GENERAL, "LiquidSyringes", true);
 		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
+		enableSPAMRExploding = c.get(Configuration.CATEGORY_ITEM, "SPAMR.Exploding", true);
+		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";

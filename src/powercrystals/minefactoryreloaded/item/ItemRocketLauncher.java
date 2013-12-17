@@ -11,6 +11,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class ItemRocketLauncher extends ItemFactory
@@ -23,6 +24,10 @@ public class ItemRocketLauncher extends ItemFactory
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
+		NBTTagCompound tag = player.getEntityData();
+		if (tag.getLong("mfr:SPAMRLaunched") > world.getTotalWorldTime())
+			return stack;
+		tag.setLong("mfr:SPAMRLaunched", world.getTotalWorldTime() + 300);
 		int slot = -1, id = MineFactoryReloadedCore.rocketItem.itemID;
 		ItemStack[] mainInventory = player.inventory.mainInventory;
         for (int j = 0, e = mainInventory.length; j < e; ++j)

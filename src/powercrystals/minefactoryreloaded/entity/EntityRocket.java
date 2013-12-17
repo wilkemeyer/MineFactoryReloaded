@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.entity;
 
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -66,7 +68,10 @@ public class EntityRocket extends Entity
 		_ticksAlive++;
 		if(_ticksAlive > 600)
 		{
-			// TODO: config option for exploding
+			if (MFRConfig.enableSPAMRExploding.getBoolean(true))
+			{
+				worldObj.newExplosion(this, posX, posY, posZ, 4.0F, true, true);
+			}
 			setDead();
 		}
 		

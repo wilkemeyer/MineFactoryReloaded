@@ -383,7 +383,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			}
 		}
 		else
-		{
+		{ // TODO: remove in 2.8
 			IFluidTank tank = _tank;
 			if (tank != null && tag.hasKey("tankFluidName"))
 			{
