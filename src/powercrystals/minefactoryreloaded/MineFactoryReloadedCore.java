@@ -327,8 +327,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		extractLang(new String[] { "en_US", "es_AR", "es_ES", "es_MX", "es_UY", "es_VE", "zh_CN", "zh_TW", "ru_RU", "ko_KR", "de_DE" });
 		loadLang();
 		
+		/*
 		CarbonContainer.cell = new CarbonContainer(MFRConfig.plasticCellItemId.getInt(), 64, "mfr.bucket.plasticcell", false);
-		CarbonContainer.cell.setFilledItem(CarbonContainer.cell).setEmptyItem(CarbonContainer.cell);
+		CarbonContainer.cell.setFilledItem(CarbonContainer.cell).setEmptyItem(CarbonContainer.cell);//*/
 		
 		MinecraftForge.EVENT_BUS.register(new LiquidRegistry(_configFolder,
 				Loader.instance().activeModContainer()));
