@@ -27,6 +27,9 @@ import buildcraft.api.gates.IAction;
 @Implementable("buildcraft.core.IMachine")
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
 {
+	private static IFluidTank[] emptyIFluidTank = new IFluidTank[] {};
+	private static FluidTankInfo[] emptyFluidTankInfo = new FluidTankInfo[] {};
+	
 	protected String _invName;
 	protected boolean _hasInvName = false;
 	
@@ -130,6 +133,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		IFluidTank[] tanks = getTanks();
+		if (tanks.length == 0)
+			return emptyFluidTankInfo;
 		FluidTankInfo[] r = new FluidTankInfo[tanks.length];
 		for (int i = tanks.length; i --> 0; )
 			r[i] = tanks[i].getInfo();
@@ -140,7 +145,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	{
 		if (_tank != null)
 			return new IFluidTank[] {_tank};
-		return new IFluidTank[] {};
+		return emptyIFluidTank;
 	}
 	
 	protected boolean shouldPumpLiquid()
