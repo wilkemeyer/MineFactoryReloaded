@@ -104,7 +104,8 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{
-		return getFluidName(syringe) != null && entity instanceof EntityPlayer;
+		FluidStack fluid = getFluid(syringe);
+		return fluid != null && fluid.amount >= getCapacity(syringe) && entity instanceof EntityPlayer;
 	}
 
 	@Override
@@ -125,8 +126,8 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	public FluidStack getFluid(ItemStack container)
 	{
 		NBTTagCompound tag = container.getTagCompound();
-		return tag == null || !tag.hasKey("fluidName") ? null :
-			FluidRegistry.getFluidStack(tag.getString("fluidName"), getCapacity(container));
+		return tag == null || !tag.hasKey("fluid") ? null :
+			FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
 	}
 
 	@Override
@@ -136,37 +137,61 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	}
 
 	@Override
-	public int fill(ItemStack container, FluidStack resource, boolean doFill)
+	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
 		if (resource == null)
+			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
-		int capacity = getCapacity(container);
-		String name = resource.getFluid().getName();
-		if (name == null | resource.amount < capacity || (container.hasTagCompound() &&
-				container.getTagCompound().hasKey("fluidName")))
+		int fillAmount = 0, capacity = getCapacity(stack);
+		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		FluidStack fluid = null;
+		if (tag == null || !tag.hasKey("fluid") ||
+				(fluidTag = tag.getCompoundTag("fluid")) == null ||
+				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
+			fillAmount = Math.min(capacity, resource.amount);
+		if (fluid == null)
+		{
+			if (doFill)
+				fluid = resource.copy();
+		}
+		else if (!fluid.isFluidEqual(resource))
 			return 0;
+		else
+			fillAmount = Math.min(capacity - fluid.amount, resource.amount);
+		fillAmount = Math.max(fillAmount, 0);
 		if (doFill)
 		{
-			NBTTagCompound tag = container.getTagCompound();
-			if (tag == null) container.setTagCompound(tag = new NBTTagCompound());
-			tag.setString("fluidName", name);
+			if (tag == null)
+				tag = stack.stackTagCompound = new NBTTagCompound();
+			fluid.amount = fillAmount;
+			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
+			tag.setLong("uniqifier", (System.identityHashCode(resource) << 32) |
+					System.identityHashCode(stack));
+			tag.setString("fluidName", fluid.getFluid().getName());
 		}
-		return capacity;
+		return fillAmount;
 	}
 
 	@Override
-	public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)
+	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
 	{
-		int capacity = getCapacity(container);
-		if (maxDrain < capacity)
+		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		FluidStack fluid = null;
+		if (tag == null || !tag.hasKey("fluid") ||
+			(fluidTag = tag.getCompoundTag("fluid")) == null ||
+			(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			return null;
-		if (!container.hasTagCompound() ||
-				!container.getTagCompound().hasKey("fluidName"))
-			return null;
-		FluidStack ret = getFluid(container);
+		int drainAmount = Math.min(maxDrain, fluid.amount);
 		if (doDrain)
-			container.getTagCompound().removeTag("fluidName");
-		return ret;
+		{
+			tag.removeTag("fluid");
+			tag.removeTag("uniqifier");
+			tag.removeTag("fluidName");
+			if (tag.hasNoTags())
+				stack.setTagCompound(null);
+		}
+		fluid.amount = drainAmount;
+		return fluid;
 	}
 
 }
