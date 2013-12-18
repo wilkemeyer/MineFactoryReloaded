@@ -116,7 +116,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		if (handler != null)
 		{
 			handler.onDrink((EntityPlayer)entity);
-			syringe.getTagCompound().removeTag("fluidName");
+			drain(syringe, Integer.MAX_VALUE, true);
 			return true;
 		}
 		return false;
