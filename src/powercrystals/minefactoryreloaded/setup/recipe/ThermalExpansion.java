@@ -23,7 +23,6 @@ public class ThermalExpansion extends Vanilla
 			ItemStack conduitLiquid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
 			ItemStack tankBasic = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
 			ItemStack lamp = GameRegistry.findItemStack("ThermalExpansion", "lamp", 1);
-			ItemStack hardenedGlass = GameRegistry.findItemStack("ThermalExpansion", "hardenedGlass", 1);
 			ItemStack machineFrame = GameRegistry.findItemStack("ThermalExpansion", "machineFrame", 1);
 			ItemStack pneumaticServo = GameRegistry.findItemStack("ThermalExpansion", "pneumaticServo", 1);
 			ItemStack powerCoilElectrum = GameRegistry.findItemStack("ThermalExpansion", "powerCoilElectrum", 1);
@@ -417,7 +416,7 @@ public class ThermalExpansion extends Vanilla
 					"DHD",
 					'G', "sheetPlastic",
 					'D', Item.diamond,
-					'H', hardenedGlass,
+					'H', "glassHardened",
 					'F', lamp,
 					'C', powerCoilGold
 						} );
@@ -429,7 +428,7 @@ public class ThermalExpansion extends Vanilla
 					'G', "sheetPlastic",
 					'D', Item.diamond,
 					'S', MineFactoryReloadedCore.pinkSlimeballItem,
-					'H', hardenedGlass,
+					'H', "glassHardened",
 					'F', lamp,
 					'C', powerCoilElectrum
 						} );
