@@ -22,17 +22,16 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 
 public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 {
-	private int _maxUses = 0;
+    public static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
+    
 	private boolean _prefix = false;
     @SideOnly(Side.CLIENT)
     protected Icon fillIcon;
-    protected static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 
 	public ItemFactoryCup(int id, int stackSize, int maxUses)
 	{
 		super(id);
 		this.setMaxStackSize(stackSize);
-		this._maxUses = maxUses;
 		this.setMaxDamage(maxUses);
 		this.setHasSubtypes(true);
 	}
@@ -77,18 +76,6 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		t = t != null ? t.trim() : "";
 		ret += t.isEmpty() ? " Cup" : " " + t;
 		return ret;
-	}
-
-	@Override
-	public ItemStack getContainerItemStack(ItemStack stack)
-	{
-		ItemFactoryCup item = (ItemFactoryCup)stack.getItem();
-		int damage = stack.getItemDamage() + 1;
-		if (item == null || damage >= item._maxUses)
-			return null;
-		stack = new ItemStack(item, 1, 0);
-		stack.setItemDamage(damage);
-		return stack;
 	}
 
 	public String getFluidName(ItemStack stack)
@@ -181,7 +168,9 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 
 	public boolean hasDrinkableLiquid(ItemStack stack)
 	{
-		return MFRRegistry.getLiquidDrinkHandlers().containsKey(getFluidName(stack)) && getFluid(stack).amount == getCapacity(stack);
+		return stack.stackSize == 1 &&
+				MFRRegistry.getLiquidDrinkHandlers().containsKey(getFluidName(stack)) &&
+				getFluid(stack).amount == getCapacity(stack);
 	}
 
 	@Override
@@ -195,14 +184,7 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 			MFRRegistry.getLiquidDrinkHandlers().get(getFluidName(stack)).onDrink(player);
 
 		if(!player.capabilities.isCreativeMode)
-		{
-			ItemStack drop = item.getContainerItemStack(stack);
-			stack.damageItem(1, player);
-			if (drop != null)
-			{
-				return drop;
-			}
-		}
+			drain(stack, 0, true);
 
 		if (stack.stackSize <= 0)
 			stack.stackSize = 0;
