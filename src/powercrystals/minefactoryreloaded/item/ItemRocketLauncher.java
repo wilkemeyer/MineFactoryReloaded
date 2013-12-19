@@ -27,7 +27,7 @@ public class ItemRocketLauncher extends ItemFactory
 		NBTTagCompound tag = player.getEntityData();
 		if (tag.getLong("mfr:SPAMRLaunched") > world.getTotalWorldTime())
 			return stack;
-		tag.setLong("mfr:SPAMRLaunched", world.getTotalWorldTime() + 300);
+		tag.setLong("mfr:SPAMRLaunched", world.getTotalWorldTime() + 100);
 		int slot = -1, id = MineFactoryReloadedCore.rocketItem.itemID;
 		ItemStack[] mainInventory = player.inventory.mainInventory;
         for (int j = 0, e = mainInventory.length; j < e; ++j)
