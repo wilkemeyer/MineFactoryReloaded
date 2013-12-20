@@ -34,7 +34,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	protected boolean _hasInvName = false;
 	
 	protected List<ItemStack> failedDrops = null;
-	private List<ItemStack> missedDrops = new ArrayList<ItemStack>();
+	private List<ItemStack> missedDrops = new ArrayList<ItemStack>(5);
 	
 	protected int _failedDropTicksMax = 20;
 	private int _failedDropTicks = 0;
@@ -230,7 +230,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				if (failedDrops == null)
 				{
-					failedDrops = new ArrayList<ItemStack>();
+					failedDrops = new ArrayList<ItemStack>(missed.size());
 				}
 				failedDrops.addAll(missed);
 			}

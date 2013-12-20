@@ -155,8 +155,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 
 		if (tile instanceof TileEntityConveyor)
 		{
+			int dye = ((TileEntityConveyor)tile).getDyeColor();
 			((TileEntityConveyor)tile).setDyeColor(colour);
-			return true;
+			return dye != ((TileEntityConveyor)tile).getDyeColor();
 		}
 		return false;
 	}
