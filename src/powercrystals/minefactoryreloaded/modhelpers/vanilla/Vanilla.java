@@ -406,22 +406,27 @@ public class Vanilla
 		registerOreDictLaserOre( 55, "oreSteel", gray, "oreNetherSteel", "dustSteel");
 		registerOreDictLaserOre( 55, "oreCassiterite", black, null);
 		registerOreDictLaserOre( 55, "oreDiamond", lightBlue, "oreNetherDiamond");
+		registerOreDictLaserOre( 55, "oreDesh", gray, null);
 		registerOreDictLaserOre( 50, "oreCertusQuartz", cyan, null);
 		registerOreDictLaserOre( 50, "oreOsmium", lightBlue, "oreNetherOsmium");
 		registerOreDictLaserOre( 50, "oreBauxite", brown, null);
 		registerOreDictLaserOre( 45, "oreFzDarkIron", purple, null);
 		registerOreDictLaserOre( 40, "oreNickel", silver, "oreNetherNickel", "dustNickel");
-		registerOreDictLaserOre( 40, "oreSulfur", yellow, null);
+		registerOreDictLaserOre( 40, "oreSulfur", yellow, "oreNetherSulfur", "dustSulfur");
 		registerOreDictLaserOre( 40, "oreSaltpeter", white, null);
 		registerOreDictLaserOre( 35, "oreEmerald", lime, "oreNetherEmerald");
 		registerOreDictLaserOre( 35, "oreRuby", red, "oreNetherRuby");
 		registerOreDictLaserOre( 35, "oreSapphire", blue, "oreNetherSapphire");
 		registerOreDictLaserOre( 35, "oreGreenSapphire", green, "oreNetherGreenSapphire");
 		registerOreDictLaserOre( 35, "orePeridot", green, "oreNetherPeridot");
+		registerOreDictLaserOre( 35, "oreTopaz", brown, null);
+		registerOreDictLaserOre( 35, "oreTanzanite", purple, null);
+		registerOreDictLaserOre( 35, "oreMalachite", cyan, null);
 		registerOreDictLaserOre( 30, "oreSilver", gray, "oreNetherSilver", "dustSilver");
 		registerOreDictLaserOre( 30, "oreGalena", purple, null);
 		registerOreDictLaserOre( 30, "oreApatite", blue, null);
 		registerOreDictLaserOre( 30, "oreSilicon", black, null);
+		registerOreDictLaserOre( 25, "oreAmethyst", pink, null);
 		registerOreDictLaserOre( 20, "oreUranium", lime, "oreNetherUranium");
 		registerOreDictLaserOre( 20, "oreYellorite", yellow, null);
 		registerOreDictLaserOre( 20, "oreFirestone", red, null);
@@ -480,7 +485,6 @@ public class Vanilla
 	private static final int cyan = 9;
 	private static final int silver = 8;
 	private static final int gray = 7;
-	@SuppressWarnings("unused")
 	private static final int pink = 6;
 	private static final int lime = 5;
 	private static final int yellow = 4;
