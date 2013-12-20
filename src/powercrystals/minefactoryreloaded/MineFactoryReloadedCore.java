@@ -523,6 +523,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("itemCharcoalSugar", MineFactoryReloadedCore.sugarCharcoalItem);
 		OreDictionary.registerOre("cableRedNet", MineFactoryReloadedCore.rednetCableBlock);
 		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
+		OreDictionary.registerOre("dyeBrown", MineFactoryReloadedCore.fertilizerItem);
 		
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
 		
