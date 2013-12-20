@@ -45,7 +45,7 @@ public class IC2
 		{
 			ItemStack booties = new ItemStack(Item.bootsLeather, 64, 0);
 			Item.bootsLeather.func_82813_b(booties, 0x3479F2);
-			OreDictionary.registerOre("greggy_greg_please_stick_a_sock_in_it", booties);
+			OreDictionary.registerOre("greggy_greg_do_please_kindly_stuff_a_sock_in_it", booties);
 			
 			ItemStack crop = Items.getItem("crop");
 			ItemStack rubber = Items.getItem("rubber").copy();
