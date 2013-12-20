@@ -1,10 +1,16 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +31,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -36,8 +43,6 @@ import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 {
@@ -66,7 +71,95 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		}
 	}
 	
-	// TODO: recolourBlock, addBlockDestroyEffects, addBlockHitEffects
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addBlockHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
+	{
+		int x = target.blockX, y = target.blockY, z = target.blockZ;
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileEntityConveyor)
+		{
+			float f = 0.1F;
+			Random rand = new Random();
+			double d0 = x + rand.nextDouble() * (getBlockBoundsMaxX() - getBlockBoundsMinX() - (f * 2.0F)) + f + getBlockBoundsMinX();
+			double d1 = y + rand.nextDouble() * (getBlockBoundsMaxY() - getBlockBoundsMinY() - (f * 2.0F)) + f + getBlockBoundsMinY();
+			double d2 = z + rand.nextDouble() * (getBlockBoundsMaxZ() - getBlockBoundsMinZ() - (f * 2.0F)) + f + getBlockBoundsMinZ();
+
+			switch (target.sideHit)
+			{
+			case 0:
+				d1 = y + getBlockBoundsMinY() - f;
+				break;
+			case 1:
+				d1 = y + getBlockBoundsMaxY() + f;
+				break;
+			case 2:
+				d2 = z + getBlockBoundsMinZ() - f;
+				break;
+			case 3:
+				d2 = z + getBlockBoundsMaxZ() + f;
+				break;
+			case 4:
+				d0 = x + getBlockBoundsMinX() - f;
+				break;
+			case 5:
+				d0 = x + getBlockBoundsMaxX() + f;
+				break;
+			}
+
+			effectRenderer.addEffect((new EntityDiggingFX(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this,
+					getDamageValue(world, x, y, z))).applyColourMultiplier(x, y, z).
+					multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addBlockDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileEntityConveyor)
+		{
+			int particles = 4 - (Minecraft.getMinecraft().gameSettings.particleSetting * 2);
+			particles &= ~particles >> 31;
+
+			for (int xOff = 0; xOff < particles; ++xOff)
+			{
+				for (int yOff = 0; yOff < particles; ++yOff)
+				{
+					for (int zOff = 0; zOff < particles; ++zOff)
+					{
+						double d0 = x + (xOff + 0.5D) / particles;
+						double d1 = y + (yOff + 0.5D) / particles;
+						double d2 = z + (zOff + 0.5D) / particles;
+						effectRenderer.addEffect((new EntityDiggingFX(world, d0, d1, d2, 
+								d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D,
+								this, getDamageValue(world, x, y, z))).
+								applyColourMultiplier(x, y, z));
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileEntityConveyor)
+		{
+			((TileEntityConveyor)tile).setDyeColor(colour);
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public Icon getBlockTexture(IBlockAccess iblockaccess, int x, int y, int z, int side)
