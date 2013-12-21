@@ -1137,10 +1137,13 @@ public class Vanilla
 			new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12)
 				} );
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.meatIngotCookedItem, 9), new Object[]
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.meatIngotCookedItem, 9), new Object[]
 				{
 			new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 13)
-				} );
+				}));
+		
+		int brickID = MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID;
+		FurnaceRecipes.smelting().addSmelting(brickID, 13, new ItemStack(Item.coal, 3, 1), 0.001F);
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.meatIngotRawItem), new Object[]
 				{

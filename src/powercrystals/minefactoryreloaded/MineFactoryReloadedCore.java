@@ -520,6 +520,10 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("ingotMeatRaw", MineFactoryReloadedCore.meatIngotRawItem);
 		OreDictionary.registerOre("nuggetMeat", MineFactoryReloadedCore.meatNuggetCookedItem);
 		OreDictionary.registerOre("nuggetMeatRaw", MineFactoryReloadedCore.meatNuggetRawItem);
+		OreDictionary.registerOre("blockMeat",
+				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 13));
+		OreDictionary.registerOre("blockMeatRaw",
+				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12));
 		OreDictionary.registerOre("itemCharcoalSugar", MineFactoryReloadedCore.sugarCharcoalItem);
 		OreDictionary.registerOre("cableRedNet", MineFactoryReloadedCore.rednetCableBlock);
 		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
