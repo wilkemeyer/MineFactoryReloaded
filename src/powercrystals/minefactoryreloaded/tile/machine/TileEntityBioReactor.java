@@ -135,26 +135,20 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	
 	private int findMatchingSlot(ItemStack s)
 	{
-		for(int i = 9; i < 18; i++)
+		int emptySlot = -1;
+		for (int i = 9; i < 18; i++)
 		{
-			if(_inventory[i] != null && _inventory[i].itemID == s.itemID && _inventory[i].getItemDamage() == s.getItemDamage())
+			if (_inventory[i] == null)
+			{
+				if (emptySlot == -1)
+					emptySlot = i;
+			}
+			else if (_inventory[i].itemID == s.itemID && _inventory[i].getItemDamage() == s.getItemDamage())
 			{
 				return i;
 			}
 		}
-		return findEmptySlot();
-	}
-	
-	private int findEmptySlot()
-	{
-		for(int i = 9; i < 18; i++)
-		{
-			if(_inventory[i] == null)
-			{
-				return i;
-			}
-		}
-		return -1;
+		return emptySlot;
 	}
 	
 	@Override
