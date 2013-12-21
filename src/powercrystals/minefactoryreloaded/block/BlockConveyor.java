@@ -461,14 +461,17 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId)
 	{
+		if(!canBlockStay(world, x, y, z))
+		{
+			world.setBlockToAir(x, y, z);
+			dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+			return;
+		}
+
 		TileEntity tec = world.getBlockTileEntity(x, y, z);
 		if(tec instanceof TileEntityConveyor)
 		{
 			((TileEntityConveyor)tec).updateConveyorActive();
-		}
-		if(!canBlockStay(world, x, y, z))
-		{
-			world.setBlockToAir(x, y, z);
 		}
 	}
 	
