@@ -539,6 +539,18 @@ public class Vanilla
 				'S', MineFactoryReloadedCore.spyglassItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
+		
+		registerMachine(Machine.SteamTurbine, new Object[]
+					{
+				"GGG",
+				"PFP",
+				"RMR",
+				'G', "sheetPlastic",
+				'F', Block.furnaceIdle,
+				'P', Block.pistonBase,
+				'R', Item.netherrackBrick,
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
 	}
 	
 	protected void registerMachine(Machine machine, Object... recipe)

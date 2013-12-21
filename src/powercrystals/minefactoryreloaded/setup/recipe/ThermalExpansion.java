@@ -35,6 +35,7 @@ public class ThermalExpansion extends Vanilla
 			ItemStack invarAxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarAxe", 1);
 			ItemStack invarSword = GameRegistry.findItemStack("ThermalExpansion", "toolInvarSword", 1);
 			ItemStack invarPickaxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarPickaxe", 1);
+			ItemStack dynamoSteam = GameRegistry.findItemStack("ThermalExpansion", "dynamoSteam", 1);
 			
 			registerMachine(Machine.Planter, new Object[] {
 					"PTP",
@@ -508,6 +509,18 @@ public class ThermalExpansion extends Vanilla
 					'C', Item.comparator,
 					'S', multimeter,
 					'M', machineFrame,
+						} );
+			
+			registerMachine(Machine.SteamTurbine, new Object[] {
+					"PTP",
+					"SFS",
+					"OCO",
+					'P', "sheetPlastic",
+					'T', dynamoSteam,
+					'S', Block.pistonBase,
+					'F', machineFrame,
+					'O', "ingotInvar",
+					'C', powerCoilSilver
 						} );
 		}
 		catch (Exception x)
