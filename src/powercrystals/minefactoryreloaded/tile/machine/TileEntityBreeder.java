@@ -3,18 +3,11 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeDirection;
 
-import powercrystals.core.inventory.IInventoryManager;
-import powercrystals.core.inventory.InventoryManager;
-import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -64,51 +57,28 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 	{
 		List<?> entities = worldObj.getEntitiesWithinAABB(EntityAnimal.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 		
-		IInventoryManager manager = InventoryManager.create(this, ForgeDirection.UNKNOWN);
-		
 		if(entities.size() > MFRConfig.breederShutdownThreshold.getInt())
 		{
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 		
-		for(Object o : entities)
+		for (Object o : entities)
 		{
-			if(o instanceof EntityAnimal)
+			if (o instanceof EntityAnimal)
 			{
 				EntityAnimal a = ((EntityAnimal)o);
-				
-				List<ItemStack> foodList;
-				if(MFRRegistry.getBreederFoods().containsKey(a.getClass()))
-				{
-					foodList = MFRRegistry.getBreederFoods().get(a.getClass());
-				}
-				else
-				{
-					foodList = new ArrayList<ItemStack>();
-					foodList.add(new ItemStack(Item.wheat));
-				}
-				for(ItemStack food : foodList)
-				{
-					int stackIndex = manager.findItem(food);
-					if(stackIndex < 0)
-					{
-						continue;
-					}
 					
-					if(!a.isInLove() && a.getGrowingAge() == 0)
+				if (!a.isInLove() && a.getGrowingAge() == 0)
+				{
+					for (int i = getSizeInventory(); i --> 0; )
 					{
-						a.inLove = 600;
-						decrStackSize(stackIndex, 1);
-						
-						for (int var3 = 0; var3 < 7; ++var3)
+						if (_inventory[i] != null && a.isBreedingItem(_inventory[i]))
 						{
-							double var4 = a.getRNG().nextGaussian() * 0.02D;
-							double var6 = a.getRNG().nextGaussian() * 0.02D;
-							double var8 = a.getRNG().nextGaussian() * 0.02D;
-							this.worldObj.spawnParticle("heart", a.posX + a.getRNG().nextFloat() * a.width * 2.0F - a.width, a.posY + 0.5D + a.getRNG().nextFloat() * a.height, a.posZ + a.getRNG().nextFloat() * a.width * 2.0F - a.width, var4, var6, var8);
+							a.func_110196_bT();
+							decrStackSize(i, 1);
+							return true;
 						}
-						return true;
 					}
 				}
 			}
