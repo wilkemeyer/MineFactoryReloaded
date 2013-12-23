@@ -203,13 +203,15 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return null;
+		return _tank.drain(maxDrain, doDrain);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return null;
+		if (resource == null || !resource.isFluidEqual(_tank.getFluid()))
+			return null;
+		return _tank.drain(resource.amount, doDrain);
 	}
 	
 	@Override
