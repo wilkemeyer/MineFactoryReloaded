@@ -113,6 +113,7 @@ public class MFRConfig
 	public static Property rocketLauncherItemId;
 	public static Property rocketItemId;
 	public static Property plasticCellItemId;
+	public static Property fishingRodItemId;
 	
 	public static Property zoolologistEntityId;
 	
@@ -132,6 +133,7 @@ public class MFRConfig
 	public static Property autospawnerCostExact;
 	public static Property laserdrillCost;
 	public static Property meatSaturation;
+	public static Property fishingDropRate;
 	
 	public static Property vanillaOverrideGlassPane;
 	public static Property vanillaOverrideIce;
@@ -280,6 +282,7 @@ public class MFRConfig
 		rocketLauncherItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.RocketLauncher", 12045);
 		rocketItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Rocket", 12046);
 		plasticCellItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.PlasticCell", 12047);
+		fishingRodItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.FishingRod", 12048);
 		
 		zoolologistEntityId = c.get("Entity", "ID.Zoologist", 330);
 		
@@ -325,6 +328,8 @@ public class MFRConfig
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
 		meatSaturation = c.get(Configuration.CATEGORY_GENERAL, "Meat.IncreasedSaturation", false);
 		meatSaturation.comment = "If true, meat will be worth steak saturation instead of cookie saturation.";
+		fishingDropRate = c.get(Configuration.CATEGORY_GENERAL, "FishDropRate", 5);
+		fishingDropRate.comment = "The rate at which fish are dropped from the fishing rod. The drop rate is 1 / this number. Must be greater than 0.";
 		
 		vanillaOverrideGlassPane = c.get(Configuration.CATEGORY_GENERAL, "VanillaOverride.GlassPanes", true);
 		vanillaOverrideGlassPane.comment = "If true, allows vanilla glass panes to connect to MFR stained glass panes.";

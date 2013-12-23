@@ -79,6 +79,7 @@ import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.ItemBlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.ItemBlockVineScaffold;
+import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
@@ -90,6 +91,7 @@ import powercrystals.minefactoryreloaded.item.ItemFactoryBucket;
 import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
 import powercrystals.minefactoryreloaded.item.ItemFactoryFood;
 import powercrystals.minefactoryreloaded.item.ItemFactoryHammer;
+import powercrystals.minefactoryreloaded.item.ItemFishingRod;
 import powercrystals.minefactoryreloaded.item.ItemLaserFocus;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.ItemMilkBottle;
@@ -263,6 +265,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Item rocketItem;
 	public static ItemFactoryCup plasticCupItem;
 	public static Item plasticCellItem;
+	public static Item fishingRodItem;
 
 	private static MineFactoryReloadedCore instance;
 
@@ -442,6 +445,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		rocketLauncherItem = (new ItemRocketLauncher(MFRConfig.rocketLauncherItemId.getInt())).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket(MFRConfig.rocketItemId.getInt())).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 		//plasticCellItem = CarbonContainer.cell;
+		fishingRodItem = (new ItemFishingRod(MFRConfig.fishingRodItemId.getInt()));
 
 		for(Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{
@@ -506,6 +510,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityNeedle.class, "mfrEntityNeedle", 2, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityRocket.class, "mfrEntityRocket", 3, instance, 160, 1, true);
+		EntityRegistry.registerModEntity(EntityFishingRod.class, "mfrEntityFishingRod", 4, instance, 80, 3, true);
 
 		MinecraftForge.EVENT_BUS.register(instance);
 		MinecraftForge.EVENT_BUS.register(proxy);

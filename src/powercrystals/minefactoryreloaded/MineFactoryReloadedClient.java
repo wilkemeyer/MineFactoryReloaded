@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,7 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.render.RenderBlockFluidClassic;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
@@ -110,6 +112,8 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		if (MineFactoryReloadedCore.syringeEmptyItem instanceof IFluidContainerItem)
 			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem.itemID, new FactoryFluidOverlayRenderer(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID, new FactoryFluidOverlayRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class, 
+					new RenderSnowball(MineFactoryReloadedCore.fishingRodItem));
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
 			MinecraftForgeClient.registerItemRenderer(Block.thinGlass.blockID, new FactoryGlassPaneItemRenderer());			
