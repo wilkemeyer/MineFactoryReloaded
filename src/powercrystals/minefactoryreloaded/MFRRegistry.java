@@ -155,6 +155,10 @@ public abstract class MFRRegistry
 		return _sludgeDrops;
 	}
 
+	/*
+	 * @deprecated for EntityAnimal.isBreedingItem(ItemStack)
+	 */
+	@Deprecated
 	public static void registerBreederFood(Class<?> entityToBreed, ItemStack food)
 	{
 		if(_breederFoods.containsKey(entityToBreed))
