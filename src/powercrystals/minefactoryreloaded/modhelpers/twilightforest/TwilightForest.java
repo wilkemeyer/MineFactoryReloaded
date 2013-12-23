@@ -12,8 +12,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import java.util.HashMap;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -49,8 +47,6 @@ public class TwilightForest
 			twilightForestContainer = FMLCommonHandler.instance().findContainerFor(Class.forName("twilightforest.TwilightForestMod").getField("instance").get(null));
 			
 			Class tfBighorn = Class.forName("twilightforest.entity.passive.EntityTFBighorn");
-			Class tfBoar = Class.forName("twilightforest.entity.passive.EntityTFBoar");
-			Class tfDeer = Class.forName("twilightforest.entity.passive.EntityTFDeer");
 			Class tfHydra = Class.forName("twilightforest.entity.EntityTFHydra");
 			Class tfHydraHead = Class.forName("twilightforest.entity.EntityTFHydraHead");
 			Class tfHydraNeck = Class.forName("twilightforest.entity.EntityTFHydraNeck");
@@ -83,10 +79,6 @@ public class TwilightForest
 			MFRRegistry.registerGrinderBlacklist(tfHydra);
 			
 			MFRRegistry.registerMobEggHandler(new TwilightForestEggHandler());
-			
-			MFRRegistry.registerBreederFood(tfBighorn, new ItemStack(Item.wheat));
-			MFRRegistry.registerBreederFood(tfBoar, new ItemStack(Item.carrot));
-			MFRRegistry.registerBreederFood(tfDeer, new ItemStack(Item.wheat));
 			
 			MFRRegistry.registerRanchable(new RanchableTFBighorn(tfBighorn));
 			

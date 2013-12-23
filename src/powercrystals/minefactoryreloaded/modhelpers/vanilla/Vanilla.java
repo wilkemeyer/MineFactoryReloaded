@@ -13,7 +13,6 @@ import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -250,14 +249,6 @@ public class Vanilla
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Item.clay, 4));
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Block.mycelium));
 		MFRRegistry.registerSludgeDrop(5, new ItemStack(Block.slowSand));
-		
-		MFRRegistry.registerBreederFood(EntityChicken.class, new ItemStack(Item.seeds));
-		MFRRegistry.registerBreederFood(EntityChicken.class, new ItemStack(Item.melonSeeds));
-		MFRRegistry.registerBreederFood(EntityChicken.class, new ItemStack(Item.pumpkinSeeds));
-		MFRRegistry.registerBreederFood(EntityChicken.class, new ItemStack(Item.netherStalkSeeds));
-		MFRRegistry.registerBreederFood(EntityWolf.class, new ItemStack(Item.porkCooked));
-		MFRRegistry.registerBreederFood(EntityOcelot.class, new ItemStack(Item.fishRaw));
-		MFRRegistry.registerBreederFood(EntityPig.class, new ItemStack(Item.carrot));
 		
 		MFRRegistry.registerSafariNetHandler(new EntityLivingHandler());
 		MFRRegistry.registerSafariNetHandler(new EntityAgeableHandler());
