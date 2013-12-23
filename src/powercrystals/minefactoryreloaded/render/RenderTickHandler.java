@@ -38,11 +38,11 @@ public class RenderTickHandler implements ITickHandler
 	{
 		return EnumSet.of(TickType.RENDER);
 	}
-
+	
 	@Override
 	public String getLabel()
 	{
-		return null;
+		return MineFactoryReloadedCore.modId + ".SPAMR_HUD";
 	}
 	
 	private void renderHUD(float partialTicks)
