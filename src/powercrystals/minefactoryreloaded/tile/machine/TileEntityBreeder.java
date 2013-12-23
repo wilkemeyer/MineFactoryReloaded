@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -63,7 +62,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 	@Override
 	protected boolean activateMachine()
 	{
-		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+		List<?> entities = worldObj.getEntitiesWithinAABB(EntityAnimal.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 		
 		IInventoryManager manager = InventoryManager.create(this, ForgeDirection.UNKNOWN);
 		
