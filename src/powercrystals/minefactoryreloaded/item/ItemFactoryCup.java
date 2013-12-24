@@ -3,30 +3,46 @@ package powercrystals.minefactoryreloaded.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.core.IAdvFluidContainerItem;
+import powercrystals.minefactoryreloaded.core.IUseHandler;
+import powercrystals.minefactoryreloaded.core.IUseable;
+import powercrystals.minefactoryreloaded.farmables.usehandlers.DefaultUseHandler;
+import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
 
-public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
+public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable
 {
-    public static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
+    public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
+	public final static IUseHandler defaultUseAction = new DefaultUseHandler();
+	public final static IUseHandler drinkUseAction = new DrinkUseHandler();
     
 	private boolean _prefix = false;
     @SideOnly(Side.CLIENT)
     protected Icon fillIcon;
+	protected List<IUseHandler> useHandlers;
 
 	public ItemFactoryCup(int id, int stackSize, int maxUses)
 	{
@@ -34,6 +50,19 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		this.setMaxStackSize(stackSize);
 		this.setMaxDamage(maxUses);
 		this.setHasSubtypes(true);
+		useHandlers = new LinkedList<IUseHandler>();
+		useHandlers.add(defaultUseAction);
+		useHandlers.add(drinkUseAction);
+	}
+
+	@Override
+	public boolean addUseHandler(IUseHandler handler) {
+		return useHandlers.add(handler);
+	}
+
+	@Override
+	public boolean removeUseHandler(IUseHandler handler) {
+		return useHandlers.remove(handler);
 	}
 
 	@Override
@@ -174,43 +203,36 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
-	{
-		ItemFactoryCup item = (ItemFactoryCup)stack.getItem();
-		if (item == null)
-			return null; // sanity check
-
-		if (hasDrinkableLiquid(stack))
-			MFRRegistry.getLiquidDrinkHandlers().get(getFluidName(stack)).onDrink(player);
-
-		if(!player.capabilities.isCreativeMode)
-			drain(stack, 0, true);
-
-		if (stack.stackSize <= 0)
-			stack.stackSize = 0;
-		return stack;
+	public ItemStack onEaten(ItemStack item, World world, EntityPlayer entity) {
+		for (IUseHandler handler : useHandlers)
+			if (handler.isUsable(item))
+				return handler.onUse(item, entity);
+		return item;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack)
-	{
-		return 32;
+	public EnumAction getItemUseAction(ItemStack item) {
+		for (IUseHandler handler : useHandlers)
+			if (handler.isUsable(item))
+				return handler.useAction(item);
+		return EnumAction.none;
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
-	{
-		return hasDrinkableLiquid(stack) ? EnumAction.drink : EnumAction.none;
+	public int getMaxItemUseDuration(ItemStack item) {
+		for (IUseHandler handler : useHandlers)
+			if (handler.isUsable(item))
+				return handler.getMaxUseDuration(item);
+		return 0;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-	{
-		if (hasDrinkableLiquid(stack))
-			player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-		return stack;
+	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer entity) {
+		for (IUseHandler handler : useHandlers)
+			if (handler.canUse(item, entity))
+				return handler.onTryUse(item, world, entity);
+		return item;
 	}
-
 	
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -231,5 +253,46 @@ public class ItemFactoryCup extends ItemFactory implements IFluidContainerItem
 		default:
 			return this.itemIcon;
 		}
+	}
+
+	@Override
+	public boolean canBeFilledFromWorld()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canPlaceInWorld()
+	{
+		return false;
+	}
+
+	@Override
+	public MovingObjectPosition rayTrace(World world, EntityLivingBase entity, boolean adjacent)
+	{
+		float f1 = entity.rotationPitch;
+		float f2 = entity.rotationYaw;
+		double y = entity.posY + entity.getEyeHeight() - entity.yOffset;
+		Vec3 vec3 = world.getWorldVec3Pool().getVecFromPool(entity.posX, y, entity.posZ);
+		float f3 = MathHelper.cos(-f2 * 0.017453292F - (float)Math.PI);
+		float f4 = MathHelper.sin(-f2 * 0.017453292F - (float)Math.PI);
+		float f5 = -MathHelper.cos(-f1 * 0.017453292F);
+		float f6 = MathHelper.sin(-f1 * 0.017453292F);
+		float f7 = f4 * f5;
+		float f8 = f3 * f5;
+		double d3 = 5.0D;
+		if (entity instanceof EntityPlayerMP)
+		{
+			d3 = ((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance();
+		}
+		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
+		MovingObjectPosition ret = world.rayTraceBlocks_do_do(vec3, vec31, adjacent, !adjacent);
+		if (ret != null && adjacent) {
+			ForgeDirection side = ForgeDirection.getOrientation(ret.sideHit);
+			ret.blockX += side.offsetX;
+			ret.blockY += side.offsetY;
+			ret.blockZ += side.offsetZ;
+		}
+		return ret;
 	}
 }
