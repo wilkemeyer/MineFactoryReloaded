@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
@@ -12,10 +15,9 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidRegistry;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoConnection
 { // TODO: convert to BlockFluidFinite
@@ -35,7 +37,8 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		if (world.isRemote | world.getTotalWorldTime() % 10 == 0)
+		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+		if (world.isRemote | world.getTotalWorldTime() % 40 == 0)
 		{
 			return;
 		}
@@ -68,7 +71,6 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0));
 			}
 		}
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 	}
 	
 	@Override
