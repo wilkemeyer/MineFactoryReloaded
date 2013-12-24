@@ -42,6 +42,8 @@ public class MFRConfig
 	
 	public static Property vineScaffoldBlockId;
 	
+	public static Property detCordBlockId;
+	
 	public static Property milkStillBlockId;
 	public static Property sludgeStillBlockId;
 	public static Property sewageStillBlockId;
@@ -220,6 +222,7 @@ public class MFRConfig
 		fakeLaserBlockId = c.getBlock("ID.FakeLaser", 3147);
 		vineScaffoldBlockId = c.getBlock("ID.VineScaffold", 3148);
 		rednetPanelBlockId = c.getBlock("ID.RedNet.Panel", 3149);
+		detCordBlockId = c.getBlock("ID.DetCord", 3150);
 		
 		hammerItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Hammer", 11987);
 		milkItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Milk", 11988);

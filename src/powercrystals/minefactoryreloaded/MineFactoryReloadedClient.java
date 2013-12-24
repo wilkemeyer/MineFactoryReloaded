@@ -38,6 +38,7 @@ import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.render.RenderTickHandler;
 import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
+import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
@@ -98,6 +99,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		MineFactoryReloadedCore.renderIdRedNetLogic = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdVineScaffold = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdFactoryGlass = RenderingRegistry.getNextAvailableRenderId();
+		MineFactoryReloadedCore.renderIdDetCord = RenderingRegistry.getNextAvailableRenderId();
 		
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdConveyor, new ConveyorRenderer());
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdFactoryGlassPane, new FactoryGlassPaneRenderer());
@@ -106,13 +108,14 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				MineFactoryReloadedCore.renderIdFluidClassic));
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdVineScaffold, new VineScaffoldRenderer());
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdFactoryGlass, new FactoryGlassRenderer());
+		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdDetCord, new DetCordRenderer());
 		
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.factoryGlassPaneBlock.blockID, new FactoryGlassPaneItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCupItem.itemID, new FactoryFluidOverlayRenderer());
 		if (MineFactoryReloadedCore.syringeEmptyItem instanceof IFluidContainerItem)
 			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem.itemID, new FactoryFluidOverlayRenderer(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID, new FactoryFluidOverlayRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class, 
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 					new RenderSnowball(MineFactoryReloadedCore.fishingRodItem));
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{

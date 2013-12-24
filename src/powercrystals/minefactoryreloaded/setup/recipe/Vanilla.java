@@ -1374,6 +1374,25 @@ public class Vanilla
 			" P ",
 			'P', "sheetPlastic",
 				} ));//*/
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.detCordBlock, 6), new Object[]
+				{
+			"PPP",
+			"PTP",
+			"PPP",
+			'P', "sheetPlastic",
+			'T', Block.tnt,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.fishingRodItem, 1), new Object[]
+				{
+			"DD ",
+			"DFD",
+			"TDD",
+			'D', "wireExplosive",
+			'F', Item.fishingRod,
+			'T', Block.torchRedstoneActive
+				} ));
 	}
 	
 	protected void registerVanillaImprovements()

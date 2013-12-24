@@ -47,6 +47,7 @@ import powercrystals.core.mod.BaseMod;
 import powercrystals.core.updater.UpdateManager;
 import powercrystals.minefactoryreloaded.block.BlockConveyor;
 import powercrystals.minefactoryreloaded.block.BlockDecorativeStone;
+import powercrystals.minefactoryreloaded.block.BlockDetCord;
 import powercrystals.minefactoryreloaded.block.BlockFactoryDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
@@ -70,6 +71,7 @@ import powercrystals.minefactoryreloaded.block.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
 import powercrystals.minefactoryreloaded.block.ItemBlockDecorativeStone;
+import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryDecorativeBrick;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlassPane;
@@ -169,6 +171,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static int renderIdVineScaffold = 1005;
 	public static int renderIdRedNetPanel = 1006;
 	public static int renderIdFactoryGlass = 1007;
+	public static int renderIdDetCord = 1008;
 	
 	public static Map<Integer, Block> machineBlocks = new HashMap<Integer, Block>();
 	
@@ -206,6 +209,8 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Block fakeLaserBlock;
 
 	public static Block vineScaffoldBlock;
+	
+	public static Block detCordBlock;
 
 	public static Item machineItem;
 
@@ -393,6 +398,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		rednetPanelBlock = new BlockRedNetPanel(MFRConfig.rednetPanelBlockId.getInt());
 		fakeLaserBlock = new BlockFakeLaser(MFRConfig.fakeLaserBlockId.getInt());
 		vineScaffoldBlock = new BlockVineScaffold(MFRConfig.vineScaffoldBlockId.getInt());
+		detCordBlock = new BlockDetCord(MFRConfig.detCordBlockId.getInt());
 
 		factoryHammerItem = (new ItemFactoryHammer(MFRConfig.hammerItemId.getInt())).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		fertilizerItem = (new ItemFactory(MFRConfig.fertilizerItemId.getInt())).setUnlocalizedName("mfr.fertilizer");
@@ -469,6 +475,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class, rednetLogicBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class, rednetPanelBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class, vineScaffoldBlock.getUnlocalizedName());
+		GameRegistry.registerBlock(detCordBlock, ItemBlockDetCord.class, detCordBlock.getUnlocalizedName());
 		
 		GameRegistry.registerBlock(milkLiquid, milkLiquid.getUnlocalizedName());
 		GameRegistry.registerBlock(sludgeLiquid, sludgeLiquid.getUnlocalizedName());
@@ -482,6 +489,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		Block.setBurnProperties(rubberWoodBlock.blockID, 4, 20);
 		Block.setBurnProperties(rubberLeavesBlock.blockID, 30, 20);
+		Block.setBurnProperties(detCordBlock.blockID, 10, 20);
 		
 		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.rednetCableBlock, 0, "pickaxe", 0);
 		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.rubberWoodBlock, "axe", 0);
@@ -534,6 +542,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
 		OreDictionary.registerOre("dyeBrown", MineFactoryReloadedCore.fertilizerItem);
 		OreDictionary.registerOre("fertilizerOrganic", MineFactoryReloadedCore.fertilizerItem);
+		OreDictionary.registerOre("wireExplosive", MineFactoryReloadedCore.detCordBlock);
 		
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
 		
