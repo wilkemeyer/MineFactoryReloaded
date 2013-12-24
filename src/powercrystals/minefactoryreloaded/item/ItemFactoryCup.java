@@ -35,13 +35,13 @@ import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
 
 public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable
 {
-    public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
+	public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 	public final static IUseHandler defaultUseAction = new DefaultUseHandler();
 	public final static IUseHandler drinkUseAction = new DrinkUseHandler();
-    
+
 	private boolean _prefix = false;
-    @SideOnly(Side.CLIENT)
-    protected Icon fillIcon;
+	@SideOnly(Side.CLIENT)
+	protected Icon fillIcon;
 	protected List<IUseHandler> useHandlers;
 
 	public ItemFactoryCup(int id, int stackSize, int maxUses)
@@ -112,7 +112,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		NBTTagCompound tag = stack.stackTagCompound;
 		return tag == null || !tag.hasKey("fluid") ? null : tag.getCompoundTag("fluid").getString("FluidName");
 	}
-	
+
 	@Override
 	public FluidStack getFluid(ItemStack stack)
 	{
@@ -137,14 +137,14 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
 		if (resource == null || resource.getFluid().isGaseous(resource))
-				//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
+			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
 		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
-			(fluidTag = tag.getCompoundTag("fluid")) == null ||
-			(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
+				(fluidTag = tag.getCompoundTag("fluid")) == null ||
+				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			fillAmount = Math.min(capacity, resource.amount);
 		if (fluid == null)
 		{
@@ -174,8 +174,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
-			(fluidTag = tag.getCompoundTag("fluid")) == null ||
-			(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
+				(fluidTag = tag.getCompoundTag("fluid")) == null ||
+				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			return null;
 		int drainAmount = (int)(Math.min(maxDrain, fluid.amount) * (Math.max(Math.random() - 0.75, 0) + 0.75));
 		if (doDrain)
@@ -233,7 +233,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 				return handler.onTryUse(item, world, entity);
 		return item;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
@@ -241,7 +241,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(ItemStack stack, int pass) {
@@ -265,6 +265,12 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public boolean canPlaceInWorld()
 	{
 		return false;
+	}
+
+	@Override
+	public boolean shouldReplaceWhenFilled()
+	{
+		return true;
 	}
 
 	@Override

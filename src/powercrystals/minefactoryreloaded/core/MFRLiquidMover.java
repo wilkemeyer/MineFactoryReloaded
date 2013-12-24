@@ -118,11 +118,17 @@ public abstract class MFRLiquidMover
 		return false;
 	}
 	
-	private static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack, EntityPlayer entityplayer, boolean allowDrop)
+	public static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack, EntityPlayer entityplayer, boolean allowDrop)
 	{
-		if (entityplayer.capabilities.isCreativeMode)
+		return disposePlayerItem(stack, dropStack, entityplayer, allowDrop, true);
+	}
+	
+	public static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack,
+			EntityPlayer entityplayer, boolean allowDrop, boolean allowReplace)
+	{
+		if (entityplayer == null || entityplayer.capabilities.isCreativeMode)
 			return true;
-		if (stack.stackSize <= 1)
+		if (allowReplace && stack.stackSize <= 1)
 		{
 			entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, dropStack);
 			return true;
