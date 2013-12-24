@@ -1380,7 +1380,7 @@ public class Vanilla
 			"PPP",
 			"PTP",
 			"PPP",
-			'P', "sheetPlastic",
+			'P', "itemRubber",
 			'T', Block.tnt,
 				} ));
 		
