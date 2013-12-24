@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -25,8 +26,7 @@ public class ItemSafariNetLauncher extends ItemFactory
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
 		super.addInformation(stack, player, infoList, advancedTooltips);
-		infoList.add("Sneak-click to change mode");
-		// TODO: localize ^
+		infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.mode"));
 	}
 	
 	@Override

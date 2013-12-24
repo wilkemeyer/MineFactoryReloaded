@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.INeedleAmmo;
@@ -21,6 +22,7 @@ public abstract class ItemNeedlegunAmmo extends ItemFactory implements INeedleAm
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
 		super.addInformation(stack, player, infoList, advancedTooltips);
-		infoList.add((stack.getMaxDamage() - stack.getItemDamage() + 1) + " rounds");
+		infoList.add((stack.getMaxDamage() - stack.getItemDamage() + 1) + 
+				" " + StatCollector.translateToLocal("tip.info.mfr.needlegun.ammo"));
 	}
 }

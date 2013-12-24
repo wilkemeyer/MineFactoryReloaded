@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.setup;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
@@ -103,7 +105,8 @@ public class Machine
 				int storedQuantity = c.getInteger("storedQuantity");
 				if (storedItem != null & storedQuantity > 0)
 				{
-					info.add("Contains " + storedQuantity + " " + storedItem.getDisplayName() +
+					info.add(StatCollector.translateToLocal("tip.info.mfr.dsu.contains") + 
+							" " + storedQuantity + " " + storedItem.getDisplayName() +
 							(adv ? " (" + storedItem.itemID + ":" +
 							storedItem.getItemDamageForDisplay() + ")" : ""));
 				}
@@ -121,7 +124,7 @@ public class Machine
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
-			info.add("Produces MJ, and RF.");
+			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
 	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, "factoryDisenchanter", 320, 16000);
@@ -141,16 +144,14 @@ public class Machine
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
-			info.add("Emits an analog redstone signal");
-			info.add("proportional to the count of");
-			info.add("mobs that are within range.");
+			info.addAll(Arrays.asList(StatCollector.translateToLocal("tip.info.mfr.mobcounter").split("\n")));
 		}
 	};
 	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 80, 10000) {
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
-			info.add("Produces MJ, and RF.");
+			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
 	

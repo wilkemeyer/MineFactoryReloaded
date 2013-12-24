@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.StatCollector;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -119,7 +120,7 @@ public class ItemBlockRedNetLogic extends ItemBlock
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
-		infoList.add("If you're lost, read the (in-game) manual");
+		infoList.add(StatCollector.translateToLocal("tip.info.mfr.prc"));
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

@@ -59,12 +59,12 @@ public class ItemSafariNet extends ItemFactory
 		
 		if(stack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID)
 		{
-			infoList.add("Released creatures don't despawn normally");
+			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.jailer"));
 		}
 		
 		if(stack.getTagCompound().getBoolean("hide"))
 		{
-			infoList.add("It is a mystery");
+			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.mystery"));
 		}
 		else
 		{

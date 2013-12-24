@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
 
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 
@@ -33,7 +34,8 @@ public class ItemUpgrade extends ItemFactory implements IUpgrade
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
 		super.addInformation(stack, player, infoList, advancedTooltips);
-		infoList.add("Radius increase: " + getUpgradeLevel(UpgradeType.RADIUS, stack));
+		infoList.add(StatCollector.translateToLocal("tip.info.mfr.upgrade.radius") + 
+				" " + getUpgradeLevel(UpgradeType.RADIUS, stack));
 	}
 	
 	@Override
