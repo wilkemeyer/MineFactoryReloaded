@@ -29,6 +29,7 @@ public class MagicalCrops
 	@EventHandler
 	public static void load(FMLInitializationEvent e)
 	{
+		if (e != null) return;
 		if(!Loader.isModLoaded("magicalcrops"))
 		{
 			FMLLog.warning("Magical Crops missing - MFR Compat: Magical Crops not loading");
