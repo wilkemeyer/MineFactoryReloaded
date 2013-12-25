@@ -204,7 +204,7 @@ public class Vanilla
 				"CAC",
 				"PMP",
 				'G', "sheetPlastic",
-				'P', new ItemStack(Item.dyePowder, 1, 5),
+				'P', "dyePurple",
 				'C', Item.goldenCarrot,
 				'A', Item.appleGold,
 				'M', MineFactoryReloadedCore.machineBaseItem,
@@ -240,7 +240,7 @@ public class Vanilla
 				"PMP",
 				'G', "sheetPlastic",
 				'E', Item.emerald,
-				'P', new ItemStack(Item.dyePowder, 1, 5),
+				'P', "dyePurple",
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		

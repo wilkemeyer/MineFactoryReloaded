@@ -183,7 +183,7 @@ public class ThermalExpansion extends Vanilla
 					'T', Item.appleGold,
 					'S', Item.goldenCarrot,
 					'F', machineFrame,
-					'O', new ItemStack(Item.dyePowder, 1, 5),
+					'O', "dyePurple",
 					'C', powerCoilGold
 						} );
 			
@@ -218,7 +218,7 @@ public class ThermalExpansion extends Vanilla
 					'P', "sheetPlastic",
 					'T', Item.emerald,
 					'F', machineFrame,
-					'O', new ItemStack(Item.dyePowder, 1, 5),
+					'O', "dyePurple",
 					'C', powerCoilGold
 						} );
 			
