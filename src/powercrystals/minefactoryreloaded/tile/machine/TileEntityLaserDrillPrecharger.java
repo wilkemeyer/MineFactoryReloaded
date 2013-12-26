@@ -126,6 +126,18 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		if (worldObj.getBlockId(bp.x, bp.y, bp.z) != MineFactoryReloadedCore.fakeLaserBlock.blockID)
 			worldObj.setBlock(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock.blockID, 1, 3);
 	}
+	
+	@Override
+	public void onDisassembled()
+	{
+		super.onDisassembled();
+		BlockPosition bp = new BlockPosition(this);
+		bp.orientation = getDirectionFacing();
+		bp.moveForwards(1);
+		if (worldObj.getBlockId(bp.x, bp.y, bp.z) == MineFactoryReloadedCore.fakeLaserBlock.blockID)
+			worldObj.setBlockMetadataWithNotify(bp.x, bp.y, bp.z, 0, 0);
+		
+	}
 
 	@Override
 	public int getMaxSafeInput()
