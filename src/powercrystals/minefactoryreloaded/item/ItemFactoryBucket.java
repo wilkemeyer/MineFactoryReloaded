@@ -4,10 +4,12 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,6 +22,14 @@ public class ItemFactoryBucket extends ItemBucket
 		super(id, liquidId);
 		setCreativeTab(MFRCreativeTab.tab);
 		_liquidId = liquidId;
+	}
+	
+	@Override
+	public Item setUnlocalizedName(String name)
+	{
+		super.setUnlocalizedName(name);
+		GameRegistry.registerItem(this, getUnlocalizedName());
+		return this;
 	}
 	
 	@SideOnly(Side.CLIENT)
