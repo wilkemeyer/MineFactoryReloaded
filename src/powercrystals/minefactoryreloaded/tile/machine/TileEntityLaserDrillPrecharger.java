@@ -50,13 +50,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		if(drill == null)
 		{
 			setIdleTicks(getIdleTicksMax());
-			if (stripTick > 0)
-				--stripTick;
-			else
-			{
-				resetLaser();
-				stripTick = 20;
-			}
+			resetLaser();
 		}
 		else
 		{
