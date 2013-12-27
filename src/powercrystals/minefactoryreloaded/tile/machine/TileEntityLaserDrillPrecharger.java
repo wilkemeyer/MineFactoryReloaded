@@ -50,6 +50,13 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		if(drill == null)
 		{
 			setIdleTicks(getIdleTicksMax());
+			if (stripTick > 0)
+				--stripTick;
+			else
+			{
+				resetLaser();
+				stripTick = 20;
+			}
 		}
 		else
 		{
@@ -70,6 +77,14 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 					drainEnergy(energy - excess);
 				}
 			}
+			else
+				if (stripTick > 0)
+					--stripTick;
+				else
+				{
+					resetLaser();
+					stripTick = 20;
+				}
 		}
 		return false;
 	}
@@ -131,6 +146,11 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	public void onDisassembled()
 	{
 		super.onDisassembled();
+		resetLaser();
+	}
+	
+	protected void resetLaser()
+	{
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
