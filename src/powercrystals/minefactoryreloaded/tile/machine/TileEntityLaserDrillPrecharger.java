@@ -149,7 +149,10 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
 		if (worldObj.getBlockId(bp.x, bp.y, bp.z) == MineFactoryReloadedCore.fakeLaserBlock.blockID)
+		{
 			worldObj.setBlockMetadataWithNotify(bp.x, bp.y, bp.z, 0, 0);
+			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock.blockID, 1);
+		}
 		
 	}
 
