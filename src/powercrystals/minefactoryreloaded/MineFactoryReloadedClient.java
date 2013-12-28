@@ -1,20 +1,29 @@
 package powercrystals.minefactoryreloaded;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.IScheduledTickHandler;
+import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -22,11 +31,15 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import org.lwjgl.opengl.GL11;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.render.RenderBlockFluidClassic;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
@@ -34,8 +47,8 @@ import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
-import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
+import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.RenderTickHandler;
 import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
 import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
@@ -60,18 +73,9 @@ import powercrystals.minefactoryreloaded.render.tileentity.RedstoneCableRenderer
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
-
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IScheduledTickHandler
@@ -226,11 +230,52 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		return 0;
 	}
 	
+	@ForgeSubscribe
+	public void setArmorModel(SetArmorModel e)
+	{
+		ItemStack itemstack = e.stack;
+		
+        if (itemstack != null)
+        {
+            Item item = itemstack.getItem();
+            int par2 = 3 - e.slot;
+            //if (item.isValidArmor(itemstack, e.slot, e.entity))
+            if (item == MineFactoryReloadedCore.plasticCupItem)
+            {
+            	Minecraft.getMinecraft().renderEngine.
+            		bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.entity, par2, null)));
+                ModelBiped modelbiped = new ModelBiped(1.0F);
+                modelbiped.bipedHead.showModel = par2 == 0;
+                modelbiped.bipedHeadwear.showModel = par2 == 0;
+                modelbiped.bipedBody.showModel = par2 == 1 || par2 == 2;
+                modelbiped.bipedRightArm.showModel = par2 == 1;
+                modelbiped.bipedLeftArm.showModel = par2 == 1;
+                modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
+                modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
+                e.renderer.setRenderPassModel(modelbiped);
+                modelbiped.onGround = e.entityLiving.getSwingProgress(e.partialRenderTick);
+                modelbiped.isRiding = e.entity.isRiding();
+                modelbiped.isChild = e.entityLiving.isChild();
+                float f1 = 1.0F;
+                GL11.glColor3f(f1, f1, f1);
+
+                if (itemstack.isItemEnchanted())
+                {
+                    e.result = 15;
+                    return;
+                }
+
+                e.result = 1;
+            }
+        }
+	}
+	
 	@ForgeSubscribe(priority=EventPriority.HIGHEST) // first to render, so everything else is overlayed
 	public void renderWorldLast(RenderWorldLastEvent e)
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		if(player.inventory.getCurrentItem() == null || player.inventory.getCurrentItem().itemID != MineFactoryReloadedCore.factoryHammerItem.itemID)
+		if(player.inventory.getCurrentItem() == null ||
+				player.inventory.getCurrentItem().itemID != MineFactoryReloadedCore.factoryHammerItem.itemID)
 		{
 			return;
 		}

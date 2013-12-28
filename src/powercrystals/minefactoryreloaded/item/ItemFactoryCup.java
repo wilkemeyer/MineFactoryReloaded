@@ -6,7 +6,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,6 +29,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.IAdvFluidContainerItem;
 import powercrystals.minefactoryreloaded.core.IUseHandler;
 import powercrystals.minefactoryreloaded.core.IUseable;
@@ -253,6 +256,34 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		default:
 			return this.itemIcon;
 		}
+	}
+
+	@Override
+	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity)
+	{
+		if (armorType == 0)
+			if (entity instanceof EntityPlayer &&
+					((EntityPlayer)entity).getCommandSenderName().equalsIgnoreCase("Eyamaz"))
+				return true;
+
+		return false;
+	}
+
+	@Override
+	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
+	{
+		return MineFactoryReloadedCore.textureFolder + "armor/plastic_layer_1.png";
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot)
+	{
+		if (armorSlot == 0)
+		{
+			return null; // TODO
+		}
+		return null;
 	}
 
 	@Override
