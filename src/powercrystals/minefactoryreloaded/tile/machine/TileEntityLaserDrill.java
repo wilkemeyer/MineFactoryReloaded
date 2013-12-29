@@ -177,8 +177,8 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			if (id != MineFactoryReloadedCore.fakeLaserBlock.blockID)
 			{
 				Block block = Block.blocksList[id];
-				if (canReplaceBlock(block, worldObj, xCoord, y, zCoord))
-					if (worldObj.setBlock(xCoord, y, zCoord, MineFactoryReloadedCore.fakeLaserBlock.blockID))
+				if (id > 0 && canReplaceBlock(block, worldObj, xCoord, y, zCoord))
+					if (worldObj.setBlockToAir(xCoord, y, zCoord))
 						continue;
 				
 				if(id == Block.bedrock.blockID)
