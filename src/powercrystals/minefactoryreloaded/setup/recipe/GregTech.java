@@ -28,11 +28,8 @@ public class GregTech extends Vanilla
 			ItemStack mfsUnit = Items.getItem("mfsUnit");
 			ItemStack reactorChamber = Items.getItem("reactorChamber");
 			ItemStack reinforcedGlass = Items.getItem("reinforcedGlass");
-			
-			if(Machine.Planter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 0), new Object[]
-						{
+
+			registerMachine(Machine.Planter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -42,13 +39,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier00",
 					'O', "plateCopper",
 					'C', "craftingCircuitTier02",
-						} ));
-			}
+			} );
 			
-			if(Machine.Fisher.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 1), new Object[]
-						{
+			registerMachine(Machine.Fisher, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -58,13 +51,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', "plateSteel",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.Harvester.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 2), new Object[]
-						{
+			registerMachine(Machine.Harvester, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -74,13 +63,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier00",
 					'O', "plateGold",
 					'C', "craftingCircuitTier02"
-						} ));
-			}
+			} );
 			
-			if(Machine.Rancher.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 3), new Object[]
-						{
+			registerMachine(Machine.Rancher, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -90,13 +75,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', "plateTin",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.Fertilizer.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 4), new Object[]
-						{
+			registerMachine(Machine.Fertilizer, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -106,13 +87,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', "plateSilver",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.Vet.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 5), new Object[]
-						{
+			registerMachine(Machine.Vet, new Object[] {
 					"PTP",
 					"TFT",
 					"OCO",
@@ -121,13 +98,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', "plateZinc",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.ItemCollector.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 6), new Object[]
-						{
+			registerMachine(Machine.ItemCollector, new Object[] {
 					"PVP",
 					" F ",
 					"PCP",
@@ -135,13 +108,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'C', Block.chest,
 					'V', "craftingConveyor"
-						} ));
-			}
+			} );
 			
-			if(Machine.BlockBreaker.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 7), new Object[]
-						{
+			registerMachine(Machine.BlockBreaker, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -151,13 +120,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', "plateAluminium",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.WeatherCollector.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 8), new Object[]
-						{
+			registerMachine(Machine.WeatherCollector, new Object[] {
 					"PTP",
 					"TFT",
 					"OCO",
@@ -166,13 +131,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', "plateBrass",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.SludgeBoiler.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 9), new Object[]
-						{
+			registerMachine(Machine.SludgeBoiler, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -182,13 +143,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', "plateIron",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.Sewer.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 10), new Object[]
-						{
+			registerMachine(Machine.Sewer, new Object[] {
 					"PTP",
 					"SFS",
 					"SSS",
@@ -196,13 +153,9 @@ public class GregTech extends Vanilla
 					'T', Item.bucketEmpty,
 					'S', Block.brick,
 					'F', "craftingRawMachineTier01",
-						} ));
-			}
+			} );
 			
-			if(Machine.Composter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 11), new Object[]
-						{
+			registerMachine(Machine.Composter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -212,13 +165,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', Block.brick,
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.Breeder.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 12), new Object[]
-						{
+			registerMachine(Machine.Breeder, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -228,13 +177,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', new ItemStack(Item.dyePowder, 1, 5),
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.Grinder.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 13), new Object[]
-						{
+			registerMachine(Machine.Grinder, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -244,13 +189,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', Item.book,
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.AutoEnchanter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 14), new Object[]
-						{
+			registerMachine(Machine.AutoEnchanter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -260,13 +201,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier04",
 					'O', "craftingCircuitTier06",
 					'C', Block.obsidian
-						} ));
-			}
+			} );
 			
-			if(Machine.Chronotyper.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(0), 1, 15), new Object[]
-						{
+			registerMachine(Machine.Chronotyper, new Object[] {
 					"PTP",
 					"TFT",
 					"OCO",
@@ -275,13 +212,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', new ItemStack(Item.dyePowder, 1, 5),
 					'C', "craftingCircuitTier06"
-						} ));
-			}
+			} );
 			
-			if(Machine.Ejector.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 0), new Object[]
-						{							
+			registerMachine(Machine.Ejector, new Object[] {
 					"PTP",
 					" F ",
 					"OOO",
@@ -289,13 +222,9 @@ public class GregTech extends Vanilla
 					'T', "craftingRedstoneReceiver",
 					'F', "craftingRawMachineTier02",
 					'O', "dustRedstone"
-						} ));
-			}
+			} );
 			
-			if(Machine.ItemRouter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 1), new Object[]
-						{					
+			registerMachine(Machine.ItemRouter, new Object[] {
 					"PTP",
 					"SFS",
 					"PSP",
@@ -303,13 +232,9 @@ public class GregTech extends Vanilla
 					'T', Block.chest,
 					'S', Item.redstoneRepeater,
 					'F', "craftingRawMachineTier02"
-						} ));
-			}
+			} );
 			
-			if(Machine.LiquidRouter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 2), new Object[]
-						{					
+			registerMachine(Machine.LiquidRouter, new Object[] {
 					"PTP",
 					"SFS",
 					"PSP",
@@ -317,13 +242,9 @@ public class GregTech extends Vanilla
 					'T', "craftingPump",
 					'S', Item.redstoneRepeater,
 					'F', "craftingRawMachineTier02"
-						} ));
-			}
+			} );
 			
-			if(Machine.DeepStorageUnit.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 3), new Object[]
-						{					
+			registerMachine(Machine.DeepStorageUnit, new Object[] {
 					"PDP",
 					"CFC",
 					"PEP",
@@ -332,26 +253,21 @@ public class GregTech extends Vanilla
 					'E', Item.eyeOfEnder,
 					'D', "craftingCircuitTier08",
 					'F', "craftingRawMachineTier04"
-						} ));
-				
-				if(MFRConfig.enableCheapDSU.getBoolean(false))
-				{
-					GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 3), new Object[]
-							{					
+			} );
+			
+			if(MFRConfig.enableCheapDSU.getBoolean(false))
+			{
+				registerMachine(Machine.DeepStorageUnit, new Object[] {
 						"PCP",
 						"CFC",
 						"PCP",
 						'P', "sheetPlastic",
 						'C', Block.chest,
 						'F', "craftingRawMachineTier01"
-							} ));
-				}
+				} );
 			}
 			
-			if(Machine.LiquiCrafter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 4), new Object[]
-						{						
+			registerMachine(Machine.LiquiCrafter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -361,13 +277,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', Item.book,
 					'C', "craftingLiquidMeter"
-						} ));
-			}
+			} );
 			
-			if(Machine.LavaFabricator.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 5), new Object[]
-						{
+			registerMachine(Machine.LavaFabricator, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -377,13 +289,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier03",
 					'O', Item.blazeRod,
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.OilFabricator.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 6), new Object[]
-						{
+			registerMachine(Machine.OilFabricator, new Object[] {
 					"PTP",
 					"OFO",
 					"OCO",
@@ -392,26 +300,18 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier03",
 					'O', Block.obsidian,
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.AutoJukebox.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 7), new Object[]
-						{
+			registerMachine(Machine.AutoJukebox, new Object[] {
 					"PJP",
 					" F ",
 					" P ",
 					'P', "sheetPlastic",
 					'J', Block.jukebox,
 					'F', "craftingRawMachineTier01"
-						} ));
-			}
+			} );
 			
-			if(Machine.Unifier.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 8), new Object[]
-						{
+			registerMachine(Machine.Unifier, new Object[] {
 					"PTP",
 					"SFL",
 					"OCO",
@@ -422,13 +322,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier01",
 					'O', Item.comparator,
 					'C', Item.book
-						} ));
-			}
+			} );
 			
-			if(Machine.AutoSpawner.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 9), new Object[]
-						{
+			registerMachine(Machine.AutoSpawner, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -438,13 +334,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier02",
 					'O', "gemRuby",
 					'C', "craftingCircuitTier05"
-						} ));
-			}
+			} );
 			
-			if(Machine.BioReactor.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 10), new Object[]
-						{
+			registerMachine(Machine.BioReactor, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -454,13 +346,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier03",
 					'O', "craftingItemValve",
 					'C', "craftingPump"
-						} ));
-			}
+			} );
 			
-			if(Machine.BioFuelGenerator.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 11), new Object[]
-						{
+			registerMachine(Machine.BioFuelGenerator, new Object[] {
 					"PCP",
 					"SFS",
 					"OCO",
@@ -469,13 +357,9 @@ public class GregTech extends Vanilla
 					'F', generator,
 					'O', Item.blazeRod,
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.AutoDisenchanter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 12), new Object[]
-						{
+			registerMachine(Machine.AutoDisenchanter, new Object[] {
 					"PTP",
 					"SFS",
 					"OCO",
@@ -485,13 +369,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier03",
 					'O', "craftingCircuitTier06",
 					'C', Block.netherBrick
-						} ));
-			}
+			} );
 			
-			if(Machine.Slaughterhouse.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 13), new Object[]
-						{
+			registerMachine(Machine.Slaughterhouse, new Object[] {
 					"GIG",
 					"SFS",
 					"XCX",
@@ -501,13 +381,9 @@ public class GregTech extends Vanilla
 					'I', "craftingDiamondBlade",
 					'F', "craftingRawMachineTier02",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 			
-			if(Machine.MeatPacker.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 14), new Object[]
-						{
+			registerMachine(Machine.MeatPacker, new Object[] {
 					"GSG",
 					"BFB",
 					"TCT",
@@ -517,13 +393,9 @@ public class GregTech extends Vanilla
 					'F', compressor,
 					'C', "craftingMachineParts",
 					'T', "craftingPump"
-						} ));
-			}
+			} );
 			
-			if(Machine.EnchantmentRouter.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(1), 1, 15), new Object[]
-						{					
+			registerMachine(Machine.EnchantmentRouter, new Object[] {
 					"PBP",
 					"SFS",
 					"PSP",
@@ -531,13 +403,9 @@ public class GregTech extends Vanilla
 					'B', Item.book,
 					'S', Item.redstoneRepeater,
 					'F', "craftingRawMachineTier02"
-						} ));
-			}
+			} );
 			
-			if(Machine.LaserDrill.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 0), new Object[]
-						{
+			registerMachine(Machine.LaserDrill, new Object[] {
 					"GFG",
 					"CRC",
 					"DLD",
@@ -547,13 +415,9 @@ public class GregTech extends Vanilla
 					'R', reactorChamber,
 					'F', "craftingRawMachineTier04",
 					'C', "craftingSuperconductor"
-						} ));
-			}
+			} );
 			
-			if(Machine.LaserDrillPrecharger.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 1), new Object[]
-						{
+			registerMachine(Machine.LaserDrillPrecharger, new Object[] {
 					"GSG",
 					"RFL",
 					"DCD",
@@ -564,13 +428,9 @@ public class GregTech extends Vanilla
 					'F', mfsUnit,
 					'C', "craftingCircuitTier07",
 					'R', "craftingSuperconductor"
-						} ));
-			}
+			} );
 			
-			if(Machine.AutoAnvil.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 2), new Object[]
-						{
+			registerMachine(Machine.AutoAnvil, new Object[] {
 					"GIG",
 					"SFS",
 					"ACA",
@@ -580,14 +440,9 @@ public class GregTech extends Vanilla
 					'F', "craftingRawMachineTier04",
 					'C', "craftingCircuitTier07",
 					'I', "plateAlloyIridium"
-						} ));
-			}
+			} );
 			
-			
-			if(Machine.BlockSmasher.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 3), new Object[]
-						{
+			registerMachine(Machine.BlockSmasher, new Object[] {
 					"GPG",
 					"HFH",
 					"BCB",
@@ -597,13 +452,9 @@ public class GregTech extends Vanilla
 					'B', "craftingItemValve",
 					'F', "craftingRawMachineTier03",
 					'C', "craftingCircuitTier06"
-						} ));
-			}
+			} );
 			
-			if(Machine.RedNote.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 4), new Object[]
-						{
+			registerMachine(Machine.RedNote, new Object[] {
 					"GNG",
 					"CFC",
 					"GNG",
@@ -611,13 +462,9 @@ public class GregTech extends Vanilla
 					'C', MineFactoryReloadedCore.rednetCableBlock,
 					'N', Block.music,
 					'F', "craftingRawMachineTier01"
-						} ));
-			}
+			} );
 			
-			if(Machine.AutoBrewer.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 5), new Object[]
-						{
+			registerMachine(Machine.AutoBrewer, new Object[] {
 					"GBG",
 					"CFC",
 					"RCR",
@@ -627,13 +474,9 @@ public class GregTech extends Vanilla
 					'R', "craftingItemValve",
 					'F', "craftingRawMachineTier02",
 					'C', "craftingCircuitTier05"
-						} ));
-			}
+			} );
 			
-			if(Machine.FruitPicker.getIsRecipeEnabled())
-			{
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineBlocks.get(2), 1, 6), new Object[]
-						{
+			registerMachine(Machine.FruitPicker, new Object[] {
 					"GXG",
 					"SFS",
 					"SCS",
@@ -642,15 +485,14 @@ public class GregTech extends Vanilla
 					'S', Item.shears,
 					'F', "craftingRawMachineTier03",
 					'C', "craftingCircuitTier04"
-						} ));
-			}
+			} );
 		}
 		catch (Exception x)
 		{
 			x.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void registerMachineUpgrades()
 	{
@@ -661,7 +503,7 @@ public class GregTech extends Vanilla
 		try
 		{
 			ItemStack insulatedGoldCableItem = Items.getItem("insulatedGoldCableItem");
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 0), new Object[]
 					{
 				"III",
@@ -672,7 +514,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier02",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 1), new Object[]
 					{
 				"III",
@@ -683,7 +525,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier02",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 2), new Object[]
 					{
 				"III",
@@ -694,7 +536,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier02",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 3), new Object[]
 					{
 				"III",
@@ -705,7 +547,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier04",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 4), new Object[]
 					{
 				"III",
@@ -716,7 +558,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier04",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 5), new Object[]
 					{
 				"III",
@@ -727,7 +569,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier04",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 6), new Object[]
 					{
 				"III",
@@ -738,7 +580,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier04",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 7), new Object[]
 					{
 				"III",
@@ -749,7 +591,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier06",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 8), new Object[]
 					{
 				"III",
@@ -760,7 +602,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier06",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 9), new Object[]
 					{
 				"III",
@@ -771,7 +613,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier06",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.upgradeItem, 1, 10), new Object[]
 					{
 				"III",
@@ -782,7 +624,7 @@ public class GregTech extends Vanilla
 				'R', insulatedGoldCableItem,
 				'G', "craftingCircuitTier06",
 					} ));
-			
+
 			for(int i = 0; i < 16; i++)
 			{
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.laserFocusItem, 1, i), new Object[]
@@ -801,7 +643,7 @@ public class GregTech extends Vanilla
 			x.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void registerConveyors()
 	{
@@ -819,7 +661,7 @@ public class GregTech extends Vanilla
 				'R', "dustRedstone",
 				'I', "plateIron",
 					} ));
-			
+
 			for(int i = 0; i < 16; i++)
 			{
 				GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.conveyorBlock, 1, i), new ItemStack(MineFactoryReloadedCore.conveyorBlock, 1, 16), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
@@ -830,7 +672,7 @@ public class GregTech extends Vanilla
 			x.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void registerSyringes()
 	{
@@ -841,7 +683,7 @@ public class GregTech extends Vanilla
 		try
 		{
 			ItemStack cell = Items.getItem("cell");
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.syringeEmptyItem, 1), new Object[]
 					{
 				"PRP",
@@ -852,10 +694,10 @@ public class GregTech extends Vanilla
 				'I', Item.ingotIron,
 				'C', cell
 					} ));
-			
+
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeHealthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.appleRed });
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeGrowthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.goldenCarrot });
-			
+
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.syringeZombieItem, 1), new Object[]
 					{
 				"FFF",
@@ -864,7 +706,7 @@ public class GregTech extends Vanilla
 				'F', Item.rottenFlesh,
 				'S', MineFactoryReloadedCore.syringeEmptyItem,
 					} );
-			
+
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.syringeSlimeItem, 1), new Object[]
 					{
 				"   ",
@@ -874,7 +716,7 @@ public class GregTech extends Vanilla
 				'L', new ItemStack(Item.dyePowder, 1, 4),
 				'S', MineFactoryReloadedCore.syringeEmptyItem,
 					} );
-			
+
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeCureItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.appleGold });
 		}
 		catch (Exception x)
@@ -882,7 +724,7 @@ public class GregTech extends Vanilla
 			x.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void registerMiscItems()
 	{
@@ -898,7 +740,7 @@ public class GregTech extends Vanilla
 				"##",
 				'#', "dustPlastic",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.fertilizerItem, 16), new Object[]
 					{
 				"WBW",
@@ -909,7 +751,7 @@ public class GregTech extends Vanilla
 				'S', Item.silk,
 				'T', Item.stick,
 					} );
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetItem, 1), new Object[]
 					{
 				" E ",
@@ -919,7 +761,7 @@ public class GregTech extends Vanilla
 				'G', Item.ghastTear,
 				'C', "craftingCircuitTier04"
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetSingleItem, 1), new Object[]
 					{
 				"SLS",
@@ -930,7 +772,7 @@ public class GregTech extends Vanilla
 				'B', Item.slimeBall,
 				'C', "craftingCircuitTier02"
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetJailerItem, 1), new Object[]
 					{
 				" P ",
@@ -940,7 +782,7 @@ public class GregTech extends Vanilla
 				'I', Block.fenceIron,
 				'P', "plateIron"
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetLauncherItem, 1), new Object[]
 					{
 				"PGP",
@@ -952,7 +794,7 @@ public class GregTech extends Vanilla
 				'I', "plateIron",
 				'R', "craftingItemValve"
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryHammerItem, 1), new Object[]
 					{
 				"PPP",
@@ -961,7 +803,7 @@ public class GregTech extends Vanilla
 				'P', "sheetPlastic",
 				'S', Item.stick,
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.blankRecordItem, 1), new Object[]
 					{
 				"RRR",
@@ -970,7 +812,7 @@ public class GregTech extends Vanilla
 				'R', "dustPlastic",
 				'P', Item.paper,
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.spyglassItem), new Object[]
 					{
 				"GLG",
@@ -981,7 +823,7 @@ public class GregTech extends Vanilla
 				'P', "sheetPlastic",
 				'S', Item.stick
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.portaSpawnerItem), new Object[]
 					{
 				"GLG",
@@ -992,7 +834,7 @@ public class GregTech extends Vanilla
 				'D', "gemDiamond",
 				'N', Item.netherStar
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.strawItem), new Object[]
 					{
 				"PP",
@@ -1000,7 +842,7 @@ public class GregTech extends Vanilla
 				"P ",
 				'P', "sheetPlastic",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.xpExtractorItem), new Object[]
 					{
 				"PLP",
@@ -1010,7 +852,7 @@ public class GregTech extends Vanilla
 				'L', Block.glass,
 				'P', "sheetPlastic",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rulerItem), new Object[]
 					{
 				"P",
@@ -1019,7 +861,7 @@ public class GregTech extends Vanilla
 				'P', "sheetPlastic",
 				'A', Item.paper,
 					} ));
-			
+
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.vineScaffoldBlock, 8), new Object[]
 					{
 				"VV",
@@ -1027,9 +869,9 @@ public class GregTech extends Vanilla
 				"VV",
 				'V', Block.vine,
 					} );
-			
+
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Item.bucketMilk, Item.bucketEmpty, new ItemStack(Item.dyePowder, 1, 3));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticCupItem, 16), new Object[]
 					{
 				" P ",
@@ -1042,7 +884,7 @@ public class GregTech extends Vanilla
 			x.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void registerRails()
 	{
@@ -1061,7 +903,7 @@ public class GregTech extends Vanilla
 				'S', "sheetPlastic",
 				'D', Block.railDetector
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.railDropoffCargoBlock, 1), new Object[]
 					{
 				"SSS",
@@ -1071,7 +913,7 @@ public class GregTech extends Vanilla
 				'S', "sheetPlastic",
 				'D', Block.railDetector
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.railPickupPassengerBlock, 1), new Object[]
 					{
 				" L ",
@@ -1081,7 +923,7 @@ public class GregTech extends Vanilla
 				'S', "sheetPlastic",
 				'D', Block.railDetector
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.railDropoffPassengerBlock, 1), new Object[]
 					{
 				"SSS",
@@ -1097,7 +939,7 @@ public class GregTech extends Vanilla
 			x.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void registerRedNet()
 	{
@@ -1115,7 +957,7 @@ public class GregTech extends Vanilla
 				'R', "dustRedstone",
 				'P', "sheetPlastic",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11), new Object[]
 					{
 				"PRP",
@@ -1126,7 +968,7 @@ public class GregTech extends Vanilla
 				'G', Block.glass,
 				'I', "plateIron",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetLogicBlock), new Object[]
 					{
 				"RDR",
@@ -1139,7 +981,7 @@ public class GregTech extends Vanilla
 				'D', "gemDiamond",
 				'R', "dustRedstone",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0), new Object[]
 					{
 				"RPR",
@@ -1149,7 +991,7 @@ public class GregTech extends Vanilla
 				'G', "ingotGold",
 				'R', "dustRedstone",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1), new Object[]
 					{
 				"GPG",
@@ -1160,7 +1002,7 @@ public class GregTech extends Vanilla
 				'G', "plateGold",
 				'R', "dustRedstone",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2), new Object[]
 					{
 				"DPD",
@@ -1172,7 +1014,7 @@ public class GregTech extends Vanilla
 				'D', "gemDiamond",
 				'R', "dustRedstone",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMeterItem, 1, 0), new Object[]
 					{
 				" G",
@@ -1182,7 +1024,7 @@ public class GregTech extends Vanilla
 				'G', "nuggetGold",
 				'R', "dustRedstone",
 					} ));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new Object[]
 					{
 				"GGG",
@@ -1192,9 +1034,9 @@ public class GregTech extends Vanilla
 				'G', "nuggetGold",
 				'R', "dustRedstone",
 					} ));
-			
+
 			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0));
-			
+
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetPanelBlock, 1, 0), new Object[]
 					{
 				"PCP",
