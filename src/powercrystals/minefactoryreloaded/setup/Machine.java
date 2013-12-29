@@ -147,7 +147,7 @@ public class Machine
 			info.addAll(Arrays.asList(StatCollector.translateToLocal("tip.info.mfr.mobcounter").split("\n")));
 		}
 	};
-	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 80, 10000) {
+	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 160, 10000) {
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
