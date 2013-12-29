@@ -111,6 +111,7 @@ public class Machine
 							storedItem.getItemDamageForDisplay() + ")" : ""));
 				}
 			}
+			super.addInformation(stack, player, info, adv);
 		}
 	};
 	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class, "factoryLiquiCrafter");
@@ -124,6 +125,7 @@ public class Machine
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
+			super.addInformation(stack, player, info, adv);
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
@@ -140,31 +142,26 @@ public class Machine
 	public static Machine AutoBrewer = new Machine(2, 5, "AutoBrewer", TileEntityAutoBrewer.class, "factoryAutoBrewer", 40, 16000);
 	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, "factoryFruitPicker", 320, 16000);
 	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 10, 16000);
-	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter") {
-		@Override
-		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
-		{
-			info.addAll(Arrays.asList(StatCollector.translateToLocal("tip.info.mfr.mobcounter").split("\n")));
-		}
-	};
+	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter");
 	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 160, 10000) {
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
+			super.addInformation(stack, player, info, adv);
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
 	
-	private int _blockIndex;
-	private int _meta;
-	private int _machineIndex;
+	private final int _blockIndex;
+	private final int _meta;
+	private final int _machineIndex;
 	
 	private Icon[] _iconsActive = new Icon[6];
 	private Icon[] _iconsIdle = new Icon[6];
 	
-	private String _name;
-	private String _internalName;
-	private String _tileEntityName;
+	private final String _name;
+	private final String _internalName;
+	private final String _tileEntityName;
 	private Class<? extends TileEntityFactory> _tileEntityClass;
 	
 	private int _activationEnergy;
@@ -245,14 +242,25 @@ public class Machine
 		}
 	}
 	
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {}
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
+	{
+		String s = "tip.info.mfr." + _name.toLowerCase();
+		if (StatCollector.func_94522_b(s))
+		{
+			s = StatCollector.translateToLocal(s);
+			if (s.contains("\n"))
+				info.addAll(Arrays.asList(s.split("\n")));
+			else
+				info.add(s);
+		}
+	}
 	
-	public String getName()
+	public final String getName()
 	{
 		return _name;
 	}
 	
-	public String getInternalName()
+	public final String getInternalName()
 	{
 		return _internalName;
 	}
@@ -267,17 +275,17 @@ public class Machine
 		return new ItemStack(MineFactoryReloadedCore.machineBlocks.get(_blockIndex), 1, _meta);
 	}
 	
-	public int getMeta()
+	public final int getMeta()
 	{
 		return _meta;
 	}
 	
-	public int getBlockIndex()
+	public final int getBlockIndex()
 	{
 		return _blockIndex;
 	}
 	
-	public boolean getIsRecipeEnabled()
+	public final boolean getIsRecipeEnabled()
 	{
 		return _isRecipeEnabled.getBoolean(true);
 	}
@@ -301,17 +309,17 @@ public class Machine
 		}
 	}
 	
-	public int getActivationEnergyMJ()
+	public final int getActivationEnergyMJ()
 	{
 		return _activationEnergy / TileEntityFactoryPowered.energyPerMJ;
 	}
 	
-	public int getActivationEnergy()
+	public final int getActivationEnergy()
 	{
 		return _activationEnergy;
 	}
 	
-	public int getMaxEnergyStorage()
+	public final int getMaxEnergyStorage()
 	{
 		return _energyStoredMax;
 	}

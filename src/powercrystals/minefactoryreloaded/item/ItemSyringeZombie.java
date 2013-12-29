@@ -40,7 +40,7 @@ public class ItemSyringeZombie extends ItemSyringe
 				EntityHorse ent = (EntityHorse)entity;
 				switch (ent.getHorseType())
 				{
-				case 1:
+				case 0:
 					ent.setHorseType(3);
 					break;
 				case 3:
