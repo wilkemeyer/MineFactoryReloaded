@@ -85,9 +85,25 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	public void setWorldObj(World world)
 	{
 		super.setWorldObj(world);
-		if(_grindingWorld != null) _grindingWorld.clearReferences();
+		if(_grindingWorld != null)
+		{
+			_grindingWorld.clearReferences();
+			_grindingWorld.setMachine(null);
+		}
 		if(this.worldObj instanceof WorldServer)
 			_grindingWorld = new GrindingWorldServer((WorldServer)this.worldObj, this);
+	}
+	
+	@Override
+	public void onChunkUnload()
+	{
+		super.onChunkUnload();
+		if(_grindingWorld != null)
+		{
+			_grindingWorld.clearReferences();
+			_grindingWorld.setMachine(null);
+		}
+		_grindingWorld = null;
 	}
 	
 	public Random getRandom()
