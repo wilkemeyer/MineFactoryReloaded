@@ -58,7 +58,7 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 			int ID = tec.getID();
 			if (ID < 0)
 				return false;
-			
+			// previous error here was PC not emy
 			crop = Crops.instance.getCropList()[ID];
 			if(!crop.canBeHarvested(tec) || crop.canGrow(tec))
 			{
