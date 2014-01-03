@@ -393,6 +393,8 @@ tip.info.mfr.dsu.contains = Enth\u00e4lt
 
 tip.info.mfr.mobcounter = Sendet ein analoges Redstone-Signal aus,\nproportional zur Menge an\nLebewesen in Reichweite.
 
+tip.info.mfr.laserdrill = Wird \u00fcber einem bis Bedrock gehenden Loch platziert
+
 death.attack.mfr.slaughterhouse = %1$s wurde zu fl\u00fcssigem Fleisch verarbeitet
 death.attack.mfr.slaughterhouse.player = %1$s wurde von %2$s dazu verdammt, zu fl\u00fcssigem Fleisch verarbeitet zu werden
 death.attack.mfr.slaughterhouse.1 = %1$s wurde zu Fleischsau\u00dfe verarbeitet
