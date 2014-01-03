@@ -1,10 +1,9 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
 import ic2.api.crops.CropCard;
+import ic2.api.crops.Crops;
 import ic2.api.crops.ICropTile;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +19,10 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 public class HarvestableIC2Crop implements IFactoryHarvestable
 {
 	private int _blockId;
-	private Method _getCropMethod;
-	private Field _dirtyField;
 	
-	public HarvestableIC2Crop(int blockId) throws NoSuchMethodException, SecurityException, ClassNotFoundException, NoSuchFieldException
+	public HarvestableIC2Crop(int blockId)
 	{
 		_blockId = blockId;
-		_getCropMethod = Class.forName("ic2.core.block.TileEntityCrop").getMethod("crop");
-		_dirtyField = Class.forName("ic2.core.block.TileEntityCrop").getField("dirty");
 	}
 	
 	@Override
@@ -60,8 +55,12 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 		CropCard crop;
 		try
 		{
-			crop = (CropCard)_getCropMethod.invoke(tec);
-			if(tec.getID() < 0 || !crop.canBeHarvested(tec) || crop.canGrow(tec))
+			int ID = tec.getID();
+			if (ID < 0)
+				return false;
+			
+			crop = Crops.instance.getCropList()[ID];
+			if(!crop.canBeHarvested(tec) || crop.canGrow(tec))
 			{
 				return false;
 			}
@@ -83,7 +82,7 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 		CropCard crop;
 		try
 		{
-			crop = (CropCard)_getCropMethod.invoke(tec);
+			crop = Crops.instance.getCropList()[tec.getID()];
 			
 			float chance = crop.dropGainChance();
 			for (int i = 0; i < tec.getGain(); i++)
@@ -109,7 +108,8 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 			}
 			
 			tec.setSize(crop.getSizeAfterHarvest(tec));
-			_dirtyField.setBoolean(tec, true);
+			tec.updateState();
+			
 			for(ItemStack s : cropDrops)
 			{
 				drops.add(s);
