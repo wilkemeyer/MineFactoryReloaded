@@ -1415,7 +1415,7 @@ public class Vanilla
 				{
 			"R",
 			"P",
-			'R', MineFactoryReloadedCore.rawRubberItem,
+			'R', "itemRawRubber",
 			'P', Block.pistonBase
 				} );
 		
@@ -1444,7 +1444,7 @@ public class Vanilla
 				{
 			"R",
 			"S",
-			'R', MineFactoryReloadedCore.rawRubberItem,
+			'R', "itemRawRubber",
 			'S', "stickWood",
 				} ));
 		
@@ -1466,7 +1466,7 @@ public class Vanilla
 					{
 				"R",
 				"S",
-				'R', MineFactoryReloadedCore.rawRubberItem,
+				'R', "itemRawRubber",
 				'S', "stoneRod",
 					} ));
 			torchStone = torchStone.copy();
