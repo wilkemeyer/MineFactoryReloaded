@@ -1411,13 +1411,13 @@ public class Vanilla
 		GameRegistry.addShapelessRecipe(new ItemStack(Block.planks, 3, 3),
 				new ItemStack(MineFactoryReloadedCore.rubberWoodBlock));
 		
-		GameRegistry.addRecipe(new ItemStack(Block.pistonStickyBase), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.pistonStickyBase), new Object[]
 				{
 			"R",
 			"P",
 			'R', "itemRawRubber",
 			'P', Block.pistonBase
-				} );
+				}));
 		
 		if(MFRConfig.vanillaOverrideIce.getBoolean(true))
 		{
