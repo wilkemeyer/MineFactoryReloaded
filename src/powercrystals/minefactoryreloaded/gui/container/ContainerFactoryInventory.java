@@ -86,7 +86,7 @@ public class ContainerFactoryInventory extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return _te.isUseableByPlayer(player);
+		return !_te.isInvalid() && _te.isUseableByPlayer(player);
 	}
 	
 	@Override

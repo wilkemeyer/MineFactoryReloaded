@@ -334,7 +334,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer)
 	{
-		if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+		if(isInvalid() || worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
 		{
 			return false;
 		}
