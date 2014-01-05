@@ -814,8 +814,8 @@ public class Vanilla
 			ItemStack glass = new ItemStack(Block.glass);
 			ItemStack paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i);
 			ItemStack pane = new ItemStack(Block.thinGlass);
-			OreDictionary.registerOre("glass" + dyes[15 - i], glassStack);
-			OreDictionary.registerOre("glassPane" + dyes[15 - i], glassStack);
+			OreDictionary.registerOre("glass" + dyes[15 - i], glassStack.copy());
+			OreDictionary.registerOre("glassPane" + dyes[15 - i], paneStack.copy());
 			dye.stackSize = 1;
 			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, "glass"));
 			GameRegistry.addShapelessRecipe(glassStack.copy(), dye, glass);
