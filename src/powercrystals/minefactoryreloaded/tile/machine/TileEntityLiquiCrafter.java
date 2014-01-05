@@ -438,7 +438,7 @@ inv:	for(int i = 0; i < 9; i++)
 		
 		for(int i = 0; i < 9; i++)
 		{
-			if(_tanks[i].getFluid() != null && liquid.isFluidEqual(_tanks[i].getFluid()))
+			if(liquid.isFluidEqual(_tanks[i].getFluid()))
 			{
 				return i;
 			}
