@@ -191,11 +191,11 @@ Class: TileEntityPamCrop
 			registerMisc("Cotton", true, true);
 			
 			// plants that require different base soils
-			registerPamMod("Rice", "Rice", Category.CROP, false, false, Block.waterStill.blockID);
-			registerPamMod("Cranberry", "Cranberry", Category.BUSH, false, true, Block.waterStill.blockID);
-			registerPamMod("Whitemushroom", "Whitemushroom", Category.BUSH, false, true, Block.wood.blockID);
-			registerPamMod("Rotten", "Rotten", Category.CROP, false, false, Block.slowSand.blockID);
-			registerPamMod("Cactusfruit", "Cactusfruit", Category.BUSH, true, true, Block.sand.blockID);
+			registerPamMod("Rice", "Rice", Category.CROP, false, false, Block.tilledField.blockID);
+			registerPamMod("Cranberry", "Cranberry", Category.BUSH, false, true, Block.tilledField.blockID);
+			registerPamMod("Whitemushroom", "Whitemushroom", Category.BUSH, false, true, Block.tilledField.blockID);
+			//registerPamMod("Rotten", "Rotten", Category.CROP, false, false, Block.tilledField.blockID);
+			registerPamMod("Cactusfruit", "Cactusfruit", Category.BUSH, true, true, Block.tilledField.blockID);
 			
 			// fruits
 			registerFruit("Apple");
@@ -220,12 +220,12 @@ Class: TileEntityPamCrop
 			registerFruit("Walnut");
 			
 			// special case for candle and cinnamon
-			registerCandle();
+			//registerCandle();
 			registerCinnamon();
 			
 			try
 			{
-				Class<?> mod = Class.forName("mods.PamHarvestCraft.PamHarvestCraft");
+				Class<?> mod = Class.forName("assets.PamHarvestCraft.PamHarvestCraft");
 				MFRRegistry.registerSludgeDrop(25, new ItemStack((Item)mod.getField("saltItem").get(null)));
 			}
 			catch(Exception x)
@@ -235,7 +235,7 @@ Class: TileEntityPamCrop
 		}
 		
 		
-		if(!Loader.isModLoaded("PamWeeeFlowers"))
+		if(!Loader.isModLoaded("pamweeeflowers"))
 		{
 			FMLLog.warning("Pam's Weee! Flowers missing - MFR Pam Weee! Flowers Compat not loading");
 		}
@@ -245,7 +245,7 @@ Class: TileEntityPamCrop
 			
 			try
 			{
-				Class<?> mod = Class.forName("mods.PamWeeeFlowers.PamWeeeFlowers");
+				Class<?> mod = Class.forName("assets.PamWeeeFlowers.PamWeeeFlowers");
 				
 				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)mod.getField("pamFlower").get(null)).blockID, HarvestType.Normal));
 				
@@ -253,7 +253,7 @@ Class: TileEntityPamCrop
 				{
 					int seedId = ((Item)mod.getField(flower.toLowerCase() + "flowerseedItem").get(null)).itemID;
 					int blockId = ((Block)mod.getField("pam" + flower.toLowerCase() + "flowerCrop").get(null)).blockID;
-					Method fertilize = Class.forName("mods.PamWeeeFlowers.BlockPamFlowerCrop").getMethod("fertilize", World.class, int.class, int.class, int.class);
+					Method fertilize = Class.forName("assets.PamWeeeFlowers.BlockPamFlowerCrop").getMethod("fertilize", World.class, int.class, int.class, int.class);
 					
 					MFRRegistry.registerPlantable(new PlantableCropPlant(seedId, blockId));
 					MFRRegistry.registerHarvestable(new HarvestablePams(blockId));
@@ -301,13 +301,14 @@ Class: TileEntityPamCrop
 			int seedId;
 			final String cropNameLC;
 			cropNameLC = cropName.toLowerCase();
-			final String baseClassPath;
-			baseClassPath = String.format("mods.PamHarvestCraft.%s.%s", category.getPackageName(), modName.toLowerCase());
+			//final String baseClassPath;
+			//baseClassPath = String.format("assets.PamHarvestCraft.%s.%s", category.getPackageName(), modName.toLowerCase());
 			
-			mod = Class.forName(String.format("%s.PamHC%s", baseClassPath, modName));
-			blockIdCrop = ((Block)mod.getField(String.format("pam%sCrop", cropNameLC)).get(null)).blockID;
-			seedId = ((Item)mod.getField(String.format("%sseedItem", cropNameLC)).get(null)).itemID;
-			
+			mod = Class.forName("assets.pamharvestcraft.PamHarvestCraft");
+			Item seed = ((Item)mod.getField(String.format("%sseedItem", cropNameLC)).get(null));
+			seedId = seed.itemID;
+			blockIdCrop = seed.getClass().getField("cropID").getInt(seed);
+            
 			if (plantableBlockId == Block.tilledField.blockID)
 			{
 				MFRRegistry.registerPlantable(new PlantableCropPlant(seedId, blockIdCrop));
@@ -333,7 +334,7 @@ Class: TileEntityPamCrop
 			}
 			
 			MFRRegistry.registerFertilizable(new FertilizableCropReflection(blockIdCrop,
-					Class.forName(String.format(isPerennial ? "mods.PamHarvestCraft.BlockPamRegrowCrop" : "mods.PamHarvestCraft.BlockPamCrop")).getMethod("fertilize", World.class, int.class, int.class, int.class), 7));
+					Class.forName(String.format( "assets.pamharvestcraft.BlockPamCrop")).getMethod("fertilize", World.class, int.class, int.class, int.class), 7));
 		}
 		catch(ClassNotFoundException x)
 		{
@@ -349,7 +350,7 @@ Class: TileEntityPamCrop
 	{
 		try
 		{
-			Block fruit = (Block)Class.forName("mods.PamHarvestCraft.trees." + name.toLowerCase() + ".PamHC" + name).getField("pam" + name).get(null);
+			Block fruit = (Block)Class.forName("assets.pamharvestcraft.PamHarvestCraft").getField("pam" + name).get(null);
 			MFRRegistry.registerFruit(new PamFruit(fruit.blockID));
 		}
 		catch(ClassNotFoundException x)
@@ -366,7 +367,7 @@ Class: TileEntityPamCrop
 	{
 		try
 		{
-			Block fruit = (Block)Class.forName("mods.PamHarvestCraft.misc.candle.PamHCCandle").getField("pamCandle").get(null);
+			Block fruit = (Block)Class.forName("assets.pamharvestcraft.PamHarvestCraft").getField("pamCandle").get(null);
 			MFRRegistry.registerFruit(new PamFruit(fruit.blockID));
 		}
 		catch(Exception x)
@@ -379,8 +380,8 @@ Class: TileEntityPamCrop
 	{
 		try
 		{
-			Block fruit = (Block)Class.forName("mods.PamHarvestCraft.trees.cinnamon.PamHCCinnamon").getField("pamCinnamon").get(null);
-			Item cinnamon = (Item)Class.forName("mods.PamHarvestCraft.trees.cinnamon.PamHCCinnamon").getField("cinnamonItem").get(null);
+			Block fruit = (Block)Class.forName("assets.pamharvestcraft.PamHarvestCraft").getField("pamCinnamon").get(null);
+			Item cinnamon = (Item)Class.forName("assets.pamharvestcraft.PamHarvestCraft").getField("cinnamonItem").get(null);
 			MFRRegistry.registerFruit(new PamFruitCinnamon(fruit.blockID, cinnamon.itemID));
 			MFRRegistry.registerFruitLogBlockId(fruit.blockID);
 		}
