@@ -157,14 +157,21 @@ Class: TileEntityPamCrop
 			registerBush("Spiceleaf", true, true);
 			registerBush("Strawberry", true, true);
 			registerBush("Sunflower", false, true);
+			registerBush("Seaweed", true, true);
 			
 			// Crops
+			registerCrop("Artichoke", true, false);
 			registerCrop("Asparagus", false, false);
+			registerCrop("Bambooshoot", true, false);
+			registerCrop("Barley", false, false);
 			registerCrop("Bean", false, false);
 			registerCrop("Beet", false, false);
 			registerCrop("Bellpepper", true, false);
 			registerCrop("Broccoli", false, false);
+			registerCrop("Brusselsprout", true, false);
+			registerCrop("Cabbage", true, false);
 			registerCrop("Cantaloupe", true, false);
+			registerCrop("Cauliflower", false, false);
 			registerCrop("Celery", false, false);
 			registerCrop("Chilipepper", true, false);
 			registerCrop("Coffee", true, false);
@@ -173,17 +180,27 @@ Class: TileEntityPamCrop
 			registerCrop("Eggplant", true, false);
 			registerCrop("Garlic", false, false);
 			registerCrop("Ginger", false, false);
+			registerCrop("Leek", false, false);
 			registerCrop("Lettuce", false, false);
 			registerCrop("Mustard", true, false);
+			registerCrop("Oats", false, false);
+			registerCrop("Okra", true, false);
 			registerCrop("Onion", false, false);
+			registerCrop("Parsnip", false, false);
 			registerCrop("Peanut", false, false);
 			registerCrop("Peas", true, false);
 			registerCrop("Pineapple", false, false);
+			registerCrop("Rhubarb", false, false);
 			registerCrop("Radish", false, false);
+			registerCrop("Rutabaga", false, false);
+			registerCrop("Rye", false, false);
+			registerCrop("Scallion", false, false);
+			registerCrop("Soybean", false, false);
 			registerCrop("Sweetpotato", false, false);
 			registerCrop("Tea", false, false);
 			registerCrop("Tomato", true, false);
 			registerCrop("Turnip", false, false);
+			registerCrop("Wintersquash", true, false);
 			registerCrop("Zucchini", true, false);
 			
 			// misc types
@@ -203,6 +220,7 @@ Class: TileEntityPamCrop
 			registerFruit("Banana");
 			registerFruit("Cherry");
 			registerFruit("Coconut");
+			registerFruit("Dragonfruit");
 			registerFruit("Lemon");
 			registerFruit("Lime");
 			registerFruit("Mango");
@@ -218,15 +236,19 @@ Class: TileEntityPamCrop
 			registerFruit("Starfruit");
 			registerFruit("Vanillabean");
 			registerFruit("Walnut");
-			
+            
+            
 			// special case for candle and cinnamon
 			//registerCandle();
 			registerCinnamon();
 			
 			try
 			{
-				Class<?> mod = Class.forName("assets.PamHarvestCraft.PamHarvestCraft");
+				Class<?> mod = Class.forName("assets.pamharvestcraft.PamHarvestCraft");
 				MFRRegistry.registerSludgeDrop(25, new ItemStack((Item)mod.getField("saltItem").get(null)));
+                int blockIdCrop = ((Block)(mod.getField("pamCrop")).get(null)).blockID;
+                MFRRegistry.registerHarvestable(new HarvestablePams(blockIdCrop));
+                			MFRRegistry.registerFertilizable(new PamFertilizable(blockIdCrop));
 			}
 			catch(Exception x)
 			{
@@ -245,19 +267,20 @@ Class: TileEntityPamCrop
 			
 			try
 			{
-				Class<?> mod = Class.forName("assets.PamWeeeFlowers.PamWeeeFlowers");
-				
-				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)mod.getField("pamFlower").get(null)).blockID, HarvestType.Normal));
-				
+				Class<?> mod = Class.forName("assets.pamweeeflowers.PamWeeeFlowers");
+                				int blockId = ((Block)mod.getField("pamFlower").get(null)).blockID;
+                MFRRegistry.registerHarvestable(new HarvestablePamsFlower(blockId));
+                MFRRegistry.registerFertilizable(new PamFertilizableFlower(blockId));
 				for(String flower : flowers)
 				{
-					int seedId = ((Item)mod.getField(flower.toLowerCase() + "flowerseedItem").get(null)).itemID;
-					int blockId = ((Block)mod.getField("pam" + flower.toLowerCase() + "flowerCrop").get(null)).blockID;
-					Method fertilize = Class.forName("assets.PamWeeeFlowers.BlockPamFlowerCrop").getMethod("fertilize", World.class, int.class, int.class, int.class);
+                    Item seed=(Item)mod.getField(flower.toLowerCase() + "flowerseedItem").get(null);
+					int seedId = seed.itemID;
 					
-					MFRRegistry.registerPlantable(new PlantableCropPlant(seedId, blockId));
-					MFRRegistry.registerHarvestable(new HarvestablePams(blockId));
-					MFRRegistry.registerFertilizable(new FertilizableCropReflection(blockId, fertilize, 7));
+                    int cropId = seed.getClass().getField("cropID").getInt(seed);
+					Method fertilize = Class.forName("assets.pamweeeflowers.BlockPamFlowerCrop").getMethod("fertilize", World.class, int.class, int.class, int.class);
+					
+					MFRRegistry.registerPlantable(new PlantablePamFlower(seedId, blockId,cropId));
+					
 				}
 			}
 			catch(ClassNotFoundException x)
@@ -300,41 +323,22 @@ Class: TileEntityPamCrop
 			int blockIdWild;
 			int seedId;
 			final String cropNameLC;
+            int cropId;
 			cropNameLC = cropName.toLowerCase();
-			//final String baseClassPath;
-			//baseClassPath = String.format("assets.PamHarvestCraft.%s.%s", category.getPackageName(), modName.toLowerCase());
-			
 			mod = Class.forName("assets.pamharvestcraft.PamHarvestCraft");
 			Item seed = ((Item)mod.getField(String.format("%sseedItem", cropNameLC)).get(null));
 			seedId = seed.itemID;
-			blockIdCrop = seed.getClass().getField("cropID").getInt(seed);
-            
-			if (plantableBlockId == Block.tilledField.blockID)
-			{
-				MFRRegistry.registerPlantable(new PlantableCropPlant(seedId, blockIdCrop));
-			}
-			else
-			{
-				MFRRegistry.registerPlantable(new PlantablePamSpecial(blockIdCrop, seedId, plantableBlockId));
-			}
-			
-			if(hasWild)
+            blockIdCrop = ((Block)(mod.getField("pamCrop")).get(null)).blockID;
+            cropId = seed.getClass().getField("cropID").getInt(seed);
+            MFRRegistry.registerPlantable(new PlantablePamCrop( blockIdCrop,seedId,cropId));
+            FMLLog.info("TESTING block id:%d crop id:%d",blockIdCrop,cropId);
+            if(hasWild)
 			{
 				blockIdWild = ((Block)mod.getField(String.format("pam%sWild", cropNameLC)).get(null)).blockID;
 				MFRRegistry.registerHarvestable(new HarvestableStandard(blockIdWild, HarvestType.Normal));
-			}
-			
-			if(isPerennial)
-			{
-				MFRRegistry.registerHarvestable(new HarvestablePamsPerennial(blockIdCrop));
-			}
-			else
-			{
-				MFRRegistry.registerHarvestable(new HarvestablePams(blockIdCrop));
-			}
-			
-			MFRRegistry.registerFertilizable(new FertilizableCropReflection(blockIdCrop,
-					Class.forName(String.format( "assets.pamharvestcraft.BlockPamCrop")).getMethod("fertilize", World.class, int.class, int.class, int.class), 7));
+			}			
+           
+
 		}
 		catch(ClassNotFoundException x)
 		{

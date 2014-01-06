@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 
 public class HarvestablePamsPerennial extends HarvestablePams
 {
-	public HarvestablePamsPerennial(int sourceId)
+	public HarvestablePamsPerennial(int sourceId) throws ClassNotFoundException
 	{
 		super(sourceId);
 	}
