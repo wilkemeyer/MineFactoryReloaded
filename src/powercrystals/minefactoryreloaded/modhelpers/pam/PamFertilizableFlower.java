@@ -5,6 +5,7 @@ class PamFertilizableFlower extends PamFertilizable
 	public PamFertilizableFlower(int blockID) throws ClassNotFoundException
     {
         super(blockID);
-        tec=Class.forName("TileEntityPamFlowerCrop");
+        getGrowthStage=Pam.PamTEFlowerGetGrowthStage;
+        _fertilize=Pam.PamBlockFlowerFertilize;
     }
 }

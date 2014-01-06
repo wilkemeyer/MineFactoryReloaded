@@ -3,7 +3,8 @@ package powercrystals.minefactoryreloaded.modhelpers.pam;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
-
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -29,10 +30,8 @@ public class PlantablePamCrop implements IFactoryPlantable
 		_itemId = itemId;
 		_plantableBlockId = plantableBlockId;
         _cropId=cropId;
-        Class[] _argTypes = new Class[] { int.class };
-        Class<?> pamTE=Class.forName("assets.pamharvestcraft.TileEntityPamCrop");
-            _setCrop=pamTE.getDeclaredMethod("setCropID",_argTypes);
-            _setStage=pamTE.getDeclaredMethod("setGrowthStage",_argTypes);
+        _setCrop=Pam.PamTESetCropId;
+        _setStage=Pam.PamTESetGrowthStage;
 	}
 	
 	@Override
@@ -56,12 +55,27 @@ public class PlantablePamCrop implements IFactoryPlantable
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{
-		return world.getBlockId(x, y - 1, z) == _plantableBlockId && world.getBlockId(x, y, z) == 0;
+		int groundId = world.getBlockId(x, y - 1, z);
+		if(!world.isAirBlock(x, y, z))
+		{
+			return false;
+		}
+		return (
+				groundId == Block.dirt.blockID ||
+				groundId == Block.grass.blockID ||
+				groundId == Block.tilledField.blockID ||
+				(Block.blocksList[_blockId] instanceof IPlantable && Block.blocksList[groundId] != null &&
+				Block.blocksList[groundId].canSustainPlant(world, x, y, z, ForgeDirection.UP, ((IPlantable)Block.blocksList[_blockId]))));
 	}
 	
 	@Override
 	public void prePlant(World world, int x, int y, int z, ItemStack stack)
 	{
+        int groundId = world.getBlockId(x, y - 1, z);
+		if(groundId == Block.dirt.blockID || groundId == Block.grass.blockID)
+		{
+			world.setBlock(x, y - 1, z, Block.tilledField.blockID);
+		}
 	}
 	
 	@Override
@@ -74,8 +88,8 @@ public class PlantablePamCrop implements IFactoryPlantable
         {
             if(te!=null)
             {
-                _setCrop.invoke(te,_cropId);
-                _setStage.invoke(te,0);
+                Pam.PamTESetCropId.invoke(te,_cropId);
+                Pam.PamTESetGrowthStage.invoke(te,0);
             }
         }
         catch (InvocationTargetException ex)

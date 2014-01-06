@@ -19,8 +19,9 @@ public class HarvestablePamsFlower extends HarvestablePams
 {
 	public HarvestablePamsFlower(int sourceId) throws ClassNotFoundException
     {
-    super(sourceId);
-	tec=Class.forName("assets.pamharvestcraft.TileEntityPamFlowerCrop");
+        super(sourceId);
+        getGrowthStage=Pam.PamTEFlowerGetGrowthStage;       
+        getCrop=Pam.PamTEFlowerGetCropId;
     }
   
 	

@@ -10,27 +10,18 @@ import net.minecraft.tileentity.TileEntity;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import cpw.mods.fml.common.FMLLog;
+
 class PamFertilizable implements IFactoryFertilizable
 {
-    private Method getGrowthStage;
-    private Method _fertilize;
+    protected Method getGrowthStage;
+    protected Method _fertilize;
 	private int _blockId;
-    protected Class<?> tec;
-	private Class[] _argTypes;
     final private Object[] dummyArgs= new Object[]{};
 	public PamFertilizable(int blockId) throws ClassNotFoundException
 	{
 		_blockId = blockId;
-        tec=Class.forName("assets.pamharvestcraft.TileEntityPamCrop");
-        try
-        {
-        getGrowthStage=tec.getDeclaredMethod("getGrowthStage",_argTypes);
-        }
-        catch(NoSuchMethodException ex)
-        {
-          getGrowthStage=null;
-          FMLLog.warning("cannot get stage method");
-        }
+        getGrowthStage=Pam.PamTEGetGrowthStage;
+        _fertilize=Pam.PamBlockFertilize;
 	}
 	
 	@Override
@@ -74,6 +65,9 @@ class PamFertilizable implements IFactoryFertilizable
                 e.printStackTrace();
             }
         }
+        FMLLog.info("Current Stage is %d",stage);
+        if (stage>=2 )
+        return false;
 		try
 		{
 			_fertilize.invoke(Block.blocksList[_blockId], world, x, y, z);
@@ -82,6 +76,6 @@ class PamFertilizable implements IFactoryFertilizable
 		{
 			e.printStackTrace();
 		}
-		return stage >= 2;
+		return true;
 	}
 }

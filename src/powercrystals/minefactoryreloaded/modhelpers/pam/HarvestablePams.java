@@ -18,35 +18,16 @@ import net.minecraft.tileentity.TileEntity;
 public class HarvestablePams implements IFactoryHarvestable
 {
 	private int _sourceId;
-	private Method getCrop;
-    private Method getGrowthStage;
+	protected Method getCrop;
+    protected Method getGrowthStage;
     private int _cropId;
-    private Class[] _argTypes;
-    final private Object[] dummyArgs= new Object[]{};
-    protected Class<?> tec;
+final private Object[] dummyArgs=new Object[]{};
     public HarvestablePams(int sourceId) throws ClassNotFoundException
     {
-    _argTypes = new Class[] {};
     _sourceId=sourceId;
-    tec=Class.forName("assets.pamharvestcraft.TileEntityPamCrop");
-    try
-        {
-        getCrop=tec.getDeclaredMethod("getCropID",_argTypes);
-        }
-        catch(NoSuchMethodException ex)
-        {
-          getCrop=null;
-          FMLLog.warning("cannot get crop method, class is %s",Block.blocksList[_sourceId].getClass().toString());
-        }
-        try
-        {
-        getGrowthStage=tec.getDeclaredMethod("getGrowthStage",_argTypes);
-        }
-        catch(NoSuchMethodException ex)
-        {
-          getGrowthStage=null;
-          FMLLog.warning("cannot get stage method");
-        }
+    
+        getCrop=Pam.PamTEGetCropId;
+        getGrowthStage=Pam.PamTEGetGrowthStage;
     }
 	
 	@Override
@@ -63,21 +44,25 @@ public class HarvestablePams implements IFactoryHarvestable
 		return HarvestType.Normal;
 	}
 	
+    //I need a better way of getting the cropID for the TileEntity;
 	@Override
 	public boolean breakBlock()
 	{
-    //I'm just basing this on what I could find
-		return _cropId>28;
+		return _cropId<=28;
 	}
 	
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
+    
     TileEntity te=world.getBlockTileEntity(x,y,z); 
 		 try
         {
-        if(te!= null &&getGrowthStage!=null && (Integer)(getGrowthStage.invoke(te,dummyArgs)) > 2)
+        if(te==null)
+        FMLLog.info("ERR:TE is null");
+        if(te!= null &&getGrowthStage!=null && (Integer)(getGrowthStage.invoke(te,dummyArgs)) >= 2)
 		{
+            _cropId=(Integer)(getCrop.invoke(te,dummyArgs));
 			return true;
 		}
         }
@@ -111,27 +96,28 @@ public class HarvestablePams implements IFactoryHarvestable
         {
         if(getGrowthStage!=null &&  (Integer)(getGrowthStage.invoke(te,dummyArgs)) > 2)
 		{
-			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+			//world.setBlockMetadataWithNotify(x, y, z, 0, 2);
 		}
 
         
             if(te!=null&&getCrop!=null)
             {
                 _cropId=(Integer)(getCrop.invoke(te,dummyArgs));
-               
             }
+            
+            
         }
         catch (InvocationTargetException ex)
         {
-        FMLLog.warning("Error with planting a crop from Pams mods");
+        FMLLog.warning("Error with harvesting a crop from Pams mods");
         }
         catch (IllegalArgumentException ex)
         {
-        FMLLog.warning("Error with planting a crop from Pams mods, this should not happen");
+        FMLLog.warning("Error with harvesting a crop from Pams mods, this should not happen");
         }
         catch (IllegalAccessException ex)
         {
-        FMLLog.warning("Error with planting a crop from Pams mods,this should not happen");
+        FMLLog.warning("Error with harvesting a crop from Pams mods,this should not happen");
         }
 	}
 	
