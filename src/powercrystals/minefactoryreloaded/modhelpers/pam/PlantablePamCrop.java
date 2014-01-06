@@ -13,12 +13,12 @@ import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
 import cpw.mods.fml.common.FMLLog;
 public class PlantablePamCrop implements IFactoryPlantable
 {
-	private int _blockId;
-	private int _itemId;
-	private int _plantableBlockId;
-	private int _cropId;
-    private Method _setCrop;
-    private Method _setStage;
+	protected int _blockId;
+	protected int _itemId;
+	protected int _plantableBlockId;
+	protected int _cropId;
+    protected Method _setCrop;
+    protected Method _setStage;
 	public PlantablePamCrop(int blockId, int itemId,int cropId) throws NoSuchMethodException,ClassNotFoundException
 	{
 		this(blockId, itemId,cropId, Block.tilledField.blockID);
@@ -88,8 +88,8 @@ public class PlantablePamCrop implements IFactoryPlantable
         {
             if(te!=null)
             {
-                Pam.PamTESetCropId.invoke(te,_cropId);
-                Pam.PamTESetGrowthStage.invoke(te,0);
+                _setCrop.invoke(te,_cropId);
+                _setStage.invoke(te,0);
             }
         }
         catch (InvocationTargetException ex)

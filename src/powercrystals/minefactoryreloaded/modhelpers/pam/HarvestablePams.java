@@ -21,7 +21,7 @@ public class HarvestablePams implements IFactoryHarvestable
 	protected Method getCrop;
     protected Method getGrowthStage;
     private int _cropId;
-final private Object[] dummyArgs=new Object[]{};
+    final private Object[] dummyArgs=new Object[]{};
     public HarvestablePams(int sourceId) throws ClassNotFoundException
     {
     _sourceId=sourceId;
@@ -84,7 +84,30 @@ final private Object[] dummyArgs=new Object[]{};
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return Block.blocksList[_sourceId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+        List<ItemStack> outStack=new List<ItemStack>();
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te!=null)
+        {
+        try
+        {
+            int cropID=(Integer)(getCrop.invoke(te,new Object[]{}));
+            int cropDrops = rand.nextInt(3) + 2;
+            int seedDrops = rand.nextInt(2) + 1;
+                    if(Pam.PamSeedFromCrop)
+                    {
+                        outStack.add(new ItemStack(PamHarvestCraft.PamCropItems[cropID], 1, 0));
+                        outStack.add(new ItemStack(PamHarvestCraft.PamSeeds[cropID], seedDrops, 0));
+                    } else
+                    {
+                        outStack.add(new ItemStack(PamHarvestCraft.PamCropItems[i], cropDrops, 0));
+                    }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        }
+		return outStack;
 	}
 	
 	@Override

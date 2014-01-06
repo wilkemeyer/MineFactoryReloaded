@@ -24,16 +24,19 @@ dependencies = "after:MineFactoryReloaded;after:pamharvestcraft")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Pam
 {
-   static public Method PamTEGetCropId;
-   static public Method PamTEGetGrowthStage;
-   static public Method PamTESetCropId;
-   static public Method PamTESetGrowthStage;
-   static public Method PamTEFlowerGetCropId;
-   static public Method PamTEFlowerGetGrowthStage;
-   static public Method PamTEFlowerSetCropId;
-  static  public Method PamTEFlowerSetGrowthStage;
-   static public Method PamBlockFertilize;
-  static  public Method PamBlockFlowerFertilize;
+    //stuff I need to get from pams mods that I only want to do once
+    static public Method PamTEGetCropId;
+    static public Method PamTEGetGrowthStage;
+    static public Method PamTESetCropId;
+    static public Method PamTESetGrowthStage;
+    static public Method PamTEFlowerGetCropId;
+    static public Method PamTEFlowerGetGrowthStage;
+    static public Method PamTEFlowerSetCropId;
+    static  public Method PamTEFlowerSetGrowthStage;
+    static public Method PamBlockFertilize;
+    static  public Method PamBlockFlowerFertilize;
+    static public boolean PamSeedFromCrop;
+    static public int flowerId;
 	private enum Category
 	{
 		BUSH("bushes"),
@@ -163,7 +166,28 @@ Class: TileEntityPamCrop
 			//getting some needed methods
 
 			// Bushes
-            
+            			try
+			{
+				Class<?> mod = Class.forName("assets.pamharvestcraft.PamHarvestCraft");
+				MFRRegistry.registerSludgeDrop(25, new ItemStack((Item)mod.getField("saltItem").get(null)));
+                int blockIdCrop = ((Block)(mod.getField("pamCrop")).get(null)).blockID;
+                MFRRegistry.registerHarvestable(new HarvestablePams(blockIdCrop));
+                MFRRegistry.registerFertilizable(new PamFertilizable(blockIdCrop));
+                                      
+            Class<?> pamTE=Class.forName("assets.pamharvestcraft.TileEntityPamCrop");
+            PamTEGetCropId=pamTE.getDeclaredMethod("getCropID",noOps);
+            PamTEGetGrowthStage=pamTE.getDeclaredMethod("getGrowthStage",noOps);
+            PamTESetCropId=pamTE.getDeclaredMethod("setCropID",SingleIntOps);
+            PamTESetGrowthStage=pamTE.getDeclaredMethod("setGrowthStage",SingleIntOps);
+            Class<?> PamBlock=Class.forName("assets.pamharvestcraft.BlockPamCrop");
+            PamBlockFertilize=PamBlock.getDeclaredMethod("fertilize",fertilizeOpts );
+            Class<?> harvestConfig=Class.forName("assets.pamharvestcraft.HarvestConfigurationHandler");
+            PamSeedFromCrop=(Boolean)(harvestConfig.getField("seedsdropfromcrop").get(null));
+			}
+			catch(Exception x)
+			{
+				x.printStackTrace();
+			}
 			registerBush("Blackberry", true, true); 
 			registerBush("Blueberry", true, true);
 			registerBush("Grape", true, true);
@@ -257,26 +281,7 @@ Class: TileEntityPamCrop
 			//registerCandle();
 			registerCinnamon();
 			
-			try
-			{
-				Class<?> mod = Class.forName("assets.pamharvestcraft.PamHarvestCraft");
-				MFRRegistry.registerSludgeDrop(25, new ItemStack((Item)mod.getField("saltItem").get(null)));
-                int blockIdCrop = ((Block)(mod.getField("pamCrop")).get(null)).blockID;
-                MFRRegistry.registerHarvestable(new HarvestablePams(blockIdCrop));
-                MFRRegistry.registerFertilizable(new PamFertilizable(blockIdCrop));
-                                      
-            Class<?> pamTE=Class.forName("assets.pamharvestcraft.TileEntityPamCrop");
-            PamTEGetCropId=pamTE.getDeclaredMethod("getCropID",noOps);
-            PamTEGetGrowthStage=pamTE.getDeclaredMethod("getGrowthStage",noOps);
-            PamTESetCropId=pamTE.getDeclaredMethod("setCropID",SingleIntOps);
-            PamTESetGrowthStage=pamTE.getDeclaredMethod("setGrowthStage",SingleIntOps);
-            Class<?> PamBlock=Class.forName("assets.pamharvestcraft.BlockPamCrop");
-            PamBlockFertilize=PamBlock.getDeclaredMethod("fertilize",fertilizeOpts );
-			}
-			catch(Exception x)
-			{
-				x.printStackTrace();
-			}
+
 		}
 		
 		
@@ -298,7 +303,8 @@ Class: TileEntityPamCrop
             Class<?> PamBlockFlower=Class.forName("assets.pamweeeflowers.BlockPamFlowerCrop");
             PamBlockFlowerFertilize=PamBlockFlower.getDeclaredMethod("fertilize",fertilizeOpts);
 				Class<?> mod = Class.forName("assets.pamweeeflowers.PamWeeeFlowers");
-                				int blockId = ((Block)mod.getField("pamflowerCrop").get(null)).blockID;
+                int blockId = ((Block)mod.getField("pamflowerCrop").get(null)).blockID;
+                flowerID=((Block)mod.getField("pamFlower").get(null)).blockID;
                 MFRRegistry.registerHarvestable(new HarvestablePamsFlower(blockId));
                 MFRRegistry.registerFertilizable(new PamFertilizableFlower(blockId));
 				for(String flower : flowers)
