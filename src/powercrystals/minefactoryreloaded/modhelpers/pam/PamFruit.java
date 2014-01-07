@@ -51,6 +51,7 @@ public class PamFruit implements IFactoryFruit
 	@Override
 	public void postPick(World world, int x, int y, int z)
 	{
+    
 	}
 	
 }

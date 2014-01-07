@@ -1,15 +1,19 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -32,6 +36,7 @@ public class Pam
         public static Method pamTEFlowerSetGrowthStage;
         public static Method pamBlockFertilize;
         public static Method pamBlockFlowerFertilize;
+        public static Method pamBlockSaplingFertilize;
         public static boolean pamSeedFromCrop;
         public static int flowerId;
         static int flowerSeeds[] = new int[16];
@@ -85,6 +90,24 @@ public class Pam
                                 pamSeedFromCrop = ( Boolean ) ( harvestConfig.getField( "seedsdropfromcrop" ).get( null ) );
                                 MFRRegistry.registerHarvestable( new HarvestablePams( blockIdCrop ) );
                                 MFRRegistry.registerFertilizable( new PamFertilizable( blockIdCrop ) );
+                                Class<?> PamSapling = Class.forName( "assets.pamharvestcraft.BlockPamSapling" );
+                                pamBlockSaplingFertilize=PamSapling.getDeclaredMethod("generateTree", new Class<?> []
+                                {World.class,int.class,int.class,int.class,Random.class,int.class});
+                                Block [] saplings=(Block []) mod.getField("PamOakSaplings").get(null);
+                                int id;
+                                for ( Block block : saplings )
+                                {
+                                    id=block.blockID;
+                                    MFRRegistry.registerFertilizable( new PamFertilizableSapling( id ) );
+                                    MFRRegistry.registerPlantable(new PlantableStandard(id,id));
+                                }
+                                saplings=(Block []) mod.getField("PamJungleSaplings").get(null);
+                                for ( Block block : saplings )
+                                {
+                                    id=block.blockID;
+                                    MFRRegistry.registerFertilizable( new PamFertilizableSapling( id ) );
+                                    MFRRegistry.registerPlantable(new PlantableStandard(id,id));
+                                }
                         }
                         catch ( Exception x )
                         {
@@ -180,6 +203,7 @@ public class Pam
                         // special case for candle and cinnamon
                         // registerCandle();
                         registerCinnamon();
+
 
 
                 }
