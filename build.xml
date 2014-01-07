@@ -6,9 +6,9 @@
 	<property name="classes.dir" value="${build.dir}/packaging" />
 	<property name="apiclasses.dir" value="${build.dir}/api-packaging" />
 	<property name="src.dir" value="src" />
-	<property name="forge.buildnum" value="884" />
-	<property name="forge.version" value="1.6.4-9.11.0.${forge.buildnum}" />
-	<property name="forge.url" value="http://files.minecraftforge.net/minecraftforge/minecraftforge-src-${forge.version}.zip" />
+	<property name="forge.buildnum" value="965" />
+	<property name="forge.version" value="1.6.4-9.11.1.${forge.buildnum}" />
+	<property name="forge.url" value="http://files.minecraftforge.net/maven/net/minecraftforge/forge/${forge.version}/forge-${forge.version}-src.zip" />
 	<property name="forge.dir" value="${build.dir}/forge" />
 	<property name="mcp.dir" value="${forge.dir}/mcp" />
 	<property name="mcpsrc.dir" value="${mcp.dir}/src/minecraft" />
@@ -196,8 +196,9 @@
 		<echo message="Starting MFR-Forestry submodule build..."/>
 		<antcall target="clone-MFR-Forestry"/>
 		<ant antfile="${basedir}/MFR-Forestry/build.xml" target="main" inheritAll="false" useNativeBasedir="true"/>
+		<delete dir="${basedir}/MFR-Forestry/build/libs/classes/META-INF"/>
 		<copy todir="${classes.dir}">
-			<fileset dir="${basedir}/MFR-Forestry/build/classes"/>
+			<fileset dir="${basedir}/MFR-Forestry/build/libs/classes"/>
 		</copy>
 		<echo message="MFR-Forestry submodule build complete."/>
 		<!-- MFR-Forestry Setup End -->
@@ -328,7 +329,7 @@
 		<delete dir="${build.dir}" failonerror="false"/>
 		<unzip dest="${build.dir}">
 			<fileset dir="${download.dir}">
-				<include name="minecraftforge-src-${forge.version}.zip"/>
+				<include name="forge-${forge.version}-src.zip"/>
 			</fileset>
 		</unzip>
 		
@@ -387,7 +388,7 @@
 			</classpath>
 		</taskdef>
 		<echo message="Downloading forge... " />
-		<get src="${forge.url}" dest="${download.dir}/minecraftforge-src-${forge.version}.zip" />
+		<get src="${forge.url}" dest="${download.dir}/forge-${forge.version}-src.zip" />
 	</target>
 
 	<target name="download-core" unless="forge-exists">
