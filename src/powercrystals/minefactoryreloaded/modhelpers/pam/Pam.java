@@ -271,7 +271,6 @@ public class Pam
                         blockIdCrop = ( ( Block ) ( mod.getField( "pamCrop" ) ).get( null ) ).blockID;
                         cropId = seed.getClass().getField( "cropID" ).getInt( seed );
                         MFRRegistry.registerPlantable( new PlantablePamCrop( blockIdCrop, seedId, cropId ) );
-                        FMLLog.info( "TESTING block id:%d crop id:%d", blockIdCrop, cropId );
                         if ( hasWild )
                         {
                                 blockIdWild = ( ( Block ) mod.getField( String.format( "pam%sWild", cropNameLC ) ).get( null ) ).blockID;
