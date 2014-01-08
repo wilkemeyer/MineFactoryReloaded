@@ -38,12 +38,13 @@
 			<available file="${mcpsrc.dir}/cofh" type="dir"/>
 			<available file="${mcpsrc.dir}/buildcraft" type="dir"/>
 			<available file="${mcpsrc.dir}/ic2" type="dir"/>
-			<!--<available file="${mcpsrc.dir}/universalelectricity" type="dir"/>-->
 			<!--<available file="${mcpsrc.dir}/thermalexpansion" type="dir"/>-->
 			<!--<available file="${mcpsrc.dir}/thaumcraft" type="dir"/>-->
 			<available file="${mcpsrc.dir}/forestry" type="dir"/>
 		</and>
 	</condition>
+	
+	<property name="cofh.commit" value="24600c4cfda893a16316c0631972170413f3a1e3"/>
 
 	<path id="mcp.classpath">
 		<pathelement location="${mcp.dir}/bin/minecraft"/>
@@ -69,7 +70,7 @@
 		-->
 		
 		<echo message="Downloading ThermalExpansion API... " />
-		<get src="https://github.com/KingLemming/CoFHLib/archive/1848fb59f53f72dfd4b416ecfd89c26c1a9a80c5.zip" dest="${download.dir}/cofh-api.zip" />
+		<get src="https://github.com/KingLemming/CoFHLib/archive/${cofh.commit}.zip" dest="${download.dir}/cofh-api.zip" />
 		<!--
 		<get src="https://dl.dropboxusercontent.com/u/57416963/Minecraft/Mods/ThermalExpansion/api/ThermalExpansion-API-2.3.0.zip" dest="${download.dir}/te-api.zip" />
 		-->
@@ -97,18 +98,10 @@
 		<unzip src="${download.dir}/industrialcraft-2-api.zip" dest="${download.dir}" />
 		<move file="${download.dir}/ic2" todir="${mcpsrc.dir}" />
 		
-		<!--
-		<echo message="Extracting UniversalElectricity API... " />
-		<unzip src="${download.dir}/ue-api.zip" dest="${download.dir}" />
-		<move file="${download.dir}/Universal-Electricity-642962a2654d611b8b90a32113b0ab73159d7a76/src/universalelectricity" todir="${mcpsrc.dir}" />
-		<echo message="Deleting stuff from the UE API that isn't actually the API... " />
-		<delete dir="${mcpsrc.dir}/universalelectricity/compatibility"/>
-		<delete dir="${mcpsrc.dir}/universalelectricity/prefab"/>-->
-		
 		<echo message="Extracting ThermalExpansion API... " />
 		<unzip src="${download.dir}/cofh-api.zip" dest="${download.dir}" />
 		<mkdir dir="${mcpsrc.dir}/cofh" />
-		<move file="${download.dir}/CoFHLib-1848fb59f53f72dfd4b416ecfd89c26c1a9a80c5/cofh/api" todir="${mcpsrc.dir}/cofh" />
+		<move file="${download.dir}/CoFHLib-${cofh.commit}/cofh/api" todir="${mcpsrc.dir}/cofh" />
 		<!--
 		<unzip src="${download.dir}/te-api.zip" dest="${download.dir}/thermalexpansion/" />
 		<move file="${download.dir}/thermalexpansion/thermalexpansion" todir="${mcpsrc.dir}" />

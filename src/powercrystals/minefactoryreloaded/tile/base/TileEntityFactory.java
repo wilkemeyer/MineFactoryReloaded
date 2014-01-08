@@ -19,14 +19,13 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import cofh.api.transport.IItemConduitConnection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class TileEntityFactory extends TileEntity
 									 implements IRotateableTile, IPipeConnection,
-												IItemConduitConnection, IHarvestAreaContainer
+												IHarvestAreaContainer
 {
 	// first index is rotation, second is side
 	private static final int[][] _textureSelection = new int[][]
@@ -271,12 +270,6 @@ public abstract class TileEntityFactory extends TileEntity
 		default:
 			return ConnectOverride.DISCONNECT;
 		}
-	}
-
-	@Override
-	public boolean canConduitConnect(ForgeDirection side) // items
-	{
-		return manageSolids();
 	}
 	
 	// hoisted IMachine methods
