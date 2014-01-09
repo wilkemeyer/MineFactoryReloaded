@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.Map;
 import java.util.Random;
 
@@ -10,11 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
 import powercrystals.minefactoryreloaded.core.AutoEnchantmentHelper;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoEnchanter;
@@ -22,8 +25,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoEnchanter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
@@ -37,8 +38,6 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		_rand = new Random();
 		
 		_targetLevel = 30;
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -206,9 +205,9 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			}
 			return true;
 		}
-		else if(_tank.getFluid() != null && _tank.getFluid().amount >= 4)
+		else if(drain(4, false) != 4)
 		{
-			_tank.drain(4, true);
+			drain(4, true);
 			setWorkDone(getWorkDone() + 1);
 			return true;
 		}
@@ -284,7 +283,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			return 0;
 		}
 		
-		return _tank.fill(resource, doFill);
+		return _tanks[0].fill(resource, doFill);
 	}
 	
 	@Override
@@ -300,13 +299,9 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
-		{
-			return _tank;
-		}
-		return null;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 
 	@Override

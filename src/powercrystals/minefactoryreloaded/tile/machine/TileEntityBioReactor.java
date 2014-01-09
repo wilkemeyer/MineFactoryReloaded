@@ -1,15 +1,18 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
 import powercrystals.core.util.Util;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -19,8 +22,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerBioReactor;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityBioReactor extends TileEntityFactoryInventory implements ITankContainerBucketable
 {
@@ -35,8 +36,6 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	public TileEntityBioReactor()
 	{
 		super(Machine.BioReactor);
-		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -125,10 +124,11 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				}
 			}
 			
-			if(_burnTime > 0 && (_tank.getFluid() == null || _tank.getFluid().amount <= _tank.getCapacity() - _bioFuelPerTick))
+			if(_burnTime > 0 && (_tanks[0].getFluid() == null ||
+					_tanks[0].getFluid().amount <= _tanks[0].getCapacity() - _bioFuelPerTick))
 			{
 				_burnTime -= _burnTimeDecreasePerTick;
-				_tank.fill(FluidRegistry.getFluidStack("biofuel", _bioFuelPerTick), true);
+				_tanks[0].fill(FluidRegistry.getFluidStack("biofuel", _bioFuelPerTick), true);
 			}
 		}
 	}
@@ -203,21 +203,26 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return _tank.drain(maxDrain, doDrain);
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource == null || !resource.isFluidEqual(_tank.getFluid()))
-			return null;
-		return _tank.drain(resource.amount, doDrain);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
+		return null;
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		return _tank;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 	
 	@Override

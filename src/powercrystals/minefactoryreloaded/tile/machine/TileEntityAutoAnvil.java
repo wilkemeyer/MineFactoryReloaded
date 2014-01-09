@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.Map;
 
 import net.minecraft.enchantment.Enchantment;
@@ -14,7 +17,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
+
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -22,8 +25,6 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerAutoAnvil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
@@ -35,8 +36,6 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	public TileEntityAutoAnvil()
 	{
 		super(Machine.AutoAnvil);
-		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -88,7 +87,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		}
 		else
 		{
-			if(_tank.getFluid() == null || _tank.getFluid().amount < 4)
+			if(drain(4, false) != 4)
 			{
 				return false;
 			}
@@ -97,7 +96,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				return false;
 			}
 			
-			_tank.drain(4, true);
+			drain(4, true);
 			setWorkDone(getWorkDone() + 1);
 			
 			if(getWorkDone() >= getWorkMax())
@@ -370,7 +369,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	public int fill(ForgeDirection from, FluidStack type, boolean doFill)
 	{
 		if(type != null && FluidRegistry.getFluid("mobessence").equals(type.getFluid()))
-			return _tank.fill(type, doFill);
+			return _tanks[0].fill(type, doFill);
 		return 0;
 	}
 	
@@ -387,13 +386,9 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		if(type != null && FluidRegistry.getFluid("mobessence").equals(type.getFluid()))
-		{
-			return _tank;
-		}
-		return null;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 
 	@Override

@@ -1,14 +1,17 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -16,16 +19,12 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityComposter extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	public TileEntityComposter()
 	{
 		super(Machine.Composter);
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -45,7 +44,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_tank.getFluid() != null && _tank.getFluid().amount >= 20)
+		if(drain(20, false) == 20)
 		{
 			setWorkDone(getWorkDone() + 1);
 			
@@ -54,7 +53,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 				doDrop(new ItemStack(MineFactoryReloadedCore.fertilizerItem));
 				setWorkDone(0);
 			}
-			_tank.drain(20, true);
+			drain(20, true);
 			return true;
 		}
 		return false;
@@ -93,7 +92,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 		}
 		else
 		{
-			return _tank.fill(resource, doFill);
+			return _tanks[0].fill(resource, doFill);
 		}
 	}
 	
@@ -110,13 +109,9 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("sewage", 1)))
-		{
-			return _tank;
-		}
-		return null;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 	
 	@Override

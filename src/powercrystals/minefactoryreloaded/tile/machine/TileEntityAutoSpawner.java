@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -9,12 +12,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IMobSpawnHandler;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -25,8 +28,6 @@ import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
@@ -37,8 +38,6 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	public TileEntityAutoSpawner()
 	{
 		super(Machine.AutoSpawner);
-		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -107,9 +106,9 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		}
 		if(getWorkDone() < getWorkMax())
 		{
-			if(_tank.getFluid() != null && _tank.getFluid().amount >= 10)
+			if (drain(10, false) == 10)
 			{
-				_tank.getFluid().amount -= 10;
+				drain(10, true);
 				setWorkDone(getWorkDone() + 1);
 				return true;
 			}
@@ -191,13 +190,19 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 	
 	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+	}
+	
+	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		if(resource == null || !resource.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
 		{
 			return 0;
 		}
-		return _tank.fill(resource, doFill);
+		return _tanks[0].fill(resource, doFill);
 	}
 	
 	@Override
@@ -209,22 +214,19 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
 		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return null;
-	}
-	
-	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
-	{
-		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("mobessence", 1)))
-		{
-			return _tank;
-		}
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	

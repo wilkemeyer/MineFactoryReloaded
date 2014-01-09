@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import buildcraft.api.gates.IAction;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +18,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+
 import powercrystals.core.asm.relauncher.Implementable;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import buildcraft.api.gates.IAction;
 
 @Implementable("buildcraft.core.IMachine")
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
@@ -38,13 +40,15 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	protected int _failedDropTicksMax = 20;
 	private int _failedDropTicks = 0;
-	
-	protected FluidTank _tank;
+
+	protected FluidTank[] _tanks;
 	
 	protected TileEntityFactoryInventory(Machine machine)
 	{
 		super(machine);
 		_inventory = new ItemStack[getSizeInventory()];
+		_tanks = createTanks();
+		setManageFluids(_tanks != null);
 	}
 	
 	@Override
@@ -126,11 +130,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 	}
 	
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
-	{
-		return _tank;
-	}
-	
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		IFluidTank[] tanks = getTanks();
 		if (tanks.length == 0)
@@ -141,11 +140,37 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return r;
 	}
 	
+	protected FluidTank[] createTanks()
+	{
+		return null;
+	}
+	
 	public IFluidTank[] getTanks()
 	{
-		if (_tank != null)
-			return new IFluidTank[] {_tank};
+		if (_tanks != null)
+			return _tanks;
 		return emptyIFluidTank;
+	}
+	
+	public int drain(int maxDrain, boolean doDrain)
+	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+			{
+				FluidStack drained = _tank.drain(maxDrain, doDrain);
+				if (drained != null)
+					return drained.amount;
+			}
+		return 0;
+	}
+	
+	public int fill(FluidStack resource, boolean doFill)
+	{
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
+		return 0;
 	}
 	
 	protected boolean shouldPumpLiquid()
@@ -384,7 +409,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		else
 		{ // TODO: remove in 2.8
-			IFluidTank tank = _tank;
+			IFluidTank tank = _tanks[0];
 			if (tank != null && tag.hasKey("tankFluidName"))
 			{
 				int tankAmount = tag.getInteger("tankAmount");

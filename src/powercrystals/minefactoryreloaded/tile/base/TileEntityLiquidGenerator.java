@@ -46,14 +46,12 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		_ticksBetweenConsumption = ticksBetweenConsumption;
 		_outputPulseSize = machine.getActivationEnergy();
 		_bufferMax = machine.getMaxEnergyStorage();
-		
-		_tank = createTank();
-		setManageFluids(true);
 	}
 	
-	protected FluidTank createTank()
+	@Override
+	protected FluidTank[] createTanks()
 	{
-		return new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4)};
 	}
 	
 	protected abstract boolean isFluidFuel(FluidStack fuel);
@@ -102,15 +100,16 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 			_buffer -= pulse;
 			_buffer += producePower(pulse);
 			
-			if (_bufferMax - _buffer < _powerProducedPerConsumption |
-					skipConsumption || _tank.getFluid() == null ||
-					_tank.getFluid().amount < _liquidConsumedPerTick)
-			{
+			if (_bufferMax - _buffer < _powerProducedPerConsumption | skipConsumption)
 				return;
-			}
+			
+			FluidStack drained = drain(ForgeDirection.UNKNOWN, _liquidConsumedPerTick, false);
+			
+			if (drained == null || drained.amount != _liquidConsumedPerTick)
+				return;
 			
 			_ticksSinceLastConsumption = 0;
-			_tank.drain(_liquidConsumedPerTick, true);
+			drain(ForgeDirection.UNKNOWN, _liquidConsumedPerTick, true);
 			_buffer += _powerProducedPerConsumption;
 		}
 	}
@@ -149,20 +148,29 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (isFluidFuel(resource))
-			return _tank.fill(resource, doFill);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
 		return 0;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
 		return null;
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	

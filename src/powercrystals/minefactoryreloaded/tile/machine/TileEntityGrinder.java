@@ -54,10 +54,8 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	protected TileEntityGrinder(Machine machine)
 	{
 		super(machine);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
+		_areaManager = new HarvestAreaManager(this, 2, 2, 1); 
 		_rand = new Random();
-		setManageFluids(true);
 		setManageSolids(true);
 		setCanRotate(true);
 	}
@@ -184,7 +182,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 					damageEntity(e);
 					if(e.getHealth() <= 0)
 					{
-						_tank.fill(FluidRegistry.getFluidStack("mobessence", 100), true);
+						fillTank(_tanks[0], "mobessence", 1);
 					}
 				}
 				finally
@@ -197,7 +195,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				_tank.fill(FluidRegistry.getFluidStack("mobessence", 100), true);
+				fillTank(_tanks[0], "mobessence", 1);
 				setIdleTicks(20);
 			}
 			else
@@ -233,6 +231,18 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		return 0;
 	}
 	
+	protected void fillTank(FluidTank tank, String fluid, float amount)
+	{
+		tank.fill(FluidRegistry.getFluidStack(fluid, (int)(100 * amount)), true);
+		onInventoryChanged();
+	}
+	
+	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+	}
+	
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
@@ -242,14 +252,19 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return _tank.drain(maxDrain, doDrain);
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
-			return _tank.drain(resource.amount, doDrain);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	

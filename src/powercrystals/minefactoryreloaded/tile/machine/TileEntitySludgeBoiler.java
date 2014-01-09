@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 import java.util.Random;
 
@@ -12,11 +15,11 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.random.WeightedRandomItemStack;
@@ -27,8 +30,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
@@ -39,8 +40,6 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	public TileEntitySludgeBoiler()
 	{
 		super(Machine.SludgeBoiler);
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 		setManageSolids(true);
 		
 		_rand = new Random();
@@ -74,9 +73,9 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_tank.getFluid() != null && _tank.getFluid().amount > 10)
+		if(drain(10, false) == 10)
 		{
-			_tank.drain(10, true);
+			drain(10, true);
 			setWorkDone(getWorkDone() + 1);
 			_tick++;
 			
@@ -130,7 +129,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 		{
 			return 0;
 		}
-		return _tank.fill(resource, doFill);
+		return _tanks[0].fill(resource, doFill);
 	}
 	
 	@Override
@@ -146,14 +145,11 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		if(type != null && type.isFluidEqual(FluidRegistry.getFluidStack("sludge", 1)))
-		{
-			return _tank;
-		}
-		return null;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
+	
 	@Override
 	public int getSizeInventory()
 	{

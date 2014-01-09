@@ -18,9 +18,9 @@ public class TileEntitySteamTurbine extends TileEntityLiquidGenerator
 	}
 	
 	@Override
-	protected FluidTank createTank()
+	protected FluidTank[] createTanks()
 	{
-		return new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 8);
+		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 8)};
 	}
 
 	@Override

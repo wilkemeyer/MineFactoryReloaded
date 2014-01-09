@@ -191,7 +191,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	{
 		int tankIndex = from.ordinal();
 		if (tankIndex >= _bufferTanks.length || _filledDirection[tankIndex]) return 0;
-		int r = pumpLiquid(resource, doFill);
+		int r = pumpLiquid(resource, doFill); // use internal tanks?
 		_filledDirection[tankIndex] = doFill & r > 0;
 		return r;
 	}
@@ -205,17 +205,6 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return null;
-	}
-	
-	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
-	{
-		if(direction.ordinal() < _bufferTanks.length && 
-				FluidContainerRegistry.containsFluid(_inventory[direction.ordinal()], type))
-		{
-			return _bufferTanks[direction.ordinal()];
-		}
 		return null;
 	}
 	

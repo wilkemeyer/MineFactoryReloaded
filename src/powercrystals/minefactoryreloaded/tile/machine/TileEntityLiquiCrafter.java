@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,12 +14,12 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.RemoteInventoryCrafting;
@@ -25,8 +28,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiLiquiCrafter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerLiquiCrafter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 // slots 0-8 craft grid, 9 craft grid template output, 10 output, 11-28 resources
 public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implements ITankContainerBucketable
@@ -34,16 +35,9 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	private boolean _lastRedstoneState;
 	private boolean _resourcesChangedSinceLastFailedCraft = true;
 	
-	private FluidTank[] _tanks = new FluidTank[9];
-	
 	public TileEntityLiquiCrafter()
 	{
 		super(Machine.LiquiCrafter);
-		for(int i = 0; i < 9; i++)
-		{
-			_tanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
-		}
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -303,8 +297,6 @@ inv:	for(int i = 0; i < 9; i++)
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 19;
-		//if(side == ForgeDirection.UP || side == ForgeDirection.DOWN) return 1;
-		//return 18;
 	}
 	
 	@Override
@@ -332,6 +324,17 @@ inv:	for(int i = 0; i < 9; i++)
 	public boolean allowBucketFill()
 	{
 		return false;
+	}
+	
+	@Override
+	protected FluidTank[] createTanks()
+	{
+		FluidTank[] _tanks = new FluidTank[9];
+		for(int i = 0; i < 9; i++)
+		{
+			_tanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
+		}
+		return _tanks;
 	}
 	
 	@Override
@@ -378,29 +381,12 @@ inv:	for(int i = 0; i < 9; i++)
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
-	{
-		int match = findFirstMatchingTank(type);
-		if(match >= 0) return _tanks[match];
-		match = findFirstEmptyTank();
-		if(match >= 0) return _tanks[match];
-		return null;
-	}
-	
-	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
 		FluidTankInfo[] r = new FluidTankInfo[_tanks.length];
 		for (int i = _tanks.length; i --> 0; )
 			r[i] = _tanks[i].getInfo();
 		return r;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IFluidTank[] getTanks()
-	{
-		return _tanks;
 	}
 	
 	private int findFirstEmptyTank()

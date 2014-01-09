@@ -36,16 +36,12 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	private int _tick;
 	private long _nextSewerCheckTick;
 	private boolean _jammed;
-	private FluidTank[] _tanks;
 	
 	public TileEntitySewer()
 	{
 		super(Machine.Sewer);
-		_tanks = new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME),
-				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
 		_areaManager = new HarvestAreaManager(this, 0, 1, 0);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
-		setManageFluids(true);
 	}
 	
 	@Override
@@ -190,6 +186,13 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 				if (resource.isFluidEqual(_tank.getFluid()))
 					return _tank.drain(resource.amount, doDrain);
 		return null;
+	}
+	
+	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME),
+				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
 	}
 	
 	@Override

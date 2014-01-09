@@ -19,7 +19,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
@@ -50,8 +49,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	{
 		super(Machine.Harvester);
 		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 		setManageSolids(true);
 		
 		_settings = new HashMap<String, Boolean>();
@@ -150,7 +147,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		
 		harvestable.postHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 		
-		_tank.fill(FluidRegistry.getFluidStack("sludge", 10), true);
+		_tanks[0].fill(FluidRegistry.getFluidStack("sludge", 10), true);
 		
 		return true;
 	}
@@ -314,21 +311,26 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return _tank.drain(maxDrain, doDrain);
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
-			return _tank.drain(resource.amount, doDrain);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		return _tank;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 	
 	@Override

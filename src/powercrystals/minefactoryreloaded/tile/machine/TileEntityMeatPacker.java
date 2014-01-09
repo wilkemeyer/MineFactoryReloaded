@@ -1,31 +1,30 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IFluidHandler
 {
 	public TileEntityMeatPacker()
 	{
 		super(Machine.MeatPacker);
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 		setManageSolids(true);
 	}
 	
@@ -51,14 +50,14 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_tank.getFluid() != null && _tank.getFluid().amount >= 2)
+		if(drain(2, false) == 2)
 		{
 			setWorkDone(getWorkDone() + 1);
 			
 			if(getWorkDone() >= getWorkMax())
 			{
 				ItemStack item;
-				if(_tank.getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
+				if(_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
 				{
 					item = new ItemStack(MineFactoryReloadedCore.meatIngotRawItem);
 				}
@@ -71,7 +70,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 				
 				setWorkDone(0);
 			}
-			_tank.drain(2, true);
+			drain(2, true);
 			return true;
 		}
 		return false;
@@ -105,11 +104,11 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 		}
 		else
 		{
-			if(_tank.getFluid() != null && _tank.getFluid().amount == 1)
+			if(drain(2, false) == 1)
 			{
-				_tank.drain(1, true);
+				drain(1, true);
 			}
-			return _tank.fill(resource, doFill);
+			return _tanks[0].fill(resource, doFill);
 		}
 	}
 	
@@ -126,14 +125,9 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		if(type != null && (type.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
-				type.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1))))
-		{
-			return _tank;
-		}
-		return null;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 
 	@Override

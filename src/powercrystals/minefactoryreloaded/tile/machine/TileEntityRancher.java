@@ -13,14 +13,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
-import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -33,8 +31,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	{
 		super(Machine.Rancher);
 		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
-		_tank = new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 		setManageSolids(true);
 		setCanRotate(true);
 	}
@@ -73,8 +69,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	@Override
 	public boolean activateMachine()
 	{
-		MFRLiquidMover.pumpLiquid(_tank, this);
-		
 		boolean didDrop = false;
 		
 		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
@@ -90,9 +84,9 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 				{
 					for(RanchedItem s : drops)
 					{
-						if(s.hasFluid())
+						if(s.hasFluid()) // whitelist fluids? multiple tanks?
 						{
-							_tank.fill((FluidStack)s.getResult(), true);
+							fill((FluidStack)s.getResult(), true);
 							didDrop = true;
 							continue;
 						}
@@ -122,6 +116,10 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
 		return 0;
 	}
 	
@@ -134,21 +132,26 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return _tank.drain(maxDrain, doDrain);
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
-			return _tank.drain(resource.amount, doDrain);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 	
 	@Override
-	public IFluidTank getTank(ForgeDirection direction, FluidStack type)
+	protected FluidTank[] createTanks()
 	{
-		return _tank;
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 
 	@Override

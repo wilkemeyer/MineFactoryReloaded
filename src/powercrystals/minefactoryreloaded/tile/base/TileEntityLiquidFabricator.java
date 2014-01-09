@@ -18,8 +18,6 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 		super(machine, machine.getActivationEnergy() * liquidFabPerTick);
 		_liquidId = liquidId;
 		_liquidFabPerTick = liquidFabPerTick;
-		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-		setManageFluids(true);
 	}
 	
 	@Override
@@ -31,12 +29,12 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 			return false;
 		}
 		
-		if(_tank.getFluid() != null && _tank.getCapacity() - _tank.getFluid().amount < _liquidFabPerTick)
-		{
-			return false;
-		}
+		FluidStack fluid = new FluidStack(_liquidId, _liquidFabPerTick);
 		
-		_tank.fill(new FluidStack(_liquidId, _liquidFabPerTick), true);
+		if (fill(ForgeDirection.UNKNOWN, fluid, false) != _liquidFabPerTick)
+			return false;
+		
+		fill(ForgeDirection.UNKNOWN, fluid, true);
 		
 		return true;
 	}
@@ -66,8 +64,18 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 	
 	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)};
+	}
+	
+	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
 		return 0;
 	}
 	
@@ -80,14 +88,19 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return _tank.drain(maxDrain, doDrain);
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
-			return _tank.drain(resource.amount, doDrain);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
 	}
 

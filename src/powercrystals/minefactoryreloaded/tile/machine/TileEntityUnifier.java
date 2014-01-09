@@ -41,10 +41,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	public TileEntityUnifier()
 	{
 		super(Machine.Unifier);
-		_tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
 		_roundingCompensation = 1;
 		setManageSolids(true);
-		setManageFluids(true);
 	}
 
 	public static void updateUnifierLiquids()
@@ -244,7 +242,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		
 		if(converted == null || converted.amount == 0) return 0;
 		
-		int filled = _tank.fill(converted, doFill);
+		int filled = _tanks[0].fill(converted, doFill);
 		
 		if(filled == converted.amount)
 		{
@@ -289,15 +287,26 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return _tank.drain(maxDrain, doDrain);
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null && resource.isFluidEqual(_tank.getFluid()))
-			return _tank.drain(resource.amount, doDrain);
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
 		return null;
+	}
+	
+	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 
 	@Override
