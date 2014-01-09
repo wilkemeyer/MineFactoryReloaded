@@ -18,6 +18,7 @@ public class CommonProxy implements IMFRProxy
 		{
 			((EntityPlayerMP)e).playerNetServerHandler.setPlayerLocation(x, y, z, e.cameraYaw, e.cameraPitch);
 		}
+		e.setPositionAndUpdate(x, y, z);
 	}
 	
 	@Override

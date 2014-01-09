@@ -1,18 +1,22 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityMinecartEmpty;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockRailPassengerDropoff extends BlockRailBase
 {
@@ -26,73 +30,84 @@ public class BlockRailPassengerDropoff extends BlockRailBase
 	}
 	
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z)
 	{
-		if(world.isRemote || !(entity instanceof EntityMinecartEmpty))
+		if(world.isRemote)
 		{
 			return;
 		}
-		EntityMinecartEmpty minecart = (EntityMinecartEmpty)entity;
 		if(minecart.riddenByEntity == null || !(minecart.riddenByEntity instanceof EntityPlayer))
 		{
 			return;
 		}
 		
-		int[] dropCoords = findSpaceForPlayer(x, y, z, world);
-		if(dropCoords[1] < 0)
-		{
-			return;
-		}
 		Entity player = minecart.riddenByEntity;
-		player.mountEntity(minecart);
-		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityPlayer)player, dropCoords[0] + 0.5, dropCoords[1] + 0.5, dropCoords[2] + 0.5);
+		AxisAlignedBB dropCoords = findSpaceForPlayer(player, x, y, z, world);
+		if (dropCoords == null)
+			return;
+		
+		player.mountEntity(null);
+		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityPlayer)player,
+				dropCoords.minX + (dropCoords.maxX - dropCoords.minX) / 2,
+				dropCoords.minY,
+				dropCoords.minZ + (dropCoords.maxZ - dropCoords.minZ) / 2);
 	}
 	
-	private int[] findSpaceForPlayer(int x, int y, int z, World world)
+	private AxisAlignedBB findSpaceForPlayer(Entity entity, int x, int y, int z, World world)
 	{
-		int[] targetCoords = new int[3];
-		targetCoords[1] = -1;
-		
-		int offsetX;
-		int offsetY;
-		int offsetZ;
-		
-		int targetX;
-		int targetY;
-		int targetZ;
-		
-		for(offsetX = -MFRConfig.passengerRailSearchMaxHorizontal.getInt(); offsetX < MFRConfig.passengerRailSearchMaxHorizontal.getInt(); offsetX++)
+        AxisAlignedBB bb = entity.boundingBox.getOffsetBoundingBox((Math.floor(entity.posX) - entity.posX) / 2,
+        		(Math.floor(entity.posY) - entity.posY) / 2, (Math.floor(entity.posZ) - entity.posZ) / 2);
+		bb.offset((int)bb.minX - bb.minX, (int)bb.minY - bb.minY, (int)bb.minZ - bb.minZ);
+		bb.offset(x - bb.minX, 0, z - bb.minZ);
+		int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
+		int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt();
+
+        bb.offset(0.25, -searchY + 0.01, 0.25);
+		for(int offsetY = -searchY; offsetY < searchY; offsetY++)
 		{
-			for(offsetY = -MFRConfig.passengerRailSearchMaxVertical.getInt(); offsetY < MFRConfig.passengerRailSearchMaxVertical.getInt(); offsetY++)
+			bb.offset(-searchX, 0, 0);
+			for(int offsetX = -searchX; offsetX <= searchX; offsetX++)
 			{
-				for(offsetZ = -MFRConfig.passengerRailSearchMaxHorizontal.getInt(); offsetZ < MFRConfig.passengerRailSearchMaxHorizontal.getInt(); offsetZ++)
+				bb.offset(0, 0, -searchX);
+				for(int offsetZ = -searchX; offsetZ <= searchX; offsetZ++)
 				{
-					targetX = x + offsetX;
-					targetY = y + offsetY;
-					targetZ = z + offsetZ;
-					
-					if(world.getBlockId(targetX, targetY, targetZ) == 0 && world.getBlockId(targetX, targetY + 1, targetZ) == 0
-							&& !isBadBlockToStandOn(world.getBlockId(targetX, targetY - 1, targetZ)))
+					int targetX = MathHelper.floor_double(bb.minX + (bb.maxX - bb.minX) / 2);
+					int targetY = MathHelper.floor_double(bb.minY);
+					int targetZ = MathHelper.floor_double(bb.minZ + (bb.maxZ - bb.minZ) / 2);
+
+					if(world.getCollidingBlockBounds(bb).isEmpty() &&
+							!isBadBlockToStandIn(world, targetX, targetY, targetZ) &&
+							!isBadBlockToStandOn(world, targetX, targetY - 1, targetZ))
 					{
-						targetCoords[0] = targetX;
-						targetCoords[1] = targetY;
-						targetCoords[2] = targetZ;
-						return targetCoords;
+						return bb;
 					}
+					bb.offset(0, 0, 1);
 				}
+				bb.offset(1, 0, -searchX - 1);
 			}
+			bb.offset(-searchX - 1, 1, 0);
 		}
 		
-		return targetCoords;
+		return null;
 	}
 	
-	private boolean isBadBlockToStandOn(int blockId)
+	private boolean isBadBlockToStandOn(World world, int x, int y, int z)
 	{
-		if(blockId == 0
-				|| Block.blocksList[blockId].blockMaterial == Material.lava
-				|| Block.blocksList[blockId].blockMaterial == Material.water
-				|| Block.blocksList[blockId].blockMaterial == Material.fire
-				|| Block.blocksList[blockId] instanceof BlockRailBase)
+		Block block = Block.blocksList[world.getBlockId(x, y, z)];
+		if (block == null || block.isAirBlock(world, x, y, z) ||
+				isBadBlockToStandIn(world, x, y, z) ||
+				!block.isBlockSolidOnSide(world, x, y, z, ForgeDirection.UP))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isBadBlockToStandIn(World world, int x, int y, int z)
+	{
+		Block block = Block.blocksList[world.getBlockId(x, y, z)];
+		if (block != null && (block.blockMaterial.isLiquid() ||
+				block instanceof BlockRailBase))
 		{
 			return true;
 		}
@@ -105,4 +120,32 @@ public class BlockRailPassengerDropoff extends BlockRailBase
 	{
 		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
+
+    @Override
+	protected void func_94358_a(World par1World, int par2, int par3, int par4, int par5, int par6, int par7)
+    {
+        boolean flag = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
+        boolean flag1 = false;
+
+        if (flag & (par5 & 8) == 0)
+        {
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, par6 | 8, 3);
+            flag1 = true;
+        }
+        else if (!flag & (par5 & 8) != 0)
+        {
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, par6, 3);
+            flag1 = true;
+        }
+
+        if (flag1)
+        {
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this.blockID);
+
+            if (par6 == 2 || par6 == 3 || par6 == 4 || par6 == 5)
+            {
+                par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this.blockID);
+            }
+        }
+    }
 }
