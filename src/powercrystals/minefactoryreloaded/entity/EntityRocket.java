@@ -28,6 +28,7 @@ public class EntityRocket extends Entity
 	public EntityRocket(World world)
 	{
 		super(world);
+		this.renderDistanceWeight = 10.0D;
 		_lostTarget = null;
 	}
 	
