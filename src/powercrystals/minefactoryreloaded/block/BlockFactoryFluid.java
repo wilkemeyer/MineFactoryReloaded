@@ -99,7 +99,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 			int block = 0;
 			if(blockID == MineFactoryReloadedCore.milkLiquid.blockID)
 			{
-				if (rand.nextInt(5) == 0)
+				if (rand.nextInt(50) == 0)
 					drop = new ItemStack(Item.dyePowder, rand.nextInt(2), 15);
 			}
 			else if(blockID == MineFactoryReloadedCore.sludgeLiquid.blockID)
