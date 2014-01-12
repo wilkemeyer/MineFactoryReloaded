@@ -1,16 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraft.tileentity.TileEntity;
-import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
-import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.FMLLog;import java.lang.reflect.InvocationTargetException;import java.lang.reflect.Method;import net.minecraft.block.Block;import net.minecraft.item.ItemStack;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import net.minecraftforge.common.ForgeDirection;import net.minecraftforge.common.IPlantable;import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
 public class PlantablePamCrop implements IFactoryPlantable
-{
+{
 	protected int _blockId;
 	protected int _itemId;
 	protected int _plantableBlockId;
@@ -34,7 +25,7 @@ public class PlantablePamCrop implements IFactoryPlantable
 	public int getSeedId()
 	{
 		return _itemId;
-	}    
+	}
 	@Override
 	public int getPlantedBlockId(World world, int x, int y, int z, ItemStack stack)
 	{
@@ -54,11 +45,11 @@ public class PlantablePamCrop implements IFactoryPlantable
 			return false;
 		}
 		return (
-		               groundId == Block.dirt.blockID ||
-		               groundId == Block.grass.blockID ||
-		               groundId == Block.tilledField.blockID ||
-		               (Block.blocksList[_blockId] instanceof IPlantable && Block.blocksList[groundId] != null &&
-		                Block.blocksList[groundId].canSustainPlant(world, x, y, z, ForgeDirection.UP, ((IPlantable)Block.blocksList[_blockId]))));
+				groundId == Block.dirt.blockID ||
+				groundId == Block.grass.blockID ||
+				groundId == Block.tilledField.blockID ||
+				(Block.blocksList[_blockId] instanceof IPlantable && Block.blocksList[groundId] != null &&
+				Block.blocksList[groundId].canSustainPlant(world, x, y, z, ForgeDirection.UP, ((IPlantable)Block.blocksList[_blockId]))));
 	}
 	@Override
 	public void prePlant(World world, int x, int y, int z, ItemStack stack)

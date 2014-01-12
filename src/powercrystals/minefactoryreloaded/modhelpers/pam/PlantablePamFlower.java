@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.modhelpers.pam;
 
 import net.minecraft.block.Block;
 
-
 public class PlantablePamFlower extends PlantablePamCrop
 {
 
@@ -10,11 +9,11 @@ public class PlantablePamFlower extends PlantablePamCrop
 	{
 		this(blockId, itemId,cropId, Block.tilledField.blockID);
 	}
-	
+
 	public PlantablePamFlower(int blockId, int itemId,int cropId, int plantableBlockId) throws NoSuchMethodException,ClassNotFoundException
 	{
-        super(blockId, itemId,cropId, plantableBlockId);
-        _setCrop=Pam.pamTEFlowerSetCropId;
-        _setStage=Pam.pamTEFlowerSetGrowthStage;
+		super(blockId, itemId,cropId, plantableBlockId);
+		_setCrop=Pam.pamTEFlowerSetCropId;
+		_setStage=Pam.pamTEFlowerSetGrowthStage;
 	}
 }

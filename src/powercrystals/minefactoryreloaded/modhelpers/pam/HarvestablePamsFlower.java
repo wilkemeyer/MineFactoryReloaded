@@ -1,13 +1,14 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class HarvestablePamsFlower extends HarvestablePams
 {
@@ -29,8 +30,8 @@ public class HarvestablePamsFlower extends HarvestablePams
 			try
 			{
 				int cropID = ( Integer ) ( getCrop.invoke( te, new Object[]
-				                           {} ) );
-                int seedID=cropID;
+						{} ) );
+				int seedID=cropID;
 				switch ( cropID )
 				{
 				case 4:
@@ -40,17 +41,17 @@ public class HarvestablePamsFlower extends HarvestablePams
 					outStack.add( new ItemStack( Block.plantRed, seedDrops, 0 ) );
 					break;
 				default:
-                    if(cropID>14)
-                        cropID-=2;
-                    else if(cropID>4)
-                        cropID-=1;
+					if(cropID>14)
+						cropID-=2;
+					else if(cropID>4)
+						cropID-=1;
 					outStack.add( new ItemStack( Pam.flowerId, cropDrops, cropID ) );
 				}
-                if(harvesterSettings.get("playSounds"))
-                {
-                    world.playAuxSFXAtEntity(null, 2001, x,y,z,
-                    _sourceId + (0 << 12));
-                }
+				if(harvesterSettings.get("playSounds"))
+				{
+					world.playAuxSFXAtEntity(null, 2001, x,y,z,
+							_sourceId + (0 << 12));
+				}
 				outStack.add( new ItemStack( Pam.flowerSeeds[seedID], seedDrops, 0 ) );
 			}
 			catch ( Exception ex )
@@ -60,11 +61,11 @@ public class HarvestablePamsFlower extends HarvestablePams
 		}
 		return outStack;
 	}
-    @Override
-    public void postHarvest( World world, int x, int y, int z )
-    {
-        world.removeBlockTileEntity(x,y,z);
+	@Override
+	public void postHarvest( World world, int x, int y, int z )
+	{
+		world.removeBlockTileEntity(x,y,z);
 
-        world.setBlockToAir(x,y,z);
-    }
+		world.setBlockToAir(x,y,z);
+	}
 }

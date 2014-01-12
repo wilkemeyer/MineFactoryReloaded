@@ -1,18 +1,11 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
-import java.lang.reflect.Method;
-import java.util.Random;
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import net.minecraft.tileentity.TileEntity;
-import powercrystals.minefactoryreloaded.api.FertilizerType;
-import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
-import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.FMLLog;import java.lang.reflect.Method;import java.util.Random;import net.minecraft.block.Block;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import powercrystals.minefactoryreloaded.api.FertilizerType;import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 class PamFertilizable implements IFactoryFertilizable
 {
 	protected Method getGrowthStage;
 	protected Method _fertilize;
 	private int _blockId;
-	final private Object[] dummyArgs= new Object[]{};
+	final private Object[] dummyArgs = new Object[]{};
 	public PamFertilizable(int blockId) throws ClassNotFoundException
 	{
 		_blockId = blockId;
