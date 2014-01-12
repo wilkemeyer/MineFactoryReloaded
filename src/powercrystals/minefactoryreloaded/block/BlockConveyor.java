@@ -499,6 +499,11 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			if (r != null)
 				ret.add(r);
 		}
+		else if (world.getBlockId(x, y, z) == blockID)
+		{
+			ret.add(new ItemStack(blockID, 1, getDamageValue(world, x, y, z)));
+			world.setBlockMetadataWithNotify(x, y, z, 15, 4);
+		}
 		return ret;
 	}
 	
