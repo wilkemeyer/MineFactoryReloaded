@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.world;
 
-import powercrystals.core.util.UtilInventory;
-
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
@@ -9,6 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import powercrystals.core.util.UtilInventory;
 
 import skyboy.core.world.WorldProxy;
 
@@ -18,12 +18,42 @@ public class SmashingWorld extends WorldProxy
 	protected int blockID, meta;
 	protected int x = 0, y = 1, z = 0;
 	protected Material mat;
-	
+
 	public SmashingWorld(World world)
 	{
 		super(world);
 	}
-	
+
+	@Override
+	public boolean setBlock(int par1, int par2, int par3, int par4, int par5, int par6)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean setBlockMetadataWithNotify(int par1, int par2, int par3, int par4, int par5)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean setBlockToAir(int par1, int par2, int par3)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean destroyBlock(int par1, int par2, int par3, boolean par4)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean setBlock(int par1, int par2, int par3, int par4)
+	{
+		return true;
+	}
+
 	@Override
 	public int getBlockId(int X, int Y, int Z)
 	{
@@ -31,13 +61,13 @@ public class SmashingWorld extends WorldProxy
 			return blockID;
 		return 0;
 	}
-	
+
 	@Override
 	public TileEntity getBlockTileEntity(int X, int Y, int Z)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public Material getBlockMaterial(int X, int Y, int Z)
 	{
@@ -45,7 +75,7 @@ public class SmashingWorld extends WorldProxy
 			return mat;
 		return Material.air;
 	}
-	
+
 	@Override
 	public int getBlockMetadata(int X, int Y, int Z)
 	{
@@ -53,7 +83,7 @@ public class SmashingWorld extends WorldProxy
 			return meta;
 		return 0;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public ArrayList smashBlock(ItemStack input, Block block, int blockId, int meta, int fortune)
 	{
