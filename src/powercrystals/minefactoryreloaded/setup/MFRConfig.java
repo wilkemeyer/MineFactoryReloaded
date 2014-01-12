@@ -152,6 +152,7 @@ public class MFRConfig
 	public static Property enableGuns;
 	public static Property enableNetLauncher;
 	public static Property enableSPAMRExploding;
+	public static Property enableFuelExploding;
 	
 	public static Property redNetConnectionBlacklist;
 	
@@ -362,6 +363,8 @@ public class MFRConfig
 		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
 		enableSPAMRExploding = c.get(Configuration.CATEGORY_ITEM, "SPAMR.Exploding", true);
 		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
+		enableFuelExploding = c.get(Configuration.CATEGORY_GENERAL, "Biofuel.Exploding", true);
+		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
