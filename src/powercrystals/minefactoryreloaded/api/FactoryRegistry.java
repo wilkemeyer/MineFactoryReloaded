@@ -166,7 +166,7 @@ public class FactoryRegistry
 			if(registry != null)
 			{
 				Method reg = registry.getMethod("registerGrinderBlacklist", Class[].class);
-				reg.invoke(registry, (Object[])ungrindables);
+				reg.invoke(registry, new Object[] {ungrindables});
 			}
 		}
 		catch(Exception e)
