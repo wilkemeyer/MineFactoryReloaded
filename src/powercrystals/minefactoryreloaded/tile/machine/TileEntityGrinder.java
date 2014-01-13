@@ -140,7 +140,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			{
 				continue;
 			}
-			boolean processMob = false;
+			
 			processEntity:
 			{
 				if(MFRRegistry.getGrindables().containsKey(e.getClass()))
@@ -154,7 +154,6 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 					}
 					if(r.processEntity(e))
 					{
-						processMob = true;
 						if(e.getHealth() <= 0)
 						{
 							continue entityList;
@@ -162,6 +161,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 						break processEntity;
 					}
 				}
+				
 				for(Class<?> t : MFRRegistry.getGrinderBlacklist())
 				{
 					if(t.isInstance(e))
@@ -169,29 +169,13 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 						continue entityList;
 					}
 				}
-				if(!_grindingWorld.addEntityForGrinding(e))
-				{
-					continue entityList;
-				}
 			}
-			if(processMob && e.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot"))
+			
+			if(!_grindingWorld.addEntityForGrinding(e))
 			{
-				try
-				{
-					e.worldObj.getGameRules().setOrCreateGameRule("doMobLoot", "false");
-					damageEntity(e);
-					if(e.getHealth() <= 0)
-					{
-						fillTank(_tanks[0], "mobessence", 1);
-					}
-				}
-				finally
-				{
-					e.worldObj.getGameRules().setOrCreateGameRule("doMobLoot", "true");
-					setIdleTicks(20);
-				}
-				return true;
+				continue entityList;
 			}
+			
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
