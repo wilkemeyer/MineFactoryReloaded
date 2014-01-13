@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
+
 public class BagContainerWrapper implements IInventory
 {
 	private ItemStack _stack;
@@ -124,6 +126,6 @@ public class BagContainerWrapper implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return true;
+		return !(itemstack.getItem() instanceof ItemFactoryBag);
 	}
 }
