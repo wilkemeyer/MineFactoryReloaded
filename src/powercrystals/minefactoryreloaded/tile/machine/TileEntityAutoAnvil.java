@@ -87,7 +87,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		}
 		else
 		{
-			if(drain(4, false) != 4)
+			if(drain(_tanks[0], 4, false) != 4)
 			{
 				return false;
 			}
@@ -96,7 +96,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				return false;
 			}
 			
-			drain(4, true);
+			drain(_tanks[0], 4, true);
 			setWorkDone(getWorkDone() + 1);
 			
 			if(getWorkDone() >= getWorkMax())

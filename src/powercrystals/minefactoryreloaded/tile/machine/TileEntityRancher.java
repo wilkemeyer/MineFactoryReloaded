@@ -96,6 +96,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 					}
 					if(didDrop)
 					{
+						onInventoryChanged();
 						setIdleTicks(20);
 						return true;
 					}
@@ -116,10 +117,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-					return _tank.fill(resource, doFill);
 		return 0;
 	}
 	

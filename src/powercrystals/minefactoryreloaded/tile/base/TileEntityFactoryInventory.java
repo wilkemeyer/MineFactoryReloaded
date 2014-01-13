@@ -152,15 +152,18 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return emptyIFluidTank;
 	}
 	
-	public int drain(int maxDrain, boolean doDrain)
+	public int drain(FluidTank _tank, int maxDrain, boolean doDrain)
 	{
-		for (FluidTank _tank : (FluidTank[])getTanks())
-			if (_tank.getFluidAmount() > 0)
+		if (_tank.getFluidAmount() > 0)
+		{
+			FluidStack drained = _tank.drain(maxDrain, doDrain);
+			if (drained != null)
 			{
-				FluidStack drained = _tank.drain(maxDrain, doDrain);
-				if (drained != null)
-					return drained.amount;
+				if (doDrain)
+					onInventoryChanged();
+				return drained.amount;
 			}
+		}
 		return 0;
 	}
 	

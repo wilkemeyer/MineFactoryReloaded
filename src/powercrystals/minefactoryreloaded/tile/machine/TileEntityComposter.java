@@ -44,7 +44,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	@Override
 	protected boolean activateMachine()
 	{
-		if(drain(20, false) == 20)
+		if(drain(_tanks[0], 20, false) == 20)
 		{
 			setWorkDone(getWorkDone() + 1);
 			
@@ -53,7 +53,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 				doDrop(new ItemStack(MineFactoryReloadedCore.fertilizerItem));
 				setWorkDone(0);
 			}
-			drain(20, true);
+			drain(_tanks[0], 20, true);
 			return true;
 		}
 		return false;

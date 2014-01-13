@@ -73,9 +73,9 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean activateMachine()
 	{
-		if(drain(10, false) == 10)
+		if(drain(_tanks[0], 10, false) == 10)
 		{
-			drain(10, true);
+			drain(_tanks[0], 10, true);
 			setWorkDone(getWorkDone() + 1);
 			_tick++;
 			

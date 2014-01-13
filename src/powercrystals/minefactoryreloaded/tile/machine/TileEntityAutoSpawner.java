@@ -106,9 +106,9 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		}
 		if(getWorkDone() < getWorkMax())
 		{
-			if (drain(10, false) == 10)
+			if (drain(_tanks[0], 10, false) == 10)
 			{
-				drain(10, true);
+				drain(_tanks[0], 10, true);
 				setWorkDone(getWorkDone() + 1);
 				return true;
 			}

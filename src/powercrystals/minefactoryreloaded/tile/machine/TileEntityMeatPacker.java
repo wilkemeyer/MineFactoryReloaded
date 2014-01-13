@@ -50,7 +50,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	@Override
 	protected boolean activateMachine()
 	{
-		if(drain(2, false) == 2)
+		if(drain(_tanks[0], 2, false) == 2)
 		{
 			setWorkDone(getWorkDone() + 1);
 			
@@ -70,7 +70,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 				
 				setWorkDone(0);
 			}
-			drain(2, true);
+			drain(_tanks[0], 2, true);
 			return true;
 		}
 		return false;
@@ -104,9 +104,9 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 		}
 		else
 		{
-			if(drain(2, false) == 1)
+			if(drain(_tanks[0], 2, false) == 1)
 			{
-				drain(1, true);
+				drain(_tanks[0], 1, true);
 			}
 			return _tanks[0].fill(resource, doFill);
 		}
