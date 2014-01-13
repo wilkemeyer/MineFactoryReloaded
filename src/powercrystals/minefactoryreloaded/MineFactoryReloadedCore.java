@@ -89,6 +89,7 @@ import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
 import powercrystals.minefactoryreloaded.item.ItemFactory;
+import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
 import powercrystals.minefactoryreloaded.item.ItemFactoryBucket;
 import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
 import powercrystals.minefactoryreloaded.item.ItemFactoryFood;
@@ -271,6 +272,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static ItemFactoryCup plasticCupItem;
 	public static Item plasticCellItem;
 	public static Item fishingRodItem;
+	public static Item bagItem;
 
 	private static MineFactoryReloadedCore instance;
 
@@ -452,6 +454,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		rocketItem = (new ItemRocket(MFRConfig.rocketItemId.getInt())).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 		//plasticCellItem = CarbonContainer.cell;
 		fishingRodItem = (new ItemFishingRod(MFRConfig.fishingRodItemId.getInt()));
+		bagItem = (new ItemFactoryBag(MFRConfig.bagItemId.getInt())).setUnlocalizedName("mfr.plastic.bag").setMaxStackSize(24);
 
 		for(Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{

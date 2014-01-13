@@ -215,6 +215,7 @@ item.mfr.rocket.name = Self-Propelled Anti Material Rocket
 item.mfr.rocket.smart.name = Tracking Self-Propelled Anti Material Rocket
 item.mfr.rocketlauncher.name = SPAMR Launcher
 item.mfr.fishingrod.name = Fishing Rod
+item.mfr.plastic.bag.name = Plastic Bag
 
 item.mfr.ceramicdye.white.name = Ceramic Dye (White)
 item.mfr.ceramicdye.orange.name = Ceramic Dye (Orange)
@@ -374,6 +375,8 @@ chat.info.mfr.rednet.connection.standard = Set cable to standard connection mode
 chat.info.mfr.rednet.connection.forced = Set cable to forced-connection mode
 chat.info.mfr.rednet.connection.forcedstrong = Set cable to strong-connection mode
 chat.info.mfr.rednet.connection.cableonly = Set cable to cable-only connection mode
+
+chat.info.mfr.bag.stacksize = You can only open one bag at a time
 
 tip.info.mfr.safarinet.mode = Sneak-click to change mode
 tip.info.mfr.safarinet.jailer = Released creatures don't despawn normally

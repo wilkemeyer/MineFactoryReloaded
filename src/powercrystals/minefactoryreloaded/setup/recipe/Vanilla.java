@@ -1393,6 +1393,15 @@ public class Vanilla
 			'F', Item.fishingRod,
 			'T', Block.torchRedstoneActive
 				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.bagItem, 3), new Object[]
+				{
+			"SPS",
+			"P P",
+			"PPP",
+			'P', "sheetPlastic",
+			'S', Item.silk
+				} ));
 	}
 	
 	protected void registerVanillaImprovements()

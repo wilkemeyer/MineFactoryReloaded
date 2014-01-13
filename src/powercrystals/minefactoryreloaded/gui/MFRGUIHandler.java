@@ -1,16 +1,20 @@
 package powercrystals.minefactoryreloaded.gui;
 
+import cpw.mods.fml.common.network.IGuiHandler;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.gui.client.GUIBag;
 import powercrystals.minefactoryreloaded.gui.client.GuiNeedlegun;
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
+import powercrystals.minefactoryreloaded.gui.container.ContainerBag;
 import powercrystals.minefactoryreloaded.gui.container.ContainerNeedlegun;
 import powercrystals.minefactoryreloaded.gui.container.ContainerRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
-import cpw.mods.fml.common.network.IGuiHandler;
 
 public class MFRGUIHandler implements IGuiHandler
 {
@@ -36,6 +40,13 @@ public class MFRGUIHandler implements IGuiHandler
 				return new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
 		}
+		else if(ID == 2)
+		{
+			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
+			{
+				return new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
+			}
+		}
 		return null;
 	}
 	
@@ -59,6 +70,13 @@ public class MFRGUIHandler implements IGuiHandler
 			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
 			{
 				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
+			}
+		}
+		else if(ID == 2)
+		{
+			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
+			{
+				return new GUIBag(new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
 			}
 		}
 		return null;
