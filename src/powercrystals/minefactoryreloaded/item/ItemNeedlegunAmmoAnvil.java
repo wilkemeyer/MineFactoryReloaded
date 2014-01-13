@@ -6,10 +6,21 @@ import net.minecraft.world.World;
 
 public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock
 {
+	public ItemNeedlegunAmmoAnvil(int id, int blockId, int meta)
+	{
+		super(id, blockId, meta);
+		setMaxDamage(0);
+	}
+	
 	public ItemNeedlegunAmmoAnvil(int id)
 	{
-		super(id, Block.anvil.blockID, 3);
-		setMaxDamage(0);
+		this(id, Block.anvil.blockID, 3);
+	}
+	
+	@Override
+	public float getSpread()
+	{
+		return 0.5f;
 	}
 
 	@Override

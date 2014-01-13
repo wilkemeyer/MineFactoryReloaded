@@ -17,7 +17,7 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo
 	@Override
 	public boolean onHitEntity(EntityPlayer owner, Entity hit, double distance)
 	{
-		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
+		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 8);
 		return true;
 	}
 
@@ -29,6 +29,6 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo
 	@Override
 	public float getSpread()
 	{
-		return 3.0F;
+		return 2.0F;
 	}
 }

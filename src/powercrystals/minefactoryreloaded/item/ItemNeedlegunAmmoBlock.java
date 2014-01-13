@@ -55,7 +55,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	@Override
 	public float getSpread()
 	{
-		return 0.5F;
+		return 1.5F;
 	}
 
 	protected void placeBlockAt(World world, int x, int y, int z, double distance)
