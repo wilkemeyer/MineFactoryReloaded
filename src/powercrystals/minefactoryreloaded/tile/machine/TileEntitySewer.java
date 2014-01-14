@@ -124,7 +124,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 				_tanks[0].fill(FluidRegistry.getFluidStack("sewage", (int)(25 * massFound)), true);
 			}
 			int maxAmount = Math.max(_tanks[1].getCapacity() - (_tanks[1].getFluidAmount()), 0);
-			if (maxAmount < 0)
+			if (maxAmount <= 0)
 			{
 				return;
 			}
@@ -192,7 +192,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	protected FluidTank[] createTanks()
 	{
 		return new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME),
-				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME) };
+				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4) };
 	}
 	
 	@Override
