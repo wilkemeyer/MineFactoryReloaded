@@ -27,7 +27,7 @@ public class ItemFactoryBag extends ItemFactory {
 					.addKey("chat.info.mfr.bag.stacksize"));
 			return stack;
 		}
-		if(stack.getTagCompound() == null)
+		if (stack.getTagCompound() == null)
 			stack.setTagCompound(new NBTTagCompound());
 
 		player.openGui(MineFactoryReloadedCore.instance(), 2, world, 0, 0, 0);
