@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -23,7 +22,7 @@ public class BlockRailPassengerPickup extends BlockFactoryRail
 	@Override
 	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z)
 	{
-		if (world.isRemote || !(minecart instanceof EntityMinecartEmpty))
+		if (world.isRemote || !minecart.canBeRidden())
 			return;
 		
 		int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
