@@ -2,70 +2,43 @@ package powercrystals.minefactoryreloaded.block;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRailBase;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockRailPassengerPickup extends BlockRailBase
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
+
+public class BlockRailPassengerPickup extends BlockFactoryRail
 {
 	public BlockRailPassengerPickup(int blockId)
 	{
 		super(blockId, true);
 		setUnlocalizedName("mfr.rail.passenger.pickup");
-		setHardness(0.5F);
-		setStepSound(Block.soundMetalFootstep);
-		setCreativeTab(MFRCreativeTab.tab);
 	}
 	
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z)
 	{
-		if(world.isRemote || !(entity instanceof EntityMinecartEmpty))
-		{
+		if (world.isRemote || !(minecart instanceof EntityMinecartEmpty))
 			return;
-		}
-		EntityMinecart minecart = (EntityMinecart)entity;
-		if(minecart.riddenByEntity != null)
-		{
-			return;
-		}
 		
-		AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
-				x - MFRConfig.passengerRailSearchMaxHorizontal.getInt(),
-				y - MFRConfig.passengerRailSearchMaxVertical.getInt(),
-				z - MFRConfig.passengerRailSearchMaxHorizontal.getInt(),
-				x + MFRConfig.passengerRailSearchMaxHorizontal.getInt() + 1,
-				y + MFRConfig.passengerRailSearchMaxVertical.getInt() + 1,
-				z + MFRConfig.passengerRailSearchMaxHorizontal.getInt() + 1);
+		int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
+		int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt();
+		AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(x - searchX, y - searchY, z - searchX,
+				x + searchX + 1, y + searchY + 1, z + searchX + 1);
 		
-		@SuppressWarnings("rawtypes")
-		List entities = world.getEntitiesWithinAABB(EntityPlayer.class, bb);
+		Class<? extends Entity> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
+		List<? extends Entity> entities = world.getEntitiesWithinAABB(target, bb);
 		
-		for(Object o : entities)
-		{
-			if(!(o instanceof EntityPlayer))
+		for (Entity o : entities)
+			if (!o.isDead)
 			{
-				continue;
+				o.mountEntity(minecart);
+				return;
 			}
-			((EntityPlayer)o).mountEntity(minecart);
-			return;
-		}
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
-	{
-		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 }

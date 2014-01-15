@@ -1,12 +1,9 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -15,31 +12,25 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class BlockRailPassengerDropoff extends BlockRailBase
+public class BlockRailPassengerDropoff extends BlockFactoryRail
 {
 	public BlockRailPassengerDropoff(int blockId)
 	{
 		super(blockId, true);
 		setUnlocalizedName("mfr.rail.passenger.dropoff");
-		setHardness(0.5F);
-		setStepSound(Block.soundMetalFootstep);
-		setCreativeTab(MFRCreativeTab.tab);
 	}
 	
 	@Override
 	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z)
 	{
-		if(world.isRemote)
-		{
+		if (world.isRemote)
 			return;
-		}
-		if(minecart.riddenByEntity == null || !(minecart.riddenByEntity instanceof EntityPlayer))
-		{
+		
+		Class<? extends Entity> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
+		if (!target.isInstance(minecart.riddenByEntity))
 			return;
-		}
 		
 		Entity player = minecart.riddenByEntity;
 		AxisAlignedBB dropCoords = findSpaceForPlayer(player, x, y, z, world);
@@ -113,39 +104,4 @@ public class BlockRailPassengerDropoff extends BlockRailBase
 		}
 		return false;
 	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
-	{
-		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-
-    @Override
-	protected void func_94358_a(World par1World, int par2, int par3, int par4, int par5, int par6, int par7)
-    {
-        boolean flag = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
-        boolean flag1 = false;
-
-        if (flag & (par5 & 8) == 0)
-        {
-            par1World.setBlockMetadataWithNotify(par2, par3, par4, par6 | 8, 3);
-            flag1 = true;
-        }
-        else if (!flag & (par5 & 8) != 0)
-        {
-            par1World.setBlockMetadataWithNotify(par2, par3, par4, par6, 3);
-            flag1 = true;
-        }
-
-        if (flag1)
-        {
-            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this.blockID);
-
-            if (par6 == 2 || par6 == 3 || par6 == 4 || par6 == 5)
-            {
-                par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this.blockID);
-            }
-        }
-    }
 }
