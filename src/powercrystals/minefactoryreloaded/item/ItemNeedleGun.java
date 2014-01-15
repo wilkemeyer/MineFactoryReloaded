@@ -1,79 +1,87 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.entity.EntityNeedle;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class ItemNeedleGun extends ItemFactory
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.entity.EntityNeedle;
+
+public class ItemNeedleGun extends ItemFactoryGun
 {
 	public ItemNeedleGun(int id)
 	{
 		super(id);
 	}
-	
+
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	protected boolean hasGUI(ItemStack stack)
 	{
-		if(stack.getTagCompound() == null)
+		return true;
+	}
+
+	@Override
+	protected boolean openGUI(ItemStack stack, World world, EntityPlayer player)
+	{
+		NBTTagCompound tag = stack.getTagCompound().getCompoundTag("ammo");
+		boolean needsAmmo = tag == null || tag.hasNoTags();
+		if (needsAmmo & !world.isRemote)
+			player.openGui(MineFactoryReloadedCore.instance(), 1, world, 0, 0, 0);
+
+		return needsAmmo;
+	}
+
+	@Override
+	protected boolean fire(ItemStack stack, World world, EntityPlayer player)
+	{
+		ItemStack ammo = ItemStack.loadItemStackFromNBT(stack.getTagCompound().getCompoundTag("ammo"));
+		boolean reloaded = false, creative = player.capabilities.isCreativeMode;
+
+		if (!world.isRemote)
 		{
-			stack.setTagCompound(new NBTTagCompound());
+			EntityNeedle needle = new EntityNeedle(world, player, ammo, 1.0F);
+			world.spawnEntityInWorld(needle);
+			world.playSoundAtEntity(player, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 2.0F);
 		}
-		boolean needsAmmo = stack.getTagCompound().getCompoundTag("ammo") == null || stack.getTagCompound().getCompoundTag("ammo").hasNoTags();
-		
-		if(!needsAmmo)
+
+		NBTTagCompound t = new NBTTagCompound();
+		if (!creative)
+			ammo.setItemDamage(ammo.getItemDamage() + 1);
+		if(ammo.getItemDamage() <= ammo.getMaxDamage())
+			ammo.writeToNBT(t);
+		else
 		{
-			ItemStack ammo = new ItemStack(0, 0, 0);
-			ammo.readFromNBT(stack.getTagCompound().getCompoundTag("ammo"));
-			
-			if(!world.isRemote)
+			ItemStack[] inv = player.inventory.mainInventory;
+			for (int i = 0, e = inv.length; i < e; ++i)
 			{
-				EntityNeedle needle = new EntityNeedle(world, player, ammo, 1.0F);
-				world.spawnEntityInWorld(needle);
-				world.playSoundAtEntity(player, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 2.0F);
+				ItemStack item = inv[i];
+				if (item != null && item.itemID == ammo.itemID)
+				{
+					if (!creative && --inv[i].stackSize <= 0) inv[i] = null;
+					ammo.setItemDamage(0);
+					ammo.writeToNBT(t);
+					reloaded = true;
+					break;
+				}
 			}
 
-			NBTTagCompound t = new NBTTagCompound();
-			ammo.setItemDamage(ammo.getItemDamage() + 1);
-			if(ammo.getItemDamage() <= ammo.getMaxDamage())
-			{
-				ammo.writeToNBT(t);
-			}
-			else
-			{
-				for(int i = 0; i < 36; i++)
-				{
-					if(player.inventory.mainInventory[i] != null && player.inventory.mainInventory[i].itemID == ammo.itemID)
-					{
-						player.inventory.decrStackSize(i, 1);
-						ammo.setItemDamage(0);
-						ammo.writeToNBT(t);
-						break;
-					}
-				}
-				
-				if(!world.isRemote)
-				{
-					player.dropPlayerItem(new ItemStack(MineFactoryReloadedCore.needlegunAmmoEmptyItem));
-				}
-			}
-			stack.getTagCompound().setCompoundTag("ammo", t);
+			if (!(world.isRemote | creative))
+				player.dropPlayerItem(new ItemStack(MineFactoryReloadedCore.needlegunAmmoEmptyItem));
 		}
-		else if(!world.isRemote)
-		{
-			player.openGui(MineFactoryReloadedCore.instance(), 1, world, 0, 0, 0);
-		}
-		return stack;
+		stack.getTagCompound().setCompoundTag("ammo", t);
+		return reloaded;
 	}
-	
+
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	protected int getDelay(ItemStack stack, boolean fired)
 	{
+		return fired ? 27 : 7;
+	}
+
+	@Override
+	protected String getDelayTag(ItemStack stack)
+	{
+		return "mfr:NeedleLaunched";
 	}
 }

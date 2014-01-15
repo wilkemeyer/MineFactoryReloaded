@@ -1606,8 +1606,8 @@ public class Vanilla
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoStandardItem), new Object[]
 				{
 					"AAA",
-					"AGA",
-					"AMA",
+					"AAA",
+					"GMG",
 					'A', Item.arrow,
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
 					'G', Item.gunpowder
@@ -1624,16 +1624,19 @@ public class Vanilla
 					'T', Block.tnt
 				}));
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoFireItem), MineFactoryReloadedCore.needlegunAmmoStandardItem,
-				Item.flintAndSteel);
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoFireItem),
+				MineFactoryReloadedCore.needlegunAmmoStandardItem, Item.flintAndSteel);
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoLavaItem), MineFactoryReloadedCore.needlegunAmmoFireItem,
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoLavaItem),
+				MineFactoryReloadedCore.needlegunAmmoStandardItem, MineFactoryReloadedCore.plasticCupItem,
 				Item.bucketLava);
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSludgeItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSludgeItem),
+				MineFactoryReloadedCore.needlegunAmmoStandardItem, MineFactoryReloadedCore.plasticCupItem,
 				MineFactoryReloadedCore.sludgeBucketItem);
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSewageItem), MineFactoryReloadedCore.needlegunAmmoEmptyItem,
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSewageItem),
+				MineFactoryReloadedCore.needlegunAmmoStandardItem, MineFactoryReloadedCore.plasticCupItem,
 				MineFactoryReloadedCore.sewageBucketItem);
 	}
 	

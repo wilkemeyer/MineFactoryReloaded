@@ -15,8 +15,8 @@ public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock
 	@Override
 	public boolean onHitEntity(EntityPlayer owner, Entity hit, double distance)
 	{
-		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
 		hit.setFire(10);
+		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
 		return true;
 	}
 	

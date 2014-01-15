@@ -10,7 +10,7 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo
 	public ItemNeedlegunAmmoStandard(int id)
 	{
 		super(id);
-		setMaxDamage(15);
+		setMaxDamage(11);
 		setHasSubtypes(false);
 	}
 
