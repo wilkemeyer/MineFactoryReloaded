@@ -37,22 +37,22 @@ public class BagContainerWrapper implements IInventory
 		}
 		else
 		{
-			ItemStack s = new ItemStack(0, 0, 0);
-			s.readFromNBT(_stack.getTagCompound().getCompoundTag("slot" + i));
-			return s;
+			return ItemStack.loadItemStackFromNBT(_stack.getTagCompound().getCompoundTag("slot" + i));
 		}
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{
-		ItemStack s = new ItemStack(0, 0, 0);
-		s.readFromNBT(_stack.getTagCompound().getCompoundTag("slot" + i));
-		s.stackSize -= j;
+		if(_stack.getTagCompound().getCompoundTag("slot" + i) == null || _stack.getTagCompound().getCompoundTag("slot" + i).hasNoTags())
+		{
+			return null;
+		}
+		ItemStack s = ItemStack.loadItemStackFromNBT(_stack.getTagCompound().getCompoundTag("slot" + i));
+		ItemStack r = s.splitStack(j);
 		if(s.stackSize <= 0)
 		{
 			_stack.getTagCompound().setCompoundTag("slot" + i, new NBTTagCompound());
-			s = null;
 		}
 		else
 		{
@@ -60,7 +60,7 @@ public class BagContainerWrapper implements IInventory
 			s.writeToNBT(t);
 			_stack.getTagCompound().setCompoundTag("slot" + i, t);
 		}
-		return s;
+		return r;
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class BagContainerWrapper implements IInventory
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 1;
+		return 64;
 	}
 
 	@Override
@@ -126,6 +126,6 @@ public class BagContainerWrapper implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return !(itemstack.getItem() instanceof ItemFactoryBag);
+		return itemstack != null && !(itemstack.getItem() instanceof ItemFactoryBag);
 	}
 }

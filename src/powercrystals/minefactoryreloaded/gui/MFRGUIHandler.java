@@ -42,7 +42,7 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
+			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.bagItem.itemID)
 			{
 				return new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
@@ -74,7 +74,7 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
+			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.bagItem.itemID)
 			{
 				return new GUIBag(new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
 			}
