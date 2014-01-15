@@ -15,10 +15,37 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemPortaSpawner extends ItemFactory
 {
 	private static int _blockId = Block.mobSpawner.blockID;
+	public static final String spawnerTag = "spawner";
 	
 	public ItemPortaSpawner(int id)
 	{
 		super(id);
+	}
+	
+	public static NBTTagCompound getSpawnerTag(ItemStack stack)
+	{
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null)
+		{
+			if (tag.hasKey(spawnerTag))
+				return tag.getCompoundTag(spawnerTag);
+			if (tag.hasKey("EntityId"))
+				return tag;
+		}
+		return null;
+	}
+	
+	private static String getEntityId(ItemStack stack)
+	{
+		NBTTagCompound tag = getSpawnerTag(stack);
+		if (tag != null)
+			return tag.getString("EntityId");
+		return null;
+	}
+	
+	public static boolean hasData(ItemStack stack)
+	{
+		return getEntityId(stack) != null;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -26,10 +53,9 @@ public class ItemPortaSpawner extends ItemFactory
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
-		if(stack.getTagCompound() != null)
-		{
-			infoList.add(stack.getTagCompound().getString("EntityId"));
-		}
+		String id = getEntityId(stack);
+		if (id != null)
+			infoList.add(id);
 	}
 	
 	@Override
@@ -39,7 +65,7 @@ public class ItemPortaSpawner extends ItemFactory
 		{
 			return true;
 		}
-		if(itemstack.getTagCompound() == null)
+		if (getEntityId(itemstack) == null)
 		{
 			int blockId = world.getBlockId(x, y, z);
 			if(blockId != _blockId)
@@ -50,7 +76,8 @@ public class ItemPortaSpawner extends ItemFactory
 			{
 				TileEntity te = world.getBlockTileEntity(x, y, z);
 				NBTTagCompound tag = new NBTTagCompound();
-				te.writeToNBT(tag);
+				tag.setCompoundTag(spawnerTag, new NBTTagCompound());
+				te.writeToNBT(tag.getCompoundTag(spawnerTag));
 				itemstack.setTagCompound(tag);
 				world.setBlockToAir(x, y, z);
 				return true;
@@ -76,34 +103,26 @@ public class ItemPortaSpawner extends ItemFactory
 		}
 		else if(blockId != Block.vine.blockID && blockId != Block.tallGrass.blockID && blockId != Block.deadBush.blockID && (Block.blocksList[blockId] == null || !Block.blocksList[blockId].isBlockReplaceable(world, x, y, z)))
 		{
-			if(side == 0)
+			switch (side)
 			{
+			case 0:
 				--y;
-			}
-			
-			if(side == 1)
-			{
+				break;
+			case 1:
 				++y;
-			}
-			
-			if(side == 2)
-			{
+				break;
+			case 2:
 				--z;
-			}
-			
-			if(side == 3)
-			{
+				break;
+			case 3:
 				++z;
-			}
-			
-			if(side == 4)
-			{
+				break;
+			case 4:
 				--x;
-			}
-			
-			if(side == 5)
-			{
+				break;
+			case 5:
 				++x;
+				break;
 			}
 		}
 		
@@ -151,6 +170,8 @@ public class ItemPortaSpawner extends ItemFactory
 			Block.blocksList[_blockId].onPostBlockPlaced(world, x, y, z, metadata);
 			TileEntity te = world.getBlockTileEntity(x, y, z);
 			NBTTagCompound tag = stack.getTagCompound();
+			if (tag.hasKey(spawnerTag))
+				tag = tag.getCompoundTag(spawnerTag);
 			tag.setInteger("x", x);
 			tag.setInteger("y", y);
 			tag.setInteger("z", z);
@@ -164,6 +185,6 @@ public class ItemPortaSpawner extends ItemFactory
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack)
 	{
-		return stack.getTagCompound() != null;
+		return hasData(stack);
 	}
 }

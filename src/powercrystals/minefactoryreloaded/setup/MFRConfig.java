@@ -154,6 +154,7 @@ public class MFRConfig
 	public static Property enableNetLauncher;
 	public static Property enableSPAMRExploding;
 	public static Property enableFuelExploding;
+	public static Property enableSpawnerCarts;
 	
 	public static Property redNetConnectionBlacklist;
 	
@@ -291,6 +292,8 @@ public class MFRConfig
 		bagItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.PlasticBag", 12049);
 		
 		zoolologistEntityId = c.get("Entity", "ID.Zoologist", 330);
+		enableSpawnerCarts = c.get("Entity", "EnableSpawnerCarts", true);
+		enableSpawnerCarts.comment = "If true, using a portaspawner on an empty minecart will make it into a spawner cart";
 		
 		colorblindMode = c.get(Configuration.CATEGORY_GENERAL, "RedNet.EnableColorblindMode", false);
 		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";

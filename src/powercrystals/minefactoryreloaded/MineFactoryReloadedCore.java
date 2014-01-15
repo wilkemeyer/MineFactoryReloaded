@@ -25,9 +25,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.DispenserBehaviors;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.entity.ai.EntityMinecartMobSpawner;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
@@ -35,6 +37,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.fluids.Fluid;
@@ -649,6 +652,42 @@ public class MineFactoryReloadedCore extends BaseMod
 		{
 			((BlockRubberSapling)MineFactoryReloadedCore.rubberSaplingBlock).growTree(e.world, e.X, e.Y, e.Z, e.world.rand);
 			e.setResult(Result.ALLOW);
+		}
+	}
+	
+	@ForgeSubscribe
+	public void onMinecartInteract(MinecartInteractEvent e)
+	{
+		if (e.player.worldObj.isRemote)
+			return;
+		if (!MFRConfig.enableSpawnerCarts.getBoolean(true))
+			return;
+		if (e.minecart != null && !e.minecart.isDead)
+		{
+			ItemStack item = e.player.getCurrentEquippedItem();
+			if (item != null && item.itemID == portaSpawnerItem.itemID &
+					e.minecart.ridingEntity == null &
+					e.minecart.riddenByEntity == null)
+			{
+				if (e.minecart.getMinecartType() == 0)
+				{
+					if (ItemPortaSpawner.hasData(item))
+					{
+						e.setCanceled(true);
+						NBTTagCompound tag = ItemPortaSpawner.getSpawnerTag(item);
+						e.player.destroyCurrentEquippedItem();
+						e.minecart.writeToNBT(tag);
+						e.minecart.setDead();
+						EntityMinecartMobSpawner ent = new EntityMinecartMobSpawner(e.minecart.worldObj);
+						ent.readFromNBT(tag);
+						ent.worldObj.spawnEntityInWorld(ent);
+					}
+				}
+				else if (e.minecart.getMinecartType() == 4)
+				{
+					// maybe
+				}
+			}
 		}
 	}
 	
