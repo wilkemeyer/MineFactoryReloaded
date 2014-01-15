@@ -1,11 +1,12 @@
 package powercrystals.minefactoryreloaded.net;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
@@ -18,7 +19,7 @@ public class ClientProxy implements IMFRProxy
 	}
 	
 	@Override
-	public void movePlayerToCoordinates(EntityPlayer e, double x, double y, double z)
+	public void movePlayerToCoordinates(EntityLivingBase e, double x, double y, double z)
 	{
 		e.setPositionAndUpdate(x, y, z);
 	}

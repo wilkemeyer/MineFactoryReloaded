@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -28,7 +29,7 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 		if (world.isRemote)
 			return;
 		
-		Class<? extends Entity> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
+		Class<? extends EntityLivingBase> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
 		if (!target.isInstance(minecart.riddenByEntity))
 			return;
 		
@@ -38,7 +39,7 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 			return;
 		
 		player.mountEntity(null);
-		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityPlayer)player,
+		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityLivingBase)player,
 				dropCoords.minX + (dropCoords.maxX - dropCoords.minX) / 2,
 				dropCoords.minY,
 				dropCoords.minZ + (dropCoords.maxZ - dropCoords.minZ) / 2);
