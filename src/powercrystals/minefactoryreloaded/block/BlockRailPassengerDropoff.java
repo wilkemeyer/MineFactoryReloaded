@@ -55,7 +55,7 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 		int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt();
 
         bb.offset(0.25, -searchY + 0.01, 0.25);
-		for(int offsetY = -searchY; offsetY < searchY; offsetY++)
+		for(int offsetY = -searchY; offsetY <= searchY; offsetY++)
 		{
 			bb.offset(-searchX, 0, 0);
 			for(int offsetX = -searchX; offsetX <= searchX; offsetX++)
