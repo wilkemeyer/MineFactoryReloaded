@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
+import buildcraft.api.tools.IToolPipette;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,7 +38,7 @@ import powercrystals.minefactoryreloaded.core.IUseable;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DefaultUseHandler;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
 
-public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable
+public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable, IToolPipette
 {
 	public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 	public final static IUseHandler defaultUseAction = new DefaultUseHandler();
@@ -331,5 +333,11 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			ret.blockZ += side.offsetZ;
 		}
 		return ret;
+	}
+
+	@Override
+	public boolean canPipette(ItemStack pipette)
+	{
+		return true;
 	}
 }
