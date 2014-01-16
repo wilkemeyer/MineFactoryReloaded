@@ -384,7 +384,7 @@ public class BlockFactoryMachine extends BlockContainer
 					return true;
 				}
 			}
-			else if(((ITankContainerBucketable)te).allowBucketFill() &&
+			if(((ITankContainerBucketable)te).allowBucketFill() &&
 					(isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)))
 			{
 				if(MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
