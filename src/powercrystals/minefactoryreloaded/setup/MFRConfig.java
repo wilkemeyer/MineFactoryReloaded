@@ -169,6 +169,7 @@ public class MFRConfig
 	public static Property rubberTreeBiomeBlacklist;
 	public static Property worldGenDimensionBlacklist;
 	public static Property unifierBlacklist;
+	public static Property spawnerBlacklist;
 	
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
@@ -370,6 +371,8 @@ public class MFRConfig
 		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
 		enableFuelExploding = c.get(Configuration.CATEGORY_GENERAL, "Biofuel.Exploding", true);
 		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
+		spawnerBlacklist = c.get(Configuration.CATEGORY_GENERAL, "AutoSpawner.Blacklist", "");
+		spawnerBlacklist.comment = "A comma-separated list of entity IDs (e.g.: CaveSpider,VillagerGolem,butterflyGE) to blacklist from the AutoSpawner.";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";

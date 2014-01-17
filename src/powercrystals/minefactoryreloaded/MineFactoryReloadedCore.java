@@ -630,6 +630,12 @@ public class MineFactoryReloadedCore extends BaseMod
 			MFRRegistry.registerUnifierBlacklist(entry);
 		}
 		
+		biomeWhitelist = MFRConfig.spawnerBlacklist.getString().split(",");
+		for(String entry : biomeWhitelist)
+		{
+			MFRRegistry.registerAutoSpawnerBlacklist(entry);
+		}
+		
 		if(MFRConfig.vanillaRecipes.getBoolean(true))
 		{
 			new Vanilla().registerRecipes();
