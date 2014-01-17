@@ -1577,24 +1577,25 @@ public class Vanilla
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunItem), new Object[]
 				{
-					"PIP",
-					"PIP",
-					"SLS",
+					"PGP",
+					"PLP",
+					"SIS",
 					'P', "sheetPlastic",
 					'I', Item.ingotIron,
-					'S', Item.slimeBall,
-					'L', MineFactoryReloadedCore.safariNetLauncherItem
+					'S', Item.magmaCream,
+					'L', MineFactoryReloadedCore.safariNetLauncherItem,
+					'G', MineFactoryReloadedCore.spyglassItem
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketLauncherItem), new Object[]
 				{
+					"PCP",
 					"PRP",
 					"ILI",
-					"PCP",
 					'P', "sheetPlastic",
-					'I', Block.blockIron,
+					'I', Item.minecartEmpty,
 					'L', MineFactoryReloadedCore.needlegunItem,
-					'R', MineFactoryReloadedCore.rednetLogicBlock,
+					'R', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1),
 					'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2)
 				}));
 		

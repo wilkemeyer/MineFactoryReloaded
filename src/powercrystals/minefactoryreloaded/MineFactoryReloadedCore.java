@@ -545,6 +545,7 @@ public class MineFactoryReloadedCore extends BaseMod
 				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12));
 		OreDictionary.registerOre("itemCharcoalSugar", MineFactoryReloadedCore.sugarCharcoalItem);
 		OreDictionary.registerOre("cableRedNet", MineFactoryReloadedCore.rednetCableBlock);
+		OreDictionary.registerOre("slimeball", Item.slimeBall);
 		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
 		OreDictionary.registerOre("dyeBrown", MineFactoryReloadedCore.fertilizerItem);
 		OreDictionary.registerOre("fertilizerOrganic", MineFactoryReloadedCore.fertilizerItem);
