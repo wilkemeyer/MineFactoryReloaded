@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoEnchanter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
@@ -196,6 +197,10 @@ public class ServerPacketHandler implements IPacketHandler
 					((TileEntityEjector)te).setIsIDMatch(!((TileEntityEjector)te).getIsIDMatch());
 					break;
 				}
+			}
+			else if(te instanceof TileEntityAutoAnvil)
+			{
+				((TileEntityAutoAnvil)te).setRepairOnly(!((TileEntityAutoAnvil)te).getRepairOnly());
 			}
 		}
 		else if(packetType == Packets.FakeSlotChange) // client -> server: client clicked on a fake slot
