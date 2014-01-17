@@ -324,6 +324,13 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return INFINITE_EXTENT_AABB;
+		return INFINITE_EXTENT_AABB; // TODO: no
 	}
+
+    @Override
+	@SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared()
+    {
+        return 4096.0D;
+    }
 }

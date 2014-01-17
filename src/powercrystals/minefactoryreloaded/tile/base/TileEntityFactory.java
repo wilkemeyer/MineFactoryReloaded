@@ -293,4 +293,11 @@ public abstract class TileEntityFactory extends TileEntity
 	{
 		return _manageSolids;
 	}
+
+    @Override
+	@SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared()
+    {
+        return -1D;
+    }
 }
