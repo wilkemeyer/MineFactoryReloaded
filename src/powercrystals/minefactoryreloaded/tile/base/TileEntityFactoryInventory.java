@@ -37,9 +37,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	protected List<ItemStack> failedDrops = null;
 	private List<ItemStack> missedDrops = new ArrayList<ItemStack>(5);
-	
 	protected int _failedDropTicksMax = 20;
 	private int _failedDropTicks = 0;
+	
+	protected boolean internalChange = false;
 
 	protected FluidTank[] _tanks;
 	
@@ -160,7 +161,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			if (drained != null)
 			{
 				if (doDrain)
+				{
+					internalChange = true;
 					onInventoryChanged();
+					internalChange = false;
+				}
 				return drained.amount;
 			}
 		}
@@ -338,7 +343,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public void onInventoryChanged()
 	{
-		onFactoryInventoryChanged();
+		if (!internalChange)
+			onFactoryInventoryChanged();
 		super.onInventoryChanged();
 	}
 	
