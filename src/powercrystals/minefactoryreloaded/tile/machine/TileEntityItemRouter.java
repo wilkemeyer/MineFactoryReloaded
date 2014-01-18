@@ -36,6 +36,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	protected static final ForgeDirection[] _outputDirections = new ForgeDirection[]
 			{ ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
 	private int[] _defaultRoutes = new int[_outputDirections.length];
+	private boolean _routing = false;
 	
 	private boolean _rejectUnmapped;
 	
@@ -128,7 +129,9 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		if(0 < remainingOverall.stackSize && remainingOverall.stackSize < totalWeight(routes))
 		{
 			int outdir = weightedRandomSide(routes);
+			_routing = true;
 			remainingOverall = UtilInventory.dropStack(this, remainingOverall, _outputDirections[outdir], _outputDirections[outdir]);
+			_routing = false;
 		}
 		return remainingOverall;
 	}
@@ -288,6 +291,12 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 			}
 		}
 		super.setInventorySlotContents(i, stack);
+	}
+	
+	@Override
+	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
+	{
+		return !_routing;
 	}
 	
 	@Override
