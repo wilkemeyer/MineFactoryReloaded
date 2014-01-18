@@ -266,10 +266,14 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		}
 		if(_essence != null & _liquidxp != null)
 		{
-			if (_liquidxp.isFluidEqual(resource))
-				return new FluidStack(_essence.fluidID, resource.amount);
-			else if (_essence.isFluidEqual(resource))
-				return new FluidStack(_liquidxp.fluidID, resource.amount);
+			if (_essence.isFluidEqual(resource))
+				return new FluidStack(_liquidxp.fluidID, resource.amount * 2);
+			else if (_liquidxp.isFluidEqual(resource))
+			{
+				if(doFill) _roundingCompensation ^= (resource.amount & 1);
+				return new FluidStack(_essence.fluidID, 
+						resource.amount / 2 + (resource.amount & _roundingCompensation));
+			}
 		}
 		return null;
 	}
