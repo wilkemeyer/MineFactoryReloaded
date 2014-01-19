@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -75,7 +76,7 @@ public class TreeHarvestManager implements IHarvestManager
 		_harvestMode = harvestMode;
 		_treeArea = treeArea;
 		_isDone = false;
-		_treeBlocks = new TreeSet<BlockPosition>();
+		_treeBlocks = new TreeSet<BlockPosition>(new PosComp());
 		_treeBlocks.add(treeArea.getOrigin());
 	}
 
@@ -89,5 +90,17 @@ public class TreeHarvestManager implements IHarvestManager
 	public BlockPosition getOrigin()
 	{
 		return _treeArea.getOrigin();
+	}
+
+	static class PosComp implements Comparator<BlockPosition>
+	{
+		@Override
+		public int compare(BlockPosition o1, BlockPosition o2) {
+			if (o1.x != o2.x)
+				return o1.x - o2.x;
+			if (o1.z != o2.z)
+				return o1.z - o2.z;
+			return o1.y - o2.y;
+		}
 	}
 }
