@@ -1,69 +1,93 @@
 package powercrystals.minefactoryreloaded.core;
 
-import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
+
+import net.minecraft.world.World;
 
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
-public class TreeHarvestManager
+public class TreeHarvestManager implements IHarvestManager
 {
-	private List<BlockPosition> _treeBlocks;
-	private int _currentBlock;
-	private boolean _isLeafPass;
+	private TreeSet<BlockPosition> _treeBlocks;
 	private boolean _isDone;
-	
-	private TreeHarvestMode _harvestMode; 
-	
+
+	private HarvestMode _harvestMode;
 	private Area _treeArea;
-	
-	public TreeHarvestManager(Area treeArea, TreeHarvestMode harvestMode)
+	private World _world;
+
+	public TreeHarvestManager(World world, Area treeArea, HarvestMode harvestMode)
 	{
-		_harvestMode = harvestMode;
-		_treeArea = treeArea;
-		reset();
+		reset(world, treeArea, harvestMode);
 	}
-	
+
+	@Override
 	public BlockPosition getNextBlock()
 	{
-		return _treeBlocks.get(_currentBlock);
+		return _treeBlocks.first();
 	}
-	
+
+	@Override
 	public void moveNext()
 	{
-		_currentBlock++;
-		if(_currentBlock >= _treeBlocks.size())
+		searchForTreeBlocks(_treeBlocks.pollFirst());
+		if (_treeBlocks.size() == 0)
 		{
-			if(_harvestMode == TreeHarvestMode.Fruit)
-			{
-				_isDone = true;
-			}
-			if(_isLeafPass)
-			{
-				_currentBlock = 0;
-				_treeBlocks = (_harvestMode == TreeHarvestMode.HarvestInverted ? _treeArea.getPositionsBottomFirst() : _treeArea.getPositionsTopFirst());
-				_isLeafPass = false;
-			}
-			else
-			{
-				_isDone = true;
-			}
+			_isDone = true;
 		}
 	}
-	
-	public void reset()
+
+	private void searchForTreeBlocks(BlockPosition bp)
 	{
-		_currentBlock = 0;
-		_isLeafPass = true;
-		_treeBlocks = (_harvestMode == TreeHarvestMode.HarvestInverted ? _treeArea.getPositionsTopFirst() : _treeArea.getPositionsBottomFirst());
+		Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+		for (BlockPosition curPos : bp.getAdjacent(true))
+			if (isValid(curPos, harvestables))
+				_treeBlocks.add(curPos);
 	}
-	
-	public boolean getIsLeafPass()
+
+	private boolean isValid(BlockPosition bp, Map<Integer, IFactoryHarvestable> harvestables)
 	{
-		return _isLeafPass;
+		if ((bp.x > _treeArea.xMax) | (bp.x < _treeArea.xMin) |
+			(bp.z > _treeArea.zMax) | (bp.z < _treeArea.zMin) |
+			(bp.y > _treeArea.yMax) | (bp.y < _treeArea.yMin) ||
+			!_world.blockExists(bp.x, bp.y, bp.z))
+			return false;
+		
+		Integer blockId = _world.getBlockId(bp.x, bp.y, bp.z);
+		if (harvestables.containsKey(blockId))
+		{
+			HarvestType obj = harvestables.get(blockId).getHarvestType();
+			return obj == HarvestType.TreeFlipped |
+					obj == HarvestType.TreeLeaf |
+					obj == HarvestType.Tree;
+		}
+		return false;
 	}
-	
+
+	@Override
+	public void reset(World world, Area treeArea, HarvestMode harvestMode)
+	{
+		_world = world;
+		_harvestMode = harvestMode;
+		_treeArea = treeArea;
+		_isDone = false;
+		_treeBlocks = new TreeSet<BlockPosition>();
+		_treeBlocks.add(treeArea.getOrigin());
+	}
+
+	@Override
 	public boolean getIsDone()
 	{
 		return _isDone;
+	}
+
+	@Override
+	public BlockPosition getOrigin()
+	{
+		return _treeArea.getOrigin();
 	}
 }

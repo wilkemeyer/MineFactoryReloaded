@@ -298,9 +298,11 @@ public class MFRConfig
 		
 		colorblindMode = c.get(Configuration.CATEGORY_GENERAL, "RedNet.EnableColorblindMode", false);
 		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
-		treeSearchMaxHorizontal = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxHoriztonal", 8);
+		deleteEntry(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxHoriztonal");
+		treeSearchMaxHorizontal = c.get(Configuration.CATEGORY_GENERAL, "SearchLimit.TreeMaxHorizontal", 40);
 		treeSearchMaxHorizontal.comment = "When searching for parts of a tree, how far out to the sides (radius) to search";
-		treeSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxVertical", 80);
+		deleteEntry(Configuration.CATEGORY_GENERAL, "SearchDistance.TreeMaxVertical");
+		treeSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchLimit.TreeMaxVertical", 256);
 		treeSearchMaxVertical.comment = "When searching for parts of a tree, how far up to search";
 		verticalHarvestSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.StackingBlockMaxVertical", 5);
 		verticalHarvestSearchMaxVertical.comment = "How far upward to search for members of \"stacking\" blocks, like cactus and sugarcane";
@@ -421,7 +423,7 @@ public class MFRConfig
 		{
 				r = config.get(oldCategory, oldName, def);
 				old = r.getString();
-				config.getCategory(oldCategory).remove(oldName);
+				deleteEntry(oldCategory, oldName);
 		}
 		
 		r = config.get(category, name, def);
@@ -430,4 +432,8 @@ public class MFRConfig
 		return r;
 	}
 	
+	private static void deleteEntry(String category, String name)
+	{
+		config.getCategory(category).remove(name);
+	}
 }

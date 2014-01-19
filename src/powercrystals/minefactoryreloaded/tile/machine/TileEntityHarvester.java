@@ -26,9 +26,10 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
+import powercrystals.minefactoryreloaded.core.HarvestMode;
+import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.TreeHarvestManager;
-import powercrystals.minefactoryreloaded.core.TreeHarvestMode;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiHarvester;
 import powercrystals.minefactoryreloaded.gui.container.ContainerHarvester;
@@ -42,7 +43,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	
 	private Random _rand;
 	
-	private TreeHarvestManager _treeManager;
+	private IHarvestManager _treeManager;
 	private BlockPosition _lastTree;
 	
 	public TileEntityHarvester()
@@ -59,6 +60,18 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		
 		_rand = new Random();
 		setCanRotate(true);
+	}
+	
+	@Override
+	public void validate()
+	{
+		super.validate();
+		if (!worldObj.isRemote)
+		{
+			_treeManager = new TreeHarvestManager(worldObj,
+					new Area(new BlockPosition(this), 0, 0, 0),
+					HarvestMode.FruitTree);
+		}
 	}
 	
 	@Override
@@ -155,6 +168,13 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	private BlockPosition getNextHarvest()
 	{
 		BlockPosition bp = _areaManager.getNextBlock();
+		if (!_treeManager.getIsDone())
+		{
+			BlockPosition temp = getNextTreeSegment(bp, false);
+			if(temp != null)
+				_areaManager.rewindBlock();
+			return temp;
+		}
 		
 		int searchId = worldObj.getBlockId(bp.x, bp.y, bp.z);
 		
@@ -167,37 +187,21 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(new Integer(searchId));
 		if(harvestable.canBeHarvested(worldObj, getImmutableSettings(), bp.x, bp.y, bp.z))
 		{
-			if(harvestable.getHarvestType() == HarvestType.Normal)
+			HarvestType type = harvestable.getHarvestType(); 
+			switch (type)
 			{
+			case Column:
+			case LeaveBottom:
+				bp = getNextVertical(bp.x, bp.y, bp.z, type == HarvestType.Column ? 0 : 1);
+			case Normal:
+			default:
 				_lastTree = null;
 				return bp;
-			}
-			else if(harvestable.getHarvestType() == HarvestType.Column)
-			{
-				_lastTree = null;
-				return getNextVertical(bp.x, bp.y, bp.z, 0);
-			}
-			else if(harvestable.getHarvestType() == HarvestType.LeaveBottom)
-			{
-				_lastTree = null;
-				return getNextVertical(bp.x, bp.y, bp.z, 1);
-			}
-			else if(harvestable.getHarvestType() == HarvestType.Tree)
-			{
-				BlockPosition temp = getNextTreeSegment(bp.x, bp.y, bp.z, false);
+			case Tree:
+			case TreeFlipped:
+				BlockPosition temp = getNextTreeSegment(bp, type == HarvestType.TreeFlipped);
 				if(temp != null)
-				{
 					_areaManager.rewindBlock();
-				}
-				return temp;
-			}
-			else if(harvestable.getHarvestType() == HarvestType.TreeFlipped)
-			{
-				BlockPosition temp = getNextTreeSegment(bp.x, bp.y, bp.z, true);
-				if(temp != null)
-				{
-					_areaManager.rewindBlock();
-				}
 				return temp;
 			}
 		}
@@ -233,67 +237,39 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		return new BlockPosition(x, y + highestBlockOffset, z);
 	}
 	
-	private BlockPosition getNextTreeSegment(int x, int y, int z, boolean treeFlipped)
+	private BlockPosition getNextTreeSegment(BlockPosition pos, boolean treeFlipped)
 	{
-		int blockId;
+		Integer blockId;
 		
-		if(_lastTree == null || _lastTree.x != x || _lastTree.y != y || _lastTree.z != z)
+		if (!pos.equals(_lastTree) || _treeManager.getIsDone())
 		{
-			int yTreeAreaLowerBound = (treeFlipped ? y - MFRConfig.treeSearchMaxVertical.getInt() : y);
-			int yTreeAreaUpperBound = (treeFlipped ? y : y + MFRConfig.treeSearchMaxVertical.getInt());
-			Area a = new Area(x - MFRConfig.treeSearchMaxHorizontal.getInt(),
-					x + MFRConfig.treeSearchMaxHorizontal.getInt(),
-					yTreeAreaLowerBound, yTreeAreaUpperBound,
-					z - MFRConfig.treeSearchMaxHorizontal.getInt(),
-					z + MFRConfig.treeSearchMaxHorizontal.getInt());
+			int lowerBound = 0;
+			int upperBound = MFRConfig.treeSearchMaxVertical.getInt();
 			
-			_treeManager = new TreeHarvestManager(a, treeFlipped ?
-					TreeHarvestMode.HarvestInverted : TreeHarvestMode.Harvest);
-			_lastTree = new BlockPosition(x, y, z);
-		}
-		else if(_treeManager.getIsDone())
-		{
-			_treeManager.reset();
+			_lastTree = new BlockPosition(pos);
+			
+			Area a = new Area(_lastTree, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
+			
+			_treeManager.reset(worldObj, a, treeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree);
 		}
 		
-		while(true)
+		Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+		while (!_treeManager.getIsDone())
 		{
-			if(_treeManager.getIsDone())
-			{
-				return null;
-			}
-			
 			BlockPosition bp = _treeManager.getNextBlock();
 			blockId = worldObj.getBlockId(bp.x, bp.y, bp.z);
 			
-			if(MFRRegistry.getHarvestables().containsKey(new Integer(blockId)) &&
-					MFRRegistry.getHarvestables().get(new Integer(blockId)).
-					canBeHarvested(worldObj, getImmutableSettings(), bp.x, bp.y, bp.z))
+			if (harvestables.containsKey(blockId))
 			{
-				if(_treeManager.getIsLeafPass() &&
-						MFRRegistry.getHarvestables().get(new Integer(blockId)).
-						getHarvestType() == HarvestType.TreeLeaf)
-				{
-					return bp;
-				}
-				else if(!_treeManager.getIsLeafPass() &&
-						(MFRRegistry.getHarvestables().get(new Integer(blockId)).
-								getHarvestType() == HarvestType.Tree ||
-								MFRRegistry.getHarvestables().get(new Integer(blockId)).
-								getHarvestType() == HarvestType.TreeFlipped))
-				{
-					return bp;
-				}
-				else if(!_treeManager.getIsLeafPass() &&
-						MFRRegistry.getHarvestables().get(new Integer(blockId)).
-						getHarvestType() == HarvestType.TreeLeaf)
-				{
-					_treeManager.reset();
-					continue;
-				}
+				IFactoryHarvestable obj = harvestables.get(blockId);
+				HarvestType t = obj.getHarvestType();
+				if (t == HarvestType.Tree | t == HarvestType.TreeFlipped | t == HarvestType.TreeLeaf)
+					if (obj.canBeHarvested(worldObj, getImmutableSettings(), bp.x, bp.y, bp.z))
+						return bp;
 			}
 			_treeManager.moveNext();
 		}
+		return null;
 	}
 	
 	@Override
