@@ -82,7 +82,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	public ItemStack routeItem(ItemStack stack)
 	{
 		int[] filteredRoutes = getRoutesForItem(stack);
-		
+
+		_routing = true;
 		if (hasRoutes(filteredRoutes))
 		{
 			stack = weightedRouteItem(stack, filteredRoutes);
@@ -93,6 +94,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 			stack = weightedRouteItem(stack, _defaultRoutes);
 			return (stack == null || stack.stackSize == 0) ? null : stack;
 		}
+		_routing = false;
 		return stack;
 	}
 	
@@ -129,9 +131,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		if(0 < remainingOverall.stackSize && remainingOverall.stackSize < totalWeight(routes))
 		{
 			int outdir = weightedRandomSide(routes);
-			_routing = true;
 			remainingOverall = UtilInventory.dropStack(this, remainingOverall, _outputDirections[outdir], _outputDirections[outdir]);
-			_routing = false;
 		}
 		return remainingOverall;
 	}
