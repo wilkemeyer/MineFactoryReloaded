@@ -1,8 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
-import java.util.Comparator;
 import java.util.Map;
-import java.util.TreeSet;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -122,14 +120,5 @@ public class TreeHarvestManager implements IHarvestManager
 	public BlockPosition getOrigin()
 	{
 		return _treeArea.getOrigin();
-	}
-
-	static class PosComp implements Comparator<BlockPosition>
-	{
-		@Override
-		public int compare(BlockPosition o1, BlockPosition o2)
-		{
-			return 0;
-		}
 	}
 }
