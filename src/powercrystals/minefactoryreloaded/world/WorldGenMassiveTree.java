@@ -525,6 +525,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			this.generateLeafNodeBases();
 			while (modifiedChunks.size() > 0)
 				modifiedChunks.pollFirst().generateSkylightMap();
+			// TODO: properly relight chunks, then send them to all players in range
 			return true;
 		}
 	}
@@ -536,6 +537,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return;
 		Chunk chunk = world.getChunkFromBlockCoords(x, z);
 		modifiedChunks.add(chunk);
+		chunk.removeChunkBlockTileEntity(x & 15, y, z & 15);
 		ExtendedBlockStorage subChunk = chunk.getBlockStorageArray()[y >> 4];
 		subChunk.setExtBlockID(x & 15, y & 15, z & 15, id);
 		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
