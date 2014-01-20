@@ -5,7 +5,7 @@ public class ItemBlockFactoryTree extends ItemBlockFactory
 	public ItemBlockFactoryTree(int id)
 	{
 		super(id);
-		setNames(new String[] {"", "massive"});
+		setNames(new String[] {null, "massive"});
 		setHasSubtypes(true);
 	}
 }

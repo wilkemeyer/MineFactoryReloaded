@@ -474,15 +474,15 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return false;
 		else
 		{
-			int var4 = this.checkBlockLine(var1, var2);
+			int newHeight = this.checkBlockLine(var1, var2);
 
-			if (var4 == -1)
+			if (newHeight == -1)
 				return true;
-			else if (var4 < 80)
+			else if (newHeight < 80)
 				return false;
 			else
 			{
-				heightLimit = var4;
+				heightLimit = newHeight;
 				return true;
 			}
 		}
@@ -539,7 +539,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	@Override
 	public void setBlockAndMetadata(World world, int x, int y, int z, int id, int meta)
 	{
-		if (y < 0 | y > 256)
+		if (y < 0 | y > 255)
 			return;
 		Chunk chunk = world.getChunkFromBlockCoords(x, z);
 		modifiedChunks.add(chunk);
