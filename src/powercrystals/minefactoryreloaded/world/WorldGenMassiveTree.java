@@ -4,11 +4,14 @@ import java.util.Comparator;
 import java.util.Random;
 import java.util.TreeSet;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSapling;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraftforge.common.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
@@ -463,9 +466,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 	{
 		int[] var1 = new int[] {basePos[0], basePos[1], basePos[2]};
 		int[] var2 = new int[] {basePos[0], basePos[1] + heightLimit - 1, basePos[2]};
-		int var3 = worldObj.getBlockId(basePos[0], basePos[1] - 1, basePos[2]);
+		int blockId = worldObj.getBlockId(basePos[0], basePos[1] - 1, basePos[2]);
+		Block block = Block.blocksList[blockId];
 
-		if (var3 != 2 && var3 != 3)
+		if (block == null || !block.canSustainPlant(worldObj, basePos[0], basePos[1] - 1, basePos[2],
+				ForgeDirection.UP, ((BlockSapling)MineFactoryReloadedCore.rubberSaplingBlock)))
 			return false;
 		else
 		{
@@ -473,7 +478,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 			if (var4 == -1)
 				return true;
-			else if (var4 < 6)
+			else if (var4 < 80)
 				return false;
 			else
 			{
@@ -512,13 +517,14 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 		if (heightLimit == 0)
 		{
-			heightLimit = 140;
+			heightLimit = 200;
 		}
 
 		if (!this.validTreeLocation())
 			return false;
 		else
 		{
+			// TODO: notify blocks under the trunk of tree growth
 			this.generateLeafNodeList();
 			this.generateLeaves();
 			this.generateTrunk();

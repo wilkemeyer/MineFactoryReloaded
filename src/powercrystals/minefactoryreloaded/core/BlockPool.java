@@ -55,7 +55,7 @@ public class BlockPool
 	
 	private BlockPool(boolean preventDupes)
 	{
-		_noDupe = preventDupes; 
+		_noDupe = preventDupes;
 	}
 	
 	public BlockPool()
