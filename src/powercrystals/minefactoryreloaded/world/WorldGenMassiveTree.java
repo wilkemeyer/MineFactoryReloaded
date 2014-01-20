@@ -544,7 +544,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 		Chunk chunk = world.getChunkFromBlockCoords(x, z);
 		modifiedChunks.add(chunk);
 		chunk.removeChunkBlockTileEntity(x & 15, y, z & 15);
-		ExtendedBlockStorage subChunk = chunk.getBlockStorageArray()[y >> 4];
+		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
+		ExtendedBlockStorage subChunk = storage[y >> 4];
+		if (subChunk == null)
+			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !this.worldObj.provider.hasNoSky);
 		subChunk.setExtBlockID(x & 15, y & 15, z & 15, id);
 		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
 	}
