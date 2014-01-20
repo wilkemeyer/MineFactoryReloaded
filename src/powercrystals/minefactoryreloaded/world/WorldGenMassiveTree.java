@@ -448,10 +448,8 @@ public class WorldGenMassiveTree extends WorldGenerator
 				var13[var7] = MathHelper.floor_double(par1ArrayOfInteger[var7] + var14 * var11);
 				int var16 = worldObj.getBlockId(var13[0], var13[1], var13[2]);
 
-				if (var16 != 0 && var16 != MineFactoryReloadedCore.rubberLeavesBlock.blockID)
-				{
+				if (var16 == Block.bedrock.blockID)
 					break;
-				}
 			}
 
 			return var14 == var15 ? -1 : Math.abs(var14);
@@ -464,8 +462,6 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 */
 	boolean validTreeLocation()
 	{
-		int[] var1 = new int[] {basePos[0], basePos[1], basePos[2]};
-		int[] var2 = new int[] {basePos[0], basePos[1] + heightLimit - 1, basePos[2]};
 		int blockId = worldObj.getBlockId(basePos[0], basePos[1] - 1, basePos[2]);
 		Block block = Block.blocksList[blockId];
 
@@ -474,7 +470,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return false;
 		else
 		{
+			int[] var1 = new int[] {basePos[0], basePos[1], basePos[2]};
+			int[] var2 = new int[] {basePos[0], basePos[1] + heightLimit - 1, basePos[2]};
 			int newHeight = this.checkBlockLine(var1, var2);
+			if (var2[1] > 255)
+				newHeight = Math.min(newHeight + basePos[1], 255) - basePos[1];
 
 			if (newHeight == -1)
 				return true;

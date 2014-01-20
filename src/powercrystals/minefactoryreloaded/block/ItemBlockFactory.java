@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class ItemBlockFactory extends ItemBlock
 {
-	protected String[] _names;
+	protected String[] _names = {null};
 
 	public ItemBlockFactory(int id)
 	{
