@@ -158,7 +158,7 @@ public class ThermalExpansion extends Vanilla
 					'P', "sheetPlastic",
 					'T', Item.bucketEmpty,
 					'F', machineFrame,
-					'O', "ingotTin",
+					'O', "ingotCopper",
 					'C', powerCoilGold
 						} );
 			
@@ -245,9 +245,9 @@ public class ThermalExpansion extends Vanilla
 						} );
 			
 			registerMachine(Machine.Ejector, 8, new Object[] {							
-					"PTP",
-					" F ",
-					"OOO",
+					"PPP",
+					" T ",
+					"OFO",
 					'P', "sheetPlastic",
 					'T', pneumaticServo,
 					'F', machineFrame,
@@ -260,7 +260,7 @@ public class ThermalExpansion extends Vanilla
 					"PSP",
 					'P', "sheetPlastic",
 					'T', Block.chest,
-					'S', Item.redstoneRepeater,
+					'S', multimeter,
 					'F', machineFrame
 						} );
 			
@@ -270,7 +270,7 @@ public class ThermalExpansion extends Vanilla
 					"PSP",
 					'P', "sheetPlastic",
 					'T', conduitLiquid,
-					'S', Item.redstoneRepeater,
+					'S', multimeter,
 					'F', machineFrame
 						} );
 			
@@ -345,7 +345,7 @@ public class ThermalExpansion extends Vanilla
 					"SFS",
 					"OCO",
 					'P', "sheetPlastic",
-					'T', "ingotCopper",
+					'T', multimeter,
 					'S', "ingotSilver",
 					'F', machineFrame,
 					'O', Item.comparator,
@@ -370,7 +370,7 @@ public class ThermalExpansion extends Vanilla
 					"OCO",
 					'P', "sheetPlastic",
 					'T', Item.fermentedSpiderEye,
-					'S', Item.slimeBall,
+					'S', "slimeball",
 					'F', machineFrame,
 					'O', Item.brick,
 					'C', Item.sugar
@@ -447,7 +447,7 @@ public class ThermalExpansion extends Vanilla
 			registerMachine(Machine.LaserDrillPrecharger, new Object[] {
 					"GSG",
 					"HFH",
-					"DCD",
+					"CDC",
 					'G', "sheetPlastic",
 					'D', Item.diamond,
 					'S', MineFactoryReloadedCore.pinkSlimeballItem,
@@ -541,7 +541,7 @@ public class ThermalExpansion extends Vanilla
 					'T', dynamoSteam,
 					'S', Block.pistonBase,
 					'F', machineFrame,
-					'O', "ingotInvar",
+					'O', "ingotSilver",
 					'C', powerCoilSilver
 						} );
 		}
