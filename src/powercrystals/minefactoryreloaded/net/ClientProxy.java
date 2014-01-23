@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-public class ClientProxy implements IMFRProxy
+public class ClientProxy extends CommonProxy
 {
 	@Override
 	public void init()

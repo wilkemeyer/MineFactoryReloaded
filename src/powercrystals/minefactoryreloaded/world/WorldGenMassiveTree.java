@@ -30,6 +30,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	World worldObj;
 	int[] basePos = new int[] {0, 0, 0};
 	int heightLimit = 0;
+	int minHeight = -1;
 	int height;
 	double heightAttenuation = 0.45D;
 	double branchDensity = 5.0D;
@@ -462,6 +463,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 */
 	boolean validTreeLocation()
 	{
+		int newHeight = Math.min(heightLimit + basePos[1], 255) - basePos[1];
+		if (newHeight < minHeight)
+			return false;
+		heightLimit = newHeight;
+		
 		int blockId = worldObj.getBlockId(basePos[0], basePos[1] - 1, basePos[2]);
 		Block block = Block.blocksList[blockId];
 
@@ -472,13 +478,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 		{
 			int[] var1 = new int[] {basePos[0], basePos[1], basePos[2]};
 			int[] var2 = new int[] {basePos[0], basePos[1] + heightLimit - 1, basePos[2]};
-			int newHeight = this.checkBlockLine(var1, var2);
-			if (var2[1] > 255)
-				newHeight = Math.min(newHeight + basePos[1], 255) - basePos[1];
+			newHeight = this.checkBlockLine(var1, var2);
 
 			if (newHeight == -1)
 				return true;
-			else if (newHeight < 80)
+			else if (newHeight < minHeight)
 				return false;
 			else
 			{
@@ -519,6 +523,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 		{
 			heightLimit = 200;
 		}
+		if (minHeight == -1)
+		{
+			minHeight = 80;
+		}
 
 		if (!this.validTreeLocation())
 			return false;
@@ -530,8 +538,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			this.generateTrunk();
 			this.generateLeafNodeBases();
 			while (modifiedChunks.size() > 0)
-				modifiedChunks.pollFirst().generateSkylightMap();
-			// TODO: properly relight chunks, then send them to all players in range
+				MineFactoryReloadedCore.proxy.addRelightChunk(modifiedChunks.pollFirst());
 			return true;
 		}
 	}
@@ -550,5 +557,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !this.worldObj.provider.hasNoSky);
 		subChunk.setExtBlockID(x & 15, y & 15, z & 15, id);
 		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
+		subChunk.setExtBlocklightValue(x & 15, y & 15, z & 15, 0);
+		subChunk.setExtSkylightValue(x & 15, y & 15, z & 15, 0);
 	}
 }
