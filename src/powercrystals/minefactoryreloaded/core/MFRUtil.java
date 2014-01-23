@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded.core;
 import buildcraft.api.tools.IToolWrench;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +18,8 @@ import powercrystals.minefactoryreloaded.api.IToolHammerAdvanced;
 
 public class MFRUtil
 {
+	public static final List<ForgeDirection> VALID_DIRECTIONS = Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
+	
 	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z)
 	{
 		if (player.inventory.getCurrentItem() == null)
@@ -58,7 +62,7 @@ public class MFRUtil
 		return false;
 	}
 	
-	public static boolean isHolding(EntityPlayer player, Class<?> itemClass)
+	public static boolean isHolding(EntityPlayer player, Class<? extends Item> itemClass)
 	{
 		if(player.inventory.getCurrentItem() == null)
 		{
@@ -72,11 +76,11 @@ public class MFRUtil
 		return false;
 	}
 	
-	public static Entity prepareMob(Class<? extends Entity> entity, World world)
+	public static <V extends Entity, T extends Class<V>> V prepareMob(T entity, World world)
 	{
 		try
 		{
-			Entity e = entity.getConstructor(new Class[] {World.class}).newInstance(new Object[] { world });
+			V e = entity.getConstructor(World.class).newInstance(world);
 			return e;
 		}
 		catch(Exception e)
