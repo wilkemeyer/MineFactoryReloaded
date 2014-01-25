@@ -162,13 +162,16 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
-		if(slot > 9)
+		if (stack != null)
 		{
-			return true;
-		}
-		else if(slot == 9)
-		{
-			return stack != null && stack.getItem() instanceof ItemUpgrade;
+			if(slot > 9)
+			{
+				return MFRRegistry.getPlantables().containsKey(new Integer(stack.itemID));
+			}
+			else if(slot == 9)
+			{
+				return stack.getItem() instanceof ItemUpgrade;
+			}
 		}
 		return false;
 	}
