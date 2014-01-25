@@ -124,8 +124,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				}
 			}
 			
-			if(_burnTime > 0 && (_tanks[0].getFluid() == null ||
-					_tanks[0].getFluid().amount <= _tanks[0].getCapacity() - _bioFuelPerTick))
+			if (_burnTime > 0 && _tanks[0].getFluidAmount() <= _tanks[0].getCapacity() - _bioFuelPerTick)
 			{
 				_burnTime -= _burnTimeDecreasePerTick;
 				_tanks[0].fill(FluidRegistry.getFluidStack("biofuel", _bioFuelPerTick), true);
@@ -143,7 +142,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				if (emptySlot == -1)
 					emptySlot = i;
 			}
-			else if (_inventory[i].itemID == s.itemID && _inventory[i].getItemDamage() == s.getItemDamage())
+			else if (_inventory[i].isItemEqual(s))
 			{
 				return i;
 			}
@@ -242,10 +241,8 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
-		if(itemstack == null | slot < 0 || slot > getSizeInventorySide(ForgeDirection.UNKNOWN))
-		{
+		if (itemstack == null | slot > getSizeInventorySide(ForgeDirection.UNKNOWN))
 			return false;
-		}
 		return _inventory[slot] == null || UtilInventory.stacksEqual(_inventory[slot], itemstack);
 	}
 
