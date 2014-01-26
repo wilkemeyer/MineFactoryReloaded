@@ -155,6 +155,7 @@ public class MFRConfig
 	public static Property enableSPAMRExploding;
 	public static Property enableFuelExploding;
 	public static Property enableSpawnerCarts;
+	public static Property enableMassiveTree;
 	
 	public static Property redNetConnectionBlacklist;
 	
@@ -375,6 +376,8 @@ public class MFRConfig
 		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
 		spawnerBlacklist = c.get(Configuration.CATEGORY_GENERAL, "AutoSpawner.Blacklist", "");
 		spawnerBlacklist.comment = "A comma-separated list of entity IDs (e.g.: CaveSpider,VillagerGolem,butterflyGE) to blacklist from the AutoSpawner.";
+		enableMassiveTree = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.SacredRubberSapling", true);
+		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
