@@ -19,8 +19,12 @@ import net.minecraft.nbt.NBTBase;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCocoa;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -43,6 +47,8 @@ public class Thaumcraft
 			Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
 			Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
 			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
+			Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
+			Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
@@ -58,8 +64,13 @@ public class Thaumcraft
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres.blockID, HarvestType.Normal));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves.blockID, tcSapling.blockID));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling.blockID));
+			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod.blockID));
 			
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling.blockID, tcSapling.blockID));
+			MFRRegistry.registerPlantable(new PlantableStandard(tcBean.itemID, tcPod.blockID));
+			
+			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod.blockID, FertilizerType.GrowMagicalCrop));
+			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling.blockID));
 			
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
 			aspects = (LinkedHashMap<String, ? extends Object>)Aspect.
