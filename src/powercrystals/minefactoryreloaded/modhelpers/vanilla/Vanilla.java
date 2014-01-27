@@ -109,7 +109,6 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCro
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableGiantMushroom;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableGrass;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableNetherWart;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableRubberSapling;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
@@ -194,9 +193,9 @@ public class Vanilla
 		MFRRegistry.registerFertilizable(new FertilizableStemPlants(Block.pumpkinStem.blockID));
 		MFRRegistry.registerFertilizable(new FertilizableStemPlants(Block.melonStem.blockID));
 		MFRRegistry.registerFertilizable(new FertilizableNetherWart());
-		MFRRegistry.registerFertilizable(new FertilizableCocoa());
+		MFRRegistry.registerFertilizable(new FertilizableCocoa(Block.cocoaPlant.blockID));
 		MFRRegistry.registerFertilizable(new FertilizableGrass());
-		MFRRegistry.registerFertilizable(new FertilizableRubberSapling());
+		MFRRegistry.registerFertilizable(new FertilizableSapling(MineFactoryReloadedCore.rubberSaplingBlock.blockID));
 		
 		MFRRegistry.registerFertilizer(new FertilizerStandard(MineFactoryReloadedCore.fertilizerItem.itemID, 0));
 		if(MFRConfig.enableBonemealFertilizing.getBoolean(false))
