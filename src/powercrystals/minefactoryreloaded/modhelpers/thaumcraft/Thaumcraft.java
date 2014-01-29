@@ -22,6 +22,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCocoa;
+import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
@@ -69,8 +70,11 @@ public class Thaumcraft
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling.blockID, tcSapling.blockID));
 			MFRRegistry.registerPlantable(new PlantableStandard(tcBean.itemID, tcPod.blockID));
 			
+			MFRRegistry.registerFruitLogBlockId(tcLog.blockID);
+			MFRRegistry.registerFruit(new FruitCocoa(tcPod.blockID));
+			
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod.blockID, FertilizerType.GrowMagicalCrop));
-			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling.blockID));
+			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
 			
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
 			aspects = (LinkedHashMap<String, ? extends Object>)Aspect.

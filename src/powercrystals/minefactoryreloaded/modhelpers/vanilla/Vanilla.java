@@ -349,7 +349,7 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
 		
 		MFRRegistry.registerFruitLogBlockId(Block.wood.blockID);
-		MFRRegistry.registerFruit(new FruitCocoa());
+		MFRRegistry.registerFruit(new FruitCocoa(Block.cocoaPlant.blockID));
 		
 		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
 		
