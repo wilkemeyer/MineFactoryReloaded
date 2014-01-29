@@ -17,6 +17,7 @@ import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
@@ -128,5 +129,22 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 9;
+	}
+	
+	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
+	{
+		if (stack != null)
+		{
+			if(slot < 9)
+			{
+				return MFRRegistry.getFertilizers().containsKey(new Integer(stack.itemID));
+			}
+			else if(slot == 9)
+			{
+				return stack.getItem() instanceof ItemUpgrade;
+			}
+		}
+		return false;
 	}
 }
