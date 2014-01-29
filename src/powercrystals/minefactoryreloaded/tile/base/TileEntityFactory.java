@@ -41,7 +41,9 @@ public abstract class TileEntityFactory extends TileEntity
 	private ForgeDirection _forwardDirection;
 	private boolean _canRotate = false;
 	
-	private boolean _isActive = false;
+	private boolean _isActive = false, _prevActive;
+	private long _lastActive;
+	
 	private boolean _manageFluids = false;
 	private boolean _manageSolids = false;
 	
@@ -183,13 +185,32 @@ public abstract class TileEntityFactory extends TileEntity
 	
 	public void setIsActive(boolean isActive)
 	{
-		if (_isActive != isActive & worldObj != null && !worldObj.isRemote)
+		if (_isActive != isActive & worldObj != null &&
+				!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime())
 		{
+			_lastActive = worldObj.getTotalWorldTime() + 101;
+			_prevActive = _isActive;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
 					50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 		_isActive = isActive;
+	}
+	
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime())
+		{
+			if (_prevActive != _isActive)
+			{
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
+						50, worldObj.provider.dimensionId, getDescriptionPacket());
+			}
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -299,5 +320,11 @@ public abstract class TileEntityFactory extends TileEntity
     public double getMaxRenderDistanceSquared()
     {
         return -1D;
+    }
+
+    @Override
+	public boolean shouldRenderInPass(int pass)
+    {
+        return pass == 0 && getMaxRenderDistanceSquared() != -1D;
     }
 }
