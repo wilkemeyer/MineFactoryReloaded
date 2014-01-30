@@ -51,14 +51,18 @@ public class Thaumcraft
 			Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
 			Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
+			Class<?> trunk = Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
 			
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
+			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);
 			
 			MFRRegistry.registerGrinderBlacklist(golem);
+			MFRRegistry.registerGrinderBlacklist(trunk);
 			
 			if (MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false))
 			{
 				MFRRegistry.registerConveyerBlacklist(golem);
+				MFRRegistry.registerConveyerBlacklist(trunk);
 			}
 			
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));
