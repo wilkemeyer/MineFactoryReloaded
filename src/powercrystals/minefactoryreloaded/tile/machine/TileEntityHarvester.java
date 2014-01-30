@@ -155,7 +155,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 						targetCoords.y, targetCoords.z,
 						harvestedBlockId + (harvestedBlockMetadata << 12));
 			}
-			worldObj.setBlockToAir(targetCoords.x, targetCoords.y, targetCoords.z);
+			worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, 0, 0, 2);
 		}
 		
 		harvestable.postHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
