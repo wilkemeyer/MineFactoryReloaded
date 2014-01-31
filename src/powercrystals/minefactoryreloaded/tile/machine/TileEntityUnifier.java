@@ -96,6 +96,9 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 					output.stackSize = _inventory[0].stackSize;
 				}
 				
+				if (output != null && _inventory[0].itemID == output.itemID)
+					output = _inventory[0].copy();
+				
 				moveItemStack(output);
 			}
 		}
