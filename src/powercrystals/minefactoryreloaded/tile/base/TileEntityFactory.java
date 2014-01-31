@@ -202,15 +202,12 @@ public abstract class TileEntityFactory extends TileEntity
 	{
 		super.updateEntity();
 
-		if (!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime())
+		if (!worldObj.isRemote && _prevActive != _isActive && _lastActive < worldObj.getTotalWorldTime())
 		{
-			if (_prevActive != _isActive)
-			{
-				_prevActive = _isActive;
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
-						50, worldObj.provider.dimensionId, getDescriptionPacket());
-			}
+			_prevActive = _isActive;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
+					50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 	}
 	
