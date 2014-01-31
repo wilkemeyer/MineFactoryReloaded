@@ -206,6 +206,7 @@ public abstract class TileEntityFactory extends TileEntity
 		{
 			if (_prevActive != _isActive)
 			{
+				_prevActive = _isActive;
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
 						50, worldObj.provider.dimensionId, getDescriptionPacket());
