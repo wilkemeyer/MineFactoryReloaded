@@ -366,7 +366,7 @@ public class MFRConfig
 		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk.";
 		mfrLakeSewageRarity = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.LakeRarity.Sewage", 32);
 		mfrLakeSewageRarity.comment = "Higher numbers make sewage lakes rarer. A value of one will be approximately one per chunk.";
-		unifierBlacklist = c.get(Configuration.CATEGORY_GENERAL, "Unifier.Blacklist", "dyeBlue,dyeWhite,dyeBrown,dyeBlack");
+		unifierBlacklist = c.get(Configuration.CATEGORY_GENERAL, "Unifier.Blacklist", "dyeBlue,dyeWhite,dyeBrown,dyeBlack,listAllwater,listAllmilk");
 		unifierBlacklist.comment = "A comma-separated list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
 		enableLiquidSyringe = c.get(Configuration.CATEGORY_GENERAL, "LiquidSyringes", true);
 		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
