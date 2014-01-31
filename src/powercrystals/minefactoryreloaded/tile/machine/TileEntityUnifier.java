@@ -80,6 +80,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			if(_inventory[0] != null)
 			{
 				List<String> names = OreDictTracker.getNamesFromItem(_inventory[0]);
+				// tracker does *not* also check the wildcard meta,
+				// avoiding issues with saplings and logs, etc.
 				
 				if(names == null || names.size() != 1 || MFRRegistry.getUnifierBlacklist().containsKey(names.get(0)))
 				{
