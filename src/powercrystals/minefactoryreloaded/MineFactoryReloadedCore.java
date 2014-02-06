@@ -107,6 +107,7 @@ import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoAnvil;
 import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoBlock;
 import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoFire;
 import powercrystals.minefactoryreloaded.item.ItemNeedlegunAmmoStandard;
+import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMemoryCard;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
@@ -167,6 +168,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static final String tileEntityFolder   = textureFolder + "tileentity/";
 	public static final String mobTextureFolder   = textureFolder + "mob/";
 	public static final String modelTextureFolder = textureFolder + "itemmodels/";
+	public static final String armorTextureFolder = textureFolder + "armor/";
 	
 	public static int renderIdConveyor = 1000;
 	public static int renderIdFactoryGlassPane = 1001;
@@ -277,6 +279,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Item plasticCellItem;
 	public static Item fishingRodItem;
 	public static Item bagItem;
+	public static Item plasticBootsItem;
 
 	private static MineFactoryReloadedCore instance;
 
@@ -459,6 +462,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		//plasticCellItem = CarbonContainer.cell;
 		fishingRodItem = (new ItemFishingRod(MFRConfig.fishingRodItemId.getInt()));
 		bagItem = (new ItemFactoryBag(MFRConfig.bagItemId.getInt())).setUnlocalizedName("mfr.plastic.bag").setMaxStackSize(24);
+		plasticBootsItem = new ItemPlasticBoots(MFRConfig.plasticBootsItemId.getInt()).
+				addRepairableItem(plasticSheetItem).addRepairableItem(rawPlasticItem);
 
 		for(Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{

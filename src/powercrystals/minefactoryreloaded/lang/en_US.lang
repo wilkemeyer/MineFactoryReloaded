@@ -178,6 +178,11 @@ item.mfr.bucket.plasticcell.name = Plastic Cell
 item.mfr.bucket.plasticcell.prefix.name =
 item.mfr.bucket.plasticcell.suffix.name = Cell
 
+item.mfr.armor.helm.plastic  = Plastic Helmet
+item.mfr.armor.chest.plastic = Plastic Breastplate
+item.mfr.armor.legs.plastic  = Plastic Leggings
+item.mfr.armor.boots.plastic = Plastic Boots
+
 item.mfr.hammer.name = Precision Sledgehammer
 item.mfr.fertilizer.name = Industrial Fertilizer
 item.mfr.plastic.sheet.name = Plastic Sheets
