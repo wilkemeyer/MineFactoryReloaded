@@ -79,7 +79,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 			{
 				_ticket = ForgeChunkManager.
 						requestPlayerTicket(MineFactoryReloadedCore.instance(),
-								_owner, worldObj, Type.ENTITY);
+								_owner, worldObj, Type.NORMAL);
 				_ticket.getModData().setInteger("X", xCoord);
 				_ticket.getModData().setInteger("Y", yCoord);
 				_ticket.getModData().setInteger("Z", zCoord);
