@@ -151,6 +151,7 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
+	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntitySteamTurbine.class, "factoryChunkLoader", 160, Integer.MAX_VALUE);
 	
 	private final int _blockIndex;
 	private final int _meta;

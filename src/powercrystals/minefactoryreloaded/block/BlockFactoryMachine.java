@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -300,6 +301,11 @@ public class BlockFactoryMachine extends BlockContainer
 					((TileEntityFactoryInventory)te).setInvName(stack.getDisplayName());
 				}
 			}
+			
+			if (entity instanceof ICommandSender)
+				((TileEntityFactory)te).setOwner(((ICommandSender)entity).getCommandSenderName());
+			else
+				((TileEntityFactory)te).setOwner(null);
 		}
 	}
 

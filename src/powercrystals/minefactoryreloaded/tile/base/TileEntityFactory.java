@@ -52,6 +52,8 @@ public abstract class TileEntityFactory extends TileEntity
 	protected HarvestAreaManager _areaManager;
 	protected Machine _machine;
 	
+	protected String _owner = "";
+	
 	protected TileEntityFactory(Machine machine)
 	{
 		this._machine = machine;
@@ -211,6 +213,12 @@ public abstract class TileEntityFactory extends TileEntity
 		}
 	}
 	
+	public void setOwner(String owner)
+	{
+		if (_owner == null || _owner.isEmpty())
+			_owner = owner;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
@@ -257,6 +265,7 @@ public abstract class TileEntityFactory extends TileEntity
 		super.readFromNBT(nbttagcompound);
 		int rotation = nbttagcompound.getInteger("rotation");
 		rotateDirectlyTo(rotation);
+		_owner = nbttagcompound.getString("owner");
 	}
 	
 	@Override
@@ -264,6 +273,8 @@ public abstract class TileEntityFactory extends TileEntity
 	{
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("rotation", getDirectionFacing().ordinal());
+		if (_owner != null)
+			nbttagcompound.setString("owner", _owner);
 	}
 	
 	public void onRedNetChanged(ForgeDirection side, int value)

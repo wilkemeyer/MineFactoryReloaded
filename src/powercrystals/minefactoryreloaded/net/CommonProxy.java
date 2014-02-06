@@ -7,22 +7,50 @@ import cpw.mods.fml.relauncher.Side;
 
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.packet.Packet51MapChunk;
 import net.minecraft.server.management.PlayerInstance;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.TextureStitchEvent.Post;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
-public class CommonProxy implements IMFRProxy, IScheduledTickHandler
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
+
+public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCallback 
 {
+	@Override
+	public void ticketsLoaded(List<Ticket> tickets, World world) 
+	{
+		for (Ticket ticket : tickets) 
+		{
+			int x = ticket.getModData().getInteger("X");
+			int y = ticket.getModData().getInteger("Y");
+			int z = ticket.getModData().getInteger("Z");
+			
+			TileEntity tile = world.getBlockTileEntity(x, y, z);
+			if (!(tile instanceof TileEntityChunkLoader))
+			{
+				ForgeChunkManager.releaseTicket(ticket);
+				continue;
+			}
+			((TileEntityChunkLoader)tile).receiveTicket(ticket);			
+		}
+	}
+	
 	@Override
 	public void init()
 	{
 		TickRegistry.registerScheduledTickHandler(this, Side.SERVER);
+		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
 
 	@Override

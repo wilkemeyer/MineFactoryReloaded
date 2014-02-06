@@ -45,7 +45,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	private int _maxEnergyTick;
 	private int _energyRequiredThisTick = 0;
 	
-	private int _energyActivation;
+	protected int _energyActivation;
 	
 	private int _workDone;
 	
@@ -71,14 +71,19 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		super(machine);
 		_maxEnergyStored = machine.getMaxEnergyStorage();
-		_energyActivation = activationCost;
-		_maxEnergyTick = Math.min(activationCost * 5, 1000);
 		_powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
-		configurePowerProvider();
+		setActivationEnergy(activationCost);
 		setIsActive(false);
 	}
 	
 	// local methods
+	
+	protected void setActivationEnergy(int activationCost)
+	{
+		_energyActivation = activationCost;
+		_maxEnergyTick = Math.min(activationCost * 4, _maxEnergyStored);
+		configurePowerProvider();
+	}
 	
 	@Override
 	public void updateEntity()
