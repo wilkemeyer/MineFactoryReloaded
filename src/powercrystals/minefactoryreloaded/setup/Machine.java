@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.setup;
 
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.registry.GameRegistry;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,6 +21,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -35,6 +39,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockPlacer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBreeder;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityCollector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityComposter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
@@ -64,8 +69,6 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntitySteamTurbine;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityVet;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityWeather;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Machine
 {
@@ -151,7 +154,7 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntitySteamTurbine.class, "factoryChunkLoader", 160, Integer.MAX_VALUE);
+	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, "factoryChunkLoader", 160, Integer.MAX_VALUE);
 	
 	private final int _blockIndex;
 	private final int _meta;
