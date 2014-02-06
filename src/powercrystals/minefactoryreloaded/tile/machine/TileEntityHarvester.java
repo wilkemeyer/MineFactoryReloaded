@@ -55,7 +55,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		_settings = new HashMap<String, Boolean>();
 		_settings.put("silkTouch", false);
 		_settings.put("harvestSmallMushrooms", false);
-		_settings.put("harvestJungleWood", false);
 		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
 		
 		_rand = new Random();
