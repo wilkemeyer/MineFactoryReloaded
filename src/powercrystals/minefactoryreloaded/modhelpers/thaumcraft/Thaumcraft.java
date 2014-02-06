@@ -25,6 +25,7 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCoc
 import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -65,7 +66,7 @@ public class Thaumcraft
 				MFRRegistry.registerConveyerBlacklist(trunk);
 			}
 			
-			MFRRegistry.registerHarvestable(new HarvestableStandard(tcLog.blockID, HarvestType.Tree));
+			MFRRegistry.registerHarvestable(new HarvestableWood(tcLog.blockID));
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres.blockID, HarvestType.Normal));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves.blockID, tcSapling.blockID));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling.blockID));

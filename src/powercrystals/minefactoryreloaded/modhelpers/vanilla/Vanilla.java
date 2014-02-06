@@ -161,7 +161,7 @@ public class Vanilla
 		MFRRegistry.registerPlantable(new PlantableCocoa());
 		MFRRegistry.registerPlantable(new PlantableStandard(MineFactoryReloadedCore.rubberSaplingBlock.blockID, MineFactoryReloadedCore.rubberSaplingBlock.blockID));
 		
-		MFRRegistry.registerHarvestable(new HarvestableWood());
+		MFRRegistry.registerHarvestable(new HarvestableWood(Block.wood.blockID));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Block.leaves.blockID));
 		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.reed.blockID, HarvestType.LeaveBottom));
 		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.cactus.blockID, HarvestType.LeaveBottom));
@@ -181,7 +181,7 @@ public class Vanilla
 		MFRRegistry.registerHarvestable(new HarvestableVine());
 		MFRRegistry.registerHarvestable(new HarvestableNetherWart());
 		MFRRegistry.registerHarvestable(new HarvestableCocoa());
-		MFRRegistry.registerHarvestable(new HarvestableStandard(MineFactoryReloadedCore.rubberWoodBlock.blockID, HarvestType.Tree));
+		MFRRegistry.registerHarvestable(new HarvestableWood(MineFactoryReloadedCore.rubberWoodBlock.blockID));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(MineFactoryReloadedCore.rubberLeavesBlock.blockID));
 		
 		MFRRegistry.registerFertilizable(new FertilizableSapling(Block.sapling.blockID));

@@ -87,7 +87,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side)
 	{
-		return Block.leaves.graphicsLevel ? true : super.shouldSideBeRendered(iba, x, y, z, side);
+        int id = iba.getBlockId(x, y, z);
+		return Block.leaves.graphicsLevel ? id != this.blockID : super.shouldSideBeRendered(iba, x, y, z, side);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
