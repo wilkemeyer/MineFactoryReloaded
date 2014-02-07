@@ -25,6 +25,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoSpawner;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEjector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
@@ -201,6 +202,10 @@ public class ServerPacketHandler implements IPacketHandler
 			else if(te instanceof TileEntityAutoAnvil)
 			{
 				((TileEntityAutoAnvil)te).setRepairOnly(!((TileEntityAutoAnvil)te).getRepairOnly());
+			}
+			else if(te instanceof TileEntityChunkLoader)
+			{
+				((TileEntityChunkLoader)te).setRadius((short)(int)(Integer)packetReadout[3]);
 			}
 		}
 		else if(packetType == Packets.FakeSlotChange) // client -> server: client clicked on a fake slot

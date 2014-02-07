@@ -12,8 +12,8 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.gui.client.GuiChunkLoader;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
-import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerChunkLoader;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -35,7 +35,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
-		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
+		return new GuiChunkLoader(getContainer(inventoryPlayer), this);
 	}
 	
 	@Override
@@ -46,7 +46,10 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 	
 	public void setRadius(short r)
 	{
+		if (r < 0 | r > 49)
+			return;
 		_radius = r;
+		onInventoryChanged();
 	}
 
 	@Override
@@ -114,11 +117,11 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 	{
 		if (isInvalid())
 			return;
-		int r = _radius;
-		float a = (r*r*32-17+r*r*r);
+		int r = _radius + 1;
+		double a = (r*r*32-17+r*r*r);
 		for (int i = r / 10; i --> 0; )
-			a *= r / 6f;
-		setActivationEnergy((int)a);
+			a *= r / 6d;
+		setActivationEnergy((int)(a*10));
 	}
 
 	public void receiveTicket(Ticket ticket)
@@ -147,7 +150,6 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 		return 1;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public short getRadius()
 	{
 		return _radius;

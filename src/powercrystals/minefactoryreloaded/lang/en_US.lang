@@ -353,6 +353,9 @@ circuit.mfr.xor.2 = Xor (2-Input)
 circuit.mfr.xor.3 = Xor (3-Input)
 circuit.mfr.xor.4 = Xor (4-Input)
 
+container.mfr.radius = Radius:
+container.mfr.power = Energy draw:
+
 chat.info.mfr.safarinet.capture = Changed to capture mode
 chat.info.mfr.safarinet.release = Changed to release mode
 
