@@ -3,9 +3,11 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -16,11 +18,22 @@ import powercrystals.minefactoryreloaded.gui.client.GuiChunkLoader;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerChunkLoader;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityChunkLoader extends TileEntityFactoryPowered
 {
+	private static void bypassLimit(Ticket tick)
+	{
+		try
+		{
+			Field f = Ticket.class.getDeclaredField("maxDepth");
+			f.setAccessible(true);
+			f.setInt(tick, Short.MAX_VALUE);
+		} catch(Throwable _) {}
+	}
+	
 	protected short _radius;
 	protected boolean activated;
 	protected Ticket _ticket;
@@ -46,7 +59,10 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 	
 	public void setRadius(short r)
 	{
-		if (r < 0 | r > 49)
+		int maxR = 49;
+		if (_ticket != null)
+			maxR = Math.min((int)Math.sqrt(_ticket.getChunkListDepth() / Math.PI), maxR);
+		if (r < 0 | r > maxR)
 			return;
 		_radius = r;
 		onInventoryChanged();
@@ -95,6 +111,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 	
 	protected void forceChunks()
 	{
+		if (MFRConfig.enableChunkLimitBypassing.getBoolean(false))
+			bypassLimit(_ticket);
 		Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
 		int x = xCoord >> 4;
 		int z = zCoord >> 4;
@@ -130,6 +148,22 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 			_ticket = ticket;
 		else
 			ForgeChunkManager.releaseTicket(ticket);
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		
+		tag.setShort("radius", _radius);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		
+		_radius = tag.getShort("radius");
 	}
 
 	@Override
