@@ -4,6 +4,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.entity.player.InventoryPlayer;
@@ -12,8 +14,14 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiChunkLoader;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerChunkLoader;
@@ -22,7 +30,7 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityChunkLoader extends TileEntityFactoryPowered
+public class TileEntityChunkLoader extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	private static void bypassLimit(Ticket tick)
 	{
@@ -34,9 +42,18 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 		} catch(Throwable _) {}
 	}
 	
+	protected static Map<String, Integer> fluidConsumptionRate = new HashMap<String, Integer>();
+	static {
+		fluidConsumptionRate.put("mobessence", 10);
+		fluidConsumptionRate.put("ender", 40);
+	}
+	
 	protected short _radius;
 	protected boolean activated;
 	protected Ticket _ticket;
+	protected int consumptionTicks;
+	protected int emptyTicks;
+	protected int unactivatedTicks;
 	
 	public TileEntityChunkLoader()
 	{
@@ -57,6 +74,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 		return new ContainerChunkLoader(this, inventoryPlayer);
 	}
 	
+	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)};
+	}
+	
 	public void setRadius(short r)
 	{
 		int maxR = 49;
@@ -72,6 +95,19 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 	protected boolean activateMachine()
 	{
 		activated = true;
+		unactivatedTicks = 0;
+		if (consumptionTicks > 0)
+			--consumptionTicks;
+		else
+		{
+			emptyTicks = Math.min(Short.MAX_VALUE, emptyTicks + 1);
+			FluidStack s = _tanks[0].getFluid();
+			if (drain(_tanks[0], 1, true) == 1)
+			{
+				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
+				emptyTicks = 0;
+			}
+		}
 		return true;
 	}
 	
@@ -83,11 +119,35 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 		if (worldObj.isRemote)
 			return;
 		
+		// drainEnergy(emptyTicks / 200);
+		
 		if (!activated)
-		{
+		l: {
 			if (_ticket != null)
 			{
 				Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
+				if (chunks.size() == 0)
+					break l;
+				
+				unactivatedTicks = Math.min(_tanks[0].getCapacity() + 10, unactivatedTicks + 1);
+				if (consumptionTicks > 0)
+					consumptionTicks /= 10;
+				else
+				{
+					emptyTicks = Math.min(Short.MAX_VALUE, emptyTicks + 1);
+					FluidStack s = _tanks[0].getFluid();
+					if (drain(_tanks[0], Math.min(unactivatedTicks,
+							_tanks[0].getFluidAmount()), true) == 1)
+					{
+						consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
+						consumptionTicks = Math.max(0, consumptionTicks - unactivatedTicks);
+						activated = emptyTicks == 1 && unactivatedTicks < _tanks[0].getCapacity();
+						emptyTicks = 0;
+						if (activated)
+							break l;
+					}
+				}
+				
 				for (ChunkCoordIntPair c : chunks)
 					ForgeChunkManager.unforceChunk(_ticket, c);
 			}
@@ -156,6 +216,9 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 		super.writeToNBT(tag);
 		
 		tag.setShort("radius", _radius);
+		tag.setInteger("empty", emptyTicks);
+		tag.setInteger("inactive", unactivatedTicks);
+		tag.setInteger("consumed", consumptionTicks);
 	}
 	
 	@Override
@@ -164,6 +227,81 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered
 		super.readFromNBT(tag);
 		
 		_radius = tag.getShort("radius");
+		emptyTicks = tag.getInteger("empty");
+		unactivatedTicks = tag.getInteger("inactive");
+		consumptionTicks = tag.getInteger("consumed");
+		onFactoryInventoryChanged();
+	}
+	
+	protected boolean isFluidFuel(FluidStack fuel)
+	{
+		String name = getFluidName(fuel);
+		if (name == null)
+			return false;
+		return name.equals("mobessence") || name.equals("ender");
+	}
+	
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		if (resource != null && isFluidFuel(resource))
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
+		return 0;
+	}
+	
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
+	}
+	
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
+		return null;
+	}
+	
+	@Override
+	public boolean allowBucketFill()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean allowBucketDrain()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+	
+	protected String getFluidName(FluidStack fluid)
+	{
+		if (fluid == null || fluid.getFluid() == null)
+			return null;
+		String name = fluid.getFluid().getName();
+		if (name == null)
+			return null;
+		return name.trim().toLowerCase();
 	}
 
 	@Override
