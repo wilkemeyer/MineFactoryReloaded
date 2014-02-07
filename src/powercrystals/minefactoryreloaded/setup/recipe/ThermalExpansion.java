@@ -28,6 +28,9 @@ public class ThermalExpansion extends Vanilla
 	ItemStack invarSword;
 	ItemStack invarPickaxe;
 	ItemStack dynamoSteam;
+	ItemStack tesseract;
+	ItemStack tesseractFrameEmpty;
+	ItemStack cellResonant;
 	
 	@Override
 	protected void gatherItems()
@@ -48,6 +51,9 @@ public class ThermalExpansion extends Vanilla
 		invarSword = GameRegistry.findItemStack("ThermalExpansion", "toolInvarSword", 1);
 		invarPickaxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarPickaxe", 1);
 		dynamoSteam = GameRegistry.findItemStack("ThermalExpansion", "dynamoSteam", 1);
+		tesseract = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tesseract"));
+		tesseractFrameEmpty = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameEmpty", 1);
+		cellResonant = GameRegistry.findItemStack("ThermalExpansion", "cellResonant", 1);
 	}
 	
 	@Override
@@ -543,6 +549,18 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', "ingotSilver",
 					'C', powerCoilSilver
+						} );
+			
+			registerMachine(Machine.ChunkLoader, new Object[] {
+					"PEP",
+					"TFT",
+					"OCO",
+					'P', "sheetPlastic",
+					'T', tesseract,
+					'E', cellResonant,
+					'F', tesseractFrameEmpty,
+					'O', "ingotElectrum",
+					'C', powerCoilElectrum
 						} );
 		}
 		catch (Exception x)

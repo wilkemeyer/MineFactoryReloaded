@@ -560,6 +560,18 @@ public class Vanilla
 				'R', Item.netherrackBrick,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
+		
+		registerMachine(Machine.ChunkLoader, new Object[]
+					{
+				"GGG",
+				"PFP",
+				"RMR",
+				'G', "sheetPlastic",
+				'F', Item.netherStar,
+				'P', Machine.DeepStorageUnit.getItemStack(),
+				'R', Block.blockRedstone,
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
 	}
 	
 	protected void registerMachine(Machine machine, Object... recipe)
