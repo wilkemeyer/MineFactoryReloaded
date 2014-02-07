@@ -238,7 +238,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		String name = getFluidName(fuel);
 		if (name == null)
 			return false;
-		return name.equals("mobessence") || name.equals("ender");
+		return fluidConsumptionRate.containsKey(name);
 	}
 	
 	@Override
