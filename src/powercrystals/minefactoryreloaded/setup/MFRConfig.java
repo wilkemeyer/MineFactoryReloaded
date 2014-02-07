@@ -143,8 +143,6 @@ public class MFRConfig
 	public static Property vanillaOverrideIce;
 	public static Property vanillaOverrideMilkBucket;
 	
-	public static Property enableSlipperyRoads;
-	
 	public static Property enableCheapDSU;
 	public static Property craftSingleDSU;
 	public static Property enableMossyCobbleRecipe;
@@ -329,8 +327,7 @@ public class MFRConfig
 		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture Thaumcraft golems regardless of other settings.";
 		playSounds = c.get(Configuration.CATEGORY_GENERAL, "PlaySounds", true);
 		playSounds.comment = "Set to false to disable the harvester's sound when a block is harvested.";
-		enableSlipperyRoads = c.get(Configuration.CATEGORY_GENERAL, "Road.Slippery", true);
-		enableSlipperyRoads.comment = "If true, roads will be slippery like ice.";
+		deleteEntry(Configuration.CATEGORY_GENERAL, "Road.Slippery");
 		fruitTreeSearchMaxHorizontal = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.FruitTreeMaxHoriztonal", 5);
 		fruitTreeSearchMaxHorizontal.comment = "When searching for parts of a fruit tree, how far out to the sides (radius) to search";
 		fruitTreeSearchMaxVertical = c.get(Configuration.CATEGORY_GENERAL, "SearchDistance.FruitTreeMaxVertical", 20);
