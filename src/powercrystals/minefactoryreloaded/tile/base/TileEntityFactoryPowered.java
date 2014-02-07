@@ -40,6 +40,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
 	
+	private static final int energyFudge = 80;
+	
 	private int _energyStored;
 	private int _maxEnergyStored;
 	private int _maxEnergyTick;
@@ -107,7 +109,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			_isAddedToIC2EnergyNet = true;
 		}
 		
-		int energyRequired = Math.min(getEnergyStoredMax() - getEnergyStored(), getActivationEnergy());
+		int energyRequired = Math.min(getEnergyStoredMax() - getEnergyStored(),
+				getActivationEnergy() + energyFudge);
 		
 		_energyRequiredThisTick = Math.max(_energyRequiredThisTick + energyRequired,
 				getMaxEnergyPerTick());
