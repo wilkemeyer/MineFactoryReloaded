@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.core;
 import java.util.Map;
 
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;
@@ -14,8 +13,6 @@ import powercrystals.minefactoryreloaded.core.BlockPool.BlockNode;
 
 public class TreeHarvestManager implements IHarvestManager
 {
-	private static ForgeDirection[] SIDES = {ForgeDirection.EAST, ForgeDirection.WEST,
-		ForgeDirection.SOUTH, ForgeDirection.NORTH};
 	private BlockPool _treeBlocks;
 	private boolean _isDone;
 
@@ -50,17 +47,13 @@ public class TreeHarvestManager implements IHarvestManager
 		BlockPosition bp = bn.bp;
 		Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
-		if (_harvestMode.isInverted)
-			cur = BlockPool.getNext(bp.x, bp.y - 1, bp.z);
-		else
-			cur = BlockPool.getNext(bp.x, bp.y + 1, bp.z);
-		if (isValid(cur.bp, harvestables))
-			_treeBlocks.push(cur);
-		else
-			cur.free();
 
-		for (ForgeDirection side : SIDES)
+		SideOffset[] sides = !_harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
+			SideOffset.ADJACENT_CUBE_INVERTED;
+
+		for (int i = 0, e = sides.length; i < e; ++i)
 		{
+			SideOffset side = sides[i];
 			cur = BlockPool.getNext(bp.x + side.offsetX, bp.y + side.offsetY, bp.z + side.offsetZ);
 			if (isValid(cur.bp, harvestables))
 				_treeBlocks.push(cur);
@@ -68,14 +61,6 @@ public class TreeHarvestManager implements IHarvestManager
 				cur.free();
 		}
 
-		if (_harvestMode.isInverted)
-			cur = BlockPool.getNext(bp.x, bp.y + 1, bp.z);
-		else
-			cur = BlockPool.getNext(bp.x, bp.y - 1, bp.z);
-		if (isValid(cur.bp, harvestables))
-			_treeBlocks.push(cur);
-		else
-			cur.free();
 		bn.free();
 	}
 
