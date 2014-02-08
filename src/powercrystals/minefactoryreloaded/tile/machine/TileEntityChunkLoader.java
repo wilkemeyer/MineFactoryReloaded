@@ -52,7 +52,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	protected boolean activated;
 	protected Ticket _ticket;
 	protected int consumptionTicks;
-	protected int emptyTicks;
+	protected int emptyTicks, prevEmpty;
 	protected int unactivatedTicks;
 	
 	public TileEntityChunkLoader()
@@ -100,7 +100,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			--consumptionTicks;
 		else
 		{
-			emptyTicks = Math.min(Short.MAX_VALUE, emptyTicks + 1);
+			emptyTicks = Math.min(65535, emptyTicks + 1);
 			FluidStack s = _tanks[0].getFluid();
 			if (drain(_tanks[0], 1, true) == 1)
 			{
@@ -119,8 +119,6 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (worldObj.isRemote)
 			return;
 		
-		// drainEnergy(emptyTicks / 200);
-		
 		if (!activated)
 		l: {
 			if (_ticket != null)
@@ -134,7 +132,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					consumptionTicks /= 10;
 				else
 				{
-					emptyTicks = Math.min(Short.MAX_VALUE, emptyTicks + 1);
+					emptyTicks = Math.min(65535, emptyTicks + 1);
 					FluidStack s = _tanks[0].getFluid();
 					if (drain(_tanks[0], Math.min(unactivatedTicks,
 							_tanks[0].getFluidAmount()), true) == 1)
@@ -164,6 +162,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				_ticket.getModData().setInteger("Z", zCoord);
 			}
 			forceChunks();
+		}
+		
+		if (prevEmpty != emptyTicks)
+		{
+			prevEmpty = emptyTicks;
+			onFactoryInventoryChanged();
 		}
 		
 		super.setIsActive(activated);
@@ -199,7 +203,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		double a = (r*r*32-17+r*r*r);
 		for (int i = r / 10; i --> 0; )
 			a *= r / 6d;
-		setActivationEnergy((int)(a*10));
+		setActivationEnergy((int)(a*10) + (int)(StrictMath.cbrt(emptyTicks) * 2));
 	}
 
 	public void receiveTicket(Ticket ticket)
@@ -325,6 +329,18 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	public short getRadius()
 	{
 		return _radius;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void setEmpty(int r)
+	{
+		emptyTicks = r;
+		onFactoryInventoryChanged();
+	}
+
+	public short getEmpty()
+	{
+		return (short)emptyTicks;
 	}
 	
 	@Override public void setIsActive(boolean a) {}
