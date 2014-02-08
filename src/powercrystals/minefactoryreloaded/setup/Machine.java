@@ -154,7 +154,7 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, "factoryChunkLoader", 0, Integer.MAX_VALUE);
+	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, "factoryChunkLoader", Short.MAX_VALUE, Integer.MAX_VALUE, false);
 	
 	private final int _blockIndex;
 	private final int _meta;
@@ -170,6 +170,7 @@ public class Machine
 	
 	private int _activationEnergy;
 	private int _energyStoredMax;
+	private boolean _configurable;
 	
 	private Property _isRecipeEnabled;
 	
@@ -182,6 +183,13 @@ public class Machine
 	private Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName,
 			int activationEnergy, int energyStoredMax)
+	{
+		this(blockIndex, meta, name, tileEntityClass, tileEntityName, activationEnergy, energyStoredMax, true);
+	}
+	
+	private Machine(int blockIndex, int meta, String name,
+			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName,
+			int activationEnergy, int energyStoredMax, boolean configurable)
 	{
 		_blockIndex = blockIndex;
 		_meta = meta;
@@ -205,6 +213,7 @@ public class Machine
 		
 		_activationEnergy = activationEnergy;
 		_energyStoredMax = energyStoredMax;
+		_configurable = configurable;
 		
 		_machineMappings.put(_machineIndex, this);
 		_machines.add(this);
@@ -331,7 +340,7 @@ public class Machine
 	public void load(Configuration c)
 	{
 		_isRecipeEnabled = c.get("Machine", _name + ".Recipe.Enabled", true);
-		if(_activationEnergy > 0)
+		if (_configurable & _activationEnergy > 0)
 		{
 			_activationEnergy = c.get("Machine", _name + ".ActivationCostMJ", getActivationEnergyMJ()).getInt() * TileEntityFactoryPowered.energyPerMJ;
 		}
