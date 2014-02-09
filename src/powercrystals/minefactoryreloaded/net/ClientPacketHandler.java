@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -20,6 +21,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 public class ClientPacketHandler implements IPacketHandler
@@ -47,6 +49,12 @@ public class ClientPacketHandler implements IPacketHandler
 				TileEntityFactory tef = (TileEntityFactory) te;
 				tef.rotateDirectlyTo((Integer)packetReadout[3]);
 				tef.setIsActive((Boolean)packetReadout[4]);
+				if (tef.hasHAM())
+				{
+					Packet t = PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
+							Packets.HAMUpdate, new Object[]{te.xCoord, te.yCoord, te.zCoord});
+					PacketDispatcher.sendPacketToServer(t);
+				}
 			}
 			break;
 		case Packets.ConveyorDescription: // server -> client; server propagating conveyor color, activity state
