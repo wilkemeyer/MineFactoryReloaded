@@ -85,10 +85,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		int maxR = 49;
 		if (_ticket != null)
 			maxR = Math.min((int)Math.sqrt(_ticket.getChunkListDepth() / Math.PI), maxR);
-		if (r < 0 | r > maxR)
+		if (r < 0 | r > maxR | r == _radius)
 			return;
 		_radius = r;
 		onInventoryChanged();
+		if (!worldObj.isRemote)
+			forceChunks();
 	}
 
 	@Override
@@ -181,6 +183,13 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		int x = xCoord >> 4;
 		int z = zCoord >> 4;
 		int r = _radius * _radius;
+		for (ChunkCoordIntPair c : chunks)
+		{
+			int xS = c.chunkXPos - x;
+			int zS = c.chunkZPos - z;
+			if ((xS * xS + zS * zS) > r)
+				ForgeChunkManager.unforceChunk(_ticket, c);
+		}
 		for (int xO = -_radius; xO <= _radius; ++xO)
 		{
 			int xS = xO * xO;
