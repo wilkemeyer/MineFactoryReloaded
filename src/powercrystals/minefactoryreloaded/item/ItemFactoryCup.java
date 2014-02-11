@@ -154,7 +154,10 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		if (fluid == null)
 		{
 			if (doFill)
+			{
 				fluid = resource.copy();
+				fluid.amount = 0;
+			}
 		}
 		else if (!fluid.isFluidEqual(resource))
 			return 0;
@@ -165,7 +168,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		{
 			if (tag == null)
 				tag = stack.stackTagCompound = new NBTTagCompound();
-			fluid.amount = fillAmount;
+			fluid.amount += fillAmount;
 			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
 			tag.setLong("uniqifier", (System.identityHashCode(resource) << 32) |
 					System.identityHashCode(stack));
