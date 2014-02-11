@@ -185,20 +185,29 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 				(fluidTag = tag.getCompoundTag("fluid")) == null ||
 				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			return null;
-		int drainAmount = (int)(Math.min(maxDrain, fluid.amount) * (Math.max(Math.random() - 0.75, 0) + 0.75));
+		int drainAmount = Math.min(maxDrain, fluid.amount);
 		if (doDrain)
 		{
+			tag.removeTag("fluid");
+			tag.removeTag("uniqifier");
+			fluid.amount -= drainAmount;
+			if (fluid.amount > 0)
+				fill(stack, fluid, true);
+			else
+				stack.setItemDamage(stack.getItemDamage() + 1);
 			if (tag.hasKey("toDrain"))
 			{
 				drainAmount = tag.getInteger("toDrain");
 				tag.removeTag("toDrain");
 			}
-			tag.removeTag("fluid");
-			tag.removeTag("uniqifier");
-			stack.setItemDamage(stack.getItemDamage() + 1);
+			else
+				drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
 		}
 		else
+		{
+			drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
 			tag.setInteger("toDrain", drainAmount);
+		}
 		fluid.amount = drainAmount;
 		return fluid;
 	}

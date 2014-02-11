@@ -192,6 +192,9 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 			tag.removeTag("fluidName");
 			if (tag.hasNoTags())
 				stack.setTagCompound(null);
+			fluid.amount -= drainAmount;
+			if (fluid.amount > 0)
+				fill(stack, fluid, true);
 		}
 		fluid.amount = drainAmount;
 		return fluid;
