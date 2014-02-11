@@ -177,6 +177,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	
 	protected void forceChunks()
 	{
+		if (_ticket == null)
+			return;
 		if (MFRConfig.enableChunkLimitBypassing.getBoolean(false))
 			bypassLimit(_ticket);
 		Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
