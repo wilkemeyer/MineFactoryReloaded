@@ -158,7 +158,7 @@ public class Vanilla
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Item.carrot.itemID, Block.carrot.blockID));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Item.potato.itemID, Block.potato.blockID));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
-		MFRRegistry.registerPlantable(new PlantableCocoa());
+		MFRRegistry.registerPlantable(new PlantableCocoa(Item.dyePowder.itemID, Block.cocoaPlant.blockID, 3));
 		MFRRegistry.registerPlantable(new PlantableStandard(MineFactoryReloadedCore.rubberSaplingBlock.blockID, MineFactoryReloadedCore.rubberSaplingBlock.blockID));
 		
 		MFRRegistry.registerHarvestable(new HarvestableWood(Block.wood.blockID));

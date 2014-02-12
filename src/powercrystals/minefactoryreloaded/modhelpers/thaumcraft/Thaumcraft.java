@@ -16,6 +16,9 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -26,7 +29,7 @@ import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCocoa;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -45,12 +48,12 @@ public class Thaumcraft
 		
 		try
 		{
-			Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
-			Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
-			Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
-			Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
-			Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
-			Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
+			final Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
+			final Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
+			final Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
+			final Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
+			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
+			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			Class<?> trunk = Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
 			
@@ -73,7 +76,28 @@ public class Thaumcraft
 			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod.blockID));
 			
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling.blockID, tcSapling.blockID));
-			MFRRegistry.registerPlantable(new PlantableStandard(tcBean.itemID, tcPod.blockID));
+			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean.itemID, tcPod.blockID) {
+				@Override
+				protected boolean isNextToAcceptableLog(World world, int x, int y, int z)
+				{
+					boolean isMagic = false;
+					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+					if (biome != null)
+						isMagic = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.MAGICAL);
+					return isMagic &&
+							isGoodLog(world, x+1, y, z) ||
+							isGoodLog(world, x-1, y, z) ||
+							isGoodLog(world, x, y, z+1) ||
+							isGoodLog(world, x, y, z-1);
+				}
+				
+				@Override
+				protected boolean isGoodLog(World world, int x, int y, int z)
+				{
+					int id = world.getBlockId(x, y, z);
+					return id == Block.wood.blockID | id == tcLog.blockID;
+				}
+			});
 			
 			MFRRegistry.registerFruitLogBlockId(tcLog.blockID);
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod.blockID));
