@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -193,8 +194,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			fluid.amount -= drainAmount;
 			if (fluid.amount > 0)
 				fill(stack, fluid, true);
-			else
-				stack.setItemDamage(stack.getItemDamage() + 1);
 			if (tag.hasKey("toDrain"))
 			{
 				drainAmount = tag.getInteger("toDrain");
@@ -210,6 +209,27 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		}
 		fluid.amount = drainAmount;
 		return fluid;
+	}
+
+	@Override
+	public ItemStack getContainerItemStack(ItemStack itemStack)
+	{
+		ItemStack r = itemStack.copy();
+		r.stackSize = 1;
+		r.attemptDamageItem(1, itemRand);
+		return r;
+	}
+
+	@Override
+	public Item getContainerItem()
+	{
+		return this;
+	}
+
+	@Override
+	public boolean hasContainerItem()
+	{
+		return true;
 	}
 
 	public boolean hasDrinkableLiquid(ItemStack stack)

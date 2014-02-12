@@ -121,18 +121,21 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 					{
 						continue;
 					}
-					
+					int slot = getResourceSlot(row, i);
 					if(Item.itemsList[ingredient.itemID].hasContainerItem())
 					{
-						_inventory[getResourceSlot(row, i)] = Item.itemsList[ingredient.itemID].getContainerItemStack(_inventory[getResourceSlot(row, i)]);
+						ItemStack r = Item.itemsList[ingredient.itemID].getContainerItemStack(_inventory[getResourceSlot(row, i)]);
+						if (r.isItemStackDamageable() && r.getItemDamage() > r.getMaxDamage())
+							r = null;
+						_inventory[slot] = r;
 					}
 					else
 					{
-						_inventory[getResourceSlot(row, i)].stackSize--;
+						_inventory[slot].stackSize--;
 						
-						if(_inventory[getResourceSlot(row, i)].stackSize <= 0)
+						if(_inventory[slot].stackSize <= 0)
 						{
-							_inventory[getResourceSlot(row, i)] = null;
+							_inventory[slot] = null;
 						}
 					}
 					break;
