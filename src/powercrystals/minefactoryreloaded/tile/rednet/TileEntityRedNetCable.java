@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -74,6 +75,11 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 			return 0;
 		}
 		return _sideColors[side.ordinal()];
+	}
+	
+	public int getSideColorValue(ForgeDirection side)
+	{
+		return ItemDye.dyeColors[~getSideColor(side) & 15];
 	}
 	
 	public byte getMode()

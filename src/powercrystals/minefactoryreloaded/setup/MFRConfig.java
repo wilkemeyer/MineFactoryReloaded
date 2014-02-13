@@ -9,6 +9,7 @@ public class MFRConfig
 {
 	// client config
 	public static Property spyglassRange;
+	public static Property brightRednetBand;
 	
 	// common config
 	public static Property dropFilledContainers;
@@ -186,6 +187,8 @@ public class MFRConfig
 		
 		spyglassRange = c.get(Configuration.CATEGORY_GENERAL, "SpyglassRange", 200);
 		spyglassRange.comment = "The maximum number of blocks the spyglass and ruler can look to find something. This calculation is performed only on the client side.";
+		brightRednetBand = c.get(Configuration.CATEGORY_GENERAL, "BrightRedNetColors", true);
+		brightRednetBand.comment = "If true, RedNet color bands will always be bright.";
 		
 		c.save();
 	}

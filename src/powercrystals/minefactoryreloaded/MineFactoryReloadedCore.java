@@ -146,7 +146,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 
 @Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
-dependencies = "required-after:PowerCrystalsCore@[1.1.7,);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
+dependencies = "required-after:Forge@[9.11.1.953,);required-after:PowerCrystalsCore@[1.1.8,);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { MineFactoryReloadedCore.modNetworkChannel }, packetHandler = ClientPacketHandler.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = { MineFactoryReloadedCore.modNetworkChannel }, packetHandler = ServerPacketHandler.class),
@@ -158,7 +158,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modNetworkChannel = "MFReloaded";
-	public static final String version = "1.6.2R2.7.6B1";
+	public static final String version = "1.6.4R2.7.6B1";
 	public static final String modName = "Minefactory Reloaded";
 
 	public static final String textureFolder      = "minefactoryreloaded:textures/";
@@ -169,16 +169,18 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static final String mobTextureFolder   = textureFolder + "mob/";
 	public static final String modelTextureFolder = textureFolder + "itemmodels/";
 	public static final String armorTextureFolder = textureFolder + "armor/";
+	public static final String modelFolder = "/powercrystals/minefactoryreloaded/models/";
 	
 	public static int renderIdConveyor = 1000;
 	public static int renderIdFactoryGlassPane = 1001;
-	public static int renderIdRedstoneCable = 1002;
+	public static int renderIdUnused = 1002;
 	public static int renderIdFluidClassic = 1003;
 	public static int renderIdRedNetLogic = 1004;
 	public static int renderIdVineScaffold = 1005;
 	public static int renderIdRedNetPanel = 1006;
 	public static int renderIdFactoryGlass = 1007;
 	public static int renderIdDetCord = 1008;
+	public static int renderIdRedNet = 1009;
 	
 	public static Map<Integer, Block> machineBlocks = new HashMap<Integer, Block>();
 	

@@ -38,9 +38,9 @@
 			<available file="${mcpsrc.dir}/cofh" type="dir"/>
 			<available file="${mcpsrc.dir}/buildcraft" type="dir"/>
 			<available file="${mcpsrc.dir}/ic2" type="dir"/>
-			<!--<available file="${mcpsrc.dir}/thermalexpansion" type="dir"/>-->
 			<!--<available file="${mcpsrc.dir}/thaumcraft" type="dir"/>-->
 			<available file="${mcpsrc.dir}/forestry" type="dir"/>
+			<available file="${mcp.dir}/lib/codechickenlib.jar" type="file"/>
 		</and>
 	</condition>
 	
@@ -52,9 +52,10 @@
 			<include name="**/*.jar"/>
 			<exclude name="**/*-sources.jar"/>
 		</fileset>
-		<pathelement location="${mcp.dir}/jars/bin/jinput.jar"/>
-		<pathelement location="${mcp.dir}/jars/bin/lwjgl.jar"/>
-		<pathelement location="${mcp.dir}/jars/bin/lwjgl_util.jar"/>
+		<fileset dir="${mcp.dir}/lib/">
+			<include name="**/*.jar"/>
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
 	</path>
 
 	<target name="get-dependencies" depends="get-version" unless="${have-apis}">
@@ -71,9 +72,6 @@
 		
 		<echo message="Downloading ThermalExpansion API... " />
 		<get src="https://github.com/KingLemming/CoFHLib/archive/${cofh.commit}.zip" dest="${download.dir}/cofh-api.zip" />
-		<!--
-		<get src="https://dl.dropboxusercontent.com/u/57416963/Minecraft/Mods/ThermalExpansion/api/ThermalExpansion-API-2.3.0.zip" dest="${download.dir}/te-api.zip" />
-		-->
 		
 		<!--
 		<echo message="Downloading Thaumcraft API... " />
@@ -82,6 +80,9 @@
 		
 		<echo message="Downloading Forestry API... "/>
 		<get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.1/forestry-api-2.3.0.1.zip" dest="${download.dir}/ForestryAPI.zip" />
+		
+		<echo message="Downloading CCL..."/>
+		<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.55.jar" dest="${download.dir}/codechickenlib.jar" />
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="${have-apis}">
@@ -102,10 +103,6 @@
 		<unzip src="${download.dir}/cofh-api.zip" dest="${download.dir}" />
 		<mkdir dir="${mcpsrc.dir}/cofh" />
 		<move file="${download.dir}/CoFHLib-${cofh.commit}/cofh/api" todir="${mcpsrc.dir}/cofh" />
-		<!--
-		<unzip src="${download.dir}/te-api.zip" dest="${download.dir}/thermalexpansion/" />
-		<move file="${download.dir}/thermalexpansion/thermalexpansion" todir="${mcpsrc.dir}" />
-		-->
 		
 		<!--
 		<echo message="Extracting Thaumcraft API... " />
@@ -116,6 +113,9 @@
 		<echo message="Extracting Forestry API... " />
 		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}" />
 		<move file="${download.dir}/forestry" todir="${mcpsrc.dir}" />
+			
+		<echo message="Extracting CCL... " />
+		<move file="${download.dir}/codechickenlib.jar" todir="${mcp.dir}/lib/codechickenlib.jar" />
 	</target>
 
 	<mkdir dir="${download.dir}"/>
@@ -188,7 +188,7 @@
 		<delete dir="${classes.dir}" />
 	</target>
 
-	<target name="MFR-Forestry" depends="download-jgit">
+	<target name="MFR-Forestry">
 		<!-- MFR-Forestry Setup Start -->
 		<echo message="Starting MFR-Forestry submodule build..."/>
 		<antcall target="clone-MFR-Forestry"/>
@@ -202,7 +202,7 @@
 	
 	<available property="den-exists" file="${basedir}/MFR-Forestry/build.xml" />
 
-	<target name="clone-MFR-Forestry" unless="den-exists">
+	<target name="clone-MFR-Forestry" depends="download-jgit" unless="den-exists">
 		<taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties">
 			<classpath>
 				<pathelement location="${download.dir}/jgit/jgit-ant.jar"/>

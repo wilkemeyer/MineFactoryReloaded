@@ -33,6 +33,7 @@ import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
+import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 
@@ -421,7 +422,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	@Override
 	public int getRenderType()
 	{
-		return MineFactoryReloadedCore.renderIdRedstoneCable;
+		return MineFactoryReloadedCore.renderIdRedNet;
 	}
 	
 	@Override
@@ -429,6 +430,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	public void registerIcons(IconRegister ir)
 	{
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		RedNetCableRenderer.updateUVT(blockIcon);
 	}
 	
 	@Override
