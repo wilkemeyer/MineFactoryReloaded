@@ -90,26 +90,30 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		
 		IFactoryFruit harvestable = MFRRegistry.getFruits().get(new Integer(harvestedBlockId));
 		
+		harvestable.prePick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
+		
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, targetCoords.x, targetCoords.y, targetCoords.z);
 		
 		ItemStack replacement = harvestable.getReplacementBlock(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 		
-		harvestable.prePick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-		
-		doDrop(drops);
-		
 		if (replacement == null)
 		{
+			if (!worldObj.setBlockToAir(targetCoords.x, targetCoords.y, targetCoords.z))
+				return false;
 			if(MFRConfig.playSounds.getBoolean(true))
 			{
-				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x, targetCoords.y, targetCoords.z, harvestedBlockId + (harvestedBlockMetadata << 12));
+				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x, targetCoords.y,
+						targetCoords.z, harvestedBlockId + (harvestedBlockMetadata << 12));
 			}
-			worldObj.setBlockToAir(targetCoords.x, targetCoords.y, targetCoords.z);
 		}
 		else
 		{
-			worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, replacement.itemID, replacement.getItemDamage(), 3);
+			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z,
+					replacement.itemID, replacement.getItemDamage(), 3))
+				return false;
 		}
+		
+		doDrop(drops);
 		
 		harvestable.postPick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 		

@@ -144,18 +144,19 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, getImmutableSettings(),
 													targetCoords.x, targetCoords.y, targetCoords.z);
 		
-		doDrop(drops);
-		
 		if(harvestable.breakBlock())
 		{
+			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, 0, 0, 2))
+				return false;
 			if(_settings.get("playSounds"))
 			{
 				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x,
 						targetCoords.y, targetCoords.z,
 						harvestedBlockId + (harvestedBlockMetadata << 12));
 			}
-			worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, 0, 0, 2);
 		}
+		
+		doDrop(drops);
 		
 		harvestable.postHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 		
