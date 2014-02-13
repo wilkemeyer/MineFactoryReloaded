@@ -28,13 +28,13 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 
 public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	protected static CCModel base;
+	protected static CCModel cage;
 	protected static CCModel[] cable = new CCModel[6];
 	protected static CCModel[] iface = new CCModel[6];
 	protected static CCModel[] band  = new CCModel[6];
 	protected static CCModel[] plate = new CCModel[6];
 	protected static CCModel[] platef = new CCModel[6];
 	protected static CCModel[] grip  = new CCModel[6];
-	protected static CCModel[] cage  = new CCModel[6];
 	protected static CCModel[] wire  = new CCModel[6];
 
 	public static IUVTransformation uvt;
@@ -48,6 +48,9 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			Vector3 p = new Vector3(0, 0, 0);
 			base = cableModels.get("base").backfacedCopy();
 			compute(base);
+
+			cage = cableModels.get("cage").backfacedCopy();
+			compute(cage);
 
 			cable[5] = cableModels.get("cable").backfacedCopy();
 			CCModel.generateSidedModels(cable, 5, p);
@@ -72,10 +75,6 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			grip[5] = cableModels.get("grip").backfacedCopy();
 			CCModel.generateSidedModels(grip, 5, p);
 			calculateNormals(grip);
-
-			cage[5] = cableModels.get("cage").backfacedCopy();
-			CCModel.generateSidedModels(cage, 5, p);
-			calculateNormals(cage);
 
 			wire[5] = cableModels.get("wire").backfacedCopy();
 			CCModel.generateSidedModels(wire, 5, p);
@@ -104,6 +103,12 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		base.render(null, uvt);
 		cable[2].render(null, uvt);
 		cable[3].render(null, uvt);
+		if (metadata == 3 | metadata == 2)
+		{
+			cage.render(null, uvt);
+			wire[2].render(null, uvt);
+			wire[3].render(null, uvt);
+		}
 		tess.draw();
 	}
 
@@ -112,6 +117,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.useNormals(false);
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getBlockTileEntity(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
 		int bandBrightness = brightBand ? 0xd00070 : brightness;
 
@@ -120,6 +126,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		tess.setBrightness(brightness);
 
 		base.render(x, y, z, uvt);
+		if (meta == 3 | meta == 2)
+			cage.render(x, y, z, uvt);
 
 		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS) {
 			int side = f.ordinal();
@@ -137,8 +145,11 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 				if (!container) {
 					iface[side].render(x, y, z, uvt);
 					grip[side].render(x, y, z, uvt);
-				} else
+				} else {
 					cable[side].render(x, y, z, uvt);
+					if (meta == 3 | meta == 2);
+						//wire[side].render()
+				}
 				break;
 			case 13: // isPlate, isSingleSubnet
 				tess.setColorOpaque_I(_cable.getSideColorValue(f));
