@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
+import codechicken.core.launch.DepLoader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -153,6 +154,7 @@ serverPacketHandlerSpec = @SidedPacketHandler(channels = { MineFactoryReloadedCo
 connectionHandler = ConnectionHandler.class)
 public class MineFactoryReloadedCore extends BaseMod
 {
+	static{DepLoader.load();}
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy", serverSide = "powercrystals.minefactoryreloaded.net.CommonProxy")
 	public static IMFRProxy proxy;
 	

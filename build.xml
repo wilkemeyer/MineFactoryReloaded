@@ -290,7 +290,8 @@
 	</target>
 	
 	<target name="copy-assets">
-		<copy todir="${classes.dir}" file="mcmod.info"/>
+		<copy todir="${classes.dir}" file="mcmod.info" overwrite="true"/>
+		<copy todir="${classes.dir}" file="dependancies.info" overwrite="true"/>
 		
 		<copy todir="${classes.dir}/assets/minefactoryreloaded/textures">
 			<fileset dir="${mcpsrc.dir}/powercrystals/minefactoryreloaded/textures" />
