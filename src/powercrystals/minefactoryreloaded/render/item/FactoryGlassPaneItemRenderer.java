@@ -1,10 +1,11 @@
 package powercrystals.minefactoryreloaded.render.item;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.FMLRenderAccessLibrary;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
@@ -27,6 +28,7 @@ public class FactoryGlassPaneItemRenderer implements IItemRenderer
 		return helper.ordinal() < ItemRendererHelper.EQUIPPED_BLOCK.ordinal();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
@@ -43,7 +45,7 @@ public class FactoryGlassPaneItemRenderer implements IItemRenderer
 			GL11.glScalef(16f, 16f, 16f);
 			GL11.glTranslatef(0.5f, 0.5f, 0.5f);
 
-			FMLRenderAccessLibrary.renderInventoryBlock(renderer, pane, item.getItemDamage(), MineFactoryReloadedCore.renderIdFactoryGlassPane);
+			RenderingRegistry.instance().renderInventoryBlock(renderer, pane, item.getItemDamage(), MineFactoryReloadedCore.renderIdFactoryGlassPane);
 
 			GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 			GL11.glScalef(1 / 16f, 1 / 16f, 1 / 16f);
@@ -66,7 +68,7 @@ public class FactoryGlassPaneItemRenderer implements IItemRenderer
 			default:
 			}
 
-			FMLRenderAccessLibrary.renderInventoryBlock(renderer, pane, item.getItemDamage(), MineFactoryReloadedCore.renderIdFactoryGlassPane);
+			RenderingRegistry.instance().renderInventoryBlock(renderer, pane, item.getItemDamage(), MineFactoryReloadedCore.renderIdFactoryGlassPane);
 
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		}
