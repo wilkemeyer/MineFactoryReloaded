@@ -299,13 +299,13 @@ public class DepLoader implements IFMLLoadingPlugin, IFMLCallHook {
 
 	public static class DepLoadInst {
 
-		private final File modsDir;
-		private final File v_modsDir;
+		private File modsDir;
+		private File v_modsDir;
 		private IDownloadDisplay downloadMonitor;
 		private JDialog popupWindow;
 
-		private final Map<String, Dependancy> depMap = new HashMap<String, Dependancy>();
-		private final HashSet<String> depSet = new HashSet<String>();
+		private Map<String, Dependancy> depMap = new HashMap<String, Dependancy>();
+		private HashSet<String> depSet = new HashSet<String>();
 
 		public DepLoadInst() {
 
