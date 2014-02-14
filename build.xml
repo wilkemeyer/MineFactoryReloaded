@@ -131,7 +131,10 @@
 		<copy todir="${mcpsrc.dir}/skyboy" overwrite="true">
 			<fileset dir="${src.dir}/skyboy"/>
 		</copy>
-		<copy todir="${mcpsrc.dir}" file="mcmod.info" overwrite="true"/>
+		<mkdir dir="${mcpsrc.dir}/codechicken" />
+		<copy todir="${mcpsrc.dir}/codechicken" overwrite="true">
+			<fileset dir="${src.dir}/codechicken"/>
+		</copy>
 		
 		<!-- Forestry compat submodule -->
 		<antcall target="MFR-Forestry"/>
@@ -246,6 +249,7 @@
 			<fileset dir="${mcp.dir}/bin/minecraft">
 				<include name="powercrystals/minefactoryreloaded/**/*.class" />
 				<include name="denoflionsx/minefactoryreloaded/**/*.class" />
+				<include name="codechicken/core/launch/Dep*.class" />
 				<include name="skyboy/**/*.class" />
 				<include name="cofh/**/*.class" />
 				<include name="ic2/**/*.class" />
@@ -279,6 +283,7 @@
 			<fileset dir="${mcp.dir}/reobf/minecraft">
 				<include name="powercrystals/minefactoryreloaded/**/*.class" />
 				<include name="denoflionsx/minefactoryreloaded/**/*.class" />
+				<include name="codechicken/core/launch/Dep*.class" />
 				<include name="skyboy/**/*.class" />
 				<include name="cofh/**/*.class" />
 				<include name="ic2/**/*.class" />
