@@ -302,7 +302,7 @@ public class BlockFactoryMachine extends BlockContainer
 				}
 			}
 			
-			if (entity instanceof ICommandSender)
+			if (entity instanceof ICommandSender && entity.addedToChunk)
 				((TileEntityFactory)te).setOwner(((ICommandSender)entity).getCommandSenderName());
 			else
 				((TileEntityFactory)te).setOwner(null);
