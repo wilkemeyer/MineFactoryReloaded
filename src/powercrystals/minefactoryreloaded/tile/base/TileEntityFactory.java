@@ -215,6 +215,8 @@ public abstract class TileEntityFactory extends TileEntity
 	
 	public void setOwner(String owner)
 	{
+		if (owner == null)
+			owner = "";
 		if (_owner == null || _owner.isEmpty())
 			_owner = owner;
 	}
