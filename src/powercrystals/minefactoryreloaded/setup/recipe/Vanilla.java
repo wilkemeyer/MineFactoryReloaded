@@ -787,10 +787,16 @@ public class Vanilla
 			'R', Item.redstone,
 			'I', Item.ingotIron,
 				} ));
+
+		String[] dyes = { "Black", "Red", "Green", "Brown", "Blue", "Purple",
+				"Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow",
+				"LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 		
 		for(int i = 0; i < 16; i++)
 		{
-			GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.conveyorBlock, 1, i), new ItemStack(MineFactoryReloadedCore.conveyorBlock, 1, 16), new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 1, i));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.conveyorBlock, 1, i),
+					new ItemStack(MineFactoryReloadedCore.conveyorBlock, 1, 16),
+					"dyeCeramic" + dyes[15 - i]));
 		}
 	}
 	
@@ -802,8 +808,8 @@ public class Vanilla
 		}
 		_registeredDecorative = true;
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 16), new Object[]
-				{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 16),
+				new Object[] {
 			"BBB",
 			"BPB",
 			"BBB",
@@ -827,17 +833,18 @@ public class Vanilla
 				"Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow",
 				"LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 		
+		ItemStack glass = new ItemStack(Block.glass);
+		ItemStack pane = new ItemStack(Block.thinGlass);
 		for(int i = 0; i < 16; i++)
 		{
 			ItemStack dye = new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i);
 			GameRegistry.addRecipe(new ShapelessOreRecipe(dye, new ItemStack(Item.clay), "dye" + dyes[15 - i]));
+			dye.stackSize = 1;
 			ItemStack glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i);
-			ItemStack glass = new ItemStack(Block.glass);
 			ItemStack paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i);
-			ItemStack pane = new ItemStack(Block.thinGlass);
 			OreDictionary.registerOre("glass" + dyes[15 - i], glassStack.copy());
 			OreDictionary.registerOre("glassPane" + dyes[15 - i], paneStack.copy());
-			dye.stackSize = 1;
+			OreDictionary.registerOre("dyeCeramic" + dyes[15 - i], dye.copy());
 			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, "glass"));
 			GameRegistry.addShapelessRecipe(glassStack.copy(), dye, glass);
 			glassStack.stackSize = 3;
