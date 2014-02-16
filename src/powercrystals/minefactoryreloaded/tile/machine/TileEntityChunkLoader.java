@@ -45,6 +45,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	protected static Map<String, Integer> fluidConsumptionRate = new HashMap<String, Integer>();
 	static {
 		fluidConsumptionRate.put("mobessence", 10);
+		fluidConsumptionRate.put("liquidessence", 20);
 		fluidConsumptionRate.put("ender", 40);
 	}
 	
@@ -107,7 +108,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			if (drain(_tanks[0], 1, true) == 1)
 			{
 				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
-				emptyTicks = 0;
+				emptyTicks = Math.max(-65535, emptyTicks - 2);
 			}
 		}
 		return true;
@@ -118,7 +119,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		activated = false;
 		super.updateEntity();
-		if (worldObj.isRemote)
+		if (worldObj.isRemote | _owner.isEmpty())
 			return;
 		
 		if (!activated)
@@ -137,12 +138,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					emptyTicks = Math.min(65535, emptyTicks + 1);
 					FluidStack s = _tanks[0].getFluid();
 					if (drain(_tanks[0], Math.min(unactivatedTicks,
-							_tanks[0].getFluidAmount()), true) == 1)
+							_tanks[0].getFluidAmount()), true) == unactivatedTicks)
 					{
 						consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 						consumptionTicks = Math.max(0, consumptionTicks - unactivatedTicks);
 						activated = emptyTicks == 1 && unactivatedTicks < _tanks[0].getCapacity();
-						emptyTicks = 0;
+						emptyTicks = Math.max(-65535, emptyTicks - 2);
 						if (activated)
 							break l;
 					}
@@ -152,7 +153,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					ForgeChunkManager.unforceChunk(_ticket, c);
 			}
 		}
-		else if (!isActive())
+		else if (activated & !isActive())
 		{
 			if (_ticket == null)
 			{
@@ -210,11 +211,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		if (isInvalid())
 			return;
-		int r = _radius + 1;
+		int r = _radius + 1, c;
+		{float t = _radius * (float)Math.PI; c = (int)(t * t) + 1;}
 		double a = (r*r*32-17+r*r*r);
 		for (int i = r / 10; i --> 0; )
 			a *= r / 6d;
-		setActivationEnergy((int)(a*10) + (int)(StrictMath.cbrt(emptyTicks) * 2));
+		setActivationEnergy((int)(a*10) + (int)(StrictMath.cbrt(emptyTicks) * c));
 	}
 
 	public void receiveTicket(Ticket ticket)
@@ -316,7 +318,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		String name = fluid.getFluid().getName();
 		if (name == null)
 			return null;
-		return name.trim().toLowerCase();
+		return name;
 	}
 
 	@Override
