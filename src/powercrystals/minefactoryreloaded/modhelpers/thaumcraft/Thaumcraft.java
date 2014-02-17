@@ -56,9 +56,12 @@ public class Thaumcraft
 			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
 			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
 			Class<?> trunk = Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
+			Class<?> pech = Class.forName("thaumcraft.common.entities.monster.EntityPech");
 			
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);
+			
+			MFRRegistry.registerSpawnHandler(new SpawnablePech(pech));
 			
 			MFRRegistry.registerGrinderBlacklist(golem);
 			MFRRegistry.registerGrinderBlacklist(trunk);
