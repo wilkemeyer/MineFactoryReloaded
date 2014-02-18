@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityOcelot;
@@ -242,12 +243,20 @@ public class Vanilla
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
 		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Item.slimeBall), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem), 1));
+		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Item.magmaCream), 1) {
+			@Override
+			protected boolean shouldDrop(EntitySlime slime) {
+				return slime.getSlimeSize() <= dropSize;
+			}
+		});
 		
 		MFRRegistry.registerSludgeDrop(50, new ItemStack(Block.sand));
 		MFRRegistry.registerSludgeDrop(40, new ItemStack(Block.dirt));
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Item.clay, 4));
-		MFRRegistry.registerSludgeDrop(3, new ItemStack(Block.mycelium));
+		MFRRegistry.registerSludgeDrop(10, new ItemStack(Block.gravel));
 		MFRRegistry.registerSludgeDrop(5, new ItemStack(Block.slowSand));
+		MFRRegistry.registerSludgeDrop(3, new ItemStack(Block.mycelium));
+		MFRRegistry.registerSludgeDrop(1, new ItemStack(Block.netherrack));
 		
 		MFRRegistry.registerSafariNetHandler(new EntityLivingHandler());
 		MFRRegistry.registerSafariNetHandler(new EntityAgeableHandler());
