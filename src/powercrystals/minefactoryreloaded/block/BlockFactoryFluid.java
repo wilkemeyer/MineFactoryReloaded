@@ -88,6 +88,8 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
+		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
 		l: if (world.provider.isHellWorld)
 		{
 			if (!isSourceBlock(world, x, y, z))
