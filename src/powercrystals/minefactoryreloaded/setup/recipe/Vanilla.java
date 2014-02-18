@@ -71,7 +71,7 @@ public class Vanilla
 			"PPP",
 			"SSS",
 			'P', "sheetPlastic",
-			'S', Block.stone,
+			'S', "stone",
 				} ));
 		
 		// regex: if\s*\((Machine\.\w+)[^\n]+\n[^\n]+\n[^\n]+\n\s+(\{[^}]+\} \))[^\n]+\n[^\n]+
@@ -968,23 +968,26 @@ public class Vanilla
 		/**
 		 * Smooth:
 		 **/
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 0), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 0), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.stone,
+			'S', "stone",
 			'D', new ItemStack(Item.dyePowder, 1, 0),
-				} );
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 1), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 1), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.stone,
+			'S', "stone",
 			'D', Item.sugar,
-				} );
+				}));
+		
+		OreDictionary.registerOre("stone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 0));
+		OreDictionary.registerOre("stone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 1));
 		
 		// cobble->smooth
 		int stoneID = MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID;
@@ -994,23 +997,26 @@ public class Vanilla
 		/**
 		 * Cobble:
 		 **/
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 2), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 2), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.cobblestone,
+			'S', "cobblestone",
 			'D', new ItemStack(Item.dyePowder, 1, 0),
-				} );
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 3), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 3), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.cobblestone,
+			'S', "cobblestone",
 			'D', Item.sugar,
-				} );
+				}));
+		
+		OreDictionary.registerOre("cobblestone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 2));
+		OreDictionary.registerOre("cobblestone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 3));
 		
 		// meta-sensitive optional override in block code?
 		
@@ -1240,15 +1246,15 @@ public class Vanilla
 			'S', MineFactoryReloadedCore.syringeEmptyItem,
 				} );
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.syringeSlimeItem, 1), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.syringeSlimeItem, 1), new Object[]
 				{
 			"   ",
 			" S ",
 			"BLB",
-			'B', Item.slimeBall,
+			'B', "slimeball",
 			'L', new ItemStack(Item.dyePowder, 1, 4),
 			'S', MineFactoryReloadedCore.syringeEmptyItem,
-				} );
+				}));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeCureItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.appleGold });
 	}
@@ -1405,15 +1411,15 @@ public class Vanilla
 			'G', Item.ghastTear,
 				} );
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.safariNetSingleItem, 1), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetSingleItem, 1), new Object[]
 				{
 			"SLS",
 			" B ",
 			"S S",
 			'S', Item.silk,
 			'L', Item.leather,
-			'B', Item.slimeBall,
-				} );
+			'B', "slimeball",
+				}));
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.safariNetJailerItem, 1), new Object[]
 				{
