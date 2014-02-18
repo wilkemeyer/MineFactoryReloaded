@@ -300,6 +300,12 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 	
 	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
+	{
+		return !_routing;
+	}
+	
+	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
