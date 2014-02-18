@@ -11,12 +11,21 @@ public class SpawnablePech implements IMobSpawnHandler
 {
 	private Class<? extends EntityLivingBase> _tcPechClass;
 	private Field _tcPechLootField;
-	
+
+	@SuppressWarnings("unchecked")
 	public SpawnablePech(Class<?> pech)
 	{
-		_tcPechClass = (Class<? extends EntityLivingBase>) pech;
+		_tcPechClass = (Class<? extends EntityLivingBase>)pech;
+		try
+		{
+			_tcPechLootField = _tcPechClass.getDeclaredField("loot");
+		}
+		catch (Throwable e)
+		{
+			e.printStackTrace();
+		}
 	}
-	
+
 	@Override
 	public Class<? extends EntityLivingBase> getMobClass()
 	{
@@ -31,10 +40,6 @@ public class SpawnablePech implements IMobSpawnHandler
 	{
 		try
 		{
-			if (_tcPechLootField == null)
-			{
-				_tcPechLootField = _tcPechClass.getDeclaredField("loot");
-			}
 			_tcPechLootField.set(entity, new ItemStack[9]);
 		}
 		catch (Throwable e)
