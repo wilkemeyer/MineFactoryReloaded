@@ -387,62 +387,62 @@ public class Vanilla
 		MFRRegistry.addLaserPreferredOre(black, new ItemStack(Block.oreCoal));
 		MFRRegistry.addLaserPreferredOre(yellow, new ItemStack(Block.glowStone));
 		registerOreDictLaserOre(175 / 2, "oreNetherCoal",  black, null); // coal isn't in the oredict??
-		registerOreDictLaserOre(150, "oreIron",            brown, "oreNetherIron");
-		registerOreDictLaserOre(100, "oreRedstone",          red, "oreNetherRedstone");
-		registerOreDictLaserOre(100, "oreNikolite",    lightBlue, "oreNetherNikolite", "dustNikolite");
-		registerOreDictLaserOre( 90, "oreCopper",         orange, "oreNetherCopper", "dustCopper");
-		registerOreDictLaserOre( 85, "oreTin",            silver, "oreNetherTin", "dustTin");
+		registerOreDictLaserOre(150, "Iron",               brown, false);
+		registerOreDictLaserOre(100, "Redstone",             red, false);
+		registerOreDictLaserOre(100, "Nikolite",       lightBlue, false);
+		registerOreDictLaserOre( 90, "Copper",            orange, false);
+		registerOreDictLaserOre( 85, "Tin",               silver, false);
 		registerOreDictLaserOre( 85, "oreCheese",         yellow, null);
-		registerOreDictLaserOre( 85, "oreForce",          yellow, null);
-		registerOreDictLaserOre( 80, "oreLapis",            blue, "oreNetherLapis");
-		registerOreDictLaserOre( 70, "oreGold",           yellow, "oreNetherGold");
+		registerOreDictLaserOre( 85, "Force",             yellow,  true);
+		registerOreDictLaserOre( 80, "Lapis",               blue,  true);
+		registerOreDictLaserOre( 70, "Gold",              yellow, false);
 		registerOreDictLaserOre( 70, "oreQuartz",          white, null);
-		registerOreDictLaserOre( 60, "oreLead",           purple, "oreNetherLead", "dustLead");
+		registerOreDictLaserOre( 60, "Lead",              purple, false);
 		registerOreDictLaserOre( 60, "oreZinc",            white, "oreSphalerite", orange, "dustZinc");
-		registerOreDictLaserOre( 60, "oreNaturalAluminum", white, null);
-		registerOreDictLaserOre( 60, "oreAluminium",       white, null);
-		registerOreDictLaserOre( 60, "oreAluminum",        white, null);
+		registerOreDictLaserOre( 60, "NaturalAluminum",    white, false);
+		registerOreDictLaserOre( 60, "Aluminium",          white, false);
+		registerOreDictLaserOre( 60, "Aluminum",           white, false);
 		registerOreDictLaserOre( 60, "oreSodalite",         blue, null);
-		registerOreDictLaserOre( 55, "oreSteel",            gray, "oreNetherSteel", "dustSteel");
+		registerOreDictLaserOre( 55, "Steel",               gray, false);
 		registerOreDictLaserOre( 55, "oreCassiterite",     black, null);
-		registerOreDictLaserOre( 55, "oreDiamond",     lightBlue, "oreNetherDiamond");
+		registerOreDictLaserOre( 55, "Diamond",        lightBlue,  true);
 		registerOreDictLaserOre( 55, "oreDesh",             gray, null);
-		registerOreDictLaserOre( 50, "oreCertusQuartz",     cyan, null);
-		registerOreDictLaserOre( 50, "oreOsmium",      lightBlue, "oreNetherOsmium");
+		registerOreDictLaserOre( 50, "CertusQuartz",        cyan,  true);
+		registerOreDictLaserOre( 50, "Osmium",         lightBlue, false);
 		registerOreDictLaserOre( 50, "oreBauxite",         brown, null);
-		registerOreDictLaserOre( 45, "oreTitanium",        black, "oreNetherTitanium", "dustTitanium");
-		registerOreDictLaserOre( 45, "oreTungsten",        black, "oreNetherTungsten", "dustTungsten");
+		registerOreDictLaserOre( 45, "Titanium",           black, false);
+		registerOreDictLaserOre( 45, "Tungsten",           black, false);
 		registerOreDictLaserOre( 45, "oreTungstate",       black, "oreNetherTungsten", "dustTungsten");
 		registerOreDictLaserOre( 45, "orePyrite",         orange, null);
-		registerOreDictLaserOre( 45, "oreFzDarkIron",     purple, null);
-		registerOreDictLaserOre( 40, "oreNickel",         silver, "oreNetherNickel", "dustNickel");
-		registerOreDictLaserOre( 40, "oreSulfur",         yellow, "oreNetherSulfur", "dustSulfur");
-		registerOreDictLaserOre( 40, "oreSaltpeter",       white, null);
-		registerOreDictLaserOre( 35, "oreEmerald",          lime, "oreNetherEmerald");
-		registerOreDictLaserOre( 35, "oreRuby",              red, "oreNetherRuby");
-		registerOreDictLaserOre( 35, "oreSapphire",         blue, "oreNetherSapphire");
-		registerOreDictLaserOre( 35, "oreGreenSapphire",   green, "oreNetherGreenSapphire");
-		registerOreDictLaserOre( 35, "orePeridot",         green, "oreNetherPeridot");
-		registerOreDictLaserOre( 35, "oreTopaz",           brown, null);
-		registerOreDictLaserOre( 35, "oreTanzanite",      purple, null);
-		registerOreDictLaserOre( 35, "oreMalachite",        cyan, null);
-		registerOreDictLaserOre( 35, "oreAmber",          orange, null);
-		registerOreDictLaserOre( 30, "oreSilver",           gray, "oreNetherSilver", "dustSilver");
-		registerOreDictLaserOre( 30, "oreGalena",         purple, null);
-		registerOreDictLaserOre( 30, "oreApatite",          blue, null);
-		registerOreDictLaserOre( 30, "oreSilicon",         black, null);
-		registerOreDictLaserOre( 25, "oreAmethyst",      magenta, null);
-		registerOreDictLaserOre( 20, "oreUranium",          lime, "oreNetherUranium", "dustUranium");
+		registerOreDictLaserOre( 45, "FzDarkIron",        purple, false);
+		registerOreDictLaserOre( 40, "Nickel",            silver, false);
+		registerOreDictLaserOre( 40, "Sulfur",            yellow, false);
+		registerOreDictLaserOre( 40, "Saltpeter",          white, false);
+		registerOreDictLaserOre( 35, "Emerald",             lime,  true);
+		registerOreDictLaserOre( 35, "Ruby",                 red,  true);
+		registerOreDictLaserOre( 35, "Sapphire",            blue,  true);
+		registerOreDictLaserOre( 35, "GreenSapphire",      green,  true);
+		registerOreDictLaserOre( 35, "Peridot",            green,  true);
+		registerOreDictLaserOre( 35, "Topaz",              brown,  true);
+		registerOreDictLaserOre( 35, "Tanzanite",         purple,  true);
+		registerOreDictLaserOre( 35, "Malachite",           cyan,  true);
+		registerOreDictLaserOre( 35, "Amber",             orange,  true);
+		registerOreDictLaserOre( 30, "Silver",              gray, false);
+		registerOreDictLaserOre( 30, "Galena",            purple, false);
+		registerOreDictLaserOre( 30, "Apatite",             blue,  true);
+		registerOreDictLaserOre( 30, "Silicon",            black, false);
+		registerOreDictLaserOre( 25, "Amethyst",         magenta,  true);
+		registerOreDictLaserOre( 20, "Uranium",             lime, false);
 		registerOreDictLaserOre( 20, "orePitchblende",     black, "oreNetherUranium", lime, "dustUranium");
-		registerOreDictLaserOre( 20, "oreYellorite",      yellow, null);
+		registerOreDictLaserOre( 20, "Yellorite",         yellow,  true);
 		registerOreDictLaserOre( 20, "oreFirestone",         red, null);
 		registerOreDictLaserOre( 20, "MonazitOre",         green, null);
-		registerOreDictLaserOre( 15, "oreCinnabar",          red, null);
-		registerOreDictLaserOre( 15, "orePlatinum",    lightBlue, "oreNetherPlatinum", "dustPlatinum");
+		registerOreDictLaserOre( 15, "Cinnabar",             red,  true);
+		registerOreDictLaserOre( 15, "Platinum",       lightBlue, false);
 		registerOreDictLaserOre( 15, "oreCooperite",      yellow, "oreNetherPlatinum", lightBlue, "dustPlatinum");
 		registerOreDictLaserOre( 10, "oreArdite",         orange, null);
 		registerOreDictLaserOre( 10, "oreCobalt",           blue, null);
-		registerOreDictLaserOre(  5, "oreIridium",         white, "oreNetherIridium", "dustIridium");
+		registerOreDictLaserOre(  5, "Iridium",            white, false);
 		
 		// rarity/usefulness unknown
 		registerOreDictLaserOre( 20, "oreTetrahedrite", orange, null);
@@ -451,6 +451,12 @@ public class Vanilla
 		registerOreDictLaserOre( 20, "oreAmmonium", white, null);
 		registerOreDictLaserOre( 20, "oreCalcite", orange, null);
 		registerOreDictLaserOre( 20, "oreFluorite", silver, null);
+	}
+	
+	private void registerOreDictLaserOre(int weight, String suffix, int focus, boolean isGem)
+	{
+		registerOreDictLaserOre(weight, "ore" + suffix, focus,
+				"oreNether" + suffix, focus, (isGem ? "gem" : "dust") + suffix);
 	}
 	
 	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName)
