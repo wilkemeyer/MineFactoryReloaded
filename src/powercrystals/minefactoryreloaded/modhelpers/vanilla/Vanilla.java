@@ -403,6 +403,7 @@ public class Vanilla
 		registerOreDictLaserOre( 60, "Aluminium",          white, false);
 		registerOreDictLaserOre( 60, "Aluminum",           white, false);
 		registerOreDictLaserOre( 60, "oreSodalite",         blue, null);
+		registerOreDictLaserOre( 55, "Mythril",             blue, false);
 		registerOreDictLaserOre( 55, "Steel",               gray, false);
 		registerOreDictLaserOre( 55, "oreCassiterite",     black, null);
 		registerOreDictLaserOre( 55, "Diamond",        lightBlue,  true);
@@ -429,6 +430,7 @@ public class Vanilla
 		registerOreDictLaserOre( 35, "Tanzanite",         purple,  true);
 		registerOreDictLaserOre( 35, "Malachite",           cyan,  true);
 		registerOreDictLaserOre( 35, "Amber",             orange,  true);
+		registerOreDictLaserOre( 30, "Adamantium",         green, false);
 		registerOreDictLaserOre( 30, "Silver",              gray, false);
 		registerOreDictLaserOre( 30, "Galena",            purple, false);
 		registerOreDictLaserOre( 30, "Apatite",             blue,  true);
@@ -447,8 +449,6 @@ public class Vanilla
 		registerOreDictLaserOre(  5, "Iridium",            white, false);
 		
 		// rarity/usefulness unknown
-		registerOreDictLaserOre( 15, "Mythril",       lightBlue, false);
-		registerOreDictLaserOre( 15, "Adamantium",       lightBlue, false);
 		registerOreDictLaserOre( 20, "oreTetrahedrite", orange, null);
 		registerOreDictLaserOre( 20, "oreCadmium", lightBlue, null);
 		registerOreDictLaserOre( 20, "oreIndium", silver, null);

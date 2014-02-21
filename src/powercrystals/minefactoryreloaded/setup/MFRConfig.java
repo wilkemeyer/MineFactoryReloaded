@@ -200,7 +200,9 @@ public class MFRConfig
 		Configuration c = new Configuration(configFile);
 		c.load();
 		config = c;
-		int idBase = 3120;
+		Property base = c.get(Configuration.CATEGORY_BLOCK, "BaseID", 3120);
+		base.comment = "This is the base ID blocks will assign from. Delete the other IDs here to auto-align to this value.";
+		int idBase = base.getInt(3120);
 		machineBlock0Id = c.getBlock("ID.MachineBlock", idBase++);
 		conveyorBlockId = c.getBlock("ID.ConveyorBlock", idBase++);
 		rubberWoodBlockId = c.getBlock("ID.RubberWood", idBase++);
@@ -233,7 +235,9 @@ public class MFRConfig
 		rednetPanelBlockId = c.getBlock("ID.RedNet.Panel", idBase++);
 		detCordBlockId = c.getBlock("ID.DetCord", idBase++);
 		
-		idBase = 11987;
+		base = c.get(Configuration.CATEGORY_ITEM, "BaseID", 11987);
+		base.comment = "This is the base ID items will assign from. Delete the other IDs here to auto-align to this value.";
+		idBase = base.getInt(11987);
 		hammerItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Hammer", idBase++);
 		milkItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Milk", idBase++);
 		sludgeItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.Sludge", idBase++);
