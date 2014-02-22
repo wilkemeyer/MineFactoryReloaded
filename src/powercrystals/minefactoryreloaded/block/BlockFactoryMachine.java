@@ -200,11 +200,17 @@ public class BlockFactoryMachine extends BlockContainer
 	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
 	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		dropContents(te);
+		if (te != null)
+		{
+			dropContents(te);
 
-		if (te instanceof TileEntityFactoryInventory)
-			((TileEntityFactoryInventory)te).onBlockBroken();
+			if (te instanceof TileEntityFactoryInventory)
+				((TileEntityFactoryInventory)te).onBlockBroken();
 
+			world.markTileEntityForDespawn(te);
+			te.invalidate();
+			world.removeBlockTileEntity(x, y, z);
+		}
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 

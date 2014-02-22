@@ -56,10 +56,10 @@ public class MFRConfig
 	public static Property mushroomSoupStillBlockId;
 	
 	public static Property hammerItemId;
-	public static Property milkItemId;
-	public static Property sludgeItemId;
-	public static Property sewageItemId;
-	public static Property mobEssenceItemId;
+	public static Property milkItemId; //TODO: UNUSED
+	public static Property sludgeItemId; //TODO: UNUSED
+	public static Property sewageItemId; //TODO: UNUSED
+	public static Property mobEssenceItemId; //TODO: UNUSED
 	public static Property fertilizerItemId;
 	public static Property plasticSheetItemId;
 	public static Property rawPlasticItemId;
@@ -77,7 +77,7 @@ public class MFRConfig
 	public static Property blankRecordId;
 	public static Property syringeZombieId;
 	public static Property safariNetSingleItemId;
-	public static Property bioFuelItemId;
+	public static Property bioFuelItemId; //TODO: UNUSED
 	public static Property bioFuelBucketItemId;
 	public static Property upgradeItemId;
 	public static Property safariNetLauncherItemId;
