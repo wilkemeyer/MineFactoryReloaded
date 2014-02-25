@@ -245,6 +245,11 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		{
 			int lowerBound = 0;
 			int upperBound = MFRConfig.treeSearchMaxVertical.getInt();
+			if (treeFlipped)
+			{
+				lowerBound = upperBound;
+				upperBound = 0;
+			}
 			
 			_lastTree = new BlockPosition(pos);
 			
