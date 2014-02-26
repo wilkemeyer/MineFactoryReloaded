@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.core;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import powercrystals.core.position.Area;
@@ -47,6 +48,9 @@ public class FruitHarvestManager implements IHarvestManager
 		_isDone = false;
 		_treeBlocks = (_harvestMode.isInverted ? _area.getPositionsTopFirst() : _area.getPositionsBottomFirst());
 	}
+
+	@Override
+	public void setWorld(World world) { }
 	
 	@Override
 	public boolean getIsDone()
@@ -59,4 +63,36 @@ public class FruitHarvestManager implements IHarvestManager
 	{
 		return _area.getOrigin();
 	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		data.setBoolean("done", _isDone);
+		data.setInteger("curPos", _currentBlock);
+		data.setInteger("mode", _harvestMode.ordinal());
+		BlockPosition o = getOrigin();
+		data.setIntArray("area", new int[] {o.x - _area.xMin, o.y - _area.yMin, _area.yMax - o.y});
+		data.setIntArray("origin", new int[] {o.x, o.y, o.z});
+		tag.setCompoundTag("harvestManager", data);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		NBTTagCompound data = tag.getCompoundTag("harvestManager");
+		_isDone = data.getBoolean("done");
+		_currentBlock = data.getInteger("curPos");
+		_harvestMode = HarvestMode.values()[data.getInteger("mode")];
+		int[] area = data.getIntArray("area"), o = data.getIntArray("origin");
+		if (area == null | o == null || o.length < 3 | area.length < 3)
+		{
+			_isDone = true;
+			return;
+		}
+		_area = new Area(new BlockPosition(o[0], o[1], o[2]), area[0], area[1], area[2]);
+	}
+
+	@Override
+	public void free() { }
 }

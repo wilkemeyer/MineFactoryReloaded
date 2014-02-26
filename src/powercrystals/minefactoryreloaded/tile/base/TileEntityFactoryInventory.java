@@ -73,6 +73,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	public void onDisassembled()
 	{
+		onChunkUnload();
 		if (failedDrops != null)
 			inv: while (failedDrops.size() > 0) 
 		{

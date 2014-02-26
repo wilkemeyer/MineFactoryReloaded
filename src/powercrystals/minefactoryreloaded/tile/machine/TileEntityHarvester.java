@@ -62,14 +62,20 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
+	public void onChunkUnload()
+	{
+		super.onChunkUnload();
+		_treeManager.free();
+		_lastTree = null;
+	}
+	
+	@Override
 	public void validate()
 	{
 		super.validate();
 		if (!worldObj.isRemote)
 		{
-			_treeManager = new TreeHarvestManager(worldObj,
-					new Area(new BlockPosition(this), 0, 0, 0),
-					HarvestMode.FruitTree);
+			_treeManager.setWorld(worldObj);
 		}
 	}
 	
@@ -167,14 +173,9 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	
 	private BlockPosition getNextHarvest()
 	{
-		BlockPosition bp = _areaManager.getNextBlock();
 		if (!_treeManager.getIsDone())
-		{
-			BlockPosition temp = getNextTreeSegment(bp, false);
-			if(temp != null)
-				_areaManager.rewindBlock();
-			return temp;
-		}
+			return getNextTreeSegment(_lastTree, false);
+		BlockPosition bp = _areaManager.getNextBlock();
 		
 		int searchId = worldObj.getBlockId(bp.x, bp.y, bp.z);
 		
@@ -315,22 +316,23 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeToNBT(tag);
 		NBTTagCompound list = new NBTTagCompound();
 		for(Entry<String, Boolean> setting : _settings.entrySet())
 		{
 			list.setByte(setting.getKey(), (byte)(setting.getValue() ? 1 : 0));
 		}
-		nbttagcompound.setTag("harvesterSettings", list);
+		tag.setTag("harvesterSettings", list);
+		_treeManager.writeToNBT(tag);
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
-		NBTTagCompound list = (NBTTagCompound)nbttagcompound.getTag("harvesterSettings");
+		super.readFromNBT(tag);
+		NBTTagCompound list = (NBTTagCompound)tag.getTag("harvesterSettings");
 		if(list != null)
 		{
 			for(String s : _settings.keySet())
@@ -342,6 +344,11 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 				}
 			}
 		}
+		if (_treeManager != null)
+			_treeManager.free();
+		_treeManager = new TreeHarvestManager(tag);
+		if (!_treeManager.getIsDone())
+			_lastTree = _treeManager.getOrigin();
 	}
 	
 	@Override

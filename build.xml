@@ -115,7 +115,7 @@
 		<move file="${download.dir}/forestry" todir="${mcpsrc.dir}" />
 			
 		<echo message="Extracting CCL... " />
-		<move file="${download.dir}/codechickenlib.jar" todir="${mcp.dir}/lib/codechickenlib.jar" />
+		<move file="${download.dir}" todir="${mcp.dir}/lib/codechickenlib.jar" />
 	</target>
 
 	<mkdir dir="${download.dir}"/>
