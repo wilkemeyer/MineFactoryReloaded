@@ -65,7 +65,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	public void onChunkUnload()
 	{
 		super.onChunkUnload();
-		_treeManager.free();
+		if (_treeManager != null)
+			_treeManager.free();
 		_lastTree = null;
 	}
 	
