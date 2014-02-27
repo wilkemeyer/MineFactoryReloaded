@@ -176,12 +176,6 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	}
 	
 	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
-		return 0;
-	}
-	
-	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 9;
@@ -236,14 +230,6 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	{
 		super.readFromNBT(nbttagcompound);
 		_burnTime = nbttagcompound.getInteger("burnTime");
-	}
-	
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-	{
-		if (itemstack == null | slot > getSizeInventorySide(ForgeDirection.UNKNOWN))
-			return false;
-		return _inventory[slot] == null || UtilInventory.stacksEqual(_inventory[slot], itemstack);
 	}
 
 	@Override
