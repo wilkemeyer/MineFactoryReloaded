@@ -93,38 +93,39 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 			
 			ItemStack ingredient = _inventory[getTemplateSlot(row)];
 			
-			if(_inventory[getProcessSlot(row)] != null && _inventory[getProcessSlot(row)].getItem() instanceof ItemPotion)
+			if (current != null && current.getItem() instanceof ItemPotion)
 			{
-				int existingPotion = _inventory[getProcessSlot(row)].getItemDamage();
-				int newPotion = this.getPotionResult(existingPotion, ingredient);
-				@SuppressWarnings("unchecked") List<Integer> existingEffects = Item.potion.getEffects(existingPotion);
-				@SuppressWarnings("unchecked") List<Integer> newEffects = Item.potion.getEffects(newPotion);
-				
-				if((existingPotion <= 0 || existingEffects != newEffects) && (existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null))
-				{
-					if(existingPotion != newPotion)
-					{
-						_inventory[getProcessSlot(row)].setItemDamage(newPotion);
-					}
-				}
-				else if(!ItemPotion.isSplash(existingPotion) && ItemPotion.isSplash(newPotion))
-				{
-					_inventory[getProcessSlot(row)].setItemDamage(newPotion);
-				}
-				
-				_inventory[getProcessSlot(row + 1)] = _inventory[getProcessSlot(row)];
-				_inventory[getProcessSlot(row)] = null;
-			
 				for(int i = 0; i < 3; i++)
 				{
-					if(!UtilInventory.stacksEqual(_inventory[getResourceSlot(row, i)], ingredient))
+					int slot = getResourceSlot(row, i);
+					if(!UtilInventory.stacksEqual(_inventory[slot], ingredient))
 					{
 						continue;
 					}
-					int slot = getResourceSlot(row, i);
+					
+					int existingPotion = current.getItemDamage();
+					int newPotion = this.getPotionResult(existingPotion, ingredient);
+					@SuppressWarnings("unchecked") List<Integer> existingEffects = Item.potion.getEffects(existingPotion);
+					@SuppressWarnings("unchecked") List<Integer> newEffects = Item.potion.getEffects(newPotion);
+
+					if((existingPotion <= 0 || existingEffects != newEffects) && (existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null))
+					{
+						if(existingPotion != newPotion)
+						{
+							current.setItemDamage(newPotion);
+						}
+					}
+					else if(!ItemPotion.isSplash(existingPotion) && ItemPotion.isSplash(newPotion))
+					{
+						current.setItemDamage(newPotion);
+					}
+
+					_inventory[getProcessSlot(row + 1)] = current;
+					_inventory[getProcessSlot(row)] = null;
+					
 					if(Item.itemsList[ingredient.itemID].hasContainerItem())
 					{
-						ItemStack r = Item.itemsList[ingredient.itemID].getContainerItemStack(_inventory[getResourceSlot(row, i)]);
+						ItemStack r = Item.itemsList[ingredient.itemID].getContainerItemStack(_inventory[slot]);
 						if (r.isItemStackDamageable() && r.getItemDamage() > r.getMaxDamage())
 							r = null;
 						_inventory[slot] = r;
