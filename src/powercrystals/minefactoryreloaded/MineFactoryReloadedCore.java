@@ -76,6 +76,7 @@ import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
 import powercrystals.minefactoryreloaded.block.ItemBlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryDecorativeBrick;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlassPane;
@@ -155,7 +156,7 @@ connectionHandler = ConnectionHandler.class)
 public class MineFactoryReloadedCore extends BaseMod
 {
 	static{DepLoader.load();}
-	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy", serverSide = "powercrystals.minefactoryreloaded.net.CommonProxy")
+	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy", serverSide = "powercrystals.minefactoryreloaded.net.ServerProxy")
 	public static IMFRProxy proxy;
 	
 	public static final String modId = "MineFactoryReloaded";
@@ -487,7 +488,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerBlock(railDropoffCargoBlock, railDropoffCargoBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(railPickupPassengerBlock, railPickupPassengerBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(railDropoffPassengerBlock, railDropoffPassengerBlock.getUnlocalizedName());
-		GameRegistry.registerBlock(rednetCableBlock, rednetCableBlock.getUnlocalizedName());
+		GameRegistry.registerBlock(rednetCableBlock, ItemBlockFactory.class, rednetCableBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class, rednetLogicBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class, rednetPanelBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class, vineScaffoldBlock.getUnlocalizedName());

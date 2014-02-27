@@ -27,8 +27,8 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdateTile
 {
-	private int[] _sideColors = new int [6];
-	private byte _mode; // 0: standard, 1: force connection, 2: connect to cables only
+	protected int[] _sideColors = new int [6];
+	protected byte _mode; // 0: standard, 1: force connection, 2: connect to cables only
 	
 	private RedstoneNetwork _network;
 	private boolean _needsNetworkUpdate;
@@ -157,9 +157,13 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.CableDescription, new Object[]
+		return  PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
+				Packets.CableDescription, new Object[]
 				{
-				xCoord, yCoord, zCoord, _sideColors[0], _sideColors[1], _sideColors[2], _sideColors[3], _sideColors[4], _sideColors[5], _mode
+					xCoord, yCoord, zCoord,
+					_sideColors[0], _sideColors[1], _sideColors[2],
+					_sideColors[3], _sideColors[4], _sideColors[5],
+					_mode
 				});
 	}
 	
@@ -339,4 +343,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
     {
         return 4096.0D;
     }
+
+	public void onNeighborTileChange(int x, int y, int z) {
+	}
 }

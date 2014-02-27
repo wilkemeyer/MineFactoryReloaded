@@ -25,6 +25,7 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
 public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	protected static CCModel base;
@@ -117,7 +118,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.useNormals(false);
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getBlockTileEntity(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z);
+		TileEntityRedNetEnergy _cond = null;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
 		int bandBrightness = brightBand ? 0xd00070 : brightness;
 
@@ -126,8 +127,10 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		tess.setBrightness(brightness);
 
 		base.render(x, y, z, uvt);
-		if (meta == 3 | meta == 2)
+		if (_cable instanceof TileEntityRedNetEnergy) {
 			cage.render(x, y, z, uvt);
+			_cond = (TileEntityRedNetEnergy)_cable;
+		}
 
 		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS) {
 			int side = f.ordinal();
@@ -145,11 +148,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 				if (!container) {
 					iface[side].render(x, y, z, uvt);
 					grip[side].render(x, y, z, uvt);
-				} else {
+				} else
 					cable[side].render(x, y, z, uvt);
-					if (meta == 3 | meta == 2);
-						//wire[side].render()
-				}
 				break;
 			case 13: // isPlate, isSingleSubnet
 				tess.setColorOpaque_I(_cable.getSideColorValue(f));
@@ -166,6 +166,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			default:
 				break;
 			}
+			if (_cond != null && _cond.isInterfacing(f))
+				wire[side].render(x, y, z, uvt);
 		}
 
 		return false;
