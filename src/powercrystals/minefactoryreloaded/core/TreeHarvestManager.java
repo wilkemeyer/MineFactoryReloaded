@@ -97,7 +97,7 @@ public class TreeHarvestManager implements IHarvestManager
 		setWorld(world);
 		_harvestMode = harvestMode;
 		_area = treeArea;
-		if (_blocks != null) free();
+		free();
 		_isDone = false;
 		_blocks = new BlockPool();
 		BlockPosition bp = treeArea.getOrigin();
@@ -150,19 +150,20 @@ public class TreeHarvestManager implements IHarvestManager
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
-		if (_blocks != null) free();
+		free();
+		_blocks = new BlockPool();
+		
 		NBTTagCompound data = tag.getCompoundTag("harvestManager");
 		_isDone = data.getBoolean("done");
 		_harvestMode = HarvestMode.values()[data.getInteger("mode")];
 		int[] area = data.getIntArray("area"), o = data.getIntArray("origin");
 		if (area == null | o == null || o.length < 3 | area.length < 3)
 		{
+			_area = new Area(new BlockPosition(0,-1,0),0,0,0);
 			_isDone = true;
 			return;
 		}
 		_area = new Area(new BlockPosition(o[0], o[1], o[2]), area[0], area[1], area[2]);
-		
-		_blocks = new BlockPool();
 		NBTTagList list = (NBTTagList)data.getTag("curPos");
 		for (int i = 0, e = list.tagCount(); i < e; ++i)
 		{
@@ -174,7 +175,7 @@ public class TreeHarvestManager implements IHarvestManager
 	@Override
 	public void free()
 	{
-		while (_blocks.poke() != null)
+		if (_blocks != null) while (_blocks.poke() != null)
 			_blocks.shift().free();
 		_isDone = true;
 	}
