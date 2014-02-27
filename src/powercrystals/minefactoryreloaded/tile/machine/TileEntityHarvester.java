@@ -75,7 +75,14 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		super.validate();
 		if (!worldObj.isRemote)
 		{
-			_treeManager.setWorld(worldObj);
+			if (_treeManager != null)
+				_treeManager.setWorld(worldObj);
+			else
+			{
+				_treeManager = new TreeHarvestManager(worldObj,
+						new Area(new BlockPosition(this),0,0,0),
+						HarvestMode.FruitTree);
+			}
 		}
 	}
 	

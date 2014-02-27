@@ -406,7 +406,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public int getMaxSafeInput()
 	{
-		return 128;
+		return Integer.MAX_VALUE;
 	}
 	
 	// IC2-lf methods
