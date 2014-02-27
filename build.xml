@@ -86,6 +86,8 @@
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="${have-apis}">
+		<delete dir="${mcp.dir}/lib/" />
+		<mkdir dir="${mcp.dir}/lib/" />
 		<copy todir="${mcpsrc.dir}/powercrystals/core">
 			<fileset dir="${download.dir}/PowerCrystalsCore-master/src/powercrystals/core" />
 		</copy>
@@ -115,7 +117,7 @@
 		<move file="${download.dir}/forestry" todir="${mcpsrc.dir}" />
 			
 		<echo message="Extracting CCL... " />
-		<move file="${download.dir}" todir="${mcp.dir}/lib/codechickenlib.jar" />
+		<move file="${download.dir}/codechickenlib.jar" todir="${mcp.dir}/lib/" />
 	</target>
 
 	<mkdir dir="${download.dir}"/>
