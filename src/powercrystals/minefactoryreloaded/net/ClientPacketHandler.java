@@ -102,6 +102,7 @@ public class ClientPacketHandler implements IPacketHandler
 				tec.setSideColor(ForgeDirection.WEST, (Integer)packetReadout[7]);
 				tec.setSideColor(ForgeDirection.EAST, (Integer)packetReadout[8]);
 				tec.setMode((Byte)packetReadout[9]);
+				((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			}
 			break;
 		case Packets.EnergyCableDescription: // server -> client; cable side colors
@@ -127,6 +128,7 @@ public class ClientPacketHandler implements IPacketHandler
 				tec.setModes(new byte[] {(Byte)packetReadout[10],(Byte)packetReadout[11],
 						(Byte)packetReadout[12],(Byte)packetReadout[13],
 						(Byte)packetReadout[14],(Byte)packetReadout[15],0});
+				((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			}
 			break;
 		case Packets.LogicCircuitDefinition: // server -> client: logic circuit (class and pins)

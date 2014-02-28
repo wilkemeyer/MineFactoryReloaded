@@ -58,6 +58,12 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		}
 	}
 	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		this.onChunkUnload();
+	}
+	
 	public void setSideColor(ForgeDirection side, int color)
 	{
 		if(side == ForgeDirection.UNKNOWN)

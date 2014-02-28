@@ -13,6 +13,7 @@ public class GridTickHandler implements IScheduledTickHandler
 {
 	private EnumSet<TickType> ticks = EnumSet.of(TickType.SERVER);
 	
+	public static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToRegenerate = new LinkedHashSet<RedstoneEnergyNetwork>();
 	public static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToAdd = new LinkedHashSet<RedstoneEnergyNetwork>();
 	LinkedHashSet<RedstoneEnergyNetwork> tickingGrids = new LinkedHashSet<RedstoneEnergyNetwork>();
 	public static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToRemove = new LinkedHashSet<RedstoneEnergyNetwork>();
@@ -20,24 +21,41 @@ public class GridTickHandler implements IScheduledTickHandler
 	public static LinkedHashSet<TileEntityRedNetEnergy> conduitToAdd = new LinkedHashSet<TileEntityRedNetEnergy>();
 	
 	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
+	public void tickStart(EnumSet<TickType> type, Object... tickData)
+	{
+		if (!tickingGridsToRegenerate.isEmpty())
+			synchronized (tickingGridsToRegenerate) {
+			for (RedstoneEnergyNetwork grid : tickingGridsToRegenerate)
+				grid.markSweep();
+		}
+				
+		if (!tickingGrids.isEmpty())
+			for (RedstoneEnergyNetwork grid : tickingGrids)
+				grid.doGridPreUpdate();
+	}
 
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData)
 	{
 		if (!tickingGridsToAdd.isEmpty())
+		synchronized(tickingGridsToAdd)
 		{
 			tickingGrids.addAll(tickingGridsToAdd);
 			tickingGridsToAdd.clear();
 		}
-		tickingGrids.removeAll(tickingGridsToRemove);
-		tickingGridsToRemove.clear();
+		if (!tickingGridsToRemove.isEmpty())
+		synchronized(tickingGridsToRemove)
+		{
+			tickingGrids.removeAll(tickingGridsToRemove);
+			tickingGridsToRemove.clear();
+		}
 		
 		if (!tickingGrids.isEmpty())
-			for (RedstoneEnergyNetwork theGrid : tickingGrids)
-				theGrid.doGridUpdate();
+			for (RedstoneEnergyNetwork grid : tickingGrids)
+				grid.doGridUpdate();
 		
 		if (!conduitToAdd.isEmpty())
+		synchronized(conduitToAdd)
 		{
 			conduit.addAll(conduitToAdd);
 			conduitToAdd.clear();

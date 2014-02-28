@@ -27,6 +27,8 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
 public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCallback 
 {
+	private GridTickHandler gridTickHandler;
+		
 	@Override
 	public void ticketsLoaded(List<Ticket> tickets, World world) 
 	{
@@ -49,6 +51,8 @@ public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCal
 	@Override
 	public void init()
 	{
+		gridTickHandler = new GridTickHandler();
+		TickRegistry.registerScheduledTickHandler(gridTickHandler, Side.SERVER);
 		TickRegistry.registerScheduledTickHandler(this, Side.SERVER);
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}

@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,6 +35,7 @@ import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
 public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkContainer
 {
@@ -209,7 +209,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 				if (!world.isRemote)
 				{
 					cable.setMode(mode);
-					PacketDispatcher.sendPacketToAllAround(x, y, z, 50, world.provider.dimensionId, cable.getDescriptionPacket());
+					world.markBlockForUpdate(x, y, z);
 					switch (mode)
 					{
 					case 0:
@@ -332,9 +332,14 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	public void breakBlock(World world, int x, int y, int z, int id, int meta)
 	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
+		if(te instanceof TileEntityRedNetCable)
 		{
-			((TileEntityRedNetCable)te).getNetwork().setInvalid();
+			if (((TileEntityRedNetCable)te).getNetwork() != null)
+				((TileEntityRedNetCable)te).getNetwork().setInvalid();
+			
+			world.markTileEntityForDespawn(te);
+			te.invalidate();
+			world.removeBlockTileEntity(x, y, z);
 		}
 		for(ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
 		{
@@ -412,11 +417,24 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	{
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityRedNetCable();
+		return null;
+	}
+	
+	@Override
+	public TileEntity createTileEntity(World world, int meta)
+	{
+		switch (meta)
+		{
+		default:
+		case 0:
+			return new TileEntityRedNetCable();
+		case 2:
+			return new TileEntityRedNetEnergy();
+		}
 	}
 	
 	@Override

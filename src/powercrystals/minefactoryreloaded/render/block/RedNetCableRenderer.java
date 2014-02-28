@@ -37,6 +37,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	protected static CCModel[] platef = new CCModel[6];
 	protected static CCModel[] grip  = new CCModel[6];
 	protected static CCModel[] wire  = new CCModel[6];
+	protected static CCModel[] caps  = new CCModel[6];
 
 	public static IUVTransformation uvt;
 	public static boolean brightBand;
@@ -80,13 +81,17 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			wire[5] = cableModels.get("wire").backfacedCopy();
 			CCModel.generateSidedModels(wire, 5, p);
 			calculateNormals(wire);
+
+			caps[5] = cableModels.get("cap").backfacedCopy();
+			CCModel.generateSidedModels(caps, 5, p);
+			calculateNormals(caps);
 		} catch (Throwable _) { _.printStackTrace(); }
 	}
 	private static void calculateNormals(CCModel[] _m) { for (CCModel m : _m) compute(m); }
 	private static void compute(CCModel m) {
 		m.computeNormals();
 		m.apply(new Translation(0.5, 0.5, 0.5));
-		m.smoothNormals();
+		//m.smoothNormals();
 	}
 	public static void updateUVT(Icon icon) {
 		uvt = new IconTransformation(icon);
@@ -109,6 +114,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			cage.render(null, uvt);
 			wire[2].render(null, uvt);
 			wire[3].render(null, uvt);
+			caps[2].render(null, uvt);
+			caps[3].render(null, uvt);
 		}
 		tess.draw();
 	}
@@ -125,10 +132,12 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		Tessellator tess = Tessellator.instance;
 		tess.setColorOpaque_F(1,1,1);
 		tess.setBrightness(brightness);
+		
+		Translation tlate = new Translation(new Vector3(x, y, z));
 
-		base.render(x, y, z, uvt);
+		base.render(tlate, uvt);
 		if (_cable instanceof TileEntityRedNetEnergy) {
-			cage.render(x, y, z, uvt);
+			cage.render(tlate, uvt);
 			_cond = (TileEntityRedNetEnergy)_cable;
 		}
 
@@ -141,33 +150,36 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			case 11: // isCable, isSingleSubnet
 				tess.setColorOpaque_I(_cable.getSideColorValue(f));
 				tess.setBrightness(bandBrightness);
-				band[side].render(x, y, z, uvt);
+				band[side].render(tlate, uvt);
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
 			case 19: // isCable, isAllSubnets
 				if (!container) {
-					iface[side].render(x, y, z, uvt);
-					grip[side].render(x, y, z, uvt);
+					iface[side].render(tlate, uvt);
+					grip[side].render(tlate, uvt);
 				} else
-					cable[side].render(x, y, z, uvt);
+					cable[side].render(tlate, uvt);
 				break;
 			case 13: // isPlate, isSingleSubnet
 				tess.setColorOpaque_I(_cable.getSideColorValue(f));
 				tess.setBrightness(bandBrightness);
-				band[side].render(x, y, z, uvt);
-				platef[side].render(x, y, z, uvt);
+				band[side].render(tlate, uvt);
+				platef[side].render(tlate, uvt);
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
 			case 21: // isPlate, isAllSubnets
-				iface[side].render(x, y, z, uvt);
-				plate[side].render(x, y, z, uvt);
+				iface[side].render(tlate, uvt);
+				plate[side].render(tlate, uvt);
 				if (state.isAllSubnets)
-					platef[side].render(x, y, z, uvt);
+					platef[side].render(tlate, uvt);
 			default:
 				break;
 			}
-			if (_cond != null && _cond.isInterfacing(f))
-				wire[side].render(x, y, z, uvt);
+			if (_cond != null && _cond.isInterfacing(f)) {
+				wire[side].render(tlate, uvt);
+				if (_cond.interfaceMode(f) != 4)
+					caps[side].render(tlate, uvt);
+			}
 		}
 
 		return false;

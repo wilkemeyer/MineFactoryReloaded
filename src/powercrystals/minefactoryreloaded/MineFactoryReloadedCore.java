@@ -143,6 +143,7 @@ import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
@@ -530,6 +531,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerTileEntity(TileEntityRedNetCable.class, "factoryRedstoneCable");
 		GameRegistry.registerTileEntity(TileEntityRedNetLogic.class, "factoryRednetLogic");
 		GameRegistry.registerTileEntity(TileEntityRedNetHistorian.class, "factoryRednetHistorian");
+		GameRegistry.registerTileEntity(TileEntityRedNetEnergy.class, "factoryRedstoneCableEnergy");
 		
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "entitySafariNet", 0, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);

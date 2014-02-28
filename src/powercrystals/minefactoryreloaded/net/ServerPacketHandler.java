@@ -42,6 +42,8 @@ public class ServerPacketHandler implements IPacketHandler
 {
 	public static void sendToAllPlayersWatching(World world, int x, int y, int z, Packet packet)
 	{
+		if (packet == null)
+			return;
 		if (world instanceof WorldServer)
 		{
 			PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
