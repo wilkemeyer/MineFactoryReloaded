@@ -22,6 +22,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityPlanter extends TileEntityFactoryPowered
 {
+	protected boolean keepLastItem = false;
 	public TileEntityPlanter() 
 	{
 		super(Machine.Planter);
@@ -61,15 +62,17 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		{		
 			ItemStack availableStack = getStackInSlot(stackIndex);
 			
-			//skip planting attempt if there's no stack in that slot, or if there's a template item that's not matched
-			if(availableStack == null ||
+			// skip planting attempt if there's no stack in that slot,
+			// or if there's a template item that's not matched
+			if (availableStack == null ||
 					(match != null &&
-					!stacksEqual(match, availableStack)))
+					!stacksEqual(match, availableStack)) ||
+					!MFRRegistry.getPlantables().containsKey(new Integer(availableStack.itemID)))
 			{
 				continue;
 			}
 			
-			if(!MFRRegistry.getPlantables().containsKey(new Integer(availableStack.itemID)))
+			if (keepLastItem && availableStack.stackSize < 2)
 			{
 				continue;
 			}
@@ -92,8 +95,22 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		tag.setBoolean("keepLastItem", keepLastItem);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		keepLastItem = tag.getBoolean("keepLastItem");
+	}
 	 
-	private boolean stacksEqual(ItemStack a, ItemStack b)
+	protected boolean stacksEqual(ItemStack a, ItemStack b)
 	{
 		if (a == null | b == null ||
 				(a.itemID != b.itemID) ||
@@ -116,12 +133,22 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	
 	//assumes a 3x3 grid in inventory slots 0-8
 	//slot 0 is northwest, slot 2 is northeast, etc
-	private int getPlanterSlotIdFromBp(BlockPosition bp)
+	protected int getPlanterSlotIdFromBp(BlockPosition bp)
 	{
 		int radius = _areaManager.getRadius();
 		int xAdjusted = Math.round( 1.49F * (bp.x - this.xCoord) / radius);
 		int zAdjusted = Math.round( 1.49F * (bp.z - this.zCoord) / radius);
 		return 4 + xAdjusted + 3 * zAdjusted;
+	}
+	
+	public boolean getConsumeAll()
+	{
+		return keepLastItem;
+	}
+	
+	public void setConsumeAll(boolean b)
+	{
+		keepLastItem = b;
 	}
 	
 	@Override
