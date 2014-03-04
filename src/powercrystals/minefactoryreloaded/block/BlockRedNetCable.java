@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.api.block.IBlockInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,7 +38,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkContainer
+public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkContainer, IBlockInfo
 {
 	private static float _wireSize = 0.25F;
 	private static float _plateWidth = 14.0F / 16.0F;
@@ -471,5 +472,14 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 			//((TileEntityRedNetCable)te).getNetwork().updatePowerLevels(subnet);
 			((TileEntityRedNetCable)te).updateNodes();
 		}
+	}
+
+	@Override
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
+			ForgeDirection side, EntityPlayer player, List<String> info, boolean debug)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		if (tile instanceof TileEntityRedNetEnergy)
+			((TileEntityRedNetEnergy)tile).getTileInfo(info, side, player, debug);
 	}
 }

@@ -198,6 +198,11 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		_network.tick();
 	}
 	
+	public boolean canInterface(TileEntityRedNetEnergy with)
+	{
+		return true;
+	}
+	
 	@Override
 	public void onNeighboorChanged()
 	{

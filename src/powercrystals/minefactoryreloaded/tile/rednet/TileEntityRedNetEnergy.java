@@ -17,6 +17,10 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.energy.tile.IEnergyTile;
 
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -40,7 +44,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	int energyForGrid = 0;
 	boolean isNode = false;
 	
-	private RedstoneEnergyNetwork grid;
+	RedstoneEnergyNetwork grid;
 	
 	public TileEntityRedNetEnergy() {}
 	
@@ -50,7 +54,23 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		deadCache = true;
 		handlerCache = null;
 		receiverCache = null;
-		GridTickHandler.conduitToAdd.add(this);
+		sourceCache = null;
+		sinkCache = null;
+		GridTickHandler.addConduit(this);
+	}
+	
+	@Override
+	public void onChunkUnload() { super.onChunkUnload();
+		if (grid != null) {
+			grid.removeConduit(this);
+			grid.storage.modifyEnergyStored(-energyForGrid);
+			int c = 0;
+			for (int i = 6; i --> 0; )
+				if ((sideMode[i] >> 1) == 4)
+					++c;
+			if (c > 1)
+				grid.regenerate();
+		}
 	}
 	
 	private void reCache() {
@@ -61,33 +81,33 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = false;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
+		updateInternalTypes();
 	}
 
 	public void firstTick() {
 		if (worldObj == null) return;
 		reCache();
-		if (grid == null)
+		if (grid == null) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ);
 				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile).grid != null) {
-					grid = ((TileEntityRedNetEnergy)tile).grid;
+					setGrid(((TileEntityRedNetEnergy)tile).grid);
 					break;
 				}
 			}
-		if (grid == null) {
-			if (!worldObj.isRemote)
-				grid = new RedstoneEnergyNetwork(this);
-		} else {
+			onInventoryChanged();
+		}
+		if (grid != null) {
 			grid.addConduit(this);
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile).grid != null)
-					if (((TileEntityRedNetEnergy)tile).grid != grid)
-						grid.mergeGrid(((TileEntityRedNetEnergy)tile).grid);
+				if (tile instanceof TileEntityRedNetEnergy)
+					grid.addConduit((TileEntityRedNetEnergy)tile);
 			}
-		}
+		} else if (!worldObj.isRemote)
+			setGrid(new RedstoneEnergyNetwork(this)); 
 	}
 	
 	@Override
@@ -103,12 +123,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public void onNeighborTileChange(int x, int y, int z) {
 		TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
-		if (grid != null)
-			if (tile instanceof TileEntityRedNetEnergy)
-				if (((TileEntityRedNetEnergy)tile).grid == null)
-					((TileEntityRedNetEnergy)tile).grid = grid;
-				else if (((TileEntityRedNetEnergy)tile).grid != grid)
-					grid.mergeGrid(((TileEntityRedNetEnergy)tile).grid);
 		
 		if (x < xCoord)
 			addCache(tile, 5);
@@ -136,20 +150,16 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		int lastMode = sideMode[side];
 		sideMode[side] &= 1;
 		if (tile instanceof TileEntityRedNetEnergy) {
-			sideMode[side] = (4 << 1) | 1; // always enable
+			if (((TileEntityRedNetEnergy)tile).canInterface(this)) {
+				sideMode[side] = (4 << 1) | 1; // always enable
+				if (((TileEntityRedNetEnergy)tile).grid == null)
+					((TileEntityRedNetEnergy)tile).setGrid(grid);
+			}
 		} else if (tile instanceof IEnergyHandler) {
 			if (((IEnergyHandler)tile).canInterface(ForgeDirection.VALID_DIRECTIONS[side])) {
 				if (handlerCache == null) handlerCache = new IEnergyHandler[6];
 				handlerCache[side] = (IEnergyHandler)tile;
 				sideMode[side] |= 1 << 1;
-			}
-		} else if (tile instanceof IPowerReceptor) {
-			PowerReceiver pp = ((IPowerReceptor)tile).
-					getPowerReceiver(ForgeDirection.VALID_DIRECTIONS[side]);
-			if (pp != null) {
-				if (receiverCache == null) receiverCache = new IPowerReceptor[6];
-				receiverCache[side] = (IPowerReceptor)tile;
-				sideMode[side] |= 2 << 1;
 			}
 		} else if (tile instanceof IEnergyTile) {
 			ForgeDirection fSide = ForgeDirection.VALID_DIRECTIONS[side];
@@ -163,10 +173,20 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				sinkCache[side] = (IEnergySink)tile;
 				sideMode[side] |= 3 << 1;
 			}
+		} else if (tile instanceof IPowerReceptor) {
+			PowerReceiver pp = ((IPowerReceptor)tile).
+					getPowerReceiver(ForgeDirection.VALID_DIRECTIONS[side]);
+			if (pp != null) {
+				if (receiverCache == null) receiverCache = new IPowerReceptor[6];
+				receiverCache[side] = (IPowerReceptor)tile;
+				sideMode[side] |= 2 << 1;
+			}
 		}
-		updateInternalTypes();
-		if (!deadCache & lastMode != sideMode[side])
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		if (!deadCache) {
+			updateInternalTypes();
+			if (lastMode != sideMode[side])
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 	
 	@Override
@@ -246,7 +266,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	public double injectEnergyUnits(ForgeDirection from, double amount) {
 		if ((sideMode[from.ordinal()] & 1) != 0) {
 			int r = (int)(amount * energyPerEU);
-			return amount - grid.storage.receiveEnergy(r, false);
+			return amount - (grid.storage.receiveEnergy(r, false) / (float)energyPerEU);
 		}
 		return amount;
 	}
@@ -292,17 +312,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			energyForGrid = 0;
 	}
 	
-	@Override
-	public void onChunkUnload() { super.onChunkUnload();
-		if (grid != null) {
-			grid.removeConduit(this);
-			grid.storage.extractEnergy(energyForGrid, false);
-			grid.regenerate();
-		}
-	}
-	
 	void extract(ForgeDirection side) {
-		int bSide = side.getOpposite().ordinal();
+		if (deadCache) return;
+		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
 			switch (sideMode[bSide] >> 1) {
 			case 1: // IEnergyHandler
@@ -338,7 +350,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 	
 	int transfer(ForgeDirection side, int energy) {
-		int bSide = side.getOpposite().ordinal();
+		if (deadCache) return 0;
+		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
 			switch (sideMode[bSide] >> 1) {
 			case 1: // IEnergyHandler
@@ -357,8 +370,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					float powerToSend = Math.min(max, pp.getMaxEnergyStored() - pp.getEnergyStored());
 					if (powerToSend > 0) {
 						powerToSend = Math.min(energy / (float)energyPerMJ, powerToSend);
-						return (int)(Math.ceil(pp.receiveEnergy(Type.PIPE, powerToSend, side)) *
-								energyPerMJ);
+						return (int)Math.ceil(pp.receiveEnergy(Type.PIPE, powerToSend, side) * energyPerMJ);
 					}
 				}
 				break;
@@ -387,7 +399,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 	
 	public void updateInternalTypes() {
-		boolean prevNode = isNode;
+		if (deadCache) return;
 		isNode = false;
 		for (int i = 0; i < 6; i++) {
 			int mode = sideMode[i] >> 1;
@@ -395,7 +407,29 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				isNode = true;
 			}
 		}
-		if (prevNode != isNode & grid != null)
+		if (grid != null)
 			grid.addConduit(this);
+	}
+
+	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+		if (grid != null) {
+			info.add("Grid:" + grid);
+			info.add("Conduits: " + grid.getConduitCount() + ", Nodes: " + grid.getNodeCount());
+			info.add("Grid Max: " + grid.storage.getMaxEnergyStored());
+			info.add("Grid Cur: " + grid.storage.getEnergyStored());
+		} else {
+			info.add("Null Grid");
+		}
+		info.add("SideType: " + Arrays.toString(sideMode));
+		info.add("Node: " + isNode);
+		if (debug) {
+			//grid.regenerate();
+			return;
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return "(x="+xCoord+",y="+yCoord+",z="+zCoord+")@"+hashCode();
 	}
 }
