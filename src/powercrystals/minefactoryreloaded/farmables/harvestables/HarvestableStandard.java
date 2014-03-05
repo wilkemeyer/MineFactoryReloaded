@@ -17,7 +17,7 @@ public class HarvestableStandard implements IFactoryHarvestable
 	
 	public HarvestableStandard(int sourceId, HarvestType harvestType)
 	{
-		if(sourceId > Block.blocksList.length)
+		if (sourceId == 0 | sourceId > Block.blocksList.length)
 		{
 			throw new IllegalArgumentException("Passed an Item ID to FactoryHarvestableStandard's source block argument");
 		}
