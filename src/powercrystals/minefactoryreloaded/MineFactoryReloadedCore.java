@@ -76,13 +76,13 @@ import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
 import powercrystals.minefactoryreloaded.block.ItemBlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
-import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryDecorativeBrick;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryTree;
+import powercrystals.minefactoryreloaded.block.ItemBlockRedNetCable;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.ItemBlockVanillaIce;
@@ -489,7 +489,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerBlock(railDropoffCargoBlock, railDropoffCargoBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(railPickupPassengerBlock, railPickupPassengerBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(railDropoffPassengerBlock, railDropoffPassengerBlock.getUnlocalizedName());
-		GameRegistry.registerBlock(rednetCableBlock, ItemBlockFactory.class, rednetCableBlock.getUnlocalizedName());
+		GameRegistry.registerBlock(rednetCableBlock, ItemBlockRedNetCable.class, rednetCableBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class, rednetLogicBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class, rednetPanelBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class, vineScaffoldBlock.getUnlocalizedName());
@@ -558,12 +558,16 @@ public class MineFactoryReloadedCore extends BaseMod
 				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12));
 		OreDictionary.registerOre("itemCharcoalSugar", MineFactoryReloadedCore.sugarCharcoalItem);
 		OreDictionary.registerOre("cableRedNet", MineFactoryReloadedCore.rednetCableBlock);
-		OreDictionary.registerOre("slimeball", Item.slimeBall);
 		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
 		OreDictionary.registerOre("dyeBrown", MineFactoryReloadedCore.fertilizerItem);
 		OreDictionary.registerOre("fertilizerOrganic", MineFactoryReloadedCore.fertilizerItem);
 		OreDictionary.registerOre("wireExplosive", MineFactoryReloadedCore.detCordBlock);
 		OreDictionary.registerOre("listAllmilk", MineFactoryReloadedCore.milkBottleItem);
+
+		OreDictionary.registerOre("slimeball", Item.slimeBall);
+		OreDictionary.registerOre("glass", Block.glass);
+		OreDictionary.registerOre("nuggetGold", Item.goldNugget);
+		OreDictionary.registerOre("ingotGold", Item.ingotGold);
 		
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
 		

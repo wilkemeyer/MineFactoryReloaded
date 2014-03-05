@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -593,7 +594,7 @@ public class ThermalExpansion extends Vanilla
 			"GLG",
 			"PLP",
 			" S ",
-			'G', Item.ingotGold,
+			'G', "ingotGold",
 			'L', "glass",
 			'P', "sheetPlastic",
 			'S', "stickWood",
@@ -629,5 +630,131 @@ public class ThermalExpansion extends Vanilla
 			'F', Item.fishingRod,
 			'T', Block.torchRedstoneActive
 				} ));
+	}
+	
+	@Override
+	protected void registerRedNet()
+	{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 8), new Object[]
+				{
+			"PPP",
+			"RRR",
+			"PPP",
+			'R', Item.redstone,
+			'P', "sheetPlastic",
+				} ));
+		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 2), new Object[]
+				{
+			"nuggetElectrum",
+			"nuggetElectrum",
+			"nuggetElectrum",
+			Item.redstone,
+			Item.redstone,
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+				} ));
+		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 2), new Object[]
+				{
+			"ingotElectrum",
+			"ingotElectrum",
+			Block.blockRedstone,
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11), new Object[]
+				{
+			"PRP",
+			"RGR",
+			"PIP",
+			'R', Item.redstone,
+			'P', "sheetPlastic",
+			'G', "glass",
+			'I', Item.ingotIron,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetLogicBlock), new Object[]
+				{
+			"RDR",
+			"LGL",
+			"PHP",
+			'H', new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11),
+			'P', "sheetPlastic",
+			'G', "ingotGold",
+			'L', new ItemStack(Item.dyePowder, 1, 4),
+			'D', Item.diamond,
+			'R', Item.redstone,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0), new Object[]
+				{
+			"RPR",
+			"PGP",
+			"RPR",
+			'P', "sheetPlastic",
+			'G', "ingotGold",
+			'R', Item.redstone,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1), new Object[]
+				{
+			"GPG",
+			"PCP",
+			"RGR",
+			'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0),
+			'P', "sheetPlastic",
+			'G', "ingotGold",
+			'R', Item.redstone,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2), new Object[]
+				{
+			"DPD",
+			"RCR",
+			"GDG",
+			'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1),
+			'P', "sheetPlastic",
+			'G', "ingotGold",
+			'D', Item.diamond,
+			'R', Item.redstone,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMeterItem, 1, 0), new Object[]
+				{
+			" G",
+			"PR",
+			"PP",
+			'P', "sheetPlastic",
+			'G', "nuggetGold",
+			'R', Item.redstone,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new Object[]
+				{
+			"GGG",
+			"PRP",
+			"PPP",
+			'P', "sheetPlastic",
+			'G', "nuggetGold",
+			'R', Item.redstone,
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetPanelBlock, 1, 0), new Object[]
+				{
+			"PCP",
+			"PBP",
+			"KPK",
+			'P', "sheetPlastic",
+			'C', MineFactoryReloadedCore.rednetCableBlock,
+			'B', Block.bookShelf,
+			'K', new ItemStack(Item.dyePowder, 1, 0)
+				} ));
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0));
 	}
 }
