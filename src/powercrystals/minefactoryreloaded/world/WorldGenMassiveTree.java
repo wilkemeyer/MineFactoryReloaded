@@ -394,7 +394,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 			if (this.leafNodeNeedsBase(var6))
 			{
-				this.placeBlockLine(var3, var5, MineFactoryReloadedCore.rubberWoodBlock.blockID, 1);
+				this.placeBlockLine(var3, var5, MineFactoryReloadedCore.rubberWoodBlock.blockID, 12 | 1);
 			}
 		}
 	}

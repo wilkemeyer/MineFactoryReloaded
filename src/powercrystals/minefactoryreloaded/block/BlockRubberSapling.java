@@ -66,6 +66,12 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	{
 		return MineFactoryReloadedCore.rubberSaplingBlock.blockID;
 	}
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return par1;
+	}
 	
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
