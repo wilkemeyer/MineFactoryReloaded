@@ -409,7 +409,8 @@ tip.info.mfr.dsu.contains = Contains
 
 tip.info.mfr.mobcounter = Emits an analog redstone signal\nproportional to the count of\nmobs that are within range.
 
-tip.info.mfr.laserdrill = Placed over a hole to bedrock
+tip.info.mfr.laserdrill = Placed over a hole to bedrock or the void
+tip.info.mfr.laserdrillprecharger = Placed one block away from a valid laser target
 
 death.attack.mfr.slaughterhouse = %1$s was processed into Liquid Meat
 death.attack.mfr.slaughterhouse.player = %1$s was doomed to be processed into Liquid Meat by %2$s
