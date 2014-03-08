@@ -51,9 +51,26 @@ public class MFRUtil
 	public static String shiftForInfo()
 	{
 		return GRAY +
-				StatCollector.translateToLocal("tip.info.mfr.holdShift1") + " " + YELLOW + ITALIC +
-				StatCollector.translateToLocal("tip.info.mfr.holdShift2") + " " + RESET + GRAY +
-				StatCollector.translateToLocal("tip.info.mfr.holdShift3") + RESET;
+				localize("tip.info.mfr.holdShift1", true) + " " + YELLOW + ITALIC +
+				localize("tip.info.mfr.holdShift2", true) + " " + RESET + GRAY +
+				localize("tip.info.mfr.holdShift3", true) + RESET;
+	}
+
+	public static String localize(String s)
+	{
+		return localize(s + ".name", false);
+	}
+
+	public static String localize(String s, boolean exists)
+	{
+		return localize(s, exists, s);
+	}
+
+	public static String localize(String s, boolean exists, String def)
+	{
+		if (exists && !StatCollector.func_94522_b(s))
+			return def;
+		return StatCollector.translateToLocal(s);
 	}
 
 	public static final List<ForgeDirection> VALID_DIRECTIONS = Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
