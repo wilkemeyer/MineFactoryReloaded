@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.render.block;
 
+import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IUVTransformation;
@@ -91,6 +92,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	private static void compute(CCModel m) {
 		m.computeNormals();
 		m.apply(new Translation(0.5, 0.5, 0.5));
+		m.computeLighting(LightModel.standardLightModel);
 		//m.smoothNormals();
 	}
 	public static void updateUVT(Icon icon) {
@@ -100,7 +102,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
-
+		CCRenderState.reset();
 		CCRenderState.useNormals(true);
 		Tessellator tess = Tessellator.instance;
 
@@ -123,7 +125,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
-		CCRenderState.useNormals(false);
+		CCRenderState.reset();
+		CCRenderState.useNormals(true);
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getBlockTileEntity(x, y, z);
 		TileEntityRedNetEnergy _cond = null;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
@@ -132,7 +135,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		Tessellator tess = Tessellator.instance;
 		tess.setColorOpaque_F(1,1,1);
 		tess.setBrightness(brightness);
-		
+
 		Translation tlate = new Translation(new Vector3(x, y, z));
 
 		base.render(tlate, uvt);
@@ -148,8 +151,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 					f.offsetX, y + f.offsetY, z + f.offsetZ)] instanceof IRedNetNetworkContainer;
 			switch (state.flags & 31) {
 			case 11: // isCable, isSingleSubnet
-				tess.setColorOpaque_I(_cable.getSideColorValue(f));
 				tess.setBrightness(bandBrightness);
+				band[side].setColour(_cable.getSideColorValue(f));
 				band[side].render(tlate, uvt);
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
@@ -161,17 +164,20 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 					cable[side].render(tlate, uvt);
 				break;
 			case 13: // isPlate, isSingleSubnet
-				tess.setColorOpaque_I(_cable.getSideColorValue(f));
 				tess.setBrightness(bandBrightness);
+				band[side].setColour(_cable.getSideColorValue(f));
 				band[side].render(tlate, uvt);
+				platef[side].setColour(_cable.getSideColorValue(f));
 				platef[side].render(tlate, uvt);
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
 			case 21: // isPlate, isAllSubnets
 				iface[side].render(tlate, uvt);
 				plate[side].render(tlate, uvt);
-				if (state.isAllSubnets)
+				if (state.isAllSubnets) {
+					platef[side].setColour(-1);
 					platef[side].render(tlate, uvt);
+				}
 			default:
 				break;
 			}
