@@ -137,6 +137,7 @@ import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableMooshroom
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableSheep;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableSquid;
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityAgeableHandler;
+import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityLivingBaseHandler;
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityLivingHandler;
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SheepHandler;
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SlimeHandler;
@@ -258,6 +259,7 @@ public class Vanilla
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Block.mycelium));
 		MFRRegistry.registerSludgeDrop(1, new ItemStack(Block.netherrack));
 		
+		MFRRegistry.registerSafariNetHandler(new EntityLivingBaseHandler());
 		MFRRegistry.registerSafariNetHandler(new EntityLivingHandler());
 		MFRRegistry.registerSafariNetHandler(new EntityAgeableHandler());
 		MFRRegistry.registerSafariNetHandler(new SheepHandler());

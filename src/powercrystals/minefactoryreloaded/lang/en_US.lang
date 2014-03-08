@@ -391,6 +391,10 @@ chat.info.mfr.rednet.connection.cableonly = Set cable to cable-only connection m
 
 chat.info.mfr.bag.stacksize = You can only open one bag at a time
 
+tip.info.mfr.holdShift1 = Hold
+tip.info.mfr.holdShift2 = Shift
+tip.info.mfr.holdShift3 = for more information
+
 tip.info.mfr.safarinet.mode = Sneak-click to change mode
 tip.info.mfr.safarinet.jailer = Released creatures don't despawn normally
 tip.info.mfr.safarinet.mystery = It is a mystery
