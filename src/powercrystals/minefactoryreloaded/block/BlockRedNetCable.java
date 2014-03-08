@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.api.block.IBlockInfo;
+import cofh.api.block.IDismantleable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,11 +34,13 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
+import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkContainer, IBlockInfo
+public class BlockRedNetCable extends BlockContainer
+								implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 {
 	private static float _wireSize = 0.25F;
 	private static float _plateWidth = 14.0F / 16.0F;
@@ -61,7 +63,7 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 	
 	public BlockRedNetCable(int id)
 	{
-		super(id, Material.clay);
+		super(id, Machine.MATERIAL);
 		
 		setUnlocalizedName("mfr.cable.redstone");
 		setHardness(0.8F);
@@ -352,6 +354,23 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 		}
 		super.breakBlock(world, x, y, z, id, meta);
 	}
+
+	@Override
+	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
+	{
+		ItemStack machine = new ItemStack(idDropped(blockID, world.rand, 0), 1,
+				damageDropped(world.getBlockMetadata(x, y, z)));
+		world.setBlockToAir(x, y, z);
+		if (!returnBlock)
+			dropBlockAsItem_do(world, x, y, z, machine);
+		return machine;
+	}
+
+	@Override
+	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+	{
+		return true;
+	}
 	
 	@Override
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
@@ -481,5 +500,11 @@ public class BlockRedNetCable extends BlockContainer implements IRedNetNetworkCo
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 		if (tile instanceof TileEntityRedNetEnergy)
 			((TileEntityRedNetEnergy)tile).getTileInfo(info, side, player, debug);
+	}
+
+	@Override
+	public int damageDropped(int i)
+	{
+		return i;
 	}
 }
