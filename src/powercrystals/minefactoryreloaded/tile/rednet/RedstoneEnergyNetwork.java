@@ -75,16 +75,9 @@ public class RedstoneEnergyNetwork
 	}
 	
 	public void markSweep() {
-		master = null;
-		for (TileEntityRedNetEnergy curCond : nodeSet)
-			destroyNode(curCond);
-		for (TileEntityRedNetEnergy curCond : conduitSet)
-			destroyConduit(curCond);
-		if (conduitSet.isEmpty()) {
-			GridTickHandler.removeGrid(this);
+		destroyGrid();
+		if (conduitSet.isEmpty())
 			return;
-		}
-		
 		TileEntityRedNetEnergy main = conduitSet.iterator().next();
 		LinkedHashSet<TileEntityRedNetEnergy> oldSet = conduitSet;
 		nodeSet.clear();
@@ -123,6 +116,15 @@ public class RedstoneEnergyNetwork
 		else
 			GridTickHandler.addGrid(this);
 		regenerating = false;
+	}
+	
+	public void destroyGrid() {
+		master = null;
+		for (TileEntityRedNetEnergy curCond : nodeSet)
+			destroyNode(curCond);
+		for (TileEntityRedNetEnergy curCond : conduitSet)
+			destroyConduit(curCond);
+		GridTickHandler.removeGrid(this);
 	}
 
 	public void destroyNode(TileEntityRedNetEnergy cond) {
@@ -188,21 +190,12 @@ public class RedstoneEnergyNetwork
 	}
 
 	public void mergeGrid(RedstoneEnergyNetwork theGrid) {
-		for (TileEntityRedNetEnergy cond : theGrid.conduitSet) {
-			cond.setGrid(this);
-			conduitSet.add(cond);
-		}
-		for (TileEntityRedNetEnergy cond : theGrid.nodeSet) {
-			cond.setGrid(this);
-			nodeSet.add(cond);
-		}
+		theGrid.destroyGrid();
+		for (TileEntityRedNetEnergy cond : theGrid.conduitSet)
+			addConduit(cond);
+		
 		theGrid.conduitSet.clear();
 		theGrid.nodeSet.clear();
-		rebalanceGrid();
-		storage.modifyEnergyStored(theGrid.storage.getEnergyStored());
-		GridTickHandler.removeGrid(theGrid);
-		if (!nodeSet.isEmpty())
-			GridTickHandler.addGrid(this);
 	}
 
 	public void nodeAdded(TileEntityRedNetEnergy cond) {
