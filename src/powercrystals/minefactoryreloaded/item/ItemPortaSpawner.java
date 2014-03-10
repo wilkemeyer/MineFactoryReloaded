@@ -54,6 +54,16 @@ public class ItemPortaSpawner extends ItemFactory
 		return getEntityId(stack) != null;
 	}
 
+	private static int getDelay(ItemStack stack)
+	{
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null)
+		{
+			return tag.getInteger(placeTag);
+		}
+		return 0;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -63,11 +73,11 @@ public class ItemPortaSpawner extends ItemFactory
 		if (id != null)
 			infoList.add(MFRUtil.localize("tile.mobSpawner") + ": " +
 					MFRUtil.localize("entity.", id));
-		NBTTagCompound tag = stack.getTagCompound();
-		if (tag != null && tag.getInteger(placeTag) > 0)
+		int delay = getDelay(stack);
+		if (delay > 0)
 		{
 			String s = MFRUtil.localize("tip.info.mfr.cannotplace", true, "%s");
-			infoList.add(String.format(s, Math.ceil(tag.getInteger("placeDelay") / 20f)));
+			infoList.add(String.format(s, Math.ceil(delay / 20f)));
 		}
 	}
 
@@ -109,7 +119,8 @@ public class ItemPortaSpawner extends ItemFactory
 		}
 		else
 		{
-			if(placeBlock(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset))
+			if (getDelay(itemstack) <= 0 &&
+					placeBlock(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset))
 			{
 				return true;
 			}
