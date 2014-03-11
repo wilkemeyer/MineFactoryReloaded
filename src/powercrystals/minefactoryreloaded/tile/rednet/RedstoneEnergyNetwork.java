@@ -22,6 +22,9 @@ public class RedstoneEnergyNetwork
 	private boolean regenerating = false;
 	EnergyStorage storage = new EnergyStorage(480, 80);
 	
+	public int distribution;
+	public int distributionSide;
+	
 	protected RedstoneEnergyNetwork() {
 		storage.setCapacity(STORAGE);
 		storage.setMaxTransfer(TRANSFER_RATE);
@@ -163,6 +166,9 @@ public class RedstoneEnergyNetwork
 		int size = nodeSet.size();
 		int toDistribute = storage.getEnergyStored() / size;
 		int sideDistribute = toDistribute / 6;
+		
+		distribution = toDistribute;
+		distributionSide = sideDistribute;
 		
 		if (sideDistribute > 0) for (TileEntityRedNetEnergy cond : nodeSet)
 			if (cond != master) {

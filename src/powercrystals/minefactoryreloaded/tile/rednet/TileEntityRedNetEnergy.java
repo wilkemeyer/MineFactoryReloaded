@@ -413,17 +413,26 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
 		if (grid != null) {
-			info.add("Grid:" + grid);
-			info.add("Conduits: " + grid.getConduitCount() + ", Nodes: " + grid.getNodeCount());
-			info.add("Grid Max: " + grid.storage.getMaxEnergyStored());
-			info.add("Grid Cur: " + grid.storage.getEnergyStored());
-		} else {
+			if (isNode) {
+				info.add("Throughput All: " + grid.distribution);
+				info.add("Throughput Side: " + grid.distributionSide);
+			} else
+				info.add("Saturation: " +
+						(Math.ceil(grid.storage.getEnergyStored() /
+								(float)grid.storage.getMaxEnergyStored() * 1000) / 10f));
+		} else if (!debug)
 			info.add("Null Grid");
-		}
-		info.add("SideType: " + Arrays.toString(sideMode));
-		info.add("Node: " + isNode);
 		if (debug) {
-			//grid.regenerate();
+			if (grid != null) {
+				info.add("Grid:" + grid);
+				info.add("Conduits: " + grid.getConduitCount() + ", Nodes: " + grid.getNodeCount());
+				info.add("Grid Max: " + grid.storage.getMaxEnergyStored());
+				info.add("Grid Cur: " + grid.storage.getEnergyStored());
+			} else {
+				info.add("Null Grid");
+			}
+			info.add("SideType: " + Arrays.toString(sideMode));
+			info.add("Node: " + isNode);
 			return;
 		}
 	}
