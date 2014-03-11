@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import com.google.common.collect.ImmutableMap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -40,6 +39,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 public class TileEntityHarvester extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	private Map<String, Boolean> _settings;
+	private Map<String, Boolean> _immutableSettings;
 	
 	private Random _rand;
 	
@@ -56,6 +56,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		_settings.put("silkTouch", false);
 		_settings.put("harvestSmallMushrooms", false);
 		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
+		_immutableSettings = java.util.Collections.unmodifiableMap(_settings);
 		
 		_rand = new Random();
 		setCanRotate(true);
@@ -107,7 +108,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	
 	public Map<String, Boolean> getImmutableSettings()
 	{
-		return ImmutableMap.copyOf(_settings);
+		return _immutableSettings;
 	}
 	
 	@Override
