@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
+import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IMobSpawnHandler;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -34,6 +35,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	private static final int _spawnRange = 4;
 	
 	private boolean _spawnExact = false;
+	private ItemStack _lastSpawnStack = null;
 	
 	public TileEntityAutoSpawner()
 	{
@@ -178,6 +180,17 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 	
 	@Override
+	protected void onFactoryInventoryChanged()
+	{
+		if (!UtilInventory.stacksEqual(_lastSpawnStack, _inventory[0]))
+		{
+			setWorkDone(0);
+			setIdleTicks(getIdleTicksMax());
+		}
+		_lastSpawnStack = _inventory[0];
+	}
+	
+	@Override
 	public int getWorkMax()
 	{
 		return _spawnExact ? MFRConfig.autospawnerCostExact.getInt() : MFRConfig.autospawnerCostStandard.getInt();
@@ -186,7 +199,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	public int getIdleTicksMax()
 	{
-		return 200;
+		return 7 * 20;
 	}
 	
 	@Override
