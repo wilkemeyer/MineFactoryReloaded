@@ -157,16 +157,16 @@ public class MFRConfig
 	public static Property enableSpawnerCarts;
 	public static Property enableMassiveTree;
 	public static Property enableChunkLimitBypassing;
-	
-	public static Property redNetConnectionBlacklist;
+	public static Property enableChunkLoaderRequiresOwner;
 	
 	public static Property redNetDebug;
 	
 	public static Property rubberTreeWorldGen;
-	
 	public static Property mfrLakeWorldGen;
 	public static Property mfrLakeSewageRarity;
 	public static Property mfrLakeSludgeRarity;
+	
+	public static Property redNetConnectionBlacklist;
 	public static Property rubberTreeBiomeWhitelist;
 	public static Property rubberTreeBiomeBlacklist;
 	public static Property worldGenDimensionBlacklist;
@@ -389,6 +389,8 @@ public class MFRConfig
 		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
 		enableChunkLimitBypassing = c.get("Machine", Machine.ChunkLoader.getName() + ".IgnoreChunkLimit", false);
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
+		enableChunkLoaderRequiresOwner = c.get("Machine", Machine.ChunkLoader.getName() + ".RequiresOwnerOnline", false);
+		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";

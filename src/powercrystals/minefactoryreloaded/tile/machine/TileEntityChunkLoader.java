@@ -26,6 +26,7 @@ import powercrystals.minefactoryreloaded.gui.client.GuiChunkLoader;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerChunkLoader;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.net.ConnectionHandler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
@@ -117,10 +118,22 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public void updateEntity()
 	{
-		activated = false;
-		super.updateEntity();
-		if (worldObj.isRemote | _owner.isEmpty())
+		if (_owner.isEmpty())
 			return;
+		activated = false;
+		if (!worldObj.isRemote && MFRConfig.enableChunkLoaderRequiresOwner.getBoolean(false) &&
+				!ConnectionHandler.onlinePlayerMap.containsKey(_owner))
+		{
+			setIdleTicks(getIdleTicksMax());
+		}
+		super.updateEntity();
+		if (worldObj.isRemote)
+			return;
+		if (getIdleTicks() > 0)
+		{
+			unforceChunks();
+			return;
+		}
 		
 		if (!activated)
 		l: {
@@ -176,6 +189,16 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		super.setIsActive(activated);
 	}
 	
+	protected void unforceChunks()
+	{
+		Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
+		if (chunks.size() == 0)
+			return;
+		
+		for (ChunkCoordIntPair c : chunks)
+			ForgeChunkManager.unforceChunk(_ticket, c);
+	}
+	
 	protected void forceChunks()
 	{
 		if (_ticket == null)
@@ -219,12 +242,25 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		setActivationEnergy((int)(a*10) + (int)(StrictMath.cbrt(emptyTicks) * c));
 	}
 
-	public void receiveTicket(Ticket ticket)
+	public boolean receiveTicket(Ticket ticket)
 	{
-		if (_ticket == null)
-			_ticket = ticket;
+		if (ConnectionHandler.onlinePlayerMap.containsKey(_owner))
+		{
+			if (_ticket == null)
+			{
+				_ticket = ticket;
+				forceChunks();
+			}
+			else
+				ForgeChunkManager.releaseTicket(ticket);
+			return true;
+		}
 		else
-			ForgeChunkManager.releaseTicket(ticket);
+		{
+			_ticket = ticket;
+			unforceChunks();
+		}
+		return false;
 	}
 	
 	@Override
@@ -336,7 +372,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public int getIdleTicksMax()
 	{
-		return 1;
+		return 40;
 	}
 	
 	public short getRadius()

@@ -28,24 +28,31 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCallback 
 {
 	private GridTickHandler gridTickHandler;
+	public static LinkedList<Ticket> ticketsInLimbo = new LinkedList<Ticket>();
+	
+	public static boolean loadTicket(Ticket ticket, boolean addToList)
+	{
+		int x = ticket.getModData().getInteger("X");
+		int y = ticket.getModData().getInteger("Y");
+		int z = ticket.getModData().getInteger("Z");
+		
+		TileEntity tile = ticket.world.getBlockTileEntity(x, y, z);
+		if (!(tile instanceof TileEntityChunkLoader))
+		{
+			ForgeChunkManager.releaseTicket(ticket);
+			return true;
+		}
+		boolean r = ((TileEntityChunkLoader)tile).receiveTicket(ticket); 
+		if (addToList & !r)
+			ticketsInLimbo.push(ticket);
+		return r;
+	}
 		
 	@Override
 	public void ticketsLoaded(List<Ticket> tickets, World world) 
 	{
-		for (Ticket ticket : tickets) 
-		{
-			int x = ticket.getModData().getInteger("X");
-			int y = ticket.getModData().getInteger("Y");
-			int z = ticket.getModData().getInteger("Z");
-			
-			TileEntity tile = world.getBlockTileEntity(x, y, z);
-			if (!(tile instanceof TileEntityChunkLoader))
-			{
-				ForgeChunkManager.releaseTicket(ticket);
-				continue;
-			}
-			((TileEntityChunkLoader)tile).receiveTicket(ticket);			
-		}
+		for (Ticket ticket : tickets)
+			loadTicket(ticket, true);
 	}
 	
 	@Override
