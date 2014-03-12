@@ -85,7 +85,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	
 	public int getSideColorValue(ForgeDirection side)
 	{
-		return ItemDye.dyeColors[~getSideColor(side) & 15];
+		return (ItemDye.dyeColors[~getSideColor(side) & 15] << 8) | 0xFF;
 	}
 	
 	public byte getMode()
