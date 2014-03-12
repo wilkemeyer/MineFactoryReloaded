@@ -147,6 +147,9 @@ tile.mfr.rail.passenger.dropoff.name = Aussteigegleis
 tile.mfr.rail.passenger.pickup.name = Einsteigegleis
 
 tile.mfr.cable.redstone.name = RedNet-Kabel
+tile.mfr.cable.redstone.glass.name = RedNet-Kabel
+tile.mfr.cable.redstone.energy.name = RedNet-Energiekabel
+tile.mfr.cable.redstone.energyglass.name = RedNet-Energiekabel
 tile.mfr.rednet.logic.name = Programmierbarer RedNet-Controller
 tile.mfr.rednet.panel.historian.name = Graph
 
@@ -388,6 +391,12 @@ chat.info.mfr.rednet.connection.cableonly = Kabel auf Nur-Kabel-Verbindungsmodus
 
 chat.info.mfr.bag.stacksize = Du kannst nur eine T\u00fcte zur Zeit \u00f6ffnen
 
+tip.info.mfr.cannotplace = Kann f\u00fcr %s weitere Sekunden nichts platzieren.
+
+tip.info.mfr.holdShift1 = Halte
+tip.info.mfr.holdShift2 = Shift
+tip.info.mfr.holdShift3 = f\u00fcr weitere Informationen
+
 tip.info.mfr.safarinet.mode = Shift-klicke, um Modus zu \u00e4ndern
 tip.info.mfr.safarinet.jailer = Freigelassene Kreaturen verschwinden nicht auf normale Weise
 tip.info.mfr.safarinet.mystery = Es ist ein Mysterium
@@ -406,7 +415,8 @@ tip.info.mfr.dsu.contains = Enth\u00e4lt
 
 tip.info.mfr.mobcounter = Sendet ein analoges Redstone-Signal aus,\nproportional zur Menge an\nLebewesen in Reichweite.
 
-tip.info.mfr.laserdrill = Wird \u00fcber einem bis Bedrock gehenden Loch platziert
+tip.info.mfr.laserdrill = Wird \u00fcber einem bis Bedrock oder ins Leere gehenden Loch platziert
+tip.info.mfr.laserdrillprecharger = Wird einen Block von einem g\u00fcltigen Laser-Ziel entfernt platziert
 
 death.attack.mfr.slaughterhouse = %1$s wurde zu fl\u00fcssigem Fleisch verarbeitet
 death.attack.mfr.slaughterhouse.player = %1$s wurde von %2$s dazu verdammt, zu fl\u00fcssigem Fleisch verarbeitet zu werden
