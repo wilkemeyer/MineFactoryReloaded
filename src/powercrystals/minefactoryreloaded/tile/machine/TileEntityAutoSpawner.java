@@ -78,6 +78,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		ItemStack item = getStackInSlot(0);
 		if(!isItemValidForSlot(0, item))
 		{
+			setIdleTicks(getIdleTicksMax());
 			setWorkDone(0);
 			return false;
 		}
@@ -151,6 +152,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 					!worldObj.getCollidingBoundingBoxes(spawnedLiving, spawnedLiving.boundingBox).isEmpty() ||
 					(worldObj.isAnyLiquid(spawnedLiving.boundingBox) != (spawnedLiving instanceof EntityWaterMob)))
 			{
+				setIdleTicks(10);
 				return false;
 			}
 			
