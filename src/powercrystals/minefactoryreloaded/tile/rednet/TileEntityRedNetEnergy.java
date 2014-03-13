@@ -467,7 +467,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
-		super.getTileInfo(info, side, player, debug);
+		super.getTileInfo(info, side, player, debug && player.isSneaking());
 		if (grid != null) {
 			if (isNode) {
 				info.add("Throughput All: " + grid.distribution);

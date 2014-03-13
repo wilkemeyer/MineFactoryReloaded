@@ -14,8 +14,10 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -164,5 +166,17 @@ public class MFRUtil
 		}
 
 		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
+	}
+
+	public static NBTTagCompound writeModifierToNBT(String name, AttributeModifier modifier)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("AttributeName", name);
+		tag.setString("Name", modifier.getName());
+		tag.setDouble("Amount", modifier.getAmount());
+		tag.setInteger("Operation", modifier.getOperation());
+		tag.setLong("UUIDMost", modifier.getID().getMostSignificantBits());
+		tag.setLong("UUIDLeast", modifier.getID().getLeastSignificantBits());
+		return tag;
 	}
 }

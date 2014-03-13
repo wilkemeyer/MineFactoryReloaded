@@ -260,7 +260,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	}
 
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
-		if (debug && player.isSneaking()) {
+		if (debug) {
 			if (_network != null) {
 				info.add("Grid:" + _network);/*
 				info.add("Conduits: " + _network. + ", Nodes: " + grid.getNodeCount());
