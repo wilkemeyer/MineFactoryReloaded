@@ -182,10 +182,10 @@ item.mfr.bucket.plasticcell.name = Plastikzelle
 item.mfr.bucket.plasticcell.prefix.name = Zelle mit
 item.mfr.bucket.plasticcell.suffix.name =
 
-item.mfr.armor.helm.plastic  = Plastikhelm
-item.mfr.armor.chest.plastic = Plastikbrustpanzer
-item.mfr.armor.legs.plastic  = Plastikbeinschutz
-item.mfr.armor.boots.plastic = Plastikstiefel
+item.mfr.armor.helm.plastic.name  = Plastikhelm
+item.mfr.armor.chest.plastic.name = Plastikbrustpanzer
+item.mfr.armor.legs.plastic.name  = Plastikbeinschutz
+item.mfr.armor.boots.plastic.name = Plastikstiefel
 
 item.mfr.hammer.name = Schmiedehammer
 item.mfr.fertilizer.name = Industried\u00fcnger

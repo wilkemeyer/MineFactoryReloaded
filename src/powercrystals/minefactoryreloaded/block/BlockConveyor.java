@@ -256,17 +256,15 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			return;
 		}
 		
-		if (!world.isRemote)
+		if (!world.isRemote && entity instanceof EntityItem)
+			specialRoute(world, x, y, z, (EntityItem)entity);
+		
+		if (entity instanceof EntityLivingBase)
 		l: {
-			if (entity instanceof EntityItem)
-				specialRoute(world, x, y, z, (EntityItem)entity);
-			else if (entity instanceof EntityLivingBase)
-			{
-				ItemStack item = ((EntityLivingBase)entity).getCurrentItemOrArmor(1);
-				if (item == null) break l;
-				if (item.getItem() instanceof ItemPlasticBoots)
-					return;
-			}
+			ItemStack item = ((EntityLivingBase)entity).getCurrentItemOrArmor(1);
+			if (item == null) break l;
+			if (item.getItem() instanceof ItemPlasticBoots)
+				return;
 		}
 		
 		double xVelocity = 0;
