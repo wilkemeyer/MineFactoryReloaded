@@ -22,7 +22,6 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
@@ -148,8 +147,6 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS) {
 			int side = f.ordinal();
 			RedNetConnectionType state = _cable.getConnectionState(f);
-			boolean container = Block.blocksList[world.getBlockId(x +
-					f.offsetX, y + f.offsetY, z + f.offsetZ)] instanceof IRedNetNetworkContainer;
 			switch (state.flags & 31) {
 			case 11: // isCable, isSingleSubnet
 				tess.setBrightness(bandBrightness);
@@ -158,7 +155,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
 			case 19: // isCable, isAllSubnets
-				if (!container) {
+				if (state.isSingleSubnet) {
 					iface[side].render(tlate, uvt);
 					grip[side].render(tlate, uvt);
 				} else

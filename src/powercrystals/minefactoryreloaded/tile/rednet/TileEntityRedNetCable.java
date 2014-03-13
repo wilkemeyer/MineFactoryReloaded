@@ -1,19 +1,21 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
+import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelection;
+
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.vec.Vector3;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.INeighboorUpdateTile;
@@ -27,8 +29,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdateTile
 {
+	
 	protected int[] _sideColors = new int [6];
-	protected byte _mode; // 0: standard, 1: force connection, 2: connect to cables only
+	protected byte[] cableMode = {0,0, 0,0,0,0, 0};
 	
 	private RedstoneNetwork _network;
 	private boolean _needsNetworkUpdate;
@@ -88,15 +91,15 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		return (ItemDye.dyeColors[~getSideColor(side) & 15] << 8) | 0xFF;
 	}
 	
-	public byte getMode()
+	public byte getMode(int side)
 	{
-		return _mode;
+		return cableMode[side];
 	}
 	
-	public void setMode(byte mode)
+	public void setMode(int side, byte mode)
 	{
-		boolean mustUpdate = (mode != _mode);
-		_mode = mode;
+		boolean mustUpdate = (mode != cableMode[side]);
+		cableMode[side] = mode;
 		if(mustUpdate)
 		{
 			_needsNetworkUpdate = true;
@@ -105,6 +108,12 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	
 	public RedNetConnectionType getConnectionState(ForgeDirection side)
 	{
+		return getConnectionState(side, true);
+	}
+	
+	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative)
+	{
+		byte _mode = cableMode[side.ordinal()];
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = side;
 		bp.moveForwards(1);
@@ -142,7 +151,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
 		}
-		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) ||
+		else if (decorative && (blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) ||
 				_connectionBlackList.contains(blockId) ||
 				b instanceof IRedNetDecorative)
 			// standard connection logic, then figure out if we shouldn't connect
@@ -169,7 +178,10 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 					xCoord, yCoord, zCoord,
 					_sideColors[0], _sideColors[1], _sideColors[2],
 					_sideColors[3], _sideColors[4], _sideColors[5],
-					_mode
+					cableMode[0] | (cableMode[1] << 8) |
+					(cableMode[1] << 16) | (cableMode[2] << 24),
+					cableMode[3] | (cableMode[4] << 8) |
+					(cableMode[5] << 16)
 				});
 	}
 	
@@ -198,7 +210,48 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		_network.tick();
 	}
 	
-	public boolean canInterface(TileEntityRedNetEnergy with)
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
+	{
+		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
+		
+		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); 
+		list.add(main);
+		
+		ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
+		for (int i = sides.length; i --> 0; )
+		{
+			RedNetConnectionType c = getConnectionState(sides[i], true);
+			RedNetConnectionType f = getConnectionState(sides[i], false);
+			l: if (c.isConnected)
+			{
+				int o = 2 + i;
+				if (c.isPlate)
+					o += 6;
+				else if (c.isCable)
+					if (c.isAllSubnets)
+					{
+						if (forTrace)
+							main.setSide(i, i & 1);
+						else
+							list.add((IndexedCuboid6)new IndexedCuboid6(o,
+									subSelection[2+6*3+i]).add(offset));
+						break l;
+					}
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+				o = 2 + 6 + 6 + i;
+				if (c.isSingleSubnet)
+					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+			}
+			else if (forTrace & (f.isConnected || cableMode[i] == 3) && cableMode[6] != 3)
+			{ // cable-only
+				list.add((IndexedCuboid6)new IndexedCuboid6(2 + i, subSelection[2 + i]).add(offset));
+				continue;
+			}
+		}
+		main.add(offset);
+	}
+	
+	public boolean canInterface(TileEntityRedNetCable with)
 	{
 		return true;
 	}
@@ -316,8 +369,9 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	{
 		super.writeToNBT(tag);
 		tag.setIntArray("sideSubnets", _sideColors);
-		tag.setByte("mode", _mode);
-		tag.setByte("v", (byte)1);
+		tag.setByte("mode", cableMode[6]);
+		tag.setByte("v", (byte)2);
+		tag.setByteArray("cableMode", cableMode);
 	}
 	
 	@Override
@@ -329,30 +383,26 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			_sideColors = new int[6];
 		}
-		_mode = tag.getByte("mode");
+		byte _mode = tag.getByte("mode");
+		cableMode = tag.getByteArray("cableMode");
+		if (cableMode.length < 6) cableMode = new byte[] {0,0,0, 0,0,0, 0};
 		switch (tag.getByte("v"))
 		{
 		case 0:
 			if (_mode == 2)
 				_mode = 3;
+		case 1:
+			cableMode = new byte[] {_mode,_mode,_mode, _mode,_mode,_mode, _mode};
 			break;
 		default:
 			break;
 		}
 	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		return INFINITE_EXTENT_AABB; // TODO: no
-	}
 
     @Override
-	@SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
+	public boolean shouldRenderInPass(int pass)
     {
-        return 4096.0D;
+        return false;
     }
 
 	public void onNeighborTileChange(int x, int y, int z) {

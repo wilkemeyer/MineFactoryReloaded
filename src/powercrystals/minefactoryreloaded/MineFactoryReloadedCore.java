@@ -541,6 +541,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		MinecraftForge.EVENT_BUS.register(instance);
 		MinecraftForge.EVENT_BUS.register(proxy);
+		MinecraftForge.EVENT_BUS.register(rednetCableBlock);
 		
 		OreDictionary.registerOre("itemRubber", MineFactoryReloadedCore.rubberBarItem);
 		OreDictionary.registerOre("itemRawRubber", MineFactoryReloadedCore.rawRubberItem);

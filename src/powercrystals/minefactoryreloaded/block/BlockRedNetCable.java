@@ -1,10 +1,17 @@
 package powercrystals.minefactoryreloaded.block;
 
+import codechicken.lib.raytracer.ExtendedMOP;
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.raytracer.RayTracer;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Vector3;
 import cofh.api.block.IBlockInfo;
 import cofh.api.block.IDismantleable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.BlockContainer;
@@ -16,13 +23,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
@@ -40,101 +50,83 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
 public class BlockRedNetCable extends BlockContainer
-								implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
+implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 {
-	private static float _wireSize = 0.25F;
+	private static float _wireSize   =  4.0F / 16.0F;
+	private static float _cageSize   =  6.0F / 16.0F;
+	private static float _gripWidth  =  8.0F / 16.0F;
 	private static float _plateWidth = 14.0F / 16.0F;
-	private static float _plateDepth = 1.0F / 16.0F;
-	private static float _bandWidth = 5.0F / 16.0F;
-	private static float _bandOffset = 2.0F / 16.0F;
-	private static float _bandDepth = 1.0F / 16.0F;
-	
-	private static float _wireStart = 0.5F - _wireSize / 2.0F;
-	private static float _wireEnd = 0.5F + _wireSize / 2.0F;
-	private static float _plateStart = 0.5F - _plateWidth / 2.0F;
-	private static float _plateEnd = 0.5F + _plateWidth / 2.0F;
-	private static float _bandWidthStart = 0.5F - _bandWidth / 2.0F;
-	private static float _bandWidthEnd = 0.5F + _bandWidth / 2.0F;
-	
+	private static float _plateDepth =  2.0F / 16.0F;
+	private static float _bandWidth  =  5.0F / 16.0F;
+	private static float _bandOffset =  2.0F / 16.0F;
+	private static float _bandDepth  =  1.0F / 16.0F;
+
+	private static float _wireStart      = 0.5F - _wireSize   / 2.0F;
+	private static float _wireEnd        = 0.5F + _wireSize   / 2.0F;
+	private static float _cageStart      = 0.5F - _cageSize   / 2.0F;
+	private static float _cageEnd        = 0.5F + _cageSize   / 2.0F;
+	private static float _gripStart      = 0.5F - _gripWidth  / 2.0F;
+	private static float _gripEnd        = 0.5F + _gripWidth  / 2.0F;
+	private static float _plateStart     = 0.5F - _plateWidth / 2.0F;
+	private static float _plateEnd       = 0.5F + _plateWidth / 2.0F;
+	private static float _bandWidthStart = 0.5F - _bandWidth  / 2.0F;
+	private static float _bandWidthEnd   = 0.5F + _bandWidth  / 2.0F;
+
 	private static float _bandDepthStart = _bandOffset;
-	private static float _bandDepthEnd = _bandOffset + _bandDepth;
-	
-	private static int[] _partSideMappings = new int[] { -1, -1, -1, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3 };
-	
+	private static float _bandDepthEnd   = _bandOffset + _bandDepth;
+
+	private static int[] _subSideMappings = new int[] { 6, 6,
+		0, 1, 3, 5, 4, 2,
+		0, 1, 3, 5, 4, 2,
+		0, 1, 3, 5, 4, 2,
+		0, 1, 3, 5, 4, 2 };
+
+	public static Cuboid6[] subSelection = new Cuboid6[26];
+
+	static {
+		int i = 0;
+		subSelection[i++] = new Cuboid6(_wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd, _wireEnd);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd);
+
+		subSelection[i++] = new Cuboid6(_gripStart, 0, _gripStart, _gripEnd, _plateDepth, _gripEnd);
+		subSelection[i++] = new Cuboid6(_gripStart, 1 - _plateDepth, _gripStart, _gripEnd, 1, _gripEnd);
+		subSelection[i++] = new Cuboid6(_gripStart, _gripStart, 0, _gripEnd, _gripEnd, _plateDepth);
+		subSelection[i++] = new Cuboid6(_gripStart, _gripStart, 1 - _plateDepth, _gripEnd, _gripEnd, 1);
+		subSelection[i++] = new Cuboid6(0, _gripStart, _gripStart, _plateDepth, _gripEnd, _gripEnd);
+		subSelection[i++] = new Cuboid6(1 - _plateDepth, _gripStart, _gripStart, 1, _gripEnd, _gripEnd);
+
+		subSelection[i++] = new Cuboid6(_plateStart, 0, _plateStart, _plateEnd, _plateDepth, _plateEnd);
+		subSelection[i++] = new Cuboid6(_plateStart, 1 - _plateDepth, _plateStart, _plateEnd, 1, _plateEnd);
+		subSelection[i++] = new Cuboid6(_plateStart, _plateStart, 0, _plateEnd, _plateEnd, _plateDepth);
+		subSelection[i++] = new Cuboid6(_plateStart, _plateStart, 1 - _plateDepth, _plateEnd, _plateEnd, 1);
+		subSelection[i++] = new Cuboid6(0, _plateStart, _plateStart, _plateDepth, _plateEnd, _plateEnd);
+		subSelection[i++] = new Cuboid6(1 - _plateDepth, _plateStart, _plateStart, 1, _plateEnd, _plateEnd);
+
+		subSelection[i++] = new Cuboid6(_bandWidthStart, _bandDepthStart, _bandWidthStart, _bandWidthEnd, _bandDepthEnd, _bandWidthEnd);
+		subSelection[i++] = new Cuboid6(_bandWidthStart, 1 - _bandDepthEnd, _bandWidthStart, _bandWidthEnd, 1 - _bandDepthStart, _bandWidthEnd);
+		subSelection[i++] = new Cuboid6(_bandWidthStart, _bandWidthStart, _bandDepthStart, _bandWidthEnd, _bandWidthEnd, _bandDepthEnd);
+		subSelection[i++] = new Cuboid6(_bandWidthStart, _bandWidthStart, 1 - _bandDepthEnd, _bandWidthEnd, _bandWidthEnd, 1 - _bandDepthStart);
+		subSelection[i++] = new Cuboid6(_bandDepthStart, _bandWidthStart, _bandWidthStart, _bandDepthEnd, _bandWidthEnd, _bandWidthEnd);
+		subSelection[i++] = new Cuboid6(1 - _bandDepthEnd, _bandWidthStart, _bandWidthStart, 1 - _bandDepthStart, _bandWidthEnd, _bandWidthEnd);
+
+		subSelection[i++] = new Cuboid6(_wireStart, _plateDepth, _wireStart, _wireEnd, _wireStart, _wireEnd);
+		subSelection[i++] = new Cuboid6(_wireStart, 1 - _plateDepth, _wireStart, _wireEnd, _wireStart, _wireEnd);
+		subSelection[i++] = new Cuboid6(_wireStart, _wireStart, _plateDepth, _wireEnd, _wireEnd, _wireStart);
+		subSelection[i++] = new Cuboid6(_wireStart, _wireStart, 1 - _plateDepth, _wireEnd, _wireEnd, _wireStart);
+		subSelection[i++] = new Cuboid6(_plateDepth, _wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd);
+		subSelection[i++] = new Cuboid6(1 - _plateDepth, _wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd);
+	}
+
 	public BlockRedNetCable(int id)
 	{
 		super(id, Machine.MATERIAL);
-		
+
 		setUnlocalizedName("mfr.cable.redstone");
 		setHardness(0.8F);
-		
+
 		setCreativeTab(MFRCreativeTab.tab);
 	}
-	
-	private AxisAlignedBB[] getParts(TileEntityRedNetCable cable)
-	{
-		RedNetConnectionType csu = cable.getConnectionState(ForgeDirection.UP);
-		RedNetConnectionType csd = cable.getConnectionState(ForgeDirection.DOWN);
-		RedNetConnectionType csn = cable.getConnectionState(ForgeDirection.NORTH);
-		RedNetConnectionType css = cable.getConnectionState(ForgeDirection.SOUTH);
-		RedNetConnectionType csw = cable.getConnectionState(ForgeDirection.WEST);
-		RedNetConnectionType cse = cable.getConnectionState(ForgeDirection.EAST); 
-		
-		AxisAlignedBB[] parts = new AxisAlignedBB[15];
-		
-		parts[0] = AxisAlignedBB.getBoundingBox(csw != RedNetConnectionType.None ? 0 : _wireStart, _wireStart, _wireStart, cse != RedNetConnectionType.None ? 1 : _wireEnd, _wireEnd, _wireEnd);
-		parts[1] = AxisAlignedBB.getBoundingBox(_wireStart, csd != RedNetConnectionType.None ? 0 : _wireStart, _wireStart, _wireEnd, csu != RedNetConnectionType.None ? 1 : _wireEnd, _wireEnd);
-		parts[2] = AxisAlignedBB.getBoundingBox(_wireStart, _wireStart, csn != RedNetConnectionType.None ? 0 : _wireStart, _wireEnd, _wireEnd, css != RedNetConnectionType.None ? 1 : _wireEnd);
-		
-		parts[3] = !csw.isPlate ? null : AxisAlignedBB.getBoundingBox(0, _plateStart, _plateStart, _plateDepth, _plateEnd, _plateEnd);
-		parts[4] = !cse.isPlate ? null : AxisAlignedBB.getBoundingBox(1.0F - _plateDepth, _plateStart, _plateStart, 1.0F, _plateEnd, _plateEnd);
-		parts[5] = !csd.isPlate ? null : AxisAlignedBB.getBoundingBox(_plateStart, 0 , _plateStart, _plateEnd, _plateDepth, _plateEnd);
-		parts[6] = !csu.isPlate ? null : AxisAlignedBB.getBoundingBox(_plateStart, 1.0F - _plateDepth, _plateStart, _plateEnd, 1.0F, _plateEnd);
-		parts[7] = !csn.isPlate ? null : AxisAlignedBB.getBoundingBox(_plateStart, _plateStart, 0, _plateEnd, _plateEnd, _plateDepth);
-		parts[8] = !css.isPlate ? null : AxisAlignedBB.getBoundingBox(_plateStart, _plateStart, 1.0F - _plateDepth, _plateEnd, _plateEnd, 1.0F);
-		
-		parts[9]  = !csw.isSingleSubnet ? null : AxisAlignedBB.getBoundingBox(_bandDepthStart, _bandWidthStart, _bandWidthStart, _bandDepthEnd, _bandWidthEnd, _bandWidthEnd);
-		parts[10] = !cse.isSingleSubnet ? null : AxisAlignedBB.getBoundingBox(1.0F - _bandDepthEnd, _bandWidthStart, _bandWidthStart, 1.0F - _bandDepthStart, _bandWidthEnd, _bandWidthEnd);
-		parts[11] = !csd.isSingleSubnet ? null : AxisAlignedBB.getBoundingBox(_bandWidthStart, _bandDepthStart, _bandWidthStart, _bandWidthEnd, _bandDepthEnd, _bandWidthEnd);
-		parts[12] = !csu.isSingleSubnet ? null : AxisAlignedBB.getBoundingBox(_bandWidthStart, 1.0F - _bandDepthEnd, _bandWidthStart, _bandWidthEnd, 1.0F - _bandDepthStart, _bandWidthEnd);
-		parts[13] = !csn.isSingleSubnet ? null : AxisAlignedBB.getBoundingBox(_bandWidthStart, _bandWidthStart, _bandDepthStart, _bandWidthEnd, _bandWidthEnd, _bandDepthEnd);
-		parts[14] = !css.isSingleSubnet ? null : AxisAlignedBB.getBoundingBox(_bandWidthStart, _bandWidthStart, 1.0F - _bandDepthEnd, _bandWidthEnd, _bandWidthEnd, 1.0F - _bandDepthStart);
-		
-		return parts;
-	}
-	
-	private int getPartClicked(EntityPlayer player, double reachDistance, TileEntityRedNetCable cable)
-	{
-		AxisAlignedBB[] wireparts = getParts(cable);
-		
-		Vec3 playerPosition = player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX - cable.xCoord, player.posY - cable.yCoord + player.getEyeHeight(), player.posZ - cable.zCoord);
-		Vec3 playerLook = player.getLookVec();
-		
-		Vec3 playerViewOffset = player.worldObj.getWorldVec3Pool().getVecFromPool(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord + playerLook.zCoord * reachDistance);
-		int closest = -1;
-		double closestdistance = Double.MAX_VALUE;
-		
-		for(int i = 0; i < wireparts.length; i++)
-		{
-			AxisAlignedBB part = wireparts[i];
-			if(part == null)
-			{
-				continue;
-			}
-			MovingObjectPosition hit = part.calculateIntercept(playerPosition, playerViewOffset);
-			if(hit != null)
-			{
-				double distance = playerPosition.distanceTo(hit.hitVec);
-				if(distance < closestdistance)
-				{
-					closestdistance = distance;
-					closest = i;
-				}
-			}
-		}
-		return closest;
-	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
@@ -143,23 +135,23 @@ public class BlockRedNetCable extends BlockContainer
 		{
 			return false;
 		}
-		
+
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
 		{
 			TileEntityRedNetCable cable = (TileEntityRedNetCable)te;
-			
-			int subHit = getPartClicked(player, 3.0F, cable);
-			
-			if (subHit < 0)
-			{
+
+			MovingObjectPosition part = collisionRayTrace(world, x, y, z,
+					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+			if (part == null)
 				return false;
-			}
-			side = _partSideMappings[subHit];
+			
+			int subHit = ((ExtendedMOP)part).subHit;
+			side = _subSideMappings[subHit];
 
 			ItemStack s = player.inventory.getCurrentItem();
-			
-			if (side >= 0)
+
+			if (subHit >= (2 + 6 * 2) && subHit <= (2 + 6 * 3))
 			{
 				if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
@@ -201,99 +193,76 @@ public class BlockRedNetCable extends BlockContainer
 					}
 				}
 			}
-			else if (MFRUtil.isHoldingUsableTool(player, x, y, z))
+			else if (subHit >= 0 && subHit <= (2 + 6 * 2))
 			{
-				byte mode = cable.getMode();
-				mode++;
-				if (mode > 3)
+				if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
-					mode = 0;
-				}
-				if (!world.isRemote)
-				{
-					cable.setMode(mode);
-					world.markBlockForUpdate(x, y, z);
-					switch (mode)
+					byte mode = cable.getMode(side);
+					mode++;
+					if (mode > 3)
 					{
-					case 0:
-						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.standard"));
-						break;
-					case 1:
-						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forced"));
-						break;
-					case 2:
-						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forcedstrong"));
-						break;
-					case 3:
-						player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.cableonly"));
-						break;
-					default:
+						mode = 0;
+					}
+					if (!world.isRemote)
+					{
+						cable.setMode(side, mode);
+						world.markBlockForUpdate(x, y, z);
+						switch (mode)
+						{
+						case 0:
+							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.standard"));
+							break;
+						case 1:
+							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forced"));
+							break;
+						case 2:
+							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forcedstrong"));
+							break;
+						case 3:
+							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.cableonly"));
+							break;
+						default:
+						}
+					}
+				}
+				else if (s != null && s.itemID == MineFactoryReloadedCore.rednetMeterItem.itemID)
+				{
+					// TODO: move to client-side when forge fixes player.getEyeHeight on client
+					if (!world.isRemote)
+					{
+						// TODO: localize
+						player.sendChatToPlayer(new ChatMessageComponent().addText("Side is " + 
+								ItemRedNetMeter._colorNames[cable.getSideColor(ForgeDirection.getOrientation(side))]));
+					}
+				}
+				else if (s != null && s.itemID == Item.dyePowder.itemID)
+				{
+					if (!world.isRemote)
+					{
+						cable.setSideColor(ForgeDirection.getOrientation(side), 15 - s.getItemDamage());
+						world.markBlockForUpdate(x, y, z);
+						return true;
 					}
 				}
 			}
 		}
 		return false;
 	}
-	
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-	{
-		float xMin = 1;
-		float yMin = 1;
-		float zMin = 1;
-		float xMax = 0;
-		float yMax = 0;
-		float zMax = 0;
-		
-		TileEntity cable = world.getBlockTileEntity(x, y, z);
-		if(cable instanceof TileEntityRedNetCable)
-		{
-			for(AxisAlignedBB aabb : getParts((TileEntityRedNetCable)cable))
-			{
-				if(aabb == null)
-				{
-					continue;
-				}
-				
-				xMin = Math.min(xMin, (float)aabb.minX);
-				yMin = Math.min(yMin, (float)aabb.minY);
-				zMin = Math.min(zMin, (float)aabb.minZ);
-				xMax = Math.max(xMax, (float)aabb.maxX);
-				yMax = Math.max(yMax, (float)aabb.maxY);
-				zMax = Math.max(zMax, (float)aabb.maxZ);
-			}
-			setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
-		}
-		else
-		{
-			super.setBlockBoundsBasedOnState(world, x, y, z);
-		}
-	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
 	{
 		TileEntity cable = world.getBlockTileEntity(x, y, z);
-		if(cable instanceof TileEntityRedNetCable)
+		if (cable instanceof TileEntityRedNetCable)
 		{
-			for(AxisAlignedBB aabb : getParts((TileEntityRedNetCable)cable))
+			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
+			((TileEntityRedNetCable)cable).addTraceableCuboids(cuboids, false);
+			for (IndexedCuboid6 c : cuboids)
 			{
-				if(aabb == null)
-				{
-					continue;
-				}
-				aabb = AxisAlignedBB.getBoundingBox(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-				aabb.minX += x;
-				aabb.maxX += x;
-				aabb.minY += y;
-				aabb.maxY += y;
-				aabb.minZ += z;
-				aabb.maxZ += z;
-				if(collisionTest.intersectsWith(aabb))
-				{
+				AxisAlignedBB aabb = c.toAABB();
+				if (collisionTest.intersectsWith(aabb))
 					collisionBoxList.add(aabb);
-				}
 			}
 		}
 		else
@@ -301,19 +270,39 @@ public class BlockRedNetCable extends BlockContainer
 			super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
 		}
 	}
-	
+
+	@Override
+	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
+	{
+		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if (te instanceof TileEntityRedNetCable)
+			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true);
+		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@ForgeSubscribe
+	public void onBlockHighlight(DrawBlockHighlightEvent event) {
+
+		if (event.target.typeOfHit == EnumMovingObjectType.TILE
+				&& event.player.worldObj.getBlockId(event.target.blockX, event.target.blockY, event.target.blockZ) == blockID) {
+			RayTracer.retraceBlock(event.player.worldObj, event.player, event.target.blockX, event.target.blockY, event.target.blockZ);
+		}
+	}
+
 	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockId)
 	{
@@ -323,14 +312,14 @@ public class BlockRedNetCable extends BlockContainer
 			return;
 		}
 		RedstoneNetwork.log("Cable block at %d, %d, %d got update from ID %d", x, y, z, blockId);
-		
+
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
 			((TileEntityRedNetCable)te).onNeighboorChanged();
 		}
 	}
-	
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int id, int meta)
 	{
@@ -339,7 +328,7 @@ public class BlockRedNetCable extends BlockContainer
 		{
 			if (((TileEntityRedNetCable)te).getNetwork() != null)
 				((TileEntityRedNetCable)te).getNetwork().setInvalid();
-			
+
 			world.markTileEntityForDespawn(te);
 			te.invalidate();
 			world.removeBlockTileEntity(x, y, z);
@@ -371,7 +360,7 @@ public class BlockRedNetCable extends BlockContainer
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
 	{
@@ -385,14 +374,14 @@ public class BlockRedNetCable extends BlockContainer
 			{
 				return 0;
 			}
-			
+
 			int subnet = ((TileEntityRedNetCable)te).getSideColor(ForgeDirection.getOrientation(side).getOpposite());
 			power = Math.min(Math.max(((TileEntityRedNetCable)te).getNetwork().getPowerLevelOutput(subnet), 0), 15);
 			RedstoneNetwork.log("Asked for weak power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
 		}
 		return power;
 	}
-	
+
 	@Override
 	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
 	{
@@ -406,12 +395,12 @@ public class BlockRedNetCable extends BlockContainer
 			{
 				return 0;
 			}
-			
+
 			BlockPosition nodebp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side).getOpposite());
 			nodebp.moveForwards(1);
 
 			int subnet = cable.getSideColor(nodebp.orientation);
-			
+
 			if(cable.getNetwork().isWeakNode(nodebp))
 			{
 				power = 0;
@@ -425,13 +414,13 @@ public class BlockRedNetCable extends BlockContainer
 		}
 		return power;
 	}
-	
+
 	@Override
 	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean canProvidePower()
 	{
@@ -443,7 +432,7 @@ public class BlockRedNetCable extends BlockContainer
 	{
 		return null;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(World world, int meta)
 	{
@@ -456,13 +445,13 @@ public class BlockRedNetCable extends BlockContainer
 			return new TileEntityRedNetEnergy();
 		}
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdRedNet;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister ir)
@@ -470,7 +459,7 @@ public class BlockRedNetCable extends BlockContainer
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		RedNetCableRenderer.updateUVT(blockIcon);
 	}
-	
+
 	@Override
 	public void updateNetwork(World world, int x, int y, int z)
 	{
@@ -481,7 +470,7 @@ public class BlockRedNetCable extends BlockContainer
 			((TileEntityRedNetCable)te).updateNodes();
 		}
 	}
-	
+
 	@Override
 	public void updateNetwork(World world, int x, int y, int z, int subnet)
 	{

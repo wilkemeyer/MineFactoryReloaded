@@ -88,7 +88,10 @@ public class ClientPacketHandler implements IPacketHandler
 			((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			break;
 		case Packets.CableDescription: // server -> client; cable side colors
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Byte.class };
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class,
+					Integer.class, Integer.class, Integer.class,
+					Integer.class, Integer.class, Integer.class,
+					Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
 			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
@@ -101,7 +104,14 @@ public class ClientPacketHandler implements IPacketHandler
 				tec.setSideColor(ForgeDirection.SOUTH, (Integer)packetReadout[6]);
 				tec.setSideColor(ForgeDirection.WEST, (Integer)packetReadout[7]);
 				tec.setSideColor(ForgeDirection.EAST, (Integer)packetReadout[8]);
-				tec.setMode((Byte)packetReadout[9]);
+				int mode = (Integer)packetReadout[9];
+				tec.setMode(0, (byte)(mode & 0xFF));
+				tec.setMode(1, (byte)((mode >> 8) & 0xFF));
+				tec.setMode(2, (byte)((mode >> 16) & 0xFF));
+				tec.setMode(3, (byte)((mode >> 24) & 0xFF));
+				mode = (Integer)packetReadout[10];
+				tec.setMode(4, (byte)(mode & 0xFF));
+				tec.setMode(5, (byte)((mode >> 8) & 0xFF));
 				((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			}
 			break;
@@ -109,7 +119,7 @@ public class ClientPacketHandler implements IPacketHandler
 			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class,
 					Integer.class, Integer.class, Integer.class,
 					Integer.class, Integer.class, Integer.class,
-					Byte.class,
+					Integer.class, Integer.class,
 					Byte.class, Byte.class, Byte.class,
 					Byte.class, Byte.class, Byte.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
@@ -124,10 +134,17 @@ public class ClientPacketHandler implements IPacketHandler
 				tec.setSideColor(ForgeDirection.SOUTH, (Integer)packetReadout[6]);
 				tec.setSideColor(ForgeDirection.WEST, (Integer)packetReadout[7]);
 				tec.setSideColor(ForgeDirection.EAST, (Integer)packetReadout[8]);
-				tec.setMode((Byte)packetReadout[9]);
-				tec.setModes(new byte[] {(Byte)packetReadout[10],(Byte)packetReadout[11],
-						(Byte)packetReadout[12],(Byte)packetReadout[13],
-						(Byte)packetReadout[14],(Byte)packetReadout[15],0});
+				int mode = (Integer)packetReadout[9];
+				tec.setMode(0, (byte)(mode & 0xFF));
+				tec.setMode(1, (byte)((mode >> 8) & 0xFF));
+				tec.setMode(2, (byte)((mode >> 16) & 0xFF));
+				tec.setMode(3, (byte)((mode >> 24) & 0xFF));
+				mode = (Integer)packetReadout[10];
+				tec.setMode(4, (byte)(mode & 0xFF));
+				tec.setMode(5, (byte)((mode >> 8) & 0xFF));
+				tec.setModes(new byte[] {(Byte)packetReadout[11],(Byte)packetReadout[12],
+						(Byte)packetReadout[13],(Byte)packetReadout[14],
+						(Byte)packetReadout[15],(Byte)packetReadout[16],0});
 				((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			}
 			break;

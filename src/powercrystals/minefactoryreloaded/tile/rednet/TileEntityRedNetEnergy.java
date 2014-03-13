@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
+import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelection;
 import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerEU;
 import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerMJ;
 import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork.TRANSFER_RATE;
@@ -9,6 +10,8 @@ import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.power.PowerHandler.Type;
 
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.vec.Vector3;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,6 +31,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.net.Packets;
 
@@ -200,8 +204,11 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					xCoord, yCoord, zCoord,
 					_sideColors[0], _sideColors[1], _sideColors[2],
 					_sideColors[3], _sideColors[4], _sideColors[5],
-					_mode, sideMode[0], sideMode[1], sideMode[2], 
-					sideMode[3], sideMode[4], sideMode[5] 
+					cableMode[0] | (cableMode[1] << 8) |
+					(cableMode[1] << 16) | (cableMode[2] << 24),
+					cableMode[3] | (cableMode[4] << 8) |
+					(cableMode[5] << 16), sideMode[0], sideMode[1],
+					sideMode[2], sideMode[3], sideMode[4], sideMode[5] 
 				});
 	}
 	
@@ -409,6 +416,53 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 		if (grid != null)
 			grid.addConduit(this);
+	}
+	
+	@Override
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
+	{
+		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
+		
+		IndexedCuboid6 main = new IndexedCuboid6(1, subSelection[1]); 
+		list.add(main);
+		
+		ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
+		for (int i = sides.length; i --> 0; )
+		{
+			RedNetConnectionType c = getConnectionState(sides[i], true);
+			RedNetConnectionType f = getConnectionState(sides[i], false);
+			l: if (c.isConnected)
+			{
+				int o = 2 + i;
+				if (c.isPlate)
+					o += 6;
+				else if (c.isCable)
+					if (c.isAllSubnets)
+					{
+						if (forTrace)
+							main.setSide(i, i & 1);
+						else;
+							/*list.add((IndexedCuboid6)new IndexedCuboid6(o,
+									subSelection[2+6*3+i]).add(offset).expand(1 / 16f));//*/
+						break l;
+					}
+					else
+					{
+						/*list.add((IndexedCuboid6)new IndexedCuboid6(o,
+								subSelection[2+6*3+i]).add(offset).expand(1 / 16f));//*/
+					}
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+				o = 2 + 6 + 6 + i;
+				if (c.isSingleSubnet)
+					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+			}
+			else if (forTrace & (f.isConnected || cableMode[i] == 3) && cableMode[6] != 3)
+			{ // cable-only
+				list.add((IndexedCuboid6)new IndexedCuboid6(2 + i, subSelection[2 + i]).add(offset));
+				continue;
+			}
+		}
+		main.add(offset);
 	}
 
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
