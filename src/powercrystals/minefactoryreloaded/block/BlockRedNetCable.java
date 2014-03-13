@@ -76,10 +76,10 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	private static float _bandDepthEnd   = _bandOffset + _bandDepth;
 
 	private static int[] _subSideMappings = new int[] { 6, 6,
-		0, 1, 3, 5, 4, 2,
-		0, 1, 3, 5, 4, 2,
-		0, 1, 3, 5, 4, 2,
-		0, 1, 3, 5, 4, 2 };
+		0, 1, 2, 3, 4, 5,
+		0, 1, 2, 3, 4, 5,
+		0, 1, 2, 3, 4, 5,
+		0, 1, 2, 3, 4, 5 };
 
 	public static Cuboid6[] subSelection = new Cuboid6[26];
 
@@ -487,8 +487,8 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			ForgeDirection side, EntityPlayer player, List<String> info, boolean debug)
 	{
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if (tile instanceof TileEntityRedNetEnergy)
-			((TileEntityRedNetEnergy)tile).getTileInfo(info, side, player, debug);
+		if (tile instanceof TileEntityRedNetCable)
+			((TileEntityRedNetCable)tile).getTileInfo(info, side, player, debug);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -114,6 +115,8 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative)
 	{
 		byte _mode = cableMode[side.ordinal()];
+		if (cableMode[6] == 3)
+			_mode = 3;
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = side;
 		bp.moveForwards(1);
@@ -179,9 +182,9 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 					_sideColors[0], _sideColors[1], _sideColors[2],
 					_sideColors[3], _sideColors[4], _sideColors[5],
 					cableMode[0] | (cableMode[1] << 8) |
-					(cableMode[1] << 16) | (cableMode[2] << 24),
-					cableMode[3] | (cableMode[4] << 8) |
-					(cableMode[5] << 16)
+					(cableMode[2] << 16) | (cableMode[3] << 24),
+					cableMode[4] | (cableMode[5] << 8) |
+					(cableMode[6] << 16)
 				});
 	}
 	
@@ -233,12 +236,12 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 						if (forTrace)
 							main.setSide(i, i & 1);
 						else
-							list.add((IndexedCuboid6)new IndexedCuboid6(o,
-									subSelection[2+6*3+i]).add(offset));
+							list.add((IndexedCuboid6)new IndexedCuboid6(2 + 6*3 + i,
+									subSelection[2 + 6*3 + i]).add(offset));
 						break l;
 					}
 				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
-				o = 2 + 6 + 6 + i;
+				o = 2 + 6*2 + i;
 				if (c.isSingleSubnet)
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 			}
@@ -254,6 +257,22 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	public boolean canInterface(TileEntityRedNetCable with)
 	{
 		return true;
+	}
+
+	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+		if (debug && player.isSneaking()) {
+			if (_network != null) {
+				info.add("Grid:" + _network);/*
+				info.add("Conduits: " + _network. + ", Nodes: " + grid.getNodeCount());
+				info.add("Grid Max: " + grid.storage.getMaxEnergyStored());
+				info.add("Grid Cur: " + grid.storage.getEnergyStored());//*/
+			} else {
+				info.add("Null Grid");
+			}
+			info.add("SideMode: " + Arrays.toString(cableMode));
+			//info.add("Node: " + isNode);
+			return;
+		}
 	}
 	
 	@Override

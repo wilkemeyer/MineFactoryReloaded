@@ -205,9 +205,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					_sideColors[0], _sideColors[1], _sideColors[2],
 					_sideColors[3], _sideColors[4], _sideColors[5],
 					cableMode[0] | (cableMode[1] << 8) |
-					(cableMode[1] << 16) | (cableMode[2] << 24),
-					cableMode[3] | (cableMode[4] << 8) |
-					(cableMode[5] << 16), sideMode[0], sideMode[1],
+					(cableMode[2] << 16) | (cableMode[3] << 24),
+					cableMode[4] | (cableMode[5] << 8) |
+					(cableMode[6] << 16), sideMode[0], sideMode[1],
 					sideMode[2], sideMode[3], sideMode[4], sideMode[5] 
 				});
 	}
@@ -465,7 +465,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		main.add(offset);
 	}
 
+	@Override
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+		super.getTileInfo(info, side, player, debug);
 		if (grid != null) {
 			if (isNode) {
 				info.add("Throughput All: " + grid.distribution);

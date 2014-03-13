@@ -112,6 +112,7 @@ public class ClientPacketHandler implements IPacketHandler
 				mode = (Integer)packetReadout[10];
 				tec.setMode(4, (byte)(mode & 0xFF));
 				tec.setMode(5, (byte)((mode >> 8) & 0xFF));
+				tec.setMode(6, (byte)((mode >> 16) & 0xFF));
 				((EntityPlayer)player).worldObj.markBlockForRenderUpdate((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			}
 			break;
@@ -142,6 +143,7 @@ public class ClientPacketHandler implements IPacketHandler
 				mode = (Integer)packetReadout[10];
 				tec.setMode(4, (byte)(mode & 0xFF));
 				tec.setMode(5, (byte)((mode >> 8) & 0xFF));
+				tec.setMode(6, (byte)((mode >> 16) & 0xFF));
 				tec.setModes(new byte[] {(Byte)packetReadout[11],(Byte)packetReadout[12],
 						(Byte)packetReadout[13],(Byte)packetReadout[14],
 						(Byte)packetReadout[15],(Byte)packetReadout[16],0});
