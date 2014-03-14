@@ -396,7 +396,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				if(j >= 0 && j < _inventory.length)
 				{
 					_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
-					if (_inventory[j].stackSize <= 0)
+					if (_inventory[j].stackSize < 0)
 						_inventory[j] = null;
 				}
 			}

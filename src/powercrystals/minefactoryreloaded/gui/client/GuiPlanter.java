@@ -1,18 +1,53 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import net.minecraft.util.StatCollector;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.gui.GuiButton;
 
+import powercrystals.core.net.PacketWrapper;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
+import powercrystals.minefactoryreloaded.net.Packets;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
 public class GuiPlanter extends GuiUpgradable
 {
+	private TileEntityPlanter _planter;
 
-	public GuiPlanter(ContainerUpgradable container, TileEntityFactoryPowered te)
+	private GuiButton _consumeToggle;
+
+	public GuiPlanter(ContainerUpgradable container, TileEntityPlanter te)
 	{
 		super(container, te);
+		_planter = te;
+		ySize = 200;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		_consumeToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 87, 100, 20, "Consume Stack: On");
+		_consumeToggle.displayString = _planter.getConsumeAll() ? "Consume Stack: Off" : "Consume Stack: On";
+		buttonList.add(_consumeToggle);
+	}
+
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		_consumeToggle.displayString = _planter.getConsumeAll() ? "Consume Stack: Off" : "Consume Stack: On";
+	}
+
+	@Override
+	protected void actionPerformed(GuiButton button)
+	{
+		if(button.id == 1)
+		{
+			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
+					new Object[] { _planter.xCoord, _planter.yCoord, _planter.zCoord, 1 }));
+		}
 	}
 	
 	@Override
@@ -20,21 +55,6 @@ public class GuiPlanter extends GuiUpgradable
 	{
 		fontRenderer.drawString("Filter", 8, 22, 4210752);
 		
-		//GuiFactoryPowered
-		drawBar(140, 75, _tePowered.getEnergyStoredMax(), _tePowered.getEnergyStored(), _barColorEnergy);
-		drawBar(150, 75, _tePowered.getWorkMax(), _tePowered.getWorkDone(), _barColorWork);
-		drawBar(160, 75, _tePowered.getIdleTicksMax(), _tePowered.getIdleTicks(), _barColorIdle);
-		
-		//GuiFactoryInventory, tweaked slightly
-		fontRenderer.drawString(_tileEntity.getInvName(), 8, 6, 4210752);
-		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 4, 4210752);
-		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		/*
-		if(_tileEntity.getTank() != null && _tileEntity.getTank().getFluid() != null)
-		{
-			int tankSize = _tileEntity.getTank().getFluid().amount * _tankSizeMax / _tileEntity.getTank().getCapacity();
-			drawTank(122, 75, _tileEntity.getTank().getFluid(), tankSize);
-		}//*/
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}
 }

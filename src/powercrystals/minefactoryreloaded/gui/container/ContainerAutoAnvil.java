@@ -19,7 +19,7 @@ public class ContainerAutoAnvil extends ContainerFactoryPowered
 	{
 		super(anvil, inv);
 		_anvil = anvil;
-		repairOnly = anvil.getRepairOnly();
+		repairOnly = !anvil.getRepairOnly();
 	}
 
 	@Override

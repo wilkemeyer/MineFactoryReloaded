@@ -1,16 +1,53 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
 public class ContainerPlanter extends ContainerUpgradable
 {
-	public ContainerPlanter(TileEntityFactoryPowered te, InventoryPlayer inv)
+	private TileEntityPlanter _planter;
+	private boolean consumeAll;
+	
+	public ContainerPlanter(TileEntityPlanter te, InventoryPlayer inv)
 	{
 		super(te, inv);
+		_planter = te;
+		consumeAll = !te.getConsumeAll();
+	}
+
+	@Override
+	public void detectAndSendChanges()
+	{
+		super.detectAndSendChanges();
+		if (_planter.getConsumeAll() != consumeAll)
+		{
+			consumeAll = _planter.getConsumeAll();
+			int data = (consumeAll ? 1 : 0);
+			for(int i = 0; i < crafters.size(); i++)
+			{
+				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, data);
+			}
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int var, int value)
+	{
+		super.updateProgressBar(var, value);
+
+		if (var == 100)
+		{
+			_planter.setConsumeAll((value & 1) == 1);
+		}
 	}
 	
 	@Override
@@ -41,5 +78,11 @@ public class ContainerPlanter extends ContainerUpgradable
 				addSlotToContainer(new Slot(_te, 10 + i*4 + j, xStart + 18 * j, yStart + 18*i));
 			}
 		}
+	}
+	
+	@Override
+	protected int getPlayerInventoryVerticalOffset()
+	{
+		return 99 + 20;
 	}
 }
