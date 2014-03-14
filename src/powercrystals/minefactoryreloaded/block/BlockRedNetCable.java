@@ -195,16 +195,34 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			}
 			else if (subHit >= 0 && subHit <= (2 + 6 * 2))
 			{
-				if (MFRUtil.isHoldingUsableTool(player, x, y, z))
+				l: if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
 					byte mode = cable.getMode(side);
 					mode++;
-					if (mode > 3)
-					{
-						mode = 0;
-					}
 					if (!world.isRemote)
 					{
+						if (side == 6)
+						{
+							if (mode > 1)
+								mode = 0;
+							cable.setMode(side, mode);
+							world.markBlockForUpdate(x, y, z);
+							switch (mode)
+							{
+							case 0:
+								player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.tile.standard"));
+								break;
+							case 1:
+								player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.tile.cableonly"));
+								break;
+							default:
+							}
+							break l;
+						}
+						if (mode > 3)
+						{
+							mode = 0;
+						}
 						cable.setMode(side, mode);
 						world.markBlockForUpdate(x, y, z);
 						switch (mode)
@@ -418,7 +436,11 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return true;
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if (te instanceof TileEntityRedNetCable)
+			return ((TileEntityRedNetCable)te).isSolidOnSide(side.ordinal());
+		
+		return false;
 	}
 
 	@Override

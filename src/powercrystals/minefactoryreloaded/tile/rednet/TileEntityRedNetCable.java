@@ -115,7 +115,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative)
 	{
 		byte _mode = cableMode[side.ordinal()];
-		if (cableMode[6] == 3)
+		if (cableMode[6] == 1)
 			_mode = 3;
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = side;
@@ -245,7 +245,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 				if (c.isSingleSubnet)
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 			}
-			else if (forTrace & (f.isConnected || cableMode[i] == 3) && cableMode[6] != 3)
+			else if (forTrace & (f.isConnected || cableMode[i] == 3) && cableMode[6] != 1)
 			{ // cable-only
 				list.add((IndexedCuboid6)new IndexedCuboid6(2 + i, subSelection[2 + i]).add(offset));
 				continue;
@@ -388,8 +388,8 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	{
 		super.writeToNBT(tag);
 		tag.setIntArray("sideSubnets", _sideColors);
-		tag.setByte("mode", cableMode[6]);
-		tag.setByte("v", (byte)2);
+		tag.setByte("mode", cableMode[0]);
+		tag.setByte("v", (byte)3);
 		tag.setByteArray("cableMode", cableMode);
 	}
 	
@@ -407,15 +407,24 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		if (cableMode.length < 6) cableMode = new byte[] {0,0,0, 0,0,0, 0};
 		switch (tag.getByte("v"))
 		{
+		case 2:
+			cableMode[6] = (byte)(cableMode[6] == 3 ? 1 : 0);
+			break;
 		case 0:
 			if (_mode == 2)
 				_mode = 3;
 		case 1:
-			cableMode = new byte[] {_mode,_mode,_mode, _mode,_mode,_mode, _mode};
+			cableMode = new byte[] {_mode,_mode,_mode,
+					_mode,_mode,_mode, (byte)(_mode == 3 ? 1 : 0)};
 			break;
 		default:
 			break;
 		}
+	}
+
+	public boolean isSolidOnSide(int side)
+	{
+		return cableMode[side] != 3 & cableMode[6] != 1;
 	}
 
     @Override
