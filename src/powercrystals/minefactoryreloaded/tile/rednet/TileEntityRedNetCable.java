@@ -115,10 +115,10 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative)
 	{
 		byte _mode = cableMode[side.ordinal()];
+		if (!decorative)
+			_mode = 1;
 		if (cableMode[6] == 1)
 			_mode = 3;
-		if (!decorative & _mode == 3)
-			_mode = 1;
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = side;
 		bp.moveForwards(1);
