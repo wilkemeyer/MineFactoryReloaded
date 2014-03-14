@@ -377,20 +377,8 @@ public class MFRConfig
 		mfrLakeSewageRarity.comment = "Higher numbers make sewage lakes rarer. A value of one will be approximately one per chunk.";
 		unifierBlacklist = c.get(Configuration.CATEGORY_GENERAL, "Unifier.Blacklist", "dyeBlue,dyeWhite,dyeBrown,dyeBlack,listAllwater,listAllmilk");
 		unifierBlacklist.comment = "A comma-separated list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
-		enableLiquidSyringe = c.get(Configuration.CATEGORY_GENERAL, "LiquidSyringes", true);
-		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
-		enableSPAMRExploding = c.get(Configuration.CATEGORY_ITEM, "SPAMR.Exploding", true);
-		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
-		enableFuelExploding = c.get(Configuration.CATEGORY_GENERAL, "Biofuel.Exploding", true);
-		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
 		spawnerBlacklist = c.get(Configuration.CATEGORY_GENERAL, "AutoSpawner.Blacklist", "");
 		spawnerBlacklist.comment = "A comma-separated list of entity IDs (e.g.: CaveSpider,VillagerGolem,butterflyGE) to blacklist from the AutoSpawner.";
-		enableMassiveTree = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.SacredRubberSapling", true);
-		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
-		enableChunkLimitBypassing = c.get("Machine", Machine.ChunkLoader.getName() + ".IgnoreChunkLimit", false);
-		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
-		enableChunkLoaderRequiresOwner = c.get("Machine", Machine.ChunkLoader.getName() + ".RequiresOwnerOnline", false);
-		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
 		
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
@@ -416,6 +404,18 @@ public class MFRConfig
 		enableGuns.comment = "If true, the Guns will be craftable.";
 		enableNetLauncher = c.get(Configuration.CATEGORY_ITEM, "Recipe.NetLauncher", true);
 		enableNetLauncher.comment = "If true, the safarinet launcher will be craftable.";
+		enableLiquidSyringe = c.get(Configuration.CATEGORY_GENERAL, "LiquidSyringes", true);
+		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
+		enableSPAMRExploding = c.get(Configuration.CATEGORY_ITEM, "SPAMR.Exploding", true);
+		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
+		enableFuelExploding = c.get(Configuration.CATEGORY_GENERAL, "Biofuel.Exploding", true);
+		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
+		enableMassiveTree = c.get(Configuration.CATEGORY_GENERAL, "WorldGen.SacredRubberSapling", true);
+		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
+		enableChunkLimitBypassing = c.get("Machine", Machine.ChunkLoader.getName() + ".IgnoreChunkLimit", false);
+		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
+		enableChunkLoaderRequiresOwner = c.get("Machine", Machine.ChunkLoader.getName() + ".RequiresOwnerOnline", false);
+		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
 		
 		for(Machine machine : Machine.values())
 		{
