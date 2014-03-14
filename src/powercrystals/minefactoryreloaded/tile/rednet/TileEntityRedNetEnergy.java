@@ -32,6 +32,7 @@ import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.net.Packets;
 
@@ -104,14 +105,15 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 		if (grid != null) {
 			grid.addConduit(this);
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityRedNetEnergy)
-					grid.addConduit((TileEntityRedNetEnergy)tile);
-			}
 		} else if (!worldObj.isRemote)
-			setGrid(new RedstoneEnergyNetwork(this)); 
+			setGrid(new RedstoneEnergyNetwork(this));
+		
+		if (grid != null) for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
+					yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			if (tile instanceof TileEntityRedNetEnergy)
+				grid.addConduit((TileEntityRedNetEnergy)tile);
+		}
 	}
 	
 	@Override
@@ -419,6 +421,19 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 	
 	@Override
+	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
+		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 5)) {
+			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
+				sideMode[ForgeDirection.OPPOSITES[side]] ^= 1;
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				updateInternalTypes();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
 	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
@@ -426,11 +441,14 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		IndexedCuboid6 main = new IndexedCuboid6(1, subSelection[1]); 
 		list.add(main);
 		
-		ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
-		for (int i = sides.length; i --> 0; )
+		ForgeDirection[] side = ForgeDirection.VALID_DIRECTIONS;
+		int[] opposite = ForgeDirection.OPPOSITES;
+		for (int i = side.length; i --> 0; )
 		{
-			RedNetConnectionType c = getConnectionState(sides[i], true);
-			RedNetConnectionType f = getConnectionState(sides[i], false);
+			RedNetConnectionType c = getConnectionState(side[i], true);
+			RedNetConnectionType f = getConnectionState(side[i], false);
+			int mode = sideMode[opposite[i]] >> 1;
+			boolean iface = mode > 0 & mode != 4;
 			l: if (c.isConnected)
 			{
 				int o = 2 + i;
@@ -441,26 +459,25 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					{
 						if (forTrace)
 							main.setSide(i, i & 1);
-						else;
-							/*list.add((IndexedCuboid6)new IndexedCuboid6(o,
-									subSelection[2+6*3+i]).add(offset).expand(1 / 16f));//*/
-						break l;
-					}
-					else
-					{
-						/*list.add((IndexedCuboid6)new IndexedCuboid6(o,
-								subSelection[2+6*3+i]).add(offset).expand(1 / 16f));//*/
+						else if (iface | mode == 4)
+							break l;
+						else
+							list.add((IndexedCuboid6)new IndexedCuboid6(2 + 6*3 + i,
+									subSelection[2 + 6*3 + i]).add(offset));
+						continue;
 					}
 				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
-				o = 2 + 6 + 6 + i;
+				o = 2 + 6*2 + i;
 				if (c.isSingleSubnet)
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 			}
-			else if (forTrace & (f.isConnected || cableMode[i] == 3) && cableMode[6] != 3)
+			else if (forTrace & f.isConnected && cableMode[6] != 1)
 			{ // cable-only
 				list.add((IndexedCuboid6)new IndexedCuboid6(2 + i, subSelection[2 + i]).add(offset));
-				continue;
 			}
+			if (iface | (!forTrace & mode == 4))
+				list.add((IndexedCuboid6)new IndexedCuboid6(2 + 6*4 + i,
+						subSelection[2 + 6*4 + i]).add(offset));
 		}
 		main.add(offset);
 	}
@@ -468,11 +485,11 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
 		super.getTileInfo(info, side, player, debug && player.isSneaking());
-		if (grid != null) {
+		if (grid != null) {/* TODO: advanced monitoring
 			if (isNode) {
 				info.add("Throughput All: " + grid.distribution);
 				info.add("Throughput Side: " + grid.distributionSide);
-			} else
+			} else//*/
 				info.add("Saturation: " +
 						(Math.ceil(grid.storage.getEnergyStored() /
 								(float)grid.storage.getMaxEnergyStored() * 1000) / 10f));

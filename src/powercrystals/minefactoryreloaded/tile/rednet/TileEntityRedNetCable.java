@@ -117,6 +117,8 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		byte _mode = cableMode[side.ordinal()];
 		if (cableMode[6] == 1)
 			_mode = 3;
+		if (!decorative & _mode == 3)
+			_mode = 1;
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = side;
 		bp.moveForwards(1);
@@ -139,7 +141,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		else if(b instanceof IConnectableRedNet) // API node - let them figure it out
 		{
 			RedNetConnectionType type = ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
-			return type.isConnectionForced && !(_mode == 1 | _mode == 2) ?
+			return type.isConnectionForced & !(_mode == 1 | _mode == 2) ?
 					RedNetConnectionType.None : type; 
 		}
 		else if(b instanceof IRedNetNoConnection || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
@@ -154,7 +156,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
 		}
-		else if (decorative && (blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) ||
+		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) ||
 				_connectionBlackList.contains(blockId) ||
 				b instanceof IRedNetDecorative)
 			// standard connection logic, then figure out if we shouldn't connect
@@ -213,6 +215,11 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		_network.tick();
 	}
 	
+	public boolean onPartHit(EntityPlayer player, int side, int subHit)
+	{
+		return false;
+	}
+	
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
 	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
@@ -225,7 +232,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			RedNetConnectionType c = getConnectionState(sides[i], true);
 			RedNetConnectionType f = getConnectionState(sides[i], false);
-			l: if (c.isConnected)
+			if (c.isConnected)
 			{
 				int o = 2 + i;
 				if (c.isPlate)
@@ -238,17 +245,16 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 						else
 							list.add((IndexedCuboid6)new IndexedCuboid6(2 + 6*3 + i,
 									subSelection[2 + 6*3 + i]).add(offset));
-						break l;
+						continue;
 					}
 				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 				o = 2 + 6*2 + i;
 				if (c.isSingleSubnet)
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 			}
-			else if (forTrace & (f.isConnected || cableMode[i] == 3) && cableMode[6] != 1)
+			else if (forTrace & f.isConnected && cableMode[6] != 1)
 			{ // cable-only
 				list.add((IndexedCuboid6)new IndexedCuboid6(2 + i, subSelection[2 + i]).add(offset));
-				continue;
 			}
 		}
 		main.add(offset);
