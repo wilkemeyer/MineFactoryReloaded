@@ -116,6 +116,8 @@ tile.mfr.decorativebrick.snow_large.name = Large Snow Bricks
 tile.mfr.decorativebrick.prc.name = Programmable RedNet Controller Housing
 tile.mfr.decorativebrick.meat.raw.name = Raw Meat Block
 tile.mfr.decorativebrick.meat.cooked.name = Cooked Meat Block
+tile.mfr.decorativebrick.pavedstone_large.name = Large Paved Stone Bricks
+tile.mfr.decorativebrick.brick_large.name = Large Bricks
 
 tile.mfr.decorativestone.black.smooth.name = Smooth Blackstone
 tile.mfr.decorativestone.black.cobble.name = Cobble Blackstone

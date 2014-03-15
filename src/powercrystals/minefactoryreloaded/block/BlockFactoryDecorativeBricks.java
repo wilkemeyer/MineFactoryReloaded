@@ -14,9 +14,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecorative
 {
-	private String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
+	static String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
 			"glowstone_large", "ice_large", "lapis_large", "obsidian_large", "snow_large", "prc", "meat.raw",
-			"meat.cooked" };
+			"meat.cooked", "pavedstone_large", "brick_large" };
 	private Icon[] _icons = new Icon[_names.length];
 	
 	public BlockFactoryDecorativeBricks(int blockId)

@@ -962,6 +962,24 @@ public class Vanilla
 			'M', Block.blockSnow,
 				} );
 		
+		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 14), new Object[]
+				{
+			"M M",
+			" B ",
+			"M M",
+			'B', Block.stoneBrick,
+			'M', new ItemStack(Block.stoneSingleSlab, 1, 0),
+				} );
+		
+		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 15), new Object[]
+				{
+			"M M",
+			" B ",
+			"M M",
+			'B', Block.stoneBrick,
+			'M', new ItemStack(Block.brick, 1, 0),
+				} );
+		
 		/**
 		 * Smooth:
 		 **/

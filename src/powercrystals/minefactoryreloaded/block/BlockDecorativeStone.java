@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockDecorativeStone extends Block implements IRedNetDecorative
 {
-	private String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
+	static String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
 			"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
 			"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
 	private Icon[] _icons = new Icon[_names.length];
