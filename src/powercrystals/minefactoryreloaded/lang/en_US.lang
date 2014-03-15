@@ -43,6 +43,7 @@ tile.mfr.machine.blockplacer.name = Block Placer
 tile.mfr.machine.mobcounter.name = Mob Counter
 tile.mfr.machine.steamturbine.name = Steam Turbine
 tile.mfr.machine.chunkloader.name = Chunk Loader
+tile.mfr.machine.fountain.name = Fountain
 
 tile.mfr.conveyor.default.name = Conveyor Belt
 tile.mfr.conveyor.white.name = Conveyor Belt (White)

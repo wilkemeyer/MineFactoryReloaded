@@ -159,10 +159,11 @@ public class ThermalExpansion extends Vanilla
 						} );
 			
 			registerMachine(Machine.WeatherCollector, new Object[] {
-					"PTP",
-					" F ",
+					"PBP",
+					"TFT",
 					"OCO",
 					'P', "sheetPlastic",
+					'B', Block.fenceIron,
 					'T', Item.bucketEmpty,
 					'F', machineFrame,
 					'O', "ingotCopper",
@@ -562,6 +563,18 @@ public class ThermalExpansion extends Vanilla
 					'F', tesseractFrameEmpty,
 					'O', "ingotElectrum",
 					'C', powerCoilElectrum
+						} );
+			
+			registerMachine(Machine.Fountain, new Object[] {
+					"PBP",
+					"TFT",
+					"OCO",
+					'P', "sheetPlastic",
+					'B', Block.fenceIron,
+					'T', tankBasic,
+					'F', machineFrame,
+					'O', "ingotNickel",
+					'C', powerCoilGold
 						} );
 		}
 		catch (Exception x)

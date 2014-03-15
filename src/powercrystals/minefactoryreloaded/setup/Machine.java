@@ -47,6 +47,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityEjector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityFertilizer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityFisher;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityFountain;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityFruitPicker;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityGrinder;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
@@ -85,7 +86,7 @@ public class Machine
 	public static Machine Vet = new Machine(0, 5, "Vet", TileEntityVet.class, "factoryVet", 320, 32000);
 	public static Machine ItemCollector = new Machine(0, 6, "ItemCollector", TileEntityCollector.class, "factoryItemCollector");
 	public static Machine BlockBreaker = new Machine(0, 7, "BlockBreaker", TileEntityBlockBreaker.class, "factoryBlockBreaker", 960, 64000);
-	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, "factoryWeather", 40, 16000);
+	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, "factoryWeather", 5, 16000);
 	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, "factorySludgeBoiler", 20, 16000);
 	public static Machine Sewer = new Machine(0, 10, "Sewer", TileEntitySewer.class, "factorySewer");
 	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, "factoryComposter", 20, 16000);
@@ -155,6 +156,7 @@ public class Machine
 		}
 	};
 	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, "factoryChunkLoader", Short.MAX_VALUE, Integer.MAX_VALUE, false);
+	public static Machine Fountain = new Machine(2, 11, "Fountain", TileEntityFountain.class, "factoryFountain", 80, 16000);
 	
 	private final int _blockIndex;
 	private final int _meta;

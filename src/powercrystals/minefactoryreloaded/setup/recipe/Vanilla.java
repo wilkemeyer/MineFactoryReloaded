@@ -572,6 +572,17 @@ public class Vanilla
 				'R', Block.blockRedstone,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
+		
+		registerMachine(Machine.Fountain, new Object[]
+					{
+				"GBG",
+				"GBG",
+				"UMU",
+				'G', "sheetPlastic",
+				'B', Block.fenceIron,
+				'U', Item.bucketEmpty,
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
 	}
 	
 	protected void registerMachine(Machine machine, Object... recipe)
