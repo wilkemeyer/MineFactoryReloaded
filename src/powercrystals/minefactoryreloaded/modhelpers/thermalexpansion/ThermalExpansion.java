@@ -73,6 +73,8 @@ public class ThermalExpansion implements IRandomMobProvider
 		creeper.setCustomNameTag("Exploding Zeldo");
 		creeper.setAlwaysRenderNameTag(true);
 		creeper.func_110163_bv();
+		creeper.setCurrentItemOrArmor(1, new ItemStack(MineFactoryReloadedCore.plasticBootsItem));
+		creeper.setEquipmentDropChance(1, 2);
 		mobs.add(new RandomMob(creeper, 20));
 		
 		return mobs;
