@@ -6,9 +6,16 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class ContainerUpgradable extends ContainerFactoryPowered
 {
+	private int _slotUpgrade;
 	public ContainerUpgradable(TileEntityFactoryPowered te, InventoryPlayer inv)
 	{
+		this(te, inv, 9);
+	}
+	
+	public ContainerUpgradable(TileEntityFactoryPowered te, InventoryPlayer inv, int slot)
+	{
 		super(te, inv);
+		_slotUpgrade = slot;
 	}
 	
 	@Override
@@ -16,7 +23,7 @@ public class ContainerUpgradable extends ContainerFactoryPowered
 	{
 		super.addSlots();
 		
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79));
+		addSlotToContainer(new SlotAcceptUpgrade(_te, _slotUpgrade, 152, 79));
 	}
 	
 	@Override

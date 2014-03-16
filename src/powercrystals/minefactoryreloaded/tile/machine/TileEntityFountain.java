@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
-import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
-import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.gui.client.GuiUpgradable;
+import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -30,18 +30,18 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
-		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
+		return new GuiUpgradable(getContainer(inventoryPlayer), this);
 	}
 	
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerUpgradable getContainer(InventoryPlayer inventoryPlayer)
 	{
-		return new ContainerFactoryPowered(this, inventoryPlayer);
+		return new ContainerUpgradable(this, inventoryPlayer, 0);
 	}
 
 	@Override
 	protected boolean activateMachine()
-	{
+	{ // TODO: use upgrade slot
 		int x = xCoord, y = yCoord + 1, z = zCoord;
 		Block block = Block.blocksList[worldObj.getBlockId(x, y, z)];
 		if (block == null || (!block.blockMaterial.isLiquid() && block.isBlockReplaceable(worldObj, x, y, z)))
@@ -120,7 +120,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	@Override
 	public int getSizeInventory()
 	{
-		return 0;
+		return 1;
 	}
 
 	@Override
