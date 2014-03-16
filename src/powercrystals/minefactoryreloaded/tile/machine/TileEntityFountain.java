@@ -44,7 +44,6 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	{
 		int x = xCoord, y = yCoord + 1, z = zCoord;
 		Block block = Block.blocksList[worldObj.getBlockId(x, y, z)];
-		worldObj.isAnyLiquid(null);
 		if (block == null || (!block.blockMaterial.isLiquid() && block.isBlockReplaceable(worldObj, x, y, z)))
 			if (_tanks[0].getFluidAmount() >= BUCKET_VOLUME)
 			{
