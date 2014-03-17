@@ -21,7 +21,8 @@ public class ContainerUpgradable extends ContainerFactoryPowered
 	@Override
 	protected void addSlots()
 	{
-		super.addSlots();
+		if (_slotUpgrade == 9)
+			super.addSlots();
 		
 		addSlotToContainer(new SlotAcceptUpgrade(_te, _slotUpgrade, 152, 79));
 	}

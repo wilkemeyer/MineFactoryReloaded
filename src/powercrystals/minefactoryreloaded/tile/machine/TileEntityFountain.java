@@ -50,6 +50,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				int blockid = _tanks[0].getFluid().getFluid().getBlockID();
 				if (blockid > 0 && worldObj.setBlock(x, y, z, blockid))
 				{// TODO: when forge supports NBT fluid blocks, adapt this
+					worldObj.notifyBlockOfNeighborChange(x, y, z, blockid);
 					drain(_tanks[0], BUCKET_VOLUME, true);
 					return true;
 				}
