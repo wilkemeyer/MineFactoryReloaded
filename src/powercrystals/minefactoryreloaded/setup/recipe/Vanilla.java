@@ -1753,7 +1753,7 @@ public class Vanilla
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 				} ));
 		
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 2), new Object[]
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 6, 2), new Object[]
 				{
 			"ingotGold",
 			"ingotGold",
