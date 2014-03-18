@@ -21,7 +21,7 @@ tile.mfr.machine.liquidrouter.name = Flüssigkeitsrouter
 tile.mfr.machine.deepstorageunit.name = Tiefenspeicher
 tile.mfr.machine.liquicrafter.name = Flüssigkeits-Werkbank
 tile.mfr.machine.lavafabricator.name = Lavafabrik
-tile.mfr.machine.oilfabricator.name = \u00d6lfabrik
+tile.mfr.machine.oilfabricator.name = Ölfabrik
 tile.mfr.machine.autojukebox.name = Automatischer Plattenspieler
 tile.mfr.machine.unifier.name = Vereiniger
 tile.mfr.machine.autospawner.name = Automatischer Spawner
@@ -118,8 +118,8 @@ tile.mfr.decorativebrick.snow_large = Großer Schneeziegel
 tile.mfr.decorativebrick.prc.name = Programmierbarer RedNet Controller - Gehäuse
 tile.mfr.decorativebrick.meat.raw.name = Roher Fleischblock
 tile.mfr.decorativebrick.meat.cooked.name = Gekochter Fleischblock
-tile.mfr.decorativebrick.pavedstone_large.name = Gro\uooDFe Gepflasterte Steinziegel
-tile.mfr.decorativebrick.brick_large.name = Gro\u00DFe Ziegel
+tile.mfr.decorativebrick.pavedstone_large.name = Große Gepflasterte Steinziegel
+tile.mfr.decorativebrick.brick_large.name = Große Ziegel
 
 tile.mfr.decorativestone.black.smooth.name = Glatter schwarzer Stein
 tile.mfr.decorativestone.black.cobble.name = Schwarzer Pflasterstein
@@ -394,7 +394,7 @@ chat.info.mfr.rednet.tile.cableonly = Kabel auf Nur-Kabel-Verbindungsmodus geste
 
 chat.info.mfr.rednet.connection.standard = Seite auf Standard-Verbindungsmodus gestellt
 chat.info.mfr.rednet.connection.forced = Seite auf Erzwungenen Verbindungsmodus gestellt
-chat.info.mfr.rednet.connection.forcedstrong = Seite auf Verst\u00E4rkten Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.forcedstrong = Seite auf Verstärkten Verbindungsmodus gestellt
 chat.info.mfr.rednet.connection.cableonly = Seite auf Nur-Kabel-Verbindungsmodus gestellt
 
 chat.info.mfr.bag.stacksize = Du kannst nur eine Tüte zur Zeit öffnen
