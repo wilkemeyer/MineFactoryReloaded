@@ -43,6 +43,7 @@ tile.mfr.machine.blockplacer.name = Block-Platzierer
 tile.mfr.machine.mobcounter.name = Mob-Z\u00e4hler
 tile.mfr.machine.steamturbine.name = Dampfturbine
 tile.mfr.machine.chunkloader.name = Chunk-Loader
+tile.mfr.machine.fountain.name = Brunnen
 
 tile.mfr.conveyor.default.name = F\u00f6rderband
 tile.mfr.conveyor.white.name = Wei\u00dfes F\u00f6rderband
@@ -116,6 +117,8 @@ tile.mfr.decorativebrick.snow_large = Gro\u00dfer Schneeziegel
 tile.mfr.decorativebrick.prc.name = Programmierbarer RedNet Controller - Geh\u00e4use
 tile.mfr.decorativebrick.meat.raw.name = Roher Fleischblock
 tile.mfr.decorativebrick.meat.cooked.name = Gekochter Fleischblock
+tile.mfr.decorativebrick.pavedstone_large.name = Gro\uooDFe Gepflasterte Steinziegel
+tile.mfr.decorativebrick.brick_large.name = Gro\u00DFe Ziegel
 
 tile.mfr.decorativestone.black.smooth.name = Glatter schwarzer Stein
 tile.mfr.decorativestone.black.cobble.name = Schwarzer Pflasterstein
@@ -384,10 +387,13 @@ chat.info.mfr.rednet.memorycard.uploaded = PRC-Programm vom PRC auf Speicherkart
 chat.info.mfr.rednet.memorycard.downloaded = PRC-Programm von Speicherkarte auf PRC geladen
 chat.info.mfr.rednet.memorycard.error = PRC besutzt zu wenige Schaltkreise, um dieses Programm zu laden
 
-chat.info.mfr.rednet.connection.standard = Kabel auf Standard-Verbindungsmodus gestellt
-chat.info.mfr.rednet.connection.forced = Kabel auf Erzwungenen Verbindungsmodus gestellt
-chat.info.mfr.rednet.connection.forcedstrong = Kabel auf Starken Verbindungsmodus gestellt
-chat.info.mfr.rednet.connection.cableonly = Kabel auf Nur-Kabel-Verbindungsmodus gestellt
+chat.info.mfr.rednet.tile.standard = Kabel auf Standard-Verbindungsmodus gestellt
+chat.info.mfr.rednet.tile.cableonly = Kabel auf Nur-Kabel-Verbindungsmodus gestellt
+
+chat.info.mfr.rednet.connection.standard = Seite auf Standard-Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.forced = Seite auf Erzwungenen Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.forcedstrong = Seite auf Verst\u00E4rkten Verbindungsmodus gestellt
+chat.info.mfr.rednet.connection.cableonly = Seite auf Nur-Kabel-Verbindungsmodus gestellt
 
 chat.info.mfr.bag.stacksize = Du kannst nur eine T\u00fcte zur Zeit \u00f6ffnen
 
