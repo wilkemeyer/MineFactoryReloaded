@@ -82,6 +82,17 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)};
 	}
 	
+	@Override
+	public void onChunkUnload()
+	{
+		super.onChunkUnload();
+		if (_ticket != null)
+		{
+			unforceChunks();
+			ForgeChunkManager.releaseTicket(_ticket);
+		}
+	}
+	
 	public void setRadius(short r)
 	{
 		int maxR = 49;
