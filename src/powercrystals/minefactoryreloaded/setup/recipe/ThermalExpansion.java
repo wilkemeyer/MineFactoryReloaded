@@ -576,6 +576,19 @@ public class ThermalExpansion extends Vanilla
 					'O', "ingotNickel",
 					'C', powerCoilGold
 						} );
+			
+			registerMachine(Machine.MobRouter, new Object[] {
+					"PBP",
+					"CFR",
+					"OCO",
+					'P', "sheetPlastic",
+					'B', Block.fenceIron,
+					'C', Machine.Chronotyper.getItemStack(),
+					'R', Machine.ItemRouter.getItemStack(),
+					'F', machineFrame,
+					'O', "dyeOrange",
+					'C', powerCoilGold
+						} );
 		}
 		catch (Exception x)
 		{

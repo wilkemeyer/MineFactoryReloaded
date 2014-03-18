@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
+import static powercrystals.minefactoryreloaded.block.ItemBlockFactory.getName;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
@@ -22,8 +25,9 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
-	private Icon _iconOpaque;
-	private Icon _iconTransparent;
+	static String[] _names = {null, "dry"};
+	private Icon[] _iconOpaque = new Icon[_names.length];
+	private Icon[] _iconTransparent = new Icon[_names.length];
 
 	public BlockRubberLeaves(int id)
 	{
@@ -39,21 +43,61 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister ir)
 	{
-		_iconOpaque = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".opaque");
-		_iconTransparent = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".transparent");
+		String unlocalizedName = getUnlocalizedName();
+		for (int i = _names.length; i --> 0; )
+		{
+			String name = getName(unlocalizedName, _names[i]);
+			_iconOpaque[i] = ir.registerIcon("minefactoryreloaded:" + name + ".opaque");
+			_iconTransparent[i] = ir.registerIcon("minefactoryreloaded:" + name + ".transparent");
+		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return Block.leaves.graphicsLevel ? _iconTransparent : _iconOpaque;
+		return getIcon(side, world.getBlockMetadata(x, y, z));
 	}
 
 	@Override
 	public Icon getIcon(int side, int meta)
 	{
-		return Block.leaves.graphicsLevel ? _iconTransparent : _iconOpaque;
+		meta &= 3;
+		return Block.leaves.graphicsLevel ? _iconTransparent[meta] : _iconOpaque[meta];
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getRenderColor(int par1)
+	{
+		return par1 == 1 ? 0xFFFFFF : super.getRenderColor(par1);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int colorMultiplier(IBlockAccess iba, int x, int y, int z)
+	{
+		int meta = iba.getBlockMetadata(x, y, z) & 3;
+		int r = 0;
+		int g = 0;
+		int b = 0;
+
+		for (int l1 = -1; l1 <= 1; ++l1)
+			for (int i2 = -1; i2 <= 1; ++i2)
+			{
+				int j2 = iba.getBiomeGenForCoords(x + i2, z + l1).getBiomeFoliageColor();
+				r += (j2 & 16711680) >> 16;
+				g += (j2 & 65280) >> 8;
+				b += j2 & 255;
+			}
+		
+		r = (r / 9 & 255);
+		g = (g / 9 & 255);
+		b = (b / 9 & 255);
+		if (meta == 1)
+			 return (r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
+
+		return r << 16 | g << 8 | b;
 	}
 
 	@Override
@@ -66,12 +110,6 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public int idDropped(int par1, Random par2Random, int par3)
 	{
 		return MineFactoryReloadedCore.rubberSaplingBlock.blockID;
-	}
-
-	@Override
-	public int damageDropped(int par1)
-	{
-		return 0;
 	}
 
 	@Override
@@ -97,14 +135,16 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		if (meta > 3)
+			return ret;
 
-		int chance = 20;
+		int chance = 20 + 15 * meta;
 
 		if (fortune > 0)
 			chance = Math.min(chance - (2 << fortune), 10);
 
 		if (world.rand.nextInt(chance) == 0)
-			ret.add(new ItemStack(idDropped(meta, world.rand, fortune), 1, damageDropped(meta)));
+			ret.add(new ItemStack(idDropped(meta, world.rand, fortune), 1, 0));
 
 		/* TODO: drop book (counts as fuel) with info on MFR
 		chance = 100;
@@ -119,6 +159,33 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
+	public void updateTick(World world, int x, int y, int z, Random rand)
+	{
+		if (world.isRemote)
+			return;
+		int l = world.getBlockMetadata(x, y, z), meta = l & 3;
+		if (meta == 0 & ((l & 4) == 0))
+		{
+			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
+			boolean decay = (l & 8) != 0;
+			if (!decay & b != null)
+			{
+				float temp = b.getFloatTemperature();
+				float rain = b.getFloatRainfall();
+				decay = rain <= 0.05f;
+				decay |= (rain <= 0.15f) & temp >= 1.2f;
+				decay |= temp > 1.8f;
+			}
+			if (decay && rand.nextInt(10) == 0)
+			{
+				world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+				return;
+			}
+		}
+		super.updateTick(world, x, y, z, rand);
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side)
 	{
@@ -130,5 +197,6 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public void getSubBlocks(int blockId, CreativeTabs creativeTab, List subTypes)
 	{
 		subTypes.add(new ItemStack(blockId, 1, 0));
+		subTypes.add(new ItemStack(blockId, 1, 1));
 	}
 }

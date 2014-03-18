@@ -44,7 +44,7 @@ public class ItemBlockFactory extends ItemBlock
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		String str = _names[Math.min(stack.getItemDamage(), _names.length - 1)];
-		return getUnlocalizedName() + (str != null ? "." + str : "");
+		return getName(getUnlocalizedName(), str);
 	}
 
 	@Override
@@ -71,5 +71,10 @@ public class ItemBlockFactory extends ItemBlock
 	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
 	{
 		getSubItems(itemId, subTypes);
+	}
+	
+	public static String getName(String name, String postfix)
+	{
+		return name + (postfix != null ? "." + postfix : "");
 	}
 }

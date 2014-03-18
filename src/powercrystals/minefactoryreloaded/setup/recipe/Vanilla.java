@@ -583,6 +583,19 @@ public class Vanilla
 				'U', Item.bucketEmpty,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
+		
+		registerMachine(Machine.Chronotyper, new Object[]
+					{
+				"GGG",
+				"CBR",
+				"PMP",
+				'G', "sheetPlastic",
+				'C', Machine.Chronotyper.getItemStack(),
+				'B', Block.fenceIron,
+				'R', Machine.ItemRouter.getItemStack(),
+				'P', "dyeOrange",
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
 	}
 	
 	protected void registerMachine(Machine machine, Object... recipe)

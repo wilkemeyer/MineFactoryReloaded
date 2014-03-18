@@ -392,6 +392,26 @@ public class ItemSafariNet extends ItemFactory
 		return s != null && (s.getItem() instanceof ItemSafariNet);
 	}
 	
+	public static Class<?> getEntityClass(ItemStack s)
+	{
+		if (!isSafariNet(s) || isEmpty(s))
+			return null;
+		if (s.getItemDamage() != 0)
+		{
+			int mobId = s.getItemDamage();
+			if (!EntityList.entityEggs.containsKey(Integer.valueOf(mobId)))
+				return null;
+			return (Class<?>)EntityList.IDtoClassMapping.get(mobId);
+		}
+		else
+		{
+			String mobId = s.getTagCompound().getString("id");
+			if (!EntityList.stringToClassMapping.containsKey(mobId))
+				return null;
+			return (Class<?>)EntityList.stringToClassMapping.get(mobId);
+		}
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)

@@ -59,6 +59,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquidRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityMeatPacker;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityMobCounter;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityMobRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityOilFabricator;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityRancher;
@@ -157,6 +158,7 @@ public class Machine
 	};
 	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, "factoryChunkLoader", Short.MAX_VALUE, Integer.MAX_VALUE, false);
 	public static Machine Fountain = new Machine(2, 11, "Fountain", TileEntityFountain.class, "factoryFountain", 80, 16000);
+	public static Machine MobRouter = new Machine(2, 12, "MobRouter", TileEntityMobRouter.class, "factoryMobRouter", 2560, 16000);
 	
 	private final int _blockIndex;
 	private final int _meta;

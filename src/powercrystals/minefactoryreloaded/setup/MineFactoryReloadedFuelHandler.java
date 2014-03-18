@@ -15,7 +15,7 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		}
 		if(fuel.itemID == MineFactoryReloadedCore.rubberLeavesBlock.blockID)
 		{
-			return 4;
+			return 4 * (fuel.getItemDamage() + 1);
 		}
 		else if(fuel.itemID == MineFactoryReloadedCore.rubberSaplingBlock.blockID)
 		{
@@ -31,7 +31,7 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		}
 		else if(fuel.itemID == MineFactoryReloadedCore.bioFuelBucketItem.itemID)
 		{
-			return 20000;
+			return 40000;
 		}
 		
 		return 0;

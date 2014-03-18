@@ -36,6 +36,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityEjector;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityMobRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
@@ -226,6 +227,21 @@ public class ServerPacketHandler implements IPacketHandler
 			else if(te instanceof TileEntityPlanter)
 			{
 				((TileEntityPlanter)te).setConsumeAll(!((TileEntityPlanter)te).getConsumeAll());
+			}
+			else if(te instanceof TileEntityMobRouter)
+			{
+				switch ((Integer)packetReadout[3])
+				{
+				case 1:
+					((TileEntityMobRouter)te).setWhiteList(!((TileEntityMobRouter)te).getWhiteList());
+					break;
+				case 2:
+					((TileEntityMobRouter)te).setMatchMode(((TileEntityMobRouter)te).getMatchMode() + 1);
+					break;
+				case 3:
+					((TileEntityMobRouter)te).setMatchMode(((TileEntityMobRouter)te).getMatchMode() - 1);
+					break;
+				}
 			}
 			break;
 		case Packets.FakeSlotChange: // client -> server: client clicked on a fake slot
