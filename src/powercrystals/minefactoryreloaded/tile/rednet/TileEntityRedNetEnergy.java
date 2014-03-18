@@ -342,11 +342,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			case 3: // IEnergyTile
 				if (sourceCache != null)
 				{
-					int e = Math.min((int)(sourceCache[bSide].getOfferedEnergy() * energyPerEU), TRANSFER_RATE);
+					IEnergySource source = sourceCache[bSide];
+					if (source == null) break;
+					int e = Math.min((int)(source.getOfferedEnergy() * energyPerEU), TRANSFER_RATE);
 					if (e > 0) {
 						e = grid.storage.receiveEnergy(e, false);
 						if (e > 0)
-							sourceCache[bSide].drawEnergy(e / (float)energyPerEU);
+							source.drawEnergy(e / (float)energyPerEU);
 					}
 				}
 				break;
@@ -386,6 +388,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			case 3: // IEnergyTile
 				if (sinkCache != null) {
 					IEnergySink sink = sinkCache[bSide];
+					if (sink == null) break;
 					int e = (int)Math.min(sink.getMaxSafeInput() * (long)energyPerEU, energy);
 					e = Math.min((int)(sink.demandedEnergyUnits() * energyPerEU), e);
 					if (e > 0) {
