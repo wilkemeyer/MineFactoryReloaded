@@ -584,7 +584,7 @@ public class Vanilla
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
-		registerMachine(Machine.Chronotyper, new Object[]
+		registerMachine(Machine.MobRouter, new Object[]
 					{
 				"GGG",
 				"CBR",
