@@ -182,6 +182,15 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	}
 	
 	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
+	{
+		if (stack != null)
+			if(slot < 9)
+				return MFRRegistry.getPlantables().containsKey(new Integer(stack.itemID));
+		return false;
+	}
+	
+	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
