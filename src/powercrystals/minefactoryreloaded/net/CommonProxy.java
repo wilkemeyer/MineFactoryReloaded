@@ -1,11 +1,8 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,15 +14,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.TextureStitchEvent.Post;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
+import org.bouncycastle.util.Arrays;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
-public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCallback 
+public class CommonProxy implements IMFRProxy, LoadingCallback 
 {
 	private GridTickHandler gridTickHandler;
 	public static LinkedList<Ticket> ticketsInLimbo = new LinkedList<Ticket>();
@@ -60,7 +60,6 @@ public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCal
 	{
 		gridTickHandler = new GridTickHandler();
 		TickRegistry.registerScheduledTickHandler(gridTickHandler, Side.SERVER);
-		TickRegistry.registerScheduledTickHandler(this, Side.SERVER);
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
 
@@ -80,15 +79,16 @@ public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCal
 	{
 	}
 
-	private long lastTime = 0;
-	private LinkedList<Chunk> chunksToRelight = new LinkedList<Chunk>();
-
 	@Override
-	public void addRelightChunk(Chunk chunk)
+	public void relightChunk(Chunk chunk)
 	{
 		if (chunk != null)
 		{
-			chunksToRelight.add(chunk);
+			chunk.generateSkylightMap();
+			ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
+			for (int i = storage.length; i --> 0;)
+				if (storage[i] != null)
+					Arrays.fill(storage[i].getSkylightArray().data, (byte)0);
 			chunk.resetRelightChecks();
 			chunk.isModified = true;
 			World world = chunk.worldObj;
@@ -100,55 +100,5 @@ public class CommonProxy implements IMFRProxy, IScheduledTickHandler, LoadingCal
 					watcher.sendToAllPlayersWatchingChunk(new Packet51MapChunk(chunk, false, -1));
 			}
 		}
-	}
-
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData)
-	{
-		lastTime = System.nanoTime();
-	}
-
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData)
-	{
-		long time;
-		if (chunksToRelight.size() > 0) do
-		{
-			Chunk chunk = chunksToRelight.pollFirst();
-			if (chunk == null)
-				break;
-			chunk.generateSkylightMap();
-			chunk.updateSkylight();
-			chunk.enqueueRelightChecks();
-			// TODO: manually relight chunks, then send them to all players in range
-			/*
-			World world = chunk.worldObj;
-			if (world instanceof WorldServer)
-			{
-				PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
-						getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
-				if (watcher != null)
-					watcher.sendToAllPlayersWatchingChunk(new Packet51MapChunk(chunk, false, 15));
-			}//*/
-			time = System.nanoTime() - lastTime;
-		} while (time < 50);
-	}
-
-	@Override
-	public EnumSet<TickType> ticks()
-	{
-		return EnumSet.of(TickType.SERVER);
-	}
-
-	@Override
-	public String getLabel()
-	{
-		return "MFR server chunk relight";
-	}
-
-	@Override
-	public int nextTickSpacing()
-	{
-		return 1;
 	}
 }

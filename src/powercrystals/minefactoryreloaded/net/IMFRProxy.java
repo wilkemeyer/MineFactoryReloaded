@@ -12,5 +12,5 @@ public interface IMFRProxy
 	
 	public void onPostTextureStitch(TextureStitchEvent.Post e);
 	
-	public void addRelightChunk(Chunk chunk);
+	public void relightChunk(Chunk chunk);
 }

@@ -538,7 +538,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			this.generateTrunk();
 			this.generateLeafNodeBases();
 			while (modifiedChunks.size() > 0)
-				MineFactoryReloadedCore.proxy.addRelightChunk(modifiedChunks.pollFirst());
+				MineFactoryReloadedCore.proxy.relightChunk(modifiedChunks.pollFirst());
 			return true;
 		}
 	}
