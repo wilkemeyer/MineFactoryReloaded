@@ -7,8 +7,8 @@ public class BlockPool
 	final public static class BlockNode
 	{
 		public BlockPosition bp;
-		BlockNode next;
-		BlockNode prev;
+		public BlockNode next;
+		public BlockNode prev;
 		BlockPool pool;
 		public BlockNode(BlockPool pool, int x, int y, int z)
 		{
@@ -27,7 +27,6 @@ public class BlockPool
 			{
 				pool.unshift(this);
 			}
-			pool.size();
 		}
 		@Override
 		public boolean equals(Object n)
@@ -53,7 +52,7 @@ public class BlockPool
 	private long size;
 	private boolean _noDupe;
 	
-	private BlockPool(boolean preventDupes)
+	public BlockPool(boolean preventDupes)
 	{
 		_noDupe = preventDupes;
 	}
@@ -63,13 +62,17 @@ public class BlockPool
 		this(true);
 	}
 
-	public synchronized static BlockNode getNext(int x, int y, int z)
+	public static BlockNode getNext(int x, int y, int z)
 	{
 		if (pool.head == null)
 		{
 			return new BlockNode(pool, x, y, z);
 		}
-		BlockNode r = pool.shift();
+		BlockNode r;
+		synchronized (pool)
+		{
+			r = pool.shift();
+		}
 		r.reset(x, y, z);
 		r.next = null;
 		r.prev = null;

@@ -507,8 +507,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerBlock(chocolateMilkLiquid, chocolateMilkLiquid.getUnlocalizedName());
 		GameRegistry.registerBlock(mushroomSoupLiquid, mushroomSoupLiquid.getUnlocalizedName());
 
-		Block.setBurnProperties(rubberWoodBlock.blockID, 8, 25);
-		Block.setBurnProperties(rubberLeavesBlock.blockID, 30, 25);
+		Block.setBurnProperties(rubberWoodBlock.blockID, 15, 25);
+		Block.setBurnProperties(rubberLeavesBlock.blockID, 40, 50);
 		Block.setBurnProperties(detCordBlock.blockID, 10, 20);
 
 		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.rednetCableBlock, 0, "pickaxe", 0);

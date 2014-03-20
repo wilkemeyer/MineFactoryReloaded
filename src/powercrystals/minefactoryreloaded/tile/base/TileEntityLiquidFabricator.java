@@ -1,11 +1,18 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
+import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowered implements ITankContainerBucketable
@@ -114,5 +121,18 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
+	{
+		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
+	}
+	
+	@Override
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
+	{
+		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 }
