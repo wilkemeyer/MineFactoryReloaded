@@ -35,7 +35,7 @@ public class HarvestableTreeLeaves extends HarvestableStandard
 				}
 			}
 			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-			int meta = block.damageDropped(world.getBlockMetadata(x, y, z));
+			int meta = block.getDamageValue(world, x, y, z);
 			drops.add(new ItemStack(getPlantId(), 1, meta));
 			return drops;
 		}
