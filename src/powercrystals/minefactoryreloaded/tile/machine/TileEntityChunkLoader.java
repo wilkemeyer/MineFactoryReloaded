@@ -142,7 +142,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			return;
 		if (getIdleTicks() > 0)
 		{
-			unforceChunks();
+			if (_ticket != null)
+				unforceChunks();
 			return;
 		}
 		
