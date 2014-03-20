@@ -37,6 +37,8 @@ public class TileEntityConveyor extends TileEntity
 	private boolean _gateAllowsActive = true;
 	private boolean _conveyorActive = true;
 	
+	private boolean _isFast = false;
+	
 	public int getDyeColor()
 	{
 		return _dye;
@@ -55,7 +57,11 @@ public class TileEntityConveyor extends TileEntity
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.ConveyorDescription, new Object[] { xCoord, yCoord, zCoord, _dye, _conveyorActive});
+		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
+				Packets.ConveyorDescription, new Object[] {
+					xCoord, yCoord, zCoord,
+					_dye, _conveyorActive, _isFast
+				});
 	}
 	
 	@Override
@@ -212,54 +218,52 @@ public class TileEntityConveyor extends TileEntity
 	{
 		return false;
 	}
-	
-	@Override
-	public void writeToNBT(NBTTagCompound nbtTagCompound)
+
+	public boolean isFast()
 	{
-		super.writeToNBT(nbtTagCompound);
-		
-		nbtTagCompound.setInteger("dyeColor", _dye);
-		nbtTagCompound.setBoolean("isReversed", _isReversed);
-		nbtTagCompound.setBoolean("redNetActive", _conveyorActive);
-		nbtTagCompound.setBoolean("gateActive", _gateAllowsActive);
-		nbtTagCompound.setBoolean("redNetReversed", _rednetReversed);
-		nbtTagCompound.setBoolean("gateReversed", _gateReversed);
+		return _isFast;
+	}
+
+	public void setFast(boolean fast)
+	{
+		_isFast = fast;
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbtTagCompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbtTagCompound);
+		super.writeToNBT(tag);
 		
-		if(nbtTagCompound.hasKey("dyeColor"))
-		{
-			_dye = nbtTagCompound.getInteger("dyeColor");
-		}
+		tag.setInteger("dyeColor", _dye);
+		tag.setBoolean("isReversed", _isReversed);
+		tag.setBoolean("redNetActive", _conveyorActive);
+		tag.setBoolean("gateActive", _gateAllowsActive);
+		tag.setBoolean("redNetReversed", _rednetReversed);
+		tag.setBoolean("gateReversed", _gateReversed);
+		tag.setBoolean("glowstone", _isFast);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
 		
-		if(nbtTagCompound.hasKey("redNetActive"))
+		if(tag.hasKey("dyeColor"))
 		{
-			_conveyorActive = nbtTagCompound.getBoolean("redNetActive");
+			_dye = tag.getInteger("dyeColor");
 		}
-		
-		if(nbtTagCompound.hasKey("gateActive"))
+		if (tag.hasKey("redNetActive"))
 		{
-			_gateAllowsActive = nbtTagCompound.getBoolean("gateActive");
+			_conveyorActive = tag.getBoolean("redNetActive");
 		}
-
-		if(nbtTagCompound.hasKey("isReversed"))
+		if (tag.hasKey("gateActive"))
 		{
-			_isReversed = nbtTagCompound.getBoolean("isReversed");
+			_gateAllowsActive = tag.getBoolean("gateActive");
 		}
-		
-		if (nbtTagCompound.hasKey("redNetReversed"))
-		{
-			_rednetReversed = nbtTagCompound.getBoolean("redNetReversed");
-		}
-		
-		if (nbtTagCompound.hasKey("gateReversed"))
-		{
-			_gateReversed = nbtTagCompound.getBoolean("gateReversed");
-		}
+		_isReversed = tag.getBoolean("isReversed");
+		_rednetReversed = tag.getBoolean("redNetReversed");
+		_gateReversed = tag.getBoolean("gateReversed");
+		_isFast = tag.getBoolean("glowstone");
 	}
 	
 	//IInventory
@@ -343,7 +347,7 @@ public class TileEntityConveyor extends TileEntity
 		}
 		else if(horizDirection == 3)
 		{
-			motionX = -0.05D;
+			motionZ = -0.05D;
 		}
 		
 		EntityItem entityitem = new EntityItem(worldObj, xCoord + dropOffsetX, yCoord + dropOffsetY, zCoord + dropOffsetZ, stack.copy());

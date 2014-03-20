@@ -60,6 +60,7 @@ import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntitySafariNetRenderer;
+import powercrystals.minefactoryreloaded.render.item.ConveyorItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.FactoryFluidOverlayRenderer;
 import powercrystals.minefactoryreloaded.render.item.FactoryGlassPaneItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
@@ -123,6 +124,8 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				new RedNetCableRenderer());
 		
 		// Items
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.conveyorBlock.blockID,
+				new ConveyorItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.factoryGlassPaneBlock.blockID,
 				new FactoryGlassPaneItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.logicCardItem.itemID,

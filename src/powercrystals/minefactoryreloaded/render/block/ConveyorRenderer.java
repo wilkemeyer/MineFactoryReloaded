@@ -1,24 +1,89 @@
 package powercrystals.minefactoryreloaded.render.block;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+
+import org.lwjgl.opengl.GL11;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 {
 	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
+	public void renderInventoryBlock(Block block, int meta, int modelID, RenderBlocks renderer)
 	{
+		Tessellator tessellator = Tessellator.instance;
+		int color = block.getRenderColor(meta);
+		float red = (color >> 16 & 255) / 255.0F;
+		float green = (color >> 8 & 255) / 255.0F;
+		float blue = (color & 255) / 255.0F;
+
+		if (EntityRenderer.anaglyphEnable)
+		{
+			float anaglyphRed = (red * 30.0F + green * 59.0F + blue * 11.0F) / 100.0F;
+			float anaglyphGreen = (red * 30.0F + green * 70.0F) / 100.0F;
+			float anaglyphBlue = (red * 30.0F + blue * 70.0F) / 100.0F;
+			red = anaglyphRed;
+			green = anaglyphGreen;
+			blue = anaglyphBlue;
+		}
+		Icon iconBase, iconOverlay;
+
+		iconBase = block.getIcon(0, meta);
+		iconOverlay = block.getIcon(1, 0);
+
+		double minXBase = iconBase.getMinU();
+		double maxXBase = iconBase.getMaxU();
+		double minYBase = iconBase.getMinV();
+		double maxYBase = iconBase.getMaxV();
+
+		double minXOverlay = iconOverlay.getMinU();
+		double maxXOverlay = iconOverlay.getMaxU();
+		double minYOverlay = iconOverlay.getMinV();
+		double maxYOverlay = iconOverlay.getMaxV();
+
+		double xMin = 0, xMax = 1;
+		double yMin = 0, yMax = 1;
+		double zMid = 0.5;
+		
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+
+		tessellator.startDrawingQuads();
+		tessellator.setColorOpaque_F(red, green, blue);
+		tessellator.addVertexWithUV(xMin, yMax, zMid, minXBase, minYBase);
+		tessellator.addVertexWithUV(xMin, yMin, zMid, minXBase, maxYBase);
+		tessellator.addVertexWithUV(xMax, yMin, zMid, maxXBase, maxYBase);
+		tessellator.addVertexWithUV(xMax, yMax, zMid, maxXBase, minYBase);
+
+		tessellator.setColorOpaque_F(1, 1, 1);
+		tessellator.addVertexWithUV(xMin, yMax, zMid, minXOverlay, minYOverlay);
+		tessellator.addVertexWithUV(xMin, yMin, zMid, minXOverlay, maxYOverlay);
+		tessellator.addVertexWithUV(xMax, yMin, zMid, maxXOverlay, maxYOverlay);
+		tessellator.addVertexWithUV(xMax, yMax, zMid, maxXOverlay, minYOverlay);
+		tessellator.draw();
+
+		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 	}
 	
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		renderConveyorWorld(renderer, world, x, y, z, block, modelId);
+		if (renderer.hasOverrideBlockTexture())
+		{
+			Tessellator tessellator = Tessellator.instance;
+			
+			calculateVerts(world, x, y, z);
+			tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+			draw(tessellator, renderer.overrideBlockTexture);
+			return true;
+		}
+		renderConveyorWorld(world, x, y, z, block);
 		return true;
 	}
 	
@@ -34,35 +99,71 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		return MineFactoryReloadedCore.renderIdConveyor;
 	}
 	
-	private void renderConveyorWorld(RenderBlocks renderblocks, IBlockAccess iblockaccess, int blockX, int blockY, int blockZ, Block block, int renderId)
+	private float vert1x, vert2x, vert3x, vert4x;
+	private float vert1z, vert2z, vert3z, vert4z;
+	private float vert1y, vert2y, vert3y, vert4y;
+	
+	private void renderConveyorWorld(IBlockAccess world, int x, int y, int z, Block block)
 	{
 		Tessellator tessellator = Tessellator.instance;
-		int conveyorMetadata = iblockaccess.getBlockMetadata(blockX, blockY, blockZ);
-		Icon conveyorTexture = renderblocks.overrideBlockTexture != null ? renderblocks.overrideBlockTexture : block.getBlockTexture(iblockaccess, blockX, blockY, blockZ, 0);
-		tessellator.setBrightness(block.getMixedBrightnessForBlock(iblockaccess, blockX, blockY, blockZ));
-		tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+		int color = block.colorMultiplier(world, x, y, z);
+		float red = (color >> 16 & 255) / 255.0F;
+		float green = (color >> 8 & 255) / 255.0F;
+		float blue = (color & 255) / 255.0F;
+
+		if (EntityRenderer.anaglyphEnable)
+		{
+			float anaglyphRed = (red * 30.0F + green * 59.0F + blue * 11.0F) / 100.0F;
+			float anaglyphGreen = (red * 30.0F + green * 70.0F) / 100.0F;
+			float anaglyphBlue = (red * 30.0F + blue * 70.0F) / 100.0F;
+			red = anaglyphRed;
+			green = anaglyphGreen;
+			blue = anaglyphBlue;
+		}
 		
-		double uStart = conveyorTexture.getInterpolatedU(0);
-		double uEnd = conveyorTexture.getInterpolatedU(16);
-		double vStart = conveyorTexture.getInterpolatedV(0);
-		double vEnd = conveyorTexture.getInterpolatedV(16);
+		calculateVerts(world, x, y, z);
+		
+		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+		tessellator.setColorOpaque_F(red, green, blue);
+		draw(tessellator, block.getBlockTexture(world, x, y, z, 0));
+		tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+		draw(tessellator, block.getBlockTexture(world, x, y, z, 1));
+	}
+	
+	private void draw(Tessellator tessellator, Icon texture)
+	{
+		double uStart = texture.getInterpolatedU(0);
+		double uEnd = texture.getInterpolatedU(16);
+		double vStart = texture.getInterpolatedV(0);
+		double vEnd = texture.getInterpolatedV(16);
+		
+		tessellator.addVertexWithUV(vert1x, vert1y, vert1z, uEnd, vStart);
+		tessellator.addVertexWithUV(vert2x, vert2y, vert2z, uEnd, vEnd);
+		tessellator.addVertexWithUV(vert3x, vert3y, vert3z, uStart, vEnd);
+		tessellator.addVertexWithUV(vert4x, vert4y, vert4z, uStart, vStart);
+		// TODO: thickness
+		tessellator.addVertexWithUV(vert4x, vert4y, vert4z, uStart, vStart);
+		tessellator.addVertexWithUV(vert3x, vert3y, vert3z, uStart, vEnd);
+		tessellator.addVertexWithUV(vert2x, vert2y, vert2z, uEnd, vEnd);
+		tessellator.addVertexWithUV(vert1x, vert1y, vert1z, uEnd, vStart);
+	}
+	
+	private void calculateVerts(IBlockAccess iblockaccess, int blockX, int blockY, int blockZ)
+	{
+		int conveyorMetadata = iblockaccess.getBlockMetadata(blockX, blockY, blockZ);
 		
 		float renderHeight = 0.00625F;
 		
-		float vert1x = blockX + 1;
-		float vert2x = blockX + 1;
-		float vert3x = blockX + 0;
-		float vert4x = blockX + 0;
+		vert1x = vert2x = blockX + 1;
+		vert3x = vert4x = blockX + 0;
 		
-		float vert1z = blockZ + 0;
-		float vert2z = blockZ + 1;
-		float vert3z = blockZ + 1;
-		float vert4z = blockZ + 0;
+		vert1z = vert4z = blockZ + 0;
+		vert2z = vert3z = blockZ + 1;
 		
-		float vert1y = blockY + renderHeight;
-		float vert2y = blockY + renderHeight;
-		float vert3y = blockY + renderHeight;
-		float vert4y = blockY + renderHeight;
+		vert1y = blockY + renderHeight;
+		vert2y = blockY + renderHeight;
+		vert3y = blockY + renderHeight;
+		vert4y = blockY + renderHeight;
 		
 		if(conveyorMetadata == 0 || conveyorMetadata == 4 || conveyorMetadata == 8)
 		{
@@ -132,14 +233,5 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 				vert4y++; // 1,1
 			}
 		}
-		
-		tessellator.addVertexWithUV(vert1x, vert1y, vert1z, uEnd, vStart);
-		tessellator.addVertexWithUV(vert2x, vert2y, vert2z, uEnd, vEnd);
-		tessellator.addVertexWithUV(vert3x, vert3y, vert3z, uStart, vEnd);
-		tessellator.addVertexWithUV(vert4x, vert4y, vert4z, uStart, vStart);
-		tessellator.addVertexWithUV(vert4x, vert4y, vert4z, uStart, vStart);
-		tessellator.addVertexWithUV(vert3x, vert3y, vert3z, uStart, vEnd);
-		tessellator.addVertexWithUV(vert2x, vert2y, vert2z, uEnd, vEnd);
-		tessellator.addVertexWithUV(vert1x, vert1y, vert1z, uEnd, vStart);
 	}
 }
