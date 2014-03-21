@@ -148,7 +148,7 @@ public class VanillaMobProvider implements IRandomMobProvider
 			direBane.setAlwaysRenderNameTag(true);
 			direBane.func_110163_bv();
 			ItemStack armor = new ItemStack(Item.plateGold);
-			AutoEnchantmentHelper.addRandomEnchantment(direBane.getRNG(), armor, 60);
+			AutoEnchantmentHelper.addRandomEnchantment(direBane.getRNG(), armor, 60, true);
 			int i = EntityLiving.getArmorPosition(armor);
 			direBane.setCurrentItemOrArmor(i, armor);
 			direBane.setEquipmentDropChance(i, 2.0F);

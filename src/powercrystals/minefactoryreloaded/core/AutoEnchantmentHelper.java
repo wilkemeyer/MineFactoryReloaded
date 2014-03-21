@@ -19,8 +19,12 @@ import net.minecraft.util.WeightedRandom;
 
 public class AutoEnchantmentHelper extends EnchantmentHelper
 {
-	@SuppressWarnings("unchecked")
 	public static ItemStack addRandomEnchantment(Random rand, ItemStack stack, int level)
+	{
+		return addRandomEnchantment(rand, stack, level, false);
+	}
+	
+	public static ItemStack addRandomEnchantment(Random rand, ItemStack stack, int level, boolean invalid)
 	{
 		if (stack == null)
 		{
@@ -28,7 +32,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 		}
 		ItemStack output = stack.splitStack(1);
 		
-		List<EnchantmentData> enchantments = buildEnchantmentList(rand, output, level);
+		List<EnchantmentData> enchantments = buildEnchantmentList(rand, output, level, !invalid);
 		if(enchantments == null)
 		{
 			return output;
@@ -86,7 +90,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 		stack.getTagCompound().setTag("ench", tagList);
 	}
 	
-	public static List<EnchantmentData> buildEnchantmentList(Random rand, ItemStack stack, int level)
+	public static List<EnchantmentData> buildEnchantmentList(Random rand, ItemStack stack, int level, boolean blockInvalid)
 	{
 		int itemEnchantability = stack.getItem().getItemEnchantability();
 		
@@ -121,7 +125,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 					
 					for(int i = targetEnchantability; rand.nextInt(50) <= i; i >>= 1)
 					{
-						for(Integer enchIndex : enchantmentMap.keySet())
+						if (blockInvalid) for (Integer enchIndex : enchantmentMap.keySet())
 						{
 							boolean validWithPreviousEnchants = true;
 							for(EnchantmentData newEnchantment : enchantmentList)
