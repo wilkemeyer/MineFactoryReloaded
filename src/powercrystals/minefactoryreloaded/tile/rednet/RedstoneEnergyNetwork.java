@@ -76,6 +76,10 @@ public class RedstoneEnergyNetwork
 		regenerating = true;
 		GridTickHandler.regenerateGrid(this);
 	}
+
+	public boolean isRegenerating() {
+		return regenerating;
+	}
 	
 	public void markSweep() {
 		destroyGrid();
@@ -197,8 +201,10 @@ public class RedstoneEnergyNetwork
 
 	public void mergeGrid(RedstoneEnergyNetwork theGrid) {
 		theGrid.destroyGrid();
+		regenerating = true;
 		for (TileEntityRedNetEnergy cond : theGrid.conduitSet)
 			addConduit(cond);
+		regenerating = false;
 		
 		theGrid.conduitSet.clear();
 		theGrid.nodeSet.clear();

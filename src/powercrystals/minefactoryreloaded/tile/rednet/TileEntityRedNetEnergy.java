@@ -97,23 +97,14 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ);
 				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile).grid != null) {
-					setGrid(((TileEntityRedNetEnergy)tile).grid);
+					((TileEntityRedNetEnergy)tile).grid.addConduit(this);
 					break;
 				}
 			}
 			onInventoryChanged();
 		}
-		if (grid != null) {
-			grid.addConduit(this);
-		} else if (!worldObj.isRemote)
+		if (grid == null & !worldObj.isRemote)
 			setGrid(new RedstoneEnergyNetwork(this));
-		
-		if (grid != null) for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
-					yCoord + dir.offsetY, zCoord + dir.offsetZ);
-			if (tile instanceof TileEntityRedNetEnergy)
-				grid.addConduit((TileEntityRedNetEnergy)tile);
-		}
 	}
 	
 	@Override
@@ -408,6 +399,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	void setGrid(RedstoneEnergyNetwork newGrid) {
 		grid = newGrid;
+		if (grid != null && !grid.isRegenerating())
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
+						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if (tile instanceof TileEntityRedNetEnergy)
+					grid.addConduit((TileEntityRedNetEnergy)tile);
+			}
 	}
 	
 	public void updateInternalTypes() {
