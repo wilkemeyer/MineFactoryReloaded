@@ -1499,6 +1499,9 @@ public class Vanilla
 		GameRegistry.addShapelessRecipe(new ItemStack(Block.planks, 3, 3),
 				new ItemStack(MineFactoryReloadedCore.rubberWoodBlock));
 		
+		GameRegistry.addShapelessRecipe(new ItemStack(Block.pistonBase, 1, 0),
+				new ItemStack(Block.pistonStickyBase, 1, 0), new ItemStack(Item.bucketMilk, 1, 0));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.pistonStickyBase), new Object[]
 				{
 			"R",
