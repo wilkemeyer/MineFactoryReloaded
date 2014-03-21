@@ -16,6 +16,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 public class ContainerFactoryPowered extends ContainerFactoryInventory
 {
 	int energyTemp;
+	int workTemp;
 	
 	public ContainerFactoryPowered(TileEntityFactoryPowered te, InventoryPlayer inv)
 	{
@@ -28,10 +29,11 @@ public class ContainerFactoryPowered extends ContainerFactoryInventory
 		super.detectAndSendChanges();
 		for(int i = 0; i < crafters.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 0, ((TileEntityFactoryPowered)_te).getWorkDone());
+			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 0, ((TileEntityFactoryPowered)_te).getWorkDone() & 65535);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 1, ((TileEntityFactoryPowered)_te).getEnergyStored() & 65535);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 2, ((TileEntityFactoryPowered)_te).getIdleTicks());
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 3, (((TileEntityFactoryPowered)_te).getEnergyStored() >> 16) & 65535);
+			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 4, ((TileEntityFactoryPowered)_te).getWorkDone() >> 16);
 		}
 	}
 	
@@ -40,9 +42,10 @@ public class ContainerFactoryPowered extends ContainerFactoryInventory
 	{
 		super.updateProgressBar(var, value);
 		
-		if(var == 0) ((TileEntityFactoryPowered)_te).setWorkDone(value);
+		if(var == 0) workTemp = (value & 65535);
 		else if(var == 1) energyTemp = (value & 65535);
 		else if(var == 2) ((TileEntityFactoryPowered)_te).setIdleTicks(value);
 		else if(var == 3) ((TileEntityFactoryPowered)_te).setEnergyStored(((value & 65535) << 16) | energyTemp);
+		else if(var == 4) ((TileEntityFactoryPowered)_te).setWorkDone(((value & 65535) << 16) | workTemp);
 	}
 }
