@@ -114,6 +114,7 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSap
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
 import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
+import powercrystals.minefactoryreloaded.farmables.grindables.GrindableEnderman;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableSlime;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableStandard;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableZombiePigman;
@@ -141,6 +142,7 @@ import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityLivin
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityLivingHandler;
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SheepHandler;
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SlimeHandler;
+import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableEnderman;
 import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableHorse;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
@@ -242,6 +244,7 @@ public class Vanilla
 				}));
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityWolf.class, new ItemStack(Item.bone)));
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
+		MFRRegistry.registerGrindable(new GrindableEnderman());
 		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Item.slimeBall), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Item.magmaCream), 1) {
@@ -365,6 +368,7 @@ public class Vanilla
 		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
 		
 		MFRRegistry.registerSpawnHandler(new SpawnableHorse());
+		MFRRegistry.registerSpawnHandler(new SpawnableEnderman());
 		
 		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
