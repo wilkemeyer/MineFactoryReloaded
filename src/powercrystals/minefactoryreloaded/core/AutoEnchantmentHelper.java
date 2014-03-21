@@ -137,8 +137,6 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 							{
 								enchantmentMap.remove(enchIndex);
 							}
-							
-							break;
 						}
 						
 						if(!enchantmentMap.isEmpty())
