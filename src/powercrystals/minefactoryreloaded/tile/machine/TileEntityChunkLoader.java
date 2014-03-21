@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -51,7 +52,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 	
 	protected short _radius;
-	protected boolean activated;
+	protected boolean activated, unableToRequestTicket;
 	protected Ticket _ticket;
 	protected int consumptionTicks;
 	protected int emptyTicks, prevEmpty;
@@ -73,6 +74,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
+		if (unableToRequestTicket && 
+				inventoryPlayer.player.getCommandSenderName().equals(_owner))
+		{
+			inventoryPlayer.player.sendChatToPlayer(new ChatMessageComponent().
+					addKey("chat.info.mfr.chunkloader.noticket"));
+		}
 		return new ContainerChunkLoader(this, inventoryPlayer);
 	}
 	
@@ -131,6 +138,12 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		if (_owner.isEmpty())
 			return;
+		if (unableToRequestTicket)
+		{
+			setIdleTicks(getIdleTicksMax());
+			super.setIsActive(false);
+			return;
+		}
 		activated = false;
 		if (!worldObj.isRemote && MFRConfig.enableChunkLoaderRequiresOwner.getBoolean(false) &&
 				!ConnectionHandler.onlinePlayerMap.containsKey(_owner))
@@ -185,9 +198,15 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				_ticket = ForgeChunkManager.
 						requestPlayerTicket(MineFactoryReloadedCore.instance(),
 								_owner, worldObj, Type.NORMAL);
+				if (_ticket == null)
+				{
+					unableToRequestTicket = true;
+					return;
+				}
 				_ticket.getModData().setInteger("X", xCoord);
 				_ticket.getModData().setInteger("Y", yCoord);
 				_ticket.getModData().setInteger("Z", zCoord);
+				
 			}
 			forceChunks();
 		}
@@ -309,7 +328,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource != null && isFluidFuel(resource))
+		if (!unableToRequestTicket & resource != null && isFluidFuel(resource))
 			for (FluidTank _tank : (FluidTank[])getTanks())
 				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
 					return _tank.fill(resource, doFill);
@@ -338,7 +357,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public boolean allowBucketFill()
 	{
-		return true;
+		return !unableToRequestTicket;
 	}
 	
 	@Override
@@ -350,13 +369,13 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return true;
+		return !unableToRequestTicket;
 	}
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return false;
+		return unableToRequestTicket;
 	}
 	
 	protected String getFluidName(FluidStack fluid)
@@ -390,6 +409,11 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	public short getRadius()
 	{
 		return _radius;
+	}
+	
+	public boolean getUnableToWork()
+	{
+		return unableToRequestTicket;
 	}
 	
 	@SideOnly(Side.CLIENT)

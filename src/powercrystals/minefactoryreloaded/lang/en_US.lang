@@ -399,6 +399,8 @@ chat.info.mfr.rednet.connection.cableonly = Set side to cable-only connection mo
 
 chat.info.mfr.bag.stacksize = You can only open one bag at a time
 
+chat.info.mfr.chunkloader.noticket = You have too many chunk loaders and this one cannot function.
+
 tip.info.mfr.cannotplace = Cannot place for %s more seconds.
 
 tip.info.mfr.holdShift1 = Hold
