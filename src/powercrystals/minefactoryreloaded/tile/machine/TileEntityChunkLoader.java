@@ -126,7 +126,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			FluidStack s = _tanks[0].getFluid();
 			if (drain(_tanks[0], 1, true) == 1)
 			{
-				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
+				Integer i = fluidConsumptionRate.get(getFluidName(s));
+				consumptionTicks = i == null ? 0 : i.intValue();
 				emptyTicks = Math.max(-65535, emptyTicks - 2);
 			}
 		}
@@ -266,7 +267,10 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (isInvalid())
 			return;
 		int r = _radius + 1, c;
-		{float t = _radius * (float)Math.PI; c = (int)(t * t) + 1;}
+		if (_ticket == null) // inaccurate past radius of 3
+			{int t = _radius * _radius; c = (int)(t * (float)Math.PI);}
+		else
+			c = _ticket.getChunkList().size();
 		double a = (r*r*32-17+r*r*r);
 		for (int i = r / 10; i --> 0; )
 			a *= r / 6d;
