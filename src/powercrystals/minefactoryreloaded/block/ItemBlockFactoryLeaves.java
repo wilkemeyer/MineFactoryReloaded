@@ -8,4 +8,10 @@ public class ItemBlockFactoryLeaves extends ItemBlockFactory {
 		setNames(BlockRubberLeaves._names);
 	}
 
+	@Override
+	public int getMetadata(int par1)
+	{
+		return par1 | 4;
+	}
+
 }
