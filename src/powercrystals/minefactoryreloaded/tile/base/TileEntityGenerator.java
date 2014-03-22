@@ -32,7 +32,7 @@ implements IPowerEmitter, IEnergyHandler
 	protected TileEntityGenerator(Machine machine, int ticksBetweenConsumption)
 	{
 		super(machine);
-		assert machine.getActivationEnergy() != 0 : "Generators cannot produce 0 energy.";
+		assert machine.getActivationEnergy() > 0 : "Generators cannot produce 0 energy.";
 		_ticksBetweenConsumption = ticksBetweenConsumption;
 		_outputPulseSize = machine.getActivationEnergy();
 		_bufferMax = machine.getMaxEnergyStorage();
