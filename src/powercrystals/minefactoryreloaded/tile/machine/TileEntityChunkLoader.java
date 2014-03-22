@@ -279,7 +279,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 
 	public boolean receiveTicket(Ticket ticket)
 	{
-		if (ConnectionHandler.onlinePlayerMap.containsKey(_owner))
+		if (!MFRConfig.enableChunkLoaderRequiresOwner.getBoolean(false) ||
+				ConnectionHandler.onlinePlayerMap.containsKey(_owner))
 		{
 			if (_ticket == null)
 			{
