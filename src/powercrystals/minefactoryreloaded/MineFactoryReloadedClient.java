@@ -81,21 +81,21 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 public class MineFactoryReloadedClient implements IScheduledTickHandler
 {
 	public static MineFactoryReloadedClient instance;
-	
+
 	private static final int _lockonMax = 30;
 	private static final int _lockonLostMax = 60;
 	private int _lockonTicks = 0;
 	private int _lockonLostTicks = 0;
 	private Entity _lastEntityOver = null;
-	
+
 	public static HashMap<BlockPosition, Integer> prcPages = new HashMap<BlockPosition, Integer>();
-	
+
 	private static List<IHarvestAreaContainer> _areaTileEntities = new LinkedList<IHarvestAreaContainer>();
-	
+
 	public static void init()
 	{
 		instance = new MineFactoryReloadedClient();
-		
+
 		// IDs
 		MineFactoryReloadedCore.renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdFactoryGlassPane = RenderingRegistry.getNextAvailableRenderId();
@@ -106,7 +106,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		MineFactoryReloadedCore.renderIdFactoryGlass = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdDetCord = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdRedNet = RenderingRegistry.getNextAvailableRenderId();
-		
+
 		// Blocks
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdConveyor,
 				new ConveyorRenderer());
@@ -122,7 +122,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				new DetCordRenderer());
 		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdRedNet,
 				new RedNetCableRenderer());
-		
+
 		// Items
 		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.conveyorBlock.blockID,
 				new ConveyorItemRenderer());
@@ -148,16 +148,16 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 			MinecraftForgeClient.registerItemRenderer(Block.thinGlass.blockID,
 					new FactoryGlassPaneItemRenderer());			
 		}
-		
+
 		// TileEntities
 		RedNetLogicRenderer logicRender = new RedNetLogicRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRender);
 		RenderingRegistry.registerBlockHandler(logicRender);
-		
+
 		RedNetHistorianRenderer panelRenderer = new RedNetHistorianRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, panelRenderer);
 		RenderingRegistry.registerBlockHandler(panelRenderer);
-		
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrill.class, new LaserDrillRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrillPrecharger.class,
 				new LaserDrillPrechargerRenderer());
@@ -170,21 +170,21 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new EntityRocketRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				new RenderSnowball(MineFactoryReloadedCore.fishingRodItem));
-		
+
 		// Handlers
 		TickRegistry.registerScheduledTickHandler(instance, Side.CLIENT);
 		TickRegistry.registerTickHandler(new RenderTickHandler(), Side.CLIENT);
-		
+
 		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoolologistEntityId.getInt(),
 				new ResourceLocation(MineFactoryReloadedCore.villagerFolder + "zoologist.png"));
-		
+
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
-	
+
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData)
 	{
-		if(!(tickData[0] instanceof EntityPlayerSP))
+		if(!type.contains(TickType.PLAYER) || !(tickData[0] instanceof EntityPlayerSP))
 		{
 			return;
 		}
@@ -228,70 +228,78 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 			}
 		}
 	}
-	
+
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData)
 	{
+		if (!type.contains(TickType.RENDER))
+			return;
+		// this solves a bug where render pass 0 textures have alpha forced by
+		// minecraft's fog on small and tiny render distances
+		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
-	
+
 	@Override
 	public EnumSet<TickType> ticks()
 	{
-		return EnumSet.of(TickType.PLAYER);
+		return EnumSet.of(TickType.PLAYER, TickType.RENDER);
 	}
-	
+
 	@Override
 	public String getLabel()
 	{
 		return MineFactoryReloadedCore.modId + ".client";
 	}
-	
+
 	@Override
 	public int nextTickSpacing()
 	{
 		return 0;
 	}
-	
+
 	@ForgeSubscribe
 	public void setArmorModel(SetArmorModel e)
 	{
 		ItemStack itemstack = e.stack;
-		
-        if (itemstack != null)
-        {
-            Item item = itemstack.getItem();
-            int par2 = 3 - e.slot;
-            //if (item.isValidArmor(itemstack, e.slot, e.entity))
-            if (item == MineFactoryReloadedCore.plasticCupItem)
-            {
-            	Minecraft.getMinecraft().renderEngine.
-            		bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.entity, par2, null)));
-                ModelBiped modelbiped = new ModelBiped(1.0F);
-                modelbiped.bipedHead.showModel = par2 == 0;
-                modelbiped.bipedHeadwear.showModel = par2 == 0;
-                modelbiped.bipedBody.showModel = par2 == 1 || par2 == 2;
-                modelbiped.bipedRightArm.showModel = par2 == 1;
-                modelbiped.bipedLeftArm.showModel = par2 == 1;
-                modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
-                modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
-                e.renderer.setRenderPassModel(modelbiped);
-                modelbiped.onGround = e.entityLiving.getSwingProgress(e.partialRenderTick);
-                modelbiped.isRiding = e.entity.isRiding();
-                modelbiped.isChild = e.entityLiving.isChild();
-                float f1 = 1.0F;
-                GL11.glColor3f(f1, f1, f1);
 
-                if (itemstack.isItemEnchanted())
-                {
-                    e.result = 15;
-                    return;
-                }
+		if (itemstack != null)
+		{
+			Item item = itemstack.getItem();
+			int par2 = 3 - e.slot;
+			//if (item.isValidArmor(itemstack, e.slot, e.entity))
+			if (item == MineFactoryReloadedCore.plasticCupItem)
+			{
+				Minecraft.getMinecraft().renderEngine.
+				bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.entity, par2, null)));
+				ModelBiped modelbiped = new ModelBiped(1.0F);
+				modelbiped.bipedHead.showModel = par2 == 0;
+				modelbiped.bipedHeadwear.showModel = par2 == 0;
+				modelbiped.bipedBody.showModel = par2 == 1 || par2 == 2;
+				modelbiped.bipedRightArm.showModel = par2 == 1;
+				modelbiped.bipedLeftArm.showModel = par2 == 1;
+				modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
+				modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
+				e.renderer.setRenderPassModel(modelbiped);
+				modelbiped.onGround = e.entityLiving.getSwingProgress(e.partialRenderTick);
+				modelbiped.isRiding = e.entity.isRiding();
+				modelbiped.isChild = e.entityLiving.isChild();
+				float f1 = 1.0F;
+				GL11.glColor3f(f1, f1, f1);
 
-                e.result = 1;
-            }
-        }
+				if (itemstack.isItemEnchanted())
+				{
+					e.result = 15;
+					return;
+				}
+
+				e.result = 1;
+			}
+		}
 	}
-	
+
 	@ForgeSubscribe(priority=EventPriority.HIGHEST) // first to render, so everything else is overlayed
 	public void renderWorldLast(RenderWorldLastEvent e)
 	{
@@ -301,24 +309,24 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		{
 			return;
 		}
-		
+
 		float playerOffsetX = -(float)(player.lastTickPosX + (player.posX - player.lastTickPosX) * e.partialTicks);
 		float playerOffsetY = -(float)(player.lastTickPosY + (player.posY - player.lastTickPosY) * e.partialTicks);
 		float playerOffsetZ = -(float)(player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * e.partialTicks);
-		
-        GL11.glColorMask(true, true, true, true);
+
+		GL11.glColorMask(true, true, true, true);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-    	GL11.glDisable(GL11.GL_FOG);
+		GL11.glDisable(GL11.GL_FOG);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-			
+
 		for(IHarvestAreaContainer c : _areaTileEntities)
 		{
 			if(((TileEntity)c).isInvalid())
 				continue;
-			
+
 			float r = (c.getHAM().getOriginX() & 15) / 16.0F;
 			float g = (c.getHAM().getOriginY() & 15) / 16.0F;
 			float b = (c.getHAM().getOriginZ() & 15) / 16.0F;
@@ -329,31 +337,31 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 			renderAABB(c.getHAM().getHarvestArea().toAxisAlignedBB());
 			GL11.glPopMatrix();
 		}
-		
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 	}
-	
+
 	public static void addTileToAreaList(IHarvestAreaContainer tile)
 	{
 		_areaTileEntities.add(tile);
 	}
-	
+
 	public static void removeTileFromAreaList(IHarvestAreaContainer tile)
 	{
 		_areaTileEntities.remove(tile);
 	}
-	
+
 	public int getLockedEntity()
 	{
 		if(_lastEntityOver != null && _lockonTicks >= _lockonMax)
 		{
 			return _lastEntityOver.entityId;
 		}
-		
+
 		return Integer.MIN_VALUE;
 	}
-	
+
 	public int getLockTimeRemaining()
 	{
 		if(_lastEntityOver != null && _lockonTicks >= _lockonMax)
@@ -365,35 +373,35 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 			return (_lockonMax - _lockonTicks) * 2;
 		}
 	}
-	
+
 	private Entity rayTrace()
 	{
 		if(Minecraft.getMinecraft().renderViewEntity == null || Minecraft.getMinecraft().theWorld == null)
 		{
 			return null;
 		}
-		
+
 		double range = 64;
 		Vec3 playerPos = Minecraft.getMinecraft().renderViewEntity.getPosition(1.0F);
-		
+
 		Vec3 playerLook = Minecraft.getMinecraft().renderViewEntity.getLook(1.0F);
 		Vec3 playerLookRel = playerPos.addVector(playerLook.xCoord * range, playerLook.yCoord * range, playerLook.zCoord * range);
 		List<?> list = Minecraft.getMinecraft().theWorld.getEntitiesWithinAABBExcludingEntity(Minecraft.getMinecraft().renderViewEntity,
 				Minecraft.getMinecraft().renderViewEntity.boundingBox.addCoord(playerLook.xCoord * range, playerLook.yCoord * range, playerLook.zCoord * range)
-						.expand(1, 1, 1));
-		
+				.expand(1, 1, 1));
+
 		double entityDistTotal = range;
 		Entity pointedEntity = null;
 		for(int i = 0; i < list.size(); ++i)
 		{
 			Entity entity = (Entity)list.get(i);
-			
+
 			if(entity.canBeCollidedWith())
 			{
 				double entitySize = entity.getCollisionBorderSize();
 				AxisAlignedBB axisalignedbb = entity.boundingBox.expand(entitySize, entitySize, entitySize);
 				MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(playerPos, playerLookRel);
-				
+
 				if(axisalignedbb.isVecInside(playerPos))
 				{
 					if(0.0D < entityDistTotal || entityDistTotal == 0.0D)
@@ -405,7 +413,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				else if(movingobjectposition != null)
 				{
 					double entityDist = playerPos.distanceTo(movingobjectposition.hitVec);
-					
+
 					if(entityDist < entityDistTotal || entityDistTotal == 0.0D)
 					{
 						pointedEntity = entity;
@@ -414,18 +422,18 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				}
 			}
 		}
-		
+
 		if(pointedEntity != null)
 		{
 			return pointedEntity;
 		}
 		return null;
 	}
-	
+
 	private static void renderAABB(AxisAlignedBB par0AxisAlignedBB)
 	{
 		double eps = 0.01;
-		
+
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
