@@ -116,6 +116,7 @@ public class RedstoneEnergyNetwork
 		if (!oldSet.isEmpty()) {
 			RedstoneEnergyNetwork newGrid = new RedstoneEnergyNetwork();
 			newGrid.conduitSet = oldSet;
+			newGrid.regenerating = true;
 			newGrid.markSweep();
 		}
 		if (nodeSet.isEmpty())

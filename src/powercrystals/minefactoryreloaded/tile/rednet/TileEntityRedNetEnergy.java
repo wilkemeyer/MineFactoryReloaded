@@ -93,15 +93,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (worldObj == null) return;
 		reCache();
 		if (grid == null) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile).grid != null) {
-					((TileEntityRedNetEnergy)tile).grid.addConduit(this);
-					break;
-				}
-			}
+			incorporateTiles();
 			onInventoryChanged();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		if (grid == null & !worldObj.isRemote)
 			setGrid(new RedstoneEnergyNetwork(this));
@@ -183,6 +177,28 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			updateInternalTypes();
 			if (lastMode != sideMode[side])
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+	}
+	
+	private void incorporateTiles() {
+		if (grid != null) for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			if (worldObj.blockExists(xCoord + dir.offsetX,
+					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
+				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
+						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if (tile instanceof TileEntityRedNetEnergy)
+					grid.addConduit((TileEntityRedNetEnergy)tile);
+			}
+		} else for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			if (worldObj.blockExists(xCoord + dir.offsetX,
+					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
+				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
+						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile).grid != null) {
+					((TileEntityRedNetEnergy)tile).grid.addConduit(this);
+					break;
+				}
+			}
 		}
 	}
 	
@@ -400,12 +416,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	void setGrid(RedstoneEnergyNetwork newGrid) {
 		grid = newGrid;
 		if (grid != null && !grid.isRegenerating())
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityRedNetEnergy)
-					grid.addConduit((TileEntityRedNetEnergy)tile);
-			}
+			incorporateTiles();
 	}
 	
 	public void updateInternalTypes() {
