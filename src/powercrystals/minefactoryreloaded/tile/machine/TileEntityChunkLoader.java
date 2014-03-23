@@ -295,6 +295,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		{
 			_ticket = ticket;
 			unforceChunks();
+			_ticket = null;
 		}
 		return false;
 	}
