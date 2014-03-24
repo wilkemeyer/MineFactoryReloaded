@@ -267,8 +267,22 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (isInvalid())
 			return;
 		int r = _radius + 1, c;
-		if (_ticket == null) // inaccurate past radius of 3
-			{int t = _radius * _radius; c = (int)(t * (float)Math.PI);}
+		if (_ticket == null)
+		{
+			// {int t = _radius * _radius; c = (int)(t * (float)Math.PI);}
+			// this is the actual math for calculating the radius of a circle
+			// and it is inaccurate for calculating the area of the loaded
+			// circle of square chunks, so simulate the number of loaded chunks
+			c = 0;
+			int r2 = _radius * _radius;
+			for (int xO = -_radius; xO <= _radius; ++xO)
+			{
+				int xS = xO * xO;
+				for (int zO = -_radius; zO <= _radius; ++zO)
+					if (xS + zO * zO <= r2)
+						++c;
+			}
+		}
 		else
 			c = _ticket.getChunkList().size();
 		double a = (r*r*32-17+r*r*r);
