@@ -399,6 +399,8 @@ chat.info.mfr.rednet.connection.cableonly = Seite auf Nur-Kabel-Verbindungsmodus
 
 chat.info.mfr.bag.stacksize = Du kannst nur eine Tüte zur Zeit öffnen
 
+chat.info.mfr.chunkloader.noticket = Du hast zu viele Chunk-Loader, dieser funktioniert nicht.
+
 tip.info.mfr.cannotplace = Kann für %s weitere Sekunden nichts platzieren.
 
 tip.info.mfr.holdShift1 = Halte
