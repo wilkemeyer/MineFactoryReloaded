@@ -56,6 +56,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	@Override
 	protected boolean activateMachine()
 	{
+		int idleTicks = 5;
 		l: if (_tanks[0].getFluidAmount() >= BUCKET_VOLUME && _tanks[0].getFluid().getFluid().canBePlacedInWorld())
 		l2: {
 			int x = xCoord, y = yCoord + 1, z = zCoord;
@@ -86,14 +87,20 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				{// TODO: when forge supports NBT fluid blocks, adapt this
 					worldObj.notifyBlockOfNeighborChange(x, y, z, blockid);
 					drain(_tanks[0], BUCKET_VOLUME, true);
+					setIdleTicks(1);
 					return true;
 				}
 			}
 			break l2;// falls into the next condition instead of out of the if/else
 		}
 		else if (_fillingManager != null)
+		l3: {
 			_fillingManager.free();
-		setIdleTicks(getIdleTicksMax());
+			break l3; // falls into the else below
+		}
+		else
+			idleTicks = getIdleTicksMax();
+		setIdleTicks(idleTicks);
 		return false;
 	}
 
