@@ -1534,6 +1534,15 @@ public class Vanilla
 					} );
 		}
 		
+		if(MFRConfig.enableSmoothSlabRecipe.getBoolean(true))
+		{
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.stoneDoubleSlab, 1, 8), new Object[]
+					{
+				"VV",
+				'V', new ItemStack(Block.stoneSingleSlab, 1, 0)
+					}));
+		}
+		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.vineScaffoldBlock, 8), new Object[]
 				{
 			"VV",
