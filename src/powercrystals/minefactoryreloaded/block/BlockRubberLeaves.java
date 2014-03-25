@@ -170,8 +170,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			boolean decay = (l & 8) != 0;
 			if (!decay & b != null)
 			{
-				float temp = b.getFloatTemperature();
-				float rain = b.getFloatRainfall();
+				float temp = b.temperature;
+				float rain = b.rainfall; // getFloatRainfall is client only!?
 				decay = rain <= 0.05f;
 				decay |= (rain <= 0.15f) & temp >= 1.2f;
 				decay |= temp > 1.8f;
