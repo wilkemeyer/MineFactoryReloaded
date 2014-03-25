@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.gui.client.GuiEnchantmentRouter;
@@ -29,40 +30,46 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 		int[] routeWeights = new int[_outputDirections.length];
 		
 		Map stackEnchants = EnchantmentHelper.getEnchantments(stack);
-		// return false if the item is unenchanted 
-		if(stackEnchants == null || stackEnchants.isEmpty())
+		// return false if the item is unenchanted
+		if (stackEnchants == null || stackEnchants.isEmpty())
 		{
-			for(int i = 0; i < routeWeights.length; i++)
+			for (int i = 0; i < routeWeights.length; i++)
 			{
 				routeWeights[i] = 0;
 			}
 			return routeWeights;
 		}
 		
-		for(int i = 0; i < _outputDirections.length; i++)
+		for (int i = 0; i < _outputDirections.length; i++)
 		{
 			int sideStart = _invOffsets[_outputDirections[i].ordinal()];
 			routeWeights[i] = 0;
 			
-			for(int j = sideStart; j < sideStart + 9; j++)
+			for (int j = sideStart; j < sideStart + 9; j++)
 			{
-				if(_inventory[j] != null && _inventory[j].hasTagCompound())
+				if (_inventory[j] == null)
+					continue;
+				if (_inventory[j].hasTagCompound())
 				{
 					Map inventoryEnchants = EnchantmentHelper.getEnchantments(_inventory[j]);
-					if(inventoryEnchants.isEmpty())
+					if (inventoryEnchants.isEmpty())
 					{
 						continue;
 					}
-					for(Object stackEnchantId : stackEnchants.keySet())
+					for (Object stackEnchantId : stackEnchants.keySet())
 					{
-						if(inventoryEnchants.containsKey(stackEnchantId))
+						if (inventoryEnchants.containsKey(stackEnchantId))
 						{
-							if(!_matchLevels || inventoryEnchants.get(stackEnchantId).equals(stackEnchants.get(stackEnchantId)))
+							if (!_matchLevels || inventoryEnchants.get(stackEnchantId).equals(stackEnchants.get(stackEnchantId)))
 							{
 								routeWeights[i] += _inventory[j].stackSize;
 							}
 						}
 					}
+				}
+				else if (_inventory[j].itemID == Item.book.itemID)
+				{
+					routeWeights[i] += (1 + _inventory[j].stackSize) / 2;
 				}
 			}
 		}
