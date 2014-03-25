@@ -89,12 +89,10 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
     {
-        if (maxScaledLight == 0)
-        {
-            return super.getLightValue(world, x, y, z);
-        }
-        int data = 1 + world.getBlockMetadata(x, y, z);
-        return Math.max((int) (data / quantaPerBlockFloat * maxScaledLight), 2);
+    	int light = super.getLightValue(world, x, y, z); 
+        if (maxScaledLight != 0)
+            light = Math.max(light, 2);
+        return light;
     }
 
 	@Override
