@@ -18,6 +18,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.Icon;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -84,6 +85,17 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 			}
 		}
 	}
+
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z)
+    {
+        if (maxScaledLight == 0)
+        {
+            return super.getLightValue(world, x, y, z);
+        }
+        int data = 1 + world.getBlockMetadata(x, y, z);
+        return Math.min((int) (data / quantaPerBlockFloat * maxScaledLight), 2);
+    }
 
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
