@@ -6,12 +6,22 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
+import powercrystals.core.position.Area;
+import powercrystals.core.position.BlockPosition;
+import powercrystals.minefactoryreloaded.api.IUpgrade;
+import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
+import powercrystals.minefactoryreloaded.core.FluidFillingManager;
+import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
+import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradable;
@@ -21,9 +31,13 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityFountain extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
+	private IHarvestManager _fillingManager;
 	public TileEntityFountain()
 	{
 		super(Machine.Fountain);
+		_areaManager = new HarvestAreaManager(this, 0, 0, 0, 1.0f, false);
+		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		_areaManager.setUpgradeVertical(true);
 	}
 	
 	@Override
@@ -41,12 +55,32 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 
 	@Override
 	protected boolean activateMachine()
-	{ // TODO: use upgrade slot
-		int x = xCoord, y = yCoord + 1, z = zCoord;
-		Block block = Block.blocksList[worldObj.getBlockId(x, y, z)];
-		if (block == null || (!block.blockMaterial.isLiquid() && block.isBlockReplaceable(worldObj, x, y, z)))
-			if (_tanks[0].getFluidAmount() >= BUCKET_VOLUME)
+	{
+		l: if (_tanks[0].getFluidAmount() >= BUCKET_VOLUME && _tanks[0].getFluid().getFluid().canBePlacedInWorld())
+		l2: {
+			int x = xCoord, y = yCoord + 1, z = zCoord;
+			if (_fillingManager != null)
 			{
+				if (_fillingManager.getIsDone())
+					onFactoryInventoryChanged();
+				BlockPosition bp = _fillingManager.getNextBlock();
+				x = bp.x; y = bp.y; z = bp.z;
+				_fillingManager.moveNext();
+			}
+			Block block = Block.blocksList[worldObj.getBlockId(x, y, z)];
+			if (block == null || block.isBlockReplaceable(worldObj, x, y, z))
+			{
+				if (block != null && block.blockMaterial.isLiquid())
+					if (block instanceof BlockFluidClassic)
+					{
+						if (((BlockFluidClassic)block).isSourceBlock(worldObj, x, y, z))
+							break l;
+					}
+					else if (block instanceof BlockFluid)
+					{
+						if (worldObj.getBlockMetadata(x, y, z) == 0)
+							break l;
+					}
 				int blockid = _tanks[0].getFluid().getFluid().getBlockID();
 				if (blockid > 0 && worldObj.setBlock(x, y, z, blockid))
 				{// TODO: when forge supports NBT fluid blocks, adapt this
@@ -55,6 +89,10 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 					return true;
 				}
 			}
+			break l2;// falls into the next condition instead of out of the if/else
+		}
+		else if (_fillingManager != null)
+			_fillingManager.free();
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
@@ -63,6 +101,30 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	protected FluidTank[] createTanks()
 	{
 		return new FluidTank[] {new FluidTank(BUCKET_VOLUME * 32)};
+	}
+	
+	@Override
+	public void onFactoryInventoryChanged()
+	{
+		if (_inventory[0] != null && _inventory[0].getItem() instanceof IUpgrade)
+		{
+			IUpgrade upgrade = (IUpgrade)_inventory[0].getItem();
+			if (upgrade.isApplicableFor(UpgradeType.RADIUS, _inventory[0]))
+			{
+				int r = upgrade.getUpgradeLevel(UpgradeType.RADIUS, _inventory[0]);
+				if (r > 0)
+				{
+					_areaManager.setUpgradeLevel(r);
+					Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+					if (_fillingManager == null)
+						_fillingManager = new FluidFillingManager(worldObj, area);
+					else
+						_fillingManager.reset(worldObj, area, null);
+				}
+			}
+		}
+		else
+			_fillingManager = null;
 	}
 
 	@Override
@@ -133,6 +195,19 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	@Override
 	public int getIdleTicksMax()
 	{
-		return 5;
+		return 10;
+	}
+	
+	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
+	{
+		if (stack != null)
+		{
+			if (slot == 0)
+			{
+				return stack.getItem() instanceof IUpgrade;
+			}
+		}
+		return false;
 	}
 }

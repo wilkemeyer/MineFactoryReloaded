@@ -37,6 +37,8 @@ public class HarvestAreaManager
 	
 	private List<BlockPosition> _harvestedBlocks;
 	private int _currentBlock;
+	private boolean _usesBlocks;
+	private boolean _upgradeVertical;
 	
 	private int _upgradeLevel;
 	private float _upgradeModifier;
@@ -45,11 +47,11 @@ public class HarvestAreaManager
 	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
 			int harvestAreaUp, int harvestAreaDown)
 	{
-		this(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f);
+		this(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, true);
 	}
 	
 	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
-			int harvestAreaUp, int harvestAreaDown, float upgradeModifier)
+			int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
 	{
 		_owner = owner;
 		_overrideDirection = ForgeDirection.UNKNOWN;
@@ -63,6 +65,8 @@ public class HarvestAreaManager
 		_originZ = ((TileEntity)owner).zCoord;
 		_originOrientation = owner.getDirectionFacing();
 		hasDirtyUpgrade = false;
+		_usesBlocks = usesBlocks;
+		_upgradeVertical = false;
 	}
 	
 	public void setOriginOffset(int x, int y, int z)
@@ -126,11 +130,26 @@ public class HarvestAreaManager
 		_overrideDirection = dir;
 	}
 	
+	public void setUpgradeVertical(boolean val)
+	{
+		_upgradeVertical = val;
+	}
+	
 	public void setUpgradeLevel(int level)
 	{
 		_upgradeLevel = level;
 		recalculateArea();
 		hasDirtyUpgrade = true;
+	}
+	
+	public void setAreaUp(int amt)
+	{
+		_areaUp = amt;
+	}
+	
+	public void setAreaDown(int amt)
+	{
+		_areaDown = amt;
 	}
 	
 	public int getUpgradeLevel()
@@ -202,9 +221,16 @@ public class HarvestAreaManager
 		_originOrientation = ourpos.orientation;
 		
 		int radius = _radius + _upgradeLevel;
+		int areaUp = _areaUp;
+		int areaDown = _areaDown;
 		
 		if(ourpos.orientation == ForgeDirection.UP || ourpos.orientation == ForgeDirection.DOWN)
 		{
+			if (_upgradeVertical)
+				if (ourpos.orientation == ForgeDirection.UP)
+					areaUp += _upgradeLevel * 2;
+				else
+					areaDown += _upgradeLevel * 2;
 			ourpos.moveForwards(1);
 		}
 		else
@@ -216,8 +242,9 @@ public class HarvestAreaManager
 		ourpos.y += _originOffsetY;
 		ourpos.z += _originOffsetZ;
 		
-		_harvestArea = new Area(ourpos, radius, _areaDown, _areaUp);
-		_harvestedBlocks = _harvestArea.getPositionsBottomFirst();
+		_harvestArea = new Area(ourpos, radius, areaDown, areaUp);
+		if (_usesBlocks)
+			_harvestedBlocks = _harvestArea.getPositionsBottomFirst();
 		_currentBlock = 0;
 	}
 }
