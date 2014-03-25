@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import powercrystals.core.net.PacketWrapper;
+import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -245,7 +246,7 @@ public class ServerPacketHandler implements IPacketHandler
 			}
 			break;
 		case Packets.FakeSlotChange: // client -> server: client clicked on a fake slot
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
+			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
 			ItemStack playerStack = ((EntityPlayer)player).inventory.getItemStack();
@@ -260,8 +261,15 @@ public class ServerPacketHandler implements IPacketHandler
 				else
 				{
 					playerStack = playerStack.copy();
-					playerStack.stackSize = 1;
-					((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
+					playerStack.stackSize = (Integer)packetReadout[4] == 1 ? -1 : 1;
+					ItemStack a = ((IInventory)te).getStackInSlot(slotNumber);
+					if (!UtilInventory.stacksEqual(a, playerStack))
+						((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
+					else
+					{
+						playerStack.stackSize = Math.min(playerStack.stackSize + a.stackSize, 1);
+						((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
+					}
 				}
 			}
 			break;

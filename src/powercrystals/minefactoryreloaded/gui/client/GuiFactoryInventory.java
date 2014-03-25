@@ -62,7 +62,7 @@ public class GuiFactoryInventory extends GuiContainer
 			if(x >= s.xDisplayPosition && x <= s.xDisplayPosition + 16 && y >= s.yDisplayPosition && y <= s.yDisplayPosition + 16)
 			{
 				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.FakeSlotChange,
-						new Object[] { _tileEntity.xCoord, _tileEntity.yCoord, _tileEntity.zCoord, s.slotNumber }));
+						new Object[] { _tileEntity.xCoord, _tileEntity.yCoord, _tileEntity.zCoord, s.slotNumber, button }));
 			}
 		}
 	}
