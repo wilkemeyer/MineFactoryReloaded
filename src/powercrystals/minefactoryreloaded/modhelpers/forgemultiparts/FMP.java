@@ -38,7 +38,10 @@ public class FMP
 			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID]);
 			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID]);
 			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryGlassBlock.blockID]);
+			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.rubberLeavesBlock.blockID]);
 			addSubtypes((ItemBlockFactory)Item.itemsList[MineFactoryReloadedCore.factoryRoadBlock.blockID]);
+			for (Block block : MineFactoryReloadedCore.machineBlocks.values())
+				addSubtypes((ItemBlockFactory)Item.itemsList[block.blockID]);
 			if (MFRConfig.vanillaOverrideIce.getBoolean(true))
 				sendComm(new ItemStack(Block.ice, 1, 1));
 			sendComm(new ItemStack(MineFactoryReloadedCore.rubberWoodBlock, 1, 0));
