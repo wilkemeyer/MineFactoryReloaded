@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -39,7 +40,7 @@ public class BlockFactoryRoad extends Block
 	public void onEntityWalking(World world, int x, int y, int z, Entity e)
 	{
 		double boost = 1.6;
-		
+
 		double a = Math.atan2(e.motionX, e.motionZ);
 		e.motionX += Math.sin(a) * boost * slipperiness;
 		e.motionZ += Math.cos(a) * boost * slipperiness;
@@ -132,5 +133,16 @@ public class BlockFactoryRoad extends Block
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
 		onNeighborBlockChange(world, x, y, z, 0);
+	}
+
+	@Override
+	public boolean canEntityDestroy(World world, int x, int y, int z, Entity entity)
+	{
+		if (entity instanceof EntityDragon)
+		{
+			return false;
+		}
+
+		return true;
 	}
 }
