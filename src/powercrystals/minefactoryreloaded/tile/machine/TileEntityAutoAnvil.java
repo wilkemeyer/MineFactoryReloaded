@@ -62,7 +62,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		{
 			if (stack.itemID == Item.enchantedBook.itemID && Item.enchantedBook.func_92110_g(stack).tagCount() > 0)
 				return true;
-			return _inventory[0].getItem().getIsRepairable(_inventory[0], stack);
+			return 	(stack.itemID == _inventory[0].itemID && stack.isItemStackDamageable()) ||
+					_inventory[0].getItem().getIsRepairable(_inventory[0], stack);
 		}
 		return false;
 	}
