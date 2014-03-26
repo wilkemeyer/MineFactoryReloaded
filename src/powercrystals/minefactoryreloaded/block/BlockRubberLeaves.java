@@ -174,7 +174,6 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			{
 				float temp = b.temperature;
 				float rain = b.rainfall; // getFloatRainfall is client only!?
-				FMLLog.severe("Biome: %s; rain: %s; temp: %s; decaying: %s", b.biomeName, rain, temp, decay);
 				boolean t;
 				decay |= (t = rain <= 0.05f);
 				if (t) chance -= 5;
@@ -185,7 +184,6 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 					chance += 7;
 				else if (temp < 0.8f)
 					chance += 3;
-				FMLLog.severe("Biome: %s; rain: %s; temp: %s; decaying: %s\n", b.biomeName, rain, temp, decay);
 			}
 			if (decay && rand.nextInt(chance) == 0)
 			{
