@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 import static powercrystals.minefactoryreloaded.block.ItemBlockFactory.getName;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -168,15 +169,25 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		{
 			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
 			boolean decay = (l & 8) != 0;
-			if (!decay & b != null)
+			int chance = 15;
+			if (b != null)
 			{
 				float temp = b.temperature;
 				float rain = b.rainfall; // getFloatRainfall is client only!?
-				decay = rain <= 0.05f;
-				decay |= (rain <= 0.15f) & temp >= 1.2f;
-				decay |= temp > 1.8f;
+				FMLLog.severe("Biome: %s; rain: %s; temp: %s; decaying: %s", b.biomeName, rain, temp, decay);
+				boolean t;
+				decay |= (t = rain <= 0.05f);
+				if (t) chance -= 5;
+				decay |= ((rain <= 0.2f) & temp >= 1.2f);
+				decay |= (t = temp > 1.8f);
+				if (t) chance -= 5;
+				if (rain >= 0.4f & temp <= 1.4f)
+					chance += 7;
+				else if (temp < 0.8f)
+					chance += 3;
+				FMLLog.severe("Biome: %s; rain: %s; temp: %s; decaying: %s\n", b.biomeName, rain, temp, decay);
 			}
-			if (decay && rand.nextInt(10) == 0)
+			if (decay && rand.nextInt(chance) == 0)
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 1, 2);
 				return;

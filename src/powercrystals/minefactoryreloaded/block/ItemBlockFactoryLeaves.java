@@ -11,7 +11,7 @@ public class ItemBlockFactoryLeaves extends ItemBlockFactory {
 	@Override
 	public int getMetadata(int par1)
 	{
-		return par1 | 4;
+		return par1 ^ 4;
 	}
 
 }
