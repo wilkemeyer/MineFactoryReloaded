@@ -141,7 +141,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		int chance = 20 + 15 * meta;
 
 		if (fortune > 0)
-			chance = Math.min(chance - (2 << fortune), 10);
+			chance = Math.max(chance - (2 << fortune), 10);
 
 		if (world.rand.nextInt(chance) == 0)
 			ret.add(new ItemStack(idDropped(meta, world.rand, fortune), 1, 0));
