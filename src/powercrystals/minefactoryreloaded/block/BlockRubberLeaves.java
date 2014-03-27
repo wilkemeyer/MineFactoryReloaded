@@ -117,10 +117,14 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	{
 		return false;
 	}
+	
+	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
 	public void dropBlockAsItemWithChance(World par1World, int x, int y, int z, int meta, float chance, int fortune)
 	{
+		if (updating.get() != null)
+			return;
 		if (!par1World.isRemote)
 		{
 			ArrayList<ItemStack> items = getBlockDropped(par1World, x, y, z, meta, fortune);
@@ -135,16 +139,16 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-		if (meta > 3)
+		if ((meta & 4) != 0)
 			return ret;
 
-		int chance = 20 + 15 * meta;
+		int chance = 20 + 15 * (meta & 3);
 
 		if (fortune > 0)
 			chance = Math.max(chance - (2 << fortune), 10);
 
 		if (world.rand.nextInt(chance) == 0)
-			ret.add(new ItemStack(idDropped(meta, world.rand, fortune), 1, 0));
+			ret.add(new ItemStack(idDropped(meta & 3, world.rand, fortune), 1, 0));
 
 		/* TODO: drop book (counts as fuel) with info on MFR
 		chance = 100;
@@ -166,9 +170,16 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		int l = world.getBlockMetadata(x, y, z), meta = l & 3;
 		if (meta == 0 & ((l & 4) == 0))
 		{
-			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
 			boolean decay = (l & 8) != 0;
+			if (decay)
+			{
+				updating.set(Boolean.TRUE);
+				super.updateTick(world, x, y, z, rand);
+				updating.set(null);
+				return;
+			}
 			int chance = 15;
+			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
 			if (b != null)
 			{
 				float temp = b.temperature;
@@ -186,12 +197,40 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			}
 			if (decay && rand.nextInt(chance) == 0)
 			{
-				world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+				world.setBlockMetadataWithNotify(x, y, z, l | 1, 2);
 				return;
 			}
 		}
 		super.updateTick(world, x, y, z, rand);
 	}
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int id, int meta)
+    {
+		if (updating.get() != null)
+		{
+			boolean decay = false;
+			int chance = 15;
+			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
+			if (b != null)
+			{
+				float temp = b.temperature;
+				float rain = b.rainfall; // getFloatRainfall is client only!?
+				boolean t;
+				decay |= (t = rain <= 0.05f);
+				if (t) chance -= 5;
+				decay |= ((rain <= 0.2f) & temp >= 1.2f);
+				decay |= (t = temp > 1.8f);
+				if (t) chance -= 5;
+				if (rain >= 0.4f & temp <= 1.4f)
+					chance += 7;
+				else if (temp < 0.8f)
+					chance += 3;
+			}
+			if (decay && world.rand.nextInt(chance) == 0)
+				world.setBlock(x, y, z, id, meta | 1, 2);
+		}
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
