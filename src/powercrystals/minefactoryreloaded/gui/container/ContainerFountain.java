@@ -1,12 +1,13 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
+
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class ContainerUpgradable extends ContainerFactoryPowered
+public class ContainerFountain extends ContainerUpgradable
 {
-	public ContainerUpgradable(TileEntityFactoryPowered te, InventoryPlayer inv)
+	public ContainerFountain(TileEntityFactoryPowered te, InventoryPlayer inv)
 	{
 		super(te, inv);
 	}
@@ -14,13 +15,6 @@ public class ContainerUpgradable extends ContainerFactoryPowered
 	@Override
 	protected void addSlots()
 	{
-		super.addSlots();
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79));
-	}
-	
-	@Override
-	protected int getPlayerInventoryVerticalOffset()
-	{
-		return 99;
+		addSlotToContainer(new SlotAcceptUpgrade(_te, 0, 152, 79));
 	}
 }

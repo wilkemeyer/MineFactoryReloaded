@@ -16,7 +16,6 @@ public class FruitIC2Resin implements IFactoryFruit
 	private Block _rubberWood;
 	private int _rubberID;
 	private ItemStack _resin;
-	private Random _rand = new Random();
 
 	public FruitIC2Resin(ItemStack rubberWood, ItemStack resin)
 	{
@@ -35,17 +34,13 @@ public class FruitIC2Resin implements IFactoryFruit
 	public boolean canBePicked(World world, int x, int y, int z)
 	{
 		int blockID = world.getBlockId(x, y, z), meta = world.getBlockMetadata(x, y, z);
-		return blockID == _rubberID && ((meta >= 2 & meta <= 5) || (meta > 5 && _rand.nextInt(100) == 0));
+		return blockID == _rubberID & (meta >= 2 & (meta <= 5));
 	}
 
 	@Override
 	public ItemStack getReplacementBlock(World world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
-		if ((meta < 2 | meta > 5) || _rand.nextInt(5) == 0)
-		{
-			return new ItemStack(_rubberID, 0, 0);
-		}
 		return new ItemStack(_rubberID, 0, meta + 6);
 	}
 
@@ -59,7 +54,9 @@ public class FruitIC2Resin implements IFactoryFruit
 	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
 	{
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-		list.add(new ItemStack(_resin.itemID, 1 + rand.nextInt(3), _resin.getItemDamage()));
+		ItemStack a = _resin.copy();
+		a.stackSize = 1 + rand.nextInt(3);
+		list.add(a);
 		return list;
 	}
 

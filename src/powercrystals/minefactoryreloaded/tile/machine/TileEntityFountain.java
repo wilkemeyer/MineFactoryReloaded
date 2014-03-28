@@ -25,7 +25,7 @@ import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradable;
-import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFountain;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -48,9 +48,9 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	}
 	
 	@Override
-	public ContainerUpgradable getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerFountain getContainer(InventoryPlayer inventoryPlayer)
 	{
-		return new ContainerUpgradable(this, inventoryPlayer, 0);
+		return new ContainerFountain(this, inventoryPlayer);
 	}
 
 	@Override

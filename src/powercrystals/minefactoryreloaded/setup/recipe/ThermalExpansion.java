@@ -588,14 +588,14 @@ public class ThermalExpansion extends Vanilla
 		registerMachine(Machine.MobRouter, new Object[] {
 				"PBP",
 				"CFR",
-				"OCO",
+				"OGO",
 				'P', "sheetPlastic",
 				'B', Block.fenceIron,
 				'C', Machine.Chronotyper.getItemStack(),
 				'R', Machine.ItemRouter.getItemStack(),
 				'F', machineFrame,
 				'O', "dyeOrange",
-				'C', powerCoilGold
+				'G', powerCoilGold
 					} );
 	}
 

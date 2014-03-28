@@ -176,6 +176,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 				updating.set(Boolean.TRUE);
 				super.updateTick(world, x, y, z, rand);
 				updating.set(null);
+				if (world.getBlockId(x, y, z) != blockID)
+					dropBlockAsItem(world, x, y, z, l, 0);
 				return;
 			}
 			int chance = 15;
