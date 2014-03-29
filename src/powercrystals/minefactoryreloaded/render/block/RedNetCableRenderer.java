@@ -186,7 +186,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
