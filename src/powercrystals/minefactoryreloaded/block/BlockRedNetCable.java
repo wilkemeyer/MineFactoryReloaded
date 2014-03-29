@@ -395,7 +395,12 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
 	{
-		return true;
+		MovingObjectPosition part = collisionRayTrace(world, x, y, z,
+				RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+		if (part == null)
+			return false;
+		int subHit = ((ExtendedMOP)part).subHit;
+		return subHit < (2 + 6 * 2) | (subHit > (2 + 6 * 3));
 	}
 
 	@Override
