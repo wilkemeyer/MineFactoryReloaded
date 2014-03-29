@@ -164,7 +164,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modNetworkChannel = "MFReloaded";
-	public static final String version = "1.6.4R2.7.8RC1";
+	public static final String version = "1.6.4R2.7.8";
 	public static final String modName = "Minefactory Reloaded";
 
 	public static final String textureFolder      = "minefactoryreloaded:textures/";
