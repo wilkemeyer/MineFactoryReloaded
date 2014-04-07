@@ -26,7 +26,8 @@
 	<!-- Forge paths -->
 	<property name="forge.dir" value="${build.dir}/forge"/>
 	<property name="forgebuild.dir" value="${forge.dir}/build"/>
-	<property name="compile.dir" value="${forgebuild.dir}/classes/main"/>
+	<property name="compile.dir" value="${forgebuild.dir}/tmp/compile"/>
+	<property name="reobf.dir" value="${forgebuild.dir}/classes/main"/>
 	<property name="lib.dir" value="${forgebuild.dir}/libs"/>
 	<property name="sources.dir" value="${forgebuild.dir}/sources/minecraft"/>
 	<property name="forge.version"
@@ -143,6 +144,8 @@
 		<delete dir="${apiclasses.dir}"/>
 		<delete dir="${sources.dir}/powercrystals/minefactoryreloaded"/>
 		<delete dir="${sources.dir}/denoflionsx/minefactoryreloaded"/>
+		<delete dir="${classes.dir}"/>
+		<delete dir="${reobf.dir}"/>
 	</target>
 
 	<macrodef name="install-lite">
@@ -163,7 +166,6 @@
 			<copy-assets/>
 			<jar destfile="${dist.dir}/MineFactoryReloaded-${build.full}@{build}.jar"
 				compress="true" level="9" basedir="${classes.dir}"/>
-			<delete dir="${classes.dir}"/>
 		</sequential>
 	</macrodef>
 	
@@ -204,7 +206,10 @@
 		<install-lite build="dev-${build.number}"/>
 
 		<!-- Reobf -->
-		<exec executable="gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
+		<copy todir="${reobf.dir}">
+			<fileset dir="${classes.dir}"/>
+		</copy>
+		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
 			<arg line="-g .gradle"/>
 			<arg line="reobf"/>
 			<arg line="-x compileJava"/>
@@ -248,11 +253,11 @@
 		<delete>
 			<fileset dir="${forge.dir}">
 				<include name="*.txt"/>
+				<include name="src/**/*.info"/>
 			</fileset>
 		</delete>
 		<delete dir="${forge.dir}/eclipse" failonerror="false"/>
 		<delete dir="${forge.dir}/src/main/java" failonerror="false"/>
-		<mkdir dir="${mcp.dir}"/>
 		
 		<!-- Change executables' permissions -->
 		<chmod file="${forge.dir}/gradlew" perm="+x"/>
@@ -260,7 +265,7 @@
 		<copy file="${download.dir}/PowerCrystalsCore-master/pcc_at.cfg" todir="${forge.dir}/src/main/resources/"/>
 
 		<!-- Install forge -->
-		<exec executable="gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
+		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
 			<arg line="-g .gradle"/>
 			<arg line="extractForgeSrc"/>
 			<arg line="eclipseClasspath"/>
@@ -383,7 +388,7 @@
 		<get dest="${download.dir}/jgit/jgit-ant.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit.ant/3.0.3.201309161630-r/org.eclipse.jgit.ant-3.0.3.201309161630-r.jar"/>
 	</target>
 
-	<target name="get-build-number" depends="build-number-there" unless="${build.number}">
+	<target name="get-build-number" depends="build-number-there" unless="build.number">
 		<echo message="!! No build number set !!"/>
 		<property name="build.number" value="CUSTOM_BUILD"/>
 	</target>
