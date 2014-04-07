@@ -44,6 +44,12 @@ public interface IFactoryPlantable
 	 * @return True if this plantable can be placed at the provided coordinates.
 	 */
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack);
+
+	/**
+	 * @param stack The stack being planted.
+	 * @return True if this plantable can be planted (useful for metadata items).
+	 */
+	//public boolean canBePlanted(ItemStack stack);
 	
 	/**
 	 * Called before planting is performed. Used to till soil, for example.

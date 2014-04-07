@@ -202,10 +202,14 @@ public class RedstoneEnergyNetwork
 
 	public void mergeGrid(RedstoneEnergyNetwork theGrid) {
 		theGrid.destroyGrid();
+		boolean r = regenerating | theGrid.regenerating;
+		if (!regenerating & r)
+			regenerate();
+		
 		regenerating = true;
 		for (TileEntityRedNetEnergy cond : theGrid.conduitSet)
 			addConduit(cond);
-		regenerating = false;
+		regenerating = r;
 		
 		theGrid.conduitSet.clear();
 		theGrid.nodeSet.clear();
