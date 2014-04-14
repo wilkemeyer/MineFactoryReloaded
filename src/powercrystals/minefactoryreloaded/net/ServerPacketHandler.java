@@ -264,12 +264,10 @@ public class ServerPacketHandler implements IPacketHandler
 					playerStack.stackSize = (Integer)packetReadout[4] == 1 ? -1 : 1;
 					ItemStack a = ((IInventory)te).getStackInSlot(slotNumber);
 					if (!UtilInventory.stacksEqual(a, playerStack))
-						((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
+						playerStack.stackSize = 1;
 					else
-					{
 						playerStack.stackSize = Math.min(playerStack.stackSize + a.stackSize, 1);
-						((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
-					}
+					((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
 				}
 			}
 			break;
