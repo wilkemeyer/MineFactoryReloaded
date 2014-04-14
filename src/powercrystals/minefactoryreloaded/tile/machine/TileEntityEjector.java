@@ -107,7 +107,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 						ItemStack itemstack = stack.getValue();
 	
 						if (chest.getValue() instanceof ISidedInventory)
-						{ // TODO: expose canRemoveItem in IInventoryManager
+						{// TODO: inventory.canRemoveItem(stack.getValue(), stack.getKey())
 							ISidedInventory sided = (ISidedInventory)chest.getValue();
 							if(!sided.canExtractItem(stack.getKey(), itemstack,
 									chest.getKey().getOpposite().ordinal()))
