@@ -106,8 +106,6 @@ public class ContainerBag extends Container
 	{
 		if (UtilInventory.stacksEqual(player.inventory.mainInventory[_nsi], _ncw.getStack(), false))
 			player.inventory.mainInventory[_nsi] = _ncw.getStack();
-		else
-			player.dropPlayerItem(((Slot)inventorySlots.get(0)).getStack());
 		super.onContainerClosed(player);
 	}
 
@@ -203,4 +201,12 @@ public class ContainerBag extends Container
 		
 		return successful;
 	}
+	
+	@Override
+    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+    {
+		if (par3 == 2 && par2 == _nsi)
+			return null;
+		return super.slotClick(par1, par2, par3, par4EntityPlayer);
+    }
 }

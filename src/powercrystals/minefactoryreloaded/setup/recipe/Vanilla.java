@@ -1363,6 +1363,8 @@ public class Vanilla
 			'S', Item.silk
 				} ));
 		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.bagItem), MineFactoryReloadedCore.bagItem);
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticBootsItem, 1), new Object[]
 				{
 			"P P",
