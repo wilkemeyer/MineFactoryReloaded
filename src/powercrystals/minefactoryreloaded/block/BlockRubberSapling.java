@@ -70,7 +70,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	@Override
 	public int damageDropped(int par1)
 	{
-		return par1;
+		return par1 & 3;
 	}
 	
 	@Override
