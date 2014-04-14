@@ -506,13 +506,13 @@ public class ThermalExpansion extends Vanilla
 		registerMachine(Machine.AutoBrewer, new Object[] {
 				"GBG",
 				"CFC",
-				"RCR",
+				"RPR",
 				'G', "sheetPlastic",
 				'C', conduitLiquid,
 				'B', Item.brewingStand,
 				'R', Item.redstoneRepeater,
 				'F', machineFrame,
-				'C', powerCoilGold
+				'P', powerCoilGold
 					} );
 		
 		registerMachine(Machine.FruitPicker, new Object[] {
