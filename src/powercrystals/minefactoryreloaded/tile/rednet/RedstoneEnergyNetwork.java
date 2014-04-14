@@ -133,6 +133,7 @@ public class RedstoneEnergyNetwork
 		for (TileEntityRedNetEnergy curCond : conduitSet)
 			destroyConduit(curCond);
 		GridTickHandler.removeGrid(this);
+		regenerating = true;
 	}
 
 	public void destroyNode(TileEntityRedNetEnergy cond) {
