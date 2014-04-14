@@ -2,12 +2,16 @@
 	<property environment="env"/>
 	
 	<!-- Basic directories -->
-	<property name="download.dir" value="downloads"/>
-	<property name="build.dir" value="build"/>
 	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
 	<property name="resources.dir" value="resources"/>
+	<property name="download.dir" value="${build.dir}/downloads"/>
+	
+	<!-- Project information -->
+	<property name="build.name" value="${ant.project.name}"/>
+	<property name="class.pckg" value="powercrystals/minefactoryreloaded"/>
 	<!-- Version file (main class) -->
-	<property name="verclass.dir" value="${src.dir}/powercrystals/minefactoryreloaded"/>
+	<property name="verclass.dir" value="${src.dir}/${class.pckg}" />
 	<property name="verclass.name" value="MineFactoryReloadedCore.java"/>
 	
 	<!-- Forge version -->
@@ -24,59 +28,79 @@
 	<property name="apiclasses.dir" value="${build.dir}/api-packaging"/>
 	
 	<!-- Forge paths -->
+	<property name="forge.version" value="${mc.version}-${forge.major}.${forge.minor}.${forge.patch}.${forge.build}"/>
 	<property name="forge.dir" value="${build.dir}/forge"/>
 	<property name="forgebuild.dir" value="${forge.dir}/build"/>
 	<property name="compile.dir" value="${forgebuild.dir}/tmp/compile"/>
-	<property name="reobf.dir" value="${forgebuild.dir}/classes/main"/>
 	<property name="lib.dir" value="${forgebuild.dir}/libs"/>
 	<property name="sources.dir" value="${forgebuild.dir}/sources/minecraft"/>
-	<property name="forge.version"
-		value="${minecraft.version}-${forge.major}.${forge.minor}.${forge.bugfix}.${forge.build}"/>
+	<property name="transformers.dir" value="${forge.dir}/src/main/resources/"/>
+	<property name="forge.jar" value="${forgebuild.dir}/dirtyArtifacts/forgeSrc-${forge.version}.jar"/>
+	<property name="reobf.jar" value="${lib.dir}/modid-1.0.jar"/>
 	<property name="forge.url" value="http://files.minecraftforge.net/maven/net/minecraftforge/forge/${forge.version}/forge-${forge.version}-src.zip"/>
-
+	
+	<!-- Enforce some paths -->
+	<mkdir dir="${build.dir}"/>
+	<mkdir dir="${download.dir}"/>
+	
 	<!-- Classpaths -->
 	<path id="mcp.classpath">
-		<pathelement location="${compile.dir}"/>
-		<fileset dir="${forge.dir}/.gradle/caches">
+		<pathelement location="${forge.jar}"/>
+		<fileset dir="${lib.dir}">
+			<include name="*.jar"/>
+			<include name="**/*.jar"/>
+			<exclude name="${reobf.jar}"/>
+		</fileset>
+		<fileset dir="${build.dir}/.gradle/caches">
 			<include name="modules*/files*/**/*.jar"/>
 			<exclude name="modules*/files*/commons-io/commons-io/1.4/**/*.jar"/>
 		</fileset>
 	</path>
 	<path id="gson">
-		<fileset dir="${forge.dir}/.gradle/caches">
+		<fileset dir="${build.dir}/.gradle/caches">
 			<include name="modules*/files*/com.google.code.gson/**/*.jar"/>
 		</fileset>
 	</path>
 	
 	<!-- Task skipping -->
-	<available property="already-compiled" file="${lib.dir}/modid-1.0.jar"/>
-	<available property="den-exists" file="${basedir}/MFR-Forestry/build.xml"/>
-	<available property="forge-exists" file="${download.dir}/forge-${forge.version}-src.zip"/>
-	<condition property="forge.already.installed">
-		<available file="${forge.dir}/build/dirtyArtifacts/forgeSrc-${forge.version}.jar" type="file"/>
-	</condition>
-	<condition property="should-download-jgit">
-		<and>
-			<available file="${download.dir}/jgit/jgit-ant.jar"/>
-			<available file="${download.dir}/jgit/jgit.jar"/>
-			<available file="${download.dir}/jgit/jsch.jar"/>
-		</and>
-	</condition>
-	<condition property="have-apis">
-		<and>
-			<available file="${sources.dir}/powercrystals/core" type="dir"/>
-			<available file="${sources.dir}/cofh" type="dir"/>
-			<available file="${sources.dir}/buildcraft" type="dir"/>
-			<available file="${sources.dir}/ic2" type="dir"/>
-			<available file="${sources.dir}/forestry" type="dir"/>
-			<available file="${lib.dir}/codechickenlib.jar" type="file"/>
-		</and>
-	</condition>
+	<target name="properties">
+		<available property="has.api" file="${src.dir}/${class.pckg}/api"/>
+		<available property="already.compiled" file="${reobf.jar}"/>
+		<available property="forge.exists" file="${download.dir}/forge-${forge.version}-src.zip"/>
+		<condition property="forge.already.installed">
+			<available file="${forge.dir}/build/dirtyArtifacts/forgeSrc-${forge.version}.jar" type="file"/>
+		</condition>
+		<available property="den-exists" file="${build.dir}/MFR-Forestry/build.xml"/>
+		<condition property="should-download-jgit">
+			<and>
+				<available file="${download.dir}/jgit/jgit-ant.jar"/>
+				<available file="${download.dir}/jgit/jgit.jar"/>
+				<available file="${download.dir}/jgit/jsch.jar"/>
+			</and>
+		</condition>
+		<condition property="have.libs">
+			<and>
+				<available file="${sources.dir}/powercrystals/core" type="dir"/>
+				<available file="${sources.dir}/cofh" type="dir"/>
+				<available file="${sources.dir}/buildcraft" type="dir"/>
+				<available file="${sources.dir}/ic2" type="dir"/>
+				<available file="${sources.dir}/forestry" type="dir"/>
+				<available file="${lib.dir}/codechickenlib.jar" type="file"/>
+			</and>
+		</condition>
+	</target>
 	
-	<mkdir dir="${download.dir}"/>
-	<mkdir dir="${build.dir}"/>
+	<!-- Dependency downloading -->
 
-	<target name="get-dependencies" unless="${have-apis}">
+	<target name="download-core" depends="properties" unless="forge.exists">
+		<echo message="Downloading PowerCrystalsCore... "/>
+		<get src="https://github.com/skyboy/PowerCrystalsCore/archive/master.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
+		
+		<echo message="Extracting PowerCrystalsCore... "/>
+		<unzip src="${download.dir}/PowerCrystalsCore-master.zip" dest="${download.dir}"/>
+	</target>
+
+	<target name="get-dependencies" unless="have.libs">
 		<parallel>
 			<sequential>
 				<echo message="Downloading IC2 API... "/>
@@ -101,7 +125,7 @@
 		</parallel>
 	</target>
 
-	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="${have-apis}">
+	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="have.libs">
 		<delete dir="${lib.dir}/"/>
 		<mkdir dir="${lib.dir}/"/>
 		<copy todir="${sources.dir}/powercrystals/core">
@@ -130,169 +154,6 @@
 		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>
 	</target>
 	
-	<target name="install" depends="build">
-		<!-- Copy & package API -->
-		<copy todir="${apiclasses.dir}/powercrystals/minefactoryreloaded/api">
-			<fileset dir="${sources.dir}/powercrystals/minefactoryreloaded/api"/>
-		</copy>
-		<zip destfile="${dist.dir}/MFR-API-${build.full}${build.number}.zip" basedir="${apiclasses.dir}"/>
-		
-		<move file="${lib.dir}/modid-1.0.jar"
-			tofile="${dist.dir}/MineFactoryReloaded-${build.full}${build.number}.jar"/>
-		
-		<!-- Cleanup -->
-		<delete dir="${apiclasses.dir}"/>
-		<delete dir="${sources.dir}/powercrystals/minefactoryreloaded"/>
-		<delete dir="${sources.dir}/denoflionsx/minefactoryreloaded"/>
-		<delete dir="${classes.dir}"/>
-		<delete dir="${reobf.dir}"/>
-	</target>
-
-	<macrodef name="install-lite">
-		<attribute name="build"/>
-		<attribute name="classes" default="${compile.dir}"/>
-		<sequential>
-			<copy todir="${classes.dir}">
-				<fileset dir="@{classes}">
-					<include name="powercrystals/minefactoryreloaded/**/*.class"/>
-					<include name="denoflionsx/minefactoryreloaded/**/*.class"/>
-					<include name="codechicken/core/launch/Dep*.class"/>
-					<include name="skyboy/**/*.class"/>
-					<include name="cofh/**/*.class"/>
-					<include name="ic2/**/*.class"/>
-					<include name="buildcraft/**/*.class"/>
-				</fileset>
-			</copy>
-			<copy-assets/>
-			<jar destfile="${dist.dir}/MineFactoryReloaded-${build.full}@{build}.jar"
-				compress="true" level="9" basedir="${classes.dir}"/>
-		</sequential>
-	</macrodef>
-	
-	<macrodef name="copy-assets">
-		<sequential>
-			<copy todir="${classes.dir}" file="mcmod.info" overwrite="true"/>
-			<copy todir="${classes.dir}" file="dependancies.info" overwrite="true"/>
-			
-			<copy todir="${classes.dir}/assets/minefactoryreloaded/textures">
-				<fileset dir="${sources.dir}/powercrystals/minefactoryreloaded/textures"/>
-			</copy>
-			
-			<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/models">
-				<fileset dir="${sources.dir}/powercrystals/minefactoryreloaded/models"/>
-			</copy>
-			
-			<copy todir="${classes.dir}/powercrystals/minefactoryreloaded/lang">
-				<fileset dir="${sources.dir}/powercrystals/minefactoryreloaded/lang"/>
-			</copy>
-		</sequential>
-	</macrodef>
-
-	<target name="build" depends="extract-dependencies,get-build-number,copy-sources" unless="already-compiled">
-		<!-- Recompile -->
-		<mkdir dir="${compile.dir}"/>
-		
-		<depend srcdir="${sources.dir}" destdir="${compile.dir}">
-			<include name="powercrystals/minefactoryreloaded/**/*.java"/>
-			<include name="denoflionsx/minefactoryreloaded/**/*.java"/>
-		</depend>
-		<javac srcdir="${sources.dir}" destdir="${compile.dir}" target="1.6" source="1.6"
-			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
-			<include name="powercrystals/minefactoryreloaded/**/*.java"/>
-			<include name="denoflionsx/minefactoryreloaded/**/*.java"/>
-		</javac>
-		
-		<!-- Dev jar -->
-		<install-lite build="dev-${build.number}"/>
-
-		<!-- Reobf -->
-		<copy todir="${reobf.dir}">
-			<fileset dir="${classes.dir}"/>
-		</copy>
-		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
-			<arg line="-g .gradle"/>
-			<arg line="reobf"/>
-			<arg line="-x compileJava"/>
-		</exec>
-	</target>
-
-	<target name="copy-sources" unless="already-compiled">
-		<!-- Copy source -->
-		<mkdir dir="${sources.dir}/powercrystals"/>
-		<copy todir="${sources.dir}/powercrystals" overwrite="true" preservelastmodified="true">
-			<fileset dir="${src.dir}/powercrystals"/>
-		</copy>
-		<mkdir dir="${sources.dir}/skyboy"/>
-		<copy todir="${sources.dir}/skyboy" overwrite="true" preservelastmodified="true">
-			<fileset dir="${src.dir}/skyboy"/>
-		</copy>
-		<mkdir dir="${sources.dir}/codechicken"/>
-		<copy todir="${sources.dir}/codechicken" overwrite="true" preservelastmodified="true">
-			<fileset dir="${src.dir}/codechicken"/>
-		</copy>
-		
-		<!-- Forestry compat submodule
-		<echo message="Cloning MFR-Forestry submodule..."/>
-		<antcall target="clone-MFR-Forestry"/>
-		<mkdir dir="${sources.dir}/denoflionsx"/>
-		<copy todir="${sources.dir}/denoflionsx" overwrite="true">
-			<fileset dir="MFR-Forestry/src/main/java/denoflionsx"/>
-		</copy>-->
-	</target>
-
-	<target name="setup-forge" depends="download-forge" unless="forge.already.installed">
-		<delete dir="${build.dir}" failonerror="false"/>
-		<mkdir dir="${build.dir}"/>
-		<unzip dest="${forge.dir}">
-			<fileset dir="${download.dir}">
-				<include name="forge-${forge.version}-src.zip"/>
-			</fileset>
-		</unzip>
-		
-		<!-- Cleanup, and adding in old file structure for convenience -->
-		<delete>
-			<fileset dir="${forge.dir}">
-				<include name="*.txt"/>
-				<include name="src/**/*.info"/>
-			</fileset>
-		</delete>
-		<delete dir="${forge.dir}/eclipse" failonerror="false"/>
-		<delete dir="${forge.dir}/src/main/java" failonerror="false"/>
-		
-		<!-- Change executables' permissions -->
-		<chmod file="${forge.dir}/gradlew" perm="+x"/>
-
-		<copy file="${download.dir}/PowerCrystalsCore-master/pcc_at.cfg" todir="${forge.dir}/src/main/resources/"/>
-
-		<!-- Install forge -->
-		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
-			<arg line="-g .gradle"/>
-			<arg line="extractForgeSrc"/>
-			<arg line="eclipseClasspath"/>
-		</exec>
-
-		<mkdir dir="${compile.dir}"/>
-		<javac srcdir="${forge.dir}/build/tmp/recompSrc" destdir="${compile.dir}" target="1.6" source="1.6"
-			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false"/>
-		<jar destfile="${forge.dir}/build/dirtyArtifacts/forgeSrc-${forge.version}.jar" compress="true"
-			level="9" basedir="${compile.dir}"/>
-		<delete dir="${compile.dir}"/>
-		
-		<!-- Move decompiled files -->
-		<copy todir="${sources.dir}" overwrite="true">
-			<fileset dir="${forge.dir}/build/tmp/recompSrc"/>
-		</copy>
-
-		<!-- Patch world files
-		<exec executable="${windows.python}" osfamily="windows" failonerror="true">
-			<arg line="patch.py ${sources.dir}/net/minecraft/world/WorldServer.java"/>
-		</exec>
-
-		<exec executable="python" osfamily="unix" failonerror="true">
-			<arg line="patch.py ${sources.dir}/net/minecraft/world/WorldServer.java"/>
-		</exec>-->
-	</target>
-	
 	<target name="clone-MFR-Forestry" depends="download-jgit" unless="den-exists">
 		<taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties">
 			<classpath>
@@ -307,24 +168,172 @@
 			</filterchain>
 		</loadfile>
 		<fail unless="mfr-forestry-revision" message="MFR-Forestry revision not found."/>
-		<git-clone uri="https://github.com/denoflionsx/MFR-Forestry.git" dest="MFR-Forestry"/>
-		<git-checkout branch="${mfr-forestry-revision}" src="MFR-Forestry"/>
+		<git-clone uri="https://github.com/denoflionsx/MFR-Forestry.git" dest="${build.dir}/MFR-Forestry"/>
+		<git-checkout branch="${mfr-forestry-revision}" src="${build.dir}/MFR-Forestry"/>
 	</target>
 
-	<target name="download-core" unless="forge-exists">
-		<echo message="Downloading PowerCrystalsCore... "/>
-		<get src="https://github.com/skyboy/PowerCrystalsCore/archive/master.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
+	<target name="download-jgit" unless="should-download-jgit">
+		<echo message="Getting: JGit"/>
+		<mkdir dir="${download.dir}/jgit"/>
+		<get dest="${download.dir}/jgit/jsch.jar" src="http://downloads.sourceforge.net/project/jsch/jsch.jar/0.1.50/jsch-0.1.50.jar"/>
+		<get dest="${download.dir}/jgit/jgit.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit/3.0.3.201309161630-r/org.eclipse.jgit-3.0.3.201309161630-r.jar"/>
+		<get dest="${download.dir}/jgit/jgit-ant.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit.ant/3.0.3.201309161630-r/org.eclipse.jgit.ant-3.0.3.201309161630-r.jar"/>
+	</target>
+	
+	<macrodef name="move-transformers"><sequential>
 		
-		<echo message="Extracting PowerCrystalsCore... "/>
-		<unzip src="${download.dir}/PowerCrystalsCore-master.zip" dest="${download.dir}"/>
+		<copy file="${download.dir}/PowerCrystalsCore-master/pcc_at.cfg" todir="${transformers.dir}"/>
+		
+	</sequential></macrodef>
+	
+	<!-- Building process -->
+	<target name="install" depends="build">
+		<move file="${reobf.jar}" tofile="${dist.dir}/${build.name}-${build.full}${build.number}.jar"/>
+		
+		<!-- Cleanup -->
+		<delete dir="${apiclasses.dir}"/>
+		<delete dir="${classes.dir}"/>
+	</target>
+
+	<macrodef name="install-lite">
+		<attribute name="build"/>
+		<attribute name="classes" default="${compile.dir}"/>
+		<sequential>
+			<copy todir="${classes.dir}" preservelastmodified="true">
+				<fileset dir="@{classes}">
+					<include name="**/*.class"/>
+				</fileset>
+				<fileset dir="${resources.dir}"/>
+			</copy>
+			<update-languages/>
+			<jar destfile="${dist.dir}/${build.name}-${build.full}@{build}.jar"
+				compress="true" level="9" basedir="${classes.dir}"/>
+		</sequential>
+	</macrodef>
+
+	<target name="build" depends="extract-dependencies,get-build-number,copy-sources" unless="already.compiled">
+		<!-- Recompile -->
+		<mkdir dir="${compile.dir}"/>
+		
+		<depend srcdir="${sources.dir}" destdir="${compile.dir}"
+			cache="${forgebuild.dir}/tmp/depcache" closure="true">
+			<include name="${class.pckg}/**/*.java"/>
+		</depend>
+		<javac srcdir="${sources.dir}" destdir="${compile.dir}" target="1.6" source="1.6"
+			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
+			<include name="${class.pckg}/**/*.java"/>
+		</javac>
+		
+		<!-- Dev jar -->
+		<local name="build"/><property name="build" value="dev-${build.number}"/>
+		<install-lite build="${build}"/>
+
+		<!-- Reobf -->
+		<copy file="${dist.dir}/${build.name}-${build.full}${build}.jar" tofile="${reobf.jar}"/>
+		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
+			<arg line="-g ../.gradle"/>
+			<arg line="reobf"/>
+			<arg line="-x compileJava"/>
+			<arg line="-x jar"/>
+		</exec>
+	</target>
+
+	<target name="copy-sources" depends="package-api" unless="already.compiled">
+		<!-- Copy source -->
+		<mkdir dir="${sources.dir}"/>
+		<sync todir="${sources.dir}">
+			<fileset dir="${src.dir}"/>
+		</sync>
+	</target>
+
+	<target name="package-api" depends="get-version" unless="already.compiled" if="has.api">
+		<!-- Copy & package API -->
+		<copy todir="${apiclasses.dir}/${class.pckg}/api">
+			<fileset dir="${src.dir}/${class.pckg}/api"/>
+		</copy>
+		<zip destfile="${dist.dir}/${build.name}-API-${build.full}${build.number}.zip" basedir="${apiclasses.dir}"/>
+	</target>
+
+	<target name="setup-forge" depends="download-forge" unless="forge.already.installed">
+		<delete dir="${forge.dir}" failonerror="false"/>
+		<mkdir dir="${forge.dir}"/>
+		<unzip dest="${forge.dir}">
+			<fileset dir="${download.dir}">
+				<include name="forge-${forge.version}-src.zip"/>
+			</fileset>
+		</unzip>
+		
+		<!-- Cleanup -->
+		<delete>
+			<fileset dir="${forge.dir}">
+				<include name="*.txt"/>
+				<include name="src/**/*.info"/>
+			</fileset>
+		</delete>
+		<delete dir="${forge.dir}/eclipse" failonerror="false"/>
+		<delete dir="${forge.dir}/src/main/java" failonerror="false"/>
+		
+		<!-- Change executables' permissions -->
+		<chmod file="${forge.dir}/gradlew" perm="+x"/>
+
+		<move-transformers/>
+
+		<!-- Install forge -->
+		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
+			<arg line="-g ../.gradle"/>
+			<arg line="extractForgeSrc"/>
+			<arg line="eclipseClasspath"/>
+		</exec>
+
+		<mkdir dir="${compile.dir}"/>
+		<mkdir dir="${lib.dir}"/>
+		<javac srcdir="${forge.dir}/build/tmp/recompSrc" destdir="${compile.dir}" target="1.6" source="1.6"
+			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false"/>
+		<jar destfile="${forge.dir}/build/dirtyArtifacts/forgeSrc-${forge.version}.jar" compress="true"
+			level="9" basedir="${compile.dir}"/>
+		<delete dir="${compile.dir}"/>
 	</target>
 
 	<target name="download-forge" depends="download-core" unless="forge-exists">
 		<echo message="Downloading forge... "/>
 		<get src="${forge.url}" dest="${download.dir}/forge-${forge.version}-src.zip"/>
 	</target>
+	
+	<macrodef name="update-languages">
+		<sequential>
+			<script language="javascript"><![CDATA[
+				importPackage(java.io);
+				var path = "/assets/" + project.getProperty("build.name").toLowerCase() + "/language/";
+				var languages = new File(project.getProperty("resources.dir") + path);
+				if (languages.exists() && languages.isDirectory()) {
+					var out = "";
+					for each(var i in languages.list()) {
+						if (i != null && i.length() > 5 && i.indexOf(".lang") == i.length() - 5) {
+							out += i.substring(0, i.length() - 5) + ", ";
+						}
+					}
+					if (out.length > 0) {
+						var os = new PrintWriter(project.getProperty("classes.dir") + path + ".languages");
+						os.write(out.substring(0, out.length - 2));
+						os.flush();
+						os.close();
+					}
+				}
+			]]></script>
+		</sequential>
+	</macrodef>
+	
+	<target name="verify-version" unless="build.full">
+		<script language="javascript"><![CDATA[
+			var name = project.getProperty("verclass.name");
+			if (name == null || name == "") {
+				project.setProperty("build.full", "-");
+			}
+		]]></script>
+	</target>
 
-	<target name="get-version" depends="setup-forge" unless="${build.full}">
+	<target name="get-version" depends="verify-version,setup-forge" unless="build.full">
+		<local name="grep.out"/><local name="mfrv"/><local name="mcv"/>
 		<!-- Read version out of file -->
 		<script language="javascript"><![CDATA[
 			importClass(java.io.File);
@@ -358,7 +367,7 @@
 			project.setProperty("mcv", mcversion);
 			
 			// open file and parse JSON structure
-			var file = new File("mcmod.info");
+			var file = new File(project.getProperty("resources.dir") + "/mcmod.info");
 			var mcmod = new Scanner(file, "UTF-8").useDelimiter("\\Z");
 			var data = new JsonParser().parse(mcmod.next()).getAsJsonArray();
 			mcmod.close();
@@ -377,15 +386,7 @@
 			output.close();
 		]]></script>
 		<echo message="Version: ${mfrv}"/>
-		<property name="build.full" value="[${mcv}]${mfrv}-"/>
-	</target>
-
-	<target name="download-jgit" unless="should-download-jgit">
-		<echo message="Getting: JGit"/>
-		<mkdir dir="${download.dir}/jgit"/>
-		<get dest="${download.dir}/jgit/jsch.jar" src="http://downloads.sourceforge.net/project/jsch/jsch.jar/0.1.50/jsch-0.1.50.jar"/>
-		<get dest="${download.dir}/jgit/jgit.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit/3.0.3.201309161630-r/org.eclipse.jgit-3.0.3.201309161630-r.jar"/>
-		<get dest="${download.dir}/jgit/jgit-ant.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit.ant/3.0.3.201309161630-r/org.eclipse.jgit.ant-3.0.3.201309161630-r.jar"/>
+		<property name="build.full" value="-[${mcv}]${mfrv}-"/>
 	</target>
 
 	<target name="get-build-number" depends="build-number-there" unless="build.number">
@@ -398,9 +399,13 @@
 		<property name="build.number" value="${env.BUILD_NUMBER}"/>
 	</target>
 
-	<target name="clean" >
+	<target name="clean">
 		<delete dir="${build.dir}"/>
-		<delete dir="${basedir}/MFR-Forestry"/>
+	</target>
+
+	<target name="rebuild">
+		<delete file="${forge.jar}"/>
+		<antcall target="install"/>
 	</target>
 
 	<target name="jar" depends="install"/>
