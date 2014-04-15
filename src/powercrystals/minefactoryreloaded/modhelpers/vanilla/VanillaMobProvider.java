@@ -46,26 +46,26 @@ public class VanillaMobProvider implements IRandomMobProvider
 	{
 		List<RandomMob> mobs = new ArrayList<RandomMob>();
 		
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMooshroom.class, world), 20));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySlime.class, world), 20));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCow.class, world), 100));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityChicken.class, world), 100));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySheep.class, world), 100));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWitch.class, world), 10));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityGhast.class, world), 15));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityPig.class, world), 100));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCreeper.class, world), 25));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySquid.class, world), 30));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityOcelot.class, world), 20));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWolf.class, world), 20));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityBat.class, world), 35));
-		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityHorse.class, world), 20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityChicken.class,   world), 130));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySheep.class,     world), 100));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCow.class,       world), 100));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityPig.class,       world), 100));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityBat.class,       world),  35));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySquid.class,     world),  30));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCreeper.class,   world),  25));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMooshroom.class, world),  20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySlime.class,     world),  20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityOcelot.class,    world),  20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWolf.class,      world),  20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityHorse.class,     world),  20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityGhast.class,     world),  15));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWitch.class,     world),  10));
 		
 		EntityXPOrb batJockey = prepareXPOrb(world);
 		EntityBat invisibat = MFRUtil.prepareMob(EntityBat.class, world);
 		invisibat.addPotionEffect(new PotionEffect(Potion.invisibility.id, Short.MAX_VALUE));
 		batJockey.mountEntity(invisibat);
-		mobs.add(new RandomMob(invisibat, 15));
+		mobs.add(new RandomMob(invisibat, 55));
 		
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMinecartHopper.class, world), 15));
 		

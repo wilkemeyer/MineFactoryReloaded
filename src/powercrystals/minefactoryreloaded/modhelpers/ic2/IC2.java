@@ -5,16 +5,18 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import ic2.api.item.Items;
 import ic2.api.recipe.IMachineRecipeManager;
-import ic2.api.recipe.Recipes;
 import ic2.api.recipe.ISemiFluidFuelManager.BurnProperty;
+import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -34,6 +36,28 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 public class IC2
 {
 	@EventHandler
+	public static void postLoad(FMLPostInitializationEvent evt)
+	{
+		ItemStack booties = new ItemStack(Item.bootsLeather, 64, 0);
+		Item.bootsLeather.func_82813_b(booties, 0x3479F2);
+		OreDictionary.registerOre("greggy_greg_do_please_kindly_stuff_a_sock_in_it", booties);
+		
+		if (Loader.isModLoaded("gregtech_addon"))
+		{
+			for (String str : OreDictionary.getOreNames())
+			{
+				ArrayList<ItemStack> list = OreDictionary.getOres(str); 
+				for (int i = list.size(); i --> 0; )
+				{
+					ItemStack stack = list.get(i);
+					OreDictionary.registerOre(str, stack);
+					OreDictionary.registerOre("\ngreggy_greg_do_please_kindly_stuff_a_sock_in_it\n" + str, stack);
+				}
+			}
+		}
+	}
+
+	@EventHandler
 	public static void load(FMLInitializationEvent evt)
 	{
 		if(!Loader.isModLoaded("IC2"))
@@ -43,10 +67,6 @@ public class IC2
 		}
 		try
 		{
-			ItemStack booties = new ItemStack(Item.bootsLeather, 64, 0);
-			Item.bootsLeather.func_82813_b(booties, 0x3479F2);
-			OreDictionary.registerOre("greggy_greg_do_please_kindly_stuff_a_sock_in_it", booties);
-			
 			ItemStack crop = Items.getItem("crop");
 			ItemStack rubber = Items.getItem("rubber").copy();
 			ItemStack rubberSapling = Items.getItem("rubberSapling");
@@ -54,7 +74,7 @@ public class IC2
 			ItemStack rubberWood = Items.getItem("rubberWood");
 			ItemStack stickyResin = Items.getItem("resin");
 			ItemStack plantBall = Items.getItem("plantBall");
-			
+
 			if(rubberSapling != null)
 			{
 				MFRRegistry.registerPlantable(new PlantableStandard(rubberSapling.itemID, rubberSapling.itemID));
@@ -70,15 +90,15 @@ public class IC2
 				MFRRegistry.registerFruitLogBlockId(((ItemBlock)rubberWood.getItem()).getBlockID());
 				MFRRegistry.registerFruit(new FruitIC2Resin(rubberWood, stickyResin));
 			}
-			
+
 			ItemStack fertilizer = Items.getItem("fertilizer");
 			if(fertilizer != null)
 			{
 				MFRRegistry.registerFertilizer(new FertilizerStandard(fertilizer.itemID, fertilizer.getItemDamage()));
 			}
-			
+
 			MFRRegistry.registerHarvestable(new HarvestableIC2Crop(crop.itemID));
-			
+
 			GameRegistry.addShapedRecipe(plantBall, new Object[]
 					{
 					"LLL",
@@ -121,7 +141,7 @@ public class IC2
 			x.printStackTrace();
 		}
 	}
-	
+
 	private static void copyEthanol()
 	{
 		BurnProperty q = Recipes.semiFluidGenerator.getBurnProperty(FluidRegistry.getFluid("bioethanol"));

@@ -2,8 +2,10 @@ package powercrystals.minefactoryreloaded.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -120,12 +122,26 @@ public class ItemSafariNet extends ItemFactory
 	}
 	
 	@SideOnly(Side.CLIENT)
+	private Random colorRand = new Random();
+	
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getColorFromItemStack(ItemStack stack, int pass)
 	{
-		if(stack.getItemDamage() == 0 && (stack.getTagCompound() == null || stack.getTagCompound().getBoolean("hide")))
+		if(stack.getItemDamage() == 0 && (stack.getTagCompound() == null))
 		{
 			return 16777215;
+		}
+		if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide"))
+		{
+			World world = Minecraft.getMinecraft().theWorld;
+			colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * pass);
+			if (pass == 2)
+				return colorRand.nextInt();
+			else if (pass == 1)
+				return colorRand.nextInt();
+			else
+				return 16777215;
 		}
 		EntityEggInfo egg = getEgg(stack);
 		
