@@ -560,7 +560,12 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("blockMeatRaw",
 				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12));
 		OreDictionary.registerOre("itemCharcoalSugar", MineFactoryReloadedCore.sugarCharcoalItem);
-		OreDictionary.registerOre("cableRedNet", MineFactoryReloadedCore.rednetCableBlock);
+		OreDictionary.registerOre("cableRedNet", new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 0));
+		OreDictionary.registerOre("cableRedNet", new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 1));
+		OreDictionary.registerOre("cableRedNetEnergy",
+				new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 2));
+		OreDictionary.registerOre("cableRedNetEnergy",
+				new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 3));
 		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
 		OreDictionary.registerOre("dyeBrown", MineFactoryReloadedCore.fertilizerItem);
 		OreDictionary.registerOre("fertilizerOrganic", MineFactoryReloadedCore.fertilizerItem);
@@ -613,6 +618,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("milk", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Item.bucketMilk), new ItemStack(Item.bucketEmpty)));
+		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("milk", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(milkBottleItem), new ItemStack(Item.glassBottle)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("sludge", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(sludgeBucketItem), new ItemStack(Item.bucketEmpty)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("sewage", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(sewageBucketItem), new ItemStack(Item.bucketEmpty)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("mobessence", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(mobEssenceBucketItem), new ItemStack(Item.bucketEmpty)));
@@ -635,26 +641,26 @@ public class MineFactoryReloadedCore extends BaseMod
 		FurnaceRecipes.smelting().addSmelting(meatIngotRawItem.itemID, new ItemStack(meatIngotCookedItem), 0.5F);
 		FurnaceRecipes.smelting().addSmelting(meatNuggetRawItem.itemID, new ItemStack(meatNuggetCookedItem), 0.3F);
 
-		String[] biomeWhitelist = MFRConfig.rubberTreeBiomeWhitelist.getString().split(",");
-		for(String biome : biomeWhitelist)
+		String[] list = MFRConfig.rubberTreeBiomeWhitelist.getString().split(",");
+		for(String biome : list)
 		{
 			MFRRegistry.registerRubberTreeBiome(biome);
 		}
 
-		String[] biomeBlacklist = MFRConfig.rubberTreeBiomeBlacklist.getString().split(",");
-		for(String biome : biomeBlacklist)
+		list = MFRConfig.rubberTreeBiomeBlacklist.getString().split(",");
+		for(String biome : list)
 		{
 			MFRRegistry.getRubberTreeBiomes().remove(biome);
 		}
 
-		biomeWhitelist = MFRConfig.unifierBlacklist.getString().split(",");
-		for(String entry : biomeWhitelist)
+		list = MFRConfig.unifierBlacklist.getString().split(",");
+		for(String entry : list)
 		{
 			MFRRegistry.registerUnifierBlacklist(entry);
 		}
 
-		biomeWhitelist = MFRConfig.spawnerBlacklist.getString().split(",");
-		for(String entry : biomeWhitelist)
+		list = MFRConfig.spawnerBlacklist.getString().split(",");
+		for(String entry : list)
 		{
 			MFRRegistry.registerAutoSpawnerBlacklist(entry);
 		}
@@ -680,7 +686,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	{
 		if(!e.world.isRemote && e.world.getBlockId(e.X, e.Y, e.Z) == MineFactoryReloadedCore.rubberSaplingBlock.blockID)
 		{
-			((BlockRubberSapling)MineFactoryReloadedCore.rubberSaplingBlock).growTree(e.world, e.X, e.Y, e.Z, e.world.rand);
+			((BlockRubberSapling)MineFactoryReloadedCore.rubberSaplingBlock).markOrGrowMarked(e.world, e.X, e.Y, e.Z, e.world.rand);
 			e.setResult(Result.ALLOW);
 		}
 	}

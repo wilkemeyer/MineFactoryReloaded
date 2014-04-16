@@ -499,7 +499,7 @@ public class Vanilla
 				"CNC",
 				" M ",
 				'G', "sheetPlastic",
-				'C', MineFactoryReloadedCore.rednetCableBlock,
+				'C', "cableRedNet",
 				'N', Block.music,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );

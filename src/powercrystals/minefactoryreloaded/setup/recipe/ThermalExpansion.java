@@ -498,7 +498,7 @@ public class ThermalExpansion extends Vanilla
 				"GNG",
 				"CFC",
 				'G', "sheetPlastic",
-				'C', MineFactoryReloadedCore.rednetCableBlock,
+				'C', "cableRedNet",
 				'N', Block.music,
 				'F', machineFrame
 					} );
