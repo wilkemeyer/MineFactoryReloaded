@@ -49,7 +49,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 		if (world.isRemote)
 			return;
 
-		int meta = world.getBlockMetadata(x, y, z);
+		int meta = damageDropped(world.getBlockMetadata(x, y, z));
 		world.setBlockToAir(x, y, z);
 		
 		if (meta == 1)
