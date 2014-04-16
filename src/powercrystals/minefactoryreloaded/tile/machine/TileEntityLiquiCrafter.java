@@ -448,6 +448,7 @@ inv:	for(int i = 0; i < 9; i++)
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
+		calculateOutput();
 		
 		NBTTagList nbttaglist = nbttagcompound.getTagList("Tanks");
 		for(int i = 0; i < nbttaglist.tagCount(); i++)
