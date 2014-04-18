@@ -5,6 +5,8 @@ import powercrystals.minefactoryreloaded.render.IconOverlay;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,6 +20,12 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 		setHardness(0.3F);
 		setStepSound(soundGlassFootstep);
 		setUnlocalizedName("thinGlass");
+	}
+
+	@Override
+	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	{
+		return false;
 	}
 	
 	@Override

@@ -71,6 +71,17 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		return ItemDye.dyeColors[15 - Math.min(Math.max(meta, 0), 15)];
 	}
 
+	@Override
+	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		if (meta != colour)
+		{
+			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
+		}
+		return false;
+	}
+
 	public Icon getBlockOverlayTexture()
 	{
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);

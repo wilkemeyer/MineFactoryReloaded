@@ -732,7 +732,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	@ForgeSubscribe
 	public void onItemExpire(ItemExpireEvent e)
 	{
-		ItemStack stack = e.entityItem.getEntityItem(); 
+		ItemStack stack = e.entityItem.getEntityItem();
 		if (stack.itemID == rubberLeavesBlock.blockID && stack.getItemDamage() == 0)
 		{
 			e.setCanceled(true);
