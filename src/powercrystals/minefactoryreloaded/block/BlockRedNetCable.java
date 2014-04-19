@@ -307,6 +307,8 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
 		}
 	}
+	
+	private ThreadLocal<Boolean> trace = new ThreadLocal<Boolean>();
 
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
@@ -314,17 +316,19 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
-			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true);
+			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true, trace.get() == Boolean.TRUE);
 		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@ForgeSubscribe
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
-
-		if (event.target.typeOfHit == EnumMovingObjectType.TILE
-				&& event.player.worldObj.getBlockId(event.target.blockX, event.target.blockY, event.target.blockZ) == blockID) {
-			RayTracer.retraceBlock(event.player.worldObj, event.player, event.target.blockX, event.target.blockY, event.target.blockZ);
+		MovingObjectPosition mop = event.target;
+		if (mop.typeOfHit == EnumMovingObjectType.TILE
+				&& event.player.worldObj.getBlockId(mop.blockX, mop.blockY, mop.blockZ) == blockID) {
+			trace.set(Boolean.TRUE);
+			RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
+			trace.set(null);
 		}
 	}
 
@@ -356,6 +360,17 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			((TileEntityRedNetCable)te).onNeighboorChanged();
 		}
 	}
+	
+	@Override
+	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		
+		if(te instanceof TileEntityRedNetEnergy)
+		{
+			((TileEntityRedNetEnergy)te).onNeighborTileChange(tileX, tileY, tileZ);
+		}
+    }
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int id, int meta)
@@ -365,20 +380,21 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		{
 			if (((TileEntityRedNetCable)te).getNetwork() != null)
 				((TileEntityRedNetCable)te).getNetwork().setInvalid();
-
-			world.markTileEntityForDespawn(te);
-			te.invalidate();
-			world.removeBlockTileEntity(x, y, z);
 		}
+		super.breakBlock(world, x, y, z, id, meta);
 		for(ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
 		{
 			BlockPosition bp = new BlockPosition(x, y, z);
 			bp.orientation = d;
 			bp.moveForwards(1);
-			world.notifyBlockOfNeighborChange(bp.x, bp.y, bp.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
-			world.notifyBlocksOfNeighborChange(bp.x, bp.y, bp.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+			if (world.getBlockId(bp.x, bp.y, bp.z) != MineFactoryReloadedCore.rednetCableBlock.blockID)
+			{
+				world.notifyBlockOfNeighborChange(bp.x, bp.y, bp.z,
+						MineFactoryReloadedCore.rednetCableBlock.blockID);
+				world.notifyBlocksOfNeighborChange(bp.x, bp.y, bp.z,
+						MineFactoryReloadedCore.rednetCableBlock.blockID);
+			}
 		}
-		super.breakBlock(world, x, y, z, id, meta);
 	}
 
 	@Override

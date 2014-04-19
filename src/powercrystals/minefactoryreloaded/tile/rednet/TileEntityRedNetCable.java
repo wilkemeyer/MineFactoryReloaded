@@ -222,6 +222,11 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
 	{
+		addTraceableCuboids(list, forTrace, false);
+	}
+	
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw)
+	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 		
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); 
@@ -232,29 +237,33 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			RedNetConnectionType c = getConnectionState(sides[i], true);
 			RedNetConnectionType f = getConnectionState(sides[i], false);
+			int o = 2 + i;
 			if (c.isConnected)
 			{
-				int o = 2 + i;
 				if (c.isPlate)
 					o += 6;
 				else if (c.isCable)
 					if (c.isAllSubnets)
 					{
-						if (forTrace)
+						if (forDraw)
 							main.setSide(i, i & 1);
-						else
-							list.add((IndexedCuboid6)new IndexedCuboid6(2 + 6*3 + i,
-									subSelection[2 + 6*3 + i]).add(offset));
+						else {
+							o = 2 + 6*3 + i;
+							list.add((IndexedCuboid6)new IndexedCuboid6(1,
+									subSelection[o]).setSide(i, i & 1).add(offset));
+						}
 						continue;
 					}
 				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 				o = 2 + 6*2 + i;
 				if (c.isSingleSubnet)
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+				o += 6;
+				list.add((IndexedCuboid6)new IndexedCuboid6(1, subSelection[o]).add(offset));
 			}
 			else if (forTrace & f.isConnected && cableMode[6] != 1)
 			{ // cable-only
-				list.add((IndexedCuboid6)new IndexedCuboid6(2 + i, subSelection[2 + i]).add(offset));
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 			}
 		}
 		main.add(offset);
@@ -262,7 +271,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	
 	public boolean canInterface(TileEntityRedNetCable with)
 	{
-		return true;
+		return !isInvalid();
 	}
 
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
@@ -440,5 +449,27 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
     }
 
 	public void onNeighborTileChange(int x, int y, int z) {
+	}
+
+    private static final int HASH_A = 0x19660d;
+    private static final int HASH_C = 0x3c6ef35f;
+
+    @Override
+    public int hashCode() {
+        final int xTransform = HASH_A * (xCoord ^ 0xBABECAFE) + HASH_C;
+        final int zTransform = HASH_A * (zCoord ^ 0xDEADBEEF) + HASH_C;
+        final int yTransform = HASH_A * (yCoord ^ 0xE73AAE09) + HASH_C;
+        return xTransform ^ zTransform ^ yTransform;
+    }
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof TileEntityRedNetCable)
+		{
+			TileEntityRedNetCable te = (TileEntityRedNetCable)obj;
+			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord;
+		}
+		return false;
 	}
 }
