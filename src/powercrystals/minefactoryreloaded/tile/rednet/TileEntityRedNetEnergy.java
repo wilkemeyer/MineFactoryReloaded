@@ -37,7 +37,7 @@ import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.net.Packets;
 
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
-IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
+									IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
 {
 	private byte[] sideMode = {1,1, 1,1,1,1, 0};
 	private IEnergyHandler[] handlerCache = null;
@@ -65,17 +65,18 @@ IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
 	}
 
 	@Override
-	public void onChunkUnload() { super.onChunkUnload();
-	if (grid != null) {
-		grid.removeConduit(this);
-		grid.storage.modifyEnergyStored(-energyForGrid);
-		int c = 0;
-		for (int i = 6; i --> 0; )
-			if ((sideMode[i] >> 1) == 4)
-				++c;
-		if (c > 1)
-			grid.regenerate();
-	}
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if (grid != null) {
+			grid.removeConduit(this);
+			grid.storage.modifyEnergyStored(-energyForGrid);
+			int c = 0;
+			for (int i = 6; i --> 0; )
+				if ((sideMode[i] >> 1) == 4)
+					++c;
+			if (c > 1)
+				grid.regenerate();
+		}
 	}
 
 	private void reCache() {
@@ -102,13 +103,14 @@ IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
 	}
 
 	@Override
-	public void onNeighboorChanged() { super.onNeighboorChanged();
-	deadCache = true;
-	reCache();
-	/* multipart doesn't issue a tile change event
-	 * so when an IEnergyHandler part is removed
-	 * the multipart will NPE when it receives energy
-	 */
+	public void onNeighboorChanged() {
+		super.onNeighboorChanged();
+		deadCache = true;
+		reCache();
+		/* multipart doesn't issue a tile change event
+		 * so when an IEnergyHandler part is removed
+		 * the multipart will NPE when it receives energy
+		 */
 	}
 
 	@Override
@@ -206,17 +208,16 @@ IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
 		if (deadCache)
 			return null;
 		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
-				Packets.EnergyCableDescription, new Object[]
-						{
-				xCoord, yCoord, zCoord,
-				_sideColors[0], _sideColors[1], _sideColors[2],
-				_sideColors[3], _sideColors[4], _sideColors[5],
-				cableMode[0] | (cableMode[1] << 8) |
-				(cableMode[2] << 16) | (cableMode[3] << 24),
-				cableMode[4] | (cableMode[5] << 8) |
-				(cableMode[6] << 16), sideMode[0], sideMode[1],
-				sideMode[2], sideMode[3], sideMode[4], sideMode[5] 
-						});
+				Packets.EnergyCableDescription, new Object[] {
+					xCoord, yCoord, zCoord,
+					_sideColors[0], _sideColors[1], _sideColors[2],
+					_sideColors[3], _sideColors[4], _sideColors[5],
+					cableMode[0] | (cableMode[1] << 8) |
+					(cableMode[2] << 16) | (cableMode[3] << 24),
+					cableMode[4] | (cableMode[5] << 8) |
+					(cableMode[6] << 16), sideMode[0], sideMode[1],
+					sideMode[2], sideMode[3], sideMode[4], sideMode[5] 
+				});
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -295,35 +296,37 @@ IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
 	public boolean isInterfacing(ForgeDirection to) {
 		int bSide = to.getOpposite().ordinal();
 		int mode = sideMode[bSide] >> 1;
-				return (sideMode[bSide] & 1) != 0 & mode != 0;
+		return (sideMode[bSide] & 1) != 0 & mode != 0;
 	}
 
 	public int interfaceMode(ForgeDirection to) {
 		int bSide = to.getOpposite().ordinal();
 		int mode = sideMode[bSide] >> 1;
-				return (sideMode[bSide] & 1) != 0 ? mode : 0;
+		return (sideMode[bSide] & 1) != 0 ? mode : 0;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) { super.readFromNBT(nbt);
-	sideMode = nbt.getByteArray("SideMode");
-	if (sideMode.length != 7)
-		sideMode = new byte[]{1,1, 1,1,1,1, 0};
-	energyForGrid = nbt.getInteger("Energy");
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		sideMode = nbt.getByteArray("SideMode");
+		if (sideMode.length != 7)
+			sideMode = new byte[]{1,1, 1,1,1,1, 0};
+		energyForGrid = nbt.getInteger("Energy");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) { super.writeToNBT(nbt);
-	nbt.setByteArray("SideMode", sideMode);
-	if (grid != null) {
-		if (isNode) {
-			energyForGrid = grid.getNodeShare(this);
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setByteArray("SideMode", sideMode);
+		if (grid != null) {
+			if (isNode) {
+				energyForGrid = grid.getNodeShare(this);
+				nbt.setInteger("Energy", energyForGrid);
+			}
+		} else if (energyForGrid > 0)
 			nbt.setInteger("Energy", energyForGrid);
-		}
-	} else if (energyForGrid > 0)
-		nbt.setInteger("Energy", energyForGrid);
-	else
-		energyForGrid = 0;
+		else
+			energyForGrid = 0;
 	}
 
 	void extract(ForgeDirection side) {
@@ -422,9 +425,9 @@ IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
 		isNode = false;
 		for (int i = 0; i < 6; i++) {
 			int mode = sideMode[i] >> 1;
-		if (((sideMode[i] & 1) != 0) & (mode != 0) & (mode != 4)) {
-			isNode = true;
-		}
+			if (((sideMode[i] & 1) != 0) & (mode != 0) & (mode != 4)) {
+				isNode = true;
+			}
 		}
 		if (grid != null)
 			grid.addConduit(this);
