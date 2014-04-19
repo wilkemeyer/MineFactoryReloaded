@@ -48,7 +48,7 @@ public class ThermalExpansion extends Vanilla
 			FMLLog.log(MineFactoryReloadedCore.modId, Level.SEVERE,
 					"ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
 			throw new MissingModsException(Collections.
-					singleton((ArtifactVersion)new DefaultArtifactVersion("ThermalExpansion", "3.0.0.2")));
+					singleton((ArtifactVersion)new DefaultArtifactVersion("ThermalExpansion", "(3.0.0.2,]")));
 		}
 		conduitLiquid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
 		tankBasic = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
