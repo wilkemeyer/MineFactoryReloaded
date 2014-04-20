@@ -51,7 +51,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	RedstoneEnergyNetwork grid;
 
-	public TileEntityRedNetEnergy() {}
+	public TileEntityRedNetEnergy() {
+	}
 
 	@Override
 	public void validate() {
@@ -61,6 +62,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		receiverCache = null;
 		sourceCache = null;
 		sinkCache = null;
+		if (worldObj.isRemote)
+			return;
 		GridTickHandler.addConduit(this);
 	}
 
@@ -105,6 +108,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public void onNeighboorChanged() {
 		super.onNeighboorChanged();
+		if (worldObj.isRemote)
+			return;
 		deadCache = true;
 		reCache();
 		/* multipart doesn't issue a tile change event
@@ -115,6 +120,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void onNeighborTileChange(int x, int y, int z) {
+		if (worldObj.isRemote)
+			return;
 		TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
 
 		if (x < xCoord)

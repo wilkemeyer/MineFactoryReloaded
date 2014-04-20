@@ -451,24 +451,25 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	public void onNeighborTileChange(int x, int y, int z) {
 	}
 
-    private static final int HASH_A = 0x19660d;
-    private static final int HASH_C = 0x3c6ef35f;
+	private static final int HASH_A = 0x19660d;
+	private static final int HASH_C = 0x3c6ef35f;
 
-    @Override
-    public int hashCode() {
-        final int xTransform = HASH_A * (xCoord ^ 0xBABECAFE) + HASH_C;
-        final int zTransform = HASH_A * (zCoord ^ 0xDEADBEEF) + HASH_C;
-        final int yTransform = HASH_A * (yCoord ^ 0xE73AAE09) + HASH_C;
-        return xTransform ^ zTransform ^ yTransform;
-    }
-	
+	@Override
+	public int hashCode() {
+		final int xTransform = HASH_A * (xCoord ^ 0xBABECAFE) + HASH_C;
+		final int zTransform = HASH_A * (zCoord ^ 0xDEADBEEF) + HASH_C;
+		final int yTransform = HASH_A * (yCoord ^ 0xE73AAE09) + HASH_C;
+		return xTransform ^ zTransform ^ yTransform;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof TileEntityRedNetCable)
 		{
 			TileEntityRedNetCable te = (TileEntityRedNetCable)obj;
-			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord;
+			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
+					te.isInvalid() == isInvalid();
 		}
 		return false;
 	}

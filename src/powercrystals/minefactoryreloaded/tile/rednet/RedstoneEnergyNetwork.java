@@ -32,7 +32,9 @@ public class RedstoneEnergyNetwork
 
 	public RedstoneEnergyNetwork(TileEntityRedNetEnergy base) { this();
 		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>();
+		regenerating = true;
 		addConduit(base);
+		regenerating = false;
 	}
 
 	public int getNodeShare(TileEntityRedNetEnergy cond) {

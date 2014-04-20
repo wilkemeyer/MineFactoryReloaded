@@ -170,7 +170,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			{
 				;
 			}
-			else if (subHit >= (2 + 6 * 2) && subHit <= (2 + 6 * 3))
+			else if (subHit >= (2 + 6 * 2) && subHit < (2 + 6 * 3))
 			{
 				if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
@@ -212,7 +212,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 					}
 				}
 			}
-			else if (subHit >= 0 && subHit <= (2 + 6 * 2))
+			else if (subHit >= 0 && subHit < (2 + 6 * 2))
 			{
 				l: if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
@@ -326,9 +326,16 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		MovingObjectPosition mop = event.target;
 		if (mop.typeOfHit == EnumMovingObjectType.TILE
 				&& event.player.worldObj.getBlockId(mop.blockX, mop.blockY, mop.blockZ) == blockID) {
-			trace.set(Boolean.TRUE);
-			RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
-			trace.set(null);
+			MovingObjectPosition part = RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
+			if (part == null)
+				return;
+			int subHit = ((ExtendedMOP)part).subHit;
+			if (subHit < 2 | (subHit >= (2 + 6 * 3) & subHit < (2 + 6 * 5)))
+			{ // extended checking for hitboxes behind hitboxes
+				trace.set(Boolean.TRUE);
+				RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
+				trace.set(null);
+			}
 		}
 	}
 

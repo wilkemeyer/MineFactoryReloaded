@@ -100,7 +100,8 @@ public class GridTickHandler implements IScheduledTickHandler
 		if (!conduit.isEmpty())
 		{
 			for (TileEntityRedNetEnergy cond : conduit)
-				cond.firstTick();
+				if (!cond.isInvalid())
+					cond.firstTick();
 			conduit.clear();
 		}
 	}
