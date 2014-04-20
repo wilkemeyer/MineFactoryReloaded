@@ -3,12 +3,17 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+
 import powercrystals.core.net.PacketWrapper;
 import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
@@ -19,9 +24,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class TileEntityFactory extends TileEntity
 									 implements IRotateableTile, IPipeConnection,
@@ -338,4 +340,27 @@ public abstract class TileEntityFactory extends TileEntity
     {
         return pass == 0 && getMaxRenderDistanceSquared() != -1D;
     }
+
+	private static final int HASH_A = 0x19660d;
+	private static final int HASH_C = 0x3c6ef35f;
+
+	@Override
+	public int hashCode() {
+		final int xTransform = HASH_A * (xCoord ^ 0xBABECAFE) + HASH_C;
+		final int zTransform = HASH_A * (zCoord ^ 0xDEADBEEF) + HASH_C;
+		final int yTransform = HASH_A * (yCoord ^ 0xE73AAE09) + HASH_C;
+		return xTransform ^ zTransform ^ yTransform;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof TileEntityFactory)
+		{
+			TileEntityFactory te = (TileEntityFactory)obj;
+			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
+					te.isInvalid() == isInvalid();
+		}
+		return false;
+	}
 }
