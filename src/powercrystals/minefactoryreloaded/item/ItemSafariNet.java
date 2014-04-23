@@ -195,6 +195,8 @@ public class ItemSafariNet extends ItemFactory
 		}
 		else
 		{
+			if (player != null && player.capabilities.isCreativeMode)
+				itemstack = itemstack.copy();
 			return releaseEntity(itemstack, world, x, y, z, side) != null;
 		}
 	}
@@ -229,11 +231,18 @@ public class ItemSafariNet extends ItemFactory
 		
 		if(spawnedCreature != null)
 		{
-			if ((spawnedCreature instanceof EntityLiving) && itemstack.hasDisplayName())
+			if ((spawnedCreature instanceof EntityLiving))
 			{
-				((EntityLiving)spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
-				// TODO: secondary jailer net for:
-				// ((EntityLiving)spawnedCreature).setAlwaysRenderNameTag(true);
+				if (itemstack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID)
+				{
+					((EntityLiving)spawnedCreature).func_110163_bv();
+				}
+				if (itemstack.hasDisplayName())
+				{
+					((EntityLiving)spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
+					// TODO: secondary jailer net for:
+					// ((EntityLiving)spawnedCreature).setAlwaysRenderNameTag(true);
+				}
 			}
 			
 			if(isSingleUse(itemstack))
@@ -406,6 +415,17 @@ public class ItemSafariNet extends ItemFactory
 	public static boolean isSafariNet(ItemStack s)
 	{
 		return s != null && (s.getItem() instanceof ItemSafariNet);
+	}
+	
+	public static ItemStack makeMysteryNet(ItemStack s)
+	{
+		if (isSafariNet(s))
+		{
+			NBTTagCompound c = new NBTTagCompound();
+			c.setBoolean("hide", true);
+			s.setTagCompound(c);
+		}
+		return s;
 	}
 	
 	public static Class<?> getEntityClass(ItemStack s)
