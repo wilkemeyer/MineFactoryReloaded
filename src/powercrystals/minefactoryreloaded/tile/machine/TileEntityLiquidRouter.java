@@ -1,45 +1,43 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquidRouter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerLiquidRouter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityLiquidRouter extends TileEntityFactoryInventory implements IFluidHandler
 {
 	private static final ForgeDirection[] _outputDirections = new ForgeDirection[]
 			{ ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
-	
-	protected FluidTank[] _bufferTanks = new FluidTank[6];
-	protected boolean[] _filledDirection = new boolean[_bufferTanks.length];
-	
+
+	protected boolean[] _filledDirection = new boolean[6];
+
 	public TileEntityLiquidRouter()
 	{
 		super(Machine.LiquidRouter);
 		for(int i = 0; i < 6; i++)
 		{
-			_bufferTanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 			_filledDirection[i] = false;
 		}
 		setManageFluids(true);
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -47,21 +45,17 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		for(int i = 0; i < 6; i++)
 		{
 			_filledDirection[i] = false;
-			if(_bufferTanks[i].getFluid() != null && _bufferTanks[i].getFluid().amount > 0)
-			{
-				_bufferTanks[i].getFluid().amount -= pumpLiquid(_bufferTanks[i].getFluid(), true);
-			}
 		}
 	}
-	
+
 	private int pumpLiquid(FluidStack resource, boolean doFill)
 	{
 		if(resource == null || resource.amount <= 0) return 0;
-		
+
 		int amountRemaining = resource.amount;
 		int[] routes = getRoutesForLiquid(resource);
 		int[] defaultRoutes = getDefaultRoutes();
-		
+
 		if(hasRoutes(routes))
 		{
 			amountRemaining = weightedRouteLiquid(resource, routes, amountRemaining, doFill);
@@ -70,10 +64,10 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		{
 			amountRemaining = weightedRouteLiquid(resource, defaultRoutes, amountRemaining, doFill);
 		}
-		
+
 		return resource.amount - amountRemaining;
 	}
-	
+
 	private int weightedRouteLiquid(FluidStack resource, int[] routes, int amountRemaining, boolean doFill)
 	{
 		if(amountRemaining >= totalWeight(routes))
@@ -94,7 +88,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 				}
 			}
 		}
-		
+
 		if(0 < amountRemaining && amountRemaining < totalWeight(routes))
 		{
 			int outdir = weightedRandomSide(routes);
@@ -105,10 +99,10 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 						new FluidStack(resource.fluidID, amountRemaining), doFill);
 			}
 		}
-		
+
 		return amountRemaining;
 	}
-	
+
 	private int weightedRandomSide(int[] routeWeights)
 	{
 		int random = worldObj.rand.nextInt(totalWeight(routeWeights));
@@ -120,21 +114,21 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 				return i;
 			}
 		}
-		
+
 		return -1;
 	}
-	
+
 	private int totalWeight(int[] routeWeights)
 	{
 		int total = 0;
-		
+
 		for(int weight : routeWeights)
 		{
 			total += weight;
 		}
 		return total;
 	}
-	
+
 	private boolean hasRoutes(int[] routeWeights)
 	{
 		for(int weight : routeWeights)
@@ -143,12 +137,12 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		}
 		return false;
 	}
-	
-	
+
+
 	private int[] getRoutesForLiquid(FluidStack resource)
 	{
 		int[] routeWeights = new int[6];
-		
+
 		for(int i = 0; i < 6; i++)
 		{
 			ItemStack stack = _inventory[i];
@@ -167,11 +161,11 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		}
 		return routeWeights;
 	}
-	
+
 	private int[] getDefaultRoutes()
 	{
 		int[] routeWeights = new int[6];
-		
+
 		for(int i = 0; i < 6; i++)
 		{
 			if(FluidContainerRegistry.isEmptyContainer(_inventory[i]))
@@ -185,66 +179,60 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		}
 		return routeWeights;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		int tankIndex = from.ordinal();
-		if (tankIndex >= _bufferTanks.length || _filledDirection[tankIndex]) return 0;
-		int r = pumpLiquid(resource, doFill); // use internal tanks?
+		if (tankIndex >= _filledDirection.length || _filledDirection[tankIndex]) return 0;
+		int r = pumpLiquid(resource, doFill);
 		_filledDirection[tankIndex] = doFill & r > 0;
 		return r;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
-	
-	@Override
-	public IFluidTank[] getTanks()
-	{
-		return _bufferTanks;
-	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 6;
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiLiquidRouter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerLiquidRouter getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerLiquidRouter(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
