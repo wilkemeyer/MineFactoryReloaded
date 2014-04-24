@@ -298,11 +298,19 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		{
 			if (_ticket == null)
 			{
-				_ticket = ticket;
-				forceChunks();
-			}
-			else
 				ForgeChunkManager.releaseTicket(ticket);
+				_ticket = ForgeChunkManager.
+						requestPlayerTicket(MineFactoryReloadedCore.instance(),
+								_owner, worldObj, Type.NORMAL);
+				if (_ticket == null)
+				{
+					unableToRequestTicket = true;
+					return true;
+				}
+				_ticket.getModData().setInteger("X", xCoord);
+				_ticket.getModData().setInteger("Y", yCoord);
+				_ticket.getModData().setInteger("Z", zCoord);
+			}
 			return true;
 		}
 		else
