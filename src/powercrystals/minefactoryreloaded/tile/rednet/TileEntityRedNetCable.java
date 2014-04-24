@@ -469,7 +469,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			TileEntityRedNetCable te = (TileEntityRedNetCable)obj;
 			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
-					te.isInvalid() == isInvalid();
+					te.isInvalid() == isInvalid() && worldObj == te.worldObj;
 		}
 		return false;
 	}

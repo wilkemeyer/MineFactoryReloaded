@@ -359,7 +359,7 @@ public abstract class TileEntityFactory extends TileEntity
 		{
 			TileEntityFactory te = (TileEntityFactory)obj;
 			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
-					te.isInvalid() == isInvalid();
+					te.isInvalid() == isInvalid() && worldObj == te.worldObj;
 		}
 		return false;
 	}
