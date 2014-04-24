@@ -636,7 +636,7 @@ public class ThermalExpansion extends Vanilla
 			'N', Item.netherStar
 				} ));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.detCordBlock, 6), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.detCordBlock, 12), new Object[]
 				{
 			"PPP",
 			"PTP",
