@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import powercrystals.minefactoryreloaded.gui.slot.SlotInvisible;
 import powercrystals.minefactoryreloaded.gui.slot.SlotRemoveOnly;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 import cpw.mods.fml.relauncher.Side;
@@ -27,6 +28,8 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory
 		addSlotToContainer(new Slot(_te, 0, 134, 16));
 		addSlotToContainer(new Slot(_te, 1, 152, 16));
 		addSlotToContainer(new SlotRemoveOnly(_te, 2, 152, 49));
+		for (int i = 34; i --> 0; )
+			addSlotToContainer(new SlotInvisible(_te, 3 + i, 170, 16, 0));
 	}
 	
 	@Override
@@ -40,14 +43,22 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
 			
-			if(slot < 3)
+			if(slot < 37)
 			{
-				if(!mergeItemStack(stackInSlot, 3, inventorySlots.size(), true))
+				if(!mergeItemStack(stackInSlot, 37, inventorySlots.size(), true))
 				{
 					return null;
 				}
+				for (int i = inventorySlots.size(); i --> 37; )
+				{
+					Slot slotObject2 = (Slot)inventorySlots.get(i);
+					if (slotObject2 != null)
+						for (int j = 0; j < this.crafters.size(); ++j)
+							((ICrafting)this.crafters.get(j)).
+								sendSlotContents(this, slotObject2.slotNumber, slotObject2.getStack());
+				}
 			}
-			else if(!mergeItemStack(stackInSlot, 0, 2, false))
+			else if(!mergeItemStack(stackInSlot, 0, 36, false))
 			{
 				return null;
 			}
@@ -81,9 +92,9 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 201, _dsu.getQuantity() >> 16);
 		}
 
-		for (Object object : inventorySlots)
+		for (int i = 3; i --> 0; )
 		{
-			Slot slotObject = (Slot)object;
+			Slot slotObject = (Slot)inventorySlots.get(i);
 			if (slotObject != null)
 				for (int j = 0; j < this.crafters.size(); ++j)
 					((ICrafting)this.crafters.get(j)).
