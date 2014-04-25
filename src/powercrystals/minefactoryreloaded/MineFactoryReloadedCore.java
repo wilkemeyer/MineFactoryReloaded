@@ -615,6 +615,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	private void addChestGenItems()
 	{
+		//{ Vanilla chests
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
 		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
@@ -623,7 +624,17 @@ public class MineFactoryReloadedCore extends BaseMod
 		{
 			ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 1), 1, 2, 1));
 		}
+		//}
+		//{ DimensionalDoors chestgen compat
+		// reference weights[iron: 160; coal: 120; gold: 80; golden apple: 10]
+		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(safariNetJailerItem), 1, 1, 15));
+		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock), 1, 8, 70));
+		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(pinkSlimeballItem), 1, 1, 5));
+		// tempting as a sacred sapling is, chests are too common with too few possible items
+		// maybe as a custom dungeon for integration 
+		///}
 
+		//{ Villager house loot chest
 		ChestGenHooks.getInfo(CHEST_GEN).setMax(2 * 9);
 		ChestGenHooks.getInfo(CHEST_GEN).setMin(5);
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 35));
@@ -667,6 +678,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		});
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(portaSpawnerItem), 1, 1, 1));
+		//}
 	}
 
 	@EventHandler
