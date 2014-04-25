@@ -65,6 +65,12 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
 	@Override
+	public boolean shouldRefresh(int oldID, int newID, int oldMeta, int newMeta, World world, int x, int y, int z)
+	{
+		return oldID != newID;
+	}
+	
+	@Override
 	public void rotate()
 	{
 		int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
