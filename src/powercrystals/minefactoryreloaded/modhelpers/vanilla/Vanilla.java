@@ -40,6 +40,7 @@ import powercrystals.minefactoryreloaded.circuits.analog.Max4;
 import powercrystals.minefactoryreloaded.circuits.analog.Min2;
 import powercrystals.minefactoryreloaded.circuits.analog.Min3;
 import powercrystals.minefactoryreloaded.circuits.analog.Min4;
+import powercrystals.minefactoryreloaded.circuits.analog.Multiplier;
 import powercrystals.minefactoryreloaded.circuits.analog.Negator;
 import powercrystals.minefactoryreloaded.circuits.analog.RandomizerAnalog;
 import powercrystals.minefactoryreloaded.circuits.analog.Scaler;
@@ -325,6 +326,7 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Min2());
 		MFRRegistry.registerRedNetLogicCircuit(new Min3());
 		MFRRegistry.registerRedNetLogicCircuit(new Min4());
+		MFRRegistry.registerRedNetLogicCircuit(new Multiplier());
 		MFRRegistry.registerRedNetLogicCircuit(new Multipulse());
 		MFRRegistry.registerRedNetLogicCircuit(new Mux4());
 		MFRRegistry.registerRedNetLogicCircuit(new Nand2());
