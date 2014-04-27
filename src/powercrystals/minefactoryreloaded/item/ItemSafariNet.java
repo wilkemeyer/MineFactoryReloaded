@@ -121,7 +121,6 @@ public class ItemSafariNet extends ItemFactory
 		return 3;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	private Random colorRand = new Random();
 	
 	@SideOnly(Side.CLIENT)
