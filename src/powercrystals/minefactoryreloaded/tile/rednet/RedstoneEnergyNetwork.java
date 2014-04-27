@@ -130,21 +130,21 @@ public class RedstoneEnergyNetwork
 	
 	public void destroyGrid() {
 		master = null;
+		regenerating = true;
 		for (TileEntityRedNetEnergy curCond : nodeSet)
 			destroyNode(curCond);
 		for (TileEntityRedNetEnergy curCond : conduitSet)
 			destroyConduit(curCond);
 		GridTickHandler.removeGrid(this);
-		regenerating = true;
 	}
 
 	public void destroyNode(TileEntityRedNetEnergy cond) {
 		cond.energyForGrid = getNodeShare(cond);
-		cond.setGrid(null);
+		cond._grid = null;
 	}
 
 	public void destroyConduit(TileEntityRedNetEnergy cond) {
-		cond.setGrid(null);
+		cond._grid = null;
 	}
 
 	public void doGridPreUpdate() {
@@ -236,15 +236,14 @@ public class RedstoneEnergyNetwork
 	}
 
 	public boolean conduitAdded(TileEntityRedNetEnergy cond) {
-		if (cond.grid != null) {
-			if (cond.grid != this)
-				if (canGridMerge(cond.grid))
-					mergeGrid(cond.grid);
-				else {
-					conduitSet.remove(cond);
+		if (cond._grid != null) {
+			if (cond._grid != this) {
+				conduitSet.remove(cond);
+				if (canGridMerge(cond._grid)) {
+					mergeGrid(cond._grid);
+				} else
 					return false;
-				}
-			else
+			} else
 				return false;
 		} else
 			cond.setGrid(this);
