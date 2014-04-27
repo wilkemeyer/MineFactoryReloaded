@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
@@ -29,6 +29,7 @@ import net.minecraft.dispenser.DispenserBehaviors;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.ai.EntityMinecartMobSpawner;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -308,37 +309,40 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static void registerFluids()
 	{
-		registerFluid("milk", MFRConfig.milkStillBlockId.getInt());
-		registerFluid("sludge", MFRConfig.sludgeStillBlockId.getInt());
-		registerFluid("sewage", MFRConfig.sewageStillBlockId.getInt());
-		registerFluid("mobessence", MFRConfig.essenceStillBlockId.getInt(), 9, 310);
-		registerFluid("biofuel", MFRConfig.biofuelStillBlockId.getInt());
-		registerFluid("meat", MFRConfig.meatStillBlockId.getInt());
-		registerFluid("pinkslime", MFRConfig.pinkslimeStillBlockId.getInt());
-		registerFluid("chocolatemilk", MFRConfig.chocolateMilkStillBlockId.getInt());
-		registerFluid("mushroomsoup", MFRConfig.mushroomSoupStillBlockId.getInt());
+		registerFluid("milk",          1050,           EnumRarity.common);
+		registerFluid("sludge",        1700,           EnumRarity.common);
+		registerFluid("sewage",        1200,           EnumRarity.common);
+		registerFluid("mobessence",     400,  9,  310, EnumRarity.epic);
+		registerFluid("biofuel",        800,           EnumRarity.rare);
+		registerFluid("meat",          2000,           EnumRarity.common);
+		registerFluid("pinkslime",     3000,           EnumRarity.uncommon);
+		registerFluid("chocolatemilk", 1100,           EnumRarity.common);
+		registerFluid("mushroomsoup",  1500,           EnumRarity.common);
 	}
 
-	public static boolean registerFluid(String name, int blockId)
+	public static Fluid registerFluid(String name, int density, EnumRarity rarity)
 	{
-		return registerFluid(name, blockId, 0, -1);
+		return registerFluid(name, density, -1, -1, rarity);
 	}
 
-	public static boolean registerFluid(String name, int blockId, int lightValue, int temp)
+	public static Fluid registerFluid(String name, int density, int lightValue, int temp, EnumRarity rarity)
 	{
 		name = name.toLowerCase(Locale.ENGLISH);
-		if (!FluidRegistry.isFluidRegistered(name))
+		Fluid fluid = new Fluid(name);
+		if (!FluidRegistry.registerFluid(fluid))
+			fluid = FluidRegistry.getFluid(name);
+		if (density != 0)
 		{
-			Fluid fluid = new Fluid(name);
-			if (!FluidRegistry.registerFluid(fluid))
-				return false;
-			fluid.setBlockID(blockId);
-			fluid.setLuminosity(lightValue);
-			if (temp > 0)
-				fluid.setTemperature(temp);
-			fluid.setUnlocalizedName("mfr.liquid." + name + ".still");
+			fluid.setDensity(density);
+			fluid.setViscosity(density); // works for my purposes
 		}
-		return false;
+		if (lightValue >= 0)
+			fluid.setLuminosity(lightValue);
+		if (temp >= 0)
+			fluid.setTemperature(temp);
+		fluid.setUnlocalizedName("mfr.liquid." + name + ".still");
+		fluid.setRarity(rarity);
+		return fluid;
 	}
 
 	@EventHandler
