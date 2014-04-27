@@ -43,6 +43,7 @@ public class DrinkUseHandler implements IUseHandler {
 	@Override
 	public ItemStack onUse(ItemStack item, EntityLivingBase entity) {
 		String liquid = getFluidName(item);
+		ItemStack r = item;
 		if (item.stackSize == 1 && liquid != null &&
 				entity instanceof EntityPlayer && isDrinkableLiquid(liquid)) {
 			EntityPlayer player = (EntityPlayer)entity;
@@ -60,6 +61,11 @@ public class DrinkUseHandler implements IUseHandler {
 					player.dropPlayerItem(drop);
 			}
 			MFRRegistry.getLiquidDrinkHandlers().get(liquid).onDrink(player);
+		}
+		if (item == null)
+		{
+			item = r;
+			item.stackSize = 0;
 		}
 		return item;
 	}
