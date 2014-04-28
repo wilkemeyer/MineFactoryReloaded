@@ -161,6 +161,7 @@ public class MFRConfig
 	public static Property enableChunkLimitBypassing;
 	public static Property enableChunkLoaderRequiresOwner;
 	public static Property enableSmoothSlabRecipe;
+	public static Property enableCheapCL;
 	
 	public static Property redNetDebug;
 	
@@ -392,7 +393,7 @@ public class MFRConfig
 		
 		enableCheapDSU = loadLegacy(CATEGORY_ITEM, "Recipe.CheaperDSU",
 				CATEGORY_GENERAL, "DSU.EnableCheaperRecipe", false);
-		enableCheapDSU.comment = "If true, DSU can be built out of chests instead of ender pearls. Does nothing if the DSU recipe is disabled.";
+		enableCheapDSU.comment = "If true, the DSU can be built out of chests instead of ender pearls. Does nothing if the recipe is disabled.";
 		craftSingleDSU = loadLegacy(CATEGORY_ITEM, "Recipe.SingleDSU",
 				CATEGORY_GENERAL, "DSU.CraftSingle", false);
 		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, GT recipes, etc).";
@@ -421,6 +422,8 @@ public class MFRConfig
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
 		enableSmoothSlabRecipe = c.get(CATEGORY_ITEM, "Recipe.SmoothSlab", true);
 		enableSmoothSlabRecipe.comment = "If true, smooth double stone slabs can be craftable.";
+		enableCheapCL = c.get(CATEGORY_ITEM, "Recipe.CheaperChunkLoader", false);
+		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
 		
 		for(Machine machine : Machine.values())
 		{

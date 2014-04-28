@@ -39,6 +39,7 @@ public class ThermalExpansion extends Vanilla
 	ItemStack tesseract;
 	ItemStack tesseractFrameEmpty;
 	ItemStack cellResonant;
+	ItemStack cellRedstone;
 	
 	@Override
 	protected void gatherItems()
@@ -69,6 +70,7 @@ public class ThermalExpansion extends Vanilla
 		tesseract = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tesseract"));
 		tesseractFrameEmpty = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameEmpty", 1);
 		cellResonant = GameRegistry.findItemStack("ThermalExpansion", "cellResonant", 1);
+		cellRedstone = GameRegistry.findItemStack("ThermalExpansion", "cellReinforced", 1);
 	}
 	
 	@Override
@@ -572,6 +574,20 @@ public class ThermalExpansion extends Vanilla
 				'O', "ingotElectrum",
 				'C', powerCoilElectrum
 					} );
+		if (MFRConfig.enableCheapCL.getBoolean(false))
+		{
+			registerMachine(Machine.ChunkLoader, new Object[] {
+					"PEP",
+					"TFT",
+					"OCO",
+					'P', "sheetPlastic",
+					'T', tesseractFrameEmpty,
+					'E', cellRedstone,
+					'F', machineFrame,
+					'O', "ingotElectrum",
+					'C', powerCoilElectrum
+						} );
+		}
 		
 		registerMachine(Machine.Fountain, new Object[] {
 				"PBP",

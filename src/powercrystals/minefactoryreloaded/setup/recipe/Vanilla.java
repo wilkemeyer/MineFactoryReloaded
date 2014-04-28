@@ -297,7 +297,7 @@ public class Vanilla
 				'E', Item.eyeOfEnder,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
-			
+		
 		if(MFRConfig.enableCheapDSU.getBoolean(false))
 		{
 			registerMachine(Machine.DeepStorageUnit, new Object[]
@@ -572,6 +572,20 @@ public class Vanilla
 				'R', Block.blockRedstone,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
+		if (MFRConfig.enableCheapCL.getBoolean(false))
+		{
+			registerMachine(Machine.ChunkLoader, new Object[]
+					{
+				"GGG",
+				"PFP",
+				"RMR",
+				'G', "sheetPlastic",
+				'F', Block.blockGold,
+				'P', Item.eyeOfEnder,
+				'R', Block.blockRedstone,
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
+		}
 		
 		registerMachine(Machine.Fountain, new Object[]
 					{
