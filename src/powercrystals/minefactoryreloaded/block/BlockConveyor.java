@@ -346,14 +346,17 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		int md = world.getBlockMetadata(x, y, z);
+		float shrink = 0.125f;
 		
 		if((md & 0x0C) == 0)
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.1F, z + 1);
+			return AxisAlignedBB.getAABBPool().getAABB(x + shrink, y, z + shrink,
+					x + 1 - shrink, y + 0.1F, z + 1 - shrink);
 		}
 		else
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.01F, z + 1);
+			return AxisAlignedBB.getAABBPool().getAABB(x + shrink, y, z + shrink,
+					x + 1 - shrink, y + 0.01F, z + 1 - shrink);
 		}
 	}
 	
