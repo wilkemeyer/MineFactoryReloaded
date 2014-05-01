@@ -12,7 +12,6 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -448,43 +447,13 @@ inv:	for(int i = 0; i < 9; i++)
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
-		
-		NBTTagList nbttaglist = nbttagcompound.getTagList("Tanks");
-		for(int i = 0; i < nbttaglist.tagCount(); i++)
-		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Tank") & 0xff;
-			if(j >= 0 && j < _tanks.length)
-			{
-				FluidStack l = FluidStack.loadFluidStackFromNBT(nbttagcompound1);
-				if(l != null)
-				{
-					_tanks[j].setFluid(l);
-				}
-			}
-		}
+		calculateOutput();
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
 		super.writeToNBT(nbttagcompound);
-		
-		NBTTagList tanks = new NBTTagList();
-		for(int i = 0; i < _tanks.length; i++)
-		{
-			if(_tanks[i].getFluid() != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Tank", (byte)i);
-				
-				FluidStack l = _tanks[i].getFluid();
-				l.writeToNBT(nbttagcompound1);
-				tanks.appendTag(nbttagcompound1);
-			}
-		}
-		
-		nbttagcompound.setTag("Tanks", tanks);
 	}
 
 	@Override

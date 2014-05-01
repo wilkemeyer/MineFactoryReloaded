@@ -9,6 +9,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -45,6 +46,17 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	}
 
 	@Override
+	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		if (meta != colour)
+		{
+			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
+		}
+		return false;
+	}
+
+	@Override
 	public int getRenderColor(int meta)
 	{
 		return ItemDye.dyeColors[15 - Math.min(Math.max(meta, 0), 15)];
@@ -67,7 +79,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	{
 		return new IconOverlay(_texture, 8, 8, 0, 0);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
@@ -77,17 +89,17 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		return super.shouldSideBeRendered(world, x, y, z, side);
 	}
 
-    public boolean isBlockFullCube(IBlockAccess world, int x, int y, int z)
-    {
-        Block block = Block.blocksList[world.getBlockId(x, y, z)];
-        if (block == null)
-        	return false;
-        block.setBlockBoundsBasedOnState(world, x, y, z);
-        return AxisAlignedBB.getAABBPool().getAABB(block.getBlockBoundsMinX(),
-        		block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(),
-        		block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(),
-        		block.getBlockBoundsMaxZ()).getAverageEdgeLength() >= 1.0D;
-    }
+	public boolean isBlockFullCube(IBlockAccess world, int x, int y, int z)
+	{
+		Block block = Block.blocksList[world.getBlockId(x, y, z)];
+		if (block == null)
+			return false;
+		block.setBlockBoundsBasedOnState(world, x, y, z);
+		return AxisAlignedBB.getAABBPool().getAABB(block.getBlockBoundsMinX(),
+				block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(),
+				block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(),
+				block.getBlockBoundsMaxZ()).getAverageEdgeLength() >= 1.0D;
+	}
 
 	public Icon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
 	{

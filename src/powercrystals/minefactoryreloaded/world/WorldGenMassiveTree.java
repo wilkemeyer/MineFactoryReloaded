@@ -558,6 +558,5 @@ public class WorldGenMassiveTree extends WorldGenerator
 		subChunk.setExtBlockID(x & 15, y & 15, z & 15, id);
 		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
 		subChunk.setExtBlocklightValue(x & 15, y & 15, z & 15, 0);
-		subChunk.setExtSkylightValue(x & 15, y & 15, z & 15, 0);
 	}
 }

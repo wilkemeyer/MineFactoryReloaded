@@ -4,6 +4,7 @@ import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork;
@@ -25,6 +26,8 @@ public class GridTickHandler implements IScheduledTickHandler
 	private static LinkedHashSet<TileEntityRedNetEnergy> conduit =
 			new LinkedHashSet<TileEntityRedNetEnergy>();
 	private static LinkedHashSet<TileEntityRedNetEnergy> conduitToAdd =
+			new LinkedHashSet<TileEntityRedNetEnergy>();
+	private static LinkedHashSet<TileEntityRedNetEnergy> conduitToUpd =
 			new LinkedHashSet<TileEntityRedNetEnergy>();
 	
 	static GridTickHandler instance = new GridTickHandler();
@@ -51,28 +54,64 @@ public class GridTickHandler implements IScheduledTickHandler
 		return tickingGrids.contains(grid);
 	}
 	
-	public static void addConduit(TileEntityRedNetEnergy grid)
+	public static void addConduitForTick(TileEntityRedNetEnergy grid)
 	{
 		conduitToAdd.add(grid);
+	}
+	
+	public static void addConduitForUpdate(TileEntityRedNetEnergy grid)
+	{
+		conduitToUpd.add(grid);
 	}
 	
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData)
 	{
+		//{ Grids that have had significant conduits removed and need to rebuild/split 
 		if (!tickingGridsToRegenerate.isEmpty())
 		synchronized (tickingGridsToRegenerate) {
 			for (RedstoneEnergyNetwork grid : tickingGridsToRegenerate)
 				grid.markSweep();
 		}
-				
+		//}
+		
+		//{ Updating internal types of conduits
+		// this pass is needed to handle issues with threading
+		if (!conduitToUpd.isEmpty())
+		synchronized (conduitToUpd) {
+			conduit.addAll(conduitToUpd);
+			conduitToUpd.clear();
+		}
+		
+		if (!conduit.isEmpty())
+		{
+			TileEntityRedNetEnergy cond = null;
+			try {
+				Iterator<TileEntityRedNetEnergy> iter = conduit.iterator();
+				while (iter.hasNext())
+				{
+					cond = iter.next();
+					if (!cond.isInvalid())
+						cond.updateInternalTypes();
+				}
+				conduit.clear();
+			} catch(Throwable _) {
+				throw new RuntimeException("Crashing on conduit " + cond, _);
+			}
+		}
+		//}
+		
+		//{ Early update pass to extract energy from sources
 		if (!tickingGrids.isEmpty())
 			for (RedstoneEnergyNetwork grid : tickingGrids)
 				grid.doGridPreUpdate();
+		//}
 	}
 
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData)
 	{
+		//{ Changes in what grids are being ticked
 		if (!tickingGridsToRemove.isEmpty())
 		synchronized(tickingGridsToRemove)
 		{
@@ -86,23 +125,40 @@ public class GridTickHandler implements IScheduledTickHandler
 			tickingGrids.addAll(tickingGridsToAdd);
 			tickingGridsToAdd.clear();
 		}
+		//}
 		
+		//{ Ticking grids to transfer energy/etc.
 		if (!tickingGrids.isEmpty())
 			for (RedstoneEnergyNetwork grid : tickingGrids)
 				grid.doGridUpdate();
+		//}
 		
+		
+		//{ Initial update tick for conduits added to the world
 		if (!conduitToAdd.isEmpty())
 		synchronized(conduitToAdd)
 		{
 			conduit.addAll(conduitToAdd);
 			conduitToAdd.clear();
 		}
+		
 		if (!conduit.isEmpty())
 		{
-			for (TileEntityRedNetEnergy cond : conduit)
-				cond.firstTick();
-			conduit.clear();
+			TileEntityRedNetEnergy cond = null;
+			try {
+				Iterator<TileEntityRedNetEnergy> iter = conduit.iterator();
+				while (iter.hasNext())
+				{
+					cond = iter.next();
+					if (!cond.isInvalid())
+						cond.firstTick();
+				}
+				conduit.clear();
+			} catch(Throwable _) {
+				throw new RuntimeException("Crashing on conduit " + cond, _);
+			}
 		}
+		//}
 	}
 
 	@Override

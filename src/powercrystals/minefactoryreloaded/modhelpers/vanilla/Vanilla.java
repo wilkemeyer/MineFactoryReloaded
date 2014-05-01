@@ -40,6 +40,7 @@ import powercrystals.minefactoryreloaded.circuits.analog.Max4;
 import powercrystals.minefactoryreloaded.circuits.analog.Min2;
 import powercrystals.minefactoryreloaded.circuits.analog.Min3;
 import powercrystals.minefactoryreloaded.circuits.analog.Min4;
+import powercrystals.minefactoryreloaded.circuits.analog.Multiplier;
 import powercrystals.minefactoryreloaded.circuits.analog.Negator;
 import powercrystals.minefactoryreloaded.circuits.analog.RandomizerAnalog;
 import powercrystals.minefactoryreloaded.circuits.analog.Scaler;
@@ -131,6 +132,7 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCocoa;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableNetherWart;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableChicken;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableCow;
@@ -153,7 +155,7 @@ public class Vanilla
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		MFRRegistry.registerPlantable(new PlantableStandard(Block.sapling.blockID, Block.sapling.blockID));
+		MFRRegistry.registerPlantable(new PlantableSapling(Block.sapling.blockID, Block.sapling.blockID));
 		MFRRegistry.registerPlantable(new PlantableStandard(Item.pumpkinSeeds.itemID, Block.pumpkinStem.blockID));
 		MFRRegistry.registerPlantable(new PlantableStandard(Item.melonSeeds.itemID, Block.melonStem.blockID));
 		MFRRegistry.registerPlantable(new PlantableStandard(Block.mushroomBrown.blockID, Block.mushroomBrown.blockID));
@@ -163,7 +165,7 @@ public class Vanilla
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Item.potato.itemID, Block.potato.blockID));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
 		MFRRegistry.registerPlantable(new PlantableCocoa(Item.dyePowder.itemID, Block.cocoaPlant.blockID, 3));
-		MFRRegistry.registerPlantable(new PlantableStandard(MineFactoryReloadedCore.rubberSaplingBlock.blockID, MineFactoryReloadedCore.rubberSaplingBlock.blockID));
+		MFRRegistry.registerPlantable(new PlantableSapling(MineFactoryReloadedCore.rubberSaplingBlock.blockID, MineFactoryReloadedCore.rubberSaplingBlock.blockID));
 		
 		MFRRegistry.registerHarvestable(new HarvestableWood(Block.wood.blockID));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Block.leaves.blockID));
@@ -325,6 +327,7 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Min2());
 		MFRRegistry.registerRedNetLogicCircuit(new Min3());
 		MFRRegistry.registerRedNetLogicCircuit(new Min4());
+		MFRRegistry.registerRedNetLogicCircuit(new Multiplier());
 		MFRRegistry.registerRedNetLogicCircuit(new Multipulse());
 		MFRRegistry.registerRedNetLogicCircuit(new Mux4());
 		MFRRegistry.registerRedNetLogicCircuit(new Nand2());

@@ -1,16 +1,18 @@
 package powercrystals.minefactoryreloaded.setup.village;
 
+import cpw.mods.fml.common.registry.VillagerRegistry.IVillageTradeHandler;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import cpw.mods.fml.common.registry.VillagerRegistry.IVillageTradeHandler;
+import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 
 public class VillageTradeHandler implements IVillageTradeHandler
 {
@@ -29,9 +31,6 @@ public class VillageTradeHandler implements IVillageTradeHandler
 	public static ItemStack getHiddenNetStack()
 	{
 		ItemStack s = new ItemStack(MineFactoryReloadedCore.safariNetSingleItem);
-		NBTTagCompound c = new NBTTagCompound();
-		c.setBoolean("hide", true);
-		s.setTagCompound(c);
-		return s;
+		return ItemSafariNet.makeMysteryNet(s);
 	}
 }

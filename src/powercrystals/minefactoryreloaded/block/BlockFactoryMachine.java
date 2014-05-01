@@ -206,10 +206,6 @@ public class BlockFactoryMachine extends BlockContainer
 
 			if (te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory)te).onBlockBroken();
-
-			world.markTileEntityForDespawn(te);
-			te.invalidate();
-			world.removeBlockTileEntity(x, y, z);
 		}
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}

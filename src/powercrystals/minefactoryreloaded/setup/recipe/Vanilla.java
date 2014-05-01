@@ -297,7 +297,7 @@ public class Vanilla
 				'E', Item.eyeOfEnder,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
-			
+		
 		if(MFRConfig.enableCheapDSU.getBoolean(false))
 		{
 			registerMachine(Machine.DeepStorageUnit, new Object[]
@@ -499,7 +499,7 @@ public class Vanilla
 				"CNC",
 				" M ",
 				'G', "sheetPlastic",
-				'C', MineFactoryReloadedCore.rednetCableBlock,
+				'C', "cableRedNet",
 				'N', Block.music,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -572,6 +572,20 @@ public class Vanilla
 				'R', Block.blockRedstone,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
+		if (MFRConfig.enableCheapCL.getBoolean(false))
+		{
+			registerMachine(Machine.ChunkLoader, new Object[]
+					{
+				"GGG",
+				"PFP",
+				"RMR",
+				'G', "sheetPlastic",
+				'F', Block.blockGold,
+				'P', Item.eyeOfEnder,
+				'R', Block.blockRedstone,
+				'M', MineFactoryReloadedCore.machineBaseItem,
+					} );
+		}
 		
 		registerMachine(Machine.Fountain, new Object[]
 					{
@@ -1362,6 +1376,8 @@ public class Vanilla
 			'P', "sheetPlastic",
 			'S', Item.silk
 				} ));
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.bagItem), MineFactoryReloadedCore.bagItem);
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticBootsItem, 1), new Object[]
 				{

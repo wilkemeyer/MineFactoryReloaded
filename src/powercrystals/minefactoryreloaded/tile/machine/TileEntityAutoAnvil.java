@@ -11,6 +11,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -57,7 +58,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				return _inventory[0].itemID == stack.itemID;
 			return false;
 		}
-		if (slot == 0) return stack.isItemStackDamageable();
+		if (slot == 0) return stack.isItemStackDamageable() || stack.itemID == Item.enchantedBook.itemID;
 		if (slot == 1 && _inventory[0] != null)
 		{
 			if (stack.itemID == Item.enchantedBook.itemID && Item.enchantedBook.func_92110_g(stack).tagCount() > 0)
@@ -405,6 +406,20 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			
 			return outputItem;
 		}
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		tag.setBoolean("repairOnly", repairOnly);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		repairOnly = tag.getBoolean("repairOnly");
 	}
 	
 	public boolean getRepairOnly()

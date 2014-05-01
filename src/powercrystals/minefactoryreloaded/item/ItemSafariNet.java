@@ -2,8 +2,10 @@ package powercrystals.minefactoryreloaded.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -119,13 +121,26 @@ public class ItemSafariNet extends ItemFactory
 		return 3;
 	}
 	
+	private Random colorRand = new Random();
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getColorFromItemStack(ItemStack stack, int pass)
 	{
-		if(stack.getItemDamage() == 0 && (stack.getTagCompound() == null || stack.getTagCompound().getBoolean("hide")))
+		if(stack.getItemDamage() == 0 && (stack.getTagCompound() == null))
 		{
 			return 16777215;
+		}
+		if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide"))
+		{
+			World world = Minecraft.getMinecraft().theWorld;
+			colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * pass);
+			if (pass == 2)
+				return colorRand.nextInt();
+			else if (pass == 1)
+				return colorRand.nextInt();
+			else
+				return 16777215;
 		}
 		EntityEggInfo egg = getEgg(stack);
 		
@@ -179,6 +194,8 @@ public class ItemSafariNet extends ItemFactory
 		}
 		else
 		{
+			if (player != null && player.capabilities.isCreativeMode)
+				itemstack = itemstack.copy();
 			return releaseEntity(itemstack, world, x, y, z, side) != null;
 		}
 	}
@@ -213,11 +230,18 @@ public class ItemSafariNet extends ItemFactory
 		
 		if(spawnedCreature != null)
 		{
-			if ((spawnedCreature instanceof EntityLiving) && itemstack.hasDisplayName())
+			if ((spawnedCreature instanceof EntityLiving))
 			{
-				((EntityLiving)spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
-				// TODO: secondary jailer net for:
-				// ((EntityLiving)spawnedCreature).setAlwaysRenderNameTag(true);
+				if (itemstack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID)
+				{
+					((EntityLiving)spawnedCreature).func_110163_bv();
+				}
+				if (itemstack.hasDisplayName())
+				{
+					((EntityLiving)spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
+					// TODO: secondary jailer net for:
+					// ((EntityLiving)spawnedCreature).setAlwaysRenderNameTag(true);
+				}
 			}
 			
 			if(isSingleUse(itemstack))
@@ -390,6 +414,17 @@ public class ItemSafariNet extends ItemFactory
 	public static boolean isSafariNet(ItemStack s)
 	{
 		return s != null && (s.getItem() instanceof ItemSafariNet);
+	}
+	
+	public static ItemStack makeMysteryNet(ItemStack s)
+	{
+		if (isSafariNet(s))
+		{
+			NBTTagCompound c = new NBTTagCompound();
+			c.setBoolean("hide", true);
+			s.setTagCompound(c);
+		}
+		return s;
 	}
 	
 	public static Class<?> getEntityClass(ItemStack s)

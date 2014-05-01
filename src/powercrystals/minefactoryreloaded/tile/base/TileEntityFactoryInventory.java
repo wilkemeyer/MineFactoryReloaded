@@ -333,9 +333,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+		if (itemstack != null)
 		{
-			itemstack.stackSize = getInventoryStackLimit();
+			if (itemstack.stackSize > getInventoryStackLimit())
+				itemstack.stackSize = getInventoryStackLimit();
+			else if (itemstack.stackSize < 0)
+				itemstack = null;
 		}
 		_inventory[i] = itemstack;
 		onInventoryChanged();
@@ -482,7 +485,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			nbttaglist = new NBTTagList();
 			for(int i = 0; i < _inventory.length; i++)
 			{
-				if (_inventory[i] != null && _inventory[i].stackSize > 0)
+				if (_inventory[i] != null && _inventory[i].stackSize >= 0)
 				{
 					NBTTagCompound slot = new NBTTagCompound();
 					slot.setByte("Slot", (byte)i);

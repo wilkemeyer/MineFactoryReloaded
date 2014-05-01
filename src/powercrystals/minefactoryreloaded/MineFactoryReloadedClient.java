@@ -11,8 +11,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -90,7 +91,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 
 	public static HashMap<BlockPosition, Integer> prcPages = new HashMap<BlockPosition, Integer>();
 
-	private static List<IHarvestAreaContainer> _areaTileEntities = new LinkedList<IHarvestAreaContainer>();
+	public static Set<IHarvestAreaContainer> _areaTileEntities = new LinkedHashSet<IHarvestAreaContainer>();
 
 	public static void init()
 	{

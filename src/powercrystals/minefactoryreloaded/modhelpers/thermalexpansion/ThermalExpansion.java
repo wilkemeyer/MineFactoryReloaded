@@ -11,6 +11,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,8 +74,11 @@ public class ThermalExpansion implements IRandomMobProvider
 		creeper.setCustomNameTag("Exploding Zeldo");
 		creeper.setAlwaysRenderNameTag(true);
 		creeper.func_110163_bv();
-		creeper.setCurrentItemOrArmor(1, new ItemStack(MineFactoryReloadedCore.plasticBootsItem));
-		creeper.setEquipmentDropChance(1, 2);
+		ItemStack armor = new ItemStack(MineFactoryReloadedCore.plasticBootsItem);
+		armor.setItemName("Zeldo's Ruby Slippers");
+		int i = EntityLiving.getArmorPosition(armor);
+		creeper.setCurrentItemOrArmor(i, armor);
+		creeper.setEquipmentDropChance(i, 2);
 		mobs.add(new RandomMob(creeper, 20));
 		
 		return mobs;

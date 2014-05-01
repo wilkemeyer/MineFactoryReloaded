@@ -39,6 +39,7 @@ public class ThermalExpansion extends Vanilla
 	ItemStack tesseract;
 	ItemStack tesseractFrameEmpty;
 	ItemStack cellResonant;
+	ItemStack cellRedstone;
 	
 	@Override
 	protected void gatherItems()
@@ -48,7 +49,7 @@ public class ThermalExpansion extends Vanilla
 			FMLLog.log(MineFactoryReloadedCore.modId, Level.SEVERE,
 					"ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
 			throw new MissingModsException(Collections.
-					singleton((ArtifactVersion)new DefaultArtifactVersion("ThermalExpansion", "3.0.0.2")));
+					singleton((ArtifactVersion)new DefaultArtifactVersion("ThermalExpansion", "(3.0.0.2,]")));
 		}
 		conduitLiquid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
 		tankBasic = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
@@ -69,6 +70,7 @@ public class ThermalExpansion extends Vanilla
 		tesseract = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tesseract"));
 		tesseractFrameEmpty = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameEmpty", 1);
 		cellResonant = GameRegistry.findItemStack("ThermalExpansion", "cellResonant", 1);
+		cellRedstone = GameRegistry.findItemStack("ThermalExpansion", "cellReinforced", 1);
 	}
 	
 	@Override
@@ -498,7 +500,7 @@ public class ThermalExpansion extends Vanilla
 				"GNG",
 				"CFC",
 				'G', "sheetPlastic",
-				'C', MineFactoryReloadedCore.rednetCableBlock,
+				'C', "cableRedNet",
 				'N', Block.music,
 				'F', machineFrame
 					} );
@@ -506,13 +508,13 @@ public class ThermalExpansion extends Vanilla
 		registerMachine(Machine.AutoBrewer, new Object[] {
 				"GBG",
 				"CFC",
-				"RCR",
+				"RPR",
 				'G', "sheetPlastic",
 				'C', conduitLiquid,
 				'B', Item.brewingStand,
 				'R', Item.redstoneRepeater,
 				'F', machineFrame,
-				'C', powerCoilGold
+				'P', powerCoilGold
 					} );
 		
 		registerMachine(Machine.FruitPicker, new Object[] {
@@ -572,6 +574,20 @@ public class ThermalExpansion extends Vanilla
 				'O', "ingotElectrum",
 				'C', powerCoilElectrum
 					} );
+		if (MFRConfig.enableCheapCL.getBoolean(false))
+		{
+			registerMachine(Machine.ChunkLoader, new Object[] {
+					"PEP",
+					"TFT",
+					"OCO",
+					'P', "sheetPlastic",
+					'T', tesseractFrameEmpty,
+					'E', cellRedstone,
+					'F', machineFrame,
+					'O', "ingotElectrum",
+					'C', powerCoilElectrum
+						} );
+		}
 		
 		registerMachine(Machine.Fountain, new Object[] {
 				"PBP",
@@ -636,7 +652,7 @@ public class ThermalExpansion extends Vanilla
 			'N', Item.netherStar
 				} ));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.detCordBlock, 6), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.detCordBlock, 12), new Object[]
 				{
 			"PPP",
 			"PTP",

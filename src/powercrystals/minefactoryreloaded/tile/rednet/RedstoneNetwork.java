@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -29,21 +29,22 @@ public class RedstoneNetwork
 	private int _id;
 	private boolean _invalid;
 	
-	private Map<Integer, List<BlockPosition>> _singleNodes = new HashMap<Integer, List<BlockPosition>>();
-	private List<BlockPosition> _omniNodes = new LinkedList<BlockPosition>();
+	private Map<Integer, Set<BlockPosition>> _singleNodes = new HashMap<Integer, Set<BlockPosition>>();
+	private Set<BlockPosition> _omniNodes = new LinkedHashSet<BlockPosition>();
 	
-	private List<BlockPosition> _weakNodes = new LinkedList<BlockPosition>();
+	private Set<BlockPosition> _weakNodes = new LinkedHashSet<BlockPosition>();
 	
-	private List<BlockPosition> _cables = new LinkedList<BlockPosition>();
+	private Set<BlockPosition> _cables = new LinkedHashSet<BlockPosition>();
 	
 	private int[] _powerLevelOutput = new int[16];
 	private BlockPosition[] _powerProviders = new BlockPosition[16];
 	
 	private World _world;
 	
+	private static boolean log = false;
 	public static void log(String format, Object... data)
 	{
-		if(MFRConfig.redNetDebug.getBoolean(false) && format != null)
+		if (log && format != null)
 		{
 			FMLLog.info("RedNet Debug: " + format, data);
 		}
@@ -54,10 +55,11 @@ public class RedstoneNetwork
 		_world = world;
 		_id = _nextId;
 		_nextId++;
+		log = MFRConfig.redNetDebug.getBoolean(false);
 		
 		for(int i = 0; i < 16; i++)
 		{
-			_singleNodes.put(i, new LinkedList<BlockPosition>());
+			_singleNodes.put(i, new LinkedHashSet<BlockPosition>());
 		}
 	}
 	
@@ -318,15 +320,13 @@ public class RedstoneNetwork
 		}
 		_ignoreUpdates = true;
 		RedstoneNetwork.log("Network with ID %d:%d notifying %d single nodes and %d omni nodes", _id, subnet, _singleNodes.get(subnet).size(), _omniNodes.size());
-		for(int i = 0; i < _singleNodes.get(subnet).size(); i++)
+		for(BlockPosition bp : _singleNodes.get(subnet))
 		{
-			BlockPosition bp = _singleNodes.get(subnet).get(i);
 			RedstoneNetwork.log("Network with ID %d:%d notifying node %s of power state change to %d", _id, subnet, bp.toString(), _powerLevelOutput[subnet]);
 			notifySingleNode(bp, subnet);
 		}
-		for(int i = 0; i < _omniNodes.size(); i++)
+		for(BlockPosition bp : _omniNodes)
 		{
-			BlockPosition bp = _omniNodes.get(i);
 			RedstoneNetwork.log("Network with ID %d:%d notifying omni node %s of power state change to %d", _id, subnet, bp.toString(), _powerLevelOutput[subnet]);
 			notifyOmniNode(bp);
 		}

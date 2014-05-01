@@ -14,7 +14,7 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
 @Mod(modid = "MineFactoryReloaded|CompatProjRed", name = "MFR Compat: ProjectRed", version = MineFactoryReloadedCore.version, 
 	 dependencies = "after:MineFactoryReloaded;after:ProjRed|Core;after:ProjRed|Exploration")
@@ -34,7 +34,7 @@ public class ProjectRedCompat
 			Block stainedLeaf = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyeleaf");
 			Block stainedSapling = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyesapling");
 			
-			MFRRegistry.registerPlantable(new PlantableStandard(stainedSapling.blockID, stainedSapling.blockID));
+			MFRRegistry.registerPlantable(new PlantableSapling(stainedSapling.blockID, stainedSapling.blockID));
 			MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(stainedLeaf.blockID));
 			MFRRegistry.registerFertilizable(new FertilizableSapling(stainedSapling.blockID));				
 		}
