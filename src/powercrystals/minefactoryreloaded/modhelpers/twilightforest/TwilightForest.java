@@ -20,7 +20,7 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSap
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
 @Mod(modid = "MineFactoryReloaded|CompatTwilightForest", name = "MFR Compat: TwilightForest", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:TwilightForest")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false)
@@ -97,7 +97,7 @@ public class TwilightForest
 				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("cicada").get(null)).blockID));
 				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)tfBlocks.getField("plant").get(null)).blockID, HarvestType.Normal));
 				
-				MFRRegistry.registerPlantable(new PlantableStandard(((Block)tfBlocks.getField("sapling").get(null)).blockID, ((Block)tfBlocks.getField("sapling").get(null)).blockID));
+				MFRRegistry.registerPlantable(new PlantableSapling(((Block)tfBlocks.getField("sapling").get(null)).blockID, ((Block)tfBlocks.getField("sapling").get(null)).blockID));
 				
 				MFRRegistry.registerFertilizable(new FertilizableSapling(((Block)tfBlocks.getField("sapling").get(null)).blockID));
 			}
