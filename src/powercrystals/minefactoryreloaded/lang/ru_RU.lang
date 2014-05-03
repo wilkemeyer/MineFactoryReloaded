@@ -1,4 +1,4 @@
-ile.mfr.machine.planter.name = Сеятель
+tile.mfr.machine.planter.name = Сеятель
 tile.mfr.machine.fisher.name = Рыболов
 tile.mfr.machine.harvester.name = Комбайн
 tile.mfr.machine.rancher.name = Фермер
@@ -12,14 +12,14 @@ tile.mfr.machine.sewer.name = Коллектор
 tile.mfr.machine.composter.name = Компостер
 tile.mfr.machine.breeder.name = Селекционер
 tile.mfr.machine.grinder.name = Молотилка
-tile.mfr.machine.autoenchanter.name = Авто-энчантер
+tile.mfr.machine.autoenchanter.name = Авто-зачарователь
 tile.mfr.machine.chronotyper.name = Сепаратор
 
 tile.mfr.machine.ejector.name = Выталкиватель
 tile.mfr.machine.itemrouter.name = Маршрутизатор предметов
 tile.mfr.machine.liquidrouter.name = Маршрутизатор жидкости
 tile.mfr.machine.deepstorageunit.name = Глубокое хранилище
-tile.mfr.machine.liquicrafter.name = Крафтер жидкости
+tile.mfr.machine.liquicrafter.name = Создатель жидкости
 tile.mfr.machine.lavafabricator.name = Производитель лавы
 tile.mfr.machine.oilfabricator.name = Нефтепереработчик
 tile.mfr.machine.autojukebox.name = Авто-проигрыватель
@@ -137,6 +137,8 @@ tile.mfr.decorativestone.white.paved.name = Мощёный белый камен
 tile.ice.unmelting.name = Укреплённый лёд
 
 tile.mfr.vinescaffold.name = Лиановые строительные леса
+
+tile.mfr.detcord.name = DetCord
 
 tile.mfr.rubberwood.sapling.name = Саженец гевеи
 tile.mfr.rubberwood.sapling.massive.name = Священный саженец гевеи
@@ -264,6 +266,7 @@ item.mfr.laserfocus.green.name = Фокусирующая линза (Зелён
 item.mfr.laserfocus.red.name = Фокусирующая линза (Красная)
 item.mfr.laserfocus.black.name = Фокусирующая линза (Чёрная)
 
+item.mfr.upgrade.radius.cobble.name = Улучшение (Булыжник)
 item.mfr.upgrade.radius.lapis.name = Улучшение (Лазурит)
 item.mfr.upgrade.radius.iron.name = Улучшение (Железо)
 item.mfr.upgrade.radius.tin.name = Улучшение (Олово)
@@ -347,7 +350,7 @@ tip.info.mfr.upgrade.radius = Увеличение радиуса:
 
 tip.info.mfr.xpextractor = Требуется пустой контейнер для заполнения
 
-tip.info.mfr.generator.produces = Вырабатывает МЖ и РФ.
+tip.info.mfr.generator.produces = Вырабатывает МДж и РФ.
 
 tip.info.mfr.dsu.contains = Содержит
 
