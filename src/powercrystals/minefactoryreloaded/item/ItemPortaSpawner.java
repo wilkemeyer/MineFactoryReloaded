@@ -23,11 +23,6 @@ public class ItemPortaSpawner extends ItemFactory
 	public static final String spawnerTag = "spawner";
 	private static final String placeTag = "placeDelay";
 
-	public ItemPortaSpawner(int id)
-	{
-		super(id);
-	}
-
 	public static NBTTagCompound getSpawnerTag(ItemStack stack)
 	{
 		NBTTagCompound tag = stack.getTagCompound();

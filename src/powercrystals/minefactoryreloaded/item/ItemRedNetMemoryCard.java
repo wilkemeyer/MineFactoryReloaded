@@ -14,11 +14,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemRedNetMemoryCard extends ItemFactory
 {
-	public ItemRedNetMemoryCard(int id)
-	{
-		super(id);
-	}
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)

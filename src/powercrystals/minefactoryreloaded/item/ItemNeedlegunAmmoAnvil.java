@@ -1,20 +1,21 @@
 package powercrystals.minefactoryreloaded.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityFallingSand;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock
 {
-	public ItemNeedlegunAmmoAnvil(int id, int blockId, int meta)
+	public ItemNeedlegunAmmoAnvil(Block block, int meta)
 	{
-		super(id, blockId, meta);
+		super(block, meta);
 		setMaxDamage(0);
 	}
 	
-	public ItemNeedlegunAmmoAnvil(int id)
+	public ItemNeedlegunAmmoAnvil()
 	{
-		this(id, Block.anvil.blockID, 3);
+		this(Blocks.anvil, 3);
 	}
 	
 	@Override
@@ -28,12 +29,12 @@ public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock
 	{
 		if(!world.isRemote)
 		{
-	        EntityFallingSand anvil = new EntityFallingSand(world, x + 0.5, y + 0.5, z + 0.5,
-	        		_blockId, _blockMeta);
-	        anvil.setIsAnvil(true);
+	        EntityFallingBlock anvil = new EntityFallingBlock(world, x + 0.5, y + 0.5, z + 0.5,
+	        		_block, _blockMeta);
+	        anvil.func_145806_a(true);
 	        world.spawnEntityInWorld(anvil);
 	        anvil.fallDistance = ((float)distance) + 1f;
-	        anvil.fallTime = 3;
+	        anvil.field_145812_b = 3;
 	        anvil.onUpdate();
 		}
 	}

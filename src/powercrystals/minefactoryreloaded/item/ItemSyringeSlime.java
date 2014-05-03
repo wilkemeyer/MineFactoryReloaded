@@ -7,11 +7,6 @@ import net.minecraft.world.World;
 
 public class ItemSyringeSlime extends ItemSyringe
 {
-	public ItemSyringeSlime(int id)
-	{
-		super(id);
-	}
-	
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{

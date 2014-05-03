@@ -12,15 +12,15 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
@@ -112,7 +112,7 @@ public class Machine
 				{
 					info.add(StatCollector.translateToLocal("tip.info.mfr.dsu.contains") + 
 							" " + storedQuantity + " " + storedItem.getDisplayName() +
-							(adv ? " (" + storedItem.itemID + ":" +
+							(adv ? " (" + Item.itemRegistry.getNameForObject(storedItem.getItem()) + ":" +
 							storedItem.getItemDamageForDisplay() + ")" : ""));
 				}
 			}
@@ -164,8 +164,8 @@ public class Machine
 	private final int _meta;
 	private final int _machineIndex;
 	
-	private Icon[] _iconsActive = new Icon[6];
-	private Icon[] _iconsIdle = new Icon[6];
+	private IIcon[] _iconsActive = new IIcon[6];
+	private IIcon[] _iconsIdle = new IIcon[6];
 	
 	private final String _name;
 	private final String _internalName;
@@ -233,9 +233,9 @@ public class Machine
 		return _machineMappings.get(meta | (blockIndex << 4));
 	}
 	
-	public static Machine getMachineFromId(int blockId, int meta)
+	public static Machine getMachineFromId(BlockFactoryMachine block, int meta)
 	{
-		return  _machineMappings.get(meta | (((BlockFactoryMachine)Block.blocksList[blockId]).getBlockIndex() << 4));
+		return  _machineMappings.get(meta | ((block.getBlockIndex() << 4)));
 	}
 	
 	public static int getHighestMetadata(int blockIndex)
@@ -248,7 +248,7 @@ public class Machine
 		return _machines;
 	}
 	
-	public static void LoadTextures(int blockIndex, IconRegister ir)
+	public static void LoadTextures(int blockIndex, IIconRegister ir)
 	{
 		for(Machine m : _machines)
 		{
@@ -262,7 +262,7 @@ public class Machine
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 	{
 		String s = "tip.info.mfr." + _name.toLowerCase();
-		if (StatCollector.func_94522_b(s))
+		if (StatCollector.canTranslate(s))
 		{
 			s = StatCollector.translateToLocal(s);
 			if (s.contains("\n"))
@@ -282,9 +282,9 @@ public class Machine
 		return _internalName;
 	}
 	
-	public int getBlockId()
+	public Block getBlock()
 	{
-		return MineFactoryReloadedCore.machineBlocks.get(_blockIndex).blockID;
+		return MineFactoryReloadedCore.machineBlocks.get(_blockIndex);
 	}
 	
 	public ItemStack getItemStack()
@@ -349,11 +349,11 @@ public class Machine
 			_activationEnergy = c.get("Machine", _name + ".ActivationCostMJ", getActivationEnergyMJ()).getInt() * TileEntityFactoryPowered.energyPerMJ;
 		}
 		
-		MinecraftForge.setBlockHarvestLevel(MineFactoryReloadedCore.machineBlocks.get(_blockIndex), _meta, "pickaxe", 0);
+		MineFactoryReloadedCore.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);
 		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 	
-	public void loadIcons(IconRegister ir)
+	public void loadIcons(IIconRegister ir)
 	{
 		_iconsActive[0] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.bottom");
 		_iconsActive[1] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.top");
@@ -369,7 +369,7 @@ public class Machine
 		_iconsIdle[5] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.right");
 	}
 	
-	public Icon getIcon(int side, boolean isActive)
+	public IIcon getIcon(int side, boolean isActive)
 	{
 		if(isActive) return _iconsActive[side];
 		return _iconsIdle[side];

@@ -3,16 +3,13 @@ package powercrystals.minefactoryreloaded.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
-
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -21,19 +18,18 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
+
 public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerItem
 {
 	private boolean _prefix = false;
     @SideOnly(Side.CLIENT)
-    protected Icon fillIcon;
-	public ItemSyringeLiquid(int id)
-	{
-		super(id);
-	}
+    protected IIcon fillIcon;
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
@@ -50,7 +46,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	public String getLocalizedName(String str)
 	{
 		String name = getUnlocalizedName() + "." + str;
-		if (StatCollector.func_94522_b(name))
+		if (StatCollector.canTranslate(name))
 			return StatCollector.translateToLocal(name);
 		return null;
 	}
@@ -83,7 +79,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(ItemStack stack, int pass) {
+	public IIcon getIcon(ItemStack stack, int pass) {
 		switch (pass)
 		{
 		case 1:

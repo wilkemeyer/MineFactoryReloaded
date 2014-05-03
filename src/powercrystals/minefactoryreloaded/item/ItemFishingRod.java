@@ -11,9 +11,8 @@ import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 
 public class ItemFishingRod extends ItemFactory
 {
-	public ItemFishingRod(int id)
+	public ItemFishingRod()
 	{
-		super(id);
 		setUnlocalizedName("mfr.fishingrod");
 		setMaxStackSize(1);
 	}

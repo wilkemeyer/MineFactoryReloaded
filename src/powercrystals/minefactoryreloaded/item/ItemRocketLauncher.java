@@ -15,11 +15,6 @@ import powercrystals.minefactoryreloaded.net.Packets;
 
 public class ItemRocketLauncher extends ItemFactoryGun
 {
-	public ItemRocketLauncher(int id)
-	{
-		super(id);
-	}
-
 	@Override
 	protected boolean hasGUI(ItemStack stack)
 	{

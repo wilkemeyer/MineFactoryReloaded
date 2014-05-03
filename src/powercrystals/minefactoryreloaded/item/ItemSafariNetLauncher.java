@@ -14,12 +14,6 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class ItemSafariNetLauncher extends ItemFactory
 {
-	public ItemSafariNetLauncher(int id)
-	{
-		super(id);
-		setCreativeTab(MFRCreativeTab.tab);
-	}
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)

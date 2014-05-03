@@ -6,7 +6,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityEggInfo;
@@ -20,7 +20,7 @@ import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Facing;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
@@ -37,16 +37,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemSafariNet extends ItemFactory
 {
-	private Icon _iconEmpty;
-	private Icon _iconBack;
-	private Icon _iconMid;
-	private Icon _iconFront;
+	private IIcon _iconEmpty;
+	private IIcon _iconBack;
+	private IIcon _iconMid;
+	private IIcon _iconFront;
 	
 	public ItemSafariNet(int id)
 	{
-		super(id);
-		maxStackSize = 1;
-		setCreativeTab(MFRCreativeTab.tab);
+		setMaxStackSize(1);
 	}
 	
 	@Override
@@ -88,7 +86,7 @@ public class ItemSafariNet extends ItemFactory
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Icon getIcon(ItemStack stack, int pass)
+	public IIcon getIcon(ItemStack stack, int pass)
 	{
 		if(isEmpty(stack)) return _iconEmpty;
 		if(pass == 0) return _iconBack;
@@ -98,7 +96,7 @@ public class ItemSafariNet extends ItemFactory
 	}
 	
 	@Override
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		_iconEmpty = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".empty");
 		_iconBack = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".back");

@@ -13,15 +13,14 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 {
-	protected int _blockId;
+	protected Block _block;
 	protected int _blockMeta;
 
-	public ItemNeedlegunAmmoBlock(int id, int blockId, int blockMeta)
+	public ItemNeedlegunAmmoBlock(Block block, int blockMeta)
 	{
-		super(id);
 		setMaxDamage(3);
 		setHasSubtypes(false);
-		_blockId = blockId;
+		_block = block;
 		_blockMeta = blockMeta;
 	}
 
@@ -62,11 +61,11 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 
 	protected void placeBlockAt(World world, int x, int y, int z, double distance)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
-		if(!world.isRemote && (block == null || block.isAirBlock(world, x, y, z) ||
-				(block.isBlockReplaceable(world, x, y, z) && !block.blockMaterial.isLiquid())))
+		Block block = world.getBlock(x, y, z);
+		if(!world.isRemote && (block == null || block.isAir(world, x, y, z) ||
+				(block.isReplaceable(world, x, y, z) && !block.getMaterial().isLiquid())))
 		{
-			world.setBlock(x, y, z, _blockId, _blockMeta, 3);
+			world.setBlock(x, y, z, _block, _blockMeta, 3);
 		}
 	}
 }

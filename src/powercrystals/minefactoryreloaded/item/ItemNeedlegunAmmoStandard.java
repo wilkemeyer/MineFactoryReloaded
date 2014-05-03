@@ -7,9 +7,8 @@ import net.minecraft.world.World;
 
 public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo
 {
-	public ItemNeedlegunAmmoStandard(int id)
+	public ItemNeedlegunAmmoStandard()
 	{
-		super(id);
 		setMaxDamage(11);
 		setHasSubtypes(false);
 	}

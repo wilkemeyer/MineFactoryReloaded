@@ -1,29 +1,26 @@
 package powercrystals.minefactoryreloaded.item;
 
-import java.util.List;
-
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.List;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 public class ItemXpExtractor extends ItemFactory
 {
-	private Icon _icon1;
-	private Icon _icon2;
-	private Icon _icon3;
-	
-	public ItemXpExtractor(int id)
-	{
-		super(id);
-	}
+	private IIcon _icon1;
+	private IIcon _icon2;
+	private IIcon _icon3;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -48,7 +45,7 @@ public class ItemXpExtractor extends ItemFactory
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		if(player.experienceLevel > 0 && player.inventory.hasItem(Item.bucketEmpty.itemID))
+		if(player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket))
 		{
 			player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 		}
@@ -59,22 +56,22 @@ public class ItemXpExtractor extends ItemFactory
 	@Override
 	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
 	{
-		if(player.experienceLevel > 0 && player.inventory.hasItem(Item.bucketEmpty.itemID))
+		if(player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket))
 		{
 			player.experienceLevel--;
-			player.inventory.consumeInventoryItem(Item.bucketEmpty.itemID);
+			player.inventory.consumeInventoryItem(Items.bucket);
 			if(!player.inventory.addItemStackToInventory(new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem)))
 			{
-				player.dropItem(MineFactoryReloadedCore.mobEssenceBucketItem.itemID, 1);
+				player.dropItem(MineFactoryReloadedCore.mobEssenceBucketItem, 1);
 			}
 		}
 		return stack;
 	}
 	
 	@Override
-	public Icon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining)
+	public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining)
 	{
-		if(usingItem != null && usingItem.itemID == itemID)
+		if (usingItem != null && usingItem.equals(this))
 		{
 			if(useRemaining > 24) return _icon1;
 			if(useRemaining > 12) return _icon2;
@@ -84,7 +81,7 @@ public class ItemXpExtractor extends ItemFactory
 	}
 	
 	@Override
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		_icon1 = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".1");
 		_icon2 = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".2");

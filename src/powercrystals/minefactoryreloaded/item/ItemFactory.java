@@ -2,8 +2,9 @@ package powercrystals.minefactoryreloaded.item;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -13,11 +14,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFactory extends Item
 {
-	private int _metaMax = 0;
+	protected int _metaMax = 0;
+	protected boolean _hasIcons = true;
 	
-	public ItemFactory(int id)
+	public ItemFactory()
 	{
-		super(id);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 	
@@ -29,25 +30,50 @@ public class ItemFactory extends Item
 		return this;
 	}
 	
+	public Item setHasIcons(boolean icons)
+	{
+		_hasIcons = icons;
+		return this;
+	}
+	
 	protected void setMetaMax(int max)
 	{
 		_metaMax = max;
 	}
-	
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+
+	public void getSubItems(Item item, List<ItemStack> subTypes)
 	{
-		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		for(int meta = 0; meta <= _metaMax; meta++)
+		{
+			subTypes.add(new ItemStack(item, 1, meta));
+		}
+	}
+	
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
+	{
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
-		for(int meta = 0; meta <= _metaMax; meta++)
-		{
-			subTypes.add(new ItemStack(itemId, 1, meta));
-		}
+		super.addInformation(stack, player, infoList, advancedTooltips);
+		addInfo(stack, player, infoList, advancedTooltips);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IIconRegister par1IconRegister)
+	{
+		if (_hasIcons)
+			this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void getSubItems(Item item, CreativeTabs creativeTab, List subTypes)
+	{
+		getSubItems(item, subTypes);
 	}
 }

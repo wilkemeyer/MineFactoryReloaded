@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
@@ -19,15 +19,15 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class ItemFactoryArmor extends ItemArmor
 {
-	public static final EnumArmorMaterial PLASTIC_ARMOR = EnumHelper.
+	public static final ItemArmor.ArmorMaterial PLASTIC_ARMOR = EnumHelper.
 			addArmorMaterial("plastic", 3, new int[]{1, 2, 2, 1}, 7);
 
 	protected HashMap<ItemIdentifier, Boolean> repariableItems = new HashMap<ItemIdentifier, Boolean>();
 	protected String textureFile;
 
-	public ItemFactoryArmor(int id, EnumArmorMaterial mat, int render, int type)
+	public ItemFactoryArmor(ItemArmor.ArmorMaterial mat, int render, int type)
 	{
-		super(id, mat, render, type);
+		super(mat, render, type);
 		setMaxStackSize(1);
 		textureFile = MineFactoryReloadedCore.armorTextureFolder + mat.name().toLowerCase() +
 				"_layer_" + (type == 2 ? 2 : 1) + ".png";
@@ -61,7 +61,7 @@ public class ItemFactoryArmor extends ItemArmor
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}

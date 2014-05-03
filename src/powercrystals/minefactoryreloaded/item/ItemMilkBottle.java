@@ -1,16 +1,15 @@
 package powercrystals.minefactoryreloaded.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class ItemMilkBottle extends ItemFactory
 {
-	public ItemMilkBottle(int id)
+	public ItemMilkBottle()
 	{
-		super(id);
 	}
 	
 	@Override
@@ -18,7 +17,7 @@ public class ItemMilkBottle extends ItemFactory
     {
 		if(!world.isRemote)
 		{
-			player.curePotionEffects(new ItemStack(Item.bucketMilk));
+			player.curePotionEffects(new ItemStack(Items.milk_bucket));
 		}
 		
 		if (!player.capabilities.isCreativeMode)
@@ -27,11 +26,11 @@ public class ItemMilkBottle extends ItemFactory
 			
 			if(stack.stackSize <= 0)
 			{
-				return new ItemStack(Item.glassBottle);
+				return new ItemStack(Items.glass_bottle);
 			}
-			else if(!player.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle)))
+			else if(!player.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle)))
 			{
-				player.dropPlayerItem(new ItemStack(Item.glassBottle));
+				player.func_146097_a(new ItemStack(Items.glass_bottle), false, true);
 			}
 		}
 

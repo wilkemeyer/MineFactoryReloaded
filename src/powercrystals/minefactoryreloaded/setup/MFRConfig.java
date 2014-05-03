@@ -1,11 +1,11 @@
 package powercrystals.minefactoryreloaded.setup;
 
-import static net.minecraftforge.common.Configuration.*;
+import static net.minecraftforge.common.config.Configuration.*;
 
 import java.io.File;
 
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class MFRConfig
 {
@@ -185,6 +185,8 @@ public class MFRConfig
 	public static Property thermalExpansionRecipes;
 	public static Property gregTechRecipes;
 	
+	public static String CATEGORY_ITEM = "item";
+	
 	public static void loadClientConfig(File configFile)
 	{
 		Configuration c = new Configuration(configFile);
@@ -204,109 +206,6 @@ public class MFRConfig
 		Configuration c = new Configuration(configFile);
 		c.load();
 		config = c;
-		Property base = c.get(CATEGORY_BLOCK, "BaseID", 3120);
-		base.comment = "This is the base ID blocks will assign from. Delete the other IDs here to auto-align to this value.";
-		int idBase = base.getInt(3120);
-		machineBlock0Id = c.getBlock("ID.MachineBlock", idBase++);
-		conveyorBlockId = c.getBlock("ID.ConveyorBlock", idBase++);
-		rubberWoodBlockId = c.getBlock("ID.RubberWood", idBase++);
-		rubberLeavesBlockId = c.getBlock("ID.RubberLeaves", idBase++);
-		rubberSaplingBlockId = c.getBlock("ID.RubberSapling", idBase++);
-		railDropoffCargoBlockId = c.getBlock("ID.CargoRailDropoffBlock", idBase++);
-		railPickupCargoBlockId = c.getBlock("ID.CargoRailPickupBlock", idBase++);
-		railDropoffPassengerBlockId = c.getBlock("ID.PassengerRailDropoffBlock", idBase++);
-		railPickupPassengerBlockId = c.getBlock("ID.PassengerRailPickupBlock", idBase++);
-		factoryGlassBlockId = c.getBlock("ID.StainedGlass", idBase++);
-		factoryGlassPaneBlockId = c.getBlock("ID.StainedGlassPane", idBase++);
-		machineBlock1Id = c.getBlock("ID.MachineBlock1", idBase++);
-		factoryRoadBlockId = c.getBlock("ID.Road", idBase++);
-		factoryDecorativeBrickBlockId = c.getBlock("ID.Bricks", idBase++);
-		factoryDecorativeStoneBlockId = c.getBlock("ID.Stone", idBase++);
-		milkStillBlockId = c.getBlock("ID.Milk.Still", idBase++);
-		meatStillBlockId = c.getBlock("ID.Meat.Still", idBase++);
-		sludgeStillBlockId = c.getBlock("ID.Sludge.Still", idBase++);
-		pinkslimeStillBlockId = c.getBlock("ID.PinkSlime.Still", idBase++);
-		sewageStillBlockId = c.getBlock("ID.Sewage.Still", idBase++);
-		chocolateMilkStillBlockId = c.getBlock("ID.ChocolateMilk.Still", idBase++);
-		essenceStillBlockId = c.getBlock("ID.MobEssence.Still", idBase++);
-		mushroomSoupStillBlockId = c.getBlock("ID.MushroomSoup.Still", idBase++);
-		biofuelStillBlockId = c.getBlock("ID.BioFuel.Still", idBase++);
-		rednetCableBlockId = c.getBlock("ID.RedNet.Cable", idBase++);
-		rednetLogicBlockId = c.getBlock("ID.RedNet.Logic", idBase++);
-		machineBlock2Id = c.getBlock("ID.MachineBlock2", idBase++);
-		fakeLaserBlockId = c.getBlock("ID.FakeLaser", idBase++);
-		vineScaffoldBlockId = c.getBlock("ID.VineScaffold", idBase++);
-		rednetPanelBlockId = c.getBlock("ID.RedNet.Panel", idBase++);
-		detCordBlockId = c.getBlock("ID.DetCord", idBase++);
-		
-		base = c.get(CATEGORY_ITEM, "BaseID", 11987);
-		base.comment = "This is the base ID items will assign from. Delete the other IDs here to auto-align to this value.";
-		idBase = base.getInt(11987);
-		hammerItemId = c.getItem(CATEGORY_ITEM, "ID.Hammer", idBase++);
-		milkItemId = c.getItem(CATEGORY_ITEM, "ID.Milk", idBase++);
-		sludgeItemId = c.getItem(CATEGORY_ITEM, "ID.Sludge", idBase++);
-		sewageItemId = c.getItem(CATEGORY_ITEM, "ID.Sewage", idBase++);
-		mobEssenceItemId = c.getItem(CATEGORY_ITEM, "ID.MobEssence", idBase++);
-		fertilizerItemId = c.getItem(CATEGORY_ITEM, "ID.FertilizerItem", idBase++);
-		plasticSheetItemId = c.getItem(CATEGORY_ITEM, "ID.PlasticSheet", idBase++);
-		rawPlasticItemId = c.getItem(CATEGORY_ITEM, "ID.RawPlastic", idBase++);
-		rubberBarItemId = c.getItem(CATEGORY_ITEM, "ID.RubberBar", idBase++);
-		sewageBucketItemId = c.getItem(CATEGORY_ITEM, "ID.SewageBucket", idBase++);
-		sludgeBucketItemId = c.getItem(CATEGORY_ITEM, "ID.SludgeBucket", idBase++);
-		mobEssenceBucketItemId = c.getItem(CATEGORY_ITEM, "ID.MobEssenceBucket", idBase++);
-		syringeEmptyItemId = c.getItem(CATEGORY_ITEM, "ID.SyringeEmpty", idBase++);
-		syringeHealthItemId = c.getItem(CATEGORY_ITEM, "ID.SyringeHealth", idBase++);
-		syringeGrowthItemId = c.getItem(CATEGORY_ITEM, "ID.SyringeGrowth", idBase++);
-		rawRubberItemId = c.getItem(CATEGORY_ITEM, "ID.RawRubber", idBase++);
-		machineBaseItemId = c.getItem(CATEGORY_ITEM, "ID.MachineBlock", idBase++);
-		safariNetItemId = c.getItem(CATEGORY_ITEM, "ID.SafariNet", idBase++);
-		ceramicDyeItemId = c.getItem(CATEGORY_ITEM, "ID.CeramicDye", idBase++);
-		blankRecordId = c.getItem(CATEGORY_ITEM, "ID.BlankRecord", idBase++);
-		syringeZombieId = c.getItem(CATEGORY_ITEM, "ID.SyringeZombie", idBase++);
-		safariNetSingleItemId = c.getItem(CATEGORY_ITEM, "ID.SafariNetSingleUse", idBase++);
-		bioFuelItemId = c.getItem(CATEGORY_ITEM, "ID.BioFuel", idBase++);
-		bioFuelBucketItemId = c.getItem(CATEGORY_ITEM, "ID.BioFuelBucket", idBase++);
-		upgradeItemId = c.getItem(CATEGORY_ITEM, "ID.Upgrade", idBase++);
-		safariNetLauncherItemId = c.getItem(CATEGORY_ITEM, "ID.SafariNetLauncher", idBase++);
-		sugarCharcoalItemId = c.getItem(CATEGORY_ITEM, "ID.SugarCharcoal", idBase++);
-		milkBottleItemId = c.getItem(CATEGORY_ITEM, "ID.MilkBottle", idBase++);
-		spyglassItemId = c.getItem(CATEGORY_ITEM, "ID.Spyglass", idBase++);
-		portaSpawnerItemId = c.getItem(CATEGORY_ITEM, "ID.PortaSpawner", idBase++);
-		strawItemId = c.getItem(CATEGORY_ITEM, "ID.Straw", idBase++);
-		xpExtractorItemId = c.getItem(CATEGORY_ITEM, "ID.XPExtractor", idBase++);
-		syringeSlimeItemId = c.getItem(CATEGORY_ITEM, "ID.SyringeSlime", idBase++);
-		syringeCureItemId = c.getItem(CATEGORY_ITEM, "ID.SyringeCure", idBase++);
-		logicCardItemId = c.getItem(CATEGORY_ITEM, "ID.Upgrade.PRC", idBase++);
-		rednetMeterItemId = c.getItem(CATEGORY_ITEM, "ID.RedNet.Meter", idBase++);
-		rednetMemoryCardItemId = c.getItem(CATEGORY_ITEM, "ID.RedNet.MemoryCard", idBase++);
-		rulerItemId = c.getItem(CATEGORY_ITEM, "ID.Ruler", idBase++);
-		meatIngotRawItemId = c.getItem(CATEGORY_ITEM, "ID.MeatIngotRaw", idBase++);
-		meatIngotCookedItemId = c.getItem(CATEGORY_ITEM, "ID.MeatIngotCooked", idBase++);
-		meatNuggetRawItemId = c.getItem(CATEGORY_ITEM, "ID.MeatNuggetRaw", idBase++);
-		meatNuggetCookedItemId = c.getItem(CATEGORY_ITEM, "ID.MeatNuggetCooked", idBase++);
-		meatBucketItemId = c.getItem(CATEGORY_ITEM, "ID.MeatBucket", idBase++);
-		pinkSlimeBucketItemId = c.getItem(CATEGORY_ITEM, "ID.PinkSlimeBucket", idBase++);
-		pinkSlimeballItemId = c.getItem(CATEGORY_ITEM, "ID.PinkSlimeball", idBase++);
-		safariNetJailerItemId = c.getItem(CATEGORY_ITEM, "ID.SafariNetJailer", idBase++);
-		laserFocusItemId = c.getItem(CATEGORY_ITEM, "ID.LaserFocus", idBase++);
-		chocolateMilkBucketItemId = c.getItem(CATEGORY_ITEM, "ID.ChocolateMilkBucket", idBase++);
-		mushroomSoupBucketItemId = c.getItem(CATEGORY_ITEM, "ID.MushroomSoupBucket", idBase++);
-		needlegunItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun", idBase++);
-		needlegunAmmoEmptyItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Empty", idBase++);
-		needlegunAmmoStandardItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Standard", idBase++);
-		needlegunAmmoLavaItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Lava", idBase++);
-		needlegunAmmoSludgeItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Sludge", idBase++);
-		needlegunAmmoSewageItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Sewage", idBase++);
-		needlegunAmmoFireItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Fire", idBase++);
-		needlegunAmmoAnvilItemId = c.getItem(CATEGORY_ITEM, "ID.NeedleGun.Ammo.Anvil", idBase++);
-		plasticCupItemId = c.getItem(CATEGORY_ITEM, "ID.PlasticCup", idBase++);
-		rocketLauncherItemId = c.getItem(CATEGORY_ITEM, "ID.RocketLauncher", idBase++);
-		rocketItemId = c.getItem(CATEGORY_ITEM, "ID.Rocket", idBase++);
-		plasticCellItemId = c.getItem(CATEGORY_ITEM, "ID.PlasticCell", idBase++);
-		fishingRodItemId = c.getItem(CATEGORY_ITEM, "ID.FishingRod", idBase++);
-		bagItemId = c.getItem(CATEGORY_ITEM, "ID.PlasticBag", idBase++);
-		plasticBootsItemId = c.getItem(CATEGORY_ITEM, "ID.PlasticBoots", idBase++);
-		
 		zoolologistEntityId = c.get("Entity", "ID.Zoologist", 330);
 		enableSpawnerCarts = c.get("Entity", "EnableSpawnerCarts", true);
 		enableSpawnerCarts.comment = "If true, using a portaspawner on an empty minecart will make it into a spawner cart";

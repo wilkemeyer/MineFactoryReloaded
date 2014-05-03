@@ -8,9 +8,9 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumMovingObjectType;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
@@ -50,7 +50,7 @@ public class EntitySafariNet extends EntityThrowable
 	{
 		ItemStack storedEntity = dataWatcher.getWatchableObjectItemStack(13);
 		
-		if(mop.typeOfHit == EnumMovingObjectType.TILE)
+		if(mop.typeOfHit == MovingObjectType.BLOCK)
 		{
 			if(ItemSafariNet.isEmpty(storedEntity))
 			{
@@ -122,7 +122,7 @@ public class EntitySafariNet extends EntityThrowable
 		setDead();
 	}
 	
-	public Icon getIcon()
+	public IIcon getIcon()
 	{
 		return dataWatcher.getWatchableObjectItemStack(13).getIconIndex();
 	}

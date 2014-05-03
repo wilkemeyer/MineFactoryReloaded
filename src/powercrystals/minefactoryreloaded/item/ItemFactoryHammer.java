@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -24,16 +24,11 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public class ItemFactoryHammer extends ItemFactory implements IToolHammer, IToolWrench
 {
-	public ItemFactoryHammer(int i)
-	{
-		super(i);
-	}
-
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
 			int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
+		Block block = world.getBlock(x, y, z);
 		if (block != null)
 		{
 			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK,

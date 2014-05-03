@@ -1,18 +1,19 @@
 package powercrystals.minefactoryreloaded.entity;
 
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
-
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class EntityFishingRod extends EntityThrowable
 {
@@ -83,8 +84,8 @@ public class EntityFishingRod extends EntityThrowable
 			for (float y = (float)(posY - f); y < posY + f; ++y)
 				for (float z = (float)(posZ - f); z < posZ + f; ++z)
 				{
-					int block = worldObj.getBlockId((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
-					if (block == Block.waterStill.blockID | block == Block.waterMoving.blockID)
+					Block block = worldObj.getBlock((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
+					if (block.equals(Blocks.water) || block.equals(Blocks.flowing_water))
 						if (rand.nextInt(rate) == 0)
 						{
 							EntityItem e = new EntityItem(worldObj, x, y, z);
@@ -92,9 +93,9 @@ public class EntityFishingRod extends EntityThrowable
 							e.motionZ = rand.nextGaussian() / 2;
 							e.motionY = 0.4 + (rand.nextDouble() - 0.4) / 2;
 							if (rand.nextInt(30) == 0)
-								e.setEntityItemStack(new ItemStack(Item.fishCooked));
-							else
-								e.setEntityItemStack(new ItemStack(Item.fishRaw));
+								e.setEntityItemStack(new ItemStack(Items.cooked_fished));
+							else // TODO: use fishing API when i write it for forge
+								e.setEntityItemStack(new ItemStack(Items.fish));
 							worldObj.spawnEntityInWorld(e);
 						}
 				}

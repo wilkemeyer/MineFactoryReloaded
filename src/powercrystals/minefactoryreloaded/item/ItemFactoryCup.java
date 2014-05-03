@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
@@ -47,7 +47,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	private boolean _prefix = false;
 	@SideOnly(Side.CLIENT)
-	protected Icon fillIcon;
+	protected IIcon fillIcon;
 	protected List<IUseHandler> useHandlers;
 
 	public ItemFactoryCup(int id, int stackSize, int maxUses)
@@ -273,7 +273,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
@@ -281,7 +281,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(ItemStack stack, int pass) {
+	public IIcon getIcon(ItemStack stack, int pass) {
 		switch (pass)
 		{
 		case 1:

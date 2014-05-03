@@ -15,11 +15,6 @@ public class ItemRedNetMeter extends ItemFactory
 					"Yellow", "Lime", "Pink", "Gray", "LightGray", "Cyan", "Purple",
 					"Blue", "Brown", "Green", "Red", "Black" };
 	
-	public ItemRedNetMeter(int id)
-	{
-		super(id);
-	}
-	
 	@Override
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world,
 			int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)

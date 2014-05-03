@@ -10,11 +10,6 @@ import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 
 public class ItemNeedleGun extends ItemFactoryGun
 {
-	public ItemNeedleGun(int id)
-	{
-		super(id);
-	}
-
 	@Override
 	protected boolean hasGUI(ItemStack stack)
 	{
@@ -56,7 +51,7 @@ public class ItemNeedleGun extends ItemFactoryGun
 			for (int i = 0, e = inv.length; i < e; ++i)
 			{
 				ItemStack item = inv[i];
-				if (item != null && item.itemID == ammo.itemID)
+				if (ammo.getItem().equals(item.getItem()))
 				{
 					if (!creative && --inv[i].stackSize <= 0) inv[i] = null;
 					ammo.setItemDamage(0);
@@ -67,9 +62,9 @@ public class ItemNeedleGun extends ItemFactoryGun
 			}
 
 			if (!(world.isRemote | creative))
-				player.dropPlayerItem(new ItemStack(MineFactoryReloadedCore.needlegunAmmoEmptyItem));
+				player.dropItem(MineFactoryReloadedCore.needlegunAmmoEmptyItem, 1);
 		}
-		stack.getTagCompound().setCompoundTag("ammo", t);
+		stack.getTagCompound().setTag("ammo", t);
 		return reloaded;
 	}
 

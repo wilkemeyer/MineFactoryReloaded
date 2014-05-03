@@ -205,7 +205,7 @@ public class Thaumcraft
 	
 	private static void parseAspects(Machine item, String toadd) throws Throwable
 	{
-		parseAspects(new ItemStack(item.getBlockId(), 1, item.getMeta()), toadd, true);
+		parseAspects(new ItemStack(item.getBlock(), 1, item.getMeta()), toadd, true);
 	}
 	
 	private static void doAspects() throws Throwable

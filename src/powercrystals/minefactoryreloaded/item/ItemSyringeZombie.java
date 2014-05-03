@@ -9,15 +9,9 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemSyringeZombie extends ItemSyringe
 {
-	public ItemSyringeZombie()
-	{
-		super(MFRConfig.syringeZombieId.getInt());
-	}
-	
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{

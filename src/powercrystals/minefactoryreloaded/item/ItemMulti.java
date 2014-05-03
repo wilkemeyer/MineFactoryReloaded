@@ -1,22 +1,19 @@
 package powercrystals.minefactoryreloaded.item;
 
-import java.util.List;
-
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 public class ItemMulti extends ItemFactory
 {
 	protected String[] _names;
-	private Icon[] _icons;
+	private IIcon[] _icons;
 	
-	public ItemMulti(int id)
+	public ItemMulti()
 	{
-		super(id);
 		setHasSubtypes(true);
 		setMaxDamage(0);
 	}
@@ -24,15 +21,17 @@ public class ItemMulti extends ItemFactory
 	protected void setNames(String... names)
 	{
 		_names = names;
-		_icons = new Icon[_names.length];
-		setMetaMax(_names.length);
+		_icons = new IIcon[_names.length];
+		setMetaMax(_names.length - 1);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Icon getIconFromDamage(int damage)
+	public IIcon getIconFromDamage(int damage)
 	{
-		return _icons[Math.min(damage, _icons.length - 1)];
+		if (!_hasIcons)
+			return null;
+		return _icons[Math.min(damage, _metaMax)];
 	}
 	
 	@Override
@@ -44,26 +43,24 @@ public class ItemMulti extends ItemFactory
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return getUnlocalizedName() + "." + _names[Math.min(stack.getItemDamage(), _names.length - 1)];
+		return getName(getUnlocalizedName(), _names[Math.min(stack.getItemDamage(), _metaMax)]);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
+		if (!_hasIcons)
+			return;
+		String str = "minefactoryreloaded:" + getUnlocalizedName();
 		for(int i = 0; i < _icons.length; i++)
 		{
-			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
+			_icons[i] = ir.registerIcon(getName(str, _names[i]));
 		}
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	public static String getName(String name, String postfix)
 	{
-		for(int i = 0; i < _names.length; i++)
-		{
-			subTypes.add(new ItemStack(itemId, 1, i));
-		}
+		return name + (postfix != null ? "." + postfix : "");
 	}
 }

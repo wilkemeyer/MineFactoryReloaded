@@ -1,9 +1,5 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,9 +7,9 @@ import net.minecraft.world.World;
 
 public abstract class ItemFactoryGun extends ItemFactory
 {
-	public ItemFactoryGun(int id)
+	public ItemFactoryGun()
 	{
-		super(id);
+		setHasIcons(false);
 	}
 
 	protected abstract boolean hasGUI(ItemStack stack);
@@ -40,11 +36,5 @@ public abstract class ItemFactoryGun extends ItemFactory
 				tag.setLong(delayTag, world.getTotalWorldTime() + getDelay(stack, fire(stack, world, player)));
 		}
 		return stack;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
-	{
 	}
 }

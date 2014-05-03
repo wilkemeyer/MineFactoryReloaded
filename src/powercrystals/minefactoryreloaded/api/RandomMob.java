@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.api;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.WeightedRandomItem;
+import net.minecraft.util.WeightedRandom;
 
-public class RandomMob extends WeightedRandomItem
+public class RandomMob extends WeightedRandom.Item
 {
 	private Entity _mob;
 	

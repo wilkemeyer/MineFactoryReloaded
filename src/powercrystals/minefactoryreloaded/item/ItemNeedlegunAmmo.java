@@ -11,11 +11,6 @@ import powercrystals.minefactoryreloaded.api.INeedleAmmo;
 
 public abstract class ItemNeedlegunAmmo extends ItemFactory implements INeedleAmmo
 {
-	public ItemNeedlegunAmmo(int id)
-	{
-		super(id);
-	}
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)

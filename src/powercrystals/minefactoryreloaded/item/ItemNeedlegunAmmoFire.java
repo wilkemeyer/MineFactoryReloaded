@@ -1,15 +1,15 @@
 package powercrystals.minefactoryreloaded.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 
 public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock
 {
-	public ItemNeedlegunAmmoFire(int id)
+	public ItemNeedlegunAmmoFire()
 	{
-		super(id, Block.fire.blockID, 4);
+		super(Blocks.fire, 4);
 	}
 
 	@Override
