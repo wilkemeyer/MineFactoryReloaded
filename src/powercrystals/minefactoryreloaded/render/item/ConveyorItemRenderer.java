@@ -4,7 +4,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -12,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.BlockConveyor;
 
 public class ConveyorItemRenderer implements IItemRenderer
 {
@@ -34,7 +32,7 @@ public class ConveyorItemRenderer implements IItemRenderer
 	{
 		RenderBlocks renderer = (RenderBlocks)data[0];
 
-		BlockConveyor pane = (BlockConveyor)Block.blocksList[((ItemBlock)item.getItem()).getBlockID()];
+		Block block = Block.getBlockFromItem(item.getItem());
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_CULL_FACE);
@@ -45,7 +43,7 @@ public class ConveyorItemRenderer implements IItemRenderer
 			GL11.glScalef(16f, 16f, 16f);
 			GL11.glTranslatef(0.5f, 0.5f, 0.5f);
 
-			RenderingRegistry.instance().renderInventoryBlock(renderer, pane, item.getItemDamage(), MineFactoryReloadedCore.renderIdConveyor);
+			RenderingRegistry.instance().renderInventoryBlock(renderer, block, item.getItemDamage(), MineFactoryReloadedCore.renderIdConveyor);
 
 			GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 			GL11.glScalef(1 / 16f, 1 / 16f, 1 / 16f);
@@ -68,7 +66,7 @@ public class ConveyorItemRenderer implements IItemRenderer
 			default:
 			}
 
-			RenderingRegistry.instance().renderInventoryBlock(renderer, pane, item.getItemDamage(), MineFactoryReloadedCore.renderIdConveyor);
+			RenderingRegistry.instance().renderInventoryBlock(renderer, block, item.getItemDamage(), MineFactoryReloadedCore.renderIdConveyor);
 
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		}

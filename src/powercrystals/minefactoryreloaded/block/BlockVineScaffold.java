@@ -14,7 +14,7 @@ import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import cpw.mods.fml.relauncher.Side;
@@ -28,9 +28,9 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	private static final ForgeDirection[] _attachDirections = new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
 	private static final int _attachDistance = 16;
 	
-	public BlockVineScaffold(int id)
+	public BlockVineScaffold()
 	{
-		super(id, Material.leaves);
+		super(Material.leaves);
 		setUnlocalizedName("mfr.vinescaffold");
 		setStepSound(soundGrassFootstep);
 		setHardness(0.1F);

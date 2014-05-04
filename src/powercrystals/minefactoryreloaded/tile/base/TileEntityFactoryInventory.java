@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.core.asm.relauncher.Implementable;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
@@ -376,7 +376,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer)
 	{
-		if(isInvalid() || worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+		if(isInvalid() || worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
 		{
 			return false;
 		}

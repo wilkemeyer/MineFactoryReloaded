@@ -16,10 +16,9 @@ import net.minecraft.world.World;
 public class ItemBlockFactory extends ItemBlock
 {
 	protected String[] _names = {null};
-
-	public ItemBlockFactory(int id)
-	{
-		super(id);
+	
+	public ItemBlockFactory(Block p_i45328_1_) {
+		super(p_i45328_1_);
 	}
 
 	protected void setNames(String[] names)

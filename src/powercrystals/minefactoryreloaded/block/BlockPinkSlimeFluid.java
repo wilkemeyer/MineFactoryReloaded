@@ -4,9 +4,9 @@ import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 
 public class BlockPinkSlimeFluid extends BlockFactoryFluid
 {
-	public BlockPinkSlimeFluid(int id, String liquidName)
+	public BlockPinkSlimeFluid(String liquidName)
 	{
-		super(id, liquidName);
+		super(liquidName);
 	}
 	
 	@Override
@@ -24,7 +24,7 @@ public class BlockPinkSlimeFluid extends BlockFactoryFluid
 				world.spawnEntityInWorld(s);
 				return;
 			}
-			world.scheduleBlockUpdate(x, y, z, blockID, tickRate);
+			world.scheduleBlockUpdate(x, y, z, this, tickRate);
 		}
 		super.updateTick(world, x, y, z, rand);
 	}

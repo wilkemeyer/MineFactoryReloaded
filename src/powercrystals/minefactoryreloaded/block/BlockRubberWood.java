@@ -22,9 +22,8 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	private IIcon _iconLogTop;
 	private IIcon _iconLogSide;
 
-	public BlockRubberWood(int id)
+	public BlockRubberWood()
 	{
-		super(id);
 		setHardness(2.0F);
 		setStepSound(soundWoodFootstep);
 		setUnlocalizedName("mfr.rubberwood.log");

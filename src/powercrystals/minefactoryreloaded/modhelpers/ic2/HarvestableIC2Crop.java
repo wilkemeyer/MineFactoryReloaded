@@ -46,7 +46,7 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te == null || !(te instanceof ICropTile))
 		{
 			return false;
@@ -78,7 +78,7 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		
-		ICropTile tec = (ICropTile)world.getBlockTileEntity(x, y, z);
+		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
 		CropCard crop;
 		try
 		{

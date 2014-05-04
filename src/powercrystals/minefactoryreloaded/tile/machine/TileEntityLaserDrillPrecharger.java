@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -113,7 +113,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		
 		bp.moveForwards(1);
 		
-		TileEntity te = worldObj.getBlockTileEntity(bp.x, bp.y, bp.z);
+		TileEntity te = worldObj.getTileEntity(bp.x, bp.y, bp.z);
 		if (te instanceof IFactoryLaserTarget)
 			return ((IFactoryLaserTarget)te);
 		

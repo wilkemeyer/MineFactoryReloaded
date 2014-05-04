@@ -157,7 +157,7 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory()
+	public boolean shouldRender3DInInventory(int modelId)
 	{
 		return true;
 	}

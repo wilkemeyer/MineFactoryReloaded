@@ -22,7 +22,7 @@ class PamFertilizable implements IFactoryFertilizable
 	public boolean canFertilizeBlock(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
 		int stage=0;
-		TileEntity te=world.getBlockTileEntity(x,y,z);
+		TileEntity te=world.getTileEntity(x,y,z);
 		if(getGrowthStage!=null&&te!=null)
 		{
 			try
@@ -40,7 +40,7 @@ class PamFertilizable implements IFactoryFertilizable
 	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
 	{
 		int stage=0;
-		TileEntity te=world.getBlockTileEntity(x,y,z);
+		TileEntity te=world.getTileEntity(x,y,z);
 		if(getGrowthStage!=null&&te!=null)
 		{
 			try

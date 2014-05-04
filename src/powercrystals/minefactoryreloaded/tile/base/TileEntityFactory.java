@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.net.PacketWrapper;
-import powercrystals.core.position.IRotateableTile;
+import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;

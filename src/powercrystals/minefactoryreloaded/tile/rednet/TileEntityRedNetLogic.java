@@ -22,8 +22,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.net.PacketWrapper;
-import powercrystals.core.position.BlockPosition;
-import powercrystals.core.position.IRotateableTile;
+import cofh.util.position.BlockPosition;
+import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 
 public final class BlockNBTManager
 {

@@ -44,7 +44,7 @@ public class ClientPacketHandler implements IPacketHandler
 			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Boolean.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityFactory)
 			{
 				TileEntityFactory tef = (TileEntityFactory) te;
@@ -63,7 +63,7 @@ public class ClientPacketHandler implements IPacketHandler
 					Integer.class, Boolean.class, Boolean.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if (te instanceof TileEntityConveyor)
 			{
 				TileEntityConveyor tec = (TileEntityConveyor) te;
@@ -76,7 +76,7 @@ public class ClientPacketHandler implements IPacketHandler
 			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityAutoJukebox)
 			{
 				Minecraft.getMinecraft().ingameGUI.setRecordPlayingMessage(((ItemRecord)Item.itemsList[(Integer)packetReadout[3]]).recordName);
@@ -96,7 +96,7 @@ public class ClientPacketHandler implements IPacketHandler
 					Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetCable)
 			{
 				TileEntityRedNetCable tec = (TileEntityRedNetCable) te;
@@ -127,7 +127,7 @@ public class ClientPacketHandler implements IPacketHandler
 					Byte.class, Byte.class, Byte.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetEnergy)
 			{
 				TileEntityRedNetEnergy tec = (TileEntityRedNetEnergy) te;
@@ -156,7 +156,7 @@ public class ClientPacketHandler implements IPacketHandler
 			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetLogic)
 			{
 				((TileEntityRedNetLogic)te).setCircuitFromPacket(data);
@@ -166,7 +166,7 @@ public class ClientPacketHandler implements IPacketHandler
 			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 			
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetHistorian)
 			{
 				((TileEntityRedNetHistorian)te).setClientValue((Integer)packetReadout[3]);
@@ -176,7 +176,7 @@ public class ClientPacketHandler implements IPacketHandler
 			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
 			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
 
-			te = ((EntityPlayer)player).worldObj.getBlockTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if (te instanceof TileEntityFactory)
 			{
 				if (((TileEntityFactory)te).hasHAM())

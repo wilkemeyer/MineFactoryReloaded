@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.item;
 
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

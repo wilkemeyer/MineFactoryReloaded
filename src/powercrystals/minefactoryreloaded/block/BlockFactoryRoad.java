@@ -26,9 +26,9 @@ public class BlockFactoryRoad extends Block
 	private IIcon _iconRoadOff;
 	private IIcon _iconRoadOn;
 
-	public BlockFactoryRoad(int id)
+	public BlockFactoryRoad()
 	{
-		super(id, Material.rock);
+		super(Material.rock);
 		setHardness(2.0F);
 		setUnlocalizedName("mfr.road");
 		setResistance(25.0F);

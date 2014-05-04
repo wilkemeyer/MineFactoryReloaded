@@ -3,8 +3,7 @@ package powercrystals.minefactoryreloaded.render.block;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.IUVTransformation;
-import codechicken.lib.render.IIconTransformation;
+import codechicken.lib.render.uv.IconTransformation;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
@@ -39,7 +38,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	protected static CCModel[] wire  = new CCModel[6];
 	protected static CCModel[] caps  = new CCModel[6];
 
-	public static IUVTransformation uvt;
+	public static IconTransformation uvt;
 	public static boolean brightBand;
 
 	static {
@@ -95,14 +94,14 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		//m.smoothNormals();
 	}
 	public static void updateUVT(IIcon icon) {
-		uvt = new IIconTransformation(icon);
+		uvt = new IconTransformation(icon);
 		brightBand = MFRConfig.brightRednetBand.getBoolean(true);
 	}
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
 		CCRenderState.reset();
-		CCRenderState.useNormals(true);
+		CCRenderState.useNormals = true;
 		Tessellator tess = Tessellator.instance;
 
 		GL11.glTranslatef(-.5f, -.5f, -.5f);
@@ -125,9 +124,9 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.reset();
-		CCRenderState.useNormals(true);
-		CCRenderState.useModelColours(true);
-		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getBlockTileEntity(x, y, z);
+		CCRenderState.useNormals = true;
+		//CCRenderState.useModelColours(true);
+		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getTileEntity(x, y, z);
 		TileEntityRedNetEnergy _cond = null;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
 		int bandBrightness = brightBand ? 0xd00070 : brightness;
@@ -190,7 +189,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory() {
+	public boolean shouldRender3DInInventory(int modelId) {
 		return true;
 	}
 

@@ -137,14 +137,14 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 						}
 					}
 				}
-				TileEntity te = worldObj.getBlockTileEntity(xCoord + facing.offsetX,
+				TileEntity te = worldObj.getTileEntity(xCoord + facing.offsetX,
 							yCoord + facing.offsetY, zCoord + facing.offsetZ);
 				if (te instanceof IFluidHandler)
 				{
 					IFluidHandler tank = (IFluidHandler)te;
 					for (ForgeDirection side : _pullDirections)
 					{
-						te = worldObj.getBlockTileEntity(xCoord + side.offsetX,
+						te = worldObj.getTileEntity(xCoord + side.offsetX,
 								yCoord + side.offsetY, zCoord + side.offsetZ);
 						if (!(te instanceof IFluidHandler))
 							continue;

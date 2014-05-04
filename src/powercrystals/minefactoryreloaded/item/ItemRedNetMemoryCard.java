@@ -35,7 +35,7 @@ public class ItemRedNetMemoryCard extends ItemFactory
 			return true;
 		}
 		
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetLogic)
 		{
 			if(itemstack.getTagCompound() == null)

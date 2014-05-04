@@ -21,9 +21,9 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 			"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
 	private IIcon[] _icons = new IIcon[_names.length];
 	
-	public BlockDecorativeStone(int blockId)
+	public BlockDecorativeStone()
 	{
-		super(blockId, Material.rock);
+		super(Material.rock);
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundStoneFootstep);

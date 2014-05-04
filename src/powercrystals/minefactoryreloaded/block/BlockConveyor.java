@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.util.position.BlockPosition;
+import cofh.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,8 +20,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -33,8 +35,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.position.BlockPosition;
-import powercrystals.core.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
@@ -54,9 +54,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@SideOnly(Side.CLIENT)
 	private IIcon base, overlay, overlayFast, overlayStopped;
 	
-	public BlockConveyor(int id)
+	public BlockConveyor()
 	{
-		super(id, Material.circuits);
+		super(Material.circuits);
 		setHardness(0.5F);
 		setUnlocalizedName("mfr.conveyor");
 		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.01F, 0.1F);
@@ -65,7 +65,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		base = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".base");
 		overlay = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".overlay");
@@ -75,10 +75,10 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addBlockHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
+	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
 	{
 		int x = target.blockX, y = target.blockY, z = target.blockZ;
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof TileEntityConveyor)
 		{
@@ -120,9 +120,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addBlockDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+	public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
 	{
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof TileEntityConveyor)
 		{
@@ -153,7 +153,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
 	{
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof TileEntityConveyor)
 		{
@@ -189,12 +189,12 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 
     @Override
 	@SideOnly(Side.CLIENT)
-    public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
     {
     	int meta = 0;
     	if (side == 1)
     	{
-    		TileEntity tile = world.getBlockTileEntity(x, y, z);
+    		TileEntity tile = world.getTileEntity(x, y, z);
     		if (tile instanceof TileEntityConveyor)
     		{
     			TileEntityConveyor tec = (TileEntityConveyor)tile;
@@ -231,7 +231,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
 		}
 		
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityConveyor)
 		{
 			((TileEntityConveyor)te).setDyeColor(stack.getItemDamage() == 16 ? -1 : stack.getItemDamage());
@@ -250,7 +250,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		if (!(isItem || entity instanceof EntityLivingBase || entity instanceof EntityTNTPrimed))
 			return;
 		
-		TileEntity conveyor = world.getBlockTileEntity(x, y, z);
+		TileEntity conveyor = world.getTileEntity(x, y, z);
 		if(!(conveyor instanceof TileEntityConveyor && ((TileEntityConveyor)conveyor).getConveyorActive()))
 			return;
 		
@@ -429,7 +429,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z)
 	{
-		return world.isBlockSolidOnSide(x, y - 1, z, ForgeDirection.UP);
+		return world.isSideSolid(x, y - 1, z, ForgeDirection.UP);
 	}
 	
 	@Override
@@ -439,7 +439,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
         {
             return false;
         }
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
@@ -459,16 +459,16 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		
 		if (MFRUtil.isHoldingHammer(player))
 		{
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof IRotateableTile)
 			{
 				((IRotateableTile)te).rotate();
 			}
 			return true;
 		}
-		else if (item != null && item.itemID == Item.glowstone.itemID)
+		else if (item != null && item.equals(Items.glowstone_dust))
 		{
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileEntityConveyor && !((TileEntityConveyor)te).isFast())
 			{
 				((TileEntityConveyor)te).setFast(true);
@@ -490,7 +490,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			return;
 		}
 
-		TileEntity tec = world.getBlockTileEntity(x, y, z);
+		TileEntity tec = world.getTileEntity(x, y, z);
 		if(tec instanceof TileEntityConveyor)
 		{
 			((TileEntityConveyor)tec).updateConveyorActive();
@@ -505,7 +505,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World world)
+	public TileEntity createTileEntity(World world, int metadata)
 	{
 		return new TileEntityConveyor();
 	}
@@ -514,7 +514,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
     @SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
     {
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		int dyeColor = 16;
 		if(te instanceof TileEntityConveyor)
 		{
@@ -527,7 +527,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
     public int getDamageValue(World world, int x, int y, int z)
     {
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		int dyeColor = 16;
 		if(te instanceof TileEntityConveyor)
 		{
@@ -548,13 +548,13 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			if (r != null)
 				ret.add(r);
 			if (tag.getBoolean("fast"))
-				ret.add(new ItemStack(Item.glowstone, 1));
+				ret.add(new ItemStack(Items.glowstone_dust, 1));
 		}
-		else if (world.getBlockId(x, y, z) == blockID)
+		else if (world.getBlock(x, y, z).equals(this))
 		{
-			ret.add(new ItemStack(blockID, 1, getDamageValue(world, x, y, z)));
-			if (((TileEntityConveyor)world.getBlockTileEntity(x, y, z)).isFast())
-				ret.add(new ItemStack(Item.glowstone, 1));
+			ret.add(new ItemStack(this, 1, getDamageValue(world, x, y, z)));
+			if (((TileEntityConveyor)world.getTileEntity(x, y, z)).isFast())
+				ret.add(new ItemStack(Items.glowstone_dust, 1));
 			world.setBlockMetadataWithNotify(x, y, z, 15, 4);
 		}
 		return ret;
@@ -572,9 +572,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	{
 		if (meta != 15)
 		{
-			NBTTagCompound tag = new ItemStack(blockID, 1, getDamageValue(world, x, y, z)).
+			NBTTagCompound tag = new ItemStack(this, 1, getDamageValue(world, x, y, z)).
 					writeToNBT(new NBTTagCompound());
-			tag.setBoolean("fast", ((TileEntityConveyor)world.getBlockTileEntity(x, y, z)).isFast());
+			tag.setBoolean("fast", ((TileEntityConveyor)world.getTileEntity(x, y, z)).isFast());
 			BlockNBTManager.setForBlock(new BlockPosition(x, y, z), tag);
 		}
 		super.breakBlock(world, x, y, z, blockId, meta);
@@ -613,7 +613,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityConveyor)
 		{
 			((TileEntityConveyor)te).onRedNetChanged(inputValue);
@@ -622,7 +622,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	
 	private void specialRoute(World world, int x, int y, int z, EntityItem entityitem)
 	{
-		TileEntity teBelow = world.getBlockTileEntity(x, y - 1, z);
+		TileEntity teBelow = world.getTileEntity(x, y - 1, z);
 		if(teBelow == null || entityitem.isDead)
 		{
 			return;
@@ -633,15 +633,15 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		}
 		else if(teBelow instanceof TileEntityHopper)
 		{
-			if(!((TileEntityHopper)teBelow).isCoolingDown())
+			if(!((TileEntityHopper)teBelow).func_145888_j())
 			{
 				ItemStack toInsert = entityitem.getEntityItem().copy();
 				toInsert.stackSize = 1;
-				toInsert = TileEntityHopper.insertStack((IInventory)teBelow, toInsert, ForgeDirection.UP.ordinal());
+				toInsert = TileEntityHopper.func_145889_a((IInventory)teBelow, toInsert, ForgeDirection.UP.ordinal());
 				if(toInsert == null)
 				{
 					entityitem.getEntityItem().stackSize--;
-					((TileEntityHopper)teBelow).setTransferCooldown(8);
+					((TileEntityHopper)teBelow).func_145896_c(8);
 				}
 			}
 		}

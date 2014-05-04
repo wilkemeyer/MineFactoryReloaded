@@ -29,9 +29,9 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 {
 	private int[] _blankOutputs = new int[16];
 	
-	public BlockRedNetPanel(int id)
+	public BlockRedNetPanel()
 	{
-		super(id, Machine.MATERIAL);
+		super(Machine.MATERIAL);
 		setUnlocalizedName("mfr.rednet.panel");
 		setHardness(0.8F);
 		
@@ -41,7 +41,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
 		{
 			if(((TileEntityFactory)te).getDirectionFacing() == ForgeDirection.NORTH)
@@ -70,7 +70,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 		{
 			return;
 		}
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(stack.getTagCompound() != null)
 		{
 			stack.getTagCompound().setInteger("x", x);
@@ -112,7 +112,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 		
 		ItemStack s = player.inventory.getCurrentItem();
 		
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(MFRUtil.isHoldingHammer(player) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			((TileEntityFactory)te).rotate();
@@ -172,7 +172,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
 		{
 			return side == ((TileEntityFactory)te).getDirectionFacing() ? RedNetConnectionType.CableAll : RedNetConnectionType.None;
@@ -195,7 +195,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	@Override
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetHistorian)
 		{
 			((TileEntityRedNetHistorian)te).valuesChanged(inputValues);

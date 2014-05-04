@@ -20,8 +20,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-import powercrystals.core.position.Area;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import powercrystals.core.random.WeightedRandomItemStack;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;

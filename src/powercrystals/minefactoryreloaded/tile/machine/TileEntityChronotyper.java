@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiChronotyper;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;

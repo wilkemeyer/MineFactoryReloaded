@@ -102,7 +102,7 @@ public class ItemPortaSpawner extends ItemFactory
 			}
 			else
 			{
-				TileEntity te = world.getBlockTileEntity(x, y, z);
+				TileEntity te = world.getTileEntity(x, y, z);
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setCompoundTag(spawnerTag, new NBTTagCompound());
 				te.writeToNBT(tag.getCompoundTag(spawnerTag));
@@ -198,7 +198,7 @@ public class ItemPortaSpawner extends ItemFactory
 		{
 			Block.blocksList[_blockId].onBlockPlacedBy(world, x, y, z, player, stack);
 			Block.blocksList[_blockId].onPostBlockPlaced(world, x, y, z, metadata);
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
 			NBTTagCompound tag = stack.getTagCompound();
 			if (tag.hasKey(spawnerTag))
 				tag = tag.getCompoundTag(spawnerTag);

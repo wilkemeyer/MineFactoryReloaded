@@ -16,9 +16,7 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 	
 	public BlockVanillaGlassPane()
 	{
-		super(102);
-		setHardness(0.3F);
-		setStepSound(soundGlassFootstep);
+		super(false);
 		setUnlocalizedName("thinGlass");
 	}
 
@@ -29,25 +27,22 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 	}
 	
 	@Override
-	public IIcon getBlockOverlayTexture()
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 7);
+		return getIcon(side, 1);
 	}
-	
-	@Override
-	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return getBlockOverlayTexture();
-	}
-	
+
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
+		meta /= 16;
+		if (meta > 0)
+			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 7);
 		return _iconPane;
 	}
 	
 	@Override
-	public IIcon getSideTextureIndex()
+	public IIcon func_150097_e()
 	{
 		return _iconSide;
 	}

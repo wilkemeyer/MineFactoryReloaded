@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 
 public class BlockPool
 {

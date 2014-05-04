@@ -14,9 +14,9 @@ import net.minecraft.world.World;
 
 public class BlockDetCord extends BlockContainer
 {
-	public BlockDetCord(int par1)
+	public BlockDetCord()
 	{
-		super(par1, Machine.MATERIAL);
+		super(Machine.MATERIAL);
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundSnowFootstep);

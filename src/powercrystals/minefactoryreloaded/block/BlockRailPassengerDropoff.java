@@ -17,9 +17,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class BlockRailPassengerDropoff extends BlockFactoryRail
 {
-	public BlockRailPassengerDropoff(int blockId)
+	public BlockRailPassengerDropoff()
 	{
-		super(blockId, true, false);
+		super(true, false);
 		setUnlocalizedName("mfr.rail.passenger.dropoff");
 	}
 

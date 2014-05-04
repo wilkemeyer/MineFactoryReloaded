@@ -1,7 +1,8 @@
 package powercrystals.minefactoryreloaded.setup.recipe;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,8 +83,8 @@ public class Vanilla
 				"CPC",
 				" M ",
 				'G', "sheetPlastic",
-				'P', Block.pistonBase,
-				'C', Item.flowerPot,
+				'P', Blocks.piston,
+				'C', Items.flower_pot,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -93,8 +94,8 @@ public class Vanilla
 				"RRR",
 				"BMB",
 				'G', "sheetPlastic",
-				'R', Item.fishingRod,
-				'B', Item.bucketEmpty,
+				'R', Items.fishing_rod,
+				'B', Items.bucket,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -104,8 +105,8 @@ public class Vanilla
 				"SXS",
 				" M ",
 				'G', "sheetPlastic",
-				'X', Item.axeGold,
-				'S', Item.shears,
+				'X', Items.golden_axe,
+				'S', Items.shears,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -115,8 +116,8 @@ public class Vanilla
 				"SBS",
 				" M ",
 				'G', "sheetPlastic",
-				'B', Item.bucketEmpty,
-				'S', Item.shears,
+				'B', Items.bucket,
+				'S', Items.shears,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -126,8 +127,8 @@ public class Vanilla
 				"LBL",
 				" M ",
 				'G', "sheetPlastic",
-				'L', Item.leather,
-				'B', Item.glassBottle,
+				'L', Items.leather,
+				'B', Items.glass_bottle,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -137,7 +138,7 @@ public class Vanilla
 				"SSS",
 				"EME",
 				'G', "sheetPlastic",
-				'E', Item.spiderEye,
+				'E', Items.spider_eye,
 				'S', MineFactoryReloadedCore.syringeEmptyItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -148,7 +149,7 @@ public class Vanilla
 				" C ",
 				" M ",
 				'G', "sheetPlastic",
-				'C', Block.chest,
+				'C', Blocks.chest,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -158,9 +159,9 @@ public class Vanilla
 				"PHS",
 				" M ",
 				'G', "sheetPlastic",
-				'P', Item.pickaxeGold,
+				'P', Items.golden_pickaxe,
 				'H', MineFactoryReloadedCore.factoryHammerItem,
-				'S', Item.shovelGold,
+				'S', Items.golden_shovel,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -170,8 +171,8 @@ public class Vanilla
 				"BBB",
 				"UMU",
 				'G', "sheetPlastic",
-				'B', Block.fenceIron,
-				'U', Item.bucketEmpty,
+				'B', Blocks.iron_bars,
+				'U', Items.bucket,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -181,7 +182,7 @@ public class Vanilla
 				"FFF",
 				" M ",
 				'G', "sheetPlastic",
-				'F', Block.furnaceIdle,
+				'F', Blocks.furnace,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -191,8 +192,8 @@ public class Vanilla
 				"BUB",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', Item.brick,
-				'U', Item.bucketEmpty,
+				'B', Items.brick,
+				'U', Items.bucket,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -202,8 +203,8 @@ public class Vanilla
 				"PFP",
 				" M ",
 				'G', "sheetPlastic",
-				'P', Block.pistonBase,
-				'F', Block.furnaceIdle,
+				'P', Blocks.piston,
+				'F', Blocks.furnace,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -214,8 +215,8 @@ public class Vanilla
 				"PMP",
 				'G', "sheetPlastic",
 				'P', "dyePurple",
-				'C', Item.goldenCarrot,
-				'A', Item.appleGold,
+				'C', Items.golden_carrot,
+				'A', Items.golden_apple,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -225,9 +226,9 @@ public class Vanilla
 				"BSP",
 				" M ",
 				'G', "sheetPlastic",
-				'P', Block.pistonBase,
-				'B', Item.book,
-				'S', Item.swordGold,
+				'P', Blocks.piston,
+				'B', Items.book,
+				'S', Items.golden_sword,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -237,8 +238,8 @@ public class Vanilla
 				"BBB",
 				"DMD",
 				'G', "sheetPlastic",
-				'B', Item.book,
-				'D', Item.diamond,
+				'B', Items.book,
+				'D', Items.diamond,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -248,7 +249,7 @@ public class Vanilla
 				"EEE",
 				"PMP",
 				'G', "sheetPlastic",
-				'E', Item.emerald,
+				'E', Items.emerald,
 				'P', "dyePurple",
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -259,8 +260,8 @@ public class Vanilla
 				" D ",
 				"RMR",
 				'G', "sheetPlastic",
-				'D', Block.dropper,
-				'R', Item.redstone,
+				'D', Blocks.dropper,
+				'R', Items.redstone,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -270,8 +271,8 @@ public class Vanilla
 				"RCR",
 				" M ",
 				'G', "sheetPlastic",
-				'C', Block.chest,
-				'R', Item.redstoneRepeater,
+				'C', Blocks.chest,
+				'R', Items.repeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -281,8 +282,8 @@ public class Vanilla
 				"RBR",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', Item.bucketEmpty,
-				'R', Item.redstoneRepeater,
+				'B', Items.bucket,
+				'R', Items.repeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -293,8 +294,8 @@ public class Vanilla
 				"PPP",
 				"EME",
 				'G', "sheetPlastic",
-				'P', Item.enderPearl,
-				'E', Item.eyeOfEnder,
+				'P', Items.ender_pearl,
+				'E', Items.ender_eye,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -306,7 +307,7 @@ public class Vanilla
 				"CCC",
 				"CMC",
 				'G', "sheetPlastic",
-				'C', Block.chest,
+				'C', Blocks.chest,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		}
@@ -317,9 +318,9 @@ public class Vanilla
 				"BWB",
 				"FMF",
 				'G', "sheetPlastic",
-				'B', Item.bucketEmpty,
-				'W', Block.workbench,
-				'F', Item.itemFrame,
+				'B', Items.bucket,
+				'W', Blocks.crafting_table,
+				'F', Items.item_frame,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -329,9 +330,9 @@ public class Vanilla
 				"OBO",
 				"CMC",
 				'G', "sheetPlastic",
-				'O', Block.obsidian,
-				'B', Item.blazeRod,
-				'C', Item.magmaCream,
+				'O', Blocks.obsidian,
+				'B', Items.blaze_rod,
+				'C', Items.magma_cream,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -341,8 +342,8 @@ public class Vanilla
 				"OTO",
 				"OMO",
 				'G', "sheetPlastic",
-				'O', Block.obsidian,
-				'T', Block.tnt,
+				'O', Blocks.obsidian,
+				'T', Blocks.tnt,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -352,7 +353,7 @@ public class Vanilla
 				" J ",
 				" M ",
 				'G', "sheetPlastic",
-				'J', Block.jukebox,
+				'J', Blocks.jukebox,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -362,8 +363,8 @@ public class Vanilla
 				"CBC",
 				" M ",
 				'G', "sheetPlastic",
-				'B', Item.book,
-				'C', Item.comparator,
+				'B', Items.book,
+				'C', Items.comparator,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -373,10 +374,10 @@ public class Vanilla
 				"ECE",
 				"NMS",
 				'G', "sheetPlastic",
-				'E', Item.emerald,
-				'C', Item.magmaCream,
-				'N', Item.netherStalkSeeds,
-				'S', Item.sugar,
+				'E', Items.emerald,
+				'C', Items.magma_cream,
+				'N', Items.nether_wart,
+				'S', Items.sugar,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -386,9 +387,9 @@ public class Vanilla
 				"UEU",
 				"SMS",
 				'G', "sheetPlastic",
-				'U', Item.sugar,
-				'E', Item.fermentedSpiderEye,
-				'S', Item.slimeBall,
+				'U', Items.sugar,
+				'E', Items.fermented_spider_eye,
+				'S', Items.slime_ball,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -398,9 +399,9 @@ public class Vanilla
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', Block.furnaceIdle,
-				'P', Block.pistonBase,
-				'R', Item.blazeRod,
+				'F', Blocks.furnace,
+				'P', Blocks.piston,
+				'R', Items.blaze_rod,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -410,9 +411,9 @@ public class Vanilla
 				"RDR",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', Item.book,
-				'D', Item.diamond,
-				'R', Block.netherBrick,
+				'B', Items.book,
+				'D', Items.diamond,
+				'R', Blocks.nether_brick,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -422,8 +423,8 @@ public class Vanilla
 				"SSS",
 				"XMX",
 				'G', "sheetPlastic",
-				'S', Item.swordGold,
-				'X', Item.axeGold,
+				'S', Items.golden_sword,
+				'X', Items.golden_axe,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -433,8 +434,8 @@ public class Vanilla
 				"BFB",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', Block.brick,
-				'F', Item.flintAndSteel,
+				'B', Blocks.brick_block,
+				'F', Items.flint_and_steel,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -444,8 +445,8 @@ public class Vanilla
 				"RBR",
 				" M ",
 				'G', "sheetPlastic",
-				'B', Item.book,
-				'R', Item.redstoneRepeater,
+				'B', Items.book,
+				'R', Items.repeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -455,8 +456,8 @@ public class Vanilla
 				"LLL",
 				"DMD",
 				'G', "sheetPlastic",
-				'L', Block.glowStone,
-				'D', Item.diamond,
+				'L', Blocks.glowstone,
+				'D', Items.diamond,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -466,8 +467,8 @@ public class Vanilla
 				"LSL",
 				"DMD",
 				'G', "sheetPlastic",
-				'L', Block.glowStone,
-				'D', Item.diamond,
+				'L', Blocks.glowstone,
+				'D', Items.diamond,
 				'S', MineFactoryReloadedCore.pinkSlimeballItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -478,7 +479,7 @@ public class Vanilla
 				"AAA",
 				" M ",
 				'G', "sheetPlastic",
-				'A', Block.anvil,
+				'A', Blocks.anvil,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -489,7 +490,7 @@ public class Vanilla
 				"BMB",
 				'G', "sheetPlastic",
 				'H', MineFactoryReloadedCore.factoryHammerItem,
-				'B', Item.book,
+				'B', Items.book,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -500,7 +501,7 @@ public class Vanilla
 				" M ",
 				'G', "sheetPlastic",
 				'C', "cableRedNet",
-				'N', Block.music,
+				'N', Blocks.noteblock,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -510,9 +511,9 @@ public class Vanilla
 				"CBC",
 				"RMR",
 				'G', "sheetPlastic",
-				'C', Block.chest,
-				'B', Item.brewingStand,
-				'R', Item.redstoneRepeater,
+				'C', Blocks.chest,
+				'B', Items.brewing_stand,
+				'R', Items.repeater,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -522,8 +523,8 @@ public class Vanilla
 				"SXS",
 				"SMS",
 				'G', "sheetPlastic",
-				'X', Item.axeGold,
-				'S', Item.shears,
+				'X', Items.golden_axe,
+				'S', Items.shears,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -533,7 +534,7 @@ public class Vanilla
 				"DDD",
 				" M ",
 				'G', "sheetPlastic",
-				'D', Block.dispenser,
+				'D', Blocks.dispenser,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -543,8 +544,8 @@ public class Vanilla
 				"RCR",
 				"SMS",
 				'G', "sheetPlastic",
-				'R', Item.redstoneRepeater,
-				'C', Item.comparator,
+				'R', Items.repeater,
+				'C', Items.comparator,
 				'S', MineFactoryReloadedCore.spyglassItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -555,9 +556,9 @@ public class Vanilla
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', Block.furnaceIdle,
-				'P', Block.pistonBase,
-				'R', Item.netherrackBrick,
+				'F', Blocks.furnace,
+				'P', Blocks.piston,
+				'R', Items.netherbrick,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -567,9 +568,9 @@ public class Vanilla
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', Item.netherStar,
+				'F', Items.nether_star,
 				'P', Machine.DeepStorageUnit.getItemStack(),
-				'R', Block.blockRedstone,
+				'R', Blocks.redstone_block,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		if (MFRConfig.enableCheapCL.getBoolean(false))
@@ -580,9 +581,9 @@ public class Vanilla
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', Block.blockGold,
-				'P', Item.eyeOfEnder,
-				'R', Block.blockRedstone,
+				'F', Blocks.gold_block,
+				'P', Items.ender_eye,
+				'R', Blocks.redstone_block,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		}
@@ -593,8 +594,8 @@ public class Vanilla
 				"GBG",
 				"UMU",
 				'G', "sheetPlastic",
-				'B', Block.fenceIron,
-				'U', Item.bucketEmpty,
+				'B', Blocks.iron_bars,
+				'U', Items.bucket,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -605,7 +606,7 @@ public class Vanilla
 				"PMP",
 				'G', "sheetPlastic",
 				'C', Machine.Chronotyper.getItemStack(),
-				'B', Block.fenceIron,
+				'B', Blocks.iron_bars,
 				'R', Machine.ItemRouter.getItemStack(),
 				'P', "dyeOrange",
 				'M', MineFactoryReloadedCore.machineBaseItem,
@@ -640,9 +641,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', new ItemStack(Item.dyePowder, 1, 4),
+			'I', new ItemStack(Items.dye, 1, 4),
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -651,9 +652,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', Item.ingotIron,
+			'I', Items.iron_ingot,
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -664,7 +665,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotTin",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -675,7 +676,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotCopper",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -686,7 +687,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotBronze",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -697,7 +698,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotSilver",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -708,7 +709,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotGold",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -717,9 +718,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', Item.netherQuartz,
+			'I', Items.quartz,
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -728,9 +729,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', Item.diamond,
+			'I', Items.diamond,
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -741,7 +742,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotPlatinum",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -750,9 +751,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', Item.emerald,
+			'I', Items.emerald,
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -763,7 +764,7 @@ public class Vanilla
 			"RGR",
 			'I', "cobblestone",
 			'P', "dustPlastic",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'G', "nuggetGold",
 				} ));
 		
@@ -774,7 +775,7 @@ public class Vanilla
 				"ENE",
 				"NGN",
 				"ENE",
-				'E', Item.emerald,
+				'E', Items.emerald,
 				'N', "nuggetGold",
 				'G', new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i)
 					} ));
@@ -790,7 +791,7 @@ public class Vanilla
 		_registeredMachineTinkers = true;
 		
 		GameRegistry.addRecipe(new ShapelessMachineTinker(Machine.ItemCollector, "Emits comparator signal",
-				new ItemStack(Item.goldNugget)) {
+				new ItemStack(Items.gold_nugget)) {
 			@Override
 			protected boolean isMachineTinkerable(ItemStack machine)
 			{
@@ -822,8 +823,8 @@ public class Vanilla
 			"UUU",
 			"RIR",
 			'U', "itemRubber",
-			'R', Item.redstone,
-			'I', Item.ingotIron,
+			'R', Items.redstone,
+			'I', Items.iron_ingot,
 				} ));
 
 		String[] dyes = { "Black", "Red", "Green", "Brown", "Blue", "Purple",
@@ -852,7 +853,7 @@ public class Vanilla
 			"BPB",
 			"BBB",
 			'P', "sheetPlastic",
-			'B', new ItemStack(Block.stoneBrick, 1, 0),
+			'B', new ItemStack(Blocks.stonebrick, 1, 0),
 				} ));
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 4, 1), new Object[]
@@ -861,7 +862,7 @@ public class Vanilla
 			" G ",
 			"R R",
 			'R', new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 0),
-			'G', Block.redstoneLampIdle,
+			'G', Blocks.redstone_lamp,
 				} );
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 4), new ItemStack(MineFactoryReloadedCore.factoryRoadBlock, 1, 1));
@@ -871,11 +872,11 @@ public class Vanilla
 				"Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow",
 				"LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 		
-		ItemStack pane = new ItemStack(Block.thinGlass);
+		ItemStack pane = new ItemStack(Blocks.glass_pane);
 		for(int i = 0; i < 16; i++)
 		{
 			ItemStack dye = new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i);
-			GameRegistry.addRecipe(new ShapelessOreRecipe(dye, new ItemStack(Item.clay), "dye" + dyes[15 - i]));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(dye, new ItemStack(Items.clay_ball), "dye" + dyes[15 - i]));
 			dye.stackSize = 1;
 			ItemStack glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i);
 			ItemStack paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i);
@@ -906,8 +907,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.brick,
-			'M', Block.ice,
+			'B', Blocks.brick_block,
+			'M', Blocks.ice,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 1), new Object[]
@@ -915,8 +916,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.brick,
-			'M', Block.glowStone,
+			'B', Blocks.brick_block,
+			'M', Blocks.glowstone,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 2), new Object[]
@@ -924,8 +925,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.brick,
-			'M', Block.blockLapis,
+			'B', Blocks.brick_block,
+			'M', Blocks.lapis_block,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 3), new Object[]
@@ -933,8 +934,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.brick,
-			'M', Block.obsidian,
+			'B', Blocks.brick_block,
+			'M', Blocks.obsidian,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 4), new Object[]
@@ -942,8 +943,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.brick,
-			'M', new ItemStack(Block.stoneSingleSlab, 1, 0),
+			'B', Blocks.brick_block,
+			'M', new ItemStack(Blocks.stone_slab, 1, 0),
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 5), new Object[]
@@ -951,8 +952,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.brick,
-			'M', Block.blockSnow,
+			'B', Blocks.brick_block,
+			'M', Blocks.snow,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 6), new Object[]
@@ -960,8 +961,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', Block.glowStone,
+			'B', Blocks.stonebrick,
+			'M', Blocks.glowstone,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 7), new Object[]
@@ -969,8 +970,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', Block.ice,
+			'B', Blocks.stonebrick,
+			'M', Blocks.ice,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 8), new Object[]
@@ -978,8 +979,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', Block.blockLapis,
+			'B', Blocks.stonebrick,
+			'M', Blocks.lapis_block,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 9), new Object[]
@@ -987,8 +988,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', Block.obsidian,
+			'B', Blocks.stonebrick,
+			'M', Blocks.obsidian,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 10), new Object[]
@@ -996,8 +997,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', Block.blockSnow,
+			'B', Blocks.stonebrick,
+			'M', Blocks.snow,
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 14), new Object[]
@@ -1005,8 +1006,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', new ItemStack(Block.stoneSingleSlab, 1, 0),
+			'B', Blocks.stonebrick,
+			'M', new ItemStack(Blocks.stone_slab, 1, 0),
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 15), new Object[]
@@ -1014,8 +1015,8 @@ public class Vanilla
 			"M M",
 			" B ",
 			"M M",
-			'B', Block.stoneBrick,
-			'M', new ItemStack(Block.brick, 1, 0),
+			'B', Blocks.stonebrick,
+			'M', new ItemStack(Blocks.brick_block, 1, 0),
 				} );
 		
 		/**
@@ -1027,7 +1028,7 @@ public class Vanilla
 			"SDS",
 			"SSS",
 			'S', "stone",
-			'D', new ItemStack(Item.dyePowder, 1, 0),
+			'D', new ItemStack(Items.dye, 1, 0),
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 1), new Object[]
@@ -1036,16 +1037,16 @@ public class Vanilla
 			"SDS",
 			"SSS",
 			'S', "stone",
-			'D', Item.sugar,
+			'D', Items.sugar,
 				}));
 		
 		OreDictionary.registerOre("stone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 0));
 		OreDictionary.registerOre("stone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 1));
 		
 		// cobble->smooth
-		int stoneID = MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID;
-		FurnaceRecipes.smelting().addSmelting(stoneID, 2, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0), 0.0001F);
-		FurnaceRecipes.smelting().addSmelting(stoneID, 3, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1), 0.0001F);
+		Block stoneID = MineFactoryReloadedCore.factoryDecorativeStoneBlock;
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(stoneID, 1, 2), new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0), 0.0001F);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(stoneID, 1, 3), new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1), 0.0001F);
 		
 		/**
 		 * Cobble:
@@ -1056,7 +1057,7 @@ public class Vanilla
 			"SDS",
 			"SSS",
 			'S', "cobblestone",
-			'D', new ItemStack(Item.dyePowder, 1, 0),
+			'D', new ItemStack(Items.dye, 1, 0),
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 3), new Object[]
@@ -1065,7 +1066,7 @@ public class Vanilla
 			"SDS",
 			"SSS",
 			'S', "cobblestone",
-			'D', Item.sugar,
+			'D', Items.sugar,
 				}));
 		
 		OreDictionary.registerOre("cobblestone", new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 2));
@@ -1081,8 +1082,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.stoneBrick,
-			'D', new ItemStack(Item.dyePowder, 1, 0),
+			'S', Blocks.stonebrick,
+			'D', new ItemStack(Items.dye, 1, 0),
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 5), new Object[]
@@ -1090,8 +1091,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.stoneBrick,
-			'D', Item.sugar,
+			'S', Blocks.stonebrick,
+			'D', Items.sugar,
 				} );
 		
 		// smooth->large brick
@@ -1117,8 +1118,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.brick,
-			'D', new ItemStack(Item.dyePowder, 1, 0),
+			'S', Blocks.brick_block,
+			'D', new ItemStack(Items.dye, 1, 0),
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 7), new Object[]
@@ -1126,8 +1127,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.brick,
-			'D', Item.sugar,
+			'S', Blocks.brick_block,
+			'D', Items.sugar,
 				} );
 		
 		// large brick->small brick
@@ -1153,8 +1154,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.gravel,
-			'D', new ItemStack(Item.dyePowder, 1, 0),
+			'S', Blocks.gravel,
+			'D', new ItemStack(Items.dye, 1, 0),
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 9), new Object[]
@@ -1162,8 +1163,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', Block.gravel,
-			'D', Item.sugar,
+			'S', Blocks.gravel,
+			'D', Items.sugar,
 				} );
 		
 		// FZ grinder?
@@ -1176,8 +1177,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', new ItemStack(Block.stoneSingleSlab, 1, 0),
-			'D', new ItemStack(Item.dyePowder, 1, 0),
+			'S', new ItemStack(Blocks.stone_slab, 1, 0),
+			'D', new ItemStack(Items.dye, 1, 0),
 				} );
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 11), new Object[]
@@ -1185,8 +1186,8 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			"SSS",
-			'S', new ItemStack(Block.stoneSingleSlab, 1, 0),
-			'D', Item.sugar,
+			'S', new ItemStack(Blocks.stone_slab, 1, 0),
+			'D', Items.sugar,
 				} );
 		
 		// smooth->paved
@@ -1229,8 +1230,8 @@ public class Vanilla
 			new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 13)
 				}));
 		
-		int brickID = MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID;
-		FurnaceRecipes.smelting().addSmelting(brickID, 13, new ItemStack(Item.coal, 3, 1), 0.001F);
+		Block brickID = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(brickID, 1, 13), new ItemStack(Items.coal, 3, 1), 0.001F);
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.meatIngotRawItem), new Object[]
 				{
@@ -1284,18 +1285,18 @@ public class Vanilla
 			" I ",
 			'P', "sheetPlastic",
 			'R', "itemRubber",
-			'I', Item.ingotIron,
+			'I', Items.iron_ingot,
 				} ));
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeHealthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.appleRed });
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeGrowthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.goldenCarrot });
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeHealthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Items.apple });
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeGrowthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Items.golden_carrot });
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.syringeZombieItem, 1), new Object[]
 				{
 			"FFF",
 			"FSF",
 			"FFF",
-			'F', Item.rottenFlesh,
+			'F', Items.rotten_flesh,
 			'S', MineFactoryReloadedCore.syringeEmptyItem,
 				} );
 		
@@ -1305,11 +1306,11 @@ public class Vanilla
 			" S ",
 			"BLB",
 			'B', "slimeball",
-			'L', new ItemStack(Item.dyePowder, 1, 4),
+			'L', new ItemStack(Items.dye, 1, 4),
 			'S', MineFactoryReloadedCore.syringeEmptyItem,
 				}));
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeCureItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Item.appleGold });
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeCureItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Items.golden_apple });
 	}
 	
 	protected void registerPlastics()
@@ -1350,7 +1351,7 @@ public class Vanilla
 			"A",
 			"P",
 			'P', "sheetPlastic",
-			'A', Item.paper,
+			'A', Items.paper,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticCupItem, 16), new Object[]
@@ -1374,7 +1375,7 @@ public class Vanilla
 			"P P",
 			"PPP",
 			'P', "sheetPlastic",
-			'S', Item.silk
+			'S', Items.string
 				} ));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.bagItem), MineFactoryReloadedCore.bagItem);
@@ -1400,9 +1401,9 @@ public class Vanilla
 			"WBW",
 			"STS",
 			"WBW",
-			'W', Item.wheat,
-			'B', new ItemStack(Item.dyePowder, 1, 15),
-			'S', Item.silk,
+			'W', Items.wheat,
+			'B', new ItemStack(Items.dye, 1, 15),
+			'S', Items.string,
 			'T', "stickWood",
 				} ));
 		
@@ -1425,8 +1426,8 @@ public class Vanilla
 			"GLG",
 			'G', "ingotGold",
 			'L', "glass",
-			'D', Item.diamond,
-			'N', Item.netherStar
+			'D', Items.diamond,
+			'N', Items.nether_star
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.detCordBlock, 12), new Object[]
@@ -1435,7 +1436,7 @@ public class Vanilla
 			"PTP",
 			"PPP",
 			'P', "itemRubber",
-			'T', Block.tnt,
+			'T', Blocks.tnt,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.fishingRodItem, 1), new Object[]
@@ -1444,8 +1445,8 @@ public class Vanilla
 			"DFD",
 			"TDD",
 			'D', "wireExplosive",
-			'F', Item.fishingRod,
-			'T', Block.torchRedstoneActive
+			'F', Items.fishing_rod,
+			'T', Blocks.redstone_torch
 				} ));
 	}
 	
@@ -1462,8 +1463,8 @@ public class Vanilla
 			" E ",
 			"EGE",
 			" E ",
-			'E', Item.enderPearl,
-			'G', Item.ghastTear,
+			'E', Items.ender_pearl,
+			'G', Items.ghast_tear,
 				} );
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.safariNetSingleItem, 1), new Object[]
@@ -1471,8 +1472,8 @@ public class Vanilla
 			"SLS",
 			" B ",
 			"S S",
-			'S', Item.silk,
-			'L', Item.leather,
+			'S', Items.string,
+			'L', Items.leather,
 			'B', "slimeball",
 				}));
 		
@@ -1482,7 +1483,7 @@ public class Vanilla
 			"ISI",
 			" I ",
 			'S', MineFactoryReloadedCore.safariNetSingleItem,
-			'I', Block.fenceIron
+			'I', Blocks.iron_bars
 				} );
 		
 		if (MFRConfig.enableNetLauncher.getBoolean(true))
@@ -1492,10 +1493,10 @@ public class Vanilla
 			"LGL",
 			"IRI",
 			'P', "sheetPlastic",
-			'L', Item.glowstone,
-			'G', Item.gunpowder,
-			'I', Item.ingotIron,
-			'R', Item.redstone,
+			'L', Items.glowstone_dust,
+			'G', Items.gunpowder,
+			'I', Items.iron_ingot,
+			'R', Items.redstone,
 				} ));
 	}
 	
@@ -1507,23 +1508,23 @@ public class Vanilla
 		}
 		_registeredVanillaImprovements = true;
 		
-		FurnaceRecipes.smelting().addSmelting(MineFactoryReloadedCore.rawRubberItem.itemID, 0,
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MineFactoryReloadedCore.rawRubberItem),
 				new ItemStack(MineFactoryReloadedCore.rubberBarItem), 0.1F);
-		FurnaceRecipes.smelting().addSmelting(MineFactoryReloadedCore.rubberWoodBlock.blockID, 0,
-				new ItemStack(Item.coal, 1, 1), 0.1F);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MineFactoryReloadedCore.rubberWoodBlock),
+				new ItemStack(Items.coal, 1, 1), 0.1F);
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(Block.planks, 3, 3),
+		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.planks, 3, 3),
 				new ItemStack(MineFactoryReloadedCore.rubberWoodBlock));
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(Block.pistonBase, 1, 0),
-				new ItemStack(Block.pistonStickyBase, 1, 0), new ItemStack(Item.bucketMilk, 1, 0));
+		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.piston, 1, 0),
+				new ItemStack(Blocks.sticky_piston, 1, 0), new ItemStack(Items.milk_bucket, 1, 0));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.pistonStickyBase), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.sticky_piston), new Object[]
 				{
 			"R",
 			"P",
 			'R', "itemRawRubber",
-			'P', Block.pistonBase
+			'P', Blocks.piston
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.blankRecordItem, 1), new Object[]
@@ -1532,30 +1533,30 @@ public class Vanilla
 			"RPR",
 			"RRR",
 			'R', "dustPlastic",
-			'P', Item.paper,
+			'P', Items.paper,
 				} ));
 		
 		if(MFRConfig.vanillaOverrideIce.getBoolean(true))
 		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Block.ice, 1, 1), new ItemStack(Block.ice, 1, 0), "dustPlastic"));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Blocks.ice, 1, 1), new ItemStack(Blocks.ice, 1, 0), "dustPlastic"));
 		}
 		
 		if(MFRConfig.enableMossyCobbleRecipe.getBoolean(true))
 		{
-			GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestoneMossy), new Object[]
+			GameRegistry.addShapelessRecipe(new ItemStack(Blocks.mossy_cobblestone), new Object[]
 					{
-				Block.cobblestone,
-				Item.bucketWater,
-				Item.wheat
+				Blocks.cobblestone,
+				Items.water_bucket,
+				Items.wheat
 					} );
 		}
 		
 		if(MFRConfig.enableSmoothSlabRecipe.getBoolean(true))
 		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.stoneDoubleSlab, 1, 8), new Object[]
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.double_stone_slab, 1, 8), new Object[]
 					{
 				"VV",
-				'V', new ItemStack(Block.stoneSingleSlab, 1, 0)
+				'V', new ItemStack(Blocks.stone_slab, 1, 0)
 					}));
 		}
 		
@@ -1564,18 +1565,18 @@ public class Vanilla
 			"VV",
 			"VV",
 			"VV",
-			'V', Block.vine,
+			'V', Blocks.vine,
 				} );
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.milkBottleItem), new Object[]
 				{
-			Item.bucketMilk,
-			Item.glassBottle
+			Items.milk_bucket,
+			Items.glass_bottle
 				} );
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Item.bucketMilk, Item.bucketEmpty, new ItemStack(Item.dyePowder, 1, 3));
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Items.milk_bucket, Items.bucket, new ItemStack(Items.dye, 1, 3));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 4), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.torch, 4), new Object[]
 				{
 			"R",
 			"S",
@@ -1583,7 +1584,7 @@ public class Vanilla
 			'S', "stickWood",
 				} ));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.torchWood, 1), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.torch, 1), new Object[]
 				{
 			"C",
 			"S",
@@ -1630,9 +1631,9 @@ public class Vanilla
 			" C ",
 			"SDS",
 			"SSS",
-			'C', Block.chest,
+			'C', Blocks.chest,
 			'S', "sheetPlastic",
-			'D', Block.railDetector
+			'D', Blocks.detector_rail
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.railDropoffCargoBlock, 2), new Object[]
@@ -1640,9 +1641,9 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			" C ",
-			'C', Block.chest,
+			'C', Blocks.chest,
 			'S', "sheetPlastic",
-			'D', Block.railDetector
+			'D', Blocks.detector_rail
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.railPickupPassengerBlock, 3), new Object[]
@@ -1650,9 +1651,9 @@ public class Vanilla
 			" L ",
 			"SDS",
 			"SSS",
-			'L', Block.blockLapis,
+			'L', Blocks.lapis_block,
 			'S', "sheetPlastic",
-			'D', Block.railDetector
+			'D', Blocks.detector_rail
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.railDropoffPassengerBlock, 3), new Object[]
@@ -1660,9 +1661,9 @@ public class Vanilla
 			"SSS",
 			"SDS",
 			" L ",
-			'L', Block.blockLapis,
+			'L', Blocks.lapis_block,
 			'S', "sheetPlastic",
-			'D', Block.railDetector
+			'D', Blocks.detector_rail
 				} ));
 	}
 	
@@ -1680,8 +1681,8 @@ public class Vanilla
 					"PLP",
 					"SIS",
 					'P', "sheetPlastic",
-					'I', Item.ingotIron,
-					'S', Item.magmaCream,
+					'I', Items.iron_ingot,
+					'S', Items.magma_cream,
 					'L', MineFactoryReloadedCore.safariNetLauncherItem,
 					'G', MineFactoryReloadedCore.spyglassItem
 				}));
@@ -1692,7 +1693,7 @@ public class Vanilla
 					"PRP",
 					"ILI",
 					'P', "sheetPlastic",
-					'I', Item.minecartEmpty,
+					'I', Items.minecart,
 					'L', MineFactoryReloadedCore.needlegunItem,
 					'R', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1),
 					'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2)
@@ -1704,7 +1705,7 @@ public class Vanilla
 					"PIP",
 					"PPP",
 					'P', "sheetPlastic",
-					'I', Item.ingotIron,
+					'I', Items.iron_ingot,
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2, 0), new Object[]
@@ -1715,8 +1716,8 @@ public class Vanilla
 					'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0),
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
 					'P', "sheetPlastic",
-					'T', Block.tnt,
-					'I', Item.firework
+					'T', Blocks.tnt,
+					'I', Items.fireworks
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2, 1), new Object[]
@@ -1726,8 +1727,8 @@ public class Vanilla
 					"IMI",
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
 					'P', "sheetPlastic",
-					'T', Block.tnt,
-					'I', Item.firework
+					'T', Blocks.tnt,
+					'I', Items.fireworks
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoStandardItem), new Object[]
@@ -1735,9 +1736,9 @@ public class Vanilla
 					"AAA",
 					"AAA",
 					"GMG",
-					'A', Item.arrow,
+					'A', Items.arrow,
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
-					'G', Item.gunpowder
+					'G', Items.gunpowder
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoAnvilItem), new Object[]
@@ -1745,18 +1746,18 @@ public class Vanilla
 					"SMS",
 					"SAS",
 					"STS",
-					'A', new ItemStack(Block.anvil, 1, 0),
+					'A', new ItemStack(Blocks.anvil, 1, 0),
 					'M', MineFactoryReloadedCore.needlegunAmmoEmptyItem,
-					'S', Item.silk,
-					'T', Block.tnt
+					'S', Items.string,
+					'T', Blocks.tnt
 				}));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoFireItem),
-				MineFactoryReloadedCore.needlegunAmmoStandardItem, Item.flintAndSteel);
+				MineFactoryReloadedCore.needlegunAmmoStandardItem, Items.flint_and_steel);
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoLavaItem),
 				MineFactoryReloadedCore.needlegunAmmoStandardItem, MineFactoryReloadedCore.plasticCupItem,
-				Item.bucketLava);
+				Items.lava_bucket);
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.needlegunAmmoSludgeItem),
 				MineFactoryReloadedCore.needlegunAmmoStandardItem, MineFactoryReloadedCore.plasticCupItem,
@@ -1780,7 +1781,7 @@ public class Vanilla
 			"PPP",
 			"RRR",
 			"PPP",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'P', "sheetPlastic",
 				} ));
 		
@@ -1789,8 +1790,8 @@ public class Vanilla
 			"nuggetGold",
 			"nuggetGold",
 			"nuggetGold",
-			Item.redstone,
-			Item.redstone,
+			Items.redstone,
+			Items.redstone,
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 				} ));
 		
@@ -1798,7 +1799,7 @@ public class Vanilla
 				{
 			"ingotGold",
 			"ingotGold",
-			Block.blockRedstone,
+			Blocks.redstone_block,
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
@@ -1812,10 +1813,10 @@ public class Vanilla
 			"PRP",
 			"RGR",
 			"PIP",
-			'R', Item.redstone,
+			'R', Items.redstone,
 			'P', "sheetPlastic",
 			'G', "glass",
-			'I', Item.ingotIron,
+			'I', Items.iron_ingot,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetLogicBlock), new Object[]
@@ -1826,9 +1827,9 @@ public class Vanilla
 			'H', new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'L', new ItemStack(Item.dyePowder, 1, 4),
-			'D', Item.diamond,
-			'R', Item.redstone,
+			'L', new ItemStack(Items.dye, 1, 4),
+			'D', Items.diamond,
+			'R', Items.redstone,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0), new Object[]
@@ -1838,7 +1839,7 @@ public class Vanilla
 			"RPR",
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'R', Item.redstone,
+			'R', Items.redstone,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1), new Object[]
@@ -1849,7 +1850,7 @@ public class Vanilla
 			'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'R', Item.redstone,
+			'R', Items.redstone,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2), new Object[]
@@ -1860,8 +1861,8 @@ public class Vanilla
 			'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'D', Item.diamond,
-			'R', Item.redstone,
+			'D', Items.diamond,
+			'R', Items.redstone,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMeterItem, 1, 0), new Object[]
@@ -1871,7 +1872,7 @@ public class Vanilla
 			"PP",
 			'P', "sheetPlastic",
 			'G', "nuggetGold",
-			'R', Item.redstone,
+			'R', Items.redstone,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new Object[]
@@ -1881,7 +1882,7 @@ public class Vanilla
 			"PPP",
 			'P', "sheetPlastic",
 			'G', "nuggetGold",
-			'R', Item.redstone,
+			'R', Items.redstone,
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetPanelBlock, 1, 0), new Object[]
@@ -1891,8 +1892,8 @@ public class Vanilla
 			"KPK",
 			'P', "sheetPlastic",
 			'C', MineFactoryReloadedCore.rednetCableBlock,
-			'B', Block.bookShelf,
-			'K', new ItemStack(Item.dyePowder, 1, 0)
+			'B', Blocks.bookshelf,
+			'K', new ItemStack(Items.dye, 1, 0)
 				} ));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0));
@@ -1906,6 +1907,6 @@ public class Vanilla
 		}
 		_registeredRedNetManual = true;
 		
-		GameRegistry.addShapelessRecipe(ItemBlockRedNetLogic.manual, MineFactoryReloadedCore.plasticSheetItem, Item.redstone, Item.book);
+		GameRegistry.addShapelessRecipe(ItemBlockRedNetLogic.manual, MineFactoryReloadedCore.plasticSheetItem, Items.redstone, Items.book);
 	}
 }

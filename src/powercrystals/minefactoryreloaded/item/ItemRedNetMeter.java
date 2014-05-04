@@ -24,7 +24,7 @@ public class ItemRedNetMeter extends ItemFactory
 			return true;
 		}
 		
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
 			int value;

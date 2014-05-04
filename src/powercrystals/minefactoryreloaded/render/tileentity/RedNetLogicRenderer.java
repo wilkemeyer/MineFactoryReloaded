@@ -45,7 +45,7 @@ public class RedNetLogicRenderer extends TileEntitySpecialRenderer implements IS
 	}
 	
 	@Override
-	public boolean shouldRender3DInInventory()
+	public boolean shouldRender3DInInventory(int modelId)
 	{
 		return true;
 	}
@@ -60,7 +60,7 @@ public class RedNetLogicRenderer extends TileEntitySpecialRenderer implements IS
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f)
 	{
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) tileentity;
-		int rotation = tileentity.worldObj.getBlockMetadata(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord);
+		int rotation = tileentity.getWorldObj().getBlockMetadata(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord);
 		bindTexture(redcomp);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5f, (float) z + 0.5F);

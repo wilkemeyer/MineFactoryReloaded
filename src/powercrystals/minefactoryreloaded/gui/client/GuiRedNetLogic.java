@@ -18,7 +18,7 @@ import powercrystals.core.gui.controls.IListBoxElement;
 import powercrystals.core.gui.controls.ListBox;
 import powercrystals.core.gui.controls.SliderVertical;
 import powercrystals.core.net.PacketWrapper;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;

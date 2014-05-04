@@ -15,8 +15,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-import powercrystals.core.position.Area;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;

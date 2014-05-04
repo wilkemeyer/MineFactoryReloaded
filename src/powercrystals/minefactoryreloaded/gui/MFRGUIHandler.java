@@ -23,7 +23,7 @@ public class MFRGUIHandler implements IGuiHandler
 	{
 		if(ID == 0)
 		{
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
 			if(te instanceof TileEntityFactory)
 			{
 				return ((TileEntityFactory)te).getContainer(player.inventory);
@@ -55,7 +55,7 @@ public class MFRGUIHandler implements IGuiHandler
 	{
 		if(ID == 0)
 		{
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
 			if(te instanceof TileEntityFactory)
 			{
 				return ((TileEntityFactory)te).getGui(player.inventory);

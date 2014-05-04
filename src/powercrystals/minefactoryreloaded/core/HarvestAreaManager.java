@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.net.PacketWrapper;
-import powercrystals.core.position.Area;
-import powercrystals.core.position.BlockPosition;
-import powercrystals.core.position.IRotateableTile;
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
+import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;

@@ -11,7 +11,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -23,9 +23,9 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
 	static IIcon _texture;
 
-	public BlockFactoryGlass(int blockId)
+	public BlockFactoryGlass()
 	{
-		super(blockId, Material.glass, false);
+		super(Material.glass, false);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
 		setUnlocalizedName("mfr.stainedglass.block");
 		setHardness(0.3F);
@@ -91,7 +91,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 
 	public boolean isBlockFullCube(IBlockAccess world, int x, int y, int z)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
+		Block block = world.getBlock(x, y, z);
 		if (block == null)
 			return false;
 		block.setBlockBoundsBasedOnState(world, x, y, z);

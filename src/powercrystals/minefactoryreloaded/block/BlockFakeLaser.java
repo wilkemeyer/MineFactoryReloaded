@@ -21,9 +21,9 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 {
 	private static GrindingDamage laserDamage = new GrindingDamage("mfr.laser");
 	
-	public BlockFakeLaser(int id)
+	public BlockFakeLaser()
 	{
-		super(id, Material.air);
+		super(Material.air);
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
 		setBlockBounds(0F, 0F, 0F, 0F, 0F, 0F);
@@ -90,7 +90,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 		if (world.isRemote || world.getBlockMetadata(x, y, z) != 0) return;
 		
 		int upperId = world.getBlockId(x, y + 1, z);
-		if (upperId != blockID && !(world.getBlockTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill))
+		if (upperId != blockID && !(world.getTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill))
 		{
 			world.setBlockToAir(x, y, z);
 			return;

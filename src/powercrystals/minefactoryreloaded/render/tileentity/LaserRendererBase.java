@@ -57,7 +57,7 @@ public class LaserRendererBase
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDepthMask(true);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		float ticks = host.worldObj.getTotalWorldTime() + partialTicks;
+		float ticks = host.getWorldObj().getTotalWorldTime() + partialTicks;
 		float f3 = -ticks * 0.2F - MathHelper.floor_float(-ticks * 0.1F);
 		double d3 = ticks * 0.025D * (1.0D - 2.5D);
 		tessellator.startDrawingQuads();

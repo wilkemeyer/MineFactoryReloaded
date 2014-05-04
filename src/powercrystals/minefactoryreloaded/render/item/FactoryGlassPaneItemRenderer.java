@@ -4,7 +4,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -12,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
 
 public class FactoryGlassPaneItemRenderer implements IItemRenderer
 {
@@ -34,7 +32,7 @@ public class FactoryGlassPaneItemRenderer implements IItemRenderer
 	{
 		RenderBlocks renderer = (RenderBlocks)data[0];
 
-		BlockFactoryGlassPane pane = (BlockFactoryGlassPane)Block.blocksList[((ItemBlock)item.getItem()).getBlockID()];
+		Block pane = Block.getBlockFromItem(item.getItem());
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_CULL_FACE);

@@ -10,14 +10,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.inventory.IInventoryManager;
 import powercrystals.core.inventory.InventoryManager;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.core.util.UtilInventory;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail
 {
-	public BlockRailCargoDropoff(int id)
+	public BlockRailCargoDropoff()
 	{
-		super(id, true, false);
+		super(true, false);
 		setUnlocalizedName("mfr.rail.cargo.dropoff");
 	}
 

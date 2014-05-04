@@ -30,7 +30,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-import powercrystals.core.position.IRotateableTile;
+import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
@@ -49,9 +49,9 @@ public class BlockFactoryMachine extends BlockContainer
 {
 	private int _mfrMachineBlockIndex;
 
-	public BlockFactoryMachine(int blockId, int index)
+	public BlockFactoryMachine(int index)
 	{
-		super(blockId, Machine.MATERIAL);
+		super(Machine.MATERIAL);
 		setHardness(0.5F);
 		setStepSound(soundMetalFootstep);
 		setCreativeTab(MFRCreativeTab.tab);
@@ -76,7 +76,7 @@ public class BlockFactoryMachine extends BlockContainer
 	{
 		int md = iblockaccess.getBlockMetadata(x, y, z);
 		boolean isActive = false;
-		TileEntity te = iblockaccess.getBlockTileEntity(x, y, z);
+		TileEntity te = iblockaccess.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
 		{
 			side = ((TileEntityFactory)te).getRotatedSide(side);
@@ -102,7 +102,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public int getLightOpacity(World world, int x, int y, int z)
 	{
-		if(world.getBlockTileEntity(x, y, z) instanceof TileEntityLaserDrill)
+		if(world.getTileEntity(x, y, z) instanceof TileEntityLaserDrill)
 		{
 			return 0;
 		}
@@ -112,7 +112,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IEntityCollidable)
 		{
 			float shrinkAmount = 0.125F;
@@ -131,7 +131,7 @@ public class BlockFactoryMachine extends BlockContainer
 		if (world.isRemote)
 			return;
 
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IEntityCollidable)
 			((IEntityCollidable)te).onEntityCollided(entity);
 		
@@ -141,7 +141,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		
 		if(te instanceof TileEntityFactory)
 		{
@@ -199,7 +199,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null)
 		{
 			dropContents(te);
@@ -226,7 +226,7 @@ public class BlockFactoryMachine extends BlockContainer
 	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
 			boolean returnBlock)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityFactory)
 		{
 			ItemStack machine = new ItemStack(idDropped(blockID, world.rand, 0), 1,
@@ -257,7 +257,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
 	{
-		return world.getBlockTileEntity(x, y, z) instanceof TileEntityFactory;
+		return world.getTileEntity(x, y, z) instanceof TileEntityFactory;
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public class BlockFactoryMachine extends BlockContainer
 		{
 			return;
 		}
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(stack.getTagCompound() != null)
 		{
 			stack.getTagCompound().setInteger("x", x);
@@ -336,7 +336,7 @@ public class BlockFactoryMachine extends BlockContainer
 		{
 			return false;
 		}
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
@@ -358,7 +358,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityFactoryInventory)
 			return ((TileEntityFactoryInventory)te).getComparatorOutput(side);
 		return 0;
@@ -375,7 +375,7 @@ public class BlockFactoryMachine extends BlockContainer
 			return false;
 		}
 
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te == null)
 		{
 			return false;
@@ -435,7 +435,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
 		{
 			return ((TileEntityFactory)te).getRedNetOutput(ForgeDirection.getOrientation(side));
@@ -475,7 +475,7 @@ public class BlockFactoryMachine extends BlockContainer
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
 		{
 			((TileEntityFactory)te).onRedNetChanged(side, inputValue);

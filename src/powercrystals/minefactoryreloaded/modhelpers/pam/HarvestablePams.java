@@ -26,7 +26,7 @@ public class HarvestablePams implements IFactoryHarvestable
 	{
 		return false;	}
 	@Override
-	public boolean canBeHarvested( World world, Map<String, Boolean> harvesterSettings, int x, int y, int z )	{		TileEntity te = world.getBlockTileEntity( x, y, z );
+	public boolean canBeHarvested( World world, Map<String, Boolean> harvesterSettings, int x, int y, int z )	{		TileEntity te = world.getTileEntity( x, y, z );
 		try
 		{
 			if ( te != null && ( Integer ) ( getGrowthStage.invoke( te, dummyArgs ) ) >= 2 )
@@ -43,7 +43,7 @@ public class HarvestablePams implements IFactoryHarvestable
 	public List<ItemStack> getDrops( World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z )
 	{
 		List<ItemStack> outStack = new ArrayList<ItemStack>();
-		TileEntity te = world.getBlockTileEntity( x, y, z );
+		TileEntity te = world.getTileEntity( x, y, z );
 		if ( te != null )
 		{
 			try
@@ -71,6 +71,6 @@ public class HarvestablePams implements IFactoryHarvestable
 	@Override	public void preHarvest( World world, int x, int y, int z )	{	}
 	@Override
 	public void postHarvest( World world, int x, int y, int z )
-	{		TileEntity te = world.getBlockTileEntity( x, y, z );		try		{			int cropId = ( Integer ) ( getCrop.invoke( te, dummyArgs ) );			if(cropId>28)			{				Pam.pamTESetGrowthStage.invoke(te,1);				world.markBlockForUpdate(x,y,z);			}			else			{				world.removeBlockTileEntity(x,y,z);				world.setBlockToAir(x,y,z);			}		}		catch ( Exception ex )		{			ex.printStackTrace();		}
+	{		TileEntity te = world.getTileEntity( x, y, z );		try		{			int cropId = ( Integer ) ( getCrop.invoke( te, dummyArgs ) );			if(cropId>28)			{				Pam.pamTESetGrowthStage.invoke(te,1);				world.markBlockForUpdate(x,y,z);			}			else			{				world.removeBlockTileEntity(x,y,z);				world.setBlockToAir(x,y,z);			}		}		catch ( Exception ex )		{			ex.printStackTrace();		}
 	}
 }

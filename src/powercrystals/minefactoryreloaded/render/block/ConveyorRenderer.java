@@ -88,7 +88,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 	}
 	
 	@Override
-	public boolean shouldRender3DInInventory()
+	public boolean shouldRender3DInInventory(int modelId)
 	{
 		return false;
 	}
@@ -125,9 +125,9 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 		tessellator.setColorOpaque_F(red, green, blue);
-		draw(tessellator, block.getBlockTexture(world, x, y, z, 0));
+		draw(tessellator, block.getIcon(world, x, y, z, 0));
 		tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
-		draw(tessellator, block.getBlockTexture(world, x, y, z, 1));
+		draw(tessellator, block.getIcon(world, x, y, z, 1));
 	}
 	
 	private void draw(Tessellator tessellator, IIcon texture)

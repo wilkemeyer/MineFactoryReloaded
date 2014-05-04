@@ -19,9 +19,9 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 			"meat.cooked", "pavedstone_large", "brick_large" };
 	private IIcon[] _icons = new IIcon[_names.length];
 	
-	public BlockFactoryDecorativeBricks(int blockId)
+	public BlockFactoryDecorativeBricks()
 	{
-		super(blockId, Material.rock);
+		super(Material.rock);
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundStoneFootstep);

@@ -3,11 +3,13 @@ package powercrystals.minefactoryreloaded.render.block;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPane;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -38,8 +40,8 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 
 		iconGlass = block.getIcon(0, metadata);
 		iconStreaks = block.getIcon(0, 16 | metadata);
-		iconSide = block.getSideTextureIndex();
-		iconOverlay = block.getBlockOverlayTexture();
+		iconSide = block.func_150097_e();
+		iconOverlay = block.getIcon(0, 32 | metadata);
 
 		double minXGlass = iconGlass.getMinU();
 		double maxXGlass = iconGlass.getMaxU();
@@ -130,7 +132,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z,
 			Block tile, int modelId, RenderBlocks renderer)
 	{
-		BlockFactoryGlassPane block = (BlockFactoryGlassPane)tile;
+		BlockPane block = (BlockPane)tile;
 
 		int worldHeight = blockAccess.getHeight();
 		int metadata = blockAccess.getBlockMetadata(x, y, z);
@@ -163,9 +165,9 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 		{
 			iconGlass = block.getIcon(0, metadata);
 			iconStreaks = block.getIcon(0, 16 | metadata);
-			iconSide = block.getSideTextureIndex();
-			iconOverlaySouth = block.getBlockOverlayTexture(blockAccess, x, y, z, 2);
-			iconOverlayWest = block.getBlockOverlayTexture(blockAccess, x, y, z, 5);
+			iconSide = block.func_150097_e();
+			iconOverlaySouth = block.getIcon(blockAccess, x, y, z, 2);
+			iconOverlayWest = block.getIcon(blockAccess, x, y, z, 5);
 		}
 
 		double minXGlass = iconGlass.getMinU();
@@ -217,10 +219,10 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 		double negSideXOffset = zMid - 0.0625D;
 		double posSideXOffset = zMid + 0.0625D;
 
-		boolean connectedNegZ = block.canThisFactoryPaneConnectToThisBlockID(blockAccess.getBlockId(x, y, z - 1));
-		boolean connectedPosZ = block.canThisFactoryPaneConnectToThisBlockID(blockAccess.getBlockId(x, y, z + 1));
-		boolean connectedNegX = block.canThisFactoryPaneConnectToThisBlockID(blockAccess.getBlockId(x - 1, y, z));
-		boolean connectedPosX = block.canThisFactoryPaneConnectToThisBlockID(blockAccess.getBlockId(x + 1, y, z));
+		boolean connectedNegZ = block.canPaneConnectTo(blockAccess, x, y, z - 1, ForgeDirection.NORTH);
+		boolean connectedPosZ = block.canPaneConnectTo(blockAccess, x, y, z + 1, ForgeDirection.SOUTH);
+		boolean connectedNegX = block.canPaneConnectTo(blockAccess, x - 1, y, z, ForgeDirection.WEST);
+		boolean connectedPosX = block.canPaneConnectTo(blockAccess, x + 1, y, z, ForgeDirection.EAST);
 
 		boolean renderTop = y >= worldHeight || block.shouldSideBeRendered(blockAccess, x, y + 1, z, 1);
 		boolean renderBottom = y <= 0 || block.shouldSideBeRendered(blockAccess, x, y - 1, z, 0);
@@ -505,7 +507,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory()
+	public boolean shouldRender3DInInventory(int modelId)
 	{
 		return false;
 	}

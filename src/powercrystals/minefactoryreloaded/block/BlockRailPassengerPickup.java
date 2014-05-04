@@ -13,9 +13,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class BlockRailPassengerPickup extends BlockFactoryRail
 {
-	public BlockRailPassengerPickup(int blockId)
+	public BlockRailPassengerPickup()
 	{
-		super(blockId, true, false);
+		super(true, false);
 		setUnlocalizedName("mfr.rail.passenger.pickup");
 	}
 

@@ -64,7 +64,7 @@ public class PlantablePamCrop implements IFactoryPlantable
 	@Override
 	public void postPlant(World world, int x, int y, int z, ItemStack stack)
 	{
-		TileEntity te=world.getBlockTileEntity(x,y,z);
+		TileEntity te=world.getTileEntity(x,y,z);
 		try
 		{
 			if(te!=null)

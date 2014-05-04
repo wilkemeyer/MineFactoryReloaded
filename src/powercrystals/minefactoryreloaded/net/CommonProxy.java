@@ -36,7 +36,7 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 		int y = ticket.getModData().getInteger("Y");
 		int z = ticket.getModData().getInteger("Z");
 		
-		TileEntity tile = ticket.world.getBlockTileEntity(x, y, z);
+		TileEntity tile = ticket.world.getTileEntity(x, y, z);
 		if (!(tile instanceof TileEntityChunkLoader))
 		{
 			ForgeChunkManager.releaseTicket(ticket);

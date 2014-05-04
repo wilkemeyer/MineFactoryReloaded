@@ -29,9 +29,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	private IIcon[] _iconOpaque = new IIcon[_names.length];
 	private IIcon[] _iconTransparent = new IIcon[_names.length];
 
-	public BlockRubberLeaves(int id)
+	public BlockRubberLeaves()
 	{
-		super(id);
 		setHardness(0.2F);
 		setLightOpacity(1);
 		setStepSound(soundGrassFootstep);

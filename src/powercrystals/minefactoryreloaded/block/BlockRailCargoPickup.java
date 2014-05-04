@@ -14,9 +14,9 @@ import powercrystals.core.util.UtilInventory;
 
 public class BlockRailCargoPickup extends BlockFactoryRail
 {
-	public BlockRailCargoPickup(int id)
+	public BlockRailCargoPickup()
 	{
-		super(id, true, false);
+		super(true, false);
 		setUnlocalizedName("mfr.rail.cargo.pickup");
 	}
 

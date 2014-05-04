@@ -21,9 +21,8 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 {
 	private static WorldGenRubberTree treeGen = new WorldGenRubberTree(true);
 			
-	public BlockRubberSapling(int id)
+	public BlockRubberSapling()
 	{
-		super(id);
 		setHardness(0.0F);
 		setStepSound(soundGrassFootstep);
 		setUnlocalizedName("mfr.rubberwood.sapling");

@@ -157,7 +157,7 @@ implements IPowerEmitter, IEnergyHandler
 	@Override
 	public void onNeighborTileChange(int x, int y, int z)
 	{
-		TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
+		TileEntity tile = worldObj.getTileEntity(x, y, z);
 
 		if (x < xCoord)
 			addCache(tile, 5);

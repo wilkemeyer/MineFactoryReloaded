@@ -1,17 +1,14 @@
 package powercrystals.minefactoryreloaded.render.item;
 
-import skyboy.core.container.CarbonContainer;
-import skyboy.core.fluid.LiquidRegistry;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -21,6 +18,9 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import skyboy.core.container.CarbonContainer;
+import skyboy.core.fluid.LiquidRegistry;
 
 @SideOnly(Side.CLIENT)
 public class FactoryFluidOverlayRenderer implements IItemRenderer {
@@ -73,7 +73,7 @@ public class FactoryFluidOverlayRenderer implements IItemRenderer {
 		boolean isFloaty = hasLiquid & liquid != null ? liquid.getFluid().getDensity(liquid) < 0 : false;
 		
 		if (fluid == null) {
-			fluid = Block.lavaMoving.getIcon(2, 0);
+			fluid = Blocks.flowing_lava.getIcon(2, 0);
 			liquidSheet = 0;
 			colorMult = 0x3F3F3F;
 		}

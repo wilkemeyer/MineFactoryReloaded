@@ -15,9 +15,9 @@ public class BlockFactoryRail extends BlockRailBase
 {
 	protected boolean canSlope;
 
-	public BlockFactoryRail(int par1, boolean par2, boolean slopes)
+	public BlockFactoryRail(boolean par2, boolean slopes)
 	{
-		super(par1, par2);
+		super(par2);
 		setHardness(0.5F);
 		setStepSound(Block.soundMetalFootstep);
 		setCreativeTab(MFRCreativeTab.tab);

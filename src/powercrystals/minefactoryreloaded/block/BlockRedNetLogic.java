@@ -35,9 +35,9 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 {
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
 	
-	public BlockRedNetLogic(int id)
+	public BlockRedNetLogic()
 	{
-		super(id, Machine.MATERIAL);
+		super(Machine.MATERIAL);
 		setUnlocalizedName("mfr.rednet.logic");
 		setHardness(0.8F);
 		setCreativeTab(MFRCreativeTab.tab);
@@ -50,7 +50,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 		{
 			return;
 		}
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetLogic)
 		{
 			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
@@ -86,7 +86,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
 	{
-		BlockNBTManager.setForBlock(world.getBlockTileEntity(x, y, z));
+		BlockNBTManager.setForBlock(world.getTileEntity(x, y, z));
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 	
@@ -103,7 +103,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
         {
             return false;
         }
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetLogic)
 		{
 			if (((TileEntityRedNetLogic)te).crafters > 0)
@@ -119,7 +119,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getBlockTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getTileEntity(x, y, z);
 		if(logic != null && side.ordinal() > 1 && side.ordinal() < 6)
 		{
 			if(world.getBlockMetadata(x, y, z) == _sideRemap[side.ordinal() - 2])
@@ -133,7 +133,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	@Override
 	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getBlockTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getTileEntity(x, y, z);
 		if(logic != null)
 		{
 			return logic.getOutputValue(side, subnet);
@@ -147,7 +147,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	@Override
 	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getBlockTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getTileEntity(x, y, z);
 		if(logic != null)
 		{
 			return logic.getOutputValues(side);
@@ -161,7 +161,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	@Override
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getBlockTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getTileEntity(x, y, z);
 		if(logic != null)
 		{
 			logic.onInputsChanged(side, inputValues);
@@ -192,7 +192,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 		
 		if(MFRUtil.isHolding(player, ItemLogicUpgradeCard.class))
 		{
-			TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getBlockTileEntity(x, y, z);
+			TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getTileEntity(x, y, z);
 			if(logic != null)
 			{
 				if(logic.insertUpgrade(player.inventory.getCurrentItem().getItemDamage() + 1));

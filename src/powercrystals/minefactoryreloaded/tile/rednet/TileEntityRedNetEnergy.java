@@ -114,7 +114,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	public void onNeighborTileChange(int x, int y, int z) {
 		if (worldObj.isRemote)
 			return;
-		TileEntity tile = worldObj.getBlockTileEntity(x, y, z);
+		TileEntity tile = worldObj.getTileEntity(x, y, z);
 
 		if (x < xCoord)
 			addCache(tile, 5);
@@ -184,7 +184,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (worldObj.blockExists(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-					TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
+					TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
 							yCoord + dir.offsetY, zCoord + dir.offsetZ);
 					if (tile instanceof TileEntityRedNetEnergy)
 						_grid.addConduit((TileEntityRedNetEnergy)tile);
@@ -193,7 +193,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		} else for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			if (worldObj.blockExists(xCoord + dir.offsetX,
 					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-				TileEntity tile = worldObj.getBlockTileEntity(xCoord + dir.offsetX,
+				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ);
 				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile)._grid != null) {
 					((TileEntityRedNetEnergy)tile)._grid.addConduit(this);

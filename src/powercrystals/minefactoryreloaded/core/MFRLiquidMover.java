@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -168,7 +168,7 @@ public abstract class MFRLiquidMover
 			l.amount = Math.min(l.amount, FluidContainerRegistry.BUCKET_VOLUME);
 			for(BlockPosition adj : new BlockPosition(from).getAdjacent(true))
 			{
-				TileEntity tile = from.worldObj.getBlockTileEntity(adj.x, adj.y, adj.z);
+				TileEntity tile = from.worldObj.getTileEntity(adj.x, adj.y, adj.z);
 				if(tile instanceof IFluidHandler)
 				{
 					int filled = ((IFluidHandler)tile).fill(adj.orientation.getOpposite(), l, true);

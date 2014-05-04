@@ -18,7 +18,7 @@
 	<property name="minecraft.version" value="1.7.2"/>
 	<property name="forge.major" value="10"/>
 	<property name="forge.minor" value="12"/>
-	<property name="forge.bugfix" value="0"/>
+	<property name="forge.patch" value="0"/>
 	<property name="forge.build" value="1055"/>
 	<property name="cofh.commit" value="24600c4cfda893a16316c0631972170413f3a1e3"/>
 	
@@ -104,12 +104,12 @@
 		<parallel>
 			<sequential>
 				<echo message="Downloading IC2 API... "/>
-				<get src="http://ic2api.player.to:8080/job/IC2_experimental/234/artifact/packages/industrialcraft-2-api_2.0.234-experimental.zip" dest="${download.dir}/industrialcraft-2-api.zip"/>
+				<get src="http://ic2api.player.to:8080/job/IC2_experimental/lastSuccessfulBuild/artifact/build/libs/industrialcraft-2-2.1.476-experimental-api.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
 			</sequential>
 			<sequential>
 				<echo message="Downloading BuildCraft API..."/>
-				<get src="https://github.com/BuildCraft/BuildCraft/archive/3e13bbb166568624cc918f8a9f916fa2062f6c37.zip" dest="${download.dir}/Buildcraft-master.zip"/>
-			</sequential>
+				<get src="http://nallar.me/buildservice/job/Buildcraft/lastSuccessfulBuild/artifact/build/libs/buildcraft-6.0.8-api.jar" dest="${download.dir}/Buildcraft.jar"/>
+			</sequential><!--
 			<sequential>
 				<echo message="Downloading ThermalExpansion API... "/>
 				<get src="https://github.com/KingLemming/CoFHLib/archive/${cofh.commit}.zip" dest="${download.dir}/cofh-api.zip"/>
@@ -121,25 +121,19 @@
 			<sequential>
 				<echo message="Downloading CCL..."/>
 				<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.55.jar" dest="${download.dir}/codechickenlib.jar"/>
-			</sequential>
+			</sequential>-->
 		</parallel>
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="have.libs">
 		<delete dir="${lib.dir}/"/>
 		<mkdir dir="${lib.dir}/"/>
-		<copy todir="${sources.dir}/powercrystals/core">
-			<fileset dir="${download.dir}/PowerCrystalsCore-master/src/powercrystals/core"/>
-		</copy>
 		
 		<echo message="Extracting BuildCraft API..."/>
-		<unzip src="${download.dir}/Buildcraft-master.zip" dest="${download.dir}"/>
-		<mkdir dir="${sources.dir}/buildcraft/"/>
-		<move file="${download.dir}/BuildCraft-3e13bbb166568624cc918f8a9f916fa2062f6c37/common/buildcraft/api" todir="${sources.dir}/buildcraft/"/>
+		<copy file="${download.dir}/Buildcraft.jar" todir="${lib.dir}"/>
 		
 		<echo message="Extracting IC2 API... "/>
-		<unzip src="${download.dir}/industrialcraft-2-api.zip" dest="${download.dir}"/>
-		<move file="${download.dir}/ic2" todir="${sources.dir}"/>
+		<copy file="${download.dir}/industrialcraft-2-api.jar" todir="${lib.dir}"/><!--
 		
 		<echo message="Extracting ThermalExpansion API... "/>
 		<unzip src="${download.dir}/cofh-api.zip" dest="${download.dir}"/>
@@ -151,7 +145,7 @@
 		<move file="${download.dir}/forestry" todir="${sources.dir}"/>
 			
 		<echo message="Extracting CCL... "/>
-		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>
+		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>-->
 	</target>
 	
 	<target name="clone-MFR-Forestry" depends="download-jgit" unless="den-exists">

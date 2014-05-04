@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGlass;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -14,7 +15,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -27,17 +28,23 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 {
 	protected IIcon _iconSide;
 
-	public BlockFactoryGlassPane(int blockId)
+	public BlockFactoryGlassPane()
 	{
-		super(blockId, "", "", Material.glass, false);
-		this.setCreativeTab(CreativeTabs.tabDecorations);
-		setUnlocalizedName("mfr.stainedglass.pane");
+		this(true);
+	}
+
+	public BlockFactoryGlassPane(boolean mfr)
+	{
+		super("", "", Material.glass, false);
 		setHardness(0.3F);
 		setStepSound(soundGlassFootstep);
-		if(blockId != Block.thinGlass.blockID)
+		if (mfr)
 		{
 			setCreativeTab(MFRCreativeTab.tab);
+			setUnlocalizedName("mfr.stainedglass.pane");
 		}
+		else
+			setCreativeTab(CreativeTabs.tabDecorations);
 	}
 
 	@Override
@@ -51,12 +58,6 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	public void registerIcons(IIconRegister ir)
 	{
 		// This space intentionally left blank.
-	}
-
-	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, meta > 15 ? 6 : 7, 7);
 	}
 
 	@Override
@@ -82,65 +83,59 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		return false;
 	}
 
-	public IIcon getBlockOverlayTexture()
+	@Override
+	public IIcon getIcon(int side, int meta)
 	{
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);
+		meta /= 16;
+		if (meta == 2)
+			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);
+		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 7 - meta, 7);
 	}
 
-	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
+	@Override
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
 		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
 		boolean[] sides = new boolean[8];
 		bp.moveRight(1);
-		sides[0] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveDown(1);
-		sides[4] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveLeft(1);
-		sides[1] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveLeft(1);
-		sides[5] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveUp(1);
-		sides[3] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveUp(1);
-		sides[6] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveRight(1);
-		sides[2] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		bp.moveRight(1);
-		sides[7] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+		sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, sides);
 	}
 
 	@Override
-	public IIcon getSideTextureIndex()
+	public IIcon func_150097_e()
 	{
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 5, 7);
-	}
-
-	public boolean canThisFactoryPaneConnectToThisBlockID(int blockId)
-	{
-		return Block.opaqueCubeLookup[blockId] ||
-				blockId == Block.glass.blockID || // connect to glass material?
-				blockId == MineFactoryReloadedCore.factoryGlassPaneBlock.blockID ||
-				blockId == MineFactoryReloadedCore.factoryGlassBlock.blockID ||
-				(blockId == Block.thinGlass.blockID && MFRConfig.vanillaOverrideGlassPane.getBoolean(true));
 	}
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		int blockId = world.getBlockId(x, y, z);
-		return !((blockId == Block.glass.blockID ||
-				blockId == MineFactoryReloadedCore.factoryGlassPaneBlock.blockID ||
-				blockId == MineFactoryReloadedCore.factoryGlassBlock.blockID ||
-				(blockId == Block.thinGlass.blockID &&
-				MFRConfig.vanillaOverrideGlassPane.getBoolean(true))) ||
+		return !(canPaneConnectTo(world, x, y, z, ForgeDirection.getOrientation(side)) ||
 				!super.shouldSideBeRendered(world, x, y, z, side));
 	}
 
 	@Override
 	public boolean canPaneConnectTo(IBlockAccess world, int x, int y, int z, ForgeDirection dir)
 	{
-		return canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x, y, z));
+		Block block = world.getBlock(x, y, z);
+		return block.func_149730_j() ||
+				block instanceof BlockPane ||
+				block.getMaterial() == Material.glass;
 	}
 
 	@Override
@@ -150,10 +145,10 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		float zStart = 0.5625F;
 		float xStop = 0.4375F;
 		float zStop = 0.5625F;
-		boolean connectedNorth = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x, y, z - 1));
-		boolean connectedSouth = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x, y, z + 1));
-		boolean connectedWest = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x - 1, y, z));
-		boolean connectedEast = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x + 1, y, z));
+		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, ForgeDirection.NORTH);
+		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, ForgeDirection.SOUTH);
+		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, ForgeDirection.WEST);
+		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, ForgeDirection.EAST);
 
 		if ((!connectedWest || !connectedEast) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
 		{
@@ -196,10 +191,10 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List blockList, Entity e)
 	{
-		boolean connectedNorth = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x, y, z - 1));
-		boolean connectedSouth = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x, y, z + 1));
-		boolean connectedWest = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x - 1, y, z));
-		boolean connectedEast = this.canThisFactoryPaneConnectToThisBlockID(world.getBlockId(x + 1, y, z));
+		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, ForgeDirection.NORTH);
+		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, ForgeDirection.SOUTH);
+		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, ForgeDirection.WEST);
+		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, ForgeDirection.EAST);
 
 		if ((!connectedWest || !connectedEast) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
 		{

@@ -35,9 +35,9 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	private IIcon _iconStill;
 	protected String fluidName;
 
-	public BlockFactoryFluid(int id, String liquidName)
+	public BlockFactoryFluid(String liquidName)
 	{
-		super(id, FluidRegistry.getFluid(liquidName), Material.water);
+		super(FluidRegistry.getFluid(liquidName), Material.water);
 		setUnlocalizedName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);

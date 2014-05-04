@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.net.PacketWrapper;
-import powercrystals.core.position.IRotateableTile;
+import cofh.util.position.IRotateableTile;
 import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.modhelpers.buildcraft.Buildcraft;

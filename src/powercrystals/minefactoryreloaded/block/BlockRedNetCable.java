@@ -36,7 +36,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
-import powercrystals.core.position.BlockPosition;
+import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
@@ -132,9 +132,9 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - _bandDepthEnd, _cageEnd, _cageEnd);
 	}
 
-	public BlockRedNetCable(int id)
+	public BlockRedNetCable()
 	{
-		super(id, Machine.MATERIAL);
+		super(Machine.MATERIAL);
 
 		setUnlocalizedName("mfr.cable.redstone");
 		setHardness(0.8F);
@@ -151,7 +151,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			return false;
 		}
 
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
 		{
 			TileEntityRedNetCable cable = (TileEntityRedNetCable)te;
@@ -290,7 +290,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
 	{
-		TileEntity cable = world.getBlockTileEntity(x, y, z);
+		TileEntity cable = world.getTileEntity(x, y, z);
 		if (cable instanceof TileEntityRedNetCable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
@@ -314,7 +314,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
 	{
 		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
 			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true, trace.get() == Boolean.TRUE);
 		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
@@ -361,7 +361,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		}
 		RedstoneNetwork.log("Cable block at %d, %d, %d got update from ID %d", x, y, z, blockId);
 
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
 			((TileEntityRedNetCable)te).onNeighboorChanged();
@@ -371,7 +371,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		
 		if(te instanceof TileEntityRedNetEnergy)
 		{
@@ -382,7 +382,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int id, int meta)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
 			if (((TileEntityRedNetCable)te).getNetwork() != null)
@@ -430,7 +430,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
 	{
 		int power = 0;
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
 			TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
@@ -451,7 +451,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
 	{
 		int power = 0;
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
 			TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
@@ -483,7 +483,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
 			return ((TileEntityRedNetCable)te).isSolidOnSide(side.ordinal());
 		
@@ -532,7 +532,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public void updateNetwork(World world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
 		{
 			//((TileEntityRedNetCable)te).getNetwork().updatePowerLevels();
@@ -543,7 +543,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public void updateNetwork(World world, int x, int y, int z, int subnet)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
 		{
 			//((TileEntityRedNetCable)te).getNetwork().updatePowerLevels(subnet);
@@ -555,7 +555,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
 			ForgeDirection side, EntityPlayer player, List<String> info, boolean debug)
 	{
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityRedNetCable)
 			((TileEntityRedNetCable)tile).getTileInfo(info, side, player, debug);
 	}

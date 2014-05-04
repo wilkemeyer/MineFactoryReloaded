@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomItem;
 
 import powercrystals.core.random.WeightedRandomItemStack;
@@ -44,14 +45,14 @@ public abstract class MFRRegistry
 	private static List<Integer> _fruitLogBlocks = new ArrayList<Integer>();
 	private static Map<Integer, IFactoryFruit> _fruitBlocks = new HashMap<Integer, IFactoryFruit>();
 
-	private static List<WeightedRandomItem> _sludgeDrops  = new ArrayList<WeightedRandomItem>();
+	private static List<WeightedRandom.Item> _sludgeDrops  = new ArrayList<WeightedRandom.Item>();
 	private static List<IMobEggHandler> _eggHandlers = new ArrayList<IMobEggHandler>();
 	private static List<ISafariNetHandler> _safariNetHandlers = new ArrayList<ISafariNetHandler>();
 	private static List<String> _rubberTreeBiomes = new ArrayList<String>();
 	private static List<Class<?>> _safariNetBlacklist = new ArrayList<Class<?>>();
 	private static List<IRandomMobProvider> _randomMobProviders = new ArrayList<IRandomMobProvider>();
 	private static List<IRedNetLogicCircuit> _redNetLogicCircuits = new ArrayList<IRedNetLogicCircuit>();
-	private static List<WeightedRandomItem> _laserOres  = new ArrayList<WeightedRandomItem>();
+	private static List<WeightedRandom.Item> _laserOres  = new ArrayList<WeightedRandom.Item>();
 	private static List<Class<?>> _grindableBlacklist = new ArrayList<Class<?>>();
 	private static List<String> _autoSpawnerBlacklist = new ArrayList<String>();
 	private static List<Class<?>> _autoSpawnerClassBlacklist = new ArrayList<Class<?>>();
@@ -150,7 +151,7 @@ public abstract class MFRRegistry
 		_sludgeDrops.add(new WeightedRandomItemStack(weight, drop.copy()));
 	}
 
-	public static List<WeightedRandomItem> getSludgeDrops()
+	public static List<WeightedRandom.Item> getSludgeDrops()
 	{
 		return _sludgeDrops;
 	}
@@ -252,7 +253,7 @@ public abstract class MFRRegistry
 
 	public static void registerLaserOre(int weight, ItemStack ore)
 	{
-		for (WeightedRandomItem item : _laserOres)
+		for (WeightedRandom.Item item : _laserOres)
 			if (UtilInventory.stacksEqual(((WeightedRandomItemStack)item).getStack(), ore))
 			{
 				item.itemWeight += weight;
@@ -262,7 +263,7 @@ public abstract class MFRRegistry
 		_laserOres.add(new WeightedRandomItemStack(weight, ore.copy()));
 	}
 
-	public static List<WeightedRandomItem> getLaserOres()
+	public static List<WeightedRandom.Item> getLaserOres()
 	{
 		return _laserOres;
 	}

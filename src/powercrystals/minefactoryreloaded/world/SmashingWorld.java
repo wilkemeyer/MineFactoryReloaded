@@ -70,7 +70,7 @@ public class SmashingWorld extends WorldProxy
 	}
 
 	@Override
-	public TileEntity getBlockTileEntity(int X, int Y, int Z)
+	public TileEntity getTileEntity(int X, int Y, int Z)
 	{
 		return null;
 	}
