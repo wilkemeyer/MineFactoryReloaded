@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 import buildcraft.api.gates.ITriggerParameter;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 

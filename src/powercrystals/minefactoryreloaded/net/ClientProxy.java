@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.event.ForgeSubscribe;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy implements IPlayerTracker
 	}
 	
 	@Override
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void onPostTextureStitch(TextureStitchEvent.Post e)
 	{
 		setIcons("milk", MineFactoryReloadedCore.milkLiquid);

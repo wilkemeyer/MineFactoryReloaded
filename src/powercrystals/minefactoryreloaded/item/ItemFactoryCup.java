@@ -25,7 +25,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -50,9 +50,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	protected IIcon fillIcon;
 	protected List<IUseHandler> useHandlers;
 
-	public ItemFactoryCup(int id, int stackSize, int maxUses)
+	public ItemFactoryCup(int stackSize, int maxUses)
 	{
-		super(id);
 		this.setMaxStackSize(stackSize);
 		this.setMaxDamage(maxUses);
 		this.setHasSubtypes(true);

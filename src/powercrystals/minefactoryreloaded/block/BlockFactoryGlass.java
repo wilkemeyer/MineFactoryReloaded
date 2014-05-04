@@ -3,14 +3,14 @@ package powercrystals.minefactoryreloaded.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
-	static Icon _texture;
+	static IIcon _texture;
 
 	public BlockFactoryGlass(int blockId)
 	{
@@ -64,18 +64,18 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		_texture = ir.registerIcon("minefactoryreloaded:tile.mfr.stainedglass");
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return new IconOverlay(_texture, 8, 8, meta > 15 ? 6 : 7, 7);
 	}
 
-	public Icon getBlockOverlayTexture()
+	public IIcon getBlockOverlayTexture()
 	{
 		return new IconOverlay(_texture, 8, 8, 0, 0);
 	}
@@ -101,7 +101,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 				block.getBlockBoundsMaxZ()).getAverageEdgeLength() >= 1.0D;
 	}
 
-	public Icon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		BlockPosition bp;
 		boolean[] sides = new boolean[8];

@@ -3,15 +3,15 @@ package powercrystals.minefactoryreloaded.render;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 
-public class IconOverlay implements Icon {
+public class IconOverlay implements IIcon {
 
-	private Icon overlayIcon;
+	private IIcon overlayIcon;
 	private float xSegments, ySegments;
 	private float selectedSegmentX, selectedSegmentY;
 	
-	public IconOverlay(Icon overlayIcon, int subX, int subY, int selectedX, int selectedY) {
+	public IconOverlay(IIcon overlayIcon, int subX, int subY, int selectedX, int selectedY) {
 		this.overlayIcon = overlayIcon;
 		xSegments = subX;
 		ySegments = subY;
@@ -19,7 +19,7 @@ public class IconOverlay implements Icon {
 		selectedSegmentY = selectedY;
 	}
 
-	public IconOverlay(Icon overlayIcon, int subX, int subY, boolean ...sides) {
+	public IconOverlay(IIcon overlayIcon, int subX, int subY, boolean ...sides) {
 		this.overlayIcon = overlayIcon;
 		xSegments = subX;
 		ySegments = subY;

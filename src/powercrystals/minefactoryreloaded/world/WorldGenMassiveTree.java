@@ -6,12 +6,13 @@ import java.util.TreeSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
@@ -162,7 +163,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 		System.arraycopy(var2, 0, leafNodes, 0, var4);
 	}
 
-	void genTreeLayer(int par1, int par2, int par3, float par4, byte par5, int par6)
+	void genTreeLayer(int par1, int par2, int par3, float par4, byte par5, Block par6)
 	{
 		int var7 = (int)(par4 + 0.618D);
 		byte var8 = otherCoordPairs[par5];
@@ -188,15 +189,15 @@ public class WorldGenMassiveTree extends WorldGenerator
 				else
 				{
 					var11[var9] = var10[var9] + var13;
-					int var14 = worldObj.getBlockId(var11[0], var11[1], var11[2]);
+					Block var14 = worldObj.getBlock(var11[0], var11[1], var11[2]);
 
-					if (var14 != 0 && var14 != MineFactoryReloadedCore.rubberLeavesBlock.blockID)
+					if (!var14.equals(MineFactoryReloadedCore.rubberLeavesBlock))
 					{
 						++var13;
 					}
 					else
 					{
-						this.setBlockAndMetadata(worldObj, var11[0], var11[1], var11[2], par6, 4);
+						this.setBlockAndNotifyAdequately(worldObj, var11[0], var11[1], var11[2], par6, 4);
 						++var13;
 					}
 				}
@@ -250,11 +251,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 		for (int var5 = par2 + leafDistanceLimit; var4 < var5; ++var4)
 		{
 			float var6 = this.leafSize(var4 - par2);
-			this.genTreeLayer(par1, var4, par3, var6, (byte)1, MineFactoryReloadedCore.rubberLeavesBlock.blockID);
+			this.genTreeLayer(par1, var4, par3, var6, (byte)1, MineFactoryReloadedCore.rubberLeavesBlock);
 		}
 	}
 	
-	void placeBlockLine(int[] par1ArrayOfInteger, int[] par2ArrayOfInteger, int par3, int meta)
+	void placeBlockLine(int[] par1ArrayOfInteger, int[] par2ArrayOfInteger, Block par3, int meta)
 	{
 		int[] var4 = new int[] {0, 0, 0};
 		byte var5 = 0;
@@ -312,7 +313,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 					}
 				}
 
-				this.setBlockAndMetadata(worldObj, var14[0], var14[1], var14[2], par3, meta | var17);
+				this.setBlockAndNotifyAdequately(worldObj, var14[0], var14[1], var14[2], par3, meta | var17);
 			}
 		}
 	}
@@ -369,7 +370,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 					var5[2] = var4 + j;
 					var6[2] = var4 + j;
 					this.placeBlockLine(var5, var6,
-							MineFactoryReloadedCore.rubberWoodBlock.blockID, 1);
+							MineFactoryReloadedCore.rubberWoodBlock, 1);
 				}
 			}
 		}
@@ -394,7 +395,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 			if (this.leafNodeNeedsBase(var6))
 			{
-				this.placeBlockLine(var3, var5, MineFactoryReloadedCore.rubberWoodBlock.blockID, 12 | 1);
+				this.placeBlockLine(var3, var5, MineFactoryReloadedCore.rubberWoodBlock, 12 | 1);
 			}
 		}
 	}
@@ -447,9 +448,9 @@ public class WorldGenMassiveTree extends WorldGenerator
 				var13[var5] = par1ArrayOfInteger[var5] + var14;
 				var13[var6] = MathHelper.floor_double(par1ArrayOfInteger[var6] + var14 * var9);
 				var13[var7] = MathHelper.floor_double(par1ArrayOfInteger[var7] + var14 * var11);
-				int var16 = worldObj.getBlockId(var13[0], var13[1], var13[2]);
+				Block var16 = worldObj.getBlock(var13[0], var13[1], var13[2]);
 
-				if (var16 == Block.bedrock.blockID)
+				if (var16.equals(Blocks.bedrock))
 					break;
 			}
 
@@ -468,8 +469,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return false;
 		heightLimit = newHeight;
 		
-		int blockId = worldObj.getBlockId(basePos[0], basePos[1] - 1, basePos[2]);
-		Block block = Block.blocksList[blockId];
+		Block block = worldObj.getBlock(basePos[0], basePos[1] - 1, basePos[2]);
 
 		if (block == null || !block.canSustainPlant(worldObj, basePos[0], basePos[1] - 1, basePos[2],
 				ForgeDirection.UP, ((BlockSapling)MineFactoryReloadedCore.rubberSaplingBlock)))
@@ -544,18 +544,18 @@ public class WorldGenMassiveTree extends WorldGenerator
 	}
 
 	@Override
-	public void setBlockAndMetadata(World world, int x, int y, int z, int id, int meta)
+	public void setBlockAndNotifyAdequately(World world, int x, int y, int z, Block block, int meta)
 	{
 		if (y < 0 | y > 255)
 			return;
 		Chunk chunk = world.getChunkFromBlockCoords(x, z);
 		modifiedChunks.add(chunk);
-		chunk.removeChunkBlockTileEntity(x & 15, y, z & 15);
+		chunk.removeTileEntity(x & 15, y, z & 15);
 		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 		ExtendedBlockStorage subChunk = storage[y >> 4];
 		if (subChunk == null)
 			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !this.worldObj.provider.hasNoSky);
-		subChunk.setExtBlockID(x & 15, y & 15, z & 15, id);
+		subChunk.func_150818_a(x & 15, y & 15, z & 15, block);
 		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
 		subChunk.setExtBlocklightValue(x & 15, y & 15, z & 15, 0);
 	}

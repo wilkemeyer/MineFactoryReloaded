@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
@@ -34,7 +34,7 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			green = anaglyphGreen;
 			blue = anaglyphBlue;
 		}
-		Icon iconGlass, iconStreaks, iconOverlay;
+		IIcon iconGlass, iconStreaks, iconOverlay;
 
 		iconGlass = block.getIcon(0, metadata);
 		iconStreaks = block.getIcon(0, 16 | metadata);
@@ -221,7 +221,7 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			blue = anaglyphBlue;
 		}
 
-		Icon iconGlass, iconStreaks, iconOverlayTop, iconOverlaySouth, iconOverlayWest;
+		IIcon iconGlass, iconStreaks, iconOverlayTop, iconOverlaySouth, iconOverlayWest;
 
 		iconGlass = block.getIcon(0, metadata);
 		iconStreaks = block.getIcon(0, 16 | metadata);

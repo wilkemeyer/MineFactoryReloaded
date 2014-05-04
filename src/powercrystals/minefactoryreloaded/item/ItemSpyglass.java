@@ -19,11 +19,6 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemSpyglass extends ItemFactory
 {
-	public ItemSpyglass(int id)
-	{
-		super(id);
-	}
-	
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{

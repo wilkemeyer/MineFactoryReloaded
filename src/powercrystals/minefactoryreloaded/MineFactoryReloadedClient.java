@@ -36,7 +36,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
-import net.minecraftforge.event.ForgeSubscribe;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
@@ -125,22 +125,22 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				new RedNetCableRenderer());
 
 		// Items
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.conveyorBlock.blockID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.conveyorBlock,
 				new ConveyorItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.factoryGlassPaneBlock.blockID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.factoryGlassPaneBlock,
 				new FactoryGlassPaneItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.logicCardItem.itemID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.logicCardItem,
 				new RedNetCardItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCupItem.itemID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCupItem,
 				new FactoryFluidOverlayRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.needlegunItem.itemID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.needlegunItem,
 				new NeedleGunItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.rocketItem.itemID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.rocketItem,
 				new RocketItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.rocketLauncherItem.itemID,
+		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.rocketLauncherItem,
 				new RocketLauncherItemRenderer());
 		if (MineFactoryReloadedCore.syringeEmptyItem instanceof IFluidContainerItem)
-			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem.itemID,
+			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem,
 					new FactoryFluidOverlayRenderer(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
 		//		new FactoryFluidOverlayRenderer());
@@ -261,7 +261,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		return 0;
 	}
 
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void setArmorModel(SetArmorModel e)
 	{
 		ItemStack itemstack = e.stack;
@@ -301,7 +301,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		}
 	}
 
-	@ForgeSubscribe(priority=EventPriority.HIGHEST) // first to render, so everything else is overlayed
+	@SubscribeEvent(priority=EventPriority.HIGHEST) // first to render, so everything else is overlayed
 	public void renderWorldLast(RenderWorldLastEvent e)
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;

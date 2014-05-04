@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -42,7 +42,7 @@ public class EntitySafariNetRenderer extends Render
 		GL11.glPopMatrix();
 	}
 	
-	private void renderItemInFlight(Tessellator par1Tessellator, Icon par2Icon)
+	private void renderItemInFlight(Tessellator par1Tessellator, IIcon par2Icon)
 	{
 		float f = par2Icon.getMinU();
 		float f1 = par2Icon.getMaxU();

@@ -2,9 +2,9 @@ package powercrystals.minefactoryreloaded.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
@@ -17,7 +17,7 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 	static String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
 			"glowstone_large", "ice_large", "lapis_large", "obsidian_large", "snow_large", "prc", "meat.raw",
 			"meat.cooked", "pavedstone_large", "brick_large" };
-	private Icon[] _icons = new Icon[_names.length];
+	private IIcon[] _icons = new IIcon[_names.length];
 	
 	public BlockFactoryDecorativeBricks(int blockId)
 	{
@@ -51,7 +51,7 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		for(int i = 0; i < _icons.length; i++)
 		{
@@ -60,7 +60,7 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 	}
 	
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return _icons[Math.min(meta, _icons.length - 1)];
 	}

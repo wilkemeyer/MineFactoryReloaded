@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.BlockLog;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -19,8 +19,8 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 {
-	private Icon _iconLogTop;
-	private Icon _iconLogSide;
+	private IIcon _iconLogTop;
+	private IIcon _iconLogSide;
 
 	public BlockRubberWood(int id)
 	{
@@ -33,7 +33,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		_iconLogSide = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
 		_iconLogTop = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
@@ -41,14 +41,14 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected Icon getSideIcon(int par1)
+	protected IIcon getSideIcon(int par1)
 	{
 		return _iconLogSide;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected Icon getEndIcon(int par1)
+	protected IIcon getEndIcon(int par1)
 	{
 		return _iconLogTop;
 	}

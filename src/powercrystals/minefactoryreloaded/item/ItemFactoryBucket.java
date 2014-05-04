@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,8 @@ public class ItemFactoryBucket extends ItemBucket
 	{
 		super(liquidBlock);
 		setCreativeTab(MFRCreativeTab.tab);
+		setMaxStackSize(1);
+		setContainerItem(Items.bucket);
 	}
 	
 	@Override

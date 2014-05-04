@@ -5,15 +5,15 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
@@ -25,7 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative
 {
-	protected Icon _iconSide;
+	protected IIcon _iconSide;
 
 	public BlockFactoryGlassPane(int blockId)
 	{
@@ -48,13 +48,13 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		// This space intentionally left blank.
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, meta > 15 ? 6 : 7, 7);
 	}
@@ -82,12 +82,12 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		return false;
 	}
 
-	public Icon getBlockOverlayTexture()
+	public IIcon getBlockOverlayTexture()
 	{
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);
 	}
 
-	public Icon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
 		boolean[] sides = new boolean[8];
@@ -111,7 +111,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	}
 
 	@Override
-	public Icon getSideTextureIndex()
+	public IIcon getSideTextureIndex()
 	{
 		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 5, 7);
 	}

@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class WorldGenRubberTree extends WorldGenerator
@@ -52,13 +52,11 @@ public class WorldGenRubberTree extends WorldGenerator
 
 		if(y >= 1 && y + treeHeight + 1 <= worldHeight)
 		{
-			int blockId;
 			int xOffset;
 			int yOffset;
 			int zOffset;
 
-			blockId = world.getBlockId(x, y - 1, z);
-			block = Block.blocksList[blockId];
+			block = world.getBlock(x, y - 1, z);
 
 			if((block != null && block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP,
 					((BlockSapling)MineFactoryReloadedCore.rubberSaplingBlock))) &&
@@ -84,12 +82,10 @@ public class WorldGenRubberTree extends WorldGenerator
 						{
 							for(zOffset = z - radius; zOffset <= z + radius; ++zOffset)
 							{
-								blockId = world.getBlockId(xOffset, yOffset, zOffset);
-
-								block = Block.blocksList[blockId];
+								block = world.getBlock(xOffset, yOffset, zOffset);
 
 								if(block != null && !(block.isLeaves(world, xOffset, yOffset, zOffset) ||
-										block.isAirBlock(world, xOffset, yOffset, zOffset) ||
+										block.isAir(world, xOffset, yOffset, zOffset) ||
 										block.canBeReplacedByLeaves(world, xOffset, yOffset, zOffset)))
 								{
 									return false;
@@ -103,8 +99,7 @@ public class WorldGenRubberTree extends WorldGenerator
 					}
 				}
 
-				blockId = world.getBlockId(x, y - 1, z);
-				block = Block.blocksList[blockId];
+				block = world.getBlock(x, y - 1, z);
 				if (block == null)
 				{ // this HAPPENS. wtf?
 					return false; // abort, something went weird
@@ -126,16 +121,16 @@ public class WorldGenRubberTree extends WorldGenerator
 							int zPos = zOffset - z;
 							zPos = (zPos + (t = zPos >> 31)) ^ t;
 
-							block = Block.blocksList[world.getBlockId(xOffset, yOffset, zOffset)];
+							block = world.getBlock(xOffset, yOffset, zOffset);
 
 							if(((xPos != center | zPos != center) ||
 									rand.nextInt(2) != 0 && var12 != 0) &&
 									(block == null || block.isLeaves(world, xOffset, yOffset, zOffset) ||
-									block.isAirBlock(world, xOffset, yOffset, zOffset) ||
+									block.isAir(world, xOffset, yOffset, zOffset) ||
 									block.canBeReplacedByLeaves(world, xOffset, yOffset, zOffset)))
 							{
-								this.setBlockAndMetadata(world, xOffset, yOffset, zOffset,
-										MineFactoryReloadedCore.rubberLeavesBlock.blockID, 0);
+								this.setBlockAndNotifyAdequately(world, xOffset, yOffset, zOffset,
+										MineFactoryReloadedCore.rubberLeavesBlock, 0);
 							}
 						}
 					}
@@ -143,16 +138,14 @@ public class WorldGenRubberTree extends WorldGenerator
 
 				for(yOffset = 0; yOffset < treeHeight; ++yOffset)
 				{
-					blockId = world.getBlockId(x, y + yOffset, z);
+					block = world.getBlock(x, y + yOffset, z);
 
-					block = Block.blocksList[blockId];
-
-					if(block == null || block.isAirBlock(world, x, y + yOffset, z)  ||
+					if(block == null || block.isAir(world, x, y + yOffset, z)  ||
 							block.isLeaves(world, x, y + yOffset, z) ||
-							block.isBlockReplaceable(world, x, y + yOffset, z)) // replace snow
+							block.isReplaceable(world, x, y + yOffset, z)) // replace snow
 					{
-						this.setBlockAndMetadata(world, x, y + yOffset, z,
-								MineFactoryReloadedCore.rubberWoodBlock.blockID, 1);
+						this.setBlockAndNotifyAdequately(world, x, y + yOffset, z,
+								MineFactoryReloadedCore.rubberWoodBlock, 1);
 					}
 				}
 

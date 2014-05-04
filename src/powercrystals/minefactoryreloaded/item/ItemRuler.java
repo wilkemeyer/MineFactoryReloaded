@@ -12,11 +12,6 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemRuler extends ItemFactory
 {
-	public ItemRuler(int id)
-	{
-		super(id);
-	}
-	
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{

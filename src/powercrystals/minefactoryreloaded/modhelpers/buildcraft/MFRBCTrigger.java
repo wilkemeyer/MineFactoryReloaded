@@ -3,10 +3,10 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import buildcraft.api.gates.ITrigger;
 import buildcraft.api.gates.ITriggerParameter;
@@ -14,7 +14,7 @@ import buildcraft.api.gates.ITriggerParameter;
 public abstract class MFRBCTrigger implements ITrigger
 {
 	@SideOnly(Side.CLIENT)
-	protected Icon _icon;
+	protected IIcon _icon;
 	protected String _iconName; 
 	protected String _tag;
 	protected String _desc;
@@ -40,14 +40,14 @@ public abstract class MFRBCTrigger implements ITrigger
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon()
+	public IIcon getIcon()
 	{
 		return _icon;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
 	{
 		if (_iconName != null)
 			_icon = iconRegister.registerIcon(_iconName);

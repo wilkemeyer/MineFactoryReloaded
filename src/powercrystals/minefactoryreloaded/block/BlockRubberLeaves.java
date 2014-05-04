@@ -11,10 +11,10 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -26,8 +26,8 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
 	static String[] _names = {null, "dry"};
-	private Icon[] _iconOpaque = new Icon[_names.length];
-	private Icon[] _iconTransparent = new Icon[_names.length];
+	private IIcon[] _iconOpaque = new IIcon[_names.length];
+	private IIcon[] _iconTransparent = new IIcon[_names.length];
 
 	public BlockRubberLeaves(int id)
 	{
@@ -41,7 +41,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		String unlocalizedName = getUnlocalizedName();
 		for (int i = _names.length; i --> 0; )
@@ -54,13 +54,13 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return getIcon(side, world.getBlockMetadata(x, y, z));
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		meta &= 3;
 		return Block.leaves.graphicsLevel ? _iconTransparent[meta] : _iconOpaque[meta];

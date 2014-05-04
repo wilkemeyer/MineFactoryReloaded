@@ -15,7 +15,7 @@ import ic2.api.energy.tile.IEnergySink;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 
 import powercrystals.core.util.Util;

@@ -7,9 +7,9 @@ import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 
 import buildcraft.api.gates.ITriggerParameter;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TriggerIsRunning extends MFRBCTrigger
 {
@@ -27,7 +27,7 @@ public class TriggerIsRunning extends MFRBCTrigger
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
 	{
 		if (!ownIcon)
 		{

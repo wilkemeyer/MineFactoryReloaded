@@ -6,11 +6,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -22,9 +22,9 @@ import powercrystals.minefactoryreloaded.net.Packets;
 
 public class BlockFactoryRoad extends Block
 {
-	private Icon _iconRoad;
-	private Icon _iconRoadOff;
-	private Icon _iconRoadOn;
+	private IIcon _iconRoad;
+	private IIcon _iconRoadOff;
+	private IIcon _iconRoadOn;
 
 	public BlockFactoryRoad(int id)
 	{
@@ -48,7 +48,7 @@ public class BlockFactoryRoad extends Block
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		_iconRoad = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		_iconRoadOff = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".light.off");
@@ -56,7 +56,7 @@ public class BlockFactoryRoad extends Block
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		switch (meta) {
 		case 1: case 3:

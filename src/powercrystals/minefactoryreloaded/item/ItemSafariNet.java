@@ -42,7 +42,7 @@ public class ItemSafariNet extends ItemFactory
 	private IIcon _iconMid;
 	private IIcon _iconFront;
 	
-	public ItemSafariNet(int id)
+	public ItemSafariNet()
 	{
 		setMaxStackSize(1);
 	}

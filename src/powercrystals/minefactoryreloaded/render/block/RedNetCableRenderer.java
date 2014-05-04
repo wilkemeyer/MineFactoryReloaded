@@ -4,7 +4,7 @@ import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IUVTransformation;
-import codechicken.lib.render.IconTransformation;
+import codechicken.lib.render.IIconTransformation;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
@@ -15,9 +15,9 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -94,8 +94,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		m.computeLighting(LightModel.standardLightModel);
 		//m.smoothNormals();
 	}
-	public static void updateUVT(Icon icon) {
-		uvt = new IconTransformation(icon);
+	public static void updateUVT(IIcon icon) {
+		uvt = new IIconTransformation(icon);
 		brightBand = MFRConfig.brightRednetBand.getBoolean(true);
 	}
 

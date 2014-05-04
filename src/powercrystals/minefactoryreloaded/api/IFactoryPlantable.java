@@ -49,7 +49,7 @@ public interface IFactoryPlantable
 	 * @param stack The stack being planted.
 	 * @return True if this plantable can be planted (useful for metadata items).
 	 */
-	//public boolean canBePlanted(ItemStack stack);
+	public boolean canBePlanted(ItemStack stack);
 	
 	/**
 	 * Called before planting is performed. Used to till soil, for example.

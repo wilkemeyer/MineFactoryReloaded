@@ -10,7 +10,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class ItemBlockFactory extends ItemBlock
@@ -29,7 +29,7 @@ public class ItemBlockFactory extends ItemBlock
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Icon getIconFromDamage(int damage)
+	public IIcon getIconFromDamage(int damage)
 	{
 		return Block.blocksList[getBlockID()].getIcon(2, damage);
 	}

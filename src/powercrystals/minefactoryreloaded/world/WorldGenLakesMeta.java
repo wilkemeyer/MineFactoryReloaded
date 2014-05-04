@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -11,12 +12,12 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class WorldGenLakesMeta extends WorldGenerator
 {
-	private int _blockId;
+	private Block _block;
 	private int _blockMeta;
 	
-	public WorldGenLakesMeta(int blockId, int blockMeta)
+	public WorldGenLakesMeta(Block block, int blockMeta)
 	{
-		_blockId = blockId;
+		_block = block;
 		_blockMeta = blockMeta;
 	}
 	
@@ -87,14 +88,14 @@ public class WorldGenLakesMeta extends WorldGenerator
 						
 						if(flag)
 						{
-							Material material = world.getBlockMaterial(x + i1, y + i2, z + j2);
+							Material material = world.getBlock(x + i1, y + i2, z + j2).getMaterial();
 							
 							if(i2 >= 4 && material.isLiquid())
 							{
 								return false;
 							}
 							
-							if(i2 < 4 && !material.isSolid() && world.getBlockId(x + i1, y + i2, z + j2) != _blockId)
+							if(i2 < 4 && !material.isSolid() && !world.getBlock(x + i1, y + i2, z + j2).equals(_block))
 							{
 								return false;
 							}
@@ -111,7 +112,7 @@ public class WorldGenLakesMeta extends WorldGenerator
 					{
 						if(aboolean[(i1 * 16 + j2) * 8 + i2])
 						{
-							world.setBlock(x + i1, y + i2, z + j2, i2 >= 4 ? 0 : _blockId, _blockMeta, 2);
+							world.setBlock(x + i1, y + i2, z + j2, i2 >= 4 ? Blocks.air : _block, _blockMeta, 2);
 						}
 					}
 				}
@@ -123,19 +124,12 @@ public class WorldGenLakesMeta extends WorldGenerator
 				{
 					for(i2 = 4; i2 < 8; ++i2)
 					{
-						if(aboolean[(i1 * 16 + j2) * 8 + i2] && world.getBlockId(x + i1, y + i2 - 1, z + j2) == Block.dirt.blockID
+						if(aboolean[(i1 * 16 + j2) * 8 + i2] && world.getBlock(x + i1, y + i2 - 1, z + j2).equals(Blocks.dirt)
 								&& world.getSavedLightValue(EnumSkyBlock.Sky, x + i1, y + i2, z + j2) > 0)
 						{
 							BiomeGenBase biomegenbase = world.getBiomeGenForCoords(x + i1, z + j2);
 							
-							if(biomegenbase.topBlock == Block.mycelium.blockID)
-							{
-								world.setBlock(x + i1, y + i2 - 1, z + j2, Block.mycelium.blockID, 0, 2);
-							}
-							else
-							{
-								world.setBlock(x + i1, y + i2 - 1, z + j2, Block.grass.blockID, 0, 2);
-							}
+							world.setBlock(x + i1, y + i2 - 1, z + j2, biomegenbase.topBlock, 0, 2);
 						}
 					}
 				}

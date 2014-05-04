@@ -5,9 +5,9 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityFallingSand;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -19,7 +19,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 	static String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
 			"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
 			"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
-	private Icon[] _icons = new Icon[_names.length];
+	private IIcon[] _icons = new IIcon[_names.length];
 	
 	public BlockDecorativeStone(int blockId)
 	{
@@ -39,7 +39,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		for(int i = 0; i < _icons.length; i++)
 		{
@@ -48,7 +48,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 	}
 	
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return _icons[Math.min(meta, _icons.length)];
 	}

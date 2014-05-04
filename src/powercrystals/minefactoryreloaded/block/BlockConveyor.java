@@ -11,7 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -25,13 +25,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.position.BlockPosition;
 import powercrystals.core.position.IRotateableTile;
@@ -52,7 +52,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		0x7598e2, 0xedde39, 0x50dc43, 0xe790a7, 0x525252, 0xbababa, 0x3785a6,
 		0x8a3ecd, 0x3440a1, 0x603f29, 0x4a6029, 0xc2403b, 0x2d2a2a, 0xf6a82c};
 	@SideOnly(Side.CLIENT)
-	private Icon base, overlay, overlayFast, overlayStopped;
+	private IIcon base, overlay, overlayFast, overlayStopped;
 	
 	public BlockConveyor(int id)
 	{
@@ -65,7 +65,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		base = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".base");
 		overlay = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".overlay");
@@ -172,7 +172,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 1)
 			switch (meta)
@@ -189,7 +189,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 
     @Override
 	@SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+    public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
     	int meta = 0;
     	if (side == 1)

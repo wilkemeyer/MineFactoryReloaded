@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -64,10 +64,10 @@ public class FactoryFluidOverlayRenderer implements IItemRenderer {
 	}
 	
 	protected void doRenderItem(ItemRenderType type, ItemStack item, Item iconItem, FluidStack liquid) {
-		Icon icon = iconItem.getIcon(item, 0);
-		Icon mask = iconItem.getIcon(item, 1);
+		IIcon icon = iconItem.getIcon(item, 0);
+		IIcon mask = iconItem.getIcon(item, 1);
 		boolean hasLiquid = liquid != null;
-		Icon fluid = hasLiquid ? liquid != null ? liquid.getFluid().getIcon(liquid) : null : mask;
+		IIcon fluid = hasLiquid ? liquid != null ? liquid.getFluid().getIcon(liquid) : null : mask;
 		int liquidSheet = hasLiquid & liquid != null ? liquid.getFluid().getSpriteNumber() : 0;
 		int colorMult = hasLiquid & liquid != null ? liquid.getFluid().getColor(liquid) : 0xFFFFFF;
 		boolean isFloaty = hasLiquid & liquid != null ? liquid.getFluid().getDensity(liquid) < 0 : false;

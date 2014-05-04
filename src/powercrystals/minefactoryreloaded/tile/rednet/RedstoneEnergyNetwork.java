@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;

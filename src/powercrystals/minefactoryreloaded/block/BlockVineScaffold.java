@@ -4,16 +4,16 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.core.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
@@ -22,8 +22,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockVineScaffold extends Block implements IRedNetDecorative
 {
-	private Icon _sideIcon;
-	private Icon _topIcon;
+	private IIcon _sideIcon;
+	private IIcon _topIcon;
 	
 	private static final ForgeDirection[] _attachDirections = new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
 	private static final int _attachDistance = 16;
@@ -72,7 +72,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		_sideIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
 		_topIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
@@ -80,7 +80,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return side < 2 ? _topIcon : _sideIcon;
 	}

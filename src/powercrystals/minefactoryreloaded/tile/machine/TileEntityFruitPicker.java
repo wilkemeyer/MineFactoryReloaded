@@ -9,7 +9,7 @@ import java.util.Random;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.position.Area;
 import powercrystals.core.position.BlockPosition;

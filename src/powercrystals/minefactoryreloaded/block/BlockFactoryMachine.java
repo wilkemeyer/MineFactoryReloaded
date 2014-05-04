@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,13 +18,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.Event.Result;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -66,13 +66,13 @@ public class BlockFactoryMachine extends BlockContainer
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		Machine.LoadTextures(_mfrMachineBlockIndex, ir);
 	}
 
 	@Override
-	public Icon getBlockTexture(IBlockAccess iblockaccess, int x, int y, int z, int side)
+	public IIcon getBlockTexture(IBlockAccess iblockaccess, int x, int y, int z, int side)
 	{
 		int md = iblockaccess.getBlockMetadata(x, y, z);
 		boolean isActive = false;
@@ -86,7 +86,7 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if(side > 1)
 		{

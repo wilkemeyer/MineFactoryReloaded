@@ -7,7 +7,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,8 +31,8 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoConnection
 { // TODO: convert to BlockFluidFinite
-	private Icon _iconFlowing;
-	private Icon _iconStill;
+	private IIcon _iconFlowing;
+	private IIcon _iconStill;
 	protected String fluidName;
 
 	public BlockFactoryFluid(int id, String liquidName)
@@ -216,14 +216,14 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister ir)
+	public void registerIcons(IIconRegister ir)
 	{
 		_iconStill = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		_iconFlowing = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName().replace(".still", ".flowing"));
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return side <= 1 ? _iconStill : _iconFlowing;
 	}

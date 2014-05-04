@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
@@ -33,7 +33,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 			green = anaglyphGreen;
 			blue = anaglyphBlue;
 		}
-		Icon iconBase, iconOverlay;
+		IIcon iconBase, iconOverlay;
 
 		iconBase = block.getIcon(0, meta);
 		iconOverlay = block.getIcon(1, 0);
@@ -130,7 +130,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		draw(tessellator, block.getBlockTexture(world, x, y, z, 1));
 	}
 	
-	private void draw(Tessellator tessellator, Icon texture)
+	private void draw(Tessellator tessellator, IIcon texture)
 	{
 		double uStart = texture.getInterpolatedU(0);
 		double uEnd = texture.getInterpolatedU(16);

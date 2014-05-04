@@ -6,10 +6,10 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -142,7 +142,7 @@ public class GuiFactoryInventory extends GuiContainer
 		Fluid fluid = stack.getFluid();
 		if(fluid == null) return;
 		
-		Icon icon = fluid.getIcon(stack);
+		IIcon icon = fluid.getIcon(stack);
 		if (icon == null)
 			icon = Block.lavaMoving.getIcon(0, 0);
 		

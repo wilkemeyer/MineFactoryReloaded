@@ -5,9 +5,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import buildcraft.api.gates.ITriggerParameter;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -20,7 +20,7 @@ public class TriggerIsBackstuffed extends MFRBCTrigger
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
 	{
 		_icon = iconRegister.registerIcon("buildcraft:triggers/guitriggers_3_4");
 	}
