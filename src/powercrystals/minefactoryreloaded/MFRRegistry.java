@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
-import cofh.random.WeightedRandomItemStack;
-import cofh.util.UtilInventory;
+import cofh.pcc.random.WeightedRandomItemStack;
+import cofh.pcc.util.UtilInventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -146,7 +146,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				sideMode[side] = (4 << 1) | 1; // always enable
 			}
 		} else if (tile instanceof IEnergyHandler) {
-			if (((IEnergyHandler)tile).canInterface(ForgeDirection.VALID_DIRECTIONS[side])) {
+			if (((IEnergyHandler)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
 				if (handlerCache == null) handlerCache = new IEnergyHandler[6];
 				handlerCache[side] = (IEnergyHandler)tile;
 				sideMode[side] |= 1 << 1;
@@ -241,7 +241,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public boolean canInterface(ForgeDirection from) {
+	public boolean canConnectEnergy(ForgeDirection from) {
 		return (sideMode[from.ordinal()] & 1) != 0 & _grid != null;
 	}
 
@@ -263,14 +263,14 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public boolean canEmitPowerFrom(ForgeDirection side) {
-		return canInterface(side);
+		return canConnectEnergy(side);
 	}
 
 	// IEnergySink
 
 	@Override
 	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
-		return canInterface(direction);
+		return canConnectEnergy(direction);
 	}
 
 	@Override

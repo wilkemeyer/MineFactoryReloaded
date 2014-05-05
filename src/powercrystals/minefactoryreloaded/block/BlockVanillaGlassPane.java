@@ -17,7 +17,7 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 	public BlockVanillaGlassPane()
 	{
 		super(false);
-		setUnlocalizedName("thinGlass");
+		setBlockName("thinGlass");
 	}
 
 	@Override

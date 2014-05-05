@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.inventory.IInventoryManager;
-import cofh.inventory.InventoryManager;
-import cofh.util.UtilInventory;
+import cofh.pcc.inventory.IInventoryManager;
+import cofh.pcc.inventory.InventoryManager;
+import cofh.pcc.util.UtilInventory;
 import cofh.util.position.BlockPosition;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail
@@ -18,7 +18,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 	public BlockRailCargoDropoff()
 	{
 		super(true, false);
-		setUnlocalizedName("mfr.rail.cargo.dropoff");
+		setBlockName("mfr.rail.cargo.dropoff");
 	}
 
 	@Override

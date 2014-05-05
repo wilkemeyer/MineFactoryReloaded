@@ -53,7 +53,7 @@ public class GuiPlanter extends GuiUpgradable
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRenderer.drawString("Filter", 8, 22, 4210752);
+		fontRendererObj.drawString("Filter", 8, 22, 4210752); // TODO: Localize
 		
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}

@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,7 +40,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	public BlockRedNetLogic()
 	{
 		super(Machine.MATERIAL);
-		setUnlocalizedName("mfr.rednet.logic");
+		setBlockName("mfr.rednet.logic");
 		setHardness(0.8F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
@@ -84,14 +86,14 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	}
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
+	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
 	{
 		BlockNBTManager.setForBlock(world.getTileEntity(x, y, z));
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World world)
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntityRedNetLogic();
 	}
@@ -219,7 +221,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
@@ -243,16 +245,16 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	}
 	
 	@Override
-	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-		ItemStack prc = new ItemStack(idDropped(blockID, world.rand, fortune), 1, damageDropped(0));
+		ItemStack prc = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1, damageDropped(0));
 		prc.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
 		drops.add(prc);
 		return drops;

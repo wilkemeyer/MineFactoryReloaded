@@ -1,20 +1,19 @@
 package powercrystals.minefactoryreloaded.modhelpers.backtools;
 
-import java.lang.reflect.Method;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
+import java.lang.reflect.Method;
+
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.item.ItemFactoryHammer;
-import powercrystals.minefactoryreloaded.item.ItemSpyglass;
 import powercrystals.minefactoryreloaded.item.ItemSafariNetLauncher;
+import powercrystals.minefactoryreloaded.item.ItemSpyglass;
 
 @Mod(modid = "MineFactoryReloaded|CompatBackTools", name = "MFR Compat: BackTools", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:mod_BackTools")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class BackTools
 {
 	private static final String lastUpdated = "for Back Tools 1.5.1v2, current release as of May 20 2013";

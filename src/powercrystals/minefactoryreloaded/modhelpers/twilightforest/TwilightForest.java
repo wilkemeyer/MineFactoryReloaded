@@ -23,7 +23,6 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
 @Mod(modid = "MineFactoryReloaded|CompatTwilightForest", name = "MFR Compat: TwilightForest", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:TwilightForest")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class TwilightForest
 {
 	@SuppressWarnings("rawtypes")

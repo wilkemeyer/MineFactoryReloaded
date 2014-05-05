@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -22,9 +23,9 @@ public class EntityPinkSlime extends EntitySlime
 	}
 	
 	@Override
-	protected int getDropItemId()
+	protected Item getDropItem()
 	{
-		return this.getSlimeSize() == 1 ? MineFactoryReloadedCore.pinkSlimeballItem.itemID : 0;
+		return this.getSlimeSize() == 1 ? MineFactoryReloadedCore.pinkSlimeballItem : Item.getItemById(0);
 	}
 	
 	@Override

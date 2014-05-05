@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -102,7 +101,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{
 		FluidStack fluid = getFluid(syringe);
-		return fluid != null && fluid.amount >= getCapacity(syringe) && entity instanceof EntityPlayer;
+		return fluid != null && fluid.amount >= getCapacity(syringe);
 	}
 
 	@Override
@@ -112,7 +111,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 				get(getFluidName(syringe));
 		if (handler != null)
 		{
-			handler.onDrink((EntityPlayer)entity);
+			handler.onDrink(entity);
 			drain(syringe, Integer.MAX_VALUE, true);
 			return true;
 		}

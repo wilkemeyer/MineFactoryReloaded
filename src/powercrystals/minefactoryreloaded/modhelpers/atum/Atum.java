@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import java.lang.reflect.Method;
 import java.util.Random;
@@ -25,7 +24,6 @@ import powercrystals.minefactoryreloaded.modhelpers.FertilizableCropReflection;
 import powercrystals.minefactoryreloaded.modhelpers.FertilizableSaplingReflection;
 
 @Mod(modid = "MineFactoryReloaded|CompatAtum", name = "MFR Compat: Atum", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Atum")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Atum
 {
 	private static final String lastUpdated = "Atum 0.4.3B, current release as of Jul 3 2013";

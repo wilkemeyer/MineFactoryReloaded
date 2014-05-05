@@ -1,9 +1,12 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.util.position.BlockPosition;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockGlass;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -15,14 +18,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.util.position.BlockPosition;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.IconOverlay;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative
 {
@@ -37,11 +37,11 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	{
 		super("", "", Material.glass, false);
 		setHardness(0.3F);
-		setStepSound(soundGlassFootstep);
+		setStepSound(soundTypeGlass);
 		if (mfr)
 		{
 			setCreativeTab(MFRCreativeTab.tab);
-			setUnlocalizedName("mfr.stainedglass.pane");
+			setBlockName("mfr.stainedglass.pane");
 		}
 		else
 			setCreativeTab(CreativeTabs.tabDecorations);
@@ -55,7 +55,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		// This space intentionally left blank.
 	}
@@ -69,7 +69,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public int getRenderColor(int meta)
 	{
-		return ItemDye.dyeColors[15 - Math.min(Math.max(meta, 0), 15)];
+		return ItemDye.field_150922_c[15 - Math.min(Math.max(meta, 0), 15)];
 	}
 
 	@Override

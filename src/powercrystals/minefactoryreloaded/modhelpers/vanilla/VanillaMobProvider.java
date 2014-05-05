@@ -27,7 +27,7 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -135,11 +135,11 @@ public class VanillaMobProvider implements IRandomMobProvider
 		EntityEnderman direBane = MFRUtil.prepareMob(EntityEnderman.class, world);
 		direBane.addPotionEffect(new PotionEffect(Potion.regeneration.id, 120 * 20));
 		direBane.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 120 * 20));
-		direBane.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(120);
-		direBane.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.7);
-		direBane.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(15);
-		direBane.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32);
-		direBane.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(1);
+		direBane.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(120);
+		direBane.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.7);
+		direBane.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(15);
+		direBane.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(32);
+		direBane.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(1);
 		direBane.stepHeight = 2;
 		EntityPlayer player = world.getPlayerEntityByName("direwolf20");
 		if (player != null)
@@ -147,7 +147,7 @@ public class VanillaMobProvider implements IRandomMobProvider
 			direBane.setCustomNameTag("Bane of direwolf");
 			direBane.setAlwaysRenderNameTag(true);
 			direBane.func_110163_bv();
-			ItemStack armor = new ItemStack(Item.plateGold);
+			ItemStack armor = new ItemStack(Items.golden_chestplate);
 			AutoEnchantmentHelper.addRandomEnchantment(direBane.getRNG(), armor, 60, true);
 			int i = EntityLiving.getArmorPosition(armor);
 			direBane.setCurrentItemOrArmor(i, armor);

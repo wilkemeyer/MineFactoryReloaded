@@ -57,49 +57,47 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	protected boolean activateMachine()
 	{
 		int idleTicks = 5;
-		l: if (_tanks[0].getFluidAmount() >= BUCKET_VOLUME && _tanks[0].getFluid().getFluid().canBePlacedInWorld())
-		l2: {
-			int x = xCoord, y = yCoord + 1, z = zCoord;
-			if (_fillingManager != null)
+		l: {
+			if (_tanks[0].getFluidAmount() >= BUCKET_VOLUME &&
+					_tanks[0].getFluid().getFluid().canBePlacedInWorld())
 			{
-				if (_fillingManager.getIsDone())
-					onFactoryInventoryChanged();
-				BlockPosition bp = _fillingManager.getNextBlock();
-				x = bp.x; y = bp.y; z = bp.z;
-				_fillingManager.moveNext();
-			}
-			Block block = worldObj.getBlock(x, y, z);
-			if (block == null || block.isReplaceable(worldObj, x, y, z))
-			{
-				if (block != null && block.getMaterial().isLiquid())
-					if (block instanceof BlockFluidClassic)
-					{
-						if (((BlockFluidClassic)block).isSourceBlock(worldObj, x, y, z))
-							break l;
+				int x = xCoord, y = yCoord + 1, z = zCoord;
+				if (_fillingManager != null)
+				{
+					if (_fillingManager.getIsDone())
+						onFactoryInventoryChanged();
+					BlockPosition bp = _fillingManager.getNextBlock();
+					x = bp.x; y = bp.y; z = bp.z;
+					_fillingManager.moveNext();
+				}
+				Block block = worldObj.getBlock(x, y, z);
+				if (block == null || block.isReplaceable(worldObj, x, y, z))
+				{
+					if (block != null && block.getMaterial().isLiquid())
+						if (block instanceof BlockFluidClassic)
+						{
+							if (((BlockFluidClassic)block).isSourceBlock(worldObj, x, y, z))
+								break l;
+						}
+						else if (block instanceof BlockLiquid)
+						{
+							if (worldObj.getBlockMetadata(x, y, z) == 0)
+								break l;
+						}
+					block = _tanks[0].getFluid().getFluid().getBlock();
+					if (worldObj.setBlock(x, y, z, block))
+					{// TODO: when forge supports NBT fluid blocks, adapt this
+						worldObj.notifyBlockOfNeighborChange(x, y, z, block);
+						drain(_tanks[0], BUCKET_VOLUME, true);
+						setIdleTicks(1);
+						return true;
 					}
-					else if (block instanceof BlockLiquid)
-					{
-						if (worldObj.getBlockMetadata(x, y, z) == 0)
-							break l;
-					}
-				Block blockid = _tanks[0].getFluid().getFluid().getBlock();
-				if (block != null && worldObj.setBlock(x, y, z, blockid))
-				{// TODO: when forge supports NBT fluid blocks, adapt this
-					worldObj.notifyBlockOfNeighborChange(x, y, z, blockid);
-					drain(_tanks[0], BUCKET_VOLUME, true);
-					setIdleTicks(1);
-					return true;
 				}
 			}
-			break l2;// falls into the next condition instead of out of the if/else
-		}
-		else if (_fillingManager != null)
-		l3: {
-			_fillingManager.free();
-			break l3; // falls into the else below
-		}
-		else
+			if (_fillingManager != null)
+				_fillingManager.free();
 			idleTicks = getIdleTicksMax();
+		}
 		setIdleTicks(idleTicks);
 		return false;
 	}

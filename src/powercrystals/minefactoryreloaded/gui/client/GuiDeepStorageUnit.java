@@ -32,7 +32,8 @@ public class GuiDeepStorageUnit extends GuiFactoryInventory
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		fontRenderer.drawString("Stored:", 110, 70, 4210752);
-		fontRenderer.drawString(((Integer)_dsu.getQuantity()).toString(), 110, 80, 4210752);
+		// TODO: localize
+		fontRendererObj.drawString("Stored:", 110, 70, 4210752);
+		fontRendererObj.drawString(((Integer)_dsu.getQuantity()).toString(), 110, 80, 4210752);
 	}
 }

@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.util.Util;
+import cofh.pcc.util.Util;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,7 +30,7 @@ public class BlockFactoryRoad extends Block
 	{
 		super(Material.rock);
 		setHardness(2.0F);
-		setUnlocalizedName("mfr.road");
+		setBlockName("mfr.road");
 		setResistance(25.0F);
 		setStepSound(soundStoneFootstep);
 		setCreativeTab(MFRCreativeTab.tab);
@@ -69,7 +69,7 @@ public class BlockFactoryRoad extends Block
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
 		if(!world.isRemote)
 		{
@@ -96,15 +96,13 @@ public class BlockFactoryRoad extends Block
 
 			if(newMeta >= 0)
 			{
-				world.setBlockMetadataWithNotify(x, y, z, newMeta, 7);
-				PacketDispatcher.sendPacketToAllAround(x, y, z, 50, world.provider.dimensionId,
-						PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RoadBlockUpdate, new Object[] { x, y, z, newMeta }));
+				world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
 			}
 		}
 	}
 
 	@Override
-	public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z)
 	{
 		return false;
 	}
@@ -132,11 +130,11 @@ public class BlockFactoryRoad extends Block
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		onNeighborBlockChange(world, x, y, z, 0);
+		onNeighborBlockChange(world, x, y, z, this);
 	}
 
 	@Override
-	public boolean canEntityDestroy(World world, int x, int y, int z, Entity entity)
+	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
 	{
 		if (entity instanceof EntityDragon)
 		{

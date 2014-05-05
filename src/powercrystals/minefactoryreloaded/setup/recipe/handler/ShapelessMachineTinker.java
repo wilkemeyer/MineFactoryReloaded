@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.setup.recipe.handler;
 
-import cofh.util.UtilInventory;
+import cofh.pcc.util.UtilInventory;
 
 import java.util.Arrays;
 import java.util.LinkedList;

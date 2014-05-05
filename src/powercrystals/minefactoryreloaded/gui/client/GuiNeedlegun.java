@@ -19,8 +19,8 @@ public class GuiNeedlegun extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRenderer.drawString("Needlegun Ammo", 8, 6, 4210752);
-		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRendererObj.drawString("Needlegun Ammo", 8, 6, 4210752); // TODO: localize
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}

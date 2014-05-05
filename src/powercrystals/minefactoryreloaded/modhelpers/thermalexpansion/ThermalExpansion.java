@@ -6,7 +6,6 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,6 @@ import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion", name = "MFR Compat: ThermalExpansion", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ThermalExpansion")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class ThermalExpansion implements IRandomMobProvider
 {
 	@EventHandler
@@ -56,8 +54,8 @@ public class ThermalExpansion implements IRandomMobProvider
 	{
 		NBTTagCompound toSend = new NBTTagCompound();
 		toSend.setInteger("energy", 3200);
-		toSend.setCompoundTag("input", input.writeToNBT(new NBTTagCompound()));
-		toSend.setCompoundTag("primaryOutput", output.writeToNBT(new NBTTagCompound()));
+		toSend.setTag("input", input.writeToNBT(new NBTTagCompound()));
+		toSend.setTag("primaryOutput", output.writeToNBT(new NBTTagCompound()));
 		sendComm("PulverizerRecipe", toSend);
 	}
 	
@@ -75,7 +73,7 @@ public class ThermalExpansion implements IRandomMobProvider
 		creeper.setAlwaysRenderNameTag(true);
 		creeper.func_110163_bv();
 		ItemStack armor = new ItemStack(MineFactoryReloadedCore.plasticBootsItem);
-		armor.setItemName("Zeldo's Ruby Slippers");
+		armor.setStackDisplayName("Zeldo's Ruby Slippers");
 		int i = EntityLiving.getArmorPosition(armor);
 		creeper.setCurrentItemOrArmor(i, armor);
 		creeper.setEquipmentDropChance(i, 2);

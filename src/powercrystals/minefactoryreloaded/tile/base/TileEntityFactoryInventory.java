@@ -19,8 +19,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
-import powercrystals.core.asm.relauncher.Implementable;
-import cofh.util.UtilInventory;
+import cofh.asm.relauncher.Implementable;
+import cofh.pcc.util.UtilInventory;
 import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;

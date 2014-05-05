@@ -15,7 +15,7 @@ public class EntityPinkSlimeRenderer extends RenderSlime {
 	}
 
     @Override
-	protected ResourceLocation getSlimeTextures(EntitySlime par1EntitySlime)
+	protected ResourceLocation getEntityTexture(EntitySlime par1EntitySlime)
     {
         return pinkSlimeTexture;
     }

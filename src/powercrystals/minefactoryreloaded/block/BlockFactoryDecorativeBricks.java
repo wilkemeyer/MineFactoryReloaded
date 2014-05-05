@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -25,7 +26,7 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundStoneFootstep);
-		setUnlocalizedName("mfr.decorativebrick");
+		setBlockName("mfr.decorativebrick");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 	
@@ -46,12 +47,12 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
     public float getExplosionResistance(Entity e, World world, int x, int y, int z, double eX, double eY, double eZ)
     {
 		int meta = world.getBlockMetadata(x, y, z);
-        return meta == 3 | meta == 9 ? Block.obsidian.getExplosionResistance(e) : getExplosionResistance(e);
+        return meta == 3 | meta == 9 ? Blocks.obsidian.getExplosionResistance(e) : getExplosionResistance(e);
     }
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		for(int i = 0; i < _icons.length; i++)
 		{

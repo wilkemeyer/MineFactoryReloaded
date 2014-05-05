@@ -31,8 +31,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	public BlockVineScaffold()
 	{
 		super(Material.leaves);
-		setUnlocalizedName("mfr.vinescaffold");
-		setStepSound(soundGrassFootstep);
+		setBlockName("mfr.vinescaffold");
+		setStepSound(soundTypeGrass);
 		setHardness(0.1F);
 		setBlockBounds(0F, 1 / 48f, 0F, 1F, 1f - 1 / 48f, 1F);
 		setTickRandomly(true);
@@ -129,7 +129,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		{
 			for(int xOffset = -1; xOffset <= 1; ++xOffset)
 			{
-				int biomeColor = world.getBiomeGenForCoords(x + xOffset, z + zOffset).getBiomeFoliageColor();
+				int biomeColor = world.getBiomeGenForCoords(x + xOffset, z + zOffset).getBiomeFoliageColor(x, y, z);
 				r += (biomeColor & 16711680) >> 16;
 			g += (biomeColor & 65280) >> 8;
 		b += biomeColor & 255;

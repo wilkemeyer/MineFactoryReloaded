@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.inventory.IInventoryManager;
-import cofh.inventory.InventoryManager;
-import cofh.util.UtilInventory;
+import cofh.pcc.inventory.IInventoryManager;
+import cofh.pcc.inventory.InventoryManager;
+import cofh.pcc.util.UtilInventory;
 
 import java.util.Map.Entry;
 
@@ -18,7 +18,7 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 	public BlockRailCargoPickup()
 	{
 		super(true, false);
-		setUnlocalizedName("mfr.rail.cargo.pickup");
+		setBlockName("mfr.rail.cargo.pickup");
 	}
 
 	@Override

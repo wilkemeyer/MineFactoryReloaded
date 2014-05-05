@@ -27,9 +27,9 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	{
 		super(Material.glass, false);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
-		setUnlocalizedName("mfr.stainedglass.block");
+		setBlockName("mfr.stainedglass.block");
 		setHardness(0.3F);
-		setStepSound(soundGlassFootstep);
+		setStepSound(soundTypeGlass);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
@@ -59,12 +59,12 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	@Override
 	public int getRenderColor(int meta)
 	{
-		return ItemDye.dyeColors[15 - Math.min(Math.max(meta, 0), 15)];
+		return ItemDye.field_150922_c[15 - Math.min(Math.max(meta, 0), 15)];
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		_texture = ir.registerIcon("minefactoryreloaded:tile.mfr.stainedglass");
 	}
@@ -84,7 +84,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		if (world.getBlockMaterial(x, y, z) == Material.glass && isBlockFullCube(world, x, y, z))
+		if (world.getBlock(x, y, z).getMaterial() == Material.glass && isBlockFullCube(world, x, y, z))
 			return false;
 		return super.shouldSideBeRendered(world, x, y, z, side);
 	}
@@ -109,41 +109,41 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		{
 			bp = new BlockPosition(x, y, z, ForgeDirection.NORTH);
 			bp.moveRight(1);
-			sides[0] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveBackwards(1);
-			sides[4] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveLeft(1);
-			sides[1] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveLeft(1);
-			sides[5] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveForwards(1);
-			sides[3] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveForwards(1);
-			sides[6] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveRight(1);
-			sides[2] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveRight(1);
-			sides[7] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		}
 		else
 		{
 			bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
 			bp.moveRight(1);
-			sides[0] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveDown(1);
-			sides[4] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveLeft(1);
-			sides[1] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveLeft(1);
-			sides[5] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveUp(1);
-			sides[3] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveUp(1);
-			sides[6] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveRight(1);
-			sides[2] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveRight(1);
-			sides[7] = world.getBlockId(bp.x,bp.y,bp.z) == blockID;
+			sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 		}
 		return new IconOverlay(_texture, 8, 8, sides);
 	}

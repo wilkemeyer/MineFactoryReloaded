@@ -151,7 +151,6 @@ import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableHorse;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 @Mod(modid = "MineFactoryReloaded|CompatVanilla", name = "MFR Compat: Vanilla", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Vanilla
 {
 	@EventHandler

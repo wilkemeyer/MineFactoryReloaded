@@ -1,9 +1,8 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cofh.util.UtilInventory;
-import cpw.mods.fml.common.network.IPacketHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import cofh.pcc.util.UtilInventory;
+
+import ibxm.Player;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -13,15 +12,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.server.management.PlayerInstance;
+import net.minecraft.network.Packet;
+import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -43,19 +39,6 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class ServerPacketHandler implements IPacketHandler
 {
-	public static void sendToAllPlayersWatching(World world, int x, int y, int z, Packet packet)
-	{
-		if (packet == null)
-			return;
-		if (world instanceof WorldServer)
-		{
-			PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
-					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
-			if (watcher != null)
-				watcher.sendToAllPlayersWatchingChunk(packet);
-		}
-	}
-	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)

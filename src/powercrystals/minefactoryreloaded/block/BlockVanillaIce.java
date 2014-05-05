@@ -21,7 +21,7 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 		setHardness(0.5F);
 		setLightOpacity(3);
 		setStepSound(soundGlassFootstep);
-		setUnlocalizedName("ice");
+		setBlockName("ice");
 	}
 	
 	@Override

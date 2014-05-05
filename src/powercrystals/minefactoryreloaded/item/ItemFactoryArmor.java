@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cofh.oredict.ItemIdentifier;
+import cofh.pcc.oredict.ItemIdentifier;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;

@@ -20,7 +20,7 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 	public BlockRailPassengerDropoff()
 	{
 		super(true, false);
-		setUnlocalizedName("mfr.rail.passenger.dropoff");
+		setBlockName("mfr.rail.passenger.dropoff");
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 					int targetY = MathHelper.floor_double(bb.minY);
 					int targetZ = MathHelper.floor_double(bb.minZ + (bb.maxZ - bb.minZ) / 2);
 
-					if(world.getCollidingBlockBounds(bb).isEmpty() &&
+					if(world.func_147461_a(bb).isEmpty() &&
 							!isBadBlockToStandIn(world, targetX, targetY, targetZ) &&
 							!isBadBlockToStandOn(world, targetX, targetY - 1, targetZ))
 					{

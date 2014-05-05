@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import static powercrystals.minefactoryreloaded.block.ItemBlockFactory.getName;
+import static powercrystals.minefactoryreloaded.item.ItemMulti.getName;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,10 +33,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	public BlockRubberLeaves()
 	{
-		setHardness(0.2F);
-		setLightOpacity(1);
-		setStepSound(soundGrassFootstep);
-		setUnlocalizedName("mfr.rubberwood.leaves");
+		setBlockName("mfr.rubberwood.leaves");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
@@ -249,4 +246,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		subTypes.add(new ItemStack(blockId, 1, 0));
 		subTypes.add(new ItemStack(blockId, 1, 1));
 	}
+	
+	@Override public String[] func_150125_e() { return null; }
+	
 }

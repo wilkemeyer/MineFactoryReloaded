@@ -7,7 +7,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
-import cofh.util.Util;
+import cofh.pcc.util.Util;
 
 import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -185,7 +185,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return _energyActivation;
 	}
 	
-	@Override // internal method and a TE method. used for the same thing
 	public int getMaxEnergyPerTick()
 	{
 		return _maxEnergyTick;
@@ -282,19 +281,25 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	// TE methods
 
 	@Override
-	public int getEnergyPerTick()
+	public int getInfoEnergyPerTick()
 	{
 		return getEnergyRequired();
 	}
 
 	@Override
-	public int getEnergy()
+	public int getInfoMaxEnergyPerTick()
+	{
+		return getMaxEnergyPerTick();
+	}
+
+	@Override
+	public int getInfoEnergy()
 	{
 		return getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergy()
+	public int getInfoMaxEnergy()
 	{
 		return getEnergyStoredMax();
 	}
@@ -311,13 +316,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return 0;
 	}
 
-	//@Override
-	public boolean canInterface(ForgeDirection from)
-	{
-		return true;
-	}
-
-	//@Override
+	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
 		return true;
 	}

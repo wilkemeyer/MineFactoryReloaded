@@ -6,7 +6,6 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -15,7 +14,6 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 
 @Mod(modid = "MineFactoryReloaded|CompatMystcraft", name = "MFR Compat: Mystcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Mystcraft")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Mystcraft
 {
 	private static final String lastUpdated = "for Mystcraft-uni-1.5.1-0.10.3.00, current release as of May 25 2013";
@@ -50,7 +48,7 @@ public class Mystcraft
 		fluidMsg.setFloat("grammarweight", 0.0F);
 		fluidMsg.setFloat("instabilityPerBlock", 1000F);
 		fluidMsg.setString("fluidname", FluidName);
-		NBTMsg.setCompoundTag("fluidsymbol", fluidMsg);
+		NBTMsg.setTag("fluidsymbol", fluidMsg);
 		FMLInterModComms.sendMessage("Mystcraft", "fluidsymbol", NBTMsg);
 	}
 }

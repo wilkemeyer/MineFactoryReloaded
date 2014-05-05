@@ -12,7 +12,7 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cofh.util.Util;
+import cofh.pcc.util.Util;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

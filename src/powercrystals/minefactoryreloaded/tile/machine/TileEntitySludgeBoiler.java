@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-import cofh.random.WeightedRandomItemStack;
+import cofh.pcc.random.WeightedRandomItemStack;
 import cofh.util.position.Area;
 import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;

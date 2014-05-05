@@ -6,8 +6,9 @@ import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
-import cofh.util.Util;
+import cofh.pcc.util.Util;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityGenerator extends TileEntityFactoryInventory
-implements IPowerEmitter, IEnergyHandler
+implements IPowerEmitter, IEnergyConnection
 {
 	private int _ticksBetweenConsumption;
 	private int _outputPulseSize;
@@ -182,7 +183,7 @@ implements IPowerEmitter, IEnergyHandler
 
 		if (tile instanceof IEnergyHandler)
 		{
-			if (((IEnergyHandler)tile).canInterface(ForgeDirection.VALID_DIRECTIONS[side]))
+			if (((IEnergyHandler)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side]))
 			{
 				if (handlerCache == null) handlerCache = new IEnergyHandler[6];
 				handlerCache[side] = (IEnergyHandler)tile;
@@ -220,33 +221,9 @@ implements IPowerEmitter, IEnergyHandler
 	// TE methods
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
-	{
-		return 0;
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean doExtract)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean canInterface(ForgeDirection from)
+	public boolean canConnectEnergy(ForgeDirection from)
 	{
 		return true;
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from)
-	{
-		return _buffer;
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from)
-	{
-		return _bufferMax;
 	}
 
 	// BC methods

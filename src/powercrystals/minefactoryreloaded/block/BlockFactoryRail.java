@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -19,13 +20,13 @@ public class BlockFactoryRail extends BlockRailBase
 	{
 		super(par2);
 		setHardness(0.5F);
-		setStepSound(Block.soundMetalFootstep);
+		setStepSound(soundTypeMetal);
 		setCreativeTab(MFRCreativeTab.tab);
 		canSlope = slopes;
 	}
 
 	@Override
-	public boolean canMakeSlopes(World world, int x, int y, int z)
+	public boolean canMakeSlopes(IBlockAccess world, int x, int y, int z)
 	{
 		return canSlope;
 	}
@@ -45,7 +46,7 @@ public class BlockFactoryRail extends BlockRailBase
 	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z){}
 
 	@Override // onRailNeighborChange
-	protected void func_94358_a(World world, int x, int y, int z, int oldMeta, int newMeta, int neighorID)
+	protected void func_150048_a(World world, int x, int y, int z, int oldMeta, int newMeta, Block neighorID)
 	{
 		boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z);
 
@@ -61,7 +62,7 @@ public class BlockFactoryRail extends BlockRailBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
+	public void registerBlockIcons(IIconRegister par1IconRegister)
 	{
 		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}

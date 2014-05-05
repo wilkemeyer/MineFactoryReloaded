@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.util.Util;
+import cofh.pcc.util.Util;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

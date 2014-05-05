@@ -2,10 +2,10 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import cofh.inventory.IInventoryManager;
-import cofh.inventory.InventoryManager;
-import cofh.util.Util;
-import cofh.util.UtilInventory;
+import cofh.pcc.inventory.IInventoryManager;
+import cofh.pcc.inventory.InventoryManager;
+import cofh.pcc.util.Util;
+import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

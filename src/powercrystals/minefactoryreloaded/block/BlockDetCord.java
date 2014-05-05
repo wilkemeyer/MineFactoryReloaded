@@ -20,11 +20,11 @@ public class BlockDetCord extends BlockContainer
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundSnowFootstep);
-		setUnlocalizedName("mfr.detcord");
+		setBlockName("mfr.detcord");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 	@Override
-	public TileEntity createNewTileEntity(World world)
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return null;
 	}
@@ -37,7 +37,7 @@ public class BlockDetCord extends BlockContainer
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
+	public void registerBlockIcons(IIconRegister par1IconRegister)
 	{
 		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}

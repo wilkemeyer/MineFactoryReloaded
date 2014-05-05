@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.command.ICommandSender;
@@ -53,9 +54,9 @@ public class BlockFactoryMachine extends BlockContainer
 	{
 		super(Machine.MATERIAL);
 		setHardness(0.5F);
-		setStepSound(soundMetalFootstep);
+		setStepSound(soundTypeMetal);
 		setCreativeTab(MFRCreativeTab.tab);
-		setUnlocalizedName("mfr.machine." + index);
+		setBlockName("mfr.machine." + index);
 		_mfrMachineBlockIndex = index;
 	}
 
@@ -66,13 +67,13 @@ public class BlockFactoryMachine extends BlockContainer
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		Machine.LoadTextures(_mfrMachineBlockIndex, ir);
 	}
 
 	@Override
-	public IIcon getBlockTexture(IBlockAccess iblockaccess, int x, int y, int z, int side)
+	public IIcon getIcon(IBlockAccess iblockaccess, int x, int y, int z, int side)
 	{
 		int md = iblockaccess.getBlockMetadata(x, y, z);
 		boolean isActive = false;
@@ -100,7 +101,7 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public int getLightOpacity(World world, int x, int y, int z)
+	public int getLightOpacity(IBlockAccess world, int x, int y, int z)
 	{
 		if(world.getTileEntity(x, y, z) instanceof TileEntityLaserDrill)
 		{
@@ -139,7 +140,7 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 	
 	@Override
-	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
+	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
 		TileEntity te = world.getTileEntity(x, y, z);
 		
@@ -153,7 +154,7 @@ public class BlockFactoryMachine extends BlockContainer
 	{
 		if (te instanceof IInventory)
 		{
-			World world = te.worldObj;
+			World world = te.getWorldObj();
 			IInventory inventory = ((IInventory)te);
 			TileEntityFactoryInventory factoryInv = null;
 			if (te instanceof TileEntityFactoryInventory)
@@ -197,7 +198,7 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
+	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null)
@@ -211,11 +212,11 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata,
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata,
 			int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-		ItemStack machine = new ItemStack(idDropped(blockID, world.rand, fortune), 1,
+		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
 				damageDropped(metadata));
 		machine.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
 		drops.add(machine);
@@ -229,8 +230,8 @@ public class BlockFactoryMachine extends BlockContainer
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityFactory)
 		{
-			ItemStack machine = new ItemStack(idDropped(blockID, world.rand, 0), 1,
-					damageDropped(world.getBlockMetadata(x, y, z)));
+			ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z),
+					world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
 			
 			dropContents(te);
 			if(te instanceof TileEntityFactoryInventory)
@@ -238,17 +239,17 @@ public class BlockFactoryMachine extends BlockContainer
 			
 			NBTTagCompound tag = new NBTTagCompound();
 			te.writeToNBT(tag);
-			if (te instanceof IInventory && ((IInventory)te).isInvNameLocalized())
+			if (te instanceof IInventory && ((IInventory)te).hasCustomInventoryName())
 			{
 				NBTTagCompound name = new NBTTagCompound();
-				name.setString("Name", ((IInventory)te).getInvName());
+				name.setString("Name", ((IInventory)te).getInventoryName());
 				tag.setTag("display", name);
 			}
 			machine.setTagCompound(tag);
 			
 			world.setBlockToAir(x, y, z);
 			if (!returnBlock)
-				dropBlockAsItem_do(world, x, y, z, machine);
+				dropBlockAsItem(world, x, y, z, machine);
 			return machine;
 		}
 		return null;
@@ -318,15 +319,9 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world)
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return null;
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int md)
-	{
-		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, md).getNewTileEntity();
+		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getNewTileEntity();
 	}
 
 	@Override
@@ -415,7 +410,7 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}
@@ -479,7 +474,7 @@ public class BlockFactoryMachine extends BlockContainer
 		if(te instanceof TileEntityFactory)
 		{
 			((TileEntityFactory)te).onRedNetChanged(side, inputValue);
-			onNeighborBlockChange(world, x, y, z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+			onNeighborBlockChange(world, x, y, z, MineFactoryReloadedCore.rednetCableBlock);
 		}
 	}
 }

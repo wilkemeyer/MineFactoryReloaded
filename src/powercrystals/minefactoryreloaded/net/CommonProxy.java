@@ -8,8 +8,8 @@ import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.packet.Packet51MapChunk;
-import net.minecraft.server.management.PlayerInstance;
+import net.minecraft.network.play.server.S21PacketChunkData;
+import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -97,7 +97,7 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 				PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
 						getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
 				if (watcher != null)
-					watcher.sendToAllPlayersWatchingChunk(new Packet51MapChunk(chunk, false, -1));
+					watcher.sendToAllPlayersWatchingChunk(new S21PacketChunkData(chunk, false, -1));
 			}
 		}
 	}

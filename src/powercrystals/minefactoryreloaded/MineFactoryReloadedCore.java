@@ -666,7 +666,7 @@ public class MineFactoryReloadedCore extends BaseMod
 			protected ItemStack[] generateChestContent(Random random, IInventory newInventory)
 			{
 				ItemStack item = theItemId.copy();
-				item.setItemDamage(random.nextInt(4)); // TODO: 6 in 1.7
+				item.setItemDamage(random.nextInt(6));
 				return ChestGenHooks.generateStacks(random, item, theMinimumChanceToGenerateItem, theMaximumChanceToGenerateItem);
 			}
 		});

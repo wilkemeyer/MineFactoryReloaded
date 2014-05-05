@@ -44,10 +44,10 @@ public class GuiChunkLoader extends GuiFactoryPowered
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		fontRenderer.drawString(StatCollector.translateToLocal("container.mfr.radius"), _xOffset, 16, 4210752);
-		fontRenderer.drawString(_cl.getRadius() + "", _xOffset + 25, 31, 4210752);
-		fontRenderer.drawString(StatCollector.translateToLocal("container.mfr.power"), _xOffset, 51, 4210752);
-		fontRenderer.drawString(_cl.getActivationEnergy() + " RF", _xOffset + 17, 51 + 11, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.mfr.radius"), _xOffset, 16, 4210752);
+		fontRendererObj.drawString(_cl.getRadius() + "", _xOffset + 25, 31, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.mfr.power"), _xOffset, 51, 4210752);
+		fontRendererObj.drawString(_cl.getActivationEnergy() + " RF", _xOffset + 17, 51 + 11, 4210752);
 	}
 	
 	@Override

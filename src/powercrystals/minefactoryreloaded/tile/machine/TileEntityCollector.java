@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.util.UtilInventory;
+import cofh.pcc.util.UtilInventory;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;

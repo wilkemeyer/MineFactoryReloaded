@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.random.WeightedRandomItemStack;
+import cofh.pcc.random.WeightedRandomItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -12,7 +12,8 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -38,7 +39,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	public BlockFactoryFluid(String liquidName)
 	{
 		super(FluidRegistry.getFluid(liquidName), Material.water);
-		setUnlocalizedName("mfr.liquid." + liquidName + ".still");
+		setBlockName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
 		fluidName = liquidName;
@@ -52,34 +53,34 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 		if(entity instanceof EntityLivingBase)
 		{
 			NBTTagCompound data = entity.getEntityData();
-			if (world.isRemote | data.getLong("mfr:fluidTimer" + blockID) > world.getTotalWorldTime())
+			if (world.isRemote | data.getLong("mfr:fluidTimer" + fluidName) > world.getTotalWorldTime())
 			{
 				return;
 			}
-			data.setLong("mfr:fluidTimer" + blockID, world.getTotalWorldTime() + 40);
+			data.setLong("mfr:fluidTimer" + fluidName, world.getTotalWorldTime() + 40);
 			
 			EntityLivingBase ent = (EntityLivingBase)entity;
-			if(blockID == MineFactoryReloadedCore.milkLiquid.blockID)
+			if (this == MineFactoryReloadedCore.milkLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 6 * 20, 0));
 			}
-			else if(blockID == MineFactoryReloadedCore.sludgeLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.sludgeLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.wither.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 12 * 20, 0));
 			}
-			else if(blockID == MineFactoryReloadedCore.sewageLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.sewageLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 12 * 20, 0));
 			}
-			else if(blockID == MineFactoryReloadedCore.essenceLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.essenceLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.nightVision.id, 60 * 20, 0));
 			}
-			else if(blockID == MineFactoryReloadedCore.biofuelLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.biofuelLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0));
 			}
@@ -109,22 +110,22 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 				break l;
 			}
 			ItemStack drop = null;
-			int block = 0;
-			if(blockID == MineFactoryReloadedCore.milkLiquid.blockID)
+			Block block = Blocks.air;
+			if (this == MineFactoryReloadedCore.milkLiquid)
 			{
 				if (rand.nextInt(50) == 0)
-					drop = new ItemStack(Item.dyePowder, rand.nextInt(2), 15);
+					drop = new ItemStack(Items.dye, rand.nextInt(2), 15);
 			}
-			else if(blockID == MineFactoryReloadedCore.sludgeLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.sludgeLiquid)
 			{
 				drop = ((WeightedRandomItemStack)WeightedRandom.
 						getRandomItem(rand, MFRRegistry.getSludgeDrops())).getStack();
 			}
-			else if(blockID == MineFactoryReloadedCore.sewageLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.sewageLiquid)
 			{
 				drop = new ItemStack(MineFactoryReloadedCore.fertilizerItem, 1 + rand.nextInt(2));
 			}
-			else if(blockID == MineFactoryReloadedCore.essenceLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.essenceLiquid)
 			{
 				if (world.setBlockToAir(x, y, z))
 				{
@@ -141,7 +142,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 				}
 				break l;
 			}
-			else if(blockID == MineFactoryReloadedCore.biofuelLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.biofuelLiquid)
 			{
 				if (world.setBlockToAir(x, y, z))
 				{
@@ -152,14 +153,14 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 				}
 				break l;
 			}
-			else if(blockID == MineFactoryReloadedCore.meatLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.meatLiquid)
 			{
 				if (rand.nextInt(5) != 0)
 					drop = new ItemStack(MineFactoryReloadedCore.meatIngotRawItem, rand.nextInt(2));
 				else
 					drop = new ItemStack(MineFactoryReloadedCore.meatIngotCookedItem, rand.nextInt(2));
 			}
-			else if (blockID == MineFactoryReloadedCore.pinkSlimeLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.pinkSlimeLiquid)
 			{
 				if (rand.nextBoolean())
 					drop = new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem, rand.nextInt(3));
@@ -169,25 +170,25 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 					else
 						drop = new ItemStack(MineFactoryReloadedCore.meatNuggetCookedItem, rand.nextInt(2));
 			}
-			else if(blockID == MineFactoryReloadedCore.chocolateMilkLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.chocolateMilkLiquid)
 			{
 				if (rand.nextBoolean())
-					drop = new ItemStack(Item.dyePowder, rand.nextInt(2), 3);
+					drop = new ItemStack(Items.dye, rand.nextInt(2), 3);
 			}
-			else if(blockID == MineFactoryReloadedCore.mushroomSoupLiquid.blockID)
+			else if (this == MineFactoryReloadedCore.mushroomSoupLiquid)
 			{
 				if (rand.nextInt(5) == 0)
-					block = (rand.nextBoolean() ? Block.mushroomBrown : Block.mushroomRed).blockID;
+					block = (rand.nextBoolean() ? Blocks.brown_mushroom : Blocks.red_mushroom);
 				else
 					if (rand.nextBoolean())
-						drop = new ItemStack(Block.mushroomBrown, rand.nextInt(2));
+						drop = new ItemStack(Blocks.brown_mushroom, rand.nextInt(2));
 					else
-						drop = new ItemStack(Block.mushroomRed, rand.nextInt(2));
+						drop = new ItemStack(Blocks.red_mushroom, rand.nextInt(2));
 			}
-			if (world.setBlock(x, y, z, block))
+			if (world.setBlock(x, y, z, block, 0, 3))
 			{
 				if (drop != null && drop.stackSize > 0)
-					this.dropBlockAsItem_do(world, x, y, z, drop);
+					this.dropBlockAsItem(world, x, y, z, drop);
 				
 				fizz(world, x, y, z, rand);
 				return;
@@ -216,7 +217,7 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		_iconStill = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		_iconFlowing = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName().replace(".still", ".flowing"));

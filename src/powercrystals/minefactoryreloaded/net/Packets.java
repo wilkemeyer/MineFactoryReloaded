@@ -1,7 +1,25 @@
 package powercrystals.minefactoryreloaded.net;
 
+import net.minecraft.network.Packet;
+import net.minecraft.server.management.PlayerManager.PlayerInstance;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+
 public final class Packets
 {
+	public static void sendToAllPlayersWatching(World world, int x, int y, int z, Packet packet)
+	{
+		if (packet == null)
+			return;
+		if (world instanceof WorldServer)
+		{
+			PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
+					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
+			if (watcher != null)
+				watcher.sendToAllPlayersWatchingChunk(packet);
+		}
+	}
+	
 	public static final int TileDescription = 1;
 	public static final int EnchanterButton = 2;
 	public static final int HarvesterButton = 3;

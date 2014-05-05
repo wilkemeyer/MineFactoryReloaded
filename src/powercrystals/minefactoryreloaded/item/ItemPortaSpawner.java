@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.net.Packets;
 
 public class ItemPortaSpawner extends ItemFactory
 {
@@ -206,7 +207,7 @@ public class ItemPortaSpawner extends ItemFactory
 			tag.setInteger("y", y);
 			tag.setInteger("z", z);
 			te.readFromNBT(tag);
-			PacketDispatcher.sendPacketToAllAround(x, y, z, 50, player.worldObj.provider.dimensionId, te.getDescriptionPacket());
+			Packets.sendToAllPlayersWatching(world, x, y, z, te.getDescriptionPacket());
 		}
 		return true;
 	}

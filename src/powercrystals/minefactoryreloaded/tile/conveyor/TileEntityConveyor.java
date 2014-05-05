@@ -5,25 +5,23 @@ import buildcraft.api.gates.IActionReceptor;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.pcc.util.Util;
+import cofh.util.position.IRotateableTile;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.net.PacketWrapper;
-import cofh.util.Util;
-import cofh.util.position.IRotateableTile;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.modhelpers.buildcraft.Buildcraft;
-import powercrystals.minefactoryreloaded.net.Packets;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityConveyor extends TileEntity
 			implements IRotateableTile, ISidedInventory, IPipeConnection, IActionReceptor
@@ -50,7 +48,6 @@ public class TileEntityConveyor extends TileEntity
 		if(worldObj != null && !worldObj.isRemote && _dye != dye)
 		{
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 		_dye = dye;
 	}
@@ -58,11 +55,21 @@ public class TileEntityConveyor extends TileEntity
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
-				Packets.ConveyorDescription, new Object[] {
-					xCoord, yCoord, zCoord,
-					_dye, _conveyorActive, _isFast
-				});
+		NBTTagCompound data = new NBTTagCompound();
+		data.setInteger("dye", _dye);
+		data.setBoolean("conveyorActive", _conveyorActive);
+		data.setBoolean("isFast", _isFast);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		return packet;
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.func_148857_g();
+		_dye = data.getInteger("dye");
+		_conveyorActive = data.getBoolean("conveyorActive");
+		_isFast = data.getBoolean("isFast");
 	}
 	
 	@Override

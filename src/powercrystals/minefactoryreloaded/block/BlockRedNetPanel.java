@@ -1,18 +1,19 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
@@ -32,7 +33,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	public BlockRedNetPanel()
 	{
 		super(Machine.MATERIAL);
-		setUnlocalizedName("mfr.rednet.panel");
+		setBlockName("mfr.rednet.panel");
 		setHardness(0.8F);
 		
 		setCreativeTab(MFRCreativeTab.tab);
@@ -124,7 +125,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 			player.openGui(MineFactoryReloadedCore.instance(), 0, world, x, y, z);
 			return true;
 		}
-		else if(te instanceof TileEntityRedNetHistorian && s != null && s.itemID == Item.dyePowder.itemID)
+		else if(te instanceof TileEntityRedNetHistorian && s != null && s.getItem().equals(Items.dye))
 		{
 			((TileEntityRedNetHistorian)te).setSelectedSubnet(15 - s.getItemDamage());
 			world.markBlockForUpdate(x, y, z);
@@ -146,7 +147,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	}
 	
 	@Override
-	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		return false;
 	}
@@ -156,15 +157,9 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	{
 		return false;
 	}
-	
+
 	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return null;
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, int metadata)
+	public TileEntity createNewTileEntity(World var1, int var2)
 	{
 		return new TileEntityRedNetHistorian();
 	}
@@ -208,7 +203,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 	}
 	
 	@Override
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}

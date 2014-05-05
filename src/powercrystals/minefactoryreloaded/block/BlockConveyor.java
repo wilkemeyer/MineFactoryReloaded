@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -58,7 +59,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	{
 		super(Material.circuits);
 		setHardness(0.5F);
-		setUnlocalizedName("mfr.conveyor");
+		setBlockName("mfr.conveyor");
 		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.01F, 0.1F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
@@ -259,7 +260,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		
 		if (entity instanceof EntityLivingBase)
 		l: {
-			ItemStack item = ((EntityLivingBase)entity).getCurrentItemOrArmor(1);
+			ItemStack item = ((EntityLivingBase)entity).getEquipmentInSlot(1);
 			if (item == null) break l;
 			if (item.getItem() instanceof ItemPlasticBoots)
 				return;
@@ -481,7 +482,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborId)
 	{
 		if(!canBlockStay(world, x, y, z))
 		{
@@ -505,7 +506,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
-	public TileEntity createTileEntity(World world, int metadata)
+	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new TileEntityConveyor();
 	}
@@ -538,7 +539,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
     }
 	
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		NBTTagCompound tag = BlockNBTManager.getForBlock(x, y, z);
@@ -568,7 +569,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int blockId, int meta)
+	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
 	{
 		if (meta != 15)
 		{

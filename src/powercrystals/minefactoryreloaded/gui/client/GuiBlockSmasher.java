@@ -37,8 +37,9 @@ public class GuiBlockSmasher extends GuiFactoryPowered
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		fontRenderer.drawString(new Integer(_smasher.getFortune()).toString(), 68, 44, 4210752);
-		fontRenderer.drawString("Fortune", 64, 15, 4210752);
+		fontRendererObj.drawString(new Integer(_smasher.getFortune()).toString(), 68, 44, 4210752);
+		fontRendererObj.drawString("Fortune", 64, 15, 4210752);
+		// TODO: localize
 	}
 	
 	@Override

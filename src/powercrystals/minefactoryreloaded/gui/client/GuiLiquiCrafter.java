@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -35,8 +35,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		fontRenderer.drawString("Template", 67 + 27, 27, 4210752);
-		fontRenderer.drawString("Output", 128 + 27, 26, 4210752);
+		fontRendererObj.drawString("Template", 67 + 27, 27, 4210752);
+		fontRendererObj.drawString("Output", 128 + 27, 26, 4210752);
+		// TODO: localize
 		
 		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
 		
@@ -98,7 +99,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 		
 		IIcon icon = fluid.getIcon(stack);
 		if (icon == null)
-			icon = Block.lavaMoving.getIcon(0, 0);
+			icon = Blocks.flowing_lava.getIcon(0, 0);
 		
 		while(level > 0)
 		{

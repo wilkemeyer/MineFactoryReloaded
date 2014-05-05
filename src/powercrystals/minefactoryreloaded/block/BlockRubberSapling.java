@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 import java.util.Random;
 
@@ -10,13 +13,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.world.WorldGenMassiveTree;
 import powercrystals.minefactoryreloaded.world.WorldGenRubberTree;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnection
 {
@@ -25,8 +26,8 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	public BlockRubberSapling()
 	{
 		setHardness(0.0F);
-		setStepSound(soundGrassFootstep);
-		setUnlocalizedName("mfr.rubberwood.sapling");
+		setStepSound(soundTypeGrass);
+		setBlockName("mfr.rubberwood.sapling");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 	

@@ -3,9 +3,11 @@ package powercrystals.minefactoryreloaded.block;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityFallingSand;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -27,7 +29,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundStoneFootstep);
-		setUnlocalizedName("mfr.decorativestone");
+		setBlockName("mfr.decorativestone");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 	
@@ -39,7 +41,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		for(int i = 0; i < _icons.length; i++)
 		{
@@ -56,13 +58,13 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 	@Override
 	public void onBlockAdded(World par1World, int par2, int par3, int par4)
 	{
-		par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate(par1World));
+		par1World.scheduleBlockUpdate(par2, par3, par4, this, this.tickRate(par1World));
 	}
 
 	@Override
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
+	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, Block par5)
 	{
-		par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate(par1World));
+		par1World.scheduleBlockUpdate(par2, par3, par4, this, this.tickRate(par1World));
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 		int meta = par1World.getBlockMetadata(par2, par3, par4);
 		if (meta != 8 & meta != 9)
 			return;
-		if (BlockSand.canFallBelow(par1World, par2, par3 - 1, par4) && par3 >= 0)
+		if (BlockFalling.func_149831_e(par1World, par2, par3 - 1, par4) && par3 >= 0)
 		{
 			byte b0 = 32;
 
@@ -87,7 +89,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 			{
 				if (!par1World.isRemote)
 				{
-					EntityFallingSand entityfallingsand = new EntityFallingSand(par1World, par2 + 0.5d, par3 + 0.5d, par4 + 0.5d, this.blockID, meta);
+					EntityFallingBlock entityfallingsand = new EntityFallingBlock(par1World, par2 + 0.5d, par3 + 0.5d, par4 + 0.5d, this, meta);
 					par1World.spawnEntityInWorld(entityfallingsand);
 				}
 			}
@@ -95,14 +97,14 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 			{
 				par1World.setBlockToAir(par2, par3, par4);
 
-				while (BlockSand.canFallBelow(par1World, par2, par3 - 1, par4) && par3 > 0)
+				while (BlockFalling.func_149831_e(par1World, par2, par3 - 1, par4) && par3 > 0)
 				{
 					--par3;
 				}
 
 				if (par3 > 0)
 				{
-					par1World.setBlock(par2, par3, par4, this.blockID, meta, 3);
+					par1World.setBlock(par2, par3, par4, this, meta, 3);
 				}
 			}
 		}

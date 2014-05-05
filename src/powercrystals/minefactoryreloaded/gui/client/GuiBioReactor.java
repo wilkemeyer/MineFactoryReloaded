@@ -28,7 +28,7 @@ public class GuiBioReactor extends GuiFactoryInventory
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
 		if(isPointInRegion(150, 15, 8, 60, mouseX, mouseY))
-		{
+		{ // TODO: localize
 			drawBarTooltip("Efficiency", "", ((TileEntityBioReactor)_tileEntity).getOutputValue(), ((TileEntityBioReactor)_tileEntity).getOutputValueMax(), mouseX, mouseY);
 		}
 		else if(isPointInRegion(160, 15, 8, 60, mouseX, mouseY))

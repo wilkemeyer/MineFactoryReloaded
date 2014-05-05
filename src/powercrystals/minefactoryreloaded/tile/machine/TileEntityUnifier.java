@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.oredict.OreDictTracker;
-import cofh.util.UtilInventory;
+import cofh.pcc.oredict.OreDictTracker;
+import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

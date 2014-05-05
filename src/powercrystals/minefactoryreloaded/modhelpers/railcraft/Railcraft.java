@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.railcraft;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -8,13 +10,12 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import java.lang.reflect.Method;
-import java.util.logging.Level;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -24,7 +25,6 @@ import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 
 @Mod(modid = "MineFactoryReloaded|CompatRailcraft", name = "MFR Compat: Railcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Railcraft")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Railcraft {
 
 	@EventHandler
@@ -41,17 +41,6 @@ public class Railcraft {
 			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 8));
 			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 9));
 			// white sand? black sand?
-			
-			/*
-			 * Type mods.railcraft.common.blocks.hidden.BlockHidden,
-			 * owned by Railcraft,
-			 * ordinal 0,
-			 * name tile.railcraft.hidden,
-			 * claimedModId null
-			 */
-			Block air = GameRegistry.findBlock("Railcraft", "tile.railcraft.hidden");
-			if (air != null && air.blockID > 0)
-				MFRRegistry.registerHarvestable(new HarvestableStandard(air.blockID, HarvestType.Normal));
 
 			Object rockCrusher = Class.forName("mods.railcraft.api.crafting.RailcraftCraftingManager").getField("rockCrusher").get(null);
 			Method createNewRecipe = Class.forName("mods.railcraft.api.crafting.IRockCrusherCraftingManager").getMethod("createNewRecipe", ItemStack.class, boolean.class, boolean.class);
@@ -71,16 +60,16 @@ public class Railcraft {
 			
 			recipe = createNewRecipe.invoke(rockCrusher, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 2), true, false);
 			addOutput.invoke(recipe, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 8), 1.0f); // Cobble Blackstone -> Gravel + flint
-			addOutput.invoke(recipe, new ItemStack(Item.flint, 1, 0), 0.05f);
+			addOutput.invoke(recipe, new ItemStack(Items.flint, 1, 0), 0.05f);
 			
 			recipe = createNewRecipe.invoke(rockCrusher, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 3), true, false);
 			addOutput.invoke(recipe, new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 9), 1.0f); // Cobble Whitestone -> Gravel + flint
-			addOutput.invoke(recipe, new ItemStack(Item.flint, 1, 0), 0.05f);
+			addOutput.invoke(recipe, new ItemStack(Items.flint, 1, 0), 0.05f);
 		}
 		catch (Throwable _)
 		{
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
-			FMLLog.log(This.getModId(), Level.SEVERE, "There was a problem loading %s.", This.getName());
+			FMLLog.log(This.getModId(), Level.WARN, "There was a problem loading %s.", This.getName());
 			_.printStackTrace();
 		}
 	}

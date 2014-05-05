@@ -48,7 +48,7 @@ public class ClientProxy extends CommonProxy implements IPlayerTracker
 	private void setIcons(String name, Block block)
 	{
 		Fluid fluid = FluidRegistry.getFluid(name);
-		if (fluid.getBlockID() == block.blockID)
+		if (fluid.getBlock().equals(block))
 		{
 			fluid.setIcons(block.getIcon(1, 0), block.getIcon(2, 0));
 		}

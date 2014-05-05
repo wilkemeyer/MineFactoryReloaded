@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.util.UtilInventory;
+import cofh.pcc.util.UtilInventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

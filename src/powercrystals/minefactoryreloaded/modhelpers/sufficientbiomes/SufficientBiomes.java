@@ -1,16 +1,15 @@
 package powercrystals.minefactoryreloaded.modhelpers.sufficientbiomes;
 
-import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
+
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 @Mod(modid = "MineFactoryReloaded|CompatSufficientBiomes", name = "MFR Compat: Sufficient Biomes", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:EmasherWorldGen")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class SufficientBiomes
 {
 	
