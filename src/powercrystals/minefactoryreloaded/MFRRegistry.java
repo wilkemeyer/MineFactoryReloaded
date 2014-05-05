@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded;
 
+import cofh.random.WeightedRandomItemStack;
+import cofh.util.UtilInventory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +12,7 @@ import java.util.TreeMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.WeightedRandomItem;
 
-import powercrystals.core.random.WeightedRandomItemStack;
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizer;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;

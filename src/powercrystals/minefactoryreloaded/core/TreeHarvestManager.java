@@ -144,7 +144,7 @@ public class TreeHarvestManager implements IHarvestManager
 			bn = bn.next;
 		}
 		data.setTag("curPos", list);
-		tag.setCompoundTag("harvestManager", data);
+		tag.setTag("harvestManager", data);
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class TreeHarvestManager implements IHarvestManager
 		NBTTagList list = (NBTTagList)data.getTag("curPos");
 		for (int i = 0, e = list.tagCount(); i < e; ++i)
 		{
-			NBTTagCompound p = (NBTTagCompound)list.tagAt(i);
+			NBTTagCompound p = list.getCompoundTagAt(i);
 			_blocks.push(BlockPool.getNext(p.getInteger("x"), p.getInteger("y"), p.getInteger("z")));
 		}
 	}

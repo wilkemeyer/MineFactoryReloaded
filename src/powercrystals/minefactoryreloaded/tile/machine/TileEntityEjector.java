@@ -2,6 +2,10 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.inventory.IInventoryManager;
+import cofh.inventory.InventoryManager;
+import cofh.util.Util;
+import cofh.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,10 +24,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import powercrystals.core.inventory.IInventoryManager;
-import powercrystals.core.inventory.InventoryManager;
-import powercrystals.core.util.Util;
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiEjector;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -169,7 +169,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		if (itemA == null | itemB == null)
 			return false;
 		
-		if (itemA.itemID != itemB.itemID)
+		if (!itemA.getItem().equals(itemB.getItem()))
 			return false;
 		
 		if (!_ignoreDamage)

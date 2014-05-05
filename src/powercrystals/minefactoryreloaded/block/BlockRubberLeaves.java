@@ -13,6 +13,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -40,7 +42,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		String unlocalizedName = getUnlocalizedName();
 		for (int i = _names.length; i --> 0; )
@@ -53,7 +55,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return getIcon(side, world.getBlockMetadata(x, y, z));
 	}
@@ -62,7 +64,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public IIcon getIcon(int side, int meta)
 	{
 		meta &= 3;
-		return Block.leaves.graphicsLevel ? _iconTransparent[meta] : _iconOpaque[meta];
+		return !isOpaqueCube() ? _iconTransparent[meta] : _iconOpaque[meta];
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		for (int l1 = -1; l1 <= 1; ++l1)
 			for (int i2 = -1; i2 <= 1; ++i2)
 			{
-				int j2 = iba.getBiomeGenForCoords(x + i2, z + l1).getBiomeFoliageColor();
+				int j2 = iba.getBiomeGenForCoords(x + i2, z + l1).getBiomeFoliageColor(x, y, z);
 				r += (j2 & 16711680) >> 16;
 				g += (j2 & 65280) >> 8;
 				b += j2 & 255;
@@ -102,13 +104,13 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@Override
 	public boolean isOpaqueCube()
 	{
-		return !Block.leaves.graphicsLevel;
+		return Blocks.leaves.isOpaqueCube();
 	}
 
 	@Override
-	public int idDropped(int par1, Random par2Random, int par3)
+	public Item getItemDropped(int par1, Random par2Random, int par3)
 	{
-		return MineFactoryReloadedCore.rubberSaplingBlock.blockID;
+		return Item.getItemFromBlock(MineFactoryReloadedCore.rubberSaplingBlock);
 	}
 
 	@Override
@@ -126,16 +128,16 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			return;
 		if (!par1World.isRemote)
 		{
-			ArrayList<ItemStack> items = getBlockDropped(par1World, x, y, z, meta, fortune);
+			ArrayList<ItemStack> items = getDrops(par1World, x, y, z, meta, fortune);
 			//chance = ForgeEventFactory.fireBlockHarvesting(items, par1World, this, x, y, z, meta, fortune, chance, false, harvesters.get());
 
 			for (ItemStack item : items)
 				if (par1World.rand.nextFloat() <= chance)
-					this.dropBlockAsItem_do(par1World, x, y, z, item);
+					this.dropBlockAsItem(par1World, x, y, z, item);
 		}
 	}
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		if ((meta & 4) != 0)
@@ -147,7 +149,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			chance = Math.max(chance - (2 << fortune), 10);
 
 		if (world.rand.nextInt(chance) == 0)
-			ret.add(new ItemStack(idDropped(meta & 3, world.rand, fortune), 1, 0));
+			ret.add(new ItemStack(getItemDropped(meta & 3, world.rand, fortune), 1, 0));
 
 		/* TODO: drop book (counts as fuel) with info on MFR
 		chance = 100;
@@ -175,7 +177,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 				updating.set(Boolean.TRUE);
 				super.updateTick(world, x, y, z, rand);
 				updating.set(null);
-				if (world.getBlockId(x, y, z) != blockID)
+				if (!world.getBlock(x, y, z).equals(this))
 					dropBlockAsItem(world, x, y, z, l, 0);
 				return;
 			}
@@ -206,7 +208,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, int id, int meta)
+    public void breakBlock(World world, int x, int y, int z, Block id, int meta)
     {
 		if (updating.get() != null)
 		{
@@ -237,12 +239,12 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side)
 	{
-		return Block.leaves.graphicsLevel ? true : super.shouldSideBeRendered(iba, x, y, z, side);
+		return isOpaqueCube() ? super.shouldSideBeRendered(iba, x, y, z, side) : true;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubBlocks(int blockId, CreativeTabs creativeTab, List subTypes)
+	public void getSubBlocks(Item blockId, CreativeTabs creativeTab, List subTypes)
 	{
 		subTypes.add(new ItemStack(blockId, 1, 0));
 		subTypes.add(new ItemStack(blockId, 1, 1));

@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -71,7 +71,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 			setWorkDone(getWorkDone() + 1);
 			if(getWorkDone() >= getWorkMax())
 			{
-				if(bgb.getFloatTemperature() >= 0.15F)
+				if(bgb.getFloatTemperature(xCoord, yCoord, zCoord) >= 0.15F)
 				{
 					if(_tanks[0].fill(FluidRegistry.getFluidStack("water", FluidContainerRegistry.BUCKET_VOLUME), true) > 0)
 					{
@@ -86,7 +86,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 				}
 				else
 				{
-					doDrop(new ItemStack(Item.snowball));
+					doDrop(new ItemStack(Items.snowball));
 					setWorkDone(0);
 				}
 			}
@@ -106,8 +106,8 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	{
 		for(int y = yCoord + 1; y <= 256; y++)
 		{
-			int blockId = worldObj.getBlockId(xCoord, y, zCoord);
-			if(Block.blocksList[blockId] != null && !Block.blocksList[blockId].isAirBlock(worldObj, xCoord, y, zCoord))
+			Block block = worldObj.getBlock(xCoord, y, zCoord);
+			if (block.isAir(worldObj, xCoord, y, zCoord))
 			{
 				return false;
 			}

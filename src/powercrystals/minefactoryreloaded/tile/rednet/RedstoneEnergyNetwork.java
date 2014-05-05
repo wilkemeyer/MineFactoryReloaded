@@ -100,7 +100,7 @@ public class RedstoneEnergyNetwork
 		while (!toCheck.isEmpty()) {
 			main = toCheck.iterator().next();
 			addConduit(main);
-			World world = main.worldObj;
+			World world = main.getWorldObj();
 			for (int i = 6; i --> 0; ) {
 				bp.x = main.xCoord; bp.y = main.yCoord; bp.z = main.zCoord;
 				bp.orientation = dir[i];

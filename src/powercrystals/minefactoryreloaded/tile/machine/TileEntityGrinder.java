@@ -218,7 +218,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	protected void fillTank(FluidTank tank, String fluid, float amount)
 	{
 		tank.fill(FluidRegistry.getFluidStack(fluid, (int)(100 * amount)), true);
-		onInventoryChanged();
+		markDirty();
 	}
 	
 	@Override

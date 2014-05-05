@@ -1,18 +1,20 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoDisenchanter;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoDisenchanter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 {
@@ -62,13 +64,15 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
+		if (stack == null)
+			return false;
 		if(slot == 0)
 		{
 			return stack.getEnchantmentTagList() != null;
 		}
 		else if(slot == 1)
 		{
-			return stack.itemID == Item.book.itemID;
+			return stack.getItem().equals(Items.book);
 		}
 		return false;
 	}
@@ -93,7 +97,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 			_inventory[0] = null;
 		}
 		else if ((list != null && list.tagCount() > 0) &&
-				(_inventory[1] != null && _inventory[1].itemID == Item.book.itemID) &
+				(_inventory[1] != null && _inventory[1].getItem().equals(Items.book)) &
 				_inventory[2] == null &
 				_inventory[3] == null)
 		{
@@ -102,19 +106,19 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 				decrStackSize(1, 1);
 				
 				NBTTagCompound enchTag;
-				if(_inventory[0].itemID == Item.enchantedBook.itemID)
+				if(_inventory[0].getItem().equals(Items.enchanted_book))
 				{
-					enchTag = (NBTTagCompound)list.tagAt(0);
+					enchTag = list.getCompoundTagAt(0);
 					list.removeTag(0);
 					if(list.tagCount() == 0)
 					{
-						_inventory[0] = new ItemStack(Item.book);
+						_inventory[0] = new ItemStack(Items.book);
 					}
 				}
 				else
 				{
 					int enchIndex = worldObj.rand.nextInt(list.tagCount());
-					enchTag = (NBTTagCompound)list.tagAt(enchIndex);
+					enchTag = list.getCompoundTagAt(enchIndex);
 					
 					list.removeTag(enchIndex);
 					if(list.tagCount() == 0)
@@ -144,7 +148,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 					_inventory[0] = null;
 				}
 				
-				_inventory[3] = new ItemStack(Item.enchantedBook, 1);
+				_inventory[3] = new ItemStack(Items.enchanted_book, 1);
 				
 				NBTTagCompound baseTag = new NBTTagCompound();
 				NBTTagList enchList = new NBTTagList();
@@ -173,7 +177,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 		}
 		else if(slot == 1)
 		{
-			return itemstack != null && itemstack.itemID == Item.book.itemID;
+			return itemstack != null && itemstack.getItem().equals(Items.book);
 		}
 		else
 		{

@@ -1,18 +1,20 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.Map;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import powercrystals.minefactoryreloaded.gui.client.GuiEnchantmentRouter;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerEnchantmentRouter;
 import powercrystals.minefactoryreloaded.setup.Machine;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 {
@@ -67,7 +69,7 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 						}
 					}
 				}
-				else if (_inventory[j].itemID == Item.book.itemID)
+				else if (_inventory[j].getItem().equals(Items.book))
 				{
 					routeWeights[i] += (1 + _inventory[j].stackSize) / 2;
 				}

@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,13 +10,13 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
@@ -24,16 +27,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IMobEggHandler;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.ISafariNetHandler;
 import powercrystals.minefactoryreloaded.api.RandomMob;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemSafariNet extends ItemFactory
 {
@@ -52,17 +53,17 @@ public class ItemSafariNet extends ItemFactory
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
-		if(stack.getTagCompound() == null)
+		if (stack.getTagCompound() == null)
 		{
 			return;
 		}
 		
-		if(stack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID)
+		if (stack.getItem().equals(MineFactoryReloadedCore.safariNetJailerItem))
 		{
 			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.jailer"));
 		}
 		
-		if(stack.getTagCompound().getBoolean("hide"))
+		if (stack.getTagCompound().getBoolean("hide"))
 		{
 			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.mystery"));
 		}
@@ -200,24 +201,24 @@ public class ItemSafariNet extends ItemFactory
 	
 	public static Entity releaseEntity(ItemStack itemstack, World world, int x, int y, int z, int side)
 	{
-		if(world.isRemote)
+		if (world.isRemote)
 		{
 			return null;
 		}
 		
 		Entity spawnedCreature;
-		int blockId = world.getBlockId(x, y, z);
+		Block block = world.getBlock(x, y, z);
 		x += Facing.offsetsXForSide[side];
 		y += Facing.offsetsYForSide[side];
 		z += Facing.offsetsZForSide[side];
 		double spawnOffsetY = 0.0D;
 		
-		if (side == 1 && Block.blocksList[blockId] != null && Block.blocksList[blockId].getRenderType() == 11)
+		if (side == 1 && block.getRenderType() == 11)
 		{
 			spawnOffsetY = 0.5D;
 		}
 		
-		if(itemstack.getItemDamage() != 0)
+		if (itemstack.getItemDamage() != 0)
 		{
 			spawnedCreature = spawnCreature(world, itemstack.getItemDamage(), x + 0.5D, y + spawnOffsetY, z + 0.5D);
 		}
@@ -226,11 +227,11 @@ public class ItemSafariNet extends ItemFactory
 			spawnedCreature = spawnCreature(world, itemstack.getTagCompound(), x + 0.5D, y + spawnOffsetY, z + 0.5D, side);
 		}
 		
-		if(spawnedCreature != null)
+		if (spawnedCreature != null)
 		{
 			if ((spawnedCreature instanceof EntityLiving))
 			{
-				if (itemstack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID)
+				if (itemstack.getItem().equals(MineFactoryReloadedCore.safariNetJailerItem))
 				{
 					((EntityLiving)spawnedCreature).func_110163_bv();
 				}
@@ -242,11 +243,11 @@ public class ItemSafariNet extends ItemFactory
 				}
 			}
 			
-			if(isSingleUse(itemstack))
+			if (isSingleUse(itemstack))
 			{
 				itemstack.stackSize--;
 			}
-			else if(itemstack.getItemDamage() != 0)
+			else if (itemstack.getItemDamage() != 0)
 			{
 				itemstack.setItemDamage(0);
 			}
@@ -273,10 +274,10 @@ public class ItemSafariNet extends ItemFactory
 		}
 		else
 		{
-			NBTTagList pos = mobTag.getTagList("Pos");
-			((NBTTagDouble)pos.tagAt(0)).data = x;
-			((NBTTagDouble)pos.tagAt(1)).data = y;
-			((NBTTagDouble)pos.tagAt(2)).data = z;
+			NBTTagList pos = mobTag.getTagList("Pos", 6);
+			pos.func_150304_a(0, new NBTTagDouble(x));
+			pos.func_150304_a(1, new NBTTagDouble(y));
+			pos.func_150304_a(2, new NBTTagDouble(z));
 			
 			e = EntityList.createEntityFromNBT(mobTag, world);
 			if (e != null)
@@ -379,7 +380,7 @@ public class ItemSafariNet extends ItemFactory
 			entity.writeToNBT(c);
 			
 			c.setString("id", (String)EntityList.classToStringMapping.get(entity.getClass()));
-			if(itemstack.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID)
+			if (itemstack.equals(MineFactoryReloadedCore.safariNetJailerItem))
 			{
 				c.setBoolean("PersistenceRequired", true);
 			}
@@ -406,7 +407,7 @@ public class ItemSafariNet extends ItemFactory
 	
 	public static boolean isSingleUse(ItemStack s)
 	{
-		return s != null && (s.itemID == MineFactoryReloadedCore.safariNetSingleItem.itemID || s.itemID == MineFactoryReloadedCore.safariNetJailerItem.itemID);
+		return s != null && (s.getItem().equals(MineFactoryReloadedCore.safariNetSingleItem) || s.getItem().equals(MineFactoryReloadedCore.safariNetJailerItem));
 	}
 	
 	public static boolean isSafariNet(ItemStack s)
@@ -445,12 +446,11 @@ public class ItemSafariNet extends ItemFactory
 		}
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	public void getSubItems(Item item, List<ItemStack> subTypes)
 	{
-		super.getSubItems(itemId, creativeTab, subTypes);
-		if(itemId == MineFactoryReloadedCore.safariNetSingleItem.itemID)
+		super.getSubItems(item, subTypes);
+		if (item.equals(MineFactoryReloadedCore.safariNetSingleItem))
 		{
 			subTypes.add(VillageTradeHandler.getHiddenNetStack());
 		}

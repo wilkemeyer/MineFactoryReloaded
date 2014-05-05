@@ -21,6 +21,6 @@ public class SheepHandler implements ISafariNetHandler
 	@Override
 	public void addInformation(ItemStack safariNetStack, EntityPlayer player, List infoList, boolean advancedTooltips)
 	{
-		infoList.add("Wool: " + ItemDye.dyeColorNames[BlockColored.getBlockFromDye((safariNetStack.getTagCompound().getByte("Color")))]);
+		infoList.add("Wool: " + ItemDye.field_150923_a[BlockColored.func_150031_c((safariNetStack.getTagCompound().getByte("Color")))]);
 	}
 }

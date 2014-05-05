@@ -1,16 +1,17 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import java.util.List;
-
+import cofh.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
-import powercrystals.core.util.UtilInventory;
+
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoBrewer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoBrewer;
@@ -111,8 +112,8 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 					
 					int existingPotion = current.getItemDamage();
 					int newPotion = this.getPotionResult(existingPotion, ingredient);
-					@SuppressWarnings("unchecked") List<Integer> existingEffects = Item.potion.getEffects(existingPotion);
-					@SuppressWarnings("unchecked") List<Integer> newEffects = Item.potion.getEffects(newPotion);
+					@SuppressWarnings("unchecked") List<Integer> existingEffects = Items.potionitem.getEffects(existingPotion);
+					@SuppressWarnings("unchecked") List<Integer> newEffects = Items.potionitem.getEffects(newPotion);
 
 					if((existingPotion <= 0 || existingEffects != newEffects) && (existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null))
 					{
@@ -131,9 +132,9 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 					
 					if (ingredient.stackSize > 0)
 						--ingredient.stackSize;
-					else if (Item.itemsList[ingredient.itemID].hasContainerItem())
+					else if (ingredient.getItem().hasContainerItem(ingredient))
 					{
-						ItemStack r = Item.itemsList[ingredient.itemID].getContainerItemStack(_inventory[slot]);
+						ItemStack r = ingredient.getItem().getContainerItem(_inventory[slot]);
 						if (r.isItemStackDamageable() && r.getItemDamage() > r.getMaxDamage())
 							r = null;
 						_inventory[slot] = r;
@@ -178,7 +179,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	
 		ItemStack ingredient = _inventory[getTemplateSlot(row)];
 		
-		if (!Item.itemsList[ingredient.itemID].isPotionIngredient())
+		if (!ingredient.getItem().isPotionIngredient(ingredient))
 		{
 			return false;
 		}
@@ -194,8 +195,8 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 				return true;
 			}
 			
-			@SuppressWarnings("unchecked") List<Integer> existingEffects = Item.potion.getEffects(existingPotion);
-			@SuppressWarnings("unchecked") List<Integer> newEffects = Item.potion.getEffects(newPotion);
+			@SuppressWarnings("unchecked") List<Integer> existingEffects = Items.potionitem.getEffects(existingPotion);
+			@SuppressWarnings("unchecked") List<Integer> newEffects = Items.potionitem.getEffects(newPotion);
 			
 			if ((existingPotion <= 0 || existingEffects != newEffects) &&
 					(existingEffects == null || !existingEffects.equals(newEffects) &&
@@ -210,11 +211,11 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	
 	private int getPotionResult(int existingPotion, ItemStack ingredient)
 	{
-		if (ingredient == null || !Item.itemsList[ingredient.itemID].isPotionIngredient())
+		if (ingredient == null || !ingredient.getItem().isPotionIngredient(ingredient))
 		{
 			return existingPotion;
 		}
-		return PotionHelper.applyIngredient(existingPotion, Item.itemsList[ingredient.itemID].getPotionEffect());
+		return PotionHelper.applyIngredient(existingPotion, ingredient.getItem().getPotionEffect(ingredient));
 	}
 	
 	@Override
@@ -238,7 +239,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 		if(itemstack == null) return false;
 		if(row == 6) return false;
 		if(column == 1) return false;
-		if(column == 0) return _inventory[getTemplateSlot(row)] != null && Item.itemsList[itemstack.itemID] instanceof ItemPotion && (row == 0 || _inventory[getTemplateSlot(row - 1)] == null);
+		if(column == 0) return _inventory[getTemplateSlot(row)] != null && itemstack.getItem() instanceof ItemPotion && (row == 0 || _inventory[getTemplateSlot(row - 1)] == null);
 		return UtilInventory.stacksEqual(_inventory[getTemplateSlot(row)], itemstack);
 	}
 	

@@ -17,6 +17,8 @@ import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -237,32 +239,32 @@ public class Vanilla
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityChicken.class, new MobDrop[]
 				{
 			new MobDrop(30, null),
-			new MobDrop(10, new ItemStack(Item.egg))
+			new MobDrop(10, new ItemStack(Items.egg))
 				}, false));
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityOcelot.class, new MobDrop[]
 				{
-			new MobDrop(10, new ItemStack(Item.fishRaw)),
-			new MobDrop(10, new ItemStack(Item.silk))
+			new MobDrop(10, new ItemStack(Items.fish)),
+			new MobDrop(10, new ItemStack(Items.string))
 				}));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityWolf.class, new ItemStack(Item.bone)));
+		MFRRegistry.registerGrindable(new GrindableStandard(EntityWolf.class, new ItemStack(Items.bone)));
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
 		MFRRegistry.registerGrindable(new GrindableEnderman());
-		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Item.slimeBall), 1));
+		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Items.slime_ball), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem), 1));
-		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Item.magmaCream), 1) {
+		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Items.magma_cream), 1) {
 			@Override
 			protected boolean shouldDrop(EntitySlime slime) {
 				return slime.getSlimeSize() <= dropSize;
 			}
 		});
 		
-		MFRRegistry.registerSludgeDrop(50, new ItemStack(Block.sand));
-		MFRRegistry.registerSludgeDrop(40, new ItemStack(Block.dirt));
-		MFRRegistry.registerSludgeDrop(30, new ItemStack(Item.clay, 4));
-		MFRRegistry.registerSludgeDrop(10, new ItemStack(Block.gravel));
-		MFRRegistry.registerSludgeDrop(5, new ItemStack(Block.slowSand));
-		MFRRegistry.registerSludgeDrop(3, new ItemStack(Block.mycelium));
-		MFRRegistry.registerSludgeDrop(1, new ItemStack(Block.netherrack));
+		MFRRegistry.registerSludgeDrop(50, new ItemStack(Blocks.sand));
+		MFRRegistry.registerSludgeDrop(40, new ItemStack(Blocks.dirt));
+		MFRRegistry.registerSludgeDrop(30, new ItemStack(Items.clay_ball, 4));
+		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.gravel));
+		MFRRegistry.registerSludgeDrop(5, new ItemStack(Blocks.soul_sand));
+		MFRRegistry.registerSludgeDrop(3, new ItemStack(Blocks.mycelium));
+		MFRRegistry.registerSludgeDrop(1, new ItemStack(Blocks.netherrack));
 		
 		MFRRegistry.registerSafariNetHandler(new EntityLivingBaseHandler());
 		MFRRegistry.registerSafariNetHandler(new EntityLivingHandler());
@@ -391,11 +393,9 @@ public class Vanilla
 	public void postLoad(FMLPostInitializationEvent event)
 	{
 		
-		MFRRegistry.registerLaserOre(80, new ItemStack(Block.glowStone));
-		MFRRegistry.registerLaserOre(175, new ItemStack(Block.oreCoal));
-		MFRRegistry.addLaserPreferredOre(black, new ItemStack(Block.oreCoal));
-		MFRRegistry.addLaserPreferredOre(yellow, new ItemStack(Block.glowStone));
-		registerOreDictLaserOre(175 / 2, "oreNetherCoal",  black, null); // coal isn't in the oredict??
+		MFRRegistry.registerLaserOre(80, new ItemStack(Blocks.glowstone));
+		MFRRegistry.addLaserPreferredOre(yellow, new ItemStack(Blocks.glowstone));
+		registerOreDictLaserOre(175, "Coal",               black, false);
 		registerOreDictLaserOre(150, "Iron",               brown, false);
 		registerOreDictLaserOre(100, "Redstone",             red, false);
 		registerOreDictLaserOre(100, "Nikolite",       lightBlue, false);

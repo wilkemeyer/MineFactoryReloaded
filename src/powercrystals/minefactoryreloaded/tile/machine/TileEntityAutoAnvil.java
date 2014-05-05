@@ -8,8 +8,8 @@ import java.util.Map;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -53,17 +53,18 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		if (stack == null) return false;
 		if (repairOnly)
 		{
-			if (slot == 0) return Item.itemsList[stack.itemID].isRepairable();
-			if (slot == 1 && _inventory[0] != null && Item.itemsList[stack.itemID].isRepairable()) 
-				return _inventory[0].itemID == stack.itemID;
+			if (slot == 0) return stack.getItem().isRepairable();
+			if (slot == 1 && _inventory[0] != null && stack.getItem().isRepairable()) 
+				return _inventory[0].getItem().equals(stack);
 			return false;
 		}
-		if (slot == 0) return stack.isItemStackDamageable() || stack.itemID == Item.enchantedBook.itemID;
+		if (slot == 0) return stack.isItemStackDamageable() || stack.getItem().equals(Items.enchanted_book);
 		if (slot == 1 && _inventory[0] != null)
 		{
-			if (stack.itemID == Item.enchantedBook.itemID && Item.enchantedBook.func_92110_g(stack).tagCount() > 0)
+			if (stack.getItem().equals(Items.enchanted_book) &&
+					Items.enchanted_book.func_92110_g(stack).tagCount() > 0)
 				return true;
-			return 	(stack.itemID == _inventory[0].itemID && stack.isItemStackDamageable()) ||
+			return 	(stack.getItem().equals(_inventory[0]) && stack.isItemStackDamageable()) ||
 					_inventory[0].getItem().getIsRepairable(_inventory[0], stack);
 		}
 		return false;
@@ -107,8 +108,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			if (repairOnly)
 			{
 				if (_inventory[0] != null && _inventory[1] != null &&
-						_inventory[0].itemID == _inventory[1].itemID &&
-						Item.itemsList[_inventory[0].itemID].isRepairable())
+						_inventory[0].getItem().equals(_inventory[1].getItem()) &&
+						_inventory[0].getItem().isRepairable())
 				{
 					setWorkDone(getWorkDone() + 1);
 
@@ -184,10 +185,10 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		{
 			this.stackSizeToBeUsedInRepair = 0;
 			ItemStack addedItem = _inventory[1];
-			Item item = Item.itemsList[startingItem.itemID];
+			Item item = startingItem.getItem();
 			
 			if (addedItem != null && item.isRepairable() &&
-					startingItem.itemID == addedItem.itemID)
+					startingItem.getItem() == addedItem.getItem())
 			{
 				int d = item.getMaxDamage();
 	            int k = startingItem.getItemDamageForDisplay();
@@ -197,7 +198,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				
 				this.maximumCost = ((k + l) / 2 - j1) / 100f;
 
-	            return new ItemStack(startingItem.itemID, 1, j1);
+	            return new ItemStack(startingItem.getItem(), 1, j1);
 			}
 			return null;
 		}
@@ -215,9 +216,11 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			
 			if(addedItem != null)
 			{
-				enchantingWithBook = addedItem.itemID == Item.enchantedBook.itemID && Item.enchantedBook.func_92110_g(addedItem).tagCount() > 0;
+				enchantingWithBook = addedItem.getItem().equals(Items.enchanted_book) &&
+						Items.enchanted_book.func_92110_g(addedItem).tagCount() > 0;
 				
-				if(outputItem.isItemStackDamageable() && Item.itemsList[outputItem.itemID].getIsRepairable(outputItem, addedItem))
+				if(outputItem.isItemStackDamageable() &&
+						outputItem.getItem().getIsRepairable(outputItem, addedItem))
 				{
 					int currentDamage = Math.min(outputItem.getItemDamageForDisplay(), outputItem.getMaxDamage() / 4);
 					
@@ -226,8 +229,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 						return null;
 					}
 					
-					int repairStackSize;
-					for(repairStackSize = 0; currentDamage > 0 && repairStackSize < addedItem.stackSize; repairStackSize++)
+					int repairStackSize = 0;
+					for (; currentDamage > 0 && repairStackSize < addedItem.stackSize; repairStackSize++)
 					{
 						outputItem.setItemDamage(outputItem.getItemDamageForDisplay() - currentDamage);
 						totalEnchCost += Math.max(1, currentDamage / 100) + existingEnchantments.size();
@@ -238,7 +241,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				}
 				else
 				{
-					if(!enchantingWithBook && (outputItem.itemID != addedItem.itemID || !outputItem.isItemStackDamageable()))
+					if(!enchantingWithBook && (!outputItem.getItem().equals(addedItem.getItem()) ||
+							!outputItem.isItemStackDamageable()))
 					{
 						return null;
 					}
@@ -287,7 +291,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 						int levelDifference = addedEnchLevel - existingEnchLevel;
 						boolean canEnchantmentBeAdded = enchantment.canApply(outputItem);
 						
-						if(outputItem.itemID == ItemEnchantedBook.enchantedBook.itemID)
+						if (outputItem.getItem().equals(Items.enchanted_book))
 						{
 							canEnchantmentBeAdded = true;
 						}
@@ -387,7 +391,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				repairCost = Math.max(1, repairCost / 2);
 			}
 			
-			if(enchantingWithBook && !Item.itemsList[outputItem.itemID].isBookEnchantable(outputItem, addedItem))
+			if(enchantingWithBook && !outputItem.getItem().isBookEnchantable(outputItem, addedItem))
 			{
 				outputItem = null;
 			}

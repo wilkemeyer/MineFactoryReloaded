@@ -41,8 +41,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		if(entity instanceof EntityPlayerMP)
-			((EntityPlayerMP)entity).playerNetServerHandler.ticksForFloatKick = 0;
+		//if(entity instanceof EntityPlayerMP)
+			//((EntityPlayerMP)entity).playerNetServerHandler.ticksForFloatKick = 0;
 		entity.fallDistance = 0;
 		if (entity.isCollidedHorizontally)
 		{
@@ -72,7 +72,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		_sideIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
 		_topIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
@@ -142,15 +142,15 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
-		if (player.inventory.mainInventory[player.inventory.currentItem] != null && player.inventory.mainInventory[player.inventory.currentItem].itemID == blockID)
+		if (player.inventory.mainInventory[player.inventory.currentItem] != null &&
+				player.inventory.mainInventory[player.inventory.currentItem].itemID == blockID)
 		{
 			for(int i = y + 1, e = world.getActualHeight(); i < e; ++i)
 			{
-				int blockId = world.getBlockId(x, i, z);
-				Block block = Block.blocksList[blockId];
-				if(block == null || world.isAirBlock(x, i, z) || block.isBlockReplaceable(world, x, i, z))
+				Block block = world.getBlock(x, i, z);
+				if(block == null || world.isAirBlock(x, i, z) || block.isReplaceable(world, x, i, z))
 				{
-					if (!world.isRemote && world.setBlock(x, i, z, blockID, 0, 3))
+					if (!world.isRemote && world.setBlock(x, i, z, this, 0, 3))
 					{
 						world.playAuxSFXAtEntity(null, 2001, x, i, z, blockID);
 						if (!player.capabilities.isCreativeMode)
@@ -164,7 +164,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 					}
 					return true;
 				}
-				else if (blockId != blockID)
+				else if (!block.equals(this))
 				{
 					return false;
 				}
@@ -182,7 +182,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z)
 	{
-		if(world.isBlockSolidOnSide(x, y - 1, z, ForgeDirection.UP))
+		if(world.isSideSolid(x, y - 1, z, ForgeDirection.UP))
 		{
 			return true;
 		}
@@ -192,7 +192,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 			for(int i = 0; i < _attachDistance; i++)
 			{
 				bp.moveForwards(1);
-				if(world.getBlockId(bp.x, bp.y, bp.z) == blockID && world.isBlockSolidOnSide(bp.x, bp.y - 1, bp.z, ForgeDirection.UP))
+				if (world.getBlock(bp.x, bp.y, bp.z).equals(this) &&
+						world.isSideSolid(bp.x, bp.y - 1, bp.z, ForgeDirection.UP))
 				{
 					return true;
 				}
@@ -204,11 +205,11 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
-		onNeighborBlockChange(world, x, y, z, ForgeDirection.UNKNOWN.ordinal());
+		onNeighborBlockChange(world, x, y, z, null);
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int side)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
 		if(!canBlockStay(world, x, y, z))
 		{
@@ -218,7 +219,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	}
 	
 	@Override
-	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		return (side == ForgeDirection.UP || side == ForgeDirection.DOWN) ? true : false;
 	}

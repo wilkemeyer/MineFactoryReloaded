@@ -5,19 +5,20 @@ import buildcraft.api.gates.IActionReceptor;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.core.net.PacketWrapper;
+import cofh.util.Util;
 import cofh.util.position.IRotateableTile;
-import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.modhelpers.buildcraft.Buildcraft;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -65,7 +66,7 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
 	@Override
-	public boolean shouldRefresh(int oldID, int newID, int oldMeta, int newMeta, World world, int x, int y, int z)
+	public boolean shouldRefresh(Block oldID, Block newID, int oldMeta, int newMeta, World world, int x, int y, int z)
 	{
 		return oldID != newID;
 	}
@@ -76,11 +77,11 @@ public class TileEntityConveyor extends TileEntity
 		int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		if(md == 0)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord + 1, yCoord, zCoord, ForgeDirection.WEST))
+			if(worldObj.isSideSolid(xCoord + 1, yCoord, zCoord, ForgeDirection.WEST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 4);
 			}
-			else if(worldObj.isBlockSolidOnSide(xCoord - 1, yCoord, zCoord, ForgeDirection.EAST))
+			else if(worldObj.isSideSolid(xCoord - 1, yCoord, zCoord, ForgeDirection.EAST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 8);
 			}
@@ -91,7 +92,7 @@ public class TileEntityConveyor extends TileEntity
 		}
 		else if(md == 4)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord - 1, yCoord, zCoord, ForgeDirection.EAST))
+			if(worldObj.isSideSolid(xCoord - 1, yCoord, zCoord, ForgeDirection.EAST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 8);
 			}
@@ -108,11 +109,11 @@ public class TileEntityConveyor extends TileEntity
 		
 		if(md == 1)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord, yCoord, zCoord + 1, ForgeDirection.NORTH))
+			if(worldObj.isSideSolid(xCoord, yCoord, zCoord + 1, ForgeDirection.NORTH))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 5);
 			}
-			else if(worldObj.isBlockSolidOnSide(xCoord, yCoord, zCoord - 1, ForgeDirection.SOUTH))
+			else if(worldObj.isSideSolid(xCoord, yCoord, zCoord - 1, ForgeDirection.SOUTH))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 9);
 			}
@@ -123,7 +124,7 @@ public class TileEntityConveyor extends TileEntity
 		}
 		else if(md == 5)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord, yCoord, zCoord - 1, ForgeDirection.SOUTH))
+			if(worldObj.isSideSolid(xCoord, yCoord, zCoord - 1, ForgeDirection.SOUTH))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 9);
 			}
@@ -140,11 +141,11 @@ public class TileEntityConveyor extends TileEntity
 		
 		if(md == 2)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord - 1, yCoord, zCoord, ForgeDirection.EAST))
+			if(worldObj.isSideSolid(xCoord - 1, yCoord, zCoord, ForgeDirection.EAST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 6);
 			}
-			else if(worldObj.isBlockSolidOnSide(xCoord + 1, yCoord, zCoord, ForgeDirection.WEST))
+			else if(worldObj.isSideSolid(xCoord + 1, yCoord, zCoord, ForgeDirection.WEST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 10);
 			}
@@ -155,7 +156,7 @@ public class TileEntityConveyor extends TileEntity
 		}
 		else if(md == 6)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord + 1, yCoord, zCoord, ForgeDirection.WEST))
+			if(worldObj.isSideSolid(xCoord + 1, yCoord, zCoord, ForgeDirection.WEST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 10);
 			}
@@ -172,11 +173,11 @@ public class TileEntityConveyor extends TileEntity
 		
 		if(md == 3)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord, yCoord, zCoord - 1, ForgeDirection.SOUTH))
+			if(worldObj.isSideSolid(xCoord, yCoord, zCoord - 1, ForgeDirection.SOUTH))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 7);
 			}
-			else if(worldObj.isBlockSolidOnSide(xCoord, yCoord, zCoord + 1, ForgeDirection.NORTH))
+			else if(worldObj.isSideSolid(xCoord, yCoord, zCoord + 1, ForgeDirection.NORTH))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 11);
 			}
@@ -187,7 +188,7 @@ public class TileEntityConveyor extends TileEntity
 		}
 		else if(md == 7)
 		{
-			if(worldObj.isBlockSolidOnSide(xCoord, yCoord, zCoord + 1, ForgeDirection.NORTH))
+			if(worldObj.isSideSolid(xCoord, yCoord, zCoord + 1, ForgeDirection.NORTH))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 11);
 			}
@@ -365,13 +366,13 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
 	@Override
-	public String getInvName()
+	public String getInventoryName()
 	{
 		return "Conveyor Belt";
 	}
 	
 	@Override
-	public boolean isInvNameLocalized()
+	public boolean hasCustomInventoryName()
 	{
 		return false;
 	}
@@ -383,7 +384,7 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
 	@Override
-	public void onInventoryChanged()
+	public void markDirty()
 	{
 	}
 	
@@ -394,12 +395,12 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
     @Override
-	public void openChest()
+	public void openInventory()
     {
     }
 
     @Override
-	public void closeChest()
+	public void closeInventory()
     {
     }
     

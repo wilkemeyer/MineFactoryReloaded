@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -242,7 +242,7 @@ public abstract class TileEntityFactory extends TileEntity
 	}
 	
 	@Override
-	public void onInventoryChanged()
+	public void markDirty()
 	{
 		if (worldObj != null && !worldObj.isRemote && hasHAM())
 		{
@@ -251,7 +251,7 @@ public abstract class TileEntityFactory extends TileEntity
 				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
 						50, worldObj.provider.dimensionId, packet);
 		}
-		super.onInventoryChanged();
+		super.markDirty();
 	}
 	
 	@Override

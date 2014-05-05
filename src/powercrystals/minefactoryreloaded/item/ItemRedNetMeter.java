@@ -1,13 +1,15 @@
 package powercrystals.minefactoryreloaded.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
+
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class ItemRedNetMeter extends ItemFactory
 {
@@ -36,21 +38,19 @@ public class ItemRedNetMeter extends ItemFactory
 				if(value != 0)
 				{
 					// TODO: localize color names v
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText(_colorNames[i]).addText(": " + value));
+					player.addChatMessage(new ChatComponentText(_colorNames[i])
+							.appendText(": " + value));
 					++foundNonZero;
 				}
 			}
 			
 			if(foundNonZero == 0)
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.rednet.meter.cable.allzero"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.cable.allzero"));
 			}
 			else if (foundNonZero < 16)
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.rednet.meter.cable.restzero"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.cable.restzero"));
 			}
 			
 			return true;
@@ -65,31 +65,27 @@ public class ItemRedNetMeter extends ItemFactory
 				
 				if(value != 0)
 				{
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addKey("chat.info.mfr.rednet.meter.varprefix")
-							.addText(" " + i + ": " + value));
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.varprefix")
+							.appendText(" " + i + ": " + value));
 					++foundNonZero;
 				}
 			}
 			
 			if(foundNonZero == 0)
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.rednet.meter.var.allzero"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.allzero"));
 			}
 			else if (foundNonZero < 16)
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.rednet.meter.var.restzero"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.restzero"));
 			}
 			
 			return true;
 		}
-		else if(world.getBlockId(x, y, z) == Block.redstoneWire.blockID)
+		else if(world.getBlock(x, y, z).equals(Blocks.redstone_wire))
 		{
-			player.sendChatToPlayer(new ChatMessageComponent()
-					.addKey("chat.info.mfr.rednet.meter.dustprefix")
-					.addText(": " + world.getBlockMetadata(x, y, z)));
+			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
+					.appendText(": " + world.getBlockMetadata(x, y, z)));
 		}
 		return false;
 	}

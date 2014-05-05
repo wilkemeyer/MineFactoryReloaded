@@ -1,10 +1,14 @@
 package powercrystals.minefactoryreloaded.farmables.ranchables;
 
+import cofh.inventory.IInventoryManager;
+import cofh.inventory.InventoryManager;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityMooshroom;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,8 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import powercrystals.core.inventory.IInventoryManager;
-import powercrystals.core.inventory.InventoryManager;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
 
@@ -36,17 +38,17 @@ public class RanchableMooshroom implements IFactoryRanchable {
 		
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		IInventoryManager manager = InventoryManager.create(rancher, ForgeDirection.UP);
-		int bowlIndex = manager.findItem(new ItemStack(Item.bowlEmpty));
+		int bowlIndex = manager.findItem(new ItemStack(Items.bowl));
 		if(bowlIndex >= 0)
 		{
-			drops.add(new RanchedItem(Item.bowlSoup));
+			drops.add(new RanchedItem(Items.mushroom_stew));
 			rancher.decrStackSize(bowlIndex, 1);
 		}
 		
-		int bucketIndex = manager.findItem(new ItemStack(Item.bucketEmpty));
+		int bucketIndex = manager.findItem(new ItemStack(Items.bucket));
 		if(bucketIndex >= 0)
 		{
-			drops.add(new RanchedItem(Item.bucketMilk));
+			drops.add(new RanchedItem(Items.milk_bucket));
 			rancher.decrStackSize(bucketIndex, 1);
 		}
 		else

@@ -1,11 +1,14 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import net.minecraft.block.Block;
+import cofh.util.position.BlockPosition;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.util.position.BlockPosition;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -13,8 +16,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 {
@@ -107,8 +108,8 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
 		
-		int midId = worldObj.getBlockId(bp.x, bp.y, bp.z);
-		if (!TileEntityLaserDrill.canReplaceBlock(Block.blocksList[midId], worldObj, bp.x, bp.y, bp.z))
+		if (!TileEntityLaserDrill.canReplaceBlock(worldObj.getBlock(bp.x, bp.y, bp.z),
+				worldObj, bp.x, bp.y, bp.z))
 			return null;
 		
 		bp.moveForwards(1);
@@ -132,8 +133,8 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
-		if (worldObj.getBlockId(bp.x, bp.y, bp.z) != MineFactoryReloadedCore.fakeLaserBlock.blockID)
-			worldObj.setBlock(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock.blockID, 1, 3);
+		if (!worldObj.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.fakeLaserBlock))
+			worldObj.setBlock(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock, 1, 3);
 	}
 	
 	@Override
@@ -148,10 +149,10 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
-		if (worldObj.getBlockId(bp.x, bp.y, bp.z) == MineFactoryReloadedCore.fakeLaserBlock.blockID)
+		if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.fakeLaserBlock))
 		{
 			worldObj.setBlockMetadataWithNotify(bp.x, bp.y, bp.z, 0, 0);
-			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock.blockID, 1);
+			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MineFactoryReloadedCore.fakeLaserBlock, 1);
 		}
 		
 	}

@@ -11,8 +11,8 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import cofh.util.UtilInventory;
 import cofh.util.position.BlockPosition;
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
@@ -36,8 +36,8 @@ public abstract class MFRLiquidMover
 				itcb.fill(ForgeDirection.UNKNOWN, liquid, true);
 				if(!entityplayer.capabilities.isCreativeMode)
 				{
-					if (item.hasContainerItem()) {
-						ItemStack drop = item.getContainerItemStack(ci);
+					if (item.hasContainerItem(ci)) {
+						ItemStack drop = item.getContainerItem(ci);
 						if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 							drop = null;
 						disposePlayerItem(ci, drop, entityplayer, true);
@@ -58,8 +58,8 @@ public abstract class MFRLiquidMover
 				ci.stackSize++;
 				fluidContainer.drain(drop, amount, true);
 				if (!entityplayer.capabilities.isCreativeMode) {
-					if (item.hasContainerItem()) {
-						drop = item.getContainerItemStack(drop);
+					if (item.hasContainerItem(drop)) {
+						drop = item.getContainerItem(drop);
 						if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 							drop = null;
 					}
@@ -153,7 +153,7 @@ public abstract class MFRLiquidMover
 			stack.stackSize -= 1;
 			if (dropStack != null && !entityplayer.inventory.addItemStackToInventory(dropStack))
 			{
-				entityplayer.dropPlayerItem(dropStack);
+				entityplayer.func_146097_a(dropStack, false, true);
 			}
 			return true;
 		}
@@ -168,7 +168,7 @@ public abstract class MFRLiquidMover
 			l.amount = Math.min(l.amount, FluidContainerRegistry.BUCKET_VOLUME);
 			for(BlockPosition adj : new BlockPosition(from).getAdjacent(true))
 			{
-				TileEntity tile = from.worldObj.getTileEntity(adj.x, adj.y, adj.z);
+				TileEntity tile = from.getWorldObj().getTileEntity(adj.x, adj.y, adj.z);
 				if(tile instanceof IFluidHandler)
 				{
 					int filled = ((IFluidHandler)tile).fill(adj.orientation.getOpposite(), l, true);

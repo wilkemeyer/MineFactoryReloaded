@@ -300,7 +300,7 @@ chat.info.mfr.safarinet.release = Режим изменён на освобож�
 
 chat.info.mfr.spyglass.nosight = Ничто не видно
 chat.info.mfr.spyglass.hitentity = Найдено %s at %.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitblock = Найдено %s [%d:%d] at %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitblock = Найдено %s [%s:%d] at %.1f, %.1f, %.1f
 chat.info.mfr.spyglass.hitunknown = Найден НЕИЗВЕСТНЫЙ (ошибочный мод?) at %.1f, %.1f, %.1f
 
 chat.info.mfr.ruler.nosight = Ничто не видно

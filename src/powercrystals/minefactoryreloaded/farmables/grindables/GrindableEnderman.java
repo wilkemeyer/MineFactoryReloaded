@@ -4,8 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -24,10 +26,10 @@ public class GrindableEnderman implements IFactoryGrindable
 	public List<MobDrop> grind(World world, EntityLivingBase entity, Random random)
 	{
 		List<MobDrop> drops = new LinkedList<MobDrop>();
-		int blockid = ((EntityEnderman)entity).getCarried();
+		Block block = ((EntityEnderman)entity).func_146080_bZ();
 		int meta = ((EntityEnderman)entity).getCarryingData();
-		if (blockid > 0)
-			drops.add(new MobDrop(10, new ItemStack(blockid, 1, meta)));
+		if (block != null && !block.equals(Blocks.air))
+			drops.add(new MobDrop(10, new ItemStack(block, 1, meta)));
 		return drops;
 	}
 

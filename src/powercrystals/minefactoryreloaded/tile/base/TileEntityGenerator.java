@@ -7,12 +7,12 @@ import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyHandler;
+import cofh.util.Util;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityGenerator extends TileEntityFactoryInventory
@@ -108,11 +108,11 @@ implements IPowerEmitter, IEnergyHandler
 
 				ForgeDirection from = ForgeDirection.VALID_DIRECTIONS[i];
 				PowerReceiver pp = ipr.getPowerReceiver(from);
-				float max;
+				double max;
 				if(pp != null && Math.min((max = pp.getMaxEnergyReceived()), 
 						pp.getMaxEnergyStored() - pp.getEnergyStored()) > 0)
 				{
-					float mjUsed = Math.min(Math.min(max, mj),
+					double mjUsed = Math.min(Math.min(max, mj),
 							pp.getMaxEnergyStored() - pp.getEnergyStored());
 					pp.receiveEnergy(PowerHandler.Type.GATE, mjUsed, from);
 

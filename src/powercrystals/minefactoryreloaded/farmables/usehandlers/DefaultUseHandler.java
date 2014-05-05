@@ -3,11 +3,12 @@ package powercrystals.minefactoryreloaded.farmables.usehandlers;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,21 +35,20 @@ public class DefaultUseHandler implements IUseHandler {
 		if (world.isRemote) return bucket;
 		Item item = bucket.getItem();
 		IAdvFluidContainerItem container = (IAdvFluidContainerItem)item;
-		ItemStack q = new ItemStack(Item.bucketEmpty, 1, 0);
+		ItemStack q = new ItemStack(Items.bucket, 1, 0);
 		FluidStack liquid = container.getFluid(bucket);
 		if (liquid == null || liquid.amount <= 0) {
 			if (!container.canBeFilledFromWorld()) return bucket;
 			ItemStack bucket2 = bucket.stackSize > 1 ? bucket.copy() : bucket;
 			bucket2.stackSize = 1;
 			MovingObjectPosition objectPosition = ((IUseable)container).rayTrace(world, entity, false);
-			if (objectPosition != null && objectPosition.typeOfHit == EnumMovingObjectType.TILE) {
+			if (objectPosition != null && objectPosition.typeOfHit == MovingObjectType.BLOCK) {
 				int x = objectPosition.blockX;
 				int y = objectPosition.blockY;
 				int z = objectPosition.blockZ;
 				if (canEntityAct(world, entity, x, y, z, objectPosition.sideHit, bucket, false))
 				{
-					int blockID = world.getBlockId(x, y, z);
-					Block block = Block.blocksList[blockID];
+					Block block = world.getBlock(x, y, z);
 					if (block instanceof IFluidBlock) {
 						liquid = ((IFluidBlock)block).drain(world, x, y, z, false);
 						if (liquid != null) {
@@ -73,22 +73,22 @@ public class DefaultUseHandler implements IUseHandler {
 		}
 		if (container.canPlaceInWorld()) {
 			if (!liquid.getFluid().canBePlacedInWorld()) return bucket;
-			Block block = Block.blocksList[liquid.getFluid().getBlockID()];
+			Block block = liquid.getFluid().getBlock();
 			if (!(block instanceof IFluidBlock)) return bucket;
 			MovingObjectPosition objectPosition = ((IUseable)container).rayTrace(world, entity, false);
-			if (objectPosition != null && objectPosition.typeOfHit == EnumMovingObjectType.TILE) {
+			if (objectPosition != null && objectPosition.typeOfHit == MovingObjectType.BLOCK) {
 				int x = objectPosition.blockX;
 				int y = objectPosition.blockY;
 				int z = objectPosition.blockZ;
 				if (canEntityAct(world, entity, x, y, z, objectPosition.sideHit, bucket, true))
 				{
-					if (world.setBlock(x, y, z, block.blockID, 0, 3))
+					if (world.setBlock(x, y, z, block, 0, 3))
 					{
 						liquid = ((IFluidBlock)block).drain(world, x, y, z, false);
 						ItemStack drop = bucket.splitStack(1);
 						container.drain(drop, liquid.amount, true);
-						if (item.hasContainerItem()) {
-							drop = item.getContainerItemStack(drop);
+						if (item.hasContainerItem(drop)) {
+							drop = item.getContainerItem(drop);
 							if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 								drop = null;
 						}
@@ -106,7 +106,7 @@ public class DefaultUseHandler implements IUseHandler {
 		return (player == null || (world.canMineBlock(player, x, y, z) &&
 						player.canPlayerEdit(x, y, z, side, item))) &&
 						(!isPlace || world.isAirBlock(x, y, z) ||
-								!world.getBlockMaterial(x, y, z).isSolid());
+								!world.getBlock(x, y, z).getMaterial().isSolid());
 	}
 
 	@Override

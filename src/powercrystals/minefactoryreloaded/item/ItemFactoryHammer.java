@@ -67,43 +67,46 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 	}
 	
 	@Override
-	public boolean shouldPassSneakingClickToBlock(World world, int x, int y, int z)
+	public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player)
 	{
 		return true;
 	}
 
     @Override
-	public boolean canHarvestBlock(Block par1Block)
+	public boolean canHarvestBlock(Block block, ItemStack stack)
     {
-    	return par1Block != null && 
-    			par1Block.blockMaterial == Material.cake |
-    			par1Block.blockMaterial == Material.iron |
-    			par1Block.blockMaterial == Material.rock |
-    			par1Block.blockMaterial == Material.wood |
-    			par1Block.blockMaterial == Material.anvil |
-    			par1Block.blockMaterial == Material.glass |
-    			par1Block.blockMaterial == Material.piston |
-    			par1Block.blockMaterial == Material.plants |
-    			par1Block.blockMaterial == Material.pumpkin |
-    			par1Block.blockMaterial == Machine.MATERIAL |
-    			par1Block.blockMaterial == Material.circuits;
+    	if (block == null)
+    		return false;
+    	Material mat = block.getMaterial();
+    	return 	mat == Material.cake |
+    			mat == Material.iron |
+    			mat == Material.rock |
+    			mat == Material.wood |
+    			mat == Material.gourd |
+    			mat == Material.anvil |
+    			mat == Material.glass |
+    			mat == Material.piston |
+    			mat == Material.plants |
+    			mat == Machine.MATERIAL |
+    			mat == Material.circuits;
     }
 
     @Override
-	public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
+	public float func_150893_a(ItemStack stack, Block block)
     {
-    	if (par2Block == null)
+    	if (block == null)
     		return 0;
-    	if (par2Block.blockMaterial == Material.pumpkin |
-    			par2Block.blockMaterial == Material.cake)
+    	Material mat = block.getMaterial();
+    	if (mat == Material.gourd |
+    			mat == Material.cake)
     		return 15f;
-        return canHarvestBlock(par2Block) ? 1.35f : 0.15f;
+        return canHarvestBlock(block, stack) ? 1.35f : 0.15f;
     }
 	
     @Override
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player)
     {
-    	Block block = Block.blocksList[player.worldObj.getBlockId(x, y, z)];
+    	Block block = player.worldObj.getBlock(x, y, z);
     	if (block == null || block.getBlockHardness(player.worldObj, x, y, z) > 2.9f)
     	{
     		Random rnd = player.getRNG();
@@ -125,11 +128,10 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
     	return false;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Multimap getItemAttributeModifiers()
+	public Multimap getAttributeModifiers(ItemStack stack)
     {
-        Multimap multimap = super.getItemAttributeModifiers();
+        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(stack);
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),
         		new AttributeModifier(field_111210_e, "Weapon modifier", 1, 0));
         return multimap;

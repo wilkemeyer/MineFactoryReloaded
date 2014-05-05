@@ -42,12 +42,12 @@ public class EntityLivingBaseHandler implements ISafariNetHandler
 			{
 				if (MFRUtil.isShiftKeyDown())
 				{
-					NBTTagList l = tag.getTagList("ActiveEffects");
+					NBTTagList l = tag.getTagList("ActiveEffects", 10);
 					infoList.add("Potions:");
 
 					for (int i = 0, e = l.tagCount(); i < e; ++i)
 					{
-						NBTTagCompound t = (NBTTagCompound)l.tagAt(i);
+						NBTTagCompound t = l.getCompoundTagAt(i);
 						PotionEffect f = PotionEffect.readCustomPotionEffectFromNBT(t);
 						Potion p = Potion.potionTypes[f.getPotionID()];
 						String s = MFRUtil.localize(f.getEffectName(), true).trim();

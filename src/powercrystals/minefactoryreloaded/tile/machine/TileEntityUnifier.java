@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.oredict.OreDictTracker;
+import cofh.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,8 +19,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.oredict.OreDictionary;
 
-import powercrystals.core.oredict.OreDictTracker;
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -98,7 +98,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 					output.stackSize = _inventory[0].stackSize;
 				}
 				
-				if (output != null && _inventory[0].itemID == output.itemID)
+				if (output != null && _inventory[0].getItem().equals(output.getItem()))
 					output = _inventory[0].copy();
 				
 				moveItemStack(output);
@@ -162,7 +162,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			_inventory[slot] = null;
 		unifyInventory();
 		ignoreChange = true;
-		onInventoryChanged();
+		markDirty();
 		ignoreChange = false;
 	}
 	

@@ -1,12 +1,15 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.UtilInventory;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.util.UtilInventory;
+
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiDeepStorageUnit;
@@ -14,8 +17,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerDeepStorageUnit;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implements IDeepStorageUnit
 {
@@ -261,7 +262,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		
 		if (_storedItem != null)
 		{
-			nbttagcompound.setCompoundTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
+			nbttagcompound.setTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
 			nbttagcompound.setInteger("storedQuantity", _storedQuantity + storedAdd);
 		}
 		else
@@ -277,25 +278,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		_storedQuantity = nbttagcompound.getInteger("storedQuantity");
 		_storedItem = null;
 		
-		if (nbttagcompound.hasKey("storedId"))
-		{
-			if (_storedQuantity != 0)
-			{
-				int storedID = nbttagcompound.getInteger("storedId");
-				if (storedID < Item.itemsList.length && Item.itemsList[storedID] != null)
-				{
-					_storedItem = new ItemStack(storedID, 1, nbttagcompound.getInteger("storedMeta"));
-				}
-			}
-			else if (_inventory[2] != null)
-			{
-				_storedItem = _inventory[2].copy();
-				_storedItem.stackSize = 1;
-			}
-			nbttagcompound.removeTag("storedId");
-			nbttagcompound.removeTag("storedMeta");
-		}
-		else if (nbttagcompound.hasKey("storedStack"))
+		if (nbttagcompound.hasKey("storedStack"))
 		{
 			_storedItem = ItemStack.
 					loadItemStackFromNBT((NBTTagCompound)nbttagcompound.getTag("storedStack"));
@@ -344,7 +327,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			}
 		}
 		_storedQuantity = amount;
-		onInventoryChanged();
+		markDirty();
 	}
 	
 	@Override
@@ -357,7 +340,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			return;
 		_storedItem = type.copy();
 		_storedItem.stackSize = 1;
-		onInventoryChanged();
+		markDirty();
 	}
 	
 	@Override

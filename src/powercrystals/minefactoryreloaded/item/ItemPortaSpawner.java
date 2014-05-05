@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,7 +20,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public class ItemPortaSpawner extends ItemFactory
 {
-	private static int _blockId = Block.mobSpawner.blockID;
+	private static Block _blockId = Blocks.mob_spawner;
 	public static final String spawnerTag = "spawner";
 	private static final String placeTag = "placeDelay";
 
@@ -95,22 +96,19 @@ public class ItemPortaSpawner extends ItemFactory
 		}
 		if (getEntityId(itemstack) == null)
 		{
-			int blockId = world.getBlockId(x, y, z);
-			if(blockId != _blockId)
-			{
-				return false;
-			}
-			else
+			if (world.getBlock(x, y, z).equals(_blockId))
 			{
 				TileEntity te = world.getTileEntity(x, y, z);
 				NBTTagCompound tag = new NBTTagCompound();
-				tag.setCompoundTag(spawnerTag, new NBTTagCompound());
+				tag.setTag(spawnerTag, new NBTTagCompound());
 				te.writeToNBT(tag.getCompoundTag(spawnerTag));
 				tag.setInteger(placeTag, 40 * 20);
 				itemstack.setTagCompound(tag);
 				world.setBlockToAir(x, y, z);
 				return true;
 			}
+			else
+				return false;
 		}
 		else
 		{
@@ -175,7 +173,7 @@ public class ItemPortaSpawner extends ItemFactory
 
 			if(placeBlockAt(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset, meta))
 			{
-				world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+				world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.func_150496_b(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 				--itemstack.stackSize;
 			}
 
@@ -189,15 +187,17 @@ public class ItemPortaSpawner extends ItemFactory
 
 	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		if(!world.setBlock(x, y, z, _blockId, metadata, 3))
+		// TODO: record and read the block that was consumed
+		if (!world.setBlock(x, y, z, _blockId, metadata, 3))
 		{
 			return false;
 		}
 
-		if(world.getBlockId(x, y, z) == _blockId)
+		Block block = world.getBlock(x, y, z);
+		if (block.equals(_blockId))
 		{
-			Block.blocksList[_blockId].onBlockPlacedBy(world, x, y, z, player, stack);
-			Block.blocksList[_blockId].onPostBlockPlaced(world, x, y, z, metadata);
+			block.onBlockPlacedBy(world, x, y, z, player, stack);
+			block.onPostBlockPlaced(world, x, y, z, metadata);
 			TileEntity te = world.getTileEntity(x, y, z);
 			NBTTagCompound tag = stack.getTagCompound();
 			if (tag.hasKey(spawnerTag))

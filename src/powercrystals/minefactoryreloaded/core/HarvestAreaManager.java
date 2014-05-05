@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.core;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 

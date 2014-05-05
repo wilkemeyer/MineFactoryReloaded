@@ -35,7 +35,7 @@ public class TileEntityMobCounter extends TileEntityFactory
 			_lastMobCount = mobCount;
 			if(!worldObj.isRemote)
 			{
-				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MineFactoryReloadedCore.machineBlocks.get(Machine.MobCounter.getBlockIndex()).blockID);
+				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MineFactoryReloadedCore.machineBlocks.get(Machine.MobCounter.getBlockIndex()));
 			}
 		}
 	}

@@ -1,5 +1,10 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.random.WeightedRandomItemStack;
+import cofh.util.UtilInventory;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -7,15 +12,14 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.WeightedRandomItem;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.random.WeightedRandomItemStack;
-import powercrystals.core.util.UtilInventory;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
@@ -26,8 +30,6 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerLaserDrill;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityLaserDrill extends TileEntityFactoryInventory implements IFactoryLaserTarget
 {
@@ -45,7 +47,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	
 	public static boolean canReplaceBlock(Block block, World world, int x, int y, int z)
 	{
-		return block == null || block.getBlockHardness(world, x, y, z) == 0 || block.isAirBlock(world, x, y, z);
+		return block == null || block.getBlockHardness(world, x, y, z) == 0 || block.isAir(world, x, y, z);
 	}
 	
 	public TileEntityLaserDrill()
@@ -103,20 +105,21 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			updateDrill();
 		}
 		
-		int lowerId = worldObj.getBlockId(xCoord, yCoord - 1, zCoord);
+		Block lowerId = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
 		
-		if(_bedrockLevel < 0)
+		if (_bedrockLevel < 0)
 		{
-			if(lowerId == MineFactoryReloadedCore.fakeLaserBlock.blockID)
+			if (lowerId.equals(MineFactoryReloadedCore.fakeLaserBlock))
 			{
 				worldObj.setBlockToAir(xCoord, yCoord - 1, zCoord);
 			}
 			return;
 		}
 		
-		if(lowerId != MineFactoryReloadedCore.fakeLaserBlock.blockID && (Block.blocksList[lowerId] == null || Block.blocksList[lowerId].isAirBlock(worldObj, xCoord, yCoord - 1, zCoord)))
+		if (!lowerId.equals(MineFactoryReloadedCore.fakeLaserBlock) &&
+				canReplaceBlock(lowerId, worldObj, xCoord, yCoord - 1, zCoord))
 		{
-			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MineFactoryReloadedCore.fakeLaserBlock.blockID);
+			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MineFactoryReloadedCore.fakeLaserBlock);
 		}
 		
 		int energyToDraw = Math.min(_energyPerWork, _energyStored);
@@ -173,15 +176,15 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		int y = Integer.MAX_VALUE;
 		for(y = yCoord - 1; y >= 0; y--)
 		{
-			int id = worldObj.getBlockId(xCoord, y, zCoord);
-			if (id != MineFactoryReloadedCore.fakeLaserBlock.blockID)
+			Block block = worldObj.getBlock(xCoord, y, zCoord);
+			if (block.equals(MineFactoryReloadedCore.fakeLaserBlock))
 			{
-				Block block = Block.blocksList[id];
-				if (id > 0 && canReplaceBlock(block, worldObj, xCoord, y, zCoord))
+				if (!block.isAir(worldObj, xCoord, yCoord, zCoord) &&
+						canReplaceBlock(block, worldObj, xCoord, y, zCoord))
 					if (worldObj.setBlockToAir(xCoord, y, zCoord))
 						continue;
 				
-				if(id == Block.bedrock.blockID)
+				if (block.equals(Blocks.bedrock))
 				{
 					_bedrockLevel = y;
 					return;
@@ -203,14 +206,14 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		List<WeightedRandomItemStack> drops = new LinkedList<WeightedRandomItemStack>();
 		int boost = WeightedRandom.getTotalWeight(MFRRegistry.getLaserOres()) / 30;
 		
-		for(WeightedRandomItem i : MFRRegistry.getLaserOres())
+		for(WeightedRandom.Item i : MFRRegistry.getLaserOres())
 		{
 			WeightedRandomItemStack oldStack = (WeightedRandomItemStack)i;
 			WeightedRandomItemStack newStack = new WeightedRandomItemStack(oldStack.itemWeight, oldStack.getStack());
 			drops.add(newStack);
 			for(ItemStack s : _inventory)
 			{
-				if(s == null || s.itemID != MineFactoryReloadedCore.laserFocusItem.itemID || MFRRegistry.getLaserPreferredOres(s.getItemDamage()) == null)
+				if(s == null || !s.getItem().equals(MineFactoryReloadedCore.laserFocusItem) || MFRRegistry.getLaserPreferredOres(s.getItemDamage()) == null)
 				{
 					continue;
 				}

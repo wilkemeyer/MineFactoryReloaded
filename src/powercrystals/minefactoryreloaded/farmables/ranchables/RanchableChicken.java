@@ -6,8 +6,8 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -37,12 +37,12 @@ public class RanchableChicken implements IFactoryRanchable
 			chicken.timeUntilNextEgg = chicken.getRNG().nextInt(6000) + 7200;
 			if (rand.nextInt(4) != 0)
 			{
-				drops.add(new RanchedItem(Item.egg));
+				drops.add(new RanchedItem(Items.egg));
 			}
 			else
 			{
 				int k = chicken.getRNG().nextInt(4) + 1;
-				drops.add(new RanchedItem(Item.feather, k));
+				drops.add(new RanchedItem(Items.feather, k));
 			}
 		}
 		return drops;

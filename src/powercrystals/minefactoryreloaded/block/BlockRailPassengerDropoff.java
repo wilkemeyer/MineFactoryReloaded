@@ -85,10 +85,10 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 
 	private boolean isBadBlockToStandOn(World world, int x, int y, int z)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
-		if (block == null || block.isAirBlock(world, x, y, z) ||
+		Block block = world.getBlock(x, y, z);
+		if (block == null || block.isAir(world, x, y, z) ||
 				isBadBlockToStandIn(world, x, y, z) ||
-				!block.isBlockSolidOnSide(world, x, y, z, ForgeDirection.UP))
+				!block.isSideSolid(world, x, y, z, ForgeDirection.UP))
 		{
 			return true;
 		}
@@ -97,8 +97,8 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 
 	private boolean isBadBlockToStandIn(World world, int x, int y, int z)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
-		if (block != null && (block.blockMaterial.isLiquid() ||
+		Block block = world.getBlock(x, y, z);
+		if (block != null && (block.getMaterial().isLiquid() ||
 				block instanceof BlockRailBase))
 		{
 			return true;

@@ -91,7 +91,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			_jammed = false;
 			for(BlockPosition bp : a.getPositionsBottomFirst())
 			{
-				if(worldObj.getBlockId(bp.x, bp.y, bp.z) == MineFactoryReloadedCore.machineBlocks.get(0).blockID &&
+				if(worldObj.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.machineBlocks.get(0)) &&
 						worldObj.getBlockMetadata(bp.x, bp.y, bp.z) == Machine.Sewer.getMeta() &&
 						!(bp.x == xCoord && bp.y == yCoord && bp.z == zCoord))
 				{

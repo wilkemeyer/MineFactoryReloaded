@@ -3,9 +3,9 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -56,16 +56,17 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		data.setInteger("facing", getDirectionFacing().ordinal());
 		data.setInteger("subnet", _currentSubnet);
 		data.setInteger("current", _lastValues[_currentSubnet]);
-		Packet132TileEntityData packet = new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, data);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
 	
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
-		_currentSubnet = pkt.data.getInteger("subnet");
-		_currentValueClient = pkt.data.getInteger("current");
-		rotateDirectlyTo(pkt.data.getInteger("facing"));
+		NBTTagCompound data = pkt.func_148857_g();
+		_currentSubnet = data.getInteger("subnet");
+		_currentValueClient = data.getInteger("current");
+		rotateDirectlyTo(data.getInteger("facing"));
 	}
 	
 	@Override

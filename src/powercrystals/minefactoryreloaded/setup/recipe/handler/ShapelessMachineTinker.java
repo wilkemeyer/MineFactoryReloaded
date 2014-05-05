@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.setup.recipe.handler;
 
+import cofh.util.UtilInventory;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +15,6 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class ShapelessMachineTinker extends ShapelessRecipes
@@ -25,10 +26,10 @@ public abstract class ShapelessMachineTinker extends ShapelessRecipes
 	{
 		ItemStack o = machine.getItemStack();
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setCompoundTag("display", new NBTTagCompound());
+		tag.setTag("display", new NBTTagCompound());
 		NBTTagList list = new NBTTagList();
 		tag.getCompoundTag("display").setTag("Lore", list);
-		list.appendTag(new NBTTagString("0", lore));
+		list.appendTag(new NBTTagString(lore));
 		o.setTagCompound(tag);
 		return o;
 	}

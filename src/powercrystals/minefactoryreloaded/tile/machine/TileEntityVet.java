@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.ISyringe;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -70,13 +69,14 @@ public class TileEntityVet extends TileEntityFactoryPowered
 			for(int i = 0; i < getSizeInventory(); i++)
 			{
 				ItemStack s = getStackInSlot(i);
-				if(s != null && s.getItem() instanceof ISyringe)
+				if (s != null && s.getItem() instanceof ISyringe)
 				{
-					if(((ISyringe)s.getItem()).canInject(worldObj, e, s))
+					ISyringe syringe = (ISyringe)s.getItem();
+					if (syringe.canInject(worldObj, e, s))
 					{
-						if(((ISyringe)s.getItem()).inject(worldObj, e, s))
+						if (syringe.inject(worldObj, e, s))
 						{
-							s.itemID = MineFactoryReloadedCore.syringeEmptyItem.itemID;
+							setInventorySlotContents(i, syringe.getEmptySyringe(s));
 							return true;
 						}
 					}
@@ -94,14 +94,25 @@ public class TileEntityVet extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
+	public boolean canInsertItem(int slot, ItemStack s, int side)
 	{
-		return itemstack != null && itemstack.getItem() instanceof ISyringe;
+		if (s != null && s.getItem() instanceof ISyringe)
+		{
+			ISyringe syringe = (ISyringe)s.getItem();
+			return !syringe.isEmpty(s);
+		}
+		return false;
 	}
 	
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
-		return itemstack != null && itemstack.itemID == MineFactoryReloadedCore.syringeEmptyItem.itemID;
+		ItemStack s = getStackInSlot(slot);
+		if (s != null && s.getItem() instanceof ISyringe)
+		{
+			ISyringe syringe = (ISyringe)s.getItem();
+			return syringe.isEmpty(s);
+		}
+		return true;
 	}
 }

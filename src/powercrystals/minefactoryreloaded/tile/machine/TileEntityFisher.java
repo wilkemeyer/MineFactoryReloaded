@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -56,7 +57,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 			Area fishingHole = _areaManager.getHarvestArea();
 			for(BlockPosition bp: fishingHole.getPositionsBottomFirst())
 			{
-				if(worldObj.getBlockId(bp.x, bp.y, bp.z) != Block.waterStill.blockID)
+				if(worldObj.getBlock(bp.x, bp.y, bp.z).equals(Blocks.water))
 				{
 					_isJammed = true;
 					setIdleTicks(getIdleTicksMax());
@@ -70,7 +71,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 		setWorkDone(getWorkDone() + 1);
 		
 		if(getWorkDone() > getWorkMax())
-		{
+		{ // TODO: forge fishing API
 			doDrop(new ItemStack(Item.fishRaw));
 			setWorkDone(0);
 		}

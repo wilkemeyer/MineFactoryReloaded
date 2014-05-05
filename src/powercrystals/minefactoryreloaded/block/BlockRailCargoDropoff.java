@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.inventory.IInventoryManager;
-import powercrystals.core.inventory.InventoryManager;
+import cofh.inventory.IInventoryManager;
+import cofh.inventory.InventoryManager;
+import cofh.util.UtilInventory;
 import cofh.util.position.BlockPosition;
-import powercrystals.core.util.UtilInventory;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail
 {

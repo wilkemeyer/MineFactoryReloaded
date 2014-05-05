@@ -68,8 +68,8 @@ public class FluidFillingManager implements IHarvestManager
 				!_world.blockExists(bp.x, bp.y, bp.z))
 			return false;
 
-		Block block = Block.blocksList[_world.getBlockId(bp.x, bp.y, bp.z)];
-		return block == null || block.isBlockReplaceable(_world, bp.x, bp.y, bp.z);
+		Block block = _world.getBlock(bp.x, bp.y, bp.z);
+		return block == null || block.isReplaceable(_world, bp.x, bp.y, bp.z);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class FluidFillingManager implements IHarvestManager
 			bn = bn.next;
 		}
 		data.setTag("curPos", list);
-		tag.setCompoundTag("harvestManager", data);
+		tag.setTag("harvestManager", data);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class FluidFillingManager implements IHarvestManager
 		NBTTagList list = (NBTTagList)data.getTag("curPos");
 		for (int i = 0, e = list.tagCount(); i < e; ++i)
 		{
-			NBTTagCompound p = (NBTTagCompound)list.tagAt(i);
+			NBTTagCompound p = list.getCompoundTagAt(i);
 			_blocks.push(BlockPool.getNext(p.getInteger("x"), p.getInteger("y"), p.getInteger("z")));
 		}
 	}

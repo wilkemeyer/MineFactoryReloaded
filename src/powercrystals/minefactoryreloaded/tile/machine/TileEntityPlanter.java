@@ -113,7 +113,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	protected boolean stacksEqual(ItemStack a, ItemStack b)
 	{
 		if (a == null | b == null ||
-				(a.itemID != b.itemID) ||
+				(!a.getItem().equals(b.getItem())) ||
 				(a.getItemDamage() != b.getItemDamage()) ||
 				a.hasTagCompound() != b.hasTagCompound())
 		{

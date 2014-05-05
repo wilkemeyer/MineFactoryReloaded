@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.gui.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class SlotPotionIngredient extends Slot
@@ -15,6 +14,6 @@ public class SlotPotionIngredient extends Slot
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return stack != null && Item.itemsList[stack.itemID].isPotionIngredient();
+		return stack != null && stack.getItem().isPotionIngredient(stack);
 	}
 }

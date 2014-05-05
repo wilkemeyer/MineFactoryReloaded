@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
+import cofh.util.UtilInventory;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -21,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import powercrystals.core.net.PacketWrapper;
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;

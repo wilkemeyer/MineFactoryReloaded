@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.farmables.egghandlers;
 
-import net.minecraft.entity.EntityEggInfo;
+import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.api.IMobEggHandler;

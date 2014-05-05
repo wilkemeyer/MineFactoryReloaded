@@ -357,7 +357,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 	{
 		if(_lastEntityOver != null && _lockonTicks >= _lockonMax)
 		{
-			return _lastEntityOver.entityId;
+			return _lastEntityOver.getEntityId();
 		}
 
 		return Integer.MIN_VALUE;

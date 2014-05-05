@@ -15,9 +15,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -211,7 +211,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		{
 			if(_upgradeLevel[i] > 0)
 			{
-				ItemStack card = new ItemStack(MineFactoryReloadedCore.logicCardItem.itemID, 1, _upgradeLevel[i] - 1);
+				ItemStack card = new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, _upgradeLevel[i] - 1);
 				if(!player.inventory.addItemStackToInventory(card))
 				{
 					player.entityDropItem(card, 0.0F);
@@ -356,7 +356,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 				ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i];
 				bp.orientation = o;
 				bp.moveForwards(1);
-				Block b = Block.blocksList[worldObj.getBlockId(bp.x, bp.y, bp.z)];
+				Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
 				if(b instanceof IRedNetNetworkContainer)
 				{
 					((IRedNetNetworkContainer)b).updateNetwork(worldObj, bp.x, bp.y, bp.z);
@@ -464,37 +464,39 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	public void readCircuitsOnly(NBTTagCompound nbttagcompound)
 	{
-		NBTTagList circuits = nbttagcompound.getTagList("circuits");
+		NBTTagList circuits = nbttagcompound.getTagList("circuits", 10);
 		if(circuits != null)
 		{
 			for(int c = 0; c < circuits.tagCount(); c++)
 			{
-				initCircuit(c, ((NBTTagCompound)circuits.tagAt(c)).getString("circuit"));
+				NBTTagCompound circuit = circuits.getCompoundTagAt(c);
+				initCircuit(c, circuit.getString("circuit"));
 
-				NBTTagList inputPins = ((NBTTagCompound)circuits.tagAt(c)).getTagList("inputPins");
+				NBTTagList inputPins = circuit.getTagList("inputPins", 10);
 				if(inputPins != null)
 				{
 					for(int i = 0; i < inputPins.tagCount() && i < _pinMappingInputs[c].length; i++)
 					{
-						int pin = ((NBTTagCompound)inputPins.tagAt(i)).getInteger("pin");
-						int buffer = ((NBTTagCompound)inputPins.tagAt(i)).getInteger("buffer");
-						_pinMappingInputs[c][i] = new PinMapping(pin, buffer);
+						NBTTagCompound pin = inputPins.getCompoundTagAt(i);
+						int ipin = pin.getInteger("pin");
+						int buffer = pin.getInteger("buffer");
+						_pinMappingInputs[c][i] = new PinMapping(ipin, buffer);
 					}
 				}
 
-				NBTTagList outputPins = ((NBTTagCompound)circuits.tagAt(c)).getTagList("outputPins");
+				NBTTagList outputPins = circuit.getTagList("outputPins", 10);
 				if(outputPins != null)
 				{
 					for(int i = 0; i < outputPins.tagCount() && i < _pinMappingOutputs[c].length; i++)
 					{
-						int pin = ((NBTTagCompound)outputPins.tagAt(i)).getInteger("pin");
-						int buffer = ((NBTTagCompound)outputPins.tagAt(i)).getInteger("buffer");
-						_pinMappingOutputs[c][i] = new PinMapping(pin, buffer);
+						NBTTagCompound pin = inputPins.getCompoundTagAt(i);
+						int ipin = pin.getInteger("pin");
+						int buffer = pin.getInteger("buffer");
+						_pinMappingOutputs[c][i] = new PinMapping(ipin, buffer);
 					}
 				}
 
-				NBTTagCompound circuitState = ((NBTTagCompound)circuits.tagAt(c)).
-						getCompoundTag("state");
+				NBTTagCompound circuitState = circuit.getCompoundTag("state");
 				if(circuitState != null)
 				{
 					_circuits[c].readFromNBT(circuitState);
@@ -508,14 +510,14 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	{
 		NBTTagCompound data = new NBTTagCompound();
 		data.setIntArray("upgrades", _upgradeLevel);
-		Packet132TileEntityData packet = new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, data);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
-		_upgradeLevel = pkt.data.getIntArray("upgrades");
+		_upgradeLevel = pkt.func_148857_g().getIntArray("upgrades");
 		updateUpgradeLevels();
 	}
 

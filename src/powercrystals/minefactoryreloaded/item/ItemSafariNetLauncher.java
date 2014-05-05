@@ -1,16 +1,17 @@
 package powercrystals.minefactoryreloaded.item;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class ItemSafariNetLauncher extends ItemFactory
 {
@@ -33,13 +34,11 @@ public class ItemSafariNetLauncher extends ItemFactory
 			{
 				if(isCaptureMode(stack))
 				{
-					player.sendChatToPlayer(new ChatMessageComponent()
-					.addKey("chat.info.mfr.safarinet.capture"));
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.safarinet.capture"));
 				}
 				else
 				{
-					player.sendChatToPlayer(new ChatMessageComponent()
-					.addKey("chat.info.mfr.safarinet.release"));
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.safarinet.release"));
 				}
 			}
 			return stack;

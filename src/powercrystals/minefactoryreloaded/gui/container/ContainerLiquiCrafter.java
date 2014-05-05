@@ -58,7 +58,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 	{
 		super.detectAndSendChanges();
 		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
-		int tankIndex = (int)(_crafter.worldObj.getWorldTime() % tanks.length);
+		int tankIndex = (int)(_crafter.getWorldObj().getWorldTime() % tanks.length);
 		FluidTankInfo tank = tanks[tankIndex];
 		FluidStack l = tank.fluid;
 		

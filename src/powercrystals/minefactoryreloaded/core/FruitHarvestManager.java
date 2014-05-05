@@ -74,7 +74,7 @@ public class FruitHarvestManager implements IHarvestManager
 		BlockPosition o = getOrigin();
 		data.setIntArray("area", new int[] {o.x - _area.xMin, o.y - _area.yMin, _area.yMax - o.y});
 		data.setIntArray("origin", new int[] {o.x, o.y, o.z});
-		tag.setCompoundTag("harvestManager", data);
+		tag.setTag("harvestManager", data);
 	}
 
 	@Override

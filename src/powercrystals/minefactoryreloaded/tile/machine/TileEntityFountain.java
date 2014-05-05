@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFluid;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -68,22 +68,22 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				x = bp.x; y = bp.y; z = bp.z;
 				_fillingManager.moveNext();
 			}
-			Block block = Block.blocksList[worldObj.getBlockId(x, y, z)];
-			if (block == null || block.isBlockReplaceable(worldObj, x, y, z))
+			Block block = worldObj.getBlock(x, y, z);
+			if (block == null || block.isReplaceable(worldObj, x, y, z))
 			{
-				if (block != null && block.blockMaterial.isLiquid())
+				if (block != null && block.getMaterial().isLiquid())
 					if (block instanceof BlockFluidClassic)
 					{
 						if (((BlockFluidClassic)block).isSourceBlock(worldObj, x, y, z))
 							break l;
 					}
-					else if (block instanceof BlockFluid)
+					else if (block instanceof BlockLiquid)
 					{
 						if (worldObj.getBlockMetadata(x, y, z) == 0)
 							break l;
 					}
-				int blockid = _tanks[0].getFluid().getFluid().getBlockID();
-				if (blockid > 0 && worldObj.setBlock(x, y, z, blockid))
+				Block blockid = _tanks[0].getFluid().getFluid().getBlock();
+				if (block != null && worldObj.setBlock(x, y, z, blockid))
 				{// TODO: when forge supports NBT fluid blocks, adapt this
 					worldObj.notifyBlockOfNeighborChange(x, y, z, blockid);
 					drain(_tanks[0], BUCKET_VOLUME, true);

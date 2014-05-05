@@ -14,7 +14,7 @@ import java.util.Set;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,12 +43,12 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 
 		Map<Integer, Integer> existingEnchants = getEnchantments(output);
 
-		boolean isBook = output.itemID == Item.book.itemID;
+		boolean isBook = output.getItem().equals(Items.book);
 
 
-		if(isBook)
+		if (isBook)
 		{
-			output.itemID = Item.enchantedBook.itemID;
+			output.func_150996_a(Items.enchanted_book);
 		}
 
 		Collections.shuffle(enchantments);
@@ -57,7 +57,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 		{
 			if(isBook)
 			{
-				Item.enchantedBook.addEnchantment(output, newEnchant);
+				Items.enchanted_book.addEnchantment(output, newEnchant);
 				return output;
 			}
 			else
@@ -82,12 +82,13 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 
 	private static void updateEnchantment(ItemStack stack, int enchantId, short newLevel)
 	{
-		NBTTagList tagList = stack.getTagCompound().getTagList("ench");
-		for(int i = 0; i < tagList.tagCount(); ++i)
+		NBTTagList tagList = stack.getTagCompound().getTagList("ench", 10);
+		for(int i = 0, e = tagList.tagCount(); i < e; ++i)
 		{
-			if(((NBTTagCompound)tagList.tagAt(i)).getShort("id") == enchantId)
+			NBTTagCompound entry = tagList.getCompoundTagAt(i);
+			if (entry.getShort("id") == enchantId)
 			{
-				((NBTTagCompound)tagList.tagAt(i)).setShort("lvl", newLevel);
+				entry.setShort("lvl", newLevel);
 			}
 		}
 		stack.getTagCompound().setTag("ench", tagList);
@@ -162,7 +163,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 	public static Map<Integer, EnchantmentData> mapEnchantmentData(int targetEnchantability, ItemStack stack)
 	{
 		HashMap<Integer, EnchantmentData> enchantmentMap = null;
-		boolean isBook = stack.itemID == Item.book.itemID;
+		boolean isBook = stack.equals(Items.book);
 
 		for(int var7 = 0; var7 < Enchantment.enchantmentsList.length; ++var7)
 		{

@@ -7,6 +7,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
+import cofh.util.Util;
 
 import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -18,7 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 
-import powercrystals.core.util.Util;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 /*
@@ -244,7 +244,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		tag.setInteger("workDone", _workDone);
 		NBTTagCompound pp = new NBTTagCompound();
 		_powerProvider.writeToNBT(pp);
-		tag.setCompoundTag("powerProvider", pp);
+		tag.setTag("powerProvider", pp);
 	}
 	
 	@Override
@@ -311,9 +311,14 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return 0;
 	}
 
-	@Override
+	//@Override
 	public boolean canInterface(ForgeDirection from)
 	{
+		return true;
+	}
+
+	//@Override
+	public boolean canConnectEnergy(ForgeDirection from) {
 		return true;
 	}
 

@@ -23,9 +23,9 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 	@Override
 	public boolean itemInteractionForEntity(ItemStack s, EntityPlayer player, EntityLivingBase e)
 	{
-		if(!e.worldObj.isRemote && canInject(e.worldObj, e, s))
+		if (!e.worldObj.isRemote && canInject(e.worldObj, e, s))
 		{
-			if(inject(e.worldObj, e, s))
+			if (inject(e.worldObj, e, s))
 			{
 				s.func_150996_a(MineFactoryReloadedCore.syringeEmptyItem);
 				return true;
@@ -33,5 +33,17 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 		}
 		
 		return false;
+	}
+
+	@Override
+	public boolean isEmpty(ItemStack syringe)
+	{
+		return false;
+	}
+
+	@Override
+	public ItemStack getEmptySyringe(ItemStack syringe)
+	{
+		return new ItemStack(MineFactoryReloadedCore.syringeEmptyItem);
 	}
 }

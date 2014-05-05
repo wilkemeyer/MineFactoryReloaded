@@ -25,7 +25,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -102,7 +102,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			incorporateTiles();
 			if (_grid != null)
 			{
-				onInventoryChanged();
+				markDirty();
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
@@ -386,8 +386,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					pp = receiverTile.getPowerReceiver(side);
 
 				if (pp != null) {
-					float max = pp.getMaxEnergyReceived();
-					float powerToSend = Math.min(max, pp.getMaxEnergyStored() - pp.getEnergyStored());
+					double max = pp.getMaxEnergyReceived();
+					double powerToSend = Math.min(max, pp.getMaxEnergyStored() - pp.getEnergyStored());
 					if (powerToSend > 0) {
 						powerToSend = Math.min(energy / (float)energyPerMJ, powerToSend);
 						return (int)Math.ceil(pp.receiveEnergy(Type.PIPE, powerToSend, side) * energyPerMJ);

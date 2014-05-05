@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.world;
 
+import cofh.util.UtilInventory;
+
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
@@ -9,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import powercrystals.core.util.UtilInventory;
 
 import skyboy.core.world.WorldProxy;
 

@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public class GrindableZombiePigman implements IFactoryGrindable
 			"Battlesign boost", 10D, 0)).setSaved(false);
 	private static final ItemStack sign;
 	static {
-		sign = new ItemStack(Item.sign);
+		sign = new ItemStack(Items.sign);
 		sign.addEnchantment(Enchantment.sharpness, 4);
 		sign.addEnchantment(Enchantment.knockback, 2);
 		sign.addEnchantment(Enchantment.fireAspect, 1);

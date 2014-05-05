@@ -13,7 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -123,14 +123,13 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		bp.orientation = side;
 		bp.moveForwards(1);
 		
-		int blockId = worldObj.getBlockId(bp.x, bp.y, bp.z);
-		Block b = Block.blocksList[blockId];
+		Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
 		
 		if(b == null) // block doesn't exist (air) - never connect
 		{
 			return RedNetConnectionType.None;
 		}
-		else if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID) // cables - always connect
+		else if(b.equals(MineFactoryReloadedCore.rednetCableBlock)) // cables - always connect
 		{
 			return RedNetConnectionType.CableAll;
 		}
@@ -144,11 +143,11 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 			return type.isConnectionForced & !(_mode == 1 | _mode == 2) ?
 					RedNetConnectionType.None : type; 
 		}
-		else if(b instanceof IRedNetNoConnection || b.isAirBlock(worldObj, bp.x, bp.y, bp.z))
+		else if(b instanceof IRedNetNoConnection || b.isAir(worldObj, bp.x, bp.y, bp.z))
 		{
 			return RedNetConnectionType.None;
 		}
-		else if (_mode == 2 && b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
+		else if (_mode == 2 && b.isSideSolid(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
 		{
 			return RedNetConnectionType.ForcedCableSingle;
 		}
@@ -164,7 +163,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.None;
 		}
-		else if(b.isBlockSolidOnSide(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
+		else if(b.isSideSolid(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
 		{
 			return RedNetConnectionType.CableSingle;
 		}

@@ -14,17 +14,20 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -192,17 +195,18 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 						return true;
 					}
 				}
-				else if (s != null && s.itemID == MineFactoryReloadedCore.rednetMeterItem.itemID)
+				else if (s != null && s.getItem().equals(MineFactoryReloadedCore.rednetMeterItem))
 				{
 					// TODO: move to client-side when forge fixes player.getEyeHeight on client
 					if (!world.isRemote)
 					{
 						// TODO: localize
-						player.sendChatToPlayer(new ChatMessageComponent().addText("Side is " + 
-								ItemRedNetMeter._colorNames[cable.getSideColor(ForgeDirection.getOrientation(side))]));
+						player.addChatMessage(new ChatComponentText("Side is ").appendText(
+								ItemRedNetMeter._colorNames[cable.
+								                            getSideColor(ForgeDirection.getOrientation(side))]));
 					}
 				}
-				else if (s != null && s.itemID == Item.dyePowder.itemID)
+				else if (s != null && s.getItem().equals(Items.dye))
 				{
 					if (!world.isRemote)
 					{
@@ -229,10 +233,12 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 							switch (mode)
 							{
 							case 0:
-								player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.tile.standard"));
+								player.addChatMessage(new ChatComponentTranslation(
+										"chat.info.mfr.rednet.tile.standard"));
 								break;
 							case 1:
-								player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.tile.cableonly"));
+								player.addChatMessage(new ChatComponentTranslation(
+										"chat.info.mfr.rednet.tile.cableonly"));
 								break;
 							default:
 							}
@@ -247,32 +253,37 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 						switch (mode)
 						{
 						case 0:
-							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.standard"));
+							player.addChatMessage(new ChatComponentTranslation(
+									"chat.info.mfr.rednet.connection.standard"));
 							break;
 						case 1:
-							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forced"));
+							player.addChatMessage(new ChatComponentTranslation(
+									"chat.info.mfr.rednet.connection.forced"));
 							break;
 						case 2:
-							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.forcedstrong"));
+							player.addChatMessage(new ChatComponentTranslation(
+									"chat.info.mfr.rednet.connection.forcedstrong"));
 							break;
 						case 3:
-							player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.connection.cableonly"));
+							player.addChatMessage(new ChatComponentTranslation(
+									"chat.info.mfr.rednet.connection.cableonly"));
 							break;
 						default:
 						}
 					}
 				}
-				else if (s != null && s.itemID == MineFactoryReloadedCore.rednetMeterItem.itemID)
+				else if (s != null && s.getItem().equals(MineFactoryReloadedCore.rednetMeterItem))
 				{
 					// TODO: move to client-side when forge fixes player.getEyeHeight on client
 					if (!world.isRemote)
 					{
 						// TODO: localize
-						player.sendChatToPlayer(new ChatMessageComponent().addText("Side is " + 
-								ItemRedNetMeter._colorNames[cable.getSideColor(ForgeDirection.getOrientation(side))]));
+						player.addChatMessage(new ChatComponentText("Side is ").appendText(
+								ItemRedNetMeter._colorNames[cable.
+								                            getSideColor(ForgeDirection.getOrientation(side))]));
 					}
 				}
-				else if (s != null && s.itemID == Item.dyePowder.itemID)
+				else if (s != null && s.getItem().equals(Items.dye))
 				{
 					if (!world.isRemote)
 					{
@@ -324,8 +335,8 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@SubscribeEvent
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
 		MovingObjectPosition mop = event.target;
-		if (mop.typeOfHit == EnumMovingObjectType.TILE
-				&& event.player.worldObj.getBlockId(mop.blockX, mop.blockY, mop.blockZ) == blockID) {
+		if (mop.typeOfHit == MovingObjectType.BLOCK
+				&& event.player.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ).equals(this)) {
 			MovingObjectPosition part = RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
 			if (part == null)
 				return;
@@ -352,10 +363,10 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int blockId)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockId)
 	{
 		super.onNeighborBlockChange(world, x, y, z, blockId);
-		if(blockId == blockID || world.isRemote)
+		if (blockId.equals(this) || world.isRemote)
 		{
 			return;
 		}
@@ -369,7 +380,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	}
 	
 	@Override
-	public void onNeighborTileChange(World world, int x, int y, int z, int tileX, int tileY, int tileZ)
+	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
 		TileEntity te = world.getTileEntity(x, y, z);
 		
@@ -380,7 +391,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
     }
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int id, int meta)
+	public void breakBlock(World world, int x, int y, int z, Block id, int meta)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
@@ -394,12 +405,12 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			BlockPosition bp = new BlockPosition(x, y, z);
 			bp.orientation = d;
 			bp.moveForwards(1);
-			if (world.getBlockId(bp.x, bp.y, bp.z) != MineFactoryReloadedCore.rednetCableBlock.blockID)
+			if (!world.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.rednetCableBlock))
 			{
 				world.notifyBlockOfNeighborChange(bp.x, bp.y, bp.z,
-						MineFactoryReloadedCore.rednetCableBlock.blockID);
+						MineFactoryReloadedCore.rednetCableBlock);
 				world.notifyBlocksOfNeighborChange(bp.x, bp.y, bp.z,
-						MineFactoryReloadedCore.rednetCableBlock.blockID);
+						MineFactoryReloadedCore.rednetCableBlock);
 			}
 		}
 	}
@@ -407,11 +418,12 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
 	{
-		ItemStack machine = new ItemStack(idDropped(blockID, world.rand, 0), 1,
-				damageDropped(world.getBlockMetadata(x, y, z)));
+		int meta = world.getBlockMetadata(x, y, z);
+		ItemStack machine = new ItemStack(getItemDropped(meta, world.rand, 0), 1,
+				damageDropped(meta));
 		world.setBlockToAir(x, y, z);
 		if (!returnBlock)
-			dropBlockAsItem_do(world, x, y, z, machine);
+			dropBlockAsItem(world, x, y, z, machine);
 		return machine;
 	}
 
@@ -481,7 +493,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	}
 
 	@Override
-	public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
@@ -497,13 +509,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return null;
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int meta)
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		switch (meta)
 		{
@@ -523,7 +529,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		RedNetCableRenderer.updateUVT(blockIcon);

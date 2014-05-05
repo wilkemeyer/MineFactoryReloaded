@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -75,7 +76,7 @@ public class MFRUtil
 
 	public static String localize(String s, boolean exists, String def)
 	{
-		if (exists && !StatCollector.func_94522_b(s))
+		if (exists && !StatCollector.canTranslate(s))
 			return def;
 		return StatCollector.translateToLocal(s);
 	}
@@ -88,7 +89,7 @@ public class MFRUtil
 		{
 			return false;
 		}
-		Item currentItem = Item.itemsList[player.inventory.getCurrentItem().itemID];
+		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammerAdvanced)
 		{
 			return ((IToolHammerAdvanced)currentItem).isActive(player.inventory.getCurrentItem());
@@ -111,7 +112,7 @@ public class MFRUtil
 		{
 			return false;
 		}
-		Item currentItem = Item.itemsList[player.inventory.getCurrentItem().itemID];
+		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammerAdvanced)
 		{
 			return ((IToolHammerAdvanced)currentItem).isActive(player.inventory.getCurrentItem());
@@ -130,7 +131,7 @@ public class MFRUtil
 		{
 			return false;
 		}
-		Item currentItem = Item.itemsList[player.inventory.getCurrentItem().itemID];
+		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if(currentItem != null && itemClass.isAssignableFrom(currentItem.getClass()))
 		{
 			return true;
@@ -156,12 +157,12 @@ public class MFRUtil
 	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z)
 	{
 		ArrayList<ForgeDirection> nonConveyors = new ArrayList<ForgeDirection>();
-		int id = MineFactoryReloadedCore.conveyorBlock.blockID;
+		Block id = MineFactoryReloadedCore.conveyorBlock;
 
 		for (int i = 0, e = ForgeDirection.VALID_DIRECTIONS.length; i < e; ++i)
 		{
 			ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[i];
-			if (id != world.getBlockId(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
+			if (!world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ).equals(id))
 				nonConveyors.add(direction);
 		}
 

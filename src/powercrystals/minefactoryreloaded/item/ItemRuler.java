@@ -3,9 +3,10 @@ package powercrystals.minefactoryreloaded.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -18,15 +19,13 @@ public class ItemRuler extends ItemFactory
 		if (world.isRemote)
 		{
 			MovingObjectPosition mop = player.rayTrace(MFRConfig.spyglassRange.getInt(), 1.0F);
-			if(mop == null || (mop.typeOfHit == EnumMovingObjectType.ENTITY && mop.entityHit == null))
+			if(mop == null || (mop.typeOfHit == MovingObjectType.ENTITY && mop.entityHit == null))
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.ruler.nosight"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.ruler.nosight"));
 			}
-			else if(mop.typeOfHit == EnumMovingObjectType.ENTITY)
+			else if(mop.typeOfHit == MovingObjectType.ENTITY)
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.ruler.hitentity"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.ruler.hitentity"));
 			}
 			else
 			{
@@ -37,9 +36,8 @@ public class ItemRuler extends ItemFactory
 					tag.setInteger("x", mop.blockX);
 					tag.setInteger("y", mop.blockY);
 					tag.setInteger("z", mop.blockZ);
-					data.setCompoundTag("ruler", tag);
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addKey("chat.info.mfr.ruler.startposition"));
+					data.setTag("ruler", tag);
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.ruler.startposition"));
 				}
 				else
 				{
@@ -55,20 +53,17 @@ public class ItemRuler extends ItemFactory
 					double distAll = Math.sqrt(Math.pow(distX, 2) +
 							Math.pow(distY, 2) + Math.pow(distZ, 2));
 					
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText("X: ").addText(StatCollector
+					player.addChatMessage(new ChatComponentText("X: ").appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distX, distX + 1)));
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText("Y: ").addText(StatCollector
+					player.addChatMessage(new ChatComponentText("Y: ").appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distY, distY + 1)));
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText("Z: ").addText(StatCollector
+					player.addChatMessage(new ChatComponentText("Z: ").appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distZ, distZ + 1)));
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText(StatCollector
+					player.addChatMessage(new ChatComponentText("")
+							.appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.total",
 											distAll)));
 				}

@@ -1,12 +1,13 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.util.UtilInventory;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.BagContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptValid;
 import powercrystals.minefactoryreloaded.gui.slot.SlotViewOnly;
@@ -132,7 +133,11 @@ public class ContainerBag extends Container
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				existingStack = slot.getStack();
 				
-				if(slot.isItemValid(stack) && existingStack != null && existingStack.itemID == stack.itemID && (!stack.getHasSubtypes() || stack.getItemDamage() == existingStack.getItemDamage()) && ItemStack.areItemStackTagsEqual(stack, existingStack))
+				if(slot.isItemValid(stack) && existingStack != null &&
+						existingStack.getItem().equals(stack.getItem()) &&
+						(!stack.getHasSubtypes() ||
+								stack.getItemDamage() == existingStack.getItemDamage()) &&
+								ItemStack.areItemStackTagsEqual(stack, existingStack))
 				{
 					int existingSize = existingStack.stackSize + stack.stackSize;
 					

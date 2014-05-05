@@ -8,7 +8,7 @@ import java.util.Random;
 
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -57,7 +57,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@Override
 	public int getWorkMax()
 	{
-		if(getStackInSlot(0) != null && getStackInSlot(0).itemID == Item.glassBottle.itemID)
+		if(getStackInSlot(0) != null && getStackInSlot(0).getItem().equals(Items.glass_bottle))
 		{
 			return 250;
 		}
@@ -137,7 +137,9 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 				output = null;
 			}
 		}
-		if((input.getItem().getItemEnchantability() == 0 && input.itemID != Item.glassBottle.itemID) || input.itemID == Item.enchantedBook.itemID)
+		if((input.getItem().getItemEnchantability() == 0 &&
+				!input.getItem().equals(Items.glass_bottle)) ||
+				input.getItem().equals(Items.enchanted_book))
 		{
 			if (output == null)
 			{
@@ -170,13 +172,13 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		}
 		else if(getWorkDone() >= getWorkMax())
 		{
-			if(input.itemID == Item.glassBottle.itemID)
+			if(input.getItem().equals(Items.glass_bottle))
 			{
 				if (output == null)
 				{
-					output = new ItemStack(Item.expBottle, 0, 0);
+					output = new ItemStack(Items.experience_bottle, 0, 0);
 				}
-				if (output.itemID != Item.expBottle.itemID)
+				if (!output.equals(Items.experience_bottle))
 				{
 					setWorkDone(0);
 					return false;

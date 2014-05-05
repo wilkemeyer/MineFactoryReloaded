@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.item;
 
-import buildcraft.api.tools.IToolPipette;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -39,7 +37,7 @@ import powercrystals.minefactoryreloaded.core.IUseable;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DefaultUseHandler;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
 
-public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable, IToolPipette
+public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable
 {
 	public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 	public final static IUseHandler defaultUseAction = new DefaultUseHandler();
@@ -81,20 +79,20 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public String getLocalizedName(String str)
 	{
 		String name = getUnlocalizedName() + "." + str;
-		if (StatCollector.func_94522_b(name))
+		if (StatCollector.canTranslate(name))
 			return StatCollector.translateToLocal(name);
 		return null;
 	}
 
 	@Override
-	public String getItemDisplayName(ItemStack item)
+	public String getItemStackDisplayName(ItemStack item)
 	{
 		String ret = getFluidName(item), t = getLocalizedName(ret);
 		if (t != null && !t.isEmpty())
 			return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
 		if (ret == null)
 		{
-			return super.getItemDisplayName(item);
+			return super.getItemStackDisplayName(item);
 		}
 		Fluid liquid = FluidRegistry.getFluid(ret);
 		if (liquid != null)
@@ -102,11 +100,11 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			ret = liquid.getLocalizedName();
 		}
 		_prefix = true;
-		t = super.getItemDisplayName(item);
+		t = super.getItemStackDisplayName(item);
 		_prefix = false;
 		t = t != null ? t.trim() : "";
 		ret = (t.isEmpty() ? "" : t + " ") + ret;
-		t = super.getItemDisplayName(item);
+		t = super.getItemStackDisplayName(item);
 		t = t != null ? t.trim() : "";
 		ret += t.isEmpty() ? " Cup" : " " + t;
 		return ret;
@@ -211,7 +209,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public ItemStack getContainerItemStack(ItemStack itemStack)
+	public ItemStack getContainerItem(ItemStack itemStack)
 	{
 		ItemStack r = itemStack.copy();
 		r.stackSize = 1;
@@ -356,7 +354,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			d3 = ((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance();
 		}
 		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-		MovingObjectPosition ret = world.rayTraceBlocks_do_do(vec3, vec31, adjacent, !adjacent);
+		MovingObjectPosition ret = world.func_147447_a(vec3, vec31, adjacent, !adjacent, false);
 		if (ret != null && adjacent) {
 			ForgeDirection side = ForgeDirection.getOrientation(ret.sideHit);
 			ret.blockX += side.offsetX;
@@ -366,7 +364,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		return ret;
 	}
 
-	@Override
+	//@Override
+	// TODO: implement pipette thing
 	public boolean canPipette(ItemStack pipette)
 	{
 		return true;

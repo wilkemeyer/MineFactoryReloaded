@@ -10,7 +10,7 @@ import java.util.Set;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -77,8 +77,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (unableToRequestTicket && 
 				inventoryPlayer.player.getCommandSenderName().equals(_owner))
 		{
-			inventoryPlayer.player.sendChatToPlayer(new ChatMessageComponent().
-					addKey("chat.info.mfr.chunkloader.noticket"));
+			inventoryPlayer.player.addChatMessage(
+					new ChatComponentTranslation("chat.info.mfr.chunkloader.noticket"));
 		}
 		return new ContainerChunkLoader(this, inventoryPlayer);
 	}
@@ -108,7 +108,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (r < 0 | r > maxR | r == _radius)
 			return;
 		_radius = r;
-		onInventoryChanged();
+		markDirty();
 		if (!worldObj.isRemote)
 			forceChunks();
 	}

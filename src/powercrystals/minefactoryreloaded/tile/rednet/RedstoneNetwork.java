@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -99,8 +100,8 @@ public class RedstoneNetwork
 	
 	public void addOrUpdateNode(BlockPosition node)
 	{
-		int blockId = _world.getBlockId(node.x, node.y, node.z);
-		if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID)
+		Block block = _world.getBlock(node.x, node.y, node.z);
+		if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
 		{
 			return;
 		}
@@ -131,13 +132,13 @@ public class RedstoneNetwork
 	
 	public void addOrUpdateNode(BlockPosition node, int subnet, boolean allowWeak)
 	{
-		int blockId = _world.getBlockId(node.x, node.y, node.z);
-		if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID)
+		Block block = _world.getBlock(node.x, node.y, node.z);
+		if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
 		{
 			return;
 		}
 		
-		if(!_singleNodes.get(subnet).contains(node))
+		if (!_singleNodes.get(subnet).contains(node))
 		{
 			removeNode(node);
 			RedstoneNetwork.log("Network with ID %d:%d adding node %s", _id, subnet, node.toString());
@@ -196,24 +197,24 @@ public class RedstoneNetwork
 			}
 		}
 		
-		int blockId = _world.getBlockId(node.x, node.y, node.z);
+		Block block = _world.getBlock(node.x, node.y, node.z);
 		if(notify)
 		{
-			if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID)
+			if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
 			{
 				return;
 			}
-			else if(Block.blocksList[blockId] instanceof IConnectableRedNet)
+			else if (block instanceof IConnectableRedNet)
 			{
-				((IConnectableRedNet)Block.blocksList[blockId]).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
+				((IConnectableRedNet)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
 			}
 		}
-		else if (omniNode && Block.blocksList[blockId] instanceof IConnectableRedNet)
+		else if (omniNode && block instanceof IConnectableRedNet)
 		{
-			((IConnectableRedNet)Block.blocksList[blockId]).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
+			((IConnectableRedNet)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
 		}
-		_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
-		_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+		_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
+		_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
 	}
 	
 	public void addCable(BlockPosition cable)
@@ -342,19 +343,19 @@ public class RedstoneNetwork
 	{
 		if(isNodeLoaded(node))
 		{
-			int blockId = _world.getBlockId(node.x, node.y, node.z);
-			if(blockId == MineFactoryReloadedCore.rednetCableBlock.blockID)
+			Block block = _world.getBlock(node.x, node.y, node.z);
+			if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
 			{
 				return;
 			}
-			else if(Block.blocksList[blockId] instanceof IConnectableRedNet)
+			else if (block instanceof IConnectableRedNet)
 			{
-				((IConnectableRedNet)Block.blocksList[blockId]).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), _powerLevelOutput[subnet]);
+				((IConnectableRedNet)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), _powerLevelOutput[subnet]);
 			}
 			else
 			{
-				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
-				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock.blockID);
+				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
+				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
 			}
 		}
 	}
@@ -363,10 +364,10 @@ public class RedstoneNetwork
 	{
 		if(isNodeLoaded(node))
 		{
-			int blockId = _world.getBlockId(node.x, node.y, node.z);
-			if(Block.blocksList[blockId] instanceof IConnectableRedNet)
+			Block block = _world.getBlock(node.x, node.y, node.z);
+			if(block instanceof IConnectableRedNet)
 			{
-				((IConnectableRedNet)Block.blocksList[blockId]).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.clone(_powerLevelOutput));
+				((IConnectableRedNet)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.clone(_powerLevelOutput));
 			}
 		}
 	}
@@ -377,7 +378,7 @@ public class RedstoneNetwork
 		{
 			return 0;
 		}
-		IConnectableRedNet b = ((IConnectableRedNet)Block.blocksList[_world.getBlockId(node.x, node.y, node.z)]);
+		IConnectableRedNet b = ((IConnectableRedNet)_world.getBlock(node.x, node.y, node.z));
 		if(b != null)
 		{
 			return b.getOutputValue(_world, node.x, node.y, node.z, node.orientation.getOpposite(), subnet);
@@ -396,15 +397,15 @@ public class RedstoneNetwork
 		}
 		
 		int offset = 0;
-		int blockId = _world.getBlockId(node.x, node.y, node.z);
-		if(blockId == Block.redstoneWire.blockID)
+		Block block = _world.getBlock(node.x, node.y, node.z);
+		if (block.equals(Blocks.redstone_wire))
 		{
 			offset = -1;
 		}
 		
 		int ret = 0;
 		
-		if(_weakNodes.contains(node) || Block.blocksList[blockId] instanceof IConnectableRedNet)
+		if(_weakNodes.contains(node) || block instanceof IConnectableRedNet)
 		{
 			int weakPower = _world.getIndirectPowerLevelTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
 			int strongPower = _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;

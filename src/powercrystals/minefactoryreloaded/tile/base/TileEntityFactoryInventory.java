@@ -20,8 +20,8 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.core.asm.relauncher.Implementable;
+import cofh.util.UtilInventory;
 import cofh.util.position.BlockPosition;
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -53,14 +53,14 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 	
 	@Override
-	public String getInvName()
+	public String getInventoryName()
 	{
 		return _hasInvName ? _invName : StatCollector.
 				translateToLocal(_machine.getInternalName() + ".name");
 	}
 	
 	@Override
-	public boolean isInvNameLocalized()
+	public boolean hasCustomInventoryName()
 	{
 		return _hasInvName;
 	}
@@ -99,7 +99,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				itemstack.stackSize -= amountToDrop;
 				EntityItem entityitem = new EntityItem(worldObj,
 						xCoord + xOffset, yCoord + yOffset, zCoord + zOffset,
-						new ItemStack(itemstack.itemID, amountToDrop, itemstack.getItemDamage()));
+						new ItemStack(itemstack.getItem(), amountToDrop, itemstack.getItemDamage()));
 				if(itemstack.getTagCompound() != null)
 				{
 					entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
@@ -124,10 +124,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	protected void writeItemNBT(NBTTagCompound tag)
 	{
-		if (isInvNameLocalized())
+		if (hasCustomInventoryName())
 		{
 			NBTTagCompound name = new NBTTagCompound();
-			name.setString("Name", getInvName());
+			name.setString("Name", getInventoryName());
 			tag.setTag("display", name);
 		}
 	}
@@ -164,7 +164,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				if (doDrain)
 				{
 					internalChange = true;
-					onInventoryChanged();
+					markDirty();
 					internalChange = false;
 				}
 				return drained.amount;
@@ -221,7 +221,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				return;
 			}
 			failedDrops = null;
-			onInventoryChanged();
+			markDirty();
 		}
 	}
 
@@ -235,7 +235,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				failedDrops = new ArrayList<ItemStack>();
 			}
 			failedDrops.add(drop);
-			onInventoryChanged();
+			markDirty();
 		}
 		return true;
 	}
@@ -273,7 +273,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				failedDrops.clear();
 				failedDrops.addAll(missed);
 			}
-			onInventoryChanged();
+			markDirty();
 			return false;
 		}
 		
@@ -294,12 +294,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 	
 	@Override
-	public void openChest()
+	public void openInventory()
 	{
 	}
 	
 	@Override
-	public void closeChest()
+	public void closeInventory()
 	{
 	}
 	
@@ -312,7 +312,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				ItemStack itemstack = _inventory[slot];
 				_inventory[slot] = null;
-				onInventoryChanged();
+				markDirty();
 				return itemstack;
 			}
 			ItemStack itemstack1 = _inventory[slot].splitStack(size);
@@ -320,12 +320,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				_inventory[slot] = null;
 			}
-			onInventoryChanged();
+			markDirty();
 			return itemstack1;
 		}
 		else
 		{
-			onInventoryChanged();
+			markDirty();
 			return null;
 		}
 	}
@@ -341,15 +341,15 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				itemstack = null;
 		}
 		_inventory[i] = itemstack;
-		onInventoryChanged();
+		markDirty();
 	}
 	
 	@Override
-	public void onInventoryChanged()
+	public void markDirty()
 	{
 		if (!internalChange)
 			onFactoryInventoryChanged();
-		super.onInventoryChanged();
+		super.markDirty();
 	}
 	
 	protected void onFactoryInventoryChanged()
@@ -391,10 +391,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		NBTTagList nbttaglist;
 		if (tag.hasKey("Items"))
 		{
-			nbttaglist = tag.getTagList("Items");
+			nbttaglist = tag.getTagList("Items", 10);
 			for (int i = nbttaglist.tagCount(); i --> 0; )
 			{
-				NBTTagCompound slot = (NBTTagCompound)nbttaglist.tagAt(i);
+				NBTTagCompound slot = nbttaglist.getCompoundTagAt(i);
 				int j = slot.getByte("Slot") & 0xff;
 				if(j >= 0 && j < _inventory.length)
 				{
@@ -404,15 +404,15 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				}
 			}
 		}
-		onInventoryChanged();
+		markDirty();
 
 		if (tag.hasKey("mTanks")) {
 			IFluidTank[] _tanks = getTanks();
 			
-			nbttaglist = tag.getTagList("mTanks");
+			nbttaglist = tag.getTagList("mTanks", 10);
 			for(int i = 0; i < nbttaglist.tagCount(); i++)
 			{
-				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				int j = nbttagcompound1.getByte("Tank") & 0xff;
 				if(j >= 0 && j < _tanks.length)
 				{
@@ -458,10 +458,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		if (tag.hasKey("DropItems"))
 		{
 			List<ItemStack> drops = new ArrayList<ItemStack>();
-			nbttaglist = tag.getTagList("DropItems");
+			nbttaglist = tag.getTagList("DropItems", 10);
 			for (int i = nbttaglist.tagCount(); i --> 0; )
 			{
-				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				ItemStack item = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 				if (item != null && item.stackSize > 0)
 				{
@@ -515,11 +515,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			tag.setTag("mTanks", tanks);
 		}
 		
-		if (this.isInvNameLocalized())
+		if (hasCustomInventoryName())
 		{
 			NBTTagCompound display = new NBTTagCompound();
-			display.setString("Name", getInvName());
-			tag.setCompoundTag("display", display);
+			display.setString("Name", getInventoryName());
+			tag.setTag("display", display);
 		}
 		
 		if (failedDrops != null)

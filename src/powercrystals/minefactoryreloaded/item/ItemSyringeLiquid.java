@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
 
 public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerItem
@@ -52,14 +53,14 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	}
 
 	@Override
-	public String getItemDisplayName(ItemStack item)
+	public String getItemStackDisplayName(ItemStack item)
 	{
 		String ret = getFluidName(item), t = getLocalizedName(ret);
 		if (t != null && !t.isEmpty())
 			return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
 		if (ret == null)
 		{
-			return super.getItemDisplayName(item);
+			return super.getItemStackDisplayName(item);
 		}
 		Fluid liquid = FluidRegistry.getFluid(ret);
 		if (liquid != null)
@@ -67,11 +68,11 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 			ret = liquid.getLocalizedName();
 		}
 		_prefix = true;
-		t = super.getItemDisplayName(item);
+		t = super.getItemStackDisplayName(item);
 		_prefix = false;
 		t = t != null ? t.trim() : "";
 		ret = (t.isEmpty() ? "" : t + " ") + ret;
-		t = super.getItemDisplayName(item);
+		t = super.getItemStackDisplayName(item);
 		t = t != null ? t.trim() : "";
 		ret += t.isEmpty() ? " Syringe" : " " + t;
 		return ret;
@@ -116,6 +117,18 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isEmpty(ItemStack syringe)
+	{
+		return getFluidName(syringe) == null;
+	}
+
+	@Override
+	public ItemStack getEmptySyringe(ItemStack syringe)
+	{
+		return new ItemStack(MineFactoryReloadedCore.syringeEmptyItem);
 	}
 
 	@Override

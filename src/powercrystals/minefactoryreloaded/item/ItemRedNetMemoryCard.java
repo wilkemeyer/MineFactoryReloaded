@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +21,7 @@ public class ItemRedNetMemoryCard extends ItemFactory
 	{
 		if(stack.getTagCompound() != null)
 		{
-			infoList.add("Programmed, " + stack.getTagCompound().getTagList("circuits").tagCount() + " circuits");
+			infoList.add("Programmed, " + stack.getTagCompound().getTagList("circuits", 10).tagCount() + " circuits");
 			infoList.add("Place in crafting grid to wipe");
 			// TODO: localize ^
 		}
@@ -43,19 +43,19 @@ public class ItemRedNetMemoryCard extends ItemFactory
 				NBTTagCompound tag = new NBTTagCompound();
 				te.writeToNBT(tag);
 				itemstack.setTagCompound(tag);
-				player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.memorycard.uploaded"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
 			}
 			else
 			{
-				int circuitCount = itemstack.getTagCompound().getTagList("circuits").tagCount();
+				int circuitCount = itemstack.getTagCompound().getTagList("circuits", 10).tagCount();
 				if(circuitCount > ((TileEntityRedNetLogic)te).getCircuitCount())
 				{
-					player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.memorycard.error"));
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
 				}
 				else
 				{
 					((TileEntityRedNetLogic)te).readCircuitsOnly(itemstack.getTagCompound());
-					player.sendChatToPlayer(new ChatMessageComponent().addKey("chat.info.mfr.rednet.memorycard.downloaded"));
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
 				}
 			}
 			

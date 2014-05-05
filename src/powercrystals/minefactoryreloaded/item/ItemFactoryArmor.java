@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cofh.oredict.ItemIdentifier;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -12,9 +13,8 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.common.util.EnumHelper;
 
-import powercrystals.core.oredict.ItemIdentifier;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class ItemFactoryArmor extends ItemArmor
@@ -67,7 +67,7 @@ public class ItemFactoryArmor extends ItemArmor
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer)
+	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
 	{
 		return textureFile;
 	}

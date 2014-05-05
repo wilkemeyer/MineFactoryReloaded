@@ -57,7 +57,10 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				existingStack = slot.getStack();
 				
-				l: if(slot.isItemValid(stack) && existingStack != null && existingStack.itemID == stack.itemID && (!stack.getHasSubtypes() || stack.getItemDamage() == existingStack.getItemDamage()) && ItemStack.areItemStackTagsEqual(stack, existingStack))
+				l: if(slot.isItemValid(stack) && existingStack != null &&
+						existingStack.getItem().equals(stack.getItem()) &&
+						(!stack.getHasSubtypes() || stack.getItemDamage() == existingStack.getItemDamage()) &&
+						ItemStack.areItemStackTagsEqual(stack, existingStack))
 				{
 					if (slotIndex < machineEnd && !_te.canInsertItem(slotIndex, stack, -1))
 						break l;

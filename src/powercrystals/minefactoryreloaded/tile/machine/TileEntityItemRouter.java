@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -10,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.util.UtilInventory;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiItemRouter;
@@ -185,7 +185,9 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 			{
 				if(_inventory[j] != null)
 				{
-					if(_inventory[j].itemID == stack.itemID && (_inventory[j].getItemDamage() == stack.getItemDamage()) || stack.getItem().isDamageable())
+					if (_inventory[j].getItem().equals(stack.getItem()) &&
+							(_inventory[j].getItemDamage() == stack.getItemDamage()) ||
+							stack.getItem().isDamageable())
 					{
 						routeWeights[i] += _inventory[j].stackSize;
 					}

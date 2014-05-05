@@ -6,6 +6,7 @@ import java.util.Random;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -31,7 +32,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
+	public void registerBlockIcons(IIconRegister par1IconRegister)
 	{
 		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
@@ -43,7 +44,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	}
 	
 	@Override
-	public void growTree(World world, int x, int y, int z, Random rand)
+	public void func_149878_d(World world, int x, int y, int z, Random rand)
 	{
 		if (world.isRemote)
 			return;
@@ -54,16 +55,10 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 		if (meta == 1)
 		{
 			if (!new WorldGenMassiveTree().generate(world, rand, x, y, z))
-				world.setBlock(x, y, z, blockID, 1, 4);
+				world.setBlock(x, y, z, this, 1, 4);
 		}
 		else if (!treeGen.growTree(world, rand, x, y, z))
-			world.setBlock(x, y, z, blockID, 0, 4);
-	}
-	
-	@Override
-	public int idDropped(int meta, Random rand, int fortune)
-	{
-		return MineFactoryReloadedCore.rubberSaplingBlock.blockID;
+			world.setBlock(x, y, z, this, 0, 4);
 	}
 
 	@Override
@@ -75,7 +70,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(int blockId, CreativeTabs tab, List subBlocks)
+	public void getSubBlocks(Item blockId, CreativeTabs tab, List subBlocks)
 	{
 		subBlocks.add(new ItemStack(blockId, 1, 0));
 	}

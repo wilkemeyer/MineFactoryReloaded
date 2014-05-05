@@ -369,7 +369,7 @@ chat.info.mfr.safarinet.release = Gewechselt in Freilassmodus
 
 chat.info.mfr.spyglass.nosight = Nichts in Sichtweite
 chat.info.mfr.spyglass.hitentity = %s bei %.1f, %.1f, %.1f gefunden
-chat.info.mfr.spyglass.hitblock = %s [%d:%d] bei %.1f, %.1f, %.1f gefunden
+chat.info.mfr.spyglass.hitblock = %s [%s:%d] bei %.1f, %.1f, %.1f gefunden
 chat.info.mfr.spyglass.hitunknown = UNBEKANNTES (Bug?) bei %.1f, %.1f, %.1f gefunden
 
 chat.info.mfr.ruler.nosight = Nichts in Sichtweite

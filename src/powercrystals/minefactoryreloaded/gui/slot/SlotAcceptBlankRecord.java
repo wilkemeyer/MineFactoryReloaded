@@ -15,6 +15,6 @@ public class SlotAcceptBlankRecord extends Slot
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return stack != null && stack.itemID == MineFactoryReloadedCore.blankRecordItem.itemID;
+		return stack != null && stack.getItem().equals(MineFactoryReloadedCore.blankRecordItem);
 	}
 }

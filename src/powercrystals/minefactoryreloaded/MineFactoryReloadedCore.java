@@ -358,15 +358,15 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		registerFluids();
 
-		milkLiquid = new BlockFactoryFluid(MFRConfig.milkStillBlockId.getInt(), "milk");
-		sludgeLiquid = new BlockFactoryFluid(MFRConfig.sludgeStillBlockId.getInt(), "sludge");
-		sewageLiquid = new BlockFactoryFluid(MFRConfig.sewageStillBlockId.getInt(), "sewage");
-		essenceLiquid = new BlockFactoryFluid(MFRConfig.essenceStillBlockId.getInt(), "mobessence");
-		biofuelLiquid = new BlockFactoryFluid(MFRConfig.biofuelStillBlockId.getInt(), "biofuel");
-		meatLiquid = new BlockFactoryFluid(MFRConfig.meatStillBlockId.getInt(), "meat");
-		pinkSlimeLiquid = new BlockPinkSlimeFluid(MFRConfig.pinkslimeStillBlockId.getInt(), "pinkslime");
-		chocolateMilkLiquid = new BlockFactoryFluid(MFRConfig.chocolateMilkStillBlockId.getInt(), "chocolatemilk");
-		mushroomSoupLiquid = new BlockFactoryFluid(MFRConfig.mushroomSoupStillBlockId.getInt(), "mushroomsoup");
+		milkLiquid = new BlockFactoryFluid("milk");
+		sludgeLiquid = new BlockFactoryFluid("sludge");
+		sewageLiquid = new BlockFactoryFluid("sewage");
+		essenceLiquid = new BlockFactoryFluid("mobessence");
+		biofuelLiquid = new BlockFactoryFluid("biofuel");
+		meatLiquid = new BlockFactoryFluid("meat");
+		pinkSlimeLiquid = new BlockPinkSlimeFluid("pinkslime");
+		chocolateMilkLiquid = new BlockFactoryFluid("chocolatemilk");
+		mushroomSoupLiquid = new BlockFactoryFluid("mushroomsoup");
 
 		sewageBucketItem = (new ItemFactoryBucket(sewageLiquid)).setUnlocalizedName("mfr.bucket.sewage");
 		sludgeBucketItem = (new ItemFactoryBucket(sludgeLiquid)).setUnlocalizedName("mfr.bucket.sludge");
@@ -604,7 +604,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		GameRegistry.registerWorldGenerator(new MineFactoryReloadedWorldGen(), 0);
 
-		TickRegistry.registerScheduledTickHandler(new UpdateManager(this), Side.CLIENT);
+		UpdateManager.registerUpdater(new UpdateManager(this));
 	}
 
 	private void addChestGenItems()
@@ -742,7 +742,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	{
 		if(!e.world.isRemote && e.world.getBlock(e.x, e.y, e.z).equals(rubberSaplingBlock))
 		{
-			((BlockRubberSapling)MineFactoryReloadedCore.rubberSaplingBlock).markOrGrowMarked(e.world, e.x, e.y, e.z, e.world.rand);
+			((BlockRubberSapling)MineFactoryReloadedCore.rubberSaplingBlock).func_149879_c(e.world, e.x, e.y, e.z, e.world.rand);
 			e.setResult(Result.ALLOW);
 		}
 	}

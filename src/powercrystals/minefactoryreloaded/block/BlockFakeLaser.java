@@ -67,7 +67,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	}
 	
 	@Override
-	public boolean isAirBlock(World world, int x, int y, int z)
+	public boolean isAir(IBlockAccess world, int x, int y, int z)
 	{
 		return true;
 	}
@@ -75,13 +75,13 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		world.scheduleBlockUpdate(x, y, z, blockID, 1);
+		world.scheduleBlockUpdate(x, y, z, this, 1);
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block id)
 	{
-		world.scheduleBlockUpdate(x, y, z, blockID, 1);
+		world.scheduleBlockUpdate(x, y, z, this, 1);
 	}
 	
 	@Override
@@ -89,24 +89,24 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	{
 		if (world.isRemote || world.getBlockMetadata(x, y, z) != 0) return;
 		
-		int upperId = world.getBlockId(x, y + 1, z);
-		if (upperId != blockID && !(world.getTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill))
+		Block upperId = world.getBlock(x, y + 1, z);
+		if (!upperId.equals(this) && !(world.getTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill))
 		{
 			world.setBlockToAir(x, y, z);
 			return;
 		}
 		
-		int lowerId = world.getBlockId(x, y - 1, z);
-		if ((lowerId != blockID || world.getBlockMetadata(x, y - 1, z) != 0) &&
-				TileEntityLaserDrill.canReplaceBlock(Block.blocksList[lowerId], world, x, y - 1, z))
+		Block lowerId = world.getBlock(x, y - 1, z);
+		if ((!lowerId.equals(this) || world.getBlockMetadata(x, y - 1, z) != 0) &&
+				TileEntityLaserDrill.canReplaceBlock(lowerId, world, x, y - 1, z))
 		{
-			world.setBlock(x, y - 1, z, blockID);
+			world.setBlock(x, y - 1, z, this);
 		}
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir)
+	public void registerBlockIcons(IIconRegister ir)
 	{
 	}
 }

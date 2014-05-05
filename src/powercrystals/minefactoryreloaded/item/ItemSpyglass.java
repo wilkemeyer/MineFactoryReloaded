@@ -9,9 +9,10 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -25,43 +26,41 @@ public class ItemSpyglass extends ItemFactory
 		if(world.isRemote)
 		{
 			MovingObjectPosition mop = rayTrace();
-			if(mop == null || (mop.typeOfHit == EnumMovingObjectType.ENTITY && mop.entityHit == null))
+			if(mop == null || (mop.typeOfHit == MovingObjectType.ENTITY && mop.entityHit == null))
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addKey("chat.info.mfr.spyglass.nosight"));
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.spyglass.nosight"));
 			}
-			else if(mop.typeOfHit == EnumMovingObjectType.ENTITY)
+			else if(mop.typeOfHit == MovingObjectType.ENTITY)
 			{
-				player.sendChatToPlayer(new ChatMessageComponent()
-						.addText(StatCollector
+				player.addChatMessage(new ChatComponentText("")
+						.appendText(StatCollector
 								.translateToLocalFormatted("chat.info.mfr.spyglass.hitentity",
 										getEntityName(mop.entityHit),
 										mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ)));
 			}
 			else
 			{
-				int blockId = world.getBlockId(mop.blockX, mop.blockY, mop.blockZ);
-				Block block = Block.blocksList[blockId];
+				Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 				ItemStack tempStack = null;
 				if (block != null)
 					tempStack = block.getPickBlock(mop, world, mop.blockX, mop.blockY, mop.blockZ);
 				if (tempStack == null)
-					tempStack = new ItemStack(blockId, 1, world.getBlockMetadata(mop.blockX, mop.blockY,
+					tempStack = new ItemStack(block, 1, world.getBlockMetadata(mop.blockX, mop.blockY,
 							mop.blockZ));
 				if (tempStack.getItem() != null)
 				{
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText(StatCollector
+					player.addChatMessage(new ChatComponentText("")
+							.appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitblock",
 											tempStack.getDisplayName(),
-											world.getBlockId(mop.blockX, mop.blockY, mop.blockZ),
+						Block.blockRegistry.getNameForObject(world.getBlock(mop.blockX, mop.blockY, mop.blockZ)),
 											world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ),
 											(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				}
 				else
 				{
-					player.sendChatToPlayer(new ChatMessageComponent()
-							.addText(StatCollector
+					player.addChatMessage(new ChatComponentText("")
+							.appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitunknown",
 										(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				}

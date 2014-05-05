@@ -75,7 +75,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 					{
 						if (_inventory[i] != null && a.isBreedingItem(_inventory[i]))
 						{
-							a.func_110196_bT();
+							a.func_146082_f(null);
 							decrStackSize(i, 1);
 							return true;
 						}
