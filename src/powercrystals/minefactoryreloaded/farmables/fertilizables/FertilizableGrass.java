@@ -3,46 +3,33 @@ package powercrystals.minefactoryreloaded.farmables.fertilizables;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
+
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 
 public class FertilizableGrass implements IFactoryFertilizable
 {
 	@Override
-	public boolean canFertilizeBlock(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		return (fertilizerType == FertilizerType.GrowPlant || fertilizerType == FertilizerType.Grass) && world.getBlockId(x, y + 1, z) == 0;
+		return (fertilizerType == FertilizerType.GrowPlant ||
+				fertilizerType == FertilizerType.Grass) &&
+				world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z);
 	}
 	
 	@Override
 	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		for(int xOffset = -1; xOffset <= 1; xOffset++)
-		{
-			for(int zOffset = -1; zOffset <= 1; zOffset++)
-			{
-				if(rand.nextInt(6) != 0)
-				{
-					if(Block.tallGrass.canBlockStay(world, x + xOffset, y + 1, z + zOffset))
-					{
-						world.setBlock(x + xOffset, y + 1, z + zOffset, Block.tallGrass.blockID, 1, 2);
-					}
-				}
-				else
-				{
-					ForgeHooks.plantGrass(world, x + xOffset, y + 1, z + zOffset);
-				}
-			}
-		}
-		
-		return world.getBlockId(x, y + 1, z) != 0;
+		((IGrowable)world.getBlock(x, y, z)).func_149853_b(world, rand, x, y, z);
+		return !world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z);
 	}
 	
 	@Override
-	public int getFertilizableBlockId()
+	public Block getPlant()
 	{
-		return Block.grass.blockID;
+		return Blocks.grass;
 	}
 }

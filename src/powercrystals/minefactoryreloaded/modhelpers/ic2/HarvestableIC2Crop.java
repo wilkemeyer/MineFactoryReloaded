@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -18,17 +19,17 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
 public class HarvestableIC2Crop implements IFactoryHarvestable
 {
-	private int _blockId;
+	private Block _block;
 	
-	public HarvestableIC2Crop(int blockId)
+	public HarvestableIC2Crop(Block block)
 	{
-		_blockId = blockId;
+		_block = block;
 	}
 	
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
-		return _blockId;
+		return _block;
 	}
 	
 	@Override

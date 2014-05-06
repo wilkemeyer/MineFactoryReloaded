@@ -13,13 +13,13 @@ public class Multipulse implements IRedNetLogicCircuit
 	private boolean _lastClockState;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 5;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 2;
 	}

@@ -8,13 +8,13 @@ public class LatchSRGated implements IRedNetLogicCircuit
 	private boolean _value;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 3;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 2;
 	}

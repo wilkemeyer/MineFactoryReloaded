@@ -1,8 +1,10 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
 
+import net.minecraft.block.Block;
+
 class PamFertilizableFlower extends PamFertilizable
 {
-	public PamFertilizableFlower(int blockID) throws ClassNotFoundException
+	public PamFertilizableFlower(Block blockID) throws ClassNotFoundException
 	{
 		super(blockID);
 		getGrowthStage=Pam.pamTEFlowerGetGrowthStage;

@@ -6,29 +6,29 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
+
 import powercrystals.minefactoryreloaded.api.HarvestType;
 
 public class HarvestableTreeLeaves extends HarvestableStandard
 {
-	public HarvestableTreeLeaves(int id)
+	public HarvestableTreeLeaves(Block block)
 	{
-		super(id, HarvestType.TreeLeaf);
+		super(block, HarvestType.TreeLeaf);
 	}
 	
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		if(harvesterSettings.get("silkTouch") != null && harvesterSettings.get("silkTouch"))
+		if (harvesterSettings.get("silkTouch") == Boolean.TRUE)
 		{
-			int blockId = world.getBlockId(x, y, z);
-			Block block = Block.blocksList[blockId];
+			Block block = world.getBlock(x, y, z);
 			if (block instanceof IShearable)
 			{
-				ItemStack stack = new ItemStack(Item.shears, 1, 0);
+				ItemStack stack = new ItemStack(Items.shears, 1, 0);
 				if (((IShearable)block).isShearable(stack, world, x, y, z))
 				{
 					return ((IShearable)block).onSheared(stack, world, x, y, z, 0);
@@ -36,26 +36,19 @@ public class HarvestableTreeLeaves extends HarvestableStandard
 			}
 			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 			int meta = block.getDamageValue(world, x, y, z);
-			drops.add(new ItemStack(getPlantId(), 1, meta));
-			return drops;
-		}
-		else if(getPlantId() == Block.leaves.blockID && (world.getBlockMetadata(x, y, z) & 3) == 0)
-		{
-			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-			if(rand.nextInt(20) == 0) drops.add(new ItemStack(Block.sapling));
-			if(rand.nextInt(200) == 0) drops.add(new ItemStack(Item.appleRed));
+			drops.add(new ItemStack(getPlant(), 1, meta));
 			return drops;
 		}
 		else
 		{
-			return Block.blocksList[getPlantId()].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+			return getPlant().getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 		}
 	}
 	
 	@Override
 	public void postHarvest(World world, int x, int y, int z)
 	{
-		int id = getPlantId();
+		Block id = getPlant();
 		
         notifyBlock(world, x, y - 1, z, id);
         notifyBlock(world, x - 1, y, z, id);
@@ -65,10 +58,10 @@ public class HarvestableTreeLeaves extends HarvestableStandard
         notifyBlock(world, x, y + 1, z, id);
 	}
 	
-	protected void notifyBlock(World world, int x, int y, int z, int id)
+	protected void notifyBlock(World world, int x, int y, int z, Block id)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
-		if (block != null && !block.isLeaves(world, x, y, z))
+		Block block = world.getBlock(x, y, z);
+		if (!block.isLeaves(world, x, y, z))
 			world.notifyBlockOfNeighborChange(x, y, z, id);
 	}
 }

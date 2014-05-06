@@ -11,7 +11,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class ItemBlockVineScaffold extends ItemBlock
 {
-	public ItemBlockVineScaffold(int id)
+	public ItemBlockVineScaffold(net.minecraft.block.Block id)
 	{
 		super(id);
 	}
@@ -21,7 +21,7 @@ public class ItemBlockVineScaffold extends ItemBlock
 			int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
 	{
 		if (world.isRemote && !player.isSneaking() && 
-				world.getBlockId(x, y, z) == MineFactoryReloadedCore.vineScaffoldBlock.blockID)
+				world.getBlock(x, y, z).equals(MineFactoryReloadedCore.vineScaffoldBlock))
 		{
 			if (MineFactoryReloadedCore.vineScaffoldBlock.onBlockActivated(world, x, y, z,
 						player, side, xOffset, yOffset, zOffset))
@@ -32,11 +32,11 @@ public class ItemBlockVineScaffold extends ItemBlock
 	
     @Override
 	@SideOnly(Side.CLIENT)
-    public boolean canPlaceItemBlockOnSide(World world, int x, int y, int z, int side,
+    public boolean func_150936_a(World world, int x, int y, int z, int side,
     		EntityPlayer player, ItemStack stack)
     {
     	return (player.isSneaking() ||
-    			world.getBlockId(x, y, z) != MineFactoryReloadedCore.vineScaffoldBlock.blockID) &&
-    			super.canPlaceItemBlockOnSide(world, x, y, z, side, player, stack);
+    			!world.getBlock(x, y, z).equals(MineFactoryReloadedCore.vineScaffoldBlock)) &&
+    			super.func_150936_a(world, x, y, z, side, player, stack);
     }
 }

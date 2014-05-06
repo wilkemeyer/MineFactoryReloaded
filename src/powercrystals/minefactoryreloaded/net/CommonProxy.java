@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.FMLCommonHandler;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,8 +19,6 @@ import net.minecraftforge.client.event.TextureStitchEvent.Post;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
-
-import org.bouncycastle.util.Arrays;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
@@ -59,7 +57,8 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 	public void init()
 	{
 		gridTickHandler = new GridTickHandler();
-		TickRegistry.registerScheduledTickHandler(gridTickHandler, Side.SERVER);
+		FMLCommonHandler.instance().bus().register(gridTickHandler);
+		FMLCommonHandler.instance().bus().register(new ConnectionHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
 

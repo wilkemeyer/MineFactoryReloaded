@@ -1,43 +1,40 @@
 package powercrystals.minefactoryreloaded.farmables.fertilizables;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizer;
 
 public class FertilizerStandard implements IFactoryFertilizer
 {
-	private int _id;
+	private Item _item;
 	private int _meta;
 	private FertilizerType _type;
 	
-	public FertilizerStandard(int id, int meta)
+	public FertilizerStandard(Item item, int meta)
 	{
-		this(id, meta, FertilizerType.GrowPlant);
+		this(item, meta, FertilizerType.GrowPlant);
 	}
 	
-	public FertilizerStandard(int id, int meta, FertilizerType type)
+	public FertilizerStandard(Item item, int meta, FertilizerType type)
 	{
-		_id = id;
+		_item = item;
 		_meta = meta;
 		_type = type;
 	}
 	
 	@Override
-	public int getFertilizerId()
+	public Item getFertilizer()
 	{
-		return _id;
+		return _item;
 	}
 	
 	@Override
-	public int getFertilizerMeta()
+	public FertilizerType getFertilizerType(ItemStack stack)
 	{
-		return _meta;
-	}
-	
-	@Override
-	public FertilizerType getFertilizerType()
-	{
-		return  _type;
+		if (stack.getItemDamage() == _meta)
+			return _type;
+		return FertilizerType.None;
 	}
 	
 	@Override

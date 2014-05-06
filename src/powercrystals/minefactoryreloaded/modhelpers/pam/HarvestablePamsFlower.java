@@ -6,18 +6,20 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class HarvestablePamsFlower extends HarvestablePams
 {
-	public HarvestablePamsFlower( int sourceId ) throws ClassNotFoundException
+	public HarvestablePamsFlower( Block sourceId ) throws ClassNotFoundException
 	{
 		super( sourceId );
 		getGrowthStage = Pam.pamTEFlowerGetGrowthStage;
 		getCrop = Pam.pamTEFlowerGetCropId;
 	}
+	@SuppressWarnings("unused")
 	@Override
 	public List<ItemStack> getDrops( World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z )
 	{
@@ -35,24 +37,24 @@ public class HarvestablePamsFlower extends HarvestablePams
 				switch ( cropID )
 				{
 				case 4:
-					outStack.add( new ItemStack( Block.plantYellow, seedDrops, 0 ) );
+					outStack.add( new ItemStack( Blocks.yellow_flower, seedDrops, 0 ) );
 					break;
 				case 14:
-					outStack.add( new ItemStack( Block.plantRed, seedDrops, 0 ) );
+					outStack.add( new ItemStack( Blocks.red_flower, seedDrops, 0 ) );
 					break;
 				default:
 					if(cropID>14)
 						cropID-=2;
 					else if(cropID>4)
 						cropID-=1;
-					outStack.add( new ItemStack( Pam.flowerId, cropDrops, cropID ) );
+					//outStack.add( new ItemStack( Pam.flowerId, cropDrops, cropID ) );
 				}
 				if(harvesterSettings.get("playSounds"))
 				{
 					world.playAuxSFXAtEntity(null, 2001, x,y,z,
-							_sourceId + (0 << 12));
+							Block.getIdFromBlock(_sourceId) + (0 << 12));
 				}
-				outStack.add( new ItemStack( Pam.flowerSeeds[seedID], seedDrops, 0 ) );
+				//outStack.add( new ItemStack( Pam.flowerSeeds[seedID], seedDrops, 0 ) );
 			}
 			catch ( Exception ex )
 			{
@@ -64,7 +66,7 @@ public class HarvestablePamsFlower extends HarvestablePams
 	@Override
 	public void postHarvest( World world, int x, int y, int z )
 	{
-		world.removeBlockTileEntity(x,y,z);
+		world.removeTileEntity(x,y,z);
 
 		world.setBlockToAir(x,y,z);
 	}

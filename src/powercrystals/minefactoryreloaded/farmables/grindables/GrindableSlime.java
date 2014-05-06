@@ -15,11 +15,11 @@ import powercrystals.minefactoryreloaded.api.MobDrop;
 
 public class GrindableSlime implements IFactoryGrindable
 {
-	protected Class<?> grindable;
+	protected Class<? extends EntityLivingBase> grindable;
 	protected ArrayList<MobDrop> drops;
 	protected int dropSize;
 
-	public GrindableSlime(Class<?> slime, MobDrop[] drops, int dropSize)
+	public GrindableSlime(Class<? extends EntityLivingBase> slime, MobDrop[] drops, int dropSize)
 	{
 		grindable = slime;
 		ArrayList<MobDrop> q = new ArrayList<MobDrop>();
@@ -28,12 +28,12 @@ public class GrindableSlime implements IFactoryGrindable
 		this.dropSize = dropSize;
 	}
 
-	public GrindableSlime(Class<?> slime, MobDrop drop, int dropSize)
+	public GrindableSlime(Class<? extends EntityLivingBase> slime, MobDrop drop, int dropSize)
 	{
 		this(slime, new MobDrop[]{drop}, dropSize);
 	}
 
-	public GrindableSlime(Class<?> slime, ItemStack[] drops, int dropSize)
+	public GrindableSlime(Class<? extends EntityLivingBase> slime, ItemStack[] drops, int dropSize)
 	{
 		grindable = slime;
 		ArrayList<MobDrop> q = new ArrayList<MobDrop>();
@@ -43,13 +43,13 @@ public class GrindableSlime implements IFactoryGrindable
 		this.dropSize = dropSize;
 	}
 
-	public GrindableSlime(Class<?> slime, ItemStack drop, int dropSize)
+	public GrindableSlime(Class<? extends EntityLivingBase> slime, ItemStack drop, int dropSize)
 	{
 		this(slime, new MobDrop[]{new MobDrop(10, drop), new MobDrop(20, null)}, dropSize);
 	}
 
 	@Override
-	public Class<?> getGrindableEntity() {
+	public Class<? extends EntityLivingBase> getGrindableEntity() {
 		return grindable;
 	}
 

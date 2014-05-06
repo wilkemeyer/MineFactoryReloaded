@@ -14,17 +14,17 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 public class HarvestableChococraft implements IFactoryHarvestable
 {
 	
-	private int blockId;
+	private Block _block;
 	
-	public HarvestableChococraft(int blockId)
+	public HarvestableChococraft(Block block)
 	{
-		this.blockId = blockId;
+		_block = block;
 	}
 	
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
-		return this.blockId;
+		return _block;
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class HarvestableChococraft implements IFactoryHarvestable
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return Block.blocksList[blockId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		return _block.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 	
 	@Override
@@ -63,5 +63,6 @@ public class HarvestableChococraft implements IFactoryHarvestable
 	@Override
 	public void postHarvest(World world, int x, int y, int z)
 	{
+		world.notifyBlocksOfNeighborChange(x, y, z, _block);
 	}
 }

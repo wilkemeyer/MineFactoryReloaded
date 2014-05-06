@@ -8,13 +8,13 @@ public class Triangle implements IRedNetLogicCircuit
 	private boolean _invert = false;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 0;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

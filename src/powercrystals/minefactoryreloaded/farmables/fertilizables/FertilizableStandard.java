@@ -1,26 +1,42 @@
 package powercrystals.minefactoryreloaded.farmables.fertilizables;
 
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 
-public abstract class FertilizableStandard extends FertilizableBase
+public class FertilizableStandard extends FertilizableBase
 {
-	public FertilizableStandard(int id, FertilizerType type)
+	public FertilizableStandard(IGrowable block, FertilizerType type)
 	{
-		super(id, type);
+		super((Block)block, type);
 	}
 	
-	public FertilizableStandard(int id)
+	public FertilizableStandard(IGrowable block)
 	{
-		this(id, FertilizerType.GrowPlant);
+		this(block, FertilizerType.GrowPlant);
 	}
 	
 	@Override
-	public boolean canFertilizeBlock(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		return fertilizerType == validFertilizer && canFertilize(world.getBlockMetadata(x, y, z));
+		return fertilizerType == validFertilizer;
 	}
 	
-	protected abstract boolean canFertilize(int metadata);
+	@Override
+	protected boolean canFertilize(int metadata)
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	{
+		Block block = world.getBlock(x, y, z);
+		((IGrowable)block).func_149853_b(world, rand, x, y, z);
+		return world.getBlock(x, y, z) != block;
+	}
 }

@@ -2,6 +2,9 @@ package powercrystals.minefactoryreloaded.tile.base;
 
 import buildcraft.api.gates.IAction;
 
+import cofh.asm.relauncher.Implementable;
+import cofh.pcc.util.UtilInventory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +22,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
-import cofh.asm.relauncher.Implementable;
-import cofh.pcc.util.UtilInventory;
-import cofh.util.position.BlockPosition;
-import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -117,12 +116,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		writeItemNBT(tag);
-		if (!tag.hasNoTags())
-			BlockNBTManager.setForBlock(new BlockPosition(xCoord, yCoord, zCoord), tag);
 		onDisassembled();
 	}
 	
-	protected void writeItemNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
 		if (hasCustomInventoryName())
 		{

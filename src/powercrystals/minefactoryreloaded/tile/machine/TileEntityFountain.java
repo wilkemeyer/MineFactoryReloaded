@@ -124,7 +124,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 					if (_fillingManager == null)
 						_fillingManager = new FluidFillingManager(worldObj, area);
 					else
-						_fillingManager.reset(worldObj, area, null);
+						_fillingManager.reset(worldObj, area, null, null);
 				}
 			}
 		}

@@ -19,7 +19,7 @@ public class BlockDetCord extends BlockContainer
 		super(Machine.MATERIAL);
 		setHardness(2.0F);
 		setResistance(10.0F);
-		setStepSound(soundSnowFootstep);
+		setStepSound(soundTypeSnow);
 		setBlockName("mfr.detcord");
 		setCreativeTab(MFRCreativeTab.tab);
 	}

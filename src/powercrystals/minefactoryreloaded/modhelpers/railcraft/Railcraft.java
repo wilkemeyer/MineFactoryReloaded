@@ -37,9 +37,9 @@ public class Railcraft {
 		}
 		try
 		{
-			int id = MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID;
-			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 8));
-			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 9));
+			//int id = MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID;
+			//FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 8));
+			//FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 9));
 			// white sand? black sand?
 
 			Object rockCrusher = Class.forName("mods.railcraft.api.crafting.RailcraftCraftingManager").getField("rockCrusher").get(null);

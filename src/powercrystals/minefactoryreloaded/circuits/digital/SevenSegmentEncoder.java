@@ -28,13 +28,13 @@ public class SevenSegmentEncoder extends StatelessCircuit
 			};
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 1;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 7;
 	}

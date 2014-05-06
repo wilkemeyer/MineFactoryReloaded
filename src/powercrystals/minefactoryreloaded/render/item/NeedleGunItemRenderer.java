@@ -17,14 +17,16 @@ import net.minecraftforge.client.model.IModelCustom;
 @SideOnly(Side.CLIENT)
 public class NeedleGunItemRenderer implements IItemRenderer
 {
-	private static final ResourceLocation needleGun = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "NeedleGun.png");
+	private static final ResourceLocation needleGun =
+			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "NeedleGun.png");
 	private IModelCustom _model;
 	
 	public NeedleGunItemRenderer()
 	{
 		try
 		{
-			_model = AdvancedModelLoader.loadModel("/powercrystals/minefactoryreloaded/models/NeedleGun.obj");
+			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
+					"/powercrystals/minefactoryreloaded/models/NeedleGun.obj"));
 		}
 		catch(Exception e)
 		{

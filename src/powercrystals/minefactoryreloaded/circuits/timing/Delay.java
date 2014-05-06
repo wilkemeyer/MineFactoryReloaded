@@ -11,13 +11,13 @@ public class Delay extends StatelessCircuit
 	private ArrayList<Integer> history = new ArrayList<Integer>();
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 2;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

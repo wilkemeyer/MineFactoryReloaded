@@ -7,9 +7,9 @@ import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableBase;
 
-public class FertilizableTCSapling extends FertilizableStandard
+public class FertilizableTCSapling extends FertilizableBase
 {
 	private Method growSilverWood, growGreatWood;
 	private Block plant;
@@ -17,7 +17,7 @@ public class FertilizableTCSapling extends FertilizableStandard
 	
 	public FertilizableTCSapling(Block tcplant)
 	{
-		super(tcplant.blockID, FertilizerType.GrowMagicalCrop);
+		super(tcplant, FertilizerType.GrowMagicalCrop);
 		plant = tcplant;
 		try
 		{
@@ -56,6 +56,6 @@ public class FertilizableTCSapling extends FertilizableStandard
 			_.printStackTrace();
 			error = true;
 		}
-		return world.getBlockId(x, y, z) != getFertilizableBlockId();
+		return world.getBlock(x, y, z) != getPlant();
 	}
 }

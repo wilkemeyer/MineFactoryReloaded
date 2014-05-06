@@ -239,7 +239,7 @@ public class BlockRedNetLogic extends BlockContainer implements IConnectableRedN
 	}
 	
 	@Override
-	public boolean isBlockNormalCube(World world, int x, int y, int z)
+	public boolean isNormalCube()
 	{
 		return false;
 	}

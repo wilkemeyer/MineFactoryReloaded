@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -8,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
+import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiPlanter;
@@ -67,7 +68,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			if (availableStack == null ||
 					(match != null &&
 					!stacksEqual(match, availableStack)) ||
-					!MFRRegistry.getPlantables().containsKey(new Integer(availableStack.itemID)))
+					!MFRRegistry.getPlantables().containsKey(availableStack.getItem()))
 			{
 				continue;
 			}
@@ -76,16 +77,15 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			{
 				continue;
 			}
-			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(new Integer(availableStack.itemID));
+			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(availableStack.getItem());
 			
-			if(!plantable.canBePlantedHere(worldObj, bp.x, bp.y, bp.z, availableStack))
-			{
+			if (!plantable.canBePlanted(availableStack) ||
+					!plantable.canBePlantedHere(worldObj, bp.x, bp.y, bp.z, availableStack))
 				continue;
-			}
+
 			plantable.prePlant(worldObj, bp.x, bp.y, bp.z, availableStack);
-			if (!worldObj.setBlock(bp.x, bp.y, bp.z,
-					plantable.getPlantedBlockId(worldObj, bp.x, bp.y, bp.z, availableStack),
-					plantable.getPlantedBlockMetadata(worldObj, bp.x, bp.y, bp.z, availableStack), 3))
+			ReplacementBlock block = plantable.getPlantedBlock(worldObj, bp.x, bp.y, bp.z, availableStack);
+			if (block == null || !block.replaceBlock(worldObj, bp.x, bp.y, bp.z))
 				continue;
 			plantable.postPlant(worldObj, bp.x, bp.y, bp.z, availableStack);
 			decrStackSize(stackIndex, 1);
@@ -194,7 +194,8 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		{
 			if(slot > 9)
 			{
-				return MFRRegistry.getPlantables().containsKey(new Integer(stack.itemID));
+				IFactoryPlantable p = MFRRegistry.getPlantables().get(stack.getItem());
+				return p != null && p.canBePlanted(stack);
 			}
 			else if(slot == 9)
 			{

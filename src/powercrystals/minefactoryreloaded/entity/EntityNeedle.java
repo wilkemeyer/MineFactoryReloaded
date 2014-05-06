@@ -127,7 +127,7 @@ public class EntityNeedle extends Entity implements IProjectile
 		++this.ticksInAir;
 		Vec3 pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
 		Vec3 nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-		MovingObjectPosition hit = this.worldObj.rayTraceBlocks_do_do(pos, nextPos, false, true);
+		MovingObjectPosition hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
 		pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
 		nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 		
@@ -186,17 +186,17 @@ public class EntityNeedle extends Entity implements IProjectile
 		distance += speed;
 		if(hit != null && !worldObj.isRemote)
 		{
-			if (MFRRegistry.getNeedleAmmoTypes().containsKey(_ammoSource.itemID))
+			if (MFRRegistry.getNeedleAmmoTypes().containsKey(_ammoSource.getItem()))
 			{
 				if(hit.entityHit != null)
 				{
-					MFRRegistry.getNeedleAmmoTypes().get(_ammoSource.itemID).onHitEntity(owner, hit.entityHit,
-							distance);
+					MFRRegistry.getNeedleAmmoTypes().get(_ammoSource.getItem()).onHitEntity(_ammoSource,
+							owner, hit.entityHit, distance);
 				}
 				else
 				{
-					MFRRegistry.getNeedleAmmoTypes().get(_ammoSource.itemID).onHitBlock(owner, worldObj,
-							hit.blockX, hit.blockY, hit.blockZ, hit.sideHit, distance);
+					MFRRegistry.getNeedleAmmoTypes().get(_ammoSource.getItem()).onHitBlock(_ammoSource, 
+							owner, worldObj, hit.blockX, hit.blockY, hit.blockZ, hit.sideHit, distance);
 				}
 			}
 			setDead();
@@ -255,13 +255,13 @@ public class EntityNeedle extends Entity implements IProjectile
 		this.motionY *= speedDropoff;
 		this.motionZ *= speedDropoff;
 		this.setPosition(this.posX, this.posY, this.posZ);
-		this.doBlockCollisions();
+		this.func_145775_I();
 	}
 	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound tag)
 	{
-		tag.setCompoundTag("ammoSource", _ammoSource.writeToNBT(new NBTTagCompound()));
+		tag.setTag("ammoSource", _ammoSource.writeToNBT(new NBTTagCompound()));
 		tag.setDouble("distance", distance);
 		tag.setBoolean("falling", _falling);
 		if (_owner != null)
@@ -271,15 +271,7 @@ public class EntityNeedle extends Entity implements IProjectile
 	@Override
 	public void readEntityFromNBT(NBTTagCompound tag)
 	{
-		if (tag.hasKey("ammoItemId"))
-		{
-			_ammoSource = new ItemStack(tag.getInteger("ammoItemId"), 1, 0);
-			distance = tag.getDouble("distance");
-			_falling = tag.getBoolean("falling");
-			if (tag.hasKey("owner"))
-				_owner = tag.getString("owner");
-		}
-		else if (tag.hasKey("ammoSource"))
+		if (tag.hasKey("ammoSource"))
 		{
 			_ammoSource = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("ammoSource"));
 			distance = tag.getDouble("distance");

@@ -2,51 +2,32 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.ArrayQueue;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
 public class TileEntityRedNetHistorian extends TileEntityFactory
 {
-	/*private class HistorianData
-	{
-		int value;
-		long worldTime;
-		
-		public HistorianData(int value, long worldTime)
-		{
-			this.value = value;
-			this.worldTime = worldTime;
-		}
-	}*/
+	@SideOnly(Side.CLIENT)
+	private ArrayQueue<Integer> _valuesClient;
+	@SideOnly(Side.CLIENT)
+	private int _currentValueClient;
 	
-	private ArrayQueue<Integer> _valuesClient = new ArrayQueue<Integer>(100);
-	private int _currentValueClient = 0;
 	private int _currentSubnet = 0;
-	
 	private int[] _lastValues = new int[16];
-	//private Map<Integer, Queue<HistorianData>> _data = new HashMap<Integer, Queue<HistorianData>>();
 	
 	public TileEntityRedNetHistorian()
 	{
 		super(null);
-		/*for(int i = 0; i < 16; i++)
-		{
-			_data.put(i, new ArrayBlockingQueue<HistorianData>(100));
-		}*/
 	}
 	
 	@Override
@@ -64,28 +45,75 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
 		NBTTagCompound data = pkt.func_148857_g();
-		_currentSubnet = data.getInteger("subnet");
-		_currentValueClient = data.getInteger("current");
-		rotateDirectlyTo(data.getInteger("facing"));
+		switch (pkt.func_148853_f())
+		{
+		case 0:
+			_currentSubnet = data.getInteger("subnet");
+			_currentValueClient = data.getInteger("current");
+			rotateDirectlyTo(data.getInteger("facing"));
+			break;
+		case 1:
+			_currentValueClient = data.getInteger("value");
+			break;
+		}
 	}
 	
 	@Override
 	public void validate()
 	{
-		if(!worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
 			setSelectedSubnet(_currentSubnet);
+		}
+		else
+		{
+			_valuesClient = new ArrayQueue<Integer>(100);
+			_currentValueClient = 0;
 		}
 	}
 	
 	@Override
+	@SideOnly(Side.SERVER)
+	public boolean canUpdate()
+	{
+		return false;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if(worldObj.isRemote)
+		if (worldObj.isRemote)
 		{
 			_valuesClient.pop();
 			_valuesClient.push(_currentValueClient);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public Integer[] getValues()
+	{
+		Integer[] values = new Integer[_valuesClient.size()];
+		return _valuesClient.toArray(values);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setClientValue(int value)
+	{
+		_currentValueClient = value;
+	}
+	
+	public void setSelectedSubnet(int newSubnet)
+	{
+		_currentSubnet = newSubnet;
+		if (worldObj.isRemote)
+		{
+			_valuesClient.fill(null);
+		}
+		else
+		{
+			sendValue(_lastValues[_currentSubnet]);
 		}
 	}
 	
@@ -95,45 +123,26 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		{
 			if(values[i] != _lastValues[i])
 			{
-				//_data.get(i).add(new HistorianData(values[i], worldObj.getWorldTime()));
 				_lastValues[i] = values[i];
-				if(i == _currentSubnet)
+				if (i == _currentSubnet)
 				{
-					PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, PacketWrapper.createPacket(
-							MineFactoryReloadedCore.modNetworkChannel, Packets.HistorianValueChanged, new Object[] { xCoord, yCoord, zCoord, values[i] }));
+					sendValue(values[i]);
 				}
 			}
 		}
 	}
 	
-	public Integer[] getValues()
+	protected void sendValue(int value)
 	{
-		Integer[] values = new Integer[_valuesClient.size()];
-		return _valuesClient.toArray(values);
-	}
-	
-	public void setSelectedSubnet(int newSubnet)
-	{
-		_currentSubnet = newSubnet;
-		if(worldObj.isRemote)
-		{
-			_valuesClient.fill(null);
-		}
-		else
-		{
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, PacketWrapper.createPacket(
-					MineFactoryReloadedCore.modNetworkChannel, Packets.HistorianValueChanged, new Object[] { xCoord, yCoord, zCoord, _lastValues[_currentSubnet] }));
-		}
+		NBTTagCompound data = new NBTTagCompound();
+		data.setInteger("value", value);
+		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 50,
+				new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
 	}
 	
 	public int getSelectedSubnet()
 	{
 		return _currentSubnet;
-	}
-	
-	public void setClientValue(int value)
-	{
-		_currentValueClient = value;
 	}
 	
 	@Override
@@ -159,13 +168,6 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	@Override
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		return ConnectOverride.DISCONNECT;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		return INFINITE_EXTENT_AABB; // TODO: no
 	}
 
     @Override

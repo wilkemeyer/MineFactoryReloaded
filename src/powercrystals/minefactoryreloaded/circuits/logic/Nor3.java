@@ -5,13 +5,13 @@ import powercrystals.minefactoryreloaded.circuits.base.StatelessCircuit;
 public class Nor3 extends StatelessCircuit
 {
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 3;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

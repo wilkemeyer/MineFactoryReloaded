@@ -9,13 +9,13 @@ public class RandomizerDigital extends StatelessCircuit
 	private Random _rand;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 0;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

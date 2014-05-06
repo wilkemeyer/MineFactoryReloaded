@@ -8,13 +8,13 @@ public class OneShot implements IRedNetLogicCircuit
 	private boolean _lastState;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 1;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

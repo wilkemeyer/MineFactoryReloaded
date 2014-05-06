@@ -2,20 +2,20 @@ package powercrystals.minefactoryreloaded.farmables.harvestables;
 
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 
 public class HarvestableMushroom extends HarvestableStandard
 {
-	public HarvestableMushroom(int sourceId)
+	public HarvestableMushroom(Block block)
 	{
-		super(sourceId, HarvestType.Normal);
+		super(block, HarvestType.Normal);
 	}
 	
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		if(harvesterSettings.get("harvestSmallMushrooms") == null) return false;
-		return harvesterSettings.get("harvestSmallMushrooms");
+		return harvesterSettings.get("harvestSmallMushrooms") == Boolean.TRUE;
 	}
 }

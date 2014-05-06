@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -7,9 +8,9 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
 public class PlantableThaumcraftTree extends PlantableSapling
 {
-	public PlantableThaumcraftTree(int sourceId, int plantedBlockId)
+	public PlantableThaumcraftTree(Block sourceId)
 	{
-		super(sourceId, plantedBlockId);
+		super(sourceId);
 	}
 	
 	@Override

@@ -3,14 +3,18 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizer;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
@@ -58,41 +62,39 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 	public boolean activateMachine()
 	{
 		BlockPosition bp = _areaManager.getNextBlock();
+		Map<Block, IFactoryFertilizable> fertalizables = MFRRegistry.getFertilizables();
 		
-		int targetId = worldObj.getBlockId(bp.x, bp.y, bp.z);
-		if(!MFRRegistry.getFertilizables().containsKey(new Integer(targetId)))
+		Block target = worldObj.getBlock(bp.x, bp.y, bp.z);
+		if (!fertalizables.containsKey(target))
 		{
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
-		for(int stackIndex = 0; stackIndex < getSizeInventory(); stackIndex++)
+		
+		IFactoryFertilizable fertilizable = fertalizables.get(target);
+		Map<Item, IFactoryFertilizer> fertilizers = MFRRegistry.getFertilizers();
+		for (int stackIndex = 0, e = getSizeInventory(); stackIndex < e; stackIndex++)
 		{
 			ItemStack fertStack = getStackInSlot(stackIndex);
-			if(fertStack == null || !MFRRegistry.getFertilizers().containsKey(new Integer(fertStack.itemID)))
-			{
+			if (fertStack == null || !fertilizers.containsKey(fertStack.getItem()))
 				continue;
-			}
-			IFactoryFertilizer fertilizer = MFRRegistry.getFertilizers().get(new Integer(fertStack.itemID));
-			IFactoryFertilizable fertilizable = MFRRegistry.getFertilizables().get(new Integer(targetId));
-			
-			if(fertilizer.getFertilizerMeta() != fertStack.getItemDamage())
-			{
+
+			IFactoryFertilizer fertilizer = fertilizers.get(fertStack.getItem());
+			FertilizerType type = fertilizer.getFertilizerType(fertStack);
+
+			if (type == FertilizerType.None)
 				continue;
-			}
-			
-			if(!fertilizable.canFertilizeBlock(worldObj, bp.x, bp.y, bp.z, fertilizer.getFertilizerType()))
-			{
+			if (!fertilizable.canFertilize(worldObj, bp.x, bp.y, bp.z, type))
 				continue;
-			}
-			if(fertilizable.fertilize(worldObj, _rand, bp.x, bp.y, bp.z, fertilizer.getFertilizerType()))
+
+			if (fertilizable.fertilize(worldObj, _rand, bp.x, bp.y, bp.z, type))
 			{
 				fertilizer.consume(fertStack);
 				if (MFRConfig.playSounds.getBoolean(true)) // particles
 					worldObj.playAuxSFXAtEntity(null, 2005, bp.x, bp.y, bp.z, _rand.nextInt(10) + 5);
 				if(fertStack.stackSize <= 0)
-				{
 					setInventorySlotContents(stackIndex, null);
-				}
+
 				return true;
 			}
 		}
@@ -138,7 +140,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 		{
 			if(slot < 9)
 			{
-				return MFRRegistry.getFertilizers().containsKey(new Integer(stack.itemID));
+				return MFRRegistry.getFertilizers().containsKey(stack.getItem());
 			}
 			else if(slot == 9)
 			{

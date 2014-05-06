@@ -5,13 +5,13 @@ import powercrystals.minefactoryreloaded.circuits.base.StatelessCircuit;
 public class Noop extends StatelessCircuit
 {
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 0;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 0;
 	}

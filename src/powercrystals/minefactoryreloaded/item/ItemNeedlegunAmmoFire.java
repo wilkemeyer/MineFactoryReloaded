@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 
 public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock
@@ -13,7 +14,7 @@ public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock
 	}
 
 	@Override
-	public boolean onHitEntity(EntityPlayer owner, Entity hit, double distance)
+	public boolean onHitEntity(ItemStack stack, EntityPlayer owner, Entity hit, double distance)
 	{
 		hit.setFire(10);
 		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
@@ -21,7 +22,7 @@ public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock
 	}
 	
 	@Override
-	public float getSpread()
+	public float getSpread(ItemStack stack)
 	{
 		return 2.0F;
 	}

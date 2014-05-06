@@ -7,13 +7,13 @@ public class Scaler extends StatelessCircuit
 	private static String[] _inputPinNames = new String[] { "I", "IMn", "IMx", "OMn", "OMx" };
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 5;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

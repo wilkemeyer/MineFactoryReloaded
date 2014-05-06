@@ -1,9 +1,9 @@
 package skyboy.core.fluid;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -42,7 +40,6 @@ final public class LiquidRegistry {
 		if (instance != null) {
 			throw new IllegalArgumentException();
 		}
-		FMLLog.log(_parent.getName(), Level.INFO, "Creating %s LiquidRegistry", _parent.getName());
 		instance = this;
 		parent = _parent;
 		loadLiquidConfig(new File(base.getAbsolutePath() + "/liquids.cfg"));
@@ -50,14 +47,12 @@ final public class LiquidRegistry {
 		for (Map.Entry<String, Fluid> e : FluidRegistry.getRegisteredFluids().entrySet()) {
 			Fluid liquid = e.getValue();
 			String name = e.getKey();
-			FMLLog.log(parent.getName(), Level.FINER, "Registering Liquid %s in PreInit", name);
 			preInitRegister(name, liquid);
 			CarbonContainer.registerAsContainer(liquid);
 		}
 	}
 
 	private void loadLiquidConfig(File configFile) throws IOException {
-		FMLLog.log(parent.getName(), Level.FINE, "Loading Liquids");
 		config = configFile;
 		if (!configFile.exists()) configFile.createNewFile();
 		BufferedReader f = new BufferedReader(new FileReader(configFile));
@@ -76,12 +71,9 @@ final public class LiquidRegistry {
 		if (id < 0) {
 			int temp = ids.indexOf(44), c = temp != -1 ? -1 : 0;
 			while (temp != -1) {++c; temp = ids.indexOf(44, temp);}
-			FMLLog.log(parent.getName(), Level.SEVERE, "Liquid list size %s loaded from config. Defaulting to actual list size of %s.", id, c);
 			id = c;
 		}
-
-		FMLLog.log(parent.getName(), Level.FINE, "Loaded %s Liquids", id);
-		FMLLog.log(parent.getName(), Level.FINER, "Preparing ID map", id);
+		
 		names.ensureCapacity(id);
 		for (int i = id; i-- != 0; ) names.add("");
 		String[] list = ids.split(",");
@@ -95,19 +87,17 @@ final public class LiquidRegistry {
 				if (existing.isEmpty() && t < id && t > 0) {
 					idMap.put(item, t);
 					names.set(t, item);
-					FMLLog.log(parent.getName(), Level.ALL, "%s: %s", t, item);
 				} else {
 					if (t >= id || t <= 0)
-						FMLLog.log(parent.getName(), Level.WARNING, "ID %s for %s outside range of 0-%s; skipping %s. This may break existing buckets.", t, item, id, item);
+						;//FMLLog.log(parent.getName(), Level.WARNING, "ID %s for %s outside range of 0-%s; skipping %s. This may break existing buckets.", t, item, id, item);
 					else
-						FMLLog.log(parent.getName(), Level.SEVERE, "Existing liquid [%s] using ID %s; skipping %s. This may break existing buckets.", existing, t, item);
+						;//FMLLog.log(parent.getName(), Level.SEVERE, "Existing liquid [%s] using ID %s; skipping %s. This may break existing buckets.", existing, t, item);
 				}
 			}
 		}
 	}
 
 	public void saveLiquidConfig() throws IOException {
-		FMLLog.log(parent.getName(), Level.FINE, "Saving Liquids");
 		BufferedWriter f = new BufferedWriter(new FileWriter(config, false));
 		String t;
 
@@ -117,7 +107,6 @@ final public class LiquidRegistry {
 		f.newLine();
 
 		f.write("list:", 0, 5);
-		FMLLog.log(parent.getName(), Level.FINER, "Saving ID map");
 		for (Map.Entry<String, Integer> e : idMap.entrySet()) {
 			t = e.getKey();
 			f.write(t, 0, t.length());
@@ -125,18 +114,15 @@ final public class LiquidRegistry {
 			t = Integer.toString(e.getValue(), 10);
 			f.write(t, 0, t.length());
 			f.write(44);
-			FMLLog.log(parent.getName(), Level.FINEST, "%s: %s", t, e.getKey());
 		}
 		f.newLine();
 		f.close();
-		FMLLog.log(parent.getName(), Level.FINE, "Saved %s Liquids", id);
 	}
 
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void registeredLiquid(FluidRegisterEvent e) throws Throwable {
 		String name = e.fluidName;
 		Fluid stack = FluidRegistry.getFluid(name);
-		FMLLog.log(parent.getName(), Level.FINER, "Received LiquidRegistrationEvent for %s", name);
 		preInitRegister(name, stack);
 		if (!seenNames.containsKey(name)) {
 			CarbonContainer.registerAsContainer(stack);
@@ -146,7 +132,7 @@ final public class LiquidRegistry {
 					o.registeredLiquid(evt);
 				} catch (Throwable _) {}
 			seenNames.put(name, true);
-		} else FMLLog.log(parent.getName(), Level.FINER, "%s has previously triggered a LiquidRegistrationEvent", name);
+		}
 	}
 
 	public void preInitRegister(String name, Fluid stack) throws IOException {
@@ -154,14 +140,13 @@ final public class LiquidRegistry {
 		if (!liquidMap.containsKey(liquid)) {
 			liquidMap.put(liquid, name);
 			nameMap.put(name, stack);
-		} else FMLLog.log(parent.getName(), Level.FINEST, "%s already has a LiquidStack associated", name);
+		} else ;//FMLLog.log(parent.getName(), Level.FINEST, "%s already has a LiquidStack associated", name);
 		if (!names.contains(name)) {
 			idMap.put(name, id);
 			names.add(id, name);
-			FMLLog.log(parent.getName(), Level.FINER, "Added %s to the ID map as %s", name, id);
 			++id;
 			if (Loader.instance().getModState(parent).ordinal() >= ModState.AVAILABLE.ordinal()) {
-				FMLLog.log(parent.getName(), Level.FINE, "Liquid %s registered after LoadComplete", name);
+				//FMLLog.log(parent.getName(), Level.FINE, "Liquid %s registered after LoadComplete", name);
 				saveLiquidConfig();
 			}
 		}

@@ -1,12 +1,13 @@
 package powercrystals.minefactoryreloaded.core;
 
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
+
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 
 public class FruitHarvestManager implements IHarvestManager
 {
@@ -20,7 +21,7 @@ public class FruitHarvestManager implements IHarvestManager
 	
 	public FruitHarvestManager(World world, Area area, HarvestMode harvestMode)
 	{
-		reset(world, area, harvestMode);
+		reset(world, area, harvestMode, null);
 	}
 	
 	@Override
@@ -40,7 +41,7 @@ public class FruitHarvestManager implements IHarvestManager
 	}
 	
 	@Override
-	public void reset(World world, Area area, HarvestMode harvestMode)
+	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> s)
 	{
 		_harvestMode = harvestMode;
 		_area = area;

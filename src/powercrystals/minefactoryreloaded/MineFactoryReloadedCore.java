@@ -24,6 +24,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
+import net.minecraft.block.BlockSapling;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.ai.EntityMinecartMobSpawner;
 import net.minecraft.init.Blocks;
@@ -197,7 +198,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static Block rubberWoodBlock;
 	public static Block rubberLeavesBlock;
-	public static Block rubberSaplingBlock;
+	public static BlockSapling rubberSaplingBlock;
 
 	public static Block railPickupCargoBlock;
 	public static Block railDropoffCargoBlock;

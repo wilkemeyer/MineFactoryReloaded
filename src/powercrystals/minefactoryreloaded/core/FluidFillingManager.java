@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.core;
 
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,7 +21,7 @@ public class FluidFillingManager implements IHarvestManager
 
 	public FluidFillingManager(World world, Area area)
 	{
-		reset(world, area, null);
+		reset(world, area, null, null);
 		_isDone = true;
 	}
 
@@ -73,7 +75,7 @@ public class FluidFillingManager implements IHarvestManager
 	}
 
 	@Override
-	public void reset(World world, Area area, HarvestMode harvestMode)
+	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> s)
 	{
 		setWorld(world);
 		_area = area;

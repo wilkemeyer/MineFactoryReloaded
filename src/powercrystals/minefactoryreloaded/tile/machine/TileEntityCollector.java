@@ -88,7 +88,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	}
 	
 	@Override
-	protected void writeItemNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);
 		if (canStuff)

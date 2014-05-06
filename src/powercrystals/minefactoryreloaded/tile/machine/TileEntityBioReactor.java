@@ -1,11 +1,14 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import java.util.Map;
+
 import cofh.pcc.util.Util;
 import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -16,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiBioReactor;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -78,19 +82,22 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	{
 		super.updateEntity();
 		
-		if(!worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			for(int i = 0; i < 9; i++)
+			Map<Item, IFactoryPlantable> plantables = MFRRegistry.getPlantables();
+			for (int i = 0; i < 9; i++)
 			{
-				if(_inventory[i] != null && MFRRegistry.getPlantables().containsKey(_inventory[i].itemID))
+				ItemStack item = _inventory[i];
+				if (item == null)
+					continue;
+				if (plantables.containsKey(item.getItem()) &&
+						plantables.get(item.getItem()).canBePlanted(item))
 				{
 					int targetSlot = findMatchingSlot(_inventory[i]);
-					if(targetSlot < 0)
-					{
+					if (targetSlot < 0)
 						continue;
-					}
 					
-					if(_inventory[targetSlot] == null)
+					if (_inventory[targetSlot] == null)
 					{
 						_inventory[targetSlot] = _inventory[i];
 						_inventory[i] = null;
@@ -98,30 +105,22 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 					else
 					{
 						UtilInventory.mergeStacks(_inventory[targetSlot], _inventory[i]);
-						if(_inventory[i].stackSize <= 0)
-						{
+						if (_inventory[i].stackSize <= 0)
 							_inventory[i] = null;
-						}
 					}
 				}
 			}
 			
-			if(Util.isRedstonePowered(this))
-			{
+			if (Util.isRedstonePowered(this))
 				return;
-			}
 			
 			int newBurn = getOutputValue();
-			if(_burnTimeMax - _burnTime >= newBurn)
+			if (_burnTimeMax - _burnTime >= newBurn)
 			{
 				_burnTime += newBurn;
-				for(int i = 9; i < 18; i++)
-				{
-					if(_inventory[i] != null)
-					{
+				for (int i = 9; i < 18; i++)
+					if (_inventory[i] != null)
 						decrStackSize(i, 1);
-					}
-				}
 			}
 			
 			if (_burnTime > 0 && _tanks[0].getFluidAmount() <= _tanks[0].getCapacity() - _bioFuelPerTick)
@@ -186,7 +185,10 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	{
 		if (stack != null)
 			if(slot < 9)
-				return MFRRegistry.getPlantables().containsKey(new Integer(stack.itemID));
+			{
+				IFactoryPlantable p = MFRRegistry.getPlantables().get(stack.getItem());
+				return p != null && p.canBePlanted(stack);
+			}
 		return false;
 	}
 	

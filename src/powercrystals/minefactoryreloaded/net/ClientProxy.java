@@ -1,27 +1,25 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.IPlayerTracker;
-import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-public class ClientProxy extends CommonProxy implements IPlayerTracker
+public class ClientProxy extends CommonProxy
 {
 	@Override
 	public void init()
 	{
 		super.init();
 		MineFactoryReloadedClient.init();
-		GameRegistry.registerPlayerTracker(this);
 	}
 	
 	@Override
@@ -54,20 +52,14 @@ public class ClientProxy extends CommonProxy implements IPlayerTracker
 		}
 	}
 
-	@Override
-	public void onPlayerLogin(EntityPlayer player) {
+	@SubscribeEvent
+	public void clientLoggedIn(ClientConnectedToServerEvent evt)
+	{
+		MineFactoryReloadedClient.prcPages.clear();
 	}
-
-	@Override
-	public void onPlayerLogout(EntityPlayer player) {
-	}
-
-	@Override
-	public void onPlayerChangedDimension(EntityPlayer player) {
+	
+	@SubscribeEvent
+	public void onPlayerChangedDimension(PlayerChangedDimensionEvent player) {
 		MineFactoryReloadedClient._areaTileEntities.clear();
-	}
-
-	@Override
-	public void onPlayerRespawn(EntityPlayer player) {
 	}
 }

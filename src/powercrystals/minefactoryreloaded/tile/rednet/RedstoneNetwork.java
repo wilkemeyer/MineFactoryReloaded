@@ -1,20 +1,19 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
+import cofh.util.position.BlockPosition;
+import cpw.mods.fml.common.FMLLog;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import org.bouncycastle.util.Arrays;
-
-import cpw.mods.fml.common.FMLLog;
-
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -367,7 +366,7 @@ public class RedstoneNetwork
 			Block block = _world.getBlock(node.x, node.y, node.z);
 			if(block instanceof IConnectableRedNet)
 			{
-				((IConnectableRedNet)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.clone(_powerLevelOutput));
+				((IConnectableRedNet)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
 			}
 		}
 	}

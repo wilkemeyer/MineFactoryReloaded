@@ -9,24 +9,24 @@ import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 
 public class FertilizableRedPowerFlax implements IFactoryFertilizable
 {
-	private int _blockId;
+	private Block _blockId;
 	
-	public FertilizableRedPowerFlax(int blockId)
+	public FertilizableRedPowerFlax(Block blockId)
 	{
 		_blockId = blockId;
 	}
 	
 	@Override
-	public int getFertilizableBlockId()
+	public Block getPlant()
 	{
 		return _blockId;
 	}
 	
 	@Override
-	public boolean canFertilizeBlock(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		int id = world.getBlockId(x, y + 1, z);
-		return Block.blocksList[id] == null || Block.blocksList[id].isAirBlock(world, x, y + 1, z);
+		Block id = world.getBlock(x, y + 1, z);
+		return id.isAir(world, x, y + 1, z);
 	}
 	
 	@Override

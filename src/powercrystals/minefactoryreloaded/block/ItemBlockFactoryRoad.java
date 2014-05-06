@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 public class ItemBlockFactoryRoad extends ItemBlockFactory
 {
-	public ItemBlockFactoryRoad(int blockId)
+	public ItemBlockFactoryRoad(net.minecraft.block.Block blockId)
 	{
 		super(blockId);
 		setMaxDamage(0);
@@ -17,7 +17,7 @@ public class ItemBlockFactoryRoad extends ItemBlockFactory
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	public void getSubItems(net.minecraft.item.Item itemId, CreativeTabs creativeTab, List subTypes)
 	{
 		subTypes.add(new ItemStack(itemId, 1, 0));
 		subTypes.add(new ItemStack(itemId, 1, 1));

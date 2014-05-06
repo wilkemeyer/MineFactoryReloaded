@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 public class ItemBlockDecorativeStone extends ItemBlockFactory
 {
-	public ItemBlockDecorativeStone(int id)
+	public ItemBlockDecorativeStone(net.minecraft.block.Block id)
 	{
 		super(id);
 		setMaxDamage(0);

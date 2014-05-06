@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,13 +17,13 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 {
 	private int _machineBlockIndex;
 	
-	public ItemBlockFactoryMachine(int blockId)
+	public ItemBlockFactoryMachine(net.minecraft.block.Block blockId)
 	{
 		super(blockId);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 		
-		_machineBlockIndex = ((BlockFactoryMachine)Block.blocksList[getBlockID()]).getBlockIndex();
+		_machineBlockIndex = ((BlockFactoryMachine)blockId).getBlockIndex();
 		int highestMeta = Machine.getHighestMetadata(_machineBlockIndex);
 		String[] names = new String[highestMeta + 1];
 		for(int i = 0; i <= highestMeta; i++)

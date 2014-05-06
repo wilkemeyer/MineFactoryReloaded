@@ -57,7 +57,7 @@ public class VineScaffoldRenderer implements ISimpleBlockRenderingHandler
 	{
 		if(renderer.renderStandardBlock(block, x, y, z))
 		{
-			_invertedRenderer.renderStandardBlock(renderer, block, x, y, z);
+			//_invertedRenderer.renderStandardBlock(renderer, block, x, y, z);
 		}
 		
 		return true;

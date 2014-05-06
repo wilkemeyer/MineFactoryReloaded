@@ -3,20 +3,21 @@ package powercrystals.minefactoryreloaded.farmables.fertilizables;
 import java.util.Random;
 
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.IGrowable;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 
 public class FertilizableCocoa extends FertilizableCropPlant
 {
-	public FertilizableCocoa(int id)
+	public FertilizableCocoa(IGrowable block)
 	{
-		this(id, FertilizerType.GrowPlant);
+		this(block, FertilizerType.GrowPlant);
 	}
 	
-	public FertilizableCocoa(int id, FertilizerType type)
+	public FertilizableCocoa(IGrowable block, FertilizerType type)
 	{
-		super(id, type, 8);
+		super(block, type, 8);
 	}
 	
 	@Override

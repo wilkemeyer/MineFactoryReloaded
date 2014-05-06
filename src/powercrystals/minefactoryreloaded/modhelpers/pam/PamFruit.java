@@ -8,18 +8,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
+import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
 public class PamFruit implements IFactoryFruit
 {
-	private int _sourceId;
+	private Block _sourceId;
 
-	public PamFruit(int sourceId)
+	public PamFruit(Block sourceId)
 	{
 		_sourceId = sourceId;
 	}
 
 	@Override
-	public int getSourceBlockId()
+	public Block getPlant()
 	{
 		return _sourceId;
 	}
@@ -31,9 +32,15 @@ public class PamFruit implements IFactoryFruit
 	}
 
 	@Override
-	public ItemStack getReplacementBlock(World world, int x, int y, int z)
+	public boolean breakBlock()
 	{
-		return new ItemStack(getSourceBlockId(), 1, 0);
+		return false;
+	}
+
+	@Override
+	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	{
+		return new ReplacementBlock(getPlant());
 	}
 
 	@Override
@@ -44,9 +51,9 @@ public class PamFruit implements IFactoryFruit
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
 	{
-		int id = world.getBlockId(x, y, z);
+		Block id = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
-		return Block.blocksList[id].getBlockDropped(world, x, y, z, meta, 0);
+		return id.getDrops(world, x, y, z, meta, 0);
 	}
 
 	@Override

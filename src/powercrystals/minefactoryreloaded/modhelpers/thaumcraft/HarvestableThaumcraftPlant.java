@@ -13,17 +13,17 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
 public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 {
-	private int _blockId;
+	private Block _block;
 	
-	public HarvestableThaumcraftPlant(int blockId)
+	public HarvestableThaumcraftPlant(Block blockId)
 	{
-		_blockId = blockId;
+		_block = blockId;
 	}
 	
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
-		return _blockId;
+		return _block;
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return Block.blocksList[_blockId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		return _block.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 	
 	@Override
@@ -58,5 +58,6 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 	@Override
 	public void postHarvest(World world, int x, int y, int z)
 	{
+		world.notifyBlocksOfNeighborChange(x, y, z, _block);
 	}
 }

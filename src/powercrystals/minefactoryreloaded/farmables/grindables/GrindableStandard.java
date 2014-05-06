@@ -13,11 +13,11 @@ import powercrystals.minefactoryreloaded.api.MobDrop;
 
 public class GrindableStandard implements IFactoryGrindable
 {
-	private Class<?> _grindableClass;
+	private Class<? extends EntityLivingBase> _grindableClass;
 	private List<MobDrop> _drops;
 	private boolean _entityProcessed;
 
-	public GrindableStandard(Class<?> entityToGrind, MobDrop[] dropStacks, boolean entityProcessed)
+	public GrindableStandard(Class<? extends EntityLivingBase> entityToGrind, MobDrop[] dropStacks, boolean entityProcessed)
 	{
 		_grindableClass = entityToGrind;
 		_drops = new ArrayList<MobDrop>();
@@ -28,12 +28,12 @@ public class GrindableStandard implements IFactoryGrindable
 		_entityProcessed = entityProcessed;
 	}
 
-	public GrindableStandard(Class<?> entityToGrind, MobDrop[] dropStacks)
+	public GrindableStandard(Class<? extends EntityLivingBase> entityToGrind, MobDrop[] dropStacks)
 	{
 		this(entityToGrind, dropStacks, true);
 	}
 
-	public GrindableStandard(Class<?> entityToGrind, ItemStack dropStack, boolean entityProcessed)
+	public GrindableStandard(Class<? extends EntityLivingBase> entityToGrind, ItemStack dropStack, boolean entityProcessed)
 	{
 		_grindableClass = entityToGrind;
 		_drops = new ArrayList<MobDrop>();
@@ -41,25 +41,25 @@ public class GrindableStandard implements IFactoryGrindable
 		_entityProcessed = entityProcessed;
 	}
 
-	public GrindableStandard(Class<?> entityToGrind, ItemStack dropStack)
+	public GrindableStandard(Class<? extends EntityLivingBase> entityToGrind, ItemStack dropStack)
 	{
 		this(entityToGrind, dropStack, true);
 	}
 
-	public GrindableStandard(Class<?> entityToGrind, boolean entityProcessed)
+	public GrindableStandard(Class<? extends EntityLivingBase> entityToGrind, boolean entityProcessed)
 	{
 		_grindableClass = entityToGrind;
 		_drops = new ArrayList<MobDrop>();
 		_entityProcessed = entityProcessed;
 	}
 
-	public GrindableStandard(Class<?> entityToGrind)
+	public GrindableStandard(Class<? extends EntityLivingBase> entityToGrind)
 	{
 		this(entityToGrind, true);
 	}
 
 	@Override
-	public Class<?> getGrindableEntity()
+	public Class<? extends EntityLivingBase> getGrindableEntity()
 	{
 		return _grindableClass;
 	}

@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.item;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock
@@ -19,7 +20,7 @@ public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock
 	}
 	
 	@Override
-	public float getSpread()
+	public float getSpread(ItemStack stack)
 	{
 		return 0.5f;
 	}

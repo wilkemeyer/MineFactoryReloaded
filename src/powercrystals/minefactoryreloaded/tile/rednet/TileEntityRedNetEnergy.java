@@ -25,16 +25,15 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
-import powercrystals.minefactoryreloaded.net.Packets;
 
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 									IPowerEmitter, IEnergySink, IEnergyHandler//, IEnergyInfo
@@ -202,23 +201,43 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			}
 		}
 	}
-
+	
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		if (deadCache)
 			return null;
-		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
-				Packets.EnergyCableDescription, new Object[] {
-					xCoord, yCoord, zCoord,
-					_sideColors[0], _sideColors[1], _sideColors[2],
-					_sideColors[3], _sideColors[4], _sideColors[5],
-					cableMode[0] | (cableMode[1] << 8) |
-					(cableMode[2] << 16) | (cableMode[3] << 24),
-					cableMode[4] | (cableMode[5] << 8) |
-					(cableMode[6] << 16), sideMode[0], sideMode[1],
-					sideMode[2], sideMode[3], sideMode[4], sideMode[5] 
-				});
+		NBTTagCompound data = new NBTTagCompound();
+		data.setIntArray("colors", _sideColors);
+		data.setInteger("mode[0]", cableMode[0] | (cableMode[1] << 8) | (cableMode[2] << 16) |
+				(cableMode[3] << 24));
+		data.setInteger("mode[1]", cableMode[4] | (cableMode[5] << 8) | (cableMode[6] << 16));
+		data.setInteger("mode[2]", sideMode[0] | (sideMode[1] << 8) | (sideMode[2] << 16) |
+				(sideMode[3] << 24));
+		data.setInteger("mode[3]", sideMode[4] | (sideMode[5] << 8) | (sideMode[6] << 16));
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		return packet;
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.func_148857_g();
+		switch (pkt.func_148853_f())
+		{
+		case 0:
+			_sideColors = data.getIntArray("colors");
+			int mode = data.getInteger("mode[0]");
+			cableMode[0] = (byte)(mode & 0xFF);
+			cableMode[1] = (byte)((mode >> 8) & 0xFF);
+			cableMode[2] = (byte)((mode >> 16) & 0xFF);
+			cableMode[3] = (byte)((mode >> 24) & 0xFF);
+			mode = data.getInteger("mode[1]");
+			cableMode[4] = (byte)(mode & 0xFF);
+			cableMode[5] = (byte)((mode >> 8) & 0xFF);
+			cableMode[6] = (byte)((mode >> 16) & 0xFF);
+			break;
+		}
 	}
 
 	@SideOnly(Side.CLIENT)

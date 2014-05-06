@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.farmables.harvestables;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -11,12 +12,12 @@ public class HarvestableCocoa extends HarvestableStandard
 {
 	public HarvestableCocoa()
 	{
-		this(Block.cocoaPlant.blockID);
+		this(Blocks.cocoa);
 	}
 	
-	public HarvestableCocoa(int blockId)
+	public HarvestableCocoa(Block blockId)
 	{
-		super(blockId, HarvestType.Normal);
+		super(blockId, HarvestType.TreeFruit);
 	}
 	
 	@Override

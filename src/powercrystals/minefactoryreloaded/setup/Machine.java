@@ -343,10 +343,10 @@ public class Machine
 	
 	public void load(Configuration c)
 	{
-		_isRecipeEnabled = c.get("Machine", _name + ".Recipe.Enabled", true);
+		_isRecipeEnabled = c.get("Machine" + _name, "Recipe.Enabled", true);
 		if (_configurable & _activationEnergy > 0)
 		{
-			_activationEnergy = c.get("Machine", _name + ".ActivationCostMJ", getActivationEnergyMJ()).getInt() * TileEntityFactoryPowered.energyPerMJ;
+			_activationEnergy = c.get("Machine" + _name, "ActivationCostMJ", getActivationEnergyMJ()).getInt() * TileEntityFactoryPowered.energyPerMJ;
 		}
 		
 		MineFactoryReloadedCore.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);

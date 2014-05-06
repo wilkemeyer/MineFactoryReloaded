@@ -1,21 +1,20 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import net.minecraft.entity.player.EntityPlayer;
+import cofh.pcc.util.Util;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemRecord;
 import net.minecraftforge.common.util.ForgeDirection;
-import powercrystals.core.net.PacketWrapper;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoJukebox;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
-import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cofh.pcc.util.Util;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 {
@@ -90,11 +89,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	public void playRecord()
 	{
 		if(_inventory[0] != null && _inventory[0].getItem() instanceof ItemRecord)
-		{
-			worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1005, xCoord, yCoord, zCoord, _inventory[0].itemID);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId,
-					PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.AutoJukeboxPlay, new Object[] { xCoord, yCoord, zCoord, _inventory[0].itemID } ));
-		}
+			worldObj.playAuxSFX(1005, xCoord, yCoord, zCoord, Item.getIdFromItem(_inventory[0].getItem()));
 		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
 	}
 	

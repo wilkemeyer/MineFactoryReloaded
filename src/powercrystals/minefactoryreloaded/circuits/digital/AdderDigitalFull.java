@@ -5,13 +5,13 @@ import powercrystals.minefactoryreloaded.circuits.base.StatelessCircuit;
 public class AdderDigitalFull extends StatelessCircuit
 {
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 3;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 2;
 	}

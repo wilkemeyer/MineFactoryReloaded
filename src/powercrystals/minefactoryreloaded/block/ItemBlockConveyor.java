@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 public class ItemBlockConveyor extends ItemBlockFactory
 {
-	public ItemBlockConveyor(int blockId)
+	public ItemBlockConveyor(net.minecraft.block.Block blockId)
 	{
 		super(blockId);
 		setMaxDamage(0);

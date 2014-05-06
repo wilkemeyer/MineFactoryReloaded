@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +12,9 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -35,7 +37,6 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Mod(modid = "MineFactoryReloaded|CompatThaumcraft", name = "MFR Compat: Thaumcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Thaumcraft")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class Thaumcraft
 {
 	@EventHandler
@@ -55,9 +56,12 @@ public class Thaumcraft
 			final Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
 			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
 			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
-			Class<?> golem = Class.forName("thaumcraft.common.entities.golems.EntityGolemBase");
-			Class<?> trunk = Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
-			Class<?> pech = Class.forName("thaumcraft.common.entities.monster.EntityPech");
+			Class<? extends EntityLivingBase> golem = (Class<? extends EntityLivingBase>) Class.
+					forName("thaumcraft.common.entities.golems.EntityGolemBase");
+			Class<? extends EntityLivingBase> trunk = (Class<? extends EntityLivingBase>) Class.
+					forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
+			Class<? extends EntityLivingBase> pech = (Class<? extends EntityLivingBase>) Class.
+					forName("thaumcraft.common.entities.monster.EntityPech");
 			
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);
@@ -73,14 +77,15 @@ public class Thaumcraft
 				MFRRegistry.registerConveyerBlacklist(trunk);
 			}
 			
-			MFRRegistry.registerHarvestable(new HarvestableWood(tcLog.blockID));
-			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres.blockID, HarvestType.Normal));
-			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves.blockID, tcSapling.blockID));
-			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling.blockID));
-			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod.blockID));
+			MFRRegistry.registerHarvestable(new HarvestableWood(tcLog));
+			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres, HarvestType.Normal));
+			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves,
+					Item.getItemFromBlock(tcSapling)));
+			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling));
+			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod));
 			
-			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling.blockID, tcSapling.blockID));
-			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean.itemID, tcPod.blockID) {
+			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling));
+			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean, tcPod) {
 				@Override
 				protected boolean isNextToAcceptableLog(World world, int x, int y, int z)
 				{
@@ -98,15 +103,15 @@ public class Thaumcraft
 				@Override
 				protected boolean isGoodLog(World world, int x, int y, int z)
 				{
-					int id = world.getBlockId(x, y, z);
-					return id == Block.wood.blockID | id == tcLog.blockID;
+					Block id = world.getBlock(x, y, z);
+					return id == tcLog || id.equals(Blocks.log);
 				}
 			});
 			
-			MFRRegistry.registerFruitLogBlockId(tcLog.blockID);
-			MFRRegistry.registerFruit(new FruitCocoa(tcPod.blockID));
+			MFRRegistry.registerFruitLogBlockId(tcLog);
+			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
 			
-			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod.blockID, FertilizerType.GrowMagicalCrop));
+			MFRRegistry.registerFertilizable(new FertilizableCocoa((IGrowable)tcPod, FertilizerType.GrowMagicalCrop));
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
 			
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
@@ -115,11 +120,11 @@ public class Thaumcraft
 			Class<?> ThaumcraftApi = Class.forName("thaumcraft.api.ThaumcraftApi");
 			AspectList = Class.forName("thaumcraft.api.aspects.AspectList");
 			registerItem = ThaumcraftApi.getDeclaredMethod("registerObjectTag",
-					int.class, int.class, AspectList);
+					Item.class, int.class, AspectList);
 			registerEntity = ThaumcraftApi.getDeclaredMethod("registerEntityTag",
 					String.class, AspectList, NBTBase[].class);
 			addAspect = AspectList.getDeclaredMethod("add", Aspect, int.class);
-			newAspectList = AspectList.getDeclaredConstructor(int.class, int.class);
+			newAspectList = AspectList.getDeclaredConstructor(ItemStack.class, int.class);
 			
 			doAspects();
 		}
@@ -140,7 +145,7 @@ public class Thaumcraft
 	{
 		Object aspectList;
 		if (craftedAspects)
-			aspectList = newAspectList.newInstance(item.itemID, item.getItemDamage());
+			aspectList = newAspectList.newInstance(item, item.getItemDamage());
 		else
 			aspectList = AspectList.newInstance();
 		if (!toadd.trim().isEmpty())
@@ -156,7 +161,7 @@ public class Thaumcraft
 					FMLLog.severe("%s aspect missing.", temp[1]);
 			}
 		}
-		registerItem.invoke(null, item.itemID, item.getItemDamage(), aspectList);
+		registerItem.invoke(null, item.getItem(), item.getItemDamage(), aspectList);
 	}
 	
 	private static void parseAspects(String entity, String toadd) throws Throwable

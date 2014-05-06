@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.net;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.world.World;
@@ -17,6 +20,29 @@ public final class Packets
 					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
 			if (watcher != null)
 				watcher.sendToAllPlayersWatchingChunk(packet);
+		}
+	}
+	public static void sendToAllPlayersInRange(World world, int x, int y, int z, int range, Packet packet)
+	{
+		if (packet == null)
+			return;
+		if (world instanceof WorldServer)
+		{
+			PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
+					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
+			if (watcher != null)
+			{
+				@SuppressWarnings("unchecked")
+				List<EntityPlayerMP> players = watcher.playersWatchingChunk;
+				for (int i = players.size(); i --> 0; )
+				{
+					EntityPlayerMP player = players.get(i);
+					if (Math.abs(player.posX - x) < range)
+						if (Math.abs(player.posY - x) < range)
+							if (Math.abs(player.posZ - x) < range)
+								player.playerNetServerHandler.sendPacket(packet);
+				}
+			}
 		}
 	}
 	

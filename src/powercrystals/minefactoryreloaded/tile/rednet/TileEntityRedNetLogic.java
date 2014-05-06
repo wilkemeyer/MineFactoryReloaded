@@ -1,14 +1,11 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
+import cofh.util.position.BlockPosition;
+import cofh.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +18,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.net.PacketWrapper;
-import cofh.util.position.BlockPosition;
-import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
@@ -247,32 +241,29 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public void setCircuitFromPacket(DataInputStream packet)
+	public void setCircuitFromPacket(NBTTagCompound packet)
 	{
 		try
 		{
-			int circuitIndex = packet.readInt();
-			String circuitName = packet.readUTF();
+			int circuitIndex = packet.getInteger("i");
+			String circuitName = packet.getString("name");
 
 			initCircuit(circuitIndex, circuitName);
-
-			int inputCount = packet.readInt();
-			for(int p = 0; p < inputCount; p++)
+			
+			int len = packet.getByte("input");
+			int[] inputs = packet.getIntArray("inputs");
+			PinMapping[] pins = _pinMappingInputs[circuitIndex];
+			for (int i = 2; i --> 0; )
 			{
-				int buffer = packet.readInt();
-				int pin = packet.readInt();
-				_pinMappingInputs[circuitIndex][p] = new PinMapping(pin, buffer);
-			}
+				for(int p = 0; p < len; ++p)
+					pins[p] = new PinMapping(inputs[p << 1], inputs[(p << 1) | 1]);
 
-			int outputCount = packet.readInt();
-			for(int p = 0; p < outputCount; p++)
-			{
-				int buffer = packet.readInt();
-				int pin = packet.readInt();
-				_pinMappingOutputs[circuitIndex][p] = new PinMapping(pin, buffer);
+				len = packet.getByte("output");
+				inputs = packet.getIntArray("outputs");
+				pins = _pinMappingOutputs[circuitIndex];
 			}
 		}
-		catch(IOException x)
+		catch(Throwable x)
 		{
 			x.printStackTrace();
 		}
@@ -280,30 +271,37 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	public void sendCircuitDefinition(int circuit)
 	{
-		List<Object> data = new ArrayList<Object>();
+		NBTTagCompound data = new NBTTagCompound();
 
-		data.add(xCoord);
-		data.add(yCoord);
-		data.add(zCoord);
+		data.setInteger("i", circuit);
 
-		data.add(circuit);
-
-		data.add(_circuits[circuit].getClass().getName());
-		data.add(_circuits[circuit].getInputCount());
-		for(int p = 0; p < _pinMappingInputs[circuit].length; p++)
+		data.setString("name", _circuits[circuit].getClass().getName());
+		
+		byte len = _circuits[circuit].getInputCount();
+		data.setByte("input", len);
+		int[] l = new int[len * 2];
+		PinMapping[] pins = _pinMappingInputs[circuit];
+		for (int p = 0; p < len; )
 		{
-			data.add(_pinMappingInputs[circuit][p].buffer);
-			data.add(_pinMappingInputs[circuit][p].pin);
+			l[p++] = pins[p].pin;
+			l[p++] = pins[p].buffer;
 		}
-		data.add(_circuits[circuit].getOutputCount());
-		for(int p = 0; p < _pinMappingOutputs[circuit].length; p++)
+		data.setIntArray("inputs", l);
+		
+		len = _circuits[circuit].getOutputCount();
+		data.setByte("output", len);
+		l = new int[len * 2];
+		pins = _pinMappingOutputs[circuit];
+		for (int p = 0; p < len; )
 		{
-			data.add(_pinMappingOutputs[circuit][p].buffer);
-			data.add(_pinMappingOutputs[circuit][p].pin);
+			l[p++] = pins[p].pin;
+			l[p++] = pins[p].buffer;
 		}
+		data.setIntArray("outputs", l);
 
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 5, worldObj.provider.dimensionId,
-				PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicCircuitDefinition, data.toArray()));
+
+		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 7,
+				new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
 	}
 
 	@Override
@@ -517,8 +515,16 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
-		_upgradeLevel = pkt.func_148857_g().getIntArray("upgrades");
-		updateUpgradeLevels();
+		switch (pkt.func_148853_f())
+		{
+		case 0:
+			_upgradeLevel = pkt.func_148857_g().getIntArray("upgrades");
+			updateUpgradeLevels();
+			break;
+		case 1:
+			setCircuitFromPacket(pkt.func_148857_g());
+			break;
+		}
 	}
 
 	public boolean insertUpgrade(int level)

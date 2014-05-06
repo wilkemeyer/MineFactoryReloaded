@@ -1,41 +1,38 @@
 package powercrystals.minefactoryreloaded.farmables.plantables;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.IPlantable;
 
 public class PlantableCropPlant extends PlantableStandard
 {
-	public PlantableCropPlant(int seedItemID, int plantBlockID)
+	public PlantableCropPlant(Item seed, Block plant)
 	{
-		super(seedItemID, plantBlockID);
+		super(seed, plant);
 	}
 	
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{
-		int groundId = world.getBlockId(x, y - 1, z);
 		if(!world.isAirBlock(x, y, z))
-		{
 			return false;
-		}
-		return (
-				groundId == Block.dirt.blockID ||
-				groundId == Block.grass.blockID ||
-				groundId == Block.tilledField.blockID ||
-				(Block.blocksList[_plantedBlockId] instanceof IPlantable && Block.blocksList[groundId] != null &&
-				Block.blocksList[groundId].canSustainPlant(world, x, y, z, ForgeDirection.UP, ((IPlantable)Block.blocksList[_plantedBlockId]))));
+		
+		Block ground = world.getBlock(x, y - 1, z);
+		return ground.equals(Blocks.farmland) ||
+				ground.equals(Blocks.grass) ||
+				ground.equals(Blocks.dirt) ||
+				super.canBePlantedHere(world, x, y, z, stack);
 	}
 	
 	@Override
 	public void prePlant(World world, int x, int y, int z, ItemStack stack)
 	{
-		int groundId = world.getBlockId(x, y - 1, z);
-		if(groundId == Block.dirt.blockID || groundId == Block.grass.blockID)
+		Block ground = world.getBlock(x, y - 1, z);
+		if (ground.equals(Blocks.grass) || ground.equals(Blocks.dirt))
 		{
-			world.setBlock(x, y - 1, z, Block.tilledField.blockID);
+			world.setBlock(x, y - 1, z, Blocks.farmland);
 		}
 	}
 }

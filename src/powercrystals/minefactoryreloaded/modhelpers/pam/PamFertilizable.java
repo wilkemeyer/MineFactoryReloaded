@@ -1,25 +1,24 @@
-package powercrystals.minefactoryreloaded.modhelpers.pam;
-import cpw.mods.fml.common.FMLLog;import java.lang.reflect.Method;import java.util.Random;import net.minecraft.block.Block;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import powercrystals.minefactoryreloaded.api.FertilizerType;import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
+package powercrystals.minefactoryreloaded.modhelpers.pam;import java.lang.reflect.Method;import java.util.Random;import net.minecraft.block.Block;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import powercrystals.minefactoryreloaded.api.FertilizerType;import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 class PamFertilizable implements IFactoryFertilizable
 {
 	protected Method getGrowthStage;
 	protected Method _fertilize;
-	private int _blockId;
+	private Block _blockId;
 	final private Object[] dummyArgs = new Object[]{};
-	public PamFertilizable(int blockId) throws ClassNotFoundException
+	public PamFertilizable(Block blockId) throws ClassNotFoundException
 	{
 		_blockId = blockId;
 		getGrowthStage=Pam.pamTEGetGrowthStage;
 		_fertilize=Pam.pamBlockFertilize;
 	}
 	@Override
-	public int getFertilizableBlockId()
+	public Block getPlant()
 	{
 		return _blockId;
 	}
 
 	@Override
-	public boolean canFertilizeBlock(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
 		int stage=0;
 		TileEntity te=world.getTileEntity(x,y,z);
@@ -52,12 +51,11 @@ class PamFertilizable implements IFactoryFertilizable
 				e.printStackTrace();
 			}
 		}
-		FMLLog.info("Current Stage is %d",stage);
 		if (stage>=2 )
 			return false;
 		try
 		{
-			_fertilize.invoke(Block.blocksList[_blockId], world, x, y, z);
+			_fertilize.invoke(_blockId, world, x, y, z);
 		}
 		catch (Exception e)
 		{

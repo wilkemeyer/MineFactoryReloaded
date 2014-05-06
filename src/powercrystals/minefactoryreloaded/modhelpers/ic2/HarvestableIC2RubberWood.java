@@ -4,20 +4,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 
-public class HarvestableIC2RubberWood extends HarvestableStandard
+public class HarvestableIC2RubberWood extends HarvestableWood
 {
-	private int _resinId;
+	private Item _resin;
 	
-	public HarvestableIC2RubberWood(int sourceId, HarvestType harvestType, int resinId)
+	public HarvestableIC2RubberWood(Block sourceId, Item resin)
 	{
-		super(sourceId, harvestType);
-		_resinId = resinId;
+		super(sourceId);
+		_resin = resin;
 	}
 	
 	@Override
@@ -27,7 +28,7 @@ public class HarvestableIC2RubberWood extends HarvestableStandard
 		int md = world.getBlockMetadata(x, y, z);
 		if(md >= 2 && md <= 5)
 		{
-			drops.add(new ItemStack(_resinId, 1, 0));
+			drops.add(new ItemStack(_resin, 1, 0));
 		}
 		
 		return drops;

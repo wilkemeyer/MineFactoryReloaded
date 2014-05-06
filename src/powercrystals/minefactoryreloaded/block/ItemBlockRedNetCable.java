@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 public class ItemBlockRedNetCable extends ItemBlockFactory
 {
-	public ItemBlockRedNetCable(int id)
+	public ItemBlockRedNetCable(net.minecraft.block.Block id)
 	{
 		super(id);
 		setHasSubtypes(true);

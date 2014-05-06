@@ -8,13 +8,13 @@ public class SchmittTrigger implements IRedNetLogicCircuit
 	private int _activeTicks = 0;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 2;
 	}
 
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 1;
 	}

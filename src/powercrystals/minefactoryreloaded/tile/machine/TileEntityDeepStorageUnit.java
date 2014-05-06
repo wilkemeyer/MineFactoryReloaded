@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiDeepStorageUnit;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerDeepStorageUnit;
@@ -47,11 +46,11 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 	
 	@Override
-	protected void writeItemNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
 		if (getQuantityAdjusted() > 0)
 		{
-			BlockNBTManager.setForBlock(this);
+			writeToNBT(tag);
 		}
 		else
 			super.writeItemNBT(tag);

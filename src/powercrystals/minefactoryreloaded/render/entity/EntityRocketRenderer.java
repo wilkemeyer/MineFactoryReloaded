@@ -15,14 +15,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRocketRenderer extends Render
 {
-	public static final ResourceLocation rocket = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "Rocket.png");
+	public static final ResourceLocation rocket =
+			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "Rocket.png");
 	private IModelCustom _model;
 	
 	public EntityRocketRenderer()
 	{
 		try
 		{
-			_model = AdvancedModelLoader.loadModel("/powercrystals/minefactoryreloaded/models/Rocket.obj");
+			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
+					"/powercrystals/minefactoryreloaded/models/Rocket.obj"));
 		}
 		catch(Exception e)
 		{

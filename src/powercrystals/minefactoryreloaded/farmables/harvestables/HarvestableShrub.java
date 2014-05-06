@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -13,17 +14,17 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
 public class HarvestableShrub implements IFactoryHarvestable
 {
-	private int _sourceId;
+	private Block _block;
 	
-	public HarvestableShrub(int sourceId)
+	public HarvestableShrub(Block block)
 	{
-		_sourceId = sourceId;
+		_block = block;
 	}
 	
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
-		return _sourceId;
+		return _block;
 	}
 	
 	@Override
@@ -50,13 +51,13 @@ public class HarvestableShrub implements IFactoryHarvestable
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		
 		int meta = world.getBlockMetadata(x, y, z);
-		if(_sourceId == Block.tallGrass.blockID && meta == 1 && !harvesterSettings.get("silkTouch"))
+		if (_block == Blocks.tallgrass && meta == 1 && !harvesterSettings.get("silkTouch"))
 		{
-			drops.addAll(Block.blocksList[_sourceId].getBlockDropped(world, x, y, z, meta, 0));
+			drops.addAll(_block.getDrops(world, x, y, z, meta, 0));
 		}
 		else
 		{
-			drops.add(new ItemStack(_sourceId, 1, meta));
+			drops.add(new ItemStack(_block, 1, meta));
 		}
 		
 		return drops;

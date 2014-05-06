@@ -1,18 +1,15 @@
 package powercrystals.minefactoryreloaded.render;
-
+/*
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.IIcon;//*/
 
 public class RenderBlocksInverted
-{
-	/**
-	 * Renders a standard cube block at the given coordinates
-	 */
+{/*/
 	public boolean renderStandardBlock(RenderBlocks renderer, Block par1Block, int par2, int par3, int par4)
 	{
 		int l = par1Block.colorMultiplier(renderer.blockAccess, par2, par3, par4);
@@ -1721,11 +1718,7 @@ public class RenderBlocksInverted
 		renderer.enableAO = false;
 		return flag;
 	}
-	
-	/**
-	 * Renders a standard cube block at the given coordinates, with a given
-	 * color ratio. Args: block, x, y, z, r, g, b
-	 */
+
 	public boolean renderStandardBlockWithColorMultiplier(RenderBlocks renderer, Block par1Block, int par2, int par3, int par4, float par5, float par6,
 			float par7)
 	{
@@ -1851,10 +1844,6 @@ public class RenderBlocksInverted
 		return flag;
 	}
 	
-	/**
-	 * Renders the given texture to the bottom face of the block. Args: block,
-	 * x, y, z, texture
-	 */
 	public void renderBottomFace(RenderBlocks renderer, Block par1Block, double par2, double par4, double par6, IIcon par8Icon)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -1953,11 +1942,7 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d11, d13, d15, d8, d10);
 		}
 	}
-	
-	/**
-	 * Renders the given texture to the top face of the block. Args: block, x,
-	 * y, z, texture
-	 */
+
 	public void renderTopFace(RenderBlocks renderer, Block par1Block, double par2, double par4, double par6, IIcon par8Icon)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -2056,11 +2041,7 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d12, d13, d15, d4, d6);
 		}
 	}
-	
-	/**
-	 * Renders the given texture to the east (z-negative) face of the block.
-	 * Args: block, x, y, z, texture
-	 */
+
 	public void renderEastFace(RenderBlocks renderer, Block par1Block, double par2, double par4, double par6, IIcon par8Icon)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -2167,11 +2148,7 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d11, d14, d15, d7, d9);
 		}
 	}
-	
-	/**
-	 * Renders the given texture to the west (z-positive) face of the block.
-	 * Args: block, x, y, z, texture
-	 */
+
 	public void renderWestFace(RenderBlocks renderer, Block par1Block, double par2, double par4, double par6, IIcon par8Icon)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -2278,11 +2255,7 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d11, d14, d15, d3, d5);
 		}
 	}
-	
-	/**
-	 * Renders the given texture to the north (x-negative) face of the block.
-	 * Args: block, x, y, z, texture
-	 */
+
 	public void renderNorthFace(RenderBlocks renderer, Block par1Block, double par2, double par4, double par6, IIcon par8Icon)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -2389,11 +2362,7 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d11, d13, d15, d7, d9);
 		}
 	}
-	
-	/**
-	 * Renders the given texture to the south (x-positive) face of the block.
-	 * Args: block, x, y, z, texture
-	 */
+
 	public void renderSouthFace(RenderBlocks renderer, Block par1Block, double par2, double par4, double par6, IIcon par8Icon)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -2500,4 +2469,5 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d11, d12, d15, d8, d10);
 		}
 	}
+//*/
 }

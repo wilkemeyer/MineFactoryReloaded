@@ -9,13 +9,13 @@ public class LatchDClocked implements IRedNetLogicCircuit
 	private boolean _lastClockState;
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 2;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 2;
 	}

@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -28,6 +30,7 @@ import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.core.SideOffset;
 import powercrystals.minefactoryreloaded.core.TreeHarvestManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiHarvester;
@@ -75,15 +78,19 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	public void validate()
 	{
 		super.validate();
+		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+		onFactoryInventoryChanged();
 		if (!worldObj.isRemote)
 		{
-			if (_treeManager != null)
+			if (_treeManager != null || _areaManager.getHarvestArea().contains(_treeManager.getOrigin()))
+			{
 				_treeManager.setWorld(worldObj);
+			}
 			else
 			{
 				_treeManager = new TreeHarvestManager(worldObj,
 						new Area(new BlockPosition(this),0,0,0),
-						HarvestMode.FruitTree);
+						HarvestMode.FruitTree, _immutableSettings);
 			}
 		}
 	}
@@ -140,34 +147,34 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	{
 		BlockPosition targetCoords = getNextHarvest();
 		
-		if(targetCoords == null)
+		if (targetCoords == null)
 		{
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
 		
-		int harvestedBlockId = worldObj.getBlockId(targetCoords.x, targetCoords.y, targetCoords.z);
+		Block harvestedBlock = worldObj.getBlock(targetCoords.x, targetCoords.y, targetCoords.z);
 		int harvestedBlockMetadata = worldObj.getBlockMetadata(targetCoords.x,
 															targetCoords.y, targetCoords.z);
 		
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().
-											get(new Integer(harvestedBlockId));
+											get(harvestedBlock);
 		
 		harvestable.preHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 		
-		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, getImmutableSettings(),
+		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, _immutableSettings,
 													targetCoords.x, targetCoords.y, targetCoords.z);
 		
 		if(harvestable.breakBlock())
 		{
-			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, 0, 0, 2))
+			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, Blocks.air, 0, 2))
 				return false;
 			if(_settings.get("playSounds"))
 			{
 				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x,
 						targetCoords.y, targetCoords.z,
-						harvestedBlockId + (harvestedBlockMetadata << 12));
+						Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
 			}
 		}
 		
@@ -185,71 +192,75 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		if (!_treeManager.getIsDone())
 			return getNextTreeSegment(_lastTree, false);
 		BlockPosition bp = _areaManager.getNextBlock();
+		_lastTree = null;
 		
-		int searchId = worldObj.getBlockId(bp.x, bp.y, bp.z);
+		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
 		
-		if(!MFRRegistry.getHarvestables().containsKey(new Integer(searchId)))
+		if(!MFRRegistry.getHarvestables().containsKey(search))
 		{
 			_lastTree = null;
 			return null;
 		}
 		
-		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(new Integer(searchId));
-		if(harvestable.canBeHarvested(worldObj, getImmutableSettings(), bp.x, bp.y, bp.z))
+		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(search);
+		if(harvestable.canBeHarvested(worldObj, _immutableSettings, bp.x, bp.y, bp.z))
 		{
 			HarvestType type = harvestable.getHarvestType(); 
 			switch (type)
 			{
+			case Gourd:
+				return getNextAdjacent(bp.x, bp.y, bp.z, harvestable);
 			case Column:
 			case LeaveBottom:
-				bp = getNextVertical(bp.x, bp.y, bp.z, type == HarvestType.Column ? 0 : 1);
-			case Normal:
-			default:
-				_lastTree = null;
-				return bp;
+				return getNextVertical(bp.x, bp.y, bp.z, type == HarvestType.Column ? 0 : 1, harvestable);
 			case Tree:
 			case TreeFlipped:
-				BlockPosition temp = getNextTreeSegment(bp, type == HarvestType.TreeFlipped);
-				if(temp != null)
-					_areaManager.rewindBlock();
-				return temp;
+			case TreeLeaf:
+				return getNextTreeSegment(bp, type == HarvestType.TreeFlipped);
+			case TreeFruit:
+			case Normal:
+				return bp;
 			}
 		}
-		_lastTree = null;
 		return null;
 	}
 	
-	private BlockPosition getNextVertical(int x, int y, int z, int startOffset)
+	private BlockPosition getNextAdjacent(int x, int y, int z, IFactoryHarvestable harvestable)
+	{
+		for (SideOffset side : SideOffset.SIDES)
+		{
+			int X = x + side.offsetX, Y = y +  side.offsetY, Z = z + side.offsetX;
+			if (harvestable.canBeHarvested(worldObj, _immutableSettings, X, Y, Z))
+				return new BlockPosition(x, y, z);
+		}
+		return null;
+	}
+	
+	private BlockPosition getNextVertical(int x, int y, int z, int startOffset, IFactoryHarvestable harvestable)
 	{
 		int highestBlockOffset = -1;
 		int maxBlockOffset = MFRConfig.verticalHarvestSearchMaxVertical.getInt();
 		
+		Block plant = harvestable.getPlant();
 		for (int currentYoffset = startOffset; currentYoffset < maxBlockOffset; ++currentYoffset)
 		{
-			int blockId = worldObj.getBlockId(x, y + currentYoffset, z);
-			if(MFRRegistry.getHarvestables().containsKey(new Integer(blockId)) &&
-					MFRRegistry.getHarvestables().get(new Integer(blockId)).
-					canBeHarvested(worldObj, getImmutableSettings(), x, y + currentYoffset, z))
-			{
-				highestBlockOffset = currentYoffset;
-			}
-			else
-			{
+			Block block = worldObj.getBlock(x, y + currentYoffset, z);
+			if (!block.equals(plant) ||
+					!harvestable.canBeHarvested(worldObj, _immutableSettings, x, y + currentYoffset, z))
 				break;
-			}
+			
+			highestBlockOffset = currentYoffset;
 		}
 		
-		if(highestBlockOffset < 0)
-		{
-			return null;
-		}
+		if (highestBlockOffset < 0)
+			return new BlockPosition(x, y + highestBlockOffset, z);
 		
-		return new BlockPosition(x, y + highestBlockOffset, z);
+		return null;
 	}
 	
 	private BlockPosition getNextTreeSegment(BlockPosition pos, boolean treeFlipped)
 	{
-		Integer blockId;
+		Block block;
 		
 		if (!pos.equals(_lastTree) || _treeManager.getIsDone())
 		{
@@ -265,21 +276,23 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			
 			Area a = new Area(_lastTree, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
 			
-			_treeManager.reset(worldObj, a, treeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree);
+			_treeManager.reset(worldObj, a,
+					treeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree,
+							_immutableSettings);
 		}
 		
-		Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		while (!_treeManager.getIsDone())
 		{
 			BlockPosition bp = _treeManager.getNextBlock();
-			blockId = worldObj.getBlockId(bp.x, bp.y, bp.z);
+			block = worldObj.getBlock(bp.x, bp.y, bp.z);
 			
-			if (harvestables.containsKey(blockId))
+			if (harvestables.containsKey(block))
 			{
-				IFactoryHarvestable obj = harvestables.get(blockId);
+				IFactoryHarvestable obj = harvestables.get(block);
 				HarvestType t = obj.getHarvestType();
 				if (t == HarvestType.Tree | t == HarvestType.TreeFlipped | t == HarvestType.TreeLeaf)
-					if (obj.canBeHarvested(worldObj, getImmutableSettings(), bp.x, bp.y, bp.z))
+					if (obj.canBeHarvested(worldObj, _immutableSettings, bp.x, bp.y, bp.z))
 						return bp;
 			}
 			_treeManager.moveNext();
@@ -342,12 +355,14 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	{
 		super.readFromNBT(tag);
 		NBTTagCompound list = (NBTTagCompound)tag.getTag("harvesterSettings");
-		if(list != null)
+		if (list != null)
 		{
-			for(String s : _settings.keySet())
+			for (String s : _settings.keySet())
 			{
+				if ("playSounds".equals(s))
+					continue;
 				byte b = list.getByte(s); 
-				if(b == 1)
+				if (b == 1)
 				{
 					_settings.put(s, true);
 				}
@@ -355,7 +370,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		}
 		if (_treeManager != null)
 			_treeManager.free();
-		_treeManager = new TreeHarvestManager(tag);
+		_treeManager = new TreeHarvestManager(tag, _immutableSettings);
 		if (!_treeManager.getIsDone())
 			_lastTree = _treeManager.getOrigin();
 	}

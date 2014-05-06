@@ -4,9 +4,8 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
@@ -19,7 +18,6 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -110,10 +108,9 @@ import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerWat
 import powercrystals.minefactoryreloaded.farmables.egghandlers.VanillaEggHandler;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCocoa;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCropPlant;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableGiantMushroom;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableGrass;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableNetherWart;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
 import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
@@ -156,62 +153,66 @@ public class Vanilla
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		MFRRegistry.registerPlantable(new PlantableSapling(Block.sapling.blockID, Block.sapling.blockID));
-		MFRRegistry.registerPlantable(new PlantableStandard(Item.pumpkinSeeds.itemID, Block.pumpkinStem.blockID));
-		MFRRegistry.registerPlantable(new PlantableStandard(Item.melonSeeds.itemID, Block.melonStem.blockID));
-		MFRRegistry.registerPlantable(new PlantableStandard(Block.mushroomBrown.blockID, Block.mushroomBrown.blockID));
-		MFRRegistry.registerPlantable(new PlantableStandard(Block.mushroomRed.blockID, Block.mushroomRed.blockID));
-		MFRRegistry.registerPlantable(new PlantableCropPlant(Item.seeds.itemID, Block.crops.blockID));
-		MFRRegistry.registerPlantable(new PlantableCropPlant(Item.carrot.itemID, Block.carrot.blockID));
-		MFRRegistry.registerPlantable(new PlantableCropPlant(Item.potato.itemID, Block.potato.blockID));
+		MFRRegistry.registerPlantable(new PlantableSapling(Blocks.sapling));
+		MFRRegistry.registerPlantable(new PlantableStandard(Items.pumpkin_seeds, Blocks.pumpkin_stem));
+		MFRRegistry.registerPlantable(new PlantableStandard(Items.melon_seeds, Blocks.melon_stem));
+		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.brown_mushroom, Blocks.brown_mushroom));
+		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.red_mushroom, Blocks.red_mushroom));
+		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.wheat_seeds, Blocks.wheat));
+		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.carrot, Blocks.carrots));
+		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.potato, Blocks.potatoes));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
-		MFRRegistry.registerPlantable(new PlantableCocoa(Item.dyePowder.itemID, Block.cocoaPlant.blockID, 3));
-		MFRRegistry.registerPlantable(new PlantableSapling(MineFactoryReloadedCore.rubberSaplingBlock.blockID, MineFactoryReloadedCore.rubberSaplingBlock.blockID));
+		MFRRegistry.registerPlantable(new PlantableCocoa(Items.dye, Blocks.cocoa, 3));
+		MFRRegistry.registerPlantable(new PlantableSapling(MineFactoryReloadedCore.rubberSaplingBlock));
 		
-		MFRRegistry.registerHarvestable(new HarvestableWood(Block.wood.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Block.leaves.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.reed.blockID, HarvestType.LeaveBottom));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.cactus.blockID, HarvestType.LeaveBottom));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.plantRed.blockID, HarvestType.Normal));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.plantYellow.blockID, HarvestType.Normal));
-		MFRRegistry.registerHarvestable(new HarvestableShrub(Block.tallGrass.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableShrub(Block.deadBush.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.mushroomCapBrown.blockID, HarvestType.Tree));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Block.mushroomCapRed.blockID, HarvestType.Tree));
-		MFRRegistry.registerHarvestable(new HarvestableMushroom(Block.mushroomBrown.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableMushroom(Block.mushroomRed.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Block.pumpkin.blockID, HarvestType.Normal));
-		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Block.melon.blockID, HarvestType.Normal));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Block.crops.blockID, 7));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Block.carrot.blockID, 7));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Block.potato.blockID, 7));
+		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.log));
+		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.log2));
+		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Blocks.leaves));
+		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Blocks.leaves2));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.reeds, HarvestType.LeaveBottom));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.cactus, HarvestType.LeaveBottom));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.red_flower, HarvestType.Normal));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.yellow_flower, HarvestType.Normal));
+		MFRRegistry.registerHarvestable(new HarvestableShrub(Blocks.tallgrass));
+		MFRRegistry.registerHarvestable(new HarvestableShrub(Blocks.deadbush));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.brown_mushroom_block, HarvestType.Tree));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.red_mushroom_block, HarvestType.Tree));
+		MFRRegistry.registerHarvestable(new HarvestableMushroom(Blocks.brown_mushroom));
+		MFRRegistry.registerHarvestable(new HarvestableMushroom(Blocks.red_mushroom));
+		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Blocks.pumpkin_stem, Blocks.pumpkin));
+		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Blocks.melon_stem, Blocks.melon_block));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.pumpkin));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.melon_block));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.wheat, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.carrots, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.potatoes, 7));
 		MFRRegistry.registerHarvestable(new HarvestableVine());
 		MFRRegistry.registerHarvestable(new HarvestableNetherWart());
 		MFRRegistry.registerHarvestable(new HarvestableCocoa());
-		MFRRegistry.registerHarvestable(new HarvestableWood(MineFactoryReloadedCore.rubberWoodBlock.blockID));
-		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(MineFactoryReloadedCore.rubberLeavesBlock.blockID));
+		MFRRegistry.registerHarvestable(new HarvestableWood(MineFactoryReloadedCore.rubberWoodBlock));
+		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(MineFactoryReloadedCore.rubberLeavesBlock));
 		
-		MFRRegistry.registerFertilizable(new FertilizableSapling(Block.sapling.blockID));
-		MFRRegistry.registerFertilizable(new FertilizableCropPlant(Block.crops.blockID, 7));
-		MFRRegistry.registerFertilizable(new FertilizableCropPlant(Block.carrot.blockID, 7));
-		MFRRegistry.registerFertilizable(new FertilizableCropPlant(Block.potato.blockID, 7));
-		MFRRegistry.registerFertilizable(new FertilizableGiantMushroom(Block.mushroomBrown.blockID));
-		MFRRegistry.registerFertilizable(new FertilizableGiantMushroom(Block.mushroomRed.blockID));
-		MFRRegistry.registerFertilizable(new FertilizableStemPlants(Block.pumpkinStem.blockID));
-		MFRRegistry.registerFertilizable(new FertilizableStemPlants(Block.melonStem.blockID));
+		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.sapling));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.wheat, 7));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.carrots, 7));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.potatoes, 7));
+		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.brown_mushroom));
+		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.red_mushroom));
+		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable)Blocks.pumpkin_stem));
+		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable)Blocks.melon_stem));
 		MFRRegistry.registerFertilizable(new FertilizableNetherWart());
-		MFRRegistry.registerFertilizable(new FertilizableCocoa(Block.cocoaPlant.blockID));
+		MFRRegistry.registerFertilizable(new FertilizableCocoa((IGrowable)Blocks.cocoa));
 		MFRRegistry.registerFertilizable(new FertilizableGrass());
-		MFRRegistry.registerFertilizable(new FertilizableSapling(MineFactoryReloadedCore.rubberSaplingBlock.blockID));
+		MFRRegistry.registerFertilizable(new FertilizableStandard(MineFactoryReloadedCore.rubberSaplingBlock));
 		
-		MFRRegistry.registerFertilizer(new FertilizerStandard(MineFactoryReloadedCore.fertilizerItem.itemID, 0));
+		MFRRegistry.registerFertilizer(new FertilizerStandard(MineFactoryReloadedCore.fertilizerItem, 0));
 		if(MFRConfig.enableBonemealFertilizing.getBoolean(false))
 		{
-			MFRRegistry.registerFertilizer(new FertilizerStandard(Item.dyePowder.itemID, 15));
+			MFRRegistry.registerFertilizer(new FertilizerStandard(Items.dye, 15));
 		}
 		else
 		{
-			MFRRegistry.registerFertilizer(new FertilizerStandard(Item.dyePowder.itemID, 15, FertilizerType.Grass));
+			MFRRegistry.registerFertilizer(new FertilizerStandard(Items.dye, 15, FertilizerType.Grass));
 		}
 		
 		MFRRegistry.registerRanchable(new RanchableCow());
@@ -223,7 +224,7 @@ public class Vanilla
 		if (MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false))
 		{
 			MFRRegistry.registerConveyerBlacklist(EntityPlayer.class);
-		}
+		} // TODO: move mfr stuff out of this class
 		
 		if (!MFRConfig.conveyorCaptureNonItems.getBoolean(true))
 		{
@@ -366,25 +367,25 @@ public class Vanilla
 		MFRRegistry.registerRedNetLogicCircuit(new Xor3());
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
 		
-		MFRRegistry.registerFruitLogBlockId(Block.wood.blockID);
-		MFRRegistry.registerFruit(new FruitCocoa(Block.cocoaPlant.blockID));
+		MFRRegistry.registerFruitLogBlockId(Blocks.log);
+		MFRRegistry.registerFruit(new FruitCocoa(Blocks.cocoa));
 		
 		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
 		
 		MFRRegistry.registerSpawnHandler(new SpawnableHorse());
 		MFRRegistry.registerSpawnHandler(new SpawnableEnderman());
 		
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem.itemID,
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem.itemID,
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem.itemID,
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem.itemID,
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem.itemID,
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem.itemID,
+		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem,
 				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
 	}
 	

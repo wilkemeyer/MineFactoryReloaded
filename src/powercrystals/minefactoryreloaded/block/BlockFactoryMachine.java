@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.api.block.IDismantleable;
+import cofh.util.position.IRotateableTile;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,19 +25,16 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
@@ -210,16 +209,36 @@ public class BlockFactoryMachine extends BlockContainer
 		}
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
+	
+	@Override
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
+		if (!player.capabilities.isCreativeMode)
+		{
+			world.func_147480_a(x, y, z, true);
+		}
+	}
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata,
 			int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+		
 		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
 				damageDropped(metadata));
-		machine.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
-		drops.add(machine);
+		
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te != null)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			if (te instanceof TileEntityFactoryInventory)
+				((TileEntityFactoryInventory)te).writeItemNBT(tag);
+			if (!tag.hasNoTags())
+				machine.setTagCompound(tag);
+		
+			drops.add(machine);
+		}
 		return drops;
 	}
 
@@ -416,7 +435,7 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 
 	@Override
-	public boolean isBlockNormalCube(World world, int x, int y, int z)
+	public boolean isNormalCube()
 	{
 		return false;
 	}

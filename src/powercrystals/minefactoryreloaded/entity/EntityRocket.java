@@ -89,7 +89,7 @@ public class EntityRocket extends Entity
 		{
 			Vec3 pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
 			Vec3 nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-			MovingObjectPosition hit = this.worldObj.rayTraceBlocks_do_do(pos, nextPos, false, true);
+			MovingObjectPosition hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
 			pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
 			nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			
@@ -276,14 +276,14 @@ public class EntityRocket extends Entity
 	{
 		if (_target != null)
 		{
-			NBTTagCompound target = new NBTTagCompound("target");
+			NBTTagCompound target = new NBTTagCompound();
 			tag.setDouble("xTarget", _target.posX);
 			tag.setDouble("yTarget", _target.posY);
 			tag.setDouble("zTarget", _target.posZ);
 			UUID uuid = _target.getUniqueID();
 			tag.setLong("UUIDMost", uuid.getMostSignificantBits());
 			tag.setLong("UUIDLeast", uuid.getLeastSignificantBits());
-			tag.setCompoundTag("target", target);
+			tag.setTag("target", target);
 		}
 		if (_owner != null)
 			tag.setString("owner", _owner);

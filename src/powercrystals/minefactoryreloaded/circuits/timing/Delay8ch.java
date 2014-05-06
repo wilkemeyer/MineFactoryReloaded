@@ -22,13 +22,13 @@ public class Delay8ch extends StatelessCircuit
 	}
 	
 	@Override
-	public int getInputCount()
+	public byte getInputCount()
 	{
 		return 9;
 	}
 	
 	@Override
-	public int getOutputCount()
+	public byte getOutputCount()
 	{
 		return 8;
 	}

@@ -19,7 +19,7 @@ public class RanchableChicken implements IFactoryRanchable
 	protected Random rand = new Random();
 	
 	@Override
-	public Class<?> getRanchableEntity()
+	public Class<? extends EntityLivingBase> getRanchableEntity()
 	{
 		return EntityChicken.class;
 	}

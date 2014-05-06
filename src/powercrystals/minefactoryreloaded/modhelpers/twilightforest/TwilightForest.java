@@ -7,16 +7,16 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import java.util.HashMap;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
@@ -30,7 +30,7 @@ public class TwilightForest
 	
 	public static ModContainer twilightForestContainer;
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@EventHandler
 	public static void load(FMLInitializationEvent e)
 	{
@@ -85,20 +85,20 @@ public class TwilightForest
 			Class tfBlocks = Class.forName("twilightforest.block.TFBlocks");
 			if(tfBlocks != null)
 			{
-				MFRRegistry.registerHarvestable(new HarvestableWood(((Block)tfBlocks.getField("log").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableWood(((Block)tfBlocks.getField("magicLog").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableWood(((Block)tfBlocks.getField("magicLogSpecial").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)tfBlocks.getField("root").get(null)).blockID, HarvestType.TreeFlipped));
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("leaves").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("magicLeaves").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("hedge").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("firefly").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("cicada").get(null)).blockID));
-				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)tfBlocks.getField("plant").get(null)).blockID, HarvestType.Normal));
+				MFRRegistry.registerHarvestable(new HarvestableWood(((Block)tfBlocks.getField("log").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableWood(((Block)tfBlocks.getField("magicLog").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableWood(((Block)tfBlocks.getField("magicLogSpecial").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)tfBlocks.getField("root").get(null)), HarvestType.TreeFlipped));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("leaves").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("magicLeaves").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("hedge").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("firefly").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(((Block)tfBlocks.getField("cicada").get(null))));
+				MFRRegistry.registerHarvestable(new HarvestableStandard(((Block)tfBlocks.getField("plant").get(null)), HarvestType.Normal));
 				
-				MFRRegistry.registerPlantable(new PlantableSapling(((Block)tfBlocks.getField("sapling").get(null)).blockID, ((Block)tfBlocks.getField("sapling").get(null)).blockID));
+				MFRRegistry.registerPlantable(new PlantableSapling(((Block)tfBlocks.getField("sapling").get(null))));
 				
-				MFRRegistry.registerFertilizable(new FertilizableSapling(((Block)tfBlocks.getField("sapling").get(null)).blockID));
+				MFRRegistry.registerFertilizable(new FertilizableStandard(((IGrowable)tfBlocks.getField("sapling").get(null))));
 			}
 			
 			MFRRegistry.registerRandomMobProvider(new TwilightForestMobProvider());

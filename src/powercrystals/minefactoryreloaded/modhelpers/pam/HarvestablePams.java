@@ -1,19 +1,19 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
-import java.lang.reflect.Method;import java.util.ArrayList;import java.util.List;import java.util.Map;import java.util.Random;import net.minecraft.item.ItemStack;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import powercrystals.minefactoryreloaded.api.HarvestType;import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
+import java.lang.reflect.Method;import java.util.ArrayList;import java.util.List;import java.util.Map;import java.util.Random;import net.minecraft.block.Block;import net.minecraft.item.ItemStack;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import powercrystals.minefactoryreloaded.api.HarvestType;import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 public class HarvestablePams implements IFactoryHarvestable
 {
-	protected int _sourceId;
+	protected Block _sourceId;
 	protected Method getCrop;
 	protected Method getGrowthStage;
 	protected final Object[] dummyArgs = new Object[]{};
-	public HarvestablePams( int sourceId ) throws ClassNotFoundException
+	public HarvestablePams( Block sourceId ) throws ClassNotFoundException
 	{
 		_sourceId = sourceId;
 		getCrop = Pam.pamTEGetCropId;
 		getGrowthStage = Pam.pamTEGetGrowthStage;
 	}
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
 		return _sourceId;
 	}
@@ -71,6 +71,6 @@ public class HarvestablePams implements IFactoryHarvestable
 	@Override	public void preHarvest( World world, int x, int y, int z )	{	}
 	@Override
 	public void postHarvest( World world, int x, int y, int z )
-	{		TileEntity te = world.getTileEntity( x, y, z );		try		{			int cropId = ( Integer ) ( getCrop.invoke( te, dummyArgs ) );			if(cropId>28)			{				Pam.pamTESetGrowthStage.invoke(te,1);				world.markBlockForUpdate(x,y,z);			}			else			{				world.removeBlockTileEntity(x,y,z);				world.setBlockToAir(x,y,z);			}		}		catch ( Exception ex )		{			ex.printStackTrace();		}
+	{		TileEntity te = world.getTileEntity( x, y, z );		try		{			int cropId = ( Integer ) ( getCrop.invoke( te, dummyArgs ) );			if(cropId>28)			{				Pam.pamTESetGrowthStage.invoke(te,1);				world.markBlockForUpdate(x,y,z);			}			else			{				world.removeTileEntity(x,y,z);				world.setBlockToAir(x,y,z);			}		}		catch ( Exception ex )		{			ex.printStackTrace();		}
 	}
 }

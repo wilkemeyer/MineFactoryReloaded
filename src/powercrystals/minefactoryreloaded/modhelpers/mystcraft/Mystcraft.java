@@ -19,7 +19,7 @@ public class Mystcraft
 	private static final String lastUpdated = "for Mystcraft-uni-1.5.1-0.10.3.00, current release as of May 25 2013";
 	
 	@EventHandler
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void load(FMLInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("Mystcraft"))

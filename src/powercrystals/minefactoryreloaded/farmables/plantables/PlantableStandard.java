@@ -1,12 +1,14 @@
 package powercrystals.minefactoryreloaded.farmables.plantables;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.oredict.OreDictionary;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
+import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
 /*
  * Used for directly placing blocks (ie saplings) and items (ie sugarcane). Pass in source ID to constructor,
@@ -17,37 +19,45 @@ public class PlantableStandard implements IFactoryPlantable
 {
 	public static final int WILDCARD = OreDictionary.WILDCARD_VALUE;
 	
-	protected int _sourceId;
-	protected int _plantedBlockId;
+	protected Item _seed;
+	protected Block _block;
+	protected ReplacementBlock _plantedBlock;
 	protected int _validMeta;
 	
-	public PlantableStandard(int sourceId, int plantedBlockId)
+	public PlantableStandard(Block block, Block plantedBlock)
 	{
-		this(sourceId, plantedBlockId, WILDCARD);
+		this(Item.getItemFromBlock(block), plantedBlock);
 	}
 	
-	public PlantableStandard(int sourceId, int plantedBlockId, int validMeta)
+	public PlantableStandard(Item block, Block plantedBlock)
 	{
-		if(plantedBlockId >= Block.blocksList.length)
-		{
-			throw new IllegalArgumentException("Passed an Item ID to FactoryPlantableStandard's planted block argument");
-		}
-		this._sourceId = sourceId;
-		this._plantedBlockId = plantedBlockId;
-		this._validMeta = validMeta;
+		this(block, plantedBlock, WILDCARD);
+	}
+	
+	public PlantableStandard(Item block, Block plantedBlock, int validMeta)
+	{
+		_seed = block;
+		_block = plantedBlock;
+		_validMeta = validMeta;
+		_plantedBlock = new ReplacementBlock(plantedBlock);
+	}
+	
+	@Override
+	public boolean canBePlanted(ItemStack stack)
+	{
+		return _validMeta == WILDCARD || stack.getItemDamage() == _validMeta;
 	}
 	
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{
-		int groundId = world.getBlockId(x, y - 1, z);
-		if(!world.isAirBlock(x, y, z) || (_validMeta != WILDCARD && stack.getItemDamage() != _validMeta))
-		{
+		if (!world.isAirBlock(x, y, z))
 			return false;
-		}
-		return (Block.blocksList[_plantedBlockId].canPlaceBlockAt(world, x, y, z) && Block.blocksList[_plantedBlockId].canBlockStay(world, x, y, z)) ||
-				(Block.blocksList[_plantedBlockId] instanceof IPlantable && Block.blocksList[groundId] != null &&
-				Block.blocksList[groundId].canSustainPlant(world, x, y, z, ForgeDirection.UP, ((IPlantable)Block.blocksList[_plantedBlockId])));
+		
+		Block groundId = world.getBlock(x, y - 1, z);
+		return (_block.canPlaceBlockAt(world, x, y, z) && _block.canBlockStay(world, x, y, z)) ||
+				(_block instanceof IPlantable && groundId != null &&
+				groundId.canSustainPlant(world, x, y, z, ForgeDirection.UP, (IPlantable)_block));
 	}
 	
 	@Override
@@ -63,24 +73,14 @@ public class PlantableStandard implements IFactoryPlantable
 	}
 	
 	@Override
-	public int getPlantedBlockId(World world, int x, int y, int z, ItemStack stack)
+	public ReplacementBlock getPlantedBlock(World world, int x, int y, int z, ItemStack stack)
 	{
-		if(stack.itemID != _sourceId)
-		{
-			return -1;
-		}
-		return _plantedBlockId;
+		return _plantedBlock;
 	}
 	
 	@Override
-	public int getPlantedBlockMetadata(World world, int x, int y, int z, ItemStack stack)
+	public Item getSeed()
 	{
-		return stack.getItemDamage();
-	}
-	
-	@Override
-	public int getSeedId()
-	{
-		return _sourceId;
+		return _seed;
 	}
 }

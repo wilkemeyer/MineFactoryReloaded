@@ -7,15 +7,15 @@ import powercrystals.minefactoryreloaded.api.HarvestType;
 
 public class HarvestableWood extends HarvestableStandard
 {
-	public HarvestableWood(int blockId)
+	public HarvestableWood(Block block)
 	{
-		super(blockId, HarvestType.Tree);
+		super(block, HarvestType.Tree);
 	}
 	
 	@Override
 	public void postHarvest(World world, int x, int y, int z)
 	{
-		int id = getPlantId();
+		Block id = getPlant();
 		
         notifyBlock(world, x, y - 1, z, id);
         notifyBlock(world, x - 1, y, z, id);
@@ -25,10 +25,10 @@ public class HarvestableWood extends HarvestableStandard
         notifyBlock(world, x, y + 1, z, id);
 	}
 	
-	protected void notifyBlock(World world, int x, int y, int z, int id)
+	protected void notifyBlock(World world, int x, int y, int z, Block id)
 	{
-		Block block = Block.blocksList[world.getBlockId(x, y, z)];
-		if (block != null && !block.isLeaves(world, x, y, z))
+		Block block = world.getBlock(x, y, z);
+		if (!block.isLeaves(world, x, y, z))
 			world.notifyBlockOfNeighborChange(x, y, z, id);
 	}
 }

@@ -6,7 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.FakePlayerFactory;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -50,15 +51,10 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 		{
 			ItemStack stack = _inventory[i];
 			if(stack == null || !(stack.getItem() instanceof ItemBlock))
-			{
 				continue;
-			}
+
 			ItemBlock item = (ItemBlock)stack.getItem();
-			if (item.getBlockID() > Block.blocksList.length)
-				continue;
-            Block block = Block.blocksList[item.getBlockID()];
-            if (block == null)
-            	continue;
+            Block block = item.field_150939_a;
 			
 			BlockPosition bp = BlockPosition.fromFactoryTile(this);
 			bp.moveForwards(1);
@@ -67,16 +63,16 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 			{
 				int j1 = item.getMetadata(stack.getItemDamage());
 				int meta = block.onBlockPlaced(worldObj, bp.x, bp.y, bp.z, 0, bp.x, bp.y, bp.z, j1);
-				if (worldObj.setBlock(bp.x, bp.y, bp.z, block.blockID, meta, 3) &&
-						worldObj.getBlockId(bp.x, bp.y, bp.z) == block.blockID)
+				if (worldObj.setBlock(bp.x, bp.y, bp.z, block, meta, 3) &&
+						worldObj.getBlock(bp.x, bp.y, bp.z).equals(block))
 				{
 					block.onBlockPlacedBy(worldObj, bp.x, bp.y, bp.z,
-							FakePlayerFactory.getMinecraft(worldObj), stack);
+							FakePlayerFactory.getMinecraft((WorldServer)worldObj), stack);
 					block.onPostBlockPlaced(worldObj, bp.x, bp.y, bp.z, meta);
 					if(MFRConfig.playSounds.getBoolean(true))
 					{
 						worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
-								block.stepSound.getPlaceSound(),
+								block.stepSound.func_150496_b(),
 								(block.stepSound.getVolume() + 1.0F) / 2.0F,
 								block.stepSound.getPitch() * 0.8F);
 					}

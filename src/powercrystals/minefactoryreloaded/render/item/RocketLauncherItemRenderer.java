@@ -17,14 +17,16 @@ import net.minecraftforge.client.model.IModelCustom;
 @SideOnly(Side.CLIENT)
 public class RocketLauncherItemRenderer implements IItemRenderer
 {
-	private static final ResourceLocation launcher = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "RocketLauncher.png");
+	private static final ResourceLocation launcher =
+			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "RocketLauncher.png");
 	private IModelCustom _model;
 	
 	public RocketLauncherItemRenderer()
 	{
 		try
 		{
-			_model = AdvancedModelLoader.loadModel("/powercrystals/minefactoryreloaded/models/RocketLauncher.obj");
+			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
+					"/powercrystals/minefactoryreloaded/models/RocketLauncher.obj"));
 		}
 		catch(Exception e)
 		{

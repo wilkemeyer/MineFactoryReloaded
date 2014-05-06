@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import java.lang.reflect.Method;
 import java.util.Random;
@@ -22,7 +21,6 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStand
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 
 @Mod( modid = "MineFactoryReloaded|CompatPams", name = "MFR Compat: Pam's Mods", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:pamharvestcraft" )
-@NetworkMod( clientSideRequired = false, serverSideRequired = false )
 public class Pam
 {
 	// stuff I need to get from pams mods that I only want to do once
@@ -59,7 +57,7 @@ public class Pam
 			{
 				Class<?> mod = Class.forName( "assets.pamharvestcraft.PamHarvestCraft" );
 				MFRRegistry.registerSludgeDrop(25, new ItemStack( ( Item ) mod.getField( "saltItem" ).get( null ) ) );
-				int blockIdCrop = ( ( Block ) ( mod.getField( "pamCrop" ) ).get( null ) ).blockID;
+				Block blockIdCrop = ( ( Block ) ( mod.getField( "pamCrop" ) ).get( null ) );
 				pamSeeds=(Item [])( mod.getField( "PamSeeds" ) ).get( null );
 				pamCropItems=(Item [])( mod.getField( "PamCropItems" ) ).get( null );
 				Class<?> pamTE = Class.forName( "assets.pamharvestcraft.TileEntityPamCrop" );
@@ -77,17 +75,17 @@ public class Pam
 				pamBlockSaplingFertilize=PamSapling.getDeclaredMethod("generateTree", new Class<?> []
 						{World.class,int.class,int.class,int.class,Random.class,int.class});
 				Block [] saplings=(Block []) mod.getField("PamOakSaplings").get(null);
-				int id;
+				Block id;
 				for ( Block block : saplings )
 				{
-					id=block.blockID;
+					id=block;
 					MFRRegistry.registerFertilizable( new PamFertilizableSapling( id ) );
 					MFRRegistry.registerPlantable(new PlantableStandard(id,id));
 				}
 				saplings=(Block []) mod.getField("PamJungleSaplings").get(null);
 				for ( Block block : saplings )
 				{
-					id=block.blockID;
+					id=block;
 					MFRRegistry.registerFertilizable( new PamFertilizableSapling( id ) );
 					MFRRegistry.registerPlantable(new PlantableStandard(id,id));
 				}
@@ -211,18 +209,17 @@ public class Pam
 				Class<?> pamBlockFlower = Class.forName( "assets.pamweeeflowers.BlockPamFlowerCrop" );
 				pamBlockFlowerFertilize = pamBlockFlower.getDeclaredMethod( "fertilize", fertilizeOpts );
 				Class<?> mod = Class.forName( "assets.pamweeeflowers.PamWeeeFlowers" );
-				int blockId = ( ( Block ) mod.getField( "pamflowerCrop" ).get( null ) ).blockID;
-				flowerId = ( ( Block ) mod.getField( "pamFlower" ).get( null ) ).blockID;
+				Block blockId = ( ( Block ) mod.getField( "pamflowerCrop" ).get( null ) );
+				//flowerId = ( ( Block ) mod.getField( "pamFlower" ).get( null ) ).blockID;
 				MFRRegistry.registerHarvestable( new HarvestablePamsFlower( blockId ) );
 				MFRRegistry.registerFertilizable( new PamFertilizableFlower( blockId ) );
 				for ( String flower : flowers )
 				{
 					Item seed = ( Item ) mod.getField( flower.toLowerCase() + "flowerseedItem" ).get( null );
-					int seedId = seed.itemID;
 
 					int cropId = seed.getClass().getField( "cropID" ).getInt( seed );
-					flowerSeeds[cropId] = seedId;
-					MFRRegistry.registerPlantable( new PlantablePamFlower( blockId, seedId, cropId ) );
+					//flowerSeeds[cropId] = seedId;
+					MFRRegistry.registerPlantable( new PlantablePamFlower( blockId, seed, cropId ) );
 
 				}
 			}
@@ -242,21 +239,19 @@ public class Pam
 		try
 		{
 			Class<?> mod;
-			int blockIdCrop;
-			int blockIdWild;
-			int seedId;
+			Block blockIdCrop;
+			Block blockIdWild;
 			final String cropNameLC;
 			int cropId;
 			cropNameLC = cropName.toLowerCase();
 			mod = Class.forName( "assets.pamharvestcraft.PamHarvestCraft" );
 			Item seed = ( ( Item ) mod.getField( String.format( "%sseedItem", cropNameLC ) ).get( null ) );
-			seedId = seed.itemID;
-			blockIdCrop = ( ( Block ) ( mod.getField( "pamCrop" ) ).get( null ) ).blockID;
+			blockIdCrop = ( ( Block ) ( mod.getField( "pamCrop" ) ).get( null ) );
 			cropId = seed.getClass().getField( "cropID" ).getInt( seed );
-			MFRRegistry.registerPlantable( new PlantablePamCrop( blockIdCrop, seedId, cropId ) );
+			MFRRegistry.registerPlantable( new PlantablePamCrop( blockIdCrop, seed, cropId ) );
 			if ( hasWild )
 			{
-				blockIdWild = ( ( Block ) mod.getField( String.format( "pam%sWild", cropNameLC ) ).get( null ) ).blockID;
+				blockIdWild = ( ( Block ) mod.getField( String.format( "pam%sWild", cropNameLC ) ).get( null ) );
 				MFRRegistry.registerHarvestable( new HarvestableStandard( blockIdWild, HarvestType.Normal ) );
 			}
 
@@ -277,7 +272,7 @@ public class Pam
 		try
 		{
 			Block fruit = ( Block ) Class.forName( "assets.pamharvestcraft.PamHarvestCraft" ).getField( "pam" + name ).get( null );
-			MFRRegistry.registerFruit( new PamFruit( fruit.blockID ) );
+			MFRRegistry.registerFruit( new PamFruit( fruit ) );
 		}
 		catch ( ClassNotFoundException x )
 		{
@@ -295,8 +290,8 @@ public class Pam
 		{
 			Block fruit = ( Block ) Class.forName( "assets.pamharvestcraft.PamHarvestCraft" ).getField( "pamCinnamon" ).get( null );
 			Item cinnamon = ( Item ) Class.forName( "assets.pamharvestcraft.PamHarvestCraft" ).getField( "cinnamonItem" ).get( null );
-			MFRRegistry.registerFruit( new PamFruitCinnamon( fruit.blockID, cinnamon.itemID ) );
-			MFRRegistry.registerFruitLogBlockId( fruit.blockID );
+			MFRRegistry.registerFruit( new PamFruitCinnamon( fruit, cinnamon ) );
+			MFRRegistry.registerFruitLogBlockId( fruit );
 		}
 		catch ( Exception x )
 		{

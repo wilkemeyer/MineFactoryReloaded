@@ -6,18 +6,20 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
 public class HarvestableNetherWart implements IFactoryHarvestable
 {
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
-		return Block.netherStalk.blockID;
+		return Blocks.nether_wart;
 	}
 	
 	@Override
@@ -49,7 +51,7 @@ public class HarvestableNetherWart implements IFactoryHarvestable
 		}
 		for(int k1 = 0; k1 < numDrops; k1++)
 		{
-			drops.add(new ItemStack(Item.netherStalkSeeds));
+			drops.add(new ItemStack(Items.nether_wart));
 		}
 		return drops;
 	}

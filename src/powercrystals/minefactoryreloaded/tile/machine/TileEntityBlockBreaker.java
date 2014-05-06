@@ -23,21 +23,20 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	{		
 		BlockPosition bp = BlockPosition.fromFactoryTile(this);
 		bp.moveForwards(1);
-		int blockId = worldObj.getBlockId(bp.x, bp.y, bp.z);
+		Block block = worldObj.getBlock(bp.x, bp.y, bp.z);
 		int blockMeta = worldObj.getBlockMetadata(bp.x, bp.y, bp.z);
-		
-		Block b = Block.blocksList[blockId];
-		if(b != null && !b.isAirBlock(worldObj, bp.x, bp.y, bp.z) &&
-				!b.blockMaterial.isLiquid() &&
-				b.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0 &&
-				worldObj.setBlockToAir(bp.x, bp.y, bp.z))
+
+		if (!block.isAir(worldObj, bp.x, bp.y, bp.z) &&
+				!block.getMaterial().isLiquid() &&
+				block.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0)
 		{
-			List<ItemStack> drops = b.getBlockDropped(worldObj, bp.x, bp.y, bp.z, blockMeta, 0);
-			doDrop(drops);
-			
-			if(MFRConfig.playSounds.getBoolean(true))
+			List<ItemStack> drops = block.getDrops(worldObj, bp.x, bp.y, bp.z, blockMeta, 0);
+			if (worldObj.setBlockToAir(bp.x, bp.y, bp.z))
 			{
-				worldObj.playAuxSFXAtEntity(null, 2001, bp.x, bp.y, bp.z, blockId + (blockMeta << 12));
+				doDrop(drops);
+				if(MFRConfig.playSounds.getBoolean(true))
+					worldObj.playAuxSFXAtEntity(null, 2001, bp.x, bp.y, bp.z, 
+							Block.getIdFromBlock(block) + (blockMeta << 12));
 			}
 			return true;
 		}

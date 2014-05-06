@@ -1,20 +1,20 @@
 package powercrystals.minefactoryreloaded.core;
 
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import powercrystals.core.net.PacketWrapper;
 import cofh.util.position.Area;
 import cofh.util.position.BlockPosition;
 import cofh.util.position.IRotateableTile;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
-import powercrystals.minefactoryreloaded.net.Packets;
 
 public class HarvestAreaManager
 {
@@ -162,8 +162,9 @@ public class HarvestAreaManager
 		if (hasDirtyUpgrade)
 		{
 			hasDirtyUpgrade = false;
-			return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
-					Packets.HAMUpdate, new Object[]{e.xCoord, e.yCoord, e.zCoord, _upgradeLevel});
+			NBTTagCompound data = new NBTTagCompound();
+			data.setInteger("_upgradeLevel", _upgradeLevel);
+			return new S35PacketUpdateTileEntity(e.xCoord, e.yCoord, e.zCoord, 255, data);
 		}
 		return null;
 	}

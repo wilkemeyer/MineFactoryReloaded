@@ -3,21 +3,20 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
+import cofh.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.net.PacketWrapper;
-import cofh.util.position.IRotateableTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -152,7 +151,6 @@ public abstract class TileEntityFactory extends TileEntity
 			}
 			
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 	}
 	
@@ -195,8 +193,6 @@ public abstract class TileEntityFactory extends TileEntity
 			_lastActive = worldObj.getTotalWorldTime() + 101;
 			_prevActive = _isActive;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
-					50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 		_isActive = isActive;
 	}
@@ -210,8 +206,6 @@ public abstract class TileEntityFactory extends TileEntity
 		{
 			_prevActive = _isActive;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
-					50, worldObj.provider.dimensionId, getDescriptionPacket());
 		}
 	}
 	
@@ -246,10 +240,7 @@ public abstract class TileEntityFactory extends TileEntity
 	{
 		if (worldObj != null && !worldObj.isRemote && hasHAM())
 		{
-			Packet packet = getHAM().getUpgradePacket(this);
-			if (packet != null)
-				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord,
-						50, worldObj.provider.dimensionId, packet);
+			Packets.sendToAllPlayersWatching(worldObj, xCoord, yCoord, zCoord, getHAM().getUpgradePacket(this));
 		}
 		super.markDirty();
 	}
@@ -257,8 +248,37 @@ public abstract class TileEntityFactory extends TileEntity
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		Object[] toSend = {xCoord, yCoord, zCoord, _forwardDirection.ordinal(), _isActive};
-		return PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.TileDescription, toSend);
+		if (worldObj != null && _lastActive < worldObj.getTotalWorldTime())
+		{
+			NBTTagCompound data = new NBTTagCompound();
+			data.setByte("r", (byte)_forwardDirection.ordinal());
+			data.setBoolean("a", _isActive);
+			S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+			return packet;
+		}
+		return null;
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.func_148857_g();
+		switch (pkt.func_148853_f())
+		{
+		case 0:
+			rotateDirectlyTo(data.getByte("r"));
+			_isActive = data.getBoolean("a");
+			//net.scheduleOutboundPacket(new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 255, null));
+			break;
+		case 255:
+			if (hasHAM())
+				if (worldObj.isRemote)
+					getHAM().setUpgradeLevel(data.getInteger("_upgradeLevel"));
+				else
+					Packets.sendToAllPlayersWatching(worldObj, xCoord, yCoord, zCoord,
+							getHAM().getUpgradePacket(this));
+			break;
+		}
 	}
 	
 	public void onNeighborTileChange(int x, int y, int z) {}

@@ -1,19 +1,18 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.relauncher.Side;
 
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class GridTickHandler implements IScheduledTickHandler
+public class GridTickHandler
 {
-	private EnumSet<TickType> ticks = EnumSet.of(TickType.SERVER);
-	
 	private static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToRegenerate =
 			new LinkedHashSet<RedstoneEnergyNetwork>();
 	private static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToAdd =
@@ -63,9 +62,19 @@ public class GridTickHandler implements IScheduledTickHandler
 	{
 		conduitToUpd.add(grid);
 	}
-	
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData)
+
+	@SubscribeEvent
+	public void tick(WorldTickEvent evt)
+	{
+		if (evt.side == Side.CLIENT)
+			return;
+		if (evt.phase == Phase.START)
+			tickStart();
+		else
+			tickEnd();
+	}
+
+	public void tickStart()
 	{
 		//{ Grids that have had significant conduits removed and need to rebuild/split 
 		if (!tickingGridsToRegenerate.isEmpty())
@@ -108,8 +117,7 @@ public class GridTickHandler implements IScheduledTickHandler
 		//}
 	}
 
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData)
+	public void tickEnd()
 	{
 		//{ Changes in what grids are being ticked
 		if (!tickingGridsToRemove.isEmpty())
@@ -159,23 +167,5 @@ public class GridTickHandler implements IScheduledTickHandler
 			}
 		}
 		//}
-	}
-
-	@Override
-	public EnumSet<TickType> ticks()
-	{
-		return ticks;
-	}
-
-	@Override
-	public String getLabel()
-	{
-		return "MFR EnergyNet";
-	}
-
-	@Override
-	public int nextTickSpacing()
-	{
-		return 1;
 	}
 }

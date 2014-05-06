@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 public class ItemBlockFactoryGlass extends ItemBlockFactory
 {
-	public ItemBlockFactoryGlass(int blockId)
+	public ItemBlockFactoryGlass(net.minecraft.block.Block blockId)
 	{
 		super(blockId);
 		this.setMaxDamage(0);

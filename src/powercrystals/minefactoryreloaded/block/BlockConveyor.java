@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.util.position.BlockPosition;
 import cofh.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.AxisAlignedBB;
@@ -40,7 +38,6 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -542,43 +539,28 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-		NBTTagCompound tag = BlockNBTManager.getForBlock(x, y, z);
-		if (tag != null)
-		{
-			ItemStack r = ItemStack.loadItemStackFromNBT(tag);
-			if (r != null)
-				ret.add(r);
-			if (tag.getBoolean("fast"))
-				ret.add(new ItemStack(Items.glowstone_dust, 1));
-		}
-		else if (world.getBlock(x, y, z).equals(this))
+		if (world.getBlock(x, y, z).equals(this))
 		{
 			ret.add(new ItemStack(this, 1, getDamageValue(world, x, y, z)));
 			if (((TileEntityConveyor)world.getTileEntity(x, y, z)).isFast())
 				ret.add(new ItemStack(Items.glowstone_dust, 1));
-			world.setBlockMetadataWithNotify(x, y, z, 15, 4);
 		}
 		return ret;
 	}
 	
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
-	{
-		if (player.capabilities.isCreativeMode)
-			world.setBlockMetadataWithNotify(x, y, z, 15, 4);
+	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
+		if (!player.capabilities.isCreativeMode)
+		{
+			world.func_147480_a(x, y, z, true);
+		}
 	}
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
+	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
-		if (meta != 15)
-		{
-			NBTTagCompound tag = new ItemStack(this, 1, getDamageValue(world, x, y, z)).
-					writeToNBT(new NBTTagCompound());
-			tag.setBoolean("fast", ((TileEntityConveyor)world.getTileEntity(x, y, z)).isFast());
-			BlockNBTManager.setForBlock(new BlockPosition(x, y, z), tag);
-		}
-		super.breakBlock(world, x, y, z, blockId, meta);
+		return false;
 	}
 	
 	@Override

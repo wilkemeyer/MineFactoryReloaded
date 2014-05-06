@@ -4,28 +4,30 @@ import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelect
 
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
+import cofh.util.position.BlockPosition;
+import cofh.util.position.INeighboorUpdateTile;
+
+import gnu.trove.map.hash.TObjectByteHashMap;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.core.net.PacketWrapper;
-import cofh.util.position.BlockPosition;
-import cofh.util.position.INeighboorUpdateTile;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdateTile
@@ -37,28 +39,32 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	private RedstoneNetwork _network;
 	private boolean _needsNetworkUpdate;
 	
-	private static final int _maxVanillaBlockId = 158;
-	private static List<Integer> _connectionWhitelist = Arrays.asList(23, 25, 27, 28, 29, 33, 46, 55, 64, 69, 70, 71, 72, 75, 76, 77, 93, 94, 96, 107, 123, 124, 131, 
-			143, 147, 148, 149, 150, 151, 152, 154, 157, 158);
-	private static List<Integer> _connectionBlackList;
+	private static TObjectByteHashMap<Block> _connectionBlackList;
 	
 	public TileEntityRedNetCable()
 	{
 		if(_connectionBlackList == null)
 		{
-			_connectionBlackList = new LinkedList<Integer>();
-			for(String s : MFRConfig.redNetConnectionBlacklist.getString().replace("\"", "").split(","))
+			_connectionBlackList = new TObjectByteHashMap<Block>();
+			for(String s : MFRConfig.redNetConnectionBlacklist.getStringList())
 			{
 				try
 				{
-					int i = Integer.parseInt(s.trim());
-					_connectionBlackList.add(i);
+					if (!StringUtils.isNullOrEmpty(s))
+						_connectionBlackList.put(Block.getBlockFromName(s), (byte)0);
 				}
 				catch(NumberFormatException x)
 				{
 					System.out.println("Empty or invalid rednet blacklist entry found. Not adding to rednet blacklist.");
 				}
 			}
+			List<Integer> wl = Arrays.asList(23, 25, 27, 28, 29, 33, 46, 55, 64, 69, 70, 71,
+					72, 75, 76, 77, 93, 94, 96, 107, 123, 124, 131, 143, 147, 148, 149, 150,
+					151, 152, 154, 157, 158);
+			int i = 176; // as of 1.7.2
+			while (i --> 0)
+				if (!wl.contains(i))
+					_connectionBlackList.put(Block.getBlockById(i), (byte)1);
 		}
 	}
 	
@@ -89,7 +95,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	
 	public int getSideColorValue(ForgeDirection side)
 	{
-		return (ItemDye.dyeColors[~getSideColor(side) & 15] << 8) | 0xFF;
+		return (ItemDye.field_150922_c[~getSideColor(side) & 15] << 8) | 0xFF;
 	}
 	
 	public byte getMode(int side)
@@ -155,9 +161,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		{
 			return RedNetConnectionType.ForcedPlateSingle;
 		}
-		else if ((blockId <= _maxVanillaBlockId && !_connectionWhitelist.contains(blockId)) ||
-				_connectionBlackList.contains(blockId) ||
-				b instanceof IRedNetDecorative)
+		else if (_connectionBlackList.contains(b) || b instanceof IRedNetDecorative)
 			// standard connection logic, then figure out if we shouldn't connect
 			// mode 1 will skip this
 		{
@@ -176,17 +180,34 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return  PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
-				Packets.CableDescription, new Object[]
-				{
-					xCoord, yCoord, zCoord,
-					_sideColors[0], _sideColors[1], _sideColors[2],
-					_sideColors[3], _sideColors[4], _sideColors[5],
-					cableMode[0] | (cableMode[1] << 8) |
-					(cableMode[2] << 16) | (cableMode[3] << 24),
-					cableMode[4] | (cableMode[5] << 8) |
-					(cableMode[6] << 16)
-				});
+		NBTTagCompound data = new NBTTagCompound();
+		data.setIntArray("colors", _sideColors);
+		data.setInteger("mode[0]", cableMode[0] | (cableMode[1] << 8) | (cableMode[2] << 16) |
+				(cableMode[3] << 24));
+		data.setInteger("mode[1]", cableMode[4] | (cableMode[5] << 8) | (cableMode[6] << 16));
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		return packet;
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.func_148857_g();
+		switch (pkt.func_148853_f())
+		{
+		case 0:
+			_sideColors = data.getIntArray("colors");
+			int mode = data.getInteger("mode[0]");
+			cableMode[0] = (byte)(mode & 0xFF);
+			cableMode[1] = (byte)((mode >> 8) & 0xFF);
+			cableMode[2] = (byte)((mode >> 16) & 0xFF);
+			cableMode[3] = (byte)((mode >> 24) & 0xFF);
+			mode = data.getInteger("mode[1]");
+			cableMode[4] = (byte)(mode & 0xFF);
+			cableMode[5] = (byte)((mode >> 8) & 0xFF);
+			cableMode[6] = (byte)((mode >> 16) & 0xFF);
+			break;
+		}
 	}
 	
 	@Override

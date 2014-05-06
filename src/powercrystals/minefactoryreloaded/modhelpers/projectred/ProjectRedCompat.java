@@ -8,10 +8,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSapling;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
@@ -32,9 +33,9 @@ public class ProjectRedCompat
 			Block stainedLeaf = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyeleaf");
 			Block stainedSapling = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyesapling");
 			
-			MFRRegistry.registerPlantable(new PlantableSapling(stainedSapling.blockID, stainedSapling.blockID));
-			MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(stainedLeaf.blockID));
-			MFRRegistry.registerFertilizable(new FertilizableSapling(stainedSapling.blockID));				
+			MFRRegistry.registerPlantable(new PlantableSapling(stainedSapling));
+			MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(stainedLeaf));
+			MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)stainedSapling));				
 		}
 		catch (Exception ex)
 		{

@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.farmables.harvestables;
 
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 
@@ -9,9 +10,9 @@ public class HarvestableCropPlant extends HarvestableStandard
 {
 	private int _targetMeta;
 	
-	public HarvestableCropPlant(int blockID, int targetMeta)
+	public HarvestableCropPlant(Block block, int targetMeta)
 	{
-		super(blockID, HarvestType.Normal);
+		super(block, HarvestType.Normal);
 		_targetMeta = targetMeta;
 	}
 	

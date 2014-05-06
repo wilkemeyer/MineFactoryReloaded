@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.core;
 
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -18,32 +19,33 @@ public class TreeHarvestManager implements IHarvestManager
 	private BlockPool _blocks;
 	private boolean _isDone;
 
+	private Map<String, Boolean> _settings;
 	private HarvestMode _harvestMode;
 	private Area _area;
 	private World _world;
 
-	public TreeHarvestManager(NBTTagCompound tag)
+	public TreeHarvestManager(NBTTagCompound tag, Map<String, Boolean> s)
 	{
 		readFromNBT(tag);
+		_settings = s;
 	}
 
-	public TreeHarvestManager(World world, Area treeArea, HarvestMode harvestMode)
+	public TreeHarvestManager(World world, Area treeArea, HarvestMode harvestMode, Map<String, Boolean> s)
 	{
-		reset(world, treeArea, harvestMode);
+		reset(world, treeArea, harvestMode, s);
 		_isDone = true;
 	}
 
 	@Override
 	public BlockPosition getNextBlock()
 	{
-		BlockNode bn = _blocks.poke();
-		return bn.bp;
+		searchForTreeBlocks(_blocks.poke());
+		return _blocks.shift().bp;
 	}
 
 	@Override
 	public void moveNext()
 	{
-		searchForTreeBlocks(_blocks.shift());
 		if (_blocks.size() == 0)
 		{
 			_isDone = true;
@@ -53,8 +55,11 @@ public class TreeHarvestManager implements IHarvestManager
 	private void searchForTreeBlocks(BlockNode bn)
 	{
 		BlockPosition bp = bn.bp;
-		Map<Integer, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
+		
+		if (getType(bn.bp, harvestables) == HarvestType.TreeFruit)
+			return;
 
 		SideOffset[] sides = !_harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
 			SideOffset.ADJACENT_CUBE_INVERTED;
@@ -63,36 +68,53 @@ public class TreeHarvestManager implements IHarvestManager
 		{
 			SideOffset side = sides[i];
 			cur = BlockPool.getNext(bp.x + side.offsetX, bp.y + side.offsetY, bp.z + side.offsetZ);
-			if (isValid(cur.bp, harvestables))
-				_blocks.push(cur);
-			else
-				cur.free();
+			addIfValid(getType(bn.bp, harvestables), cur);
 		}
 
 		bn.free();
 	}
 
-	private boolean isValid(BlockPosition bp, Map<Integer, IFactoryHarvestable> harvestables)
+	private void addIfValid(HarvestType type, BlockNode node)
+	{
+		if (type != null)
+		{
+			long size = _blocks.size();
+			if (type == HarvestType.TreeFruit |
+					type == HarvestType.TreeLeaf)
+			{
+				_blocks.unshift(node);
+			}
+			else if (type == HarvestType.Tree |
+					type == HarvestType.TreeFlipped)
+			{
+				_blocks.push(node);
+			}
+			if (size != _blocks.size())
+				return;
+		}
+		node.free();
+	}
+	
+	private HarvestType getType(BlockPosition bp, Map<Block, IFactoryHarvestable> harvestables)
 	{
 		if ((bp.x > _area.xMax) | (bp.x < _area.xMin) |
 				(bp.z > _area.zMax) | (bp.z < _area.zMin) |
 				(bp.y > _area.yMax) | (bp.y < _area.yMin) ||
 				!_world.blockExists(bp.x, bp.y, bp.z))
-			return false;
+			return null;
 
-		Integer blockId = _world.getBlockId(bp.x, bp.y, bp.z);
-		if (harvestables.containsKey(blockId))
+		Block block = _world.getBlock(bp.x, bp.y, bp.z);
+		if (harvestables.containsKey(block))
 		{
-			HarvestType obj = harvestables.get(blockId).getHarvestType();
-			return obj == HarvestType.TreeFlipped |
-					obj == HarvestType.TreeLeaf |
-					obj == HarvestType.Tree;
+			IFactoryHarvestable h = harvestables.get(block);
+			if (h.canBeHarvested(_world, _settings, bp.x, bp.y, bp.z))
+				return h.getHarvestType();
 		}
-		return false;
+		return null;
 	}
 
 	@Override
-	public void reset(World world, Area treeArea, HarvestMode harvestMode)
+	public void reset(World world, Area treeArea, HarvestMode harvestMode, Map<String, Boolean> settings)
 	{
 		setWorld(world);
 		_harvestMode = harvestMode;
@@ -102,6 +124,7 @@ public class TreeHarvestManager implements IHarvestManager
 		_blocks = new BlockPool();
 		BlockPosition bp = treeArea.getOrigin();
 		_blocks.push(BlockPool.getNext(bp.x, bp.y, bp.z));
+		_settings = settings;
 	}
 
 	@Override

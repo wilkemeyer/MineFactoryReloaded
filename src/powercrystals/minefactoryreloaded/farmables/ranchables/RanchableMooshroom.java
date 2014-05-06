@@ -10,20 +10,20 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
 
 public class RanchableMooshroom implements IFactoryRanchable {
 	
 	@Override
-	public Class<?> getRanchableEntity()
+	public Class<? extends EntityLivingBase> getRanchableEntity()
 	{
 		return EntityMooshroom.class;
 	}

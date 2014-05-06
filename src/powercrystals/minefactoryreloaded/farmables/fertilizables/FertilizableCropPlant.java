@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.farmables.fertilizables;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
+import net.minecraft.block.IGrowable;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -12,15 +12,15 @@ public class FertilizableCropPlant extends FertilizableStandard
 {
 	protected final int targetMeta;
 	
-	public FertilizableCropPlant(int blockID, FertilizerType type, int targetMeta)
+	public FertilizableCropPlant(IGrowable block, FertilizerType type, int targetMeta)
 	{
-		super(blockID, type);
+		super(block, type);
 		this.targetMeta = targetMeta;
 	}
 	
-	public FertilizableCropPlant(int blockID, int targetMeta)
+	public FertilizableCropPlant(IGrowable block, int targetMeta)
 	{
-		this(blockID, FertilizerType.GrowPlant, targetMeta);
+		this(block, FertilizerType.GrowPlant, targetMeta);
 	}
 
 	@Override
@@ -32,7 +32,9 @@ public class FertilizableCropPlant extends FertilizableStandard
 	@Override
 	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		((BlockCrops)Block.crops).fertilize(world, x, y, z);
-		return true;
+		Block block = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+		((IGrowable)block).func_149853_b(world, rand, x, y, z);
+		return world.getBlockMetadata(x, y, z) != meta;
 	}
 }

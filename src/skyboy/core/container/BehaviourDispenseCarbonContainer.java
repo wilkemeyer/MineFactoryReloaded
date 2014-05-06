@@ -1,6 +1,7 @@
 package skyboy.core.container;
 
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
@@ -15,14 +16,14 @@ public final class BehaviourDispenseCarbonContainer extends BehaviorDefaultDispe
 	public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
 		CarbonContainer item = (CarbonContainer)stack.getItem();
 		World world = source.getWorld();
-		EnumFacing enumfacing = BlockDispenser.getFacing(source.getBlockMetadata());
+		EnumFacing enumfacing = BlockDispenser.func_149937_b(source.getBlockMetadata());
 		int x = source.getXInt() + enumfacing.getFrontOffsetX(),
 				y = source.getYInt() + enumfacing.getFrontOffsetY(),
 				z = source.getZInt() + enumfacing.getFrontOffsetZ();
-		int id = world.getBlockId(x, y, z);
+		Block id = world.getBlock(x, y, z);
 		ItemStack r = item.tryPlaceContainedLiquid(world, stack, x, y, z, enumfacing.ordinal());
 
-		if (id != world.getBlockId(x, y, z)) {
+		if (id != world.getBlock(x, y, z)) {
 			if (--stack.stackSize > 0) {
 				IInventory inv = (IInventory)source.getBlockTileEntity();
 				if (inv != null && r != null) {

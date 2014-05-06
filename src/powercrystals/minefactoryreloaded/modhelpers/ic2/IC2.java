@@ -15,21 +15,18 @@ import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
 @Mod(modid = "MineFactoryReloaded|CompatIC2", name = "MFR Compat: IC2", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:IC2")
 public class IC2
@@ -63,17 +60,18 @@ public class IC2
 
 			if(rubberSapling != null)
 			{
-				MFRRegistry.registerPlantable(new PlantableStandard(rubberSapling.getItem(), rubberSapling.getItem()));
-				MFRRegistry.registerFertilizable(new FertilizableIC2RubberTree(rubberSapling.getItem()));
+				MFRRegistry.registerPlantable(new PlantableSapling(rubberSapling.getItem(),
+						Block.getBlockFromItem(rubberSapling.getItem())));
+				MFRRegistry.registerFertilizable(new FertilizableIC2RubberTree(Block.getBlockFromItem(rubberSapling.getItem())));
 			}
 			if(rubberLeaves != null)
 			{
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(rubberLeaves.getItem()));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Block.getBlockFromItem(rubberLeaves.getItem())));
 			}
 			if(rubberWood != null)
 			{
-				MFRRegistry.registerHarvestable(new HarvestableIC2RubberWood(rubberWood.getItem(), HarvestType.Tree, stickyResin.itemID));
-				MFRRegistry.registerFruitLogBlockId(rubberWood.getItem());
+				MFRRegistry.registerHarvestable(new HarvestableIC2RubberWood(Block.getBlockFromItem(rubberWood.getItem()), stickyResin.getItem()));
+				MFRRegistry.registerFruitLogBlockId(Block.getBlockFromItem(rubberWood.getItem()));
 				MFRRegistry.registerFruit(new FruitIC2Resin(rubberWood, stickyResin));
 			}
 
@@ -83,7 +81,7 @@ public class IC2
 				MFRRegistry.registerFertilizer(new FertilizerStandard(fertilizer.getItem(), fertilizer.getItemDamage()));
 			}
 
-			MFRRegistry.registerHarvestable(new HarvestableIC2Crop(crop.getItem()));
+			MFRRegistry.registerHarvestable(new HarvestableIC2Crop(Block.getBlockFromItem(crop.getItem())));
 
 			GameRegistry.addShapedRecipe(plantBall, new Object[]
 					{

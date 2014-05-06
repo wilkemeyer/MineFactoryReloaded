@@ -2,14 +2,14 @@ package powercrystals.minefactoryreloaded.block;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 public class ItemBlockVanillaIce extends ItemBlock
 {
-	public ItemBlockVanillaIce(int blockId)
+	public ItemBlockVanillaIce(net.minecraft.block.Block blockId)
 	{
 		super(blockId);
 		setMaxDamage(0);
@@ -32,9 +32,9 @@ public class ItemBlockVanillaIce extends ItemBlock
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List subTypes)
+	public void getSubItems(net.minecraft.item.Item itemId, CreativeTabs creativeTab, List subTypes)
 	{
-		subTypes.add(new ItemStack(Block.ice.blockID, 1, 0));
-		subTypes.add(new ItemStack(Block.ice.blockID, 1, 1));
+		subTypes.add(new ItemStack(Blocks.ice, 1, 0));
+		subTypes.add(new ItemStack(Blocks.ice, 1, 1));
 	}
 }

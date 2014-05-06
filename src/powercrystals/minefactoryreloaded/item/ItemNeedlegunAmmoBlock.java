@@ -4,6 +4,7 @@ import cofh.util.position.BlockPosition;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -25,7 +26,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	}
 
 	@Override
-	public void onHitBlock(EntityPlayer owner, World world, int x, int y, int z, int side,
+	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, int x, int y, int z, int side,
 			double distance)
 	{
 		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side));
@@ -44,7 +45,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	}
 
 	@Override
-	public boolean onHitEntity(EntityPlayer owner, Entity hit, double distance)
+	public boolean onHitEntity(ItemStack stack, EntityPlayer owner, Entity hit, double distance)
 	{
 		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
 		Vec3 placement = calculatePlacement(hit);
@@ -54,7 +55,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	}
 
 	@Override
-	public float getSpread()
+	public float getSpread(ItemStack stack)
 	{
 		return 1.5F;
 	}

@@ -13,15 +13,15 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
 public class HarvestableRedPowerFlax implements IFactoryHarvestable
 {
-	private int _sourceId;
+	private Block _sourceId;
 	
-	public HarvestableRedPowerFlax(int sourceId)
+	public HarvestableRedPowerFlax(Block sourceId)
 	{
 		_sourceId = sourceId;
 	}
 	
 	@Override
-	public int getPlantId()
+	public Block getPlant()
 	{
 		return _sourceId;
 	}
@@ -41,15 +41,15 @@ public class HarvestableRedPowerFlax implements IFactoryHarvestable
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return world.getBlockId(x, y + 1, z) == _sourceId;
+		return world.getBlock(x, y + 1, z) == _sourceId;
 	}
 	
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.addAll(Block.blocksList[_sourceId].getBlockDropped(world, x, y, z, world.getBlockMetadata(x, y, z), 0));
-		drops.addAll(Block.blocksList[_sourceId].getBlockDropped(world, x, y + 1, z, world.getBlockMetadata(x, y + 1, z), 0));
+		drops.addAll(_sourceId.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0));
+		drops.addAll(_sourceId.getDrops(world, x, y + 1, z, world.getBlockMetadata(x, y + 1, z), 0));
 		return drops;
 	}
 	

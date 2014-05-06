@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import java.lang.reflect.Method;
 
@@ -21,7 +20,6 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 
 @Mod(modid = "MineFactoryReloaded|CompatRP2", name = "MFR Compat: RP2", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:RedPowerWorld")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class RP2
 {
 	@EventHandler
@@ -36,12 +34,12 @@ public class RP2
 		{
 			Class<?> modClass = Class.forName("com.eloraam.redpower.RedPowerWorld");
 			
-			int blockIdLeaves = ((Block)modClass.getField("blockLeaves").get(null)).blockID;
-			int blockIdLogs = ((Block)modClass.getField("blockLogs").get(null)).blockID;
-			int blockIdPlants = ((Block)modClass.getField("blockPlants").get(null)).blockID;
-			int blockIdCrops = ((Block)modClass.getField("blockCrops").get(null)).blockID;
+			Block blockIdLeaves = ((Block)modClass.getField("blockLeaves").get(null));
+			Block blockIdLogs = ((Block)modClass.getField("blockLogs").get(null));
+			Block blockIdPlants = ((Block)modClass.getField("blockPlants").get(null));
+			Block blockIdCrops = ((Block)modClass.getField("blockCrops").get(null));
 			
-			int itemCropSeedId = ((Item)modClass.getField("itemSeeds").get(null)).itemID;
+			Item itemCropSeedId = ((Item)modClass.getField("itemSeeds").get(null));
 			
 			Method fertilizeMethod = Class.forName("com.eloraam.redpower.world.BlockCustomFlower").getMethod("growTree", World.class, int.class, int.class, int.class);
 			

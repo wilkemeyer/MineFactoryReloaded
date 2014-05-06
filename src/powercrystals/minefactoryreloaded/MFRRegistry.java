@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
 
@@ -30,78 +33,95 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 
 public abstract class MFRRegistry
 {
-	private static Map<Integer, IFactoryPlantable> _plantables = new HashMap<Integer, IFactoryPlantable>();
-	private static Map<Integer, IFactoryHarvestable> _harvestables = new HashMap<Integer, IFactoryHarvestable>();
-	private static Map<Integer, IFactoryFertilizer> _fertilizers = new HashMap<Integer, IFactoryFertilizer>();
-	private static Map<Integer, IFactoryFertilizable> _fertilizables = new HashMap<Integer, IFactoryFertilizable>();
-	private static Map<Class<?>, IFactoryRanchable> _ranchables = new HashMap<Class<?>, IFactoryRanchable>();
-	private static Map<Class<?>, IFactoryGrindable> _grindables = new HashMap<Class<?>, IFactoryGrindable>();
-	private static Map<Class<?>, List<ItemStack>> _breederFoods = new HashMap<Class<?>, List<ItemStack>>();
-	private static Map<String, ILiquidDrinkHandler> _liquidDrinkHandlers = new HashMap<String, ILiquidDrinkHandler>();
-	private static Map<Integer, INeedleAmmo> _needleAmmoTypes = new HashMap<Integer, INeedleAmmo>();
-	private static Map<Class<? extends EntityLivingBase>, IMobSpawnHandler> _spawnHandlers =
-			new HashMap<Class<? extends EntityLivingBase>, IMobSpawnHandler>();
+	private static Map<Item, IFactoryPlantable> _plantables = new HashMap<Item, IFactoryPlantable>();
 	
-	private static List<Integer> _fruitLogBlocks = new ArrayList<Integer>();
-	private static Map<Integer, IFactoryFruit> _fruitBlocks = new HashMap<Integer, IFactoryFruit>();
+	private static Map<Block, IFactoryHarvestable> _harvestables = new HashMap<Block, IFactoryHarvestable>();
+	
+	private static Map<Item, IFactoryFertilizer> _fertilizers = new HashMap<Item, IFactoryFertilizer>();
+	
+	private static Map<Block, IFactoryFertilizable> _fertilizables = new HashMap<Block, IFactoryFertilizable>();
+	
+	private static Map<Class<? extends EntityLivingBase>, IFactoryRanchable> _ranchables =
+			new HashMap<Class<? extends EntityLivingBase>, IFactoryRanchable>();
+	
+	private static Map<String, ILiquidDrinkHandler> _liquidDrinkHandlers =
+			new HashMap<String, ILiquidDrinkHandler>();
+	
+	private static Map<Item, INeedleAmmo> _needleAmmoTypes = new HashMap<Item, INeedleAmmo>();
+	
+	private static List<Block> _fruitLogBlocks = new ArrayList<Block>();
+	private static Map<Block, IFactoryFruit> _fruitBlocks = new HashMap<Block, IFactoryFruit>();
 
 	private static List<WeightedRandom.Item> _sludgeDrops  = new ArrayList<WeightedRandom.Item>();
+	
+	private static List<String> _rubberTreeBiomes = new ArrayList<String>();
+	
+	private static List<IRedNetLogicCircuit> _redNetLogicCircuits = new ArrayList<IRedNetLogicCircuit>();
+	
+	private static Map<Class<? extends EntityLivingBase>, IFactoryGrindable> _grindables =
+			new HashMap<Class<? extends EntityLivingBase>, IFactoryGrindable>();
+	private static List<Class<? extends EntityLivingBase>> _grindableBlacklist =
+			new ArrayList<Class<? extends EntityLivingBase>>();
+	
+	private static List<Class<? extends EntityLivingBase>> _safariNetBlacklist =
+			new ArrayList<Class<? extends EntityLivingBase>>();
 	private static List<IMobEggHandler> _eggHandlers = new ArrayList<IMobEggHandler>();
 	private static List<ISafariNetHandler> _safariNetHandlers = new ArrayList<ISafariNetHandler>();
-	private static List<String> _rubberTreeBiomes = new ArrayList<String>();
-	private static List<Class<?>> _safariNetBlacklist = new ArrayList<Class<?>>();
 	private static List<IRandomMobProvider> _randomMobProviders = new ArrayList<IRandomMobProvider>();
-	private static List<IRedNetLogicCircuit> _redNetLogicCircuits = new ArrayList<IRedNetLogicCircuit>();
-	private static List<WeightedRandom.Item> _laserOres  = new ArrayList<WeightedRandom.Item>();
-	private static List<Class<?>> _grindableBlacklist = new ArrayList<Class<?>>();
+	
+	private static Map<Class<? extends EntityLivingBase>, IMobSpawnHandler> _spawnHandlers =
+			new HashMap<Class<? extends EntityLivingBase>, IMobSpawnHandler>();
 	private static List<String> _autoSpawnerBlacklist = new ArrayList<String>();
-	private static List<Class<?>> _autoSpawnerClassBlacklist = new ArrayList<Class<?>>();
-	private static List<Class<?>> _slaughterhouseBlacklist = new ArrayList<Class<?>>();
-	private static List<Class<?>> _conveyerBlacklist = new ArrayList<Class<?>>();
+	private static List<Class<? extends EntityLivingBase>> _autoSpawnerClassBlacklist =
+			new ArrayList<Class<? extends EntityLivingBase>>();
+	
+	private static List<Class<? extends EntityLivingBase>> _slaughterhouseBlacklist =
+			new ArrayList<Class<? extends EntityLivingBase>>();
+	
+	private static List<Class<? extends Entity>> _conveyerBlacklist =
+			new ArrayList<Class<? extends Entity>>();
+	
 	private static Map<String, Boolean> _unifierBlacklist  = new TreeMap<String, Boolean>();
 
+	private static List<WeightedRandom.Item> _laserOres  = new ArrayList<WeightedRandom.Item>();
 	private static Map<Integer, List<ItemStack>> _laserPreferredOres = new HashMap<Integer, List<ItemStack>>(16);
 
 	public static void registerPlantable(IFactoryPlantable plantable)
 	{
-		_plantables.put(new Integer(plantable.getSeedId()), plantable);
+		_plantables.put(plantable.getSeed(), plantable);
 	}
 
-	public static Map<Integer, IFactoryPlantable> getPlantables()
+	public static Map<Item, IFactoryPlantable> getPlantables()
 	{
 		return _plantables;
 	}
 
 	public static void registerHarvestable(IFactoryHarvestable harvestable)
 	{
-		_harvestables.put(harvestable.getPlantId(), harvestable);
+		_harvestables.put(harvestable.getPlant(), harvestable);
 	}
 
-	public static Map<Integer, IFactoryHarvestable> getHarvestables()
+	public static Map<Block, IFactoryHarvestable> getHarvestables()
 	{
 		return _harvestables;
 	}
 
 	public static void registerFertilizable(IFactoryFertilizable fertilizable)
 	{
-		_fertilizables.put(fertilizable.getFertilizableBlockId(), fertilizable);
+		_fertilizables.put(fertilizable.getPlant(), fertilizable);
 	}
 
-	public static Map<Integer, IFactoryFertilizable> getFertilizables()
+	public static Map<Block, IFactoryFertilizable> getFertilizables()
 	{
 		return _fertilizables;
 	}
 
 	public static void registerFertilizer(IFactoryFertilizer fertilizer)
 	{
-		Integer i = new Integer(fertilizer.getFertilizerId());
-		if(!_fertilizers.containsKey(i))
-		{
-			_fertilizers.put(i, fertilizer);
-		}
+		_fertilizers.put(fertilizer.getFertilizer(), fertilizer);
 	}
 
-	public static Map<Integer, IFactoryFertilizer> getFertilizers()
+	public static Map<Item, IFactoryFertilizer> getFertilizers()
 	{
 		return _fertilizers;
 	}
@@ -111,7 +131,7 @@ public abstract class MFRRegistry
 		_ranchables.put(ranchable.getRanchableEntity(), ranchable);
 	}
 
-	public static Map<Class<?>, IFactoryRanchable> getRanchables()
+	public static Map<Class<? extends EntityLivingBase>, IFactoryRanchable> getRanchables()
 	{
 		return _ranchables;
 	}
@@ -121,27 +141,24 @@ public abstract class MFRRegistry
 		_grindables.put(grindable.getGrindableEntity(), grindable);
 	}
 
-	public static Map<Class<?>, IFactoryGrindable> getGrindables()
+	public static Map<Class<? extends EntityLivingBase>, IFactoryGrindable> getGrindables()
 	{
 		return _grindables;
 	}
 
-	public static void registerGrinderBlacklist(Class<?> ...ungrindables)
+	public static void registerGrinderBlacklist(Class<? extends EntityLivingBase> ungrindable)
 	{
-		for (Class<?> ungrindable : ungrindables)
-		{
-			_grindableBlacklist.add(ungrindable);
-			if (MFRRegistry._safariNetBlacklist.contains(ungrindable))
-				_slaughterhouseBlacklist.add(ungrindable);
-		}
+		_grindableBlacklist.add(ungrindable);
+		if (MFRRegistry._safariNetBlacklist.contains(ungrindable))
+			_slaughterhouseBlacklist.add(ungrindable);
 	}
 
-	public static List<Class<?>> getGrinderBlacklist()
+	public static List<Class<? extends EntityLivingBase>> getGrinderBlacklist()
 	{
 		return _grindableBlacklist;
 	}
 
-	public static List<Class<?>> getSlaughterhouseBlacklist()
+	public static List<Class<? extends EntityLivingBase>> getSlaughterhouseBlacklist()
 	{
 		return _slaughterhouseBlacklist;
 	}
@@ -154,29 +171,6 @@ public abstract class MFRRegistry
 	public static List<WeightedRandom.Item> getSludgeDrops()
 	{
 		return _sludgeDrops;
-	}
-
-	/*
-	 * @deprecated for EntityAnimal.isBreedingItem(ItemStack)
-	 */
-	@Deprecated
-	public static void registerBreederFood(Class<?> entityToBreed, ItemStack food)
-	{
-		if(_breederFoods.containsKey(entityToBreed))
-		{
-			_breederFoods.get(entityToBreed).add(food);
-		}
-		else
-		{
-			ArrayList<ItemStack> foodToAdd = new ArrayList<ItemStack>();
-			foodToAdd.add(food.copy());
-			_breederFoods.put(entityToBreed, foodToAdd);
-		}
-	}
-
-	public static Map<Class<?>, List<ItemStack>> getBreederFoods()
-	{
-		return _breederFoods;
 	}
 
 	public static void registerMobEggHandler(IMobEggHandler handler)
@@ -209,14 +203,14 @@ public abstract class MFRRegistry
 		return _rubberTreeBiomes;
 	}
 
-	public static void registerSafariNetBlacklist(Class<?> entityClass)
+	public static void registerSafariNetBlacklist(Class<? extends EntityLivingBase> entityClass)
 	{
 		_safariNetBlacklist.add(entityClass);
 		if (MFRRegistry._grindableBlacklist.contains(entityClass))
 			_slaughterhouseBlacklist.add(entityClass);
 	}
 
-	public static List<Class<?>> getSafariNetBlacklist()
+	public static List<Class<? extends EntityLivingBase>> getSafariNetBlacklist()
 	{
 		return _safariNetBlacklist;
 	}
@@ -268,32 +262,32 @@ public abstract class MFRRegistry
 		return _laserOres;
 	}
 
-	public static void registerFruitLogBlockId(Integer fruitLogBlockId)
+	public static void registerFruitLogBlockId(Block fruitLogBlock)
 	{
-		_fruitLogBlocks.add(fruitLogBlockId);
+		_fruitLogBlocks.add(fruitLogBlock);
 	}
 
-	public static List<Integer> getFruitLogBlockIds()
+	public static List<Block> getFruitLogBlockIds()
 	{
 		return _fruitLogBlocks;
 	}
 
 	public static void registerFruit(IFactoryFruit fruit)
 	{
-		_fruitBlocks.put(fruit.getSourceBlockId(), fruit);
+		_fruitBlocks.put(fruit.getPlant(), fruit);
 	}
 
-	public static Map<Integer, IFactoryFruit> getFruits()
+	public static Map<Block, IFactoryFruit> getFruits()
 	{
 		return _fruitBlocks;
 	}
 	
-	public static void registerAutoSpawnerBlacklistClass(Class<?> entityClass)
+	public static void registerAutoSpawnerBlacklistClass(Class<? extends EntityLivingBase> entityClass)
 	{
 		_autoSpawnerClassBlacklist.add(entityClass);
 	}
 
-	public static List<Class<?>> getAutoSpawnerClassBlacklist()
+	public static List<Class<? extends EntityLivingBase>> getAutoSpawnerClassBlacklist()
 	{
 		return _autoSpawnerClassBlacklist;
 	}
@@ -328,20 +322,14 @@ public abstract class MFRRegistry
 		return _unifierBlacklist;
 	}
 	
-	public static void registerConveyerBlacklist(Class<?> entityClass)
+	public static void registerConveyerBlacklist(Class<? extends Entity> entityClass)
 	{
 		_conveyerBlacklist.add(entityClass);
 	}
 
-	public static List<Class<?>> getConveyerBlacklist()
+	public static List<Class<? extends Entity>> getConveyerBlacklist()
 	{
 		return _conveyerBlacklist;
-	}
-	
-	@Deprecated
-	public static void setLaserPreferredOre(int color, ItemStack ore)
-	{
-		addLaserPreferredOre(color, ore);
 	}
 
 	public static void addLaserPreferredOre(int color, ItemStack ore)
@@ -374,16 +362,12 @@ public abstract class MFRRegistry
 		return _laserPreferredOres.get(color);
 	}
 	
-	public static void registerNeedleAmmoType(Integer itemId, INeedleAmmo ammo)
+	public static void registerNeedleAmmoType(Item item, INeedleAmmo ammo)
 	{
-		Integer i = new Integer(itemId);
-		if(!_needleAmmoTypes.containsKey(i))
-		{
-			_needleAmmoTypes.put(i, ammo);
-		}
+		_needleAmmoTypes.put(item, ammo);
 	}
 	
-	public static Map<Integer, INeedleAmmo> getNeedleAmmoTypes()
+	public static Map<Item, INeedleAmmo> getNeedleAmmoTypes()
 	{
 		return _needleAmmoTypes;
 	}

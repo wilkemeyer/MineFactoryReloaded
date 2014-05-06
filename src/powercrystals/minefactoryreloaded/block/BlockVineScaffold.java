@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.util.position.BlockPosition;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -7,18 +11,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.util.position.BlockPosition;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.render.IconInverted;
 
 public class BlockVineScaffold extends Block implements IRedNetDecorative
 {
@@ -76,6 +79,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	{
 		_sideIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
 		_topIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
+		_sideIcon = new IconInverted(_sideIcon);
+		_topIcon = new IconInverted(_topIcon);
 	}
 	
 	@Override
@@ -107,7 +112,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return !world.isBlockOpaqueCube(x, y, z);
+		return !world.getBlock(x, y, z).isOpaqueCube();
 	}
 	
 	@Override
@@ -142,8 +147,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
-		if (player.inventory.mainInventory[player.inventory.currentItem] != null &&
-				player.inventory.mainInventory[player.inventory.currentItem].itemID == blockID)
+		ItemStack ci = player.inventory.mainInventory[player.inventory.currentItem];
+		if (ci != null && Block.getBlockFromItem(ci.getItem()).equals(this))
 		{
 			for(int i = y + 1, e = world.getActualHeight(); i < e; ++i)
 			{
@@ -152,11 +157,11 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 				{
 					if (!world.isRemote && world.setBlock(x, i, z, this, 0, 3))
 					{
-						world.playAuxSFXAtEntity(null, 2001, x, i, z, blockID);
+						world.playAuxSFXAtEntity(null, 2001, x, i, z, Block.getIdFromBlock(this));
 						if (!player.capabilities.isCreativeMode)
 						{
-							player.inventory.mainInventory[player.inventory.currentItem].stackSize--;
-							if(player.inventory.mainInventory[player.inventory.currentItem].stackSize == 0)
+							ci.stackSize--;
+							if (ci.stackSize == 0)
 							{
 								player.inventory.mainInventory[player.inventory.currentItem] = null;
 							}

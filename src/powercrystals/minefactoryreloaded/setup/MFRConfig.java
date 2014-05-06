@@ -195,134 +195,169 @@ public class MFRConfig
 		spyglassRange.comment = "The maximum number of blocks the spyglass and ruler can look to find something. This calculation is performed only on the client side.";
 		brightRednetBand = c.get(CATEGORY_GENERAL, "BrightRedNetColors", true);
 		brightRednetBand.comment = "If true, RedNet color bands will always be bright.";
+		colorblindMode = c.get(CATEGORY_GENERAL, "EnableColorblindMode", false);
+		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
+		// TODO: expand this to as many textures as possible (cofh core config option?)
 		
 		c.save();
 	}
 	
-	private static Configuration config;
+	//private static Configuration config;
 	
 	public static void loadCommonConfig(File configFile)
 	{
 		Configuration c = new Configuration(configFile);
 		c.load();
-		config = c;
-		zoolologistEntityId = c.get("Entity", "ID.Zoologist", 330);
-		enableSpawnerCarts = c.get("Entity", "EnableSpawnerCarts", true);
+		//config = c;
+		
+		String category = "Entity", subCategory = "";
+		zoolologistEntityId = c.get(category, "ID.Zoologist", 330);
+		enableSpawnerCarts = c.get(category, "EnableSpawnerCarts", true);
 		enableSpawnerCarts.comment = "If true, using a portaspawner on an empty minecart will make it into a spawner cart";
 		
-		colorblindMode = c.get(CATEGORY_GENERAL, "RedNet.EnableColorblindMode", false);
-		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
-		deleteEntry(CATEGORY_GENERAL, "SearchDistance.TreeMaxHoriztonal");
-		treeSearchMaxHorizontal = c.get(CATEGORY_GENERAL, "SearchLimit.TreeMaxHorizontal", 200);
-		treeSearchMaxHorizontal.comment = "When searching for parts of a tree, how far out to the sides (radius) to search";
-		deleteEntry(CATEGORY_GENERAL, "SearchDistance.TreeMaxVertical");
-		treeSearchMaxVertical = c.get(CATEGORY_GENERAL, "SearchLimit.TreeMaxVertical", 256);
-		treeSearchMaxVertical.comment = "When searching for parts of a tree, how far up to search";
-		verticalHarvestSearchMaxVertical = c.get(CATEGORY_GENERAL, "SearchDistance.StackingBlockMaxVertical", 5);
-		verticalHarvestSearchMaxVertical.comment = "How far upward to search for members of \"stacking\" blocks, like cactus and sugarcane";
-		passengerRailSearchMaxVertical = c.get(CATEGORY_GENERAL, "SearchDistance.PassengerRailMaxVertical", 2);
-		passengerRailSearchMaxVertical.comment = "When searching for players or dropoff locations, how far up to search";
-		passengerRailSearchMaxHorizontal = c.get(CATEGORY_GENERAL, "SearchDistance.PassengerRailMaxHorizontal", 3);
-		passengerRailSearchMaxHorizontal.comment = "When searching for players or dropoff locations, how far out to the sides (radius) to search";
-		rubberTreeWorldGen = c.get(CATEGORY_GENERAL, "WorldGen.RubberTree", true);
-		rubberTreeWorldGen.comment = "Whether or not to generate rubber trees during map generation";
-		mfrLakeWorldGen = c.get(CATEGORY_GENERAL, "WorldGen.MFRLakes", true);
-		mfrLakeWorldGen.comment = "Whether or not to generate MFR lakes during map generation";
-		enableBonemealFertilizing = c.get(CATEGORY_GENERAL, "Fertilizer.EnableBonemeal", false);
-		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
-		conveyorCaptureNonItems = c.get(CATEGORY_GENERAL, "Conveyor.CaptureNonItems", true);
-		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
-		conveyorNeverCapturesPlayers = c.get(CATEGORY_GENERAL, "Conveyor.NeverCapturePlayers", false);
-		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
-		conveyorNeverCapturesTCGolems = c.get(CATEGORY_GENERAL, "Conveyor.NeverCaptureTCGolems", false);
-		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture Thaumcraft golems regardless of other settings.";
 		playSounds = c.get(CATEGORY_GENERAL, "PlaySounds", true);
 		playSounds.comment = "Set to false to disable the harvester's sound when a block is harvested.";
-		deleteEntry(CATEGORY_GENERAL, "Road.Slippery");
-		fruitTreeSearchMaxHorizontal = c.get(CATEGORY_GENERAL, "SearchDistance.FruitTreeMaxHoriztonal", 5);
+		
+		//{ Searching
+		treeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + "SearchDistance", "Tree.MaxHorizontal", 200);
+		treeSearchMaxHorizontal.comment = "When searching for parts of a tree, how far out to the sides (radius) to search";
+		treeSearchMaxVertical = c.get(CATEGORY_GENERAL + "SearchDistance", "Tree.MaxVertical", 256);
+		treeSearchMaxVertical.comment = "When searching for parts of a tree, how far up to search";
+		verticalHarvestSearchMaxVertical = c.get(CATEGORY_GENERAL + "SearchDistance", "StackingBlock.MaxVertical", 5);
+		verticalHarvestSearchMaxVertical.comment = "How far upward to search for members of \"stacking\" blocks, like cactus and sugarcane";
+		passengerRailSearchMaxVertical = c.get(CATEGORY_GENERAL + "SearchDistance", "PassengerRail.MaxVertical", 2);
+		passengerRailSearchMaxVertical.comment = "When searching for players or dropoff locations, how far up to search";
+		passengerRailSearchMaxHorizontal = c.get(CATEGORY_GENERAL + "SearchDistance", "PassengerRail.MaxHorizontal", 3);
+		passengerRailSearchMaxHorizontal.comment = "When searching for players or dropoff locations, how far out to the sides (radius) to search";
+		fruitTreeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + "SearchDistance", "FruitTree.MaxHoriztonal", 5);
 		fruitTreeSearchMaxHorizontal.comment = "When searching for parts of a fruit tree, how far out to the sides (radius) to search";
-		fruitTreeSearchMaxVertical = c.get(CATEGORY_GENERAL, "SearchDistance.FruitTreeMaxVertical", 20);
+		fruitTreeSearchMaxVertical = c.get(CATEGORY_GENERAL + "SearchDistance", "FruitTree.MaxVertical", 20);
 		fruitTreeSearchMaxVertical.comment = "When searching for parts of a fruit tree, how far up to search";
-		breederShutdownThreshold = c.get(CATEGORY_GENERAL, "Breeder.ShutdownThreshold", 50);
-		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
-		autospawnerCostExact = c.get(CATEGORY_GENERAL, "AutoSpawner.Cost.Exact", 50);
-		autospawnerCostExact.comment = "The work required to generate a mob in exact mode.";
-		autospawnerCostStandard = c.get(CATEGORY_GENERAL, "AutoSpawner.Cost.Standard", 15);
-		autospawnerCostStandard.comment = "The work required to generate a mob in standard (non-exact) mode.";
-		laserdrillCost = c.get(CATEGORY_GENERAL, "LaserDrill.Cost", 300);
-		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
-		meatSaturation = c.get(CATEGORY_GENERAL, "Meat.IncreasedSaturation", false);
-		meatSaturation.comment = "If true, meat will be worth steak saturation instead of cookie saturation.";
-		fishingDropRate = c.get(CATEGORY_GENERAL, "FishDropRate", 5);
-		fishingDropRate.comment = "The rate at which fish are dropped from the fishing rod. The drop rate is 1 / this number. Must be greater than 0.";
+		//}
 		
-		vanillaOverrideGlassPane = c.get(CATEGORY_GENERAL, "VanillaOverride.GlassPanes", true);
-		vanillaOverrideGlassPane.comment = "If true, allows vanilla glass panes to connect to MFR stained glass panes.";
-		vanillaOverrideIce = c.get(CATEGORY_GENERAL, "VanillaOverride.Ice", true);
-		vanillaOverrideIce.comment = "If true, enables MFR unmelting ice as well as vanilla ice.";
-		vanillaOverrideMilkBucket = c.get(CATEGORY_GENERAL, "VanillaOverride.MilkBucket", true);
-		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
-		
-		redNetDebug = c.get(CATEGORY_GENERAL, "RedNet.Debug", false);
+		//{ RedNet
+		category = CATEGORY_GENERAL + "RedNet";
+		redNetDebug = c.get(category, "Debug", false);
 		redNetDebug.comment = "If true, RedNet cables will dump a massive amount of data to the log file. You should probably only use this if PC tells you to.";
+		redNetConnectionBlacklist = c.get(category, "ConnectionBlackList", new String[] {});
+		redNetConnectionBlacklist.comment = "A list of block IDs to prevent RedNet cables from connecting to.";
+		//}
 		
-		rubberTreeBiomeWhitelist = c.get(CATEGORY_GENERAL, "WorldGen.RubberTreeBiomeWhitelist", "");
-		rubberTreeBiomeWhitelist.comment = "A comma-separated list of biomes to allow rubber trees to spawn in. Does nothing if rubber tree worldgen is disabled.";
-		rubberTreeBiomeBlacklist = c.get(CATEGORY_GENERAL, "WorldGen.RubberTreeBiomeBlacklist", "");
-		rubberTreeBiomeBlacklist.comment = "A comma-separated list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
-		redNetConnectionBlacklist = c.get(CATEGORY_GENERAL, "RedNet.ConnectionBlackList", "");
-		redNetConnectionBlacklist.comment = "A comma-separated list of block IDs to prevent RedNet cables from connecting to.";
-		worldGenDimensionBlacklist = c.get(CATEGORY_GENERAL, "WorldGen.DimensionBlacklist", "");
-		worldGenDimensionBlacklist.comment = "A comma-separated list of dimension IDs to disable MFR worldgen in. By default, MFR will not attempt worldgen in dimensions where the player cannot respawn.";
-		mfrLakeSludgeRarity = c.get(CATEGORY_GENERAL, "WorldGen.LakeRarity.Sludge", 32);
-		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk.";
-		mfrLakeSewageRarity = c.get(CATEGORY_GENERAL, "WorldGen.LakeRarity.Sewage", 32);
-		mfrLakeSewageRarity.comment = "Higher numbers make sewage lakes rarer. A value of one will be approximately one per chunk.";
-		unifierBlacklist = c.get(CATEGORY_GENERAL, "Unifier.Blacklist", "dyeBlue,dyeWhite,dyeBrown,dyeBlack,listAllwater,listAllmilk");
-		unifierBlacklist.comment = "A comma-separated list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
-		spawnerBlacklist = c.get(CATEGORY_GENERAL, "AutoSpawner.Blacklist", "");
-		spawnerBlacklist.comment = "A comma-separated list of entity IDs (e.g.: CaveSpider,VillagerGolem,butterflyGE) to blacklist from the AutoSpawner.";
+		//{ Worldgen
+		category = CATEGORY_GENERAL + "WorldGen";
+		worldGenDimensionBlacklist = c.get(category, "Dimension.Blacklist", new String[] {});
+		worldGenDimensionBlacklist.comment = "A list of dimension IDs to disable MFR worldgen in. By default, MFR will not attempt worldgen in dimensions where the player cannot respawn.";
 		
+		subCategory = category + "RubberTrees";
+		rubberTreeWorldGen = c.get(subCategory, "Enable", true);
+		rubberTreeWorldGen.comment = "Whether or not to generate MFR rubber trees during map generation";
+		rubberTreeBiomeWhitelist = c.get(subCategory, "Biome.Whitelist", new String[] {});
+		rubberTreeBiomeWhitelist.comment = "A list of biomes to allow rubber trees to spawn in. Does nothing if rubber tree worldgen is disabled.";
+		rubberTreeBiomeBlacklist = c.get(subCategory, "Biome.Blacklist", new String[] {});
+		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
+		enableMassiveTree = c.get(subCategory, "SacredRubberSapling", true);
+		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
+		
+		subCategory = category + "Lakes";
+		mfrLakeWorldGen = c.get(subCategory, "Enable", true);
+		mfrLakeWorldGen.comment = "Whether or not to generate MFR lakes during map generation";
+		
+		mfrLakeSludgeRarity = c.get(subCategory + ".Sludge", "Rarity", 32);
+		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk. 0 will disable.";
+		rubberTreeBiomeWhitelist = c.get(subCategory + ".Sludge", "Biome.Whitelist", new String[] {});
+		rubberTreeBiomeWhitelist.comment = "A list of biomes to allow rubber trees to spawn in. Does nothing if rubber tree worldgen is disabled.";
+		rubberTreeBiomeBlacklist = c.get(subCategory + ".Sludge", "Biome.Blacklist", new String[] {});
+		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
+		
+		mfrLakeSewageRarity = c.get(subCategory + ".Sewage", "Rarity", 32);
+		mfrLakeSewageRarity.comment = "Higher numbers make Sewage lakes rarer. A value of one will be approximately one per chunk. 0 will disable.";
+		rubberTreeBiomeWhitelist = c.get(subCategory + ".Sewage", "Biome.Whitelist", new String[] {});
+		rubberTreeBiomeWhitelist.comment = "A list of biomes to allow rubber trees to spawn in. Does nothing if rubber tree worldgen is disabled.";
+		rubberTreeBiomeBlacklist = c.get(subCategory + ".Sewage", "Biome.Blacklist", new String[] {});
+		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
+		//}
+		
+		// Alternate recipe sets TODO: auto-register for config handling
 		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
 		thermalExpansionRecipes = c.get("RecipeSets", "EnableThermalExpansionRecipes", false);
 		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
-		gregTechRecipes = c.get("RecipeSets", "EnableGregTechRecipes", false);
-		gregTechRecipes.comment = "If true, MFR will register its GregTech-based recipes.";
+		//}
+
+		//{ Item/block behavior overriding
+		category = CATEGORY_ITEM + ".VanillaOverride";
+		vanillaOverrideGlassPane = c.get(CATEGORY_GENERAL, "GlassPanes", true);
+		vanillaOverrideGlassPane.comment = "If true, allows vanilla glass panes to connect to MFR stained glass panes.";
+		vanillaOverrideIce = c.get(CATEGORY_GENERAL, "Ice", true);
+		vanillaOverrideIce.comment = "If true, enables MFR unmelting ice as well as vanilla ice.";
+		vanillaOverrideMilkBucket = c.get(CATEGORY_GENERAL, "MilkBucket", true);
+		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
+		//}
 		
-		enableCheapDSU = loadLegacy(CATEGORY_ITEM, "Recipe.CheaperDSU",
-				CATEGORY_GENERAL, "DSU.EnableCheaperRecipe", false);
+		//{ misc. item changes
+		meatSaturation = c.get(CATEGORY_ITEM, "Meat.IncreasedSaturation", false);
+		meatSaturation.comment = "If true, meat will be worth steak saturation instead of cookie saturation.";
+		fishingDropRate = c.get(CATEGORY_ITEM, "FishDropRate", 5);
+		fishingDropRate.comment = "The rate at which fish are dropped from the fishing rod. The drop rate is 1 / this number. Must be greater than 0.";
+		//}
+		
+		//{ Alterations to recipes
+		category = CATEGORY_ITEM + ".Recipe";
+		enableCheapDSU = c.get(category, "CheaperDSU",  false);
 		enableCheapDSU.comment = "If true, the DSU can be built out of chests instead of ender pearls. Does nothing if the recipe is disabled.";
-		craftSingleDSU = loadLegacy(CATEGORY_ITEM, "Recipe.SingleDSU",
-				CATEGORY_GENERAL, "DSU.CraftSingle", false);
+		craftSingleDSU = c.get(category, "SingleDSU",  false);
 		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, GT recipes, etc).";
-		enableMossyCobbleRecipe = loadLegacy(CATEGORY_ITEM, "Recipe.MossyCobble",
-				CATEGORY_GENERAL, "EnableMossyCobbleRecipe", false);
+		enableMossyCobbleRecipe = c.get(category, "MossyCobble",  false);
 		enableMossyCobbleRecipe.comment = "If true, mossy cobble can be crafted.";
-		enablePortaSpawner = c.get(CATEGORY_ITEM, "Recipe.PortaSpawner", true);
+		enablePortaSpawner = c.get(category, "PortaSpawner", true);
 		enablePortaSpawner.comment = "If true, the PortaSpawner will be craftable.";
-		enableSyringes = c.get(CATEGORY_ITEM, "Recipe.Syringes", true);
+		enableSyringes = c.get(category, "Syringes", true);
 		enableSyringes.comment = "If true, the Syringes will be craftable.";
-		enableGuns = c.get(CATEGORY_ITEM, "Recipe.Guns", true);
+		enableGuns = c.get(category, "Guns", true);
 		enableGuns.comment = "If true, the Guns will be craftable.";
-		enableNetLauncher = c.get(CATEGORY_ITEM, "Recipe.NetLauncher", true);
+		enableNetLauncher = c.get(category, "NetLauncher", true);
 		enableNetLauncher.comment = "If true, the safarinet launcher will be craftable.";
-		enableLiquidSyringe = c.get(CATEGORY_GENERAL, "LiquidSyringes", true);
-		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
+		enableSmoothSlabRecipe = c.get(category, "SmoothSlab", true);
+		enableSmoothSlabRecipe.comment = "If true, smooth double stone slabs can be craftable.";
+		enableCheapCL = c.get(category, "CheaperChunkLoader", false);
+		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
+		//}
+		
 		enableSPAMRExploding = c.get(CATEGORY_ITEM, "SPAMR.Exploding", true);
 		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
-		enableFuelExploding = c.get(CATEGORY_GENERAL, "Biofuel.Exploding", true);
+		enableFuelExploding = c.get(CATEGORY_ITEM, "Biofuel.Exploding", true);
 		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
-		enableMassiveTree = c.get(CATEGORY_GENERAL, "WorldGen.SacredRubberSapling", true);
-		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
-		enableChunkLimitBypassing = c.get("Machine", Machine.ChunkLoader.getName() + ".IgnoreChunkLimit", false);
+		
+		enableLiquidSyringe = c.get(CATEGORY_GENERAL, "LiquidSyringes", true);
+		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
+		
+		//{ Additional machine configs
+		conveyorCaptureNonItems = c.get("Machine.Conveyor", "CaptureNonItems", true);
+		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
+		conveyorNeverCapturesPlayers = c.get("Machine.Conveyor", "NeverCapturePlayers", false);
+		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
+		conveyorNeverCapturesTCGolems = c.get("Machine.Conveyor", "NeverCaptureTCGolems", false);
+		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture ThaumCraft golems regardless of other settings.";
+		
+		enableChunkLimitBypassing = c.get("Machine" + Machine.ChunkLoader.getName(), "IgnoreChunkLimit", false);
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
-		enableChunkLoaderRequiresOwner = c.get("Machine", Machine.ChunkLoader.getName() + ".RequiresOwnerOnline", false);
+		enableChunkLoaderRequiresOwner = c.get("Machine" + Machine.ChunkLoader.getName(), "RequiresOwnerOnline", false);
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
-		enableSmoothSlabRecipe = c.get(CATEGORY_ITEM, "Recipe.SmoothSlab", true);
-		enableSmoothSlabRecipe.comment = "If true, smooth double stone slabs can be craftable.";
-		enableCheapCL = c.get(CATEGORY_ITEM, "Recipe.CheaperChunkLoader", false);
-		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
+		autospawnerCostExact = c.get(CATEGORY_GENERAL + Machine.AutoSpawner.getName(), "Work.Exact", 50);
+		autospawnerCostExact.comment = "The work required to generate a mob in exact mode.";
+		autospawnerCostStandard = c.get(CATEGORY_GENERAL + Machine.AutoSpawner.getName(), "Work.Standard", 15);
+		autospawnerCostStandard.comment = "The work required to generate a mob in standard (non-exact) mode.";
+		laserdrillCost = c.get(CATEGORY_GENERAL + Machine.LaserDrill.getName(), "Work", 300);
+		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
+		unifierBlacklist = c.get("Machine" + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"});
+		unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
+		spawnerBlacklist = c.get("Machine" + Machine.AutoSpawner.getName(), "Blacklist", new String[] {""});
+		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, butterflyGE) to blacklist from the AutoSpawner.";
+		breederShutdownThreshold = c.get("Machine",  Machine.Breeder.getName() + "ShutdownThreshold", 50);
+		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
+		enableBonemealFertilizing = c.get("Machine" + Machine.Fertilizer.getName(), "EnableBonemeal", false);
+		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
+		//}
 		
 		for(Machine machine : Machine.values())
 		{
@@ -334,29 +369,5 @@ public class MFRConfig
 		dropFilledContainers.comment = "If true, when you have no empty slots in your inventory, you will continue filling buckets from tanks and drop them on the ground.";
 		
 		c.save();
-	}
-	
-	private static Property loadLegacy(String category, String name,
-						String oldCategory, String oldName, boolean def)
-	{
-		Property r = null;
-		String old = null;
-		
-		if (config.hasKey(oldCategory, oldName))
-		{
-				r = config.get(oldCategory, oldName, def);
-				old = r.getString();
-				deleteEntry(oldCategory, oldName);
-		}
-		
-		r = config.get(category, name, def);
-		if (old != null)
-			r.set(old);
-		return r;
-	}
-	
-	private static void deleteEntry(String category, String name)
-	{
-		config.getCategory(category).remove(name);
 	}
 }

@@ -8,23 +8,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
@@ -53,31 +55,31 @@ public class CarbonContainer extends ItemBucket {
 	boolean canBeFilledFromWorld;
 	protected Item filledItem, emptyItem;
 	protected int volume;
-	protected Icon[] icons;
+	protected IIcon[] icons;
 	protected List<IUseHandler> useHandlers;
 
-	public CarbonContainer(int id, String name) {
-		this(id, 64, name);
+	public CarbonContainer(String name) {
+		this(64, name);
 	}
 
-	public CarbonContainer(int id, String name, int volume) {
-		this(id, 64, name, volume);
+	public CarbonContainer(String name, int volume) {
+		this(64, name, volume);
 	}
 
-	public CarbonContainer(int id, int stackSize, String name) {
-		this(id, stackSize, name, false);
+	public CarbonContainer(int stackSize, String name) {
+		this(stackSize, name, false);
 	}
 
-	public CarbonContainer(int id, int stackSize, String name, int volume) {
-		this(id, stackSize, name, volume, false);
+	public CarbonContainer(int stackSize, String name, int volume) {
+		this(stackSize, name, volume, false);
 	}
 
-	public CarbonContainer(int id, int stackSize, String name, boolean canPlace) {
-		this(id, stackSize, name, FluidContainerRegistry.BUCKET_VOLUME, canPlace);
+	public CarbonContainer(int stackSize, String name, boolean canPlace) {
+		this(stackSize, name, FluidContainerRegistry.BUCKET_VOLUME, canPlace);
 	}
 
-	public CarbonContainer(int id, int stackSize, String name, int volume, boolean canPlace) {
-		super(id, 0);
+	public CarbonContainer(int stackSize, String name, int volume, boolean canPlace) {
+		super(Blocks.air);
 		setMaxStackSize(stackSize);
 		setHasSubtypes(true);
 		setMaxDamage(0);
@@ -135,13 +137,12 @@ public class CarbonContainer extends ItemBucket {
 		if (id != 0) {
 			if (!item.canPlaceInWorld) return bucket;
 			FluidStack liquid = LiquidRegistry.getLiquid(id);
-			if (world.setBlock(x, y, z, liquid.getFluid().getBlockID(), 0, 3))
-				return item.getContainerItemStack(bucket);
+			if (world.setBlock(x, y, z, liquid.getFluid().getBlock(), 0, 3))
+				return item.getContainerItem(bucket);
 			return bucket;
 		}
 		if (!item.canBeFilledFromWorld) return bucket;
-		int blockID = world.getBlockId(x, y, z);
-		Block block = Block.blocksList[blockID];
+		Block block = world.getBlock(x, y, z);
 		if (block instanceof IFluidBlock) {
 			FluidStack liquid = ((IFluidBlock)block).drain(world, x, y, z, false);
 			if (liquid != null && FluidRegistry.isFluidRegistered(liquid.getFluid())) {
@@ -188,7 +189,7 @@ public class CarbonContainer extends ItemBucket {
 		} else {
 			ItemStack bucket2 = new ItemStack(item.filledItem, 1, id);
 			if (!par3EntityPlayer.inventory.addItemStackToInventory(bucket2))
-				par3EntityPlayer.dropPlayerItem(bucket2);
+				par3EntityPlayer.func_146097_a(bucket2, false, true);
 		}
 		liquid.amount -= item.volume;
 		return bucket;
@@ -204,8 +205,8 @@ public class CarbonContainer extends ItemBucket {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister par1IconRegister) {
-		icons = new Icon[2];
+	public void registerIcons(IIconRegister par1IconRegister) {
+		icons = new IIcon[2];
 		icons[0] = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		icons[1] = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
 	}
@@ -219,20 +220,20 @@ public class CarbonContainer extends ItemBucket {
 
 	@Override
 	public String getUnlocalizedName(ItemStack item) {
-		if (item != null && item.itemID == filledItem.itemID && item.getItemDamage() != 0)
+		if (item != null && item.getItem().equals(filledItem) && item.getItemDamage() != 0)
 			return getUnlocalizedName() + (_prefix ? ".prefix" : ".suffix");
 		return getUnlocalizedName();
 	}
 
 	public String getLocalizedName(String str) {
 		String name = getUnlocalizedName() + "." + str;
-		if (StatCollector.func_94522_b(name))
+		if (StatCollector.canTranslate(name))
 			return StatCollector.translateToLocal(name);
 		return null;
 	}
 
 	@Override
-	public String getItemDisplayName(ItemStack item) {
+	public String getItemStackDisplayName(ItemStack item) {
 		int id = item.getItemDamage();
 		if (id != 0) {
 			String ret = LiquidRegistry.getName(id), t = getLocalizedName(ret);
@@ -242,25 +243,25 @@ public class CarbonContainer extends ItemBucket {
 			if (liquid != null)
 				ret = liquid.getLocalizedName();
 			_prefix = true;
-			t = super.getItemDisplayName(item);
+			t = super.getItemStackDisplayName(item);
 			_prefix = false;
 			t = t != null ? t.trim() : "";
 			ret = (t.isEmpty() ? "" : t + " ") + ret;
-			t = super.getItemDisplayName(item);
+			t = super.getItemStackDisplayName(item);
 			t = t != null ? t.trim() : "";
 			ret += t.isEmpty() ? " " + getTranslatedBucketName() : " " + t;
 			return ret;
 		}
-		return super.getItemDisplayName(item);
+		return super.getItemStackDisplayName(item);
 	}
 
 	protected String getTranslatedBucketName() {
-		return Item.bucketEmpty.getItemDisplayName(FluidContainerRegistry.EMPTY_BUCKET);
+		return Items.bucket.getItemStackDisplayName(FluidContainerRegistry.EMPTY_BUCKET);
 	}
 
 	@Override
-	public ItemStack getContainerItemStack(ItemStack itemStack) {
-		if (itemStack.getItemDamage() != 0 && hasContainerItem())
+	public ItemStack getContainerItem(ItemStack itemStack) {
+		if (itemStack.getItemDamage() != 0 && hasContainerItem(itemStack))
 			return new ItemStack(getContainerItem(), 1, 0);
 		return null;
 	}
@@ -268,15 +269,15 @@ public class CarbonContainer extends ItemBucket {
 	@SuppressWarnings("unchecked")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, @SuppressWarnings("rawtypes") List par3List) {
-		if (emptyItem.itemID == par1) par3List.add(new ItemStack(par1, 1, 0));
-		if (filledItem.itemID == par1)
+	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, @SuppressWarnings("rawtypes") List par3List) {
+		if (par1.equals(emptyItem)) par3List.add(new ItemStack(par1, 1, 0));
+		if (par1.equals(filledItem))
 			for (int i = 0, e = LiquidRegistry.getRegisteredLiquidCount(); i++ < e; )
 				par3List.add(new ItemStack(par1, 1, i));
 	}
 
 	@Override
-	public Icon getIcon(ItemStack stack, int pass) {
+	public IIcon getIcon(ItemStack stack, int pass) {
 		return icons[pass];
 	}
 
@@ -297,7 +298,7 @@ public class CarbonContainer extends ItemBucket {
 			d3 = ((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance();
 		}
 		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-		MovingObjectPosition ret = world.rayTraceBlocks_do_do(vec3, vec31, adjacent, !adjacent);
+		MovingObjectPosition ret = world.func_147447_a(vec3, vec31, adjacent, !adjacent, false);
 		if (ret != null && adjacent) {
 			ForgeDirection side = ForgeDirection.getOrientation(ret.sideHit);
 			ret.blockX += side.offsetX;

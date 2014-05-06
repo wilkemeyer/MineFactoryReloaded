@@ -28,7 +28,7 @@ public class Atum
 {
 	private static final String lastUpdated = "Atum 0.4.3B, current release as of Jul 3 2013";
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@EventHandler
 	public static void load(FMLInitializationEvent e)
 	{
@@ -47,16 +47,16 @@ public class Atum
 			Class banditWarlord = Class.forName(entityprefix + "BanditWarlord");
 			Class pharaoh = Class.forName(entityprefix + "Pharaoh");
 			
-			int atumLogId = ((Block)AtumBlocks.getField("log").get(null)).blockID;
-			int atumLeavesId = ((Block)AtumBlocks.getField("leaves").get(null)).blockID;
-			int atumSaplingId = ((Block)AtumBlocks.getField("palmSapling").get(null)).blockID;
+			Block atumLogId = ((Block)AtumBlocks.getField("log").get(null));
+			Block atumLeavesId = ((Block)AtumBlocks.getField("leaves").get(null));
+			Block atumSaplingId = ((Block)AtumBlocks.getField("palmSapling").get(null));
 			
-			int flaxSeedsId = ((Item)AtumItems.getField("flaxSeeds").get(null)).itemID;
+			Item flaxSeedsId = ((Item)AtumItems.getField("flaxSeeds").get(null));
 			
-			int flaxId = ((Block)AtumBlocks.getField("flax").get(null)).blockID;
-			int papyrusId = ((Block)AtumBlocks.getField("papyrus").get(null)).blockID;
-			int shrubId = ((Block)AtumBlocks.getField("shrub").get(null)).blockID;
-			int weedId = ((Block)AtumBlocks.getField("weed").get(null)).blockID;
+			Block flaxId = ((Block)AtumBlocks.getField("flax").get(null));
+			Block papyrusId = ((Block)AtumBlocks.getField("papyrus").get(null));
+			Block shrubId = ((Block)AtumBlocks.getField("shrub").get(null));
+			Block weedId = ((Block)AtumBlocks.getField("weed").get(null));
 			
 			Method atumSaplingGrowTree = Class.forName("rebelkeithy.mods.atum.blocks.BlockPalmSapling").getMethod("growTree", World.class, int.class, int.class, int.class, Random.class);
 			Method atumFlaxFertilize = Class.forName("rebelkeithy.mods.atum.blocks.BlockFlax").getMethod("fertilize", World.class, int.class, int.class, int.class);

@@ -1,10 +1,9 @@
 package powercrystals.minefactoryreloaded;
 
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,12 +17,14 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -35,11 +36,15 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventPriority;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.Point;
 
 import cofh.util.position.BlockPosition;
 import powercrystals.core.render.RenderBlockFluidClassic;
@@ -50,7 +55,6 @@ import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
-import powercrystals.minefactoryreloaded.render.RenderTickHandler;
 import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
 import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
@@ -79,10 +83,14 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 @SideOnly(Side.CLIENT)
-public class MineFactoryReloadedClient implements IScheduledTickHandler
+public class MineFactoryReloadedClient
 {
 	public static MineFactoryReloadedClient instance;
 
+	private static final ResourceLocation targetingBlue =
+			new ResourceLocation(MineFactoryReloadedCore.hudFolder + "lockon_blue.png");
+	private static final ResourceLocation targetingRed  =
+			new ResourceLocation(MineFactoryReloadedCore.hudFolder + "lockon_red.png");
 	private static final int _lockonMax = 30;
 	private static final int _lockonLostMax = 60;
 	private int _lockonTicks = 0;
@@ -109,45 +117,45 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		MineFactoryReloadedCore.renderIdRedNet = RenderingRegistry.getNextAvailableRenderId();
 
 		// Blocks
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdConveyor,
+		RenderingRegistry.registerBlockHandler(renderIdConveyor,
 				new ConveyorRenderer());
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdFactoryGlassPane,
+		RenderingRegistry.registerBlockHandler(renderIdFactoryGlassPane,
 				new FactoryGlassPaneRenderer());
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdFluidClassic,
-				new RenderBlockFluidClassic(MineFactoryReloadedCore.renderIdFluidClassic));
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdVineScaffold,
-				new VineScaffoldRenderer());
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdFactoryGlass,
+		RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
+				new RenderBlockFluidClassic(renderIdFluidClassic));
+		/*RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
+				new VineScaffoldRenderer());//*/
+		RenderingRegistry.registerBlockHandler(renderIdFactoryGlass,
 				new FactoryGlassRenderer());
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdDetCord,
+		RenderingRegistry.registerBlockHandler(renderIdDetCord,
 				new DetCordRenderer());
-		RenderingRegistry.registerBlockHandler(MineFactoryReloadedCore.renderIdRedNet,
+		RenderingRegistry.registerBlockHandler(renderIdRedNet,
 				new RedNetCableRenderer());
 
 		// Items
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.conveyorBlock,
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(conveyorBlock),
 				new ConveyorItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.factoryGlassPaneBlock,
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(factoryGlassPaneBlock),
 				new FactoryGlassPaneItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.logicCardItem,
+		MinecraftForgeClient.registerItemRenderer(logicCardItem,
 				new RedNetCardItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCupItem,
+		MinecraftForgeClient.registerItemRenderer(plasticCupItem,
 				new FactoryFluidOverlayRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.needlegunItem,
+		MinecraftForgeClient.registerItemRenderer(needlegunItem,
 				new NeedleGunItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.rocketItem,
+		MinecraftForgeClient.registerItemRenderer(rocketItem,
 				new RocketItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.rocketLauncherItem,
+		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem,
 				new RocketLauncherItemRenderer());
-		if (MineFactoryReloadedCore.syringeEmptyItem instanceof IFluidContainerItem)
-			MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.syringeEmptyItem,
+		if (syringeEmptyItem instanceof IFluidContainerItem)
+			MinecraftForgeClient.registerItemRenderer(syringeEmptyItem,
 					new FactoryFluidOverlayRenderer(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
 		//		new FactoryFluidOverlayRenderer());
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
-			MinecraftForgeClient.registerItemRenderer(Block.thinGlass.blockID,
-					new FactoryGlassPaneItemRenderer());			
+			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.glass_pane),
+					new FactoryGlassPaneItemRenderer());
 		}
 
 		// TileEntities
@@ -173,23 +181,19 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 				new RenderSnowball(MineFactoryReloadedCore.fishingRodItem));
 
 		// Handlers
-		TickRegistry.registerScheduledTickHandler(instance, Side.CLIENT);
-		TickRegistry.registerTickHandler(new RenderTickHandler(), Side.CLIENT);
-
 		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoolologistEntityId.getInt(),
-				new ResourceLocation(MineFactoryReloadedCore.villagerFolder + "zoologist.png"));
+				new ResourceLocation(villagerFolder + "zoologist.png"));
 
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
 
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData)
+	@SubscribeEvent
+	public void tickStart(PlayerTickEvent evt)
 	{
-		if(!type.contains(TickType.PLAYER) || !(tickData[0] instanceof EntityPlayerSP))
-		{
+		if (evt.side != Side.CLIENT | evt.phase != Phase.START)
 			return;
-		}
-		EntityPlayerSP player = (EntityPlayerSP)tickData[0];
+
+		EntityPlayer player = evt.player;
 		ItemStack equipped = player.inventory.getCurrentItem();
 		if(equipped != null && equipped.getItem() instanceof ItemRocketLauncher)
 		{
@@ -230,11 +234,12 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		}
 	}
 
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData)
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void tickEnd(RenderTickEvent evt)
 	{
-		if (!type.contains(TickType.RENDER))
+		if (evt.phase != Phase.END)
 			return;
+		renderHUD(evt.renderTickTime);
 		// this solves a bug where render pass 0 textures have alpha forced by
 		// minecraft's fog on small and tiny render distances
 		GL11.glShadeModel(GL11.GL_FLAT);
@@ -242,23 +247,61 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
-
-	@Override
-	public EnumSet<TickType> ticks()
+	
+	private void renderHUD(float partialTicks)
 	{
-		return EnumSet.of(TickType.PLAYER, TickType.RENDER);
+		Minecraft mc = Minecraft.getMinecraft();
+		if(!mc.isGamePaused() && mc.currentScreen == null && mc.thePlayer != null && mc.thePlayer.inventory.getCurrentItem() != null
+				&& mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemRocketLauncher)
+		{
+			ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+			Point center = new Point(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2);
+			
+			if(MineFactoryReloadedClient.instance.getLockedEntity() != Integer.MIN_VALUE)
+			{
+				mc.renderEngine.bindTexture(targetingBlue);
+			}
+			else
+			{
+				mc.renderEngine.bindTexture(targetingRed);
+			}
+			
+			GL11.glPushMatrix();
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glTranslatef(center.getX(), center.getY(), 0);
+			GL11.glRotatef((mc.theWorld.getWorldTime() * 4) % 360 + partialTicks, 0, 0, 1);
+			
+			float distance = MineFactoryReloadedClient.instance.getLockTimeRemaining();
+			
+			drawLockonPart(center, distance, 0);
+			drawLockonPart(center, distance, 90);
+			drawLockonPart(center, distance, 180);
+			drawLockonPart(center, distance, 270);
+			
+			GL11.glPopMatrix();
+		}
 	}
-
-	@Override
-	public String getLabel()
+	
+	private void drawLockonPart(Point center, float distanceFromCenter, int rotation)
 	{
-		return MineFactoryReloadedCore.modId + ".client";
-	}
+		GL11.glPushMatrix();
+		
+		GL11.glRotatef(rotation, 0, 0, 1);
+		GL11.glTranslatef(-8, -13, 0);
+		GL11.glTranslatef(0, -distanceFromCenter, 0);
 
-	@Override
-	public int nextTickSpacing()
-	{
-		return 0;
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2i(0, 0);
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2i(0, 16);
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2i(16, 16);
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2i(16, 0);
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
 	}
 
 	@SubscribeEvent
@@ -306,7 +349,7 @@ public class MineFactoryReloadedClient implements IScheduledTickHandler
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if(player.inventory.getCurrentItem() == null ||
-				player.inventory.getCurrentItem().itemID != MineFactoryReloadedCore.factoryHammerItem.itemID)
+				player.inventory.getCurrentItem().getItem().equals(MineFactoryReloadedCore.factoryHammerItem))
 		{
 			return;
 		}

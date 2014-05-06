@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class PamFruitCinnamon extends PamFruit
 {
-	private int _cinnamonItemId;
+	private Item _cinnamonItemId;
 
-	public PamFruitCinnamon(int sourceId, int itemId)
+	public PamFruitCinnamon(Block sourceId, Item itemId)
 	{
 		super(sourceId);
 		_cinnamonItemId = itemId;

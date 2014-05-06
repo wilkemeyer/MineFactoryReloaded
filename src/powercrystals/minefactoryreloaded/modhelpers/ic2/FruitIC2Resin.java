@@ -10,44 +10,50 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
+import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
 public class FruitIC2Resin implements IFactoryFruit
 {
 	private Block _rubberWood;
-	private int _rubberID;
 	private ItemStack _resin;
 
 	public FruitIC2Resin(ItemStack rubberWood, ItemStack resin)
 	{
-		this._rubberID = ((ItemBlock)rubberWood.getItem()).getBlockID();
-		this._rubberWood = Block.blocksList[_rubberID];
+		this._rubberWood = ((ItemBlock)rubberWood.getItem()).field_150939_a;
 		this._resin = resin;
 	}
 
 	@Override
-	public int getSourceBlockId()
+	public Block getPlant()
 	{
-		return _rubberWood.blockID;
+		return _rubberWood;
 	}
 
 	@Override
 	public boolean canBePicked(World world, int x, int y, int z)
 	{
-		int blockID = world.getBlockId(x, y, z), meta = world.getBlockMetadata(x, y, z);
-		return blockID == _rubberID & (meta >= 2 & (meta <= 5));
+		Block blockID = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+		return blockID.equals(_rubberWood) & (meta >= 2 & (meta <= 5));
 	}
 
 	@Override
-	public ItemStack getReplacementBlock(World world, int x, int y, int z)
+	public boolean breakBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
-		return new ItemStack(_rubberID, 0, meta + 6);
+		return new ReplacementBlock(_rubberWood, meta + 6);
 	}
 
 	@Override
 	public void prePick(World world, int x, int y, int z)
 	{
-		
+
 	}
 
 	@Override
@@ -63,7 +69,7 @@ public class FruitIC2Resin implements IFactoryFruit
 	@Override
 	public void postPick(World world, int x, int y, int z)
 	{
-		
+
 	}
 
 }

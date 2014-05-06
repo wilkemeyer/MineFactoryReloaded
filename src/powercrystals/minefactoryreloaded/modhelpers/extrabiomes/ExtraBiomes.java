@@ -5,7 +5,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -13,18 +12,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 
 @Mod(modid = "MineFactoryReloaded|CompatExtraBiomes", name = "MFR Compat: ExtraBiomes", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ExtrabiomesXL")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
 public class ExtraBiomes
 {
 	private static Map<String, HarvestType> _harvestRegistries;
@@ -57,21 +51,21 @@ public class ExtraBiomes
 			{
 				Object o = xbbs.getField(s).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
-				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(blockID));
+				//MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(blockID));
 			}
 			
 			for(Entry<String, HarvestType> e : _harvestRegistries.entrySet())
 			{
 				Object o = xbbs.getField(e.getKey()).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
-				MFRRegistry.registerHarvestable(new HarvestableStandard(blockID, e.getValue()));
+				//MFRRegistry.registerHarvestable(new HarvestableStandard(blockID, e.getValue()));
 			}
 			
 			for(String s : new String[] { "SAPLING", "CATTAIL" })
 			{
 				Object o = xbbs.getField(s).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
-				MFRRegistry.registerPlantable(new PlantableStandard(blockID, blockID));
+				//MFRRegistry.registerPlantable(new PlantableStandard(blockID, blockID));
 			}
 			
 			
@@ -81,10 +75,10 @@ public class ExtraBiomes
 			Object o = xbbs.getField("SAPLING").get(null);
 			int saplingBlockID = (Integer)xbbs.getMethod("getID").invoke(o);
 			
-			MFRRegistry.registerFertilizable(new FertilizableExtraBiomesTree(saplingBlockID, fert));
+			//MFRRegistry.registerFertilizable(new FertilizableExtraBiomesTree(saplingBlockID, fert));
 			
-			MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("QUICKSAND").get(null)), 1, 0));
-			MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("CRACKEDSAND").get(null)), 1, 0));
+			//MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("QUICKSAND").get(null)), 1, 0));
+			//MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("CRACKEDSAND").get(null)), 1, 0));
 			
 			MFRRegistry.registerRubberTreeBiome("Autumn Woods");
 			MFRRegistry.registerRubberTreeBiome("Birch Forest");

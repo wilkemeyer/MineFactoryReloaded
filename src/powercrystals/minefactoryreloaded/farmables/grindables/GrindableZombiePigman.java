@@ -37,7 +37,7 @@ public class GrindableZombiePigman implements IFactoryGrindable
 	}
 
 	@Override
-	public Class<?> getGrindableEntity()
+	public Class<? extends EntityLivingBase> getGrindableEntity()
 	{
 		return EntityPigZombie.class;
 	}

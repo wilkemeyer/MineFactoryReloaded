@@ -15,7 +15,7 @@ import powercrystals.minefactoryreloaded.api.RanchedItem;
 public class RanchableSheep implements IFactoryRanchable
 {
 	@Override
-	public Class<?> getRanchableEntity()
+	public Class<? extends EntityLivingBase> getRanchableEntity()
 	{
 		return EntitySheep.class;
 	}

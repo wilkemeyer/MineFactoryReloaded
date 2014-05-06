@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 public class ItemBlockFactoryTree extends ItemBlockFactory
 {
-	public ItemBlockFactoryTree(int id)
+	public ItemBlockFactoryTree(net.minecraft.block.Block id)
 	{
 		super(id);
 		setNames(new String[] {null, "massive"});

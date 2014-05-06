@@ -1,63 +1,54 @@
 package powercrystals.minefactoryreloaded.modhelpers.pam;
-import cpw.mods.fml.common.FMLLog;import java.lang.reflect.InvocationTargetException;import java.lang.reflect.Method;import net.minecraft.block.Block;import net.minecraft.item.ItemStack;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import net.minecraftforge.common.util.ForgeDirection;import net.minecraftforge.common.IPlantable;import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
+import cpw.mods.fml.common.FMLLog;import java.lang.reflect.InvocationTargetException;import java.lang.reflect.Method;import net.minecraft.block.Block;import net.minecraft.init.Blocks;import net.minecraft.item.Item;import net.minecraft.item.ItemStack;import net.minecraft.tileentity.TileEntity;import net.minecraft.world.World;import net.minecraftforge.common.util.ForgeDirection;import net.minecraftforge.common.IPlantable;import powercrystals.minefactoryreloaded.api.IFactoryPlantable;import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 public class PlantablePamCrop implements IFactoryPlantable
 {
-	protected int _blockId;
-	protected int _itemId;
-	protected int _plantableBlockId;
+	protected Block _blockId;
+	protected Item _itemId;
+	protected ReplacementBlock _plantableBlockId;
 	protected int _cropId;
 	protected Method _setCrop;
 	protected Method _setStage;
-	public PlantablePamCrop(int blockId, int itemId,int cropId) throws NoSuchMethodException,ClassNotFoundException
-	{
-		this(blockId, itemId,cropId, Block.tilledField.blockID);
-	}
-	public PlantablePamCrop(int blockId, int itemId,int cropId ,int plantableBlockId) throws NoSuchMethodException,ClassNotFoundException
+	public PlantablePamCrop(Block blockId, Item itemId,int cropId)
 	{
 		_blockId = blockId;
 		_itemId = itemId;
-		_plantableBlockId = plantableBlockId;
+		_plantableBlockId = new ReplacementBlock(blockId);
 		_cropId=cropId;
 		_setCrop=Pam.pamTESetCropId;
 		_setStage=Pam.pamTESetGrowthStage;
 	}
 	@Override
-	public int getSeedId()
+	public Item getSeed()
 	{
 		return _itemId;
-	}
+	}	@Override	public boolean canBePlanted(ItemStack stack)	{		// Auto-generated method stub		return true;	}
 	@Override
-	public int getPlantedBlockId(World world, int x, int y, int z, ItemStack stack)
+	public ReplacementBlock getPlantedBlock(World world, int x, int y, int z, ItemStack stack)
 	{
-		return _blockId;
-	}
-	@Override
-	public int getPlantedBlockMetadata(World world, int x, int y, int z, ItemStack stack)
-	{
-		return 0;
+		return _plantableBlockId;
 	}
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{
-		int groundId = world.getBlockId(x, y - 1, z);
+		Block groundId = world.getBlock(x, y - 1, z);
 		if(!world.isAirBlock(x, y, z))
 		{
 			return false;
 		}
 		return (
-				groundId == Block.dirt.blockID ||
-				groundId == Block.grass.blockID ||
-				groundId == Block.tilledField.blockID ||
-				(Block.blocksList[_blockId] instanceof IPlantable && Block.blocksList[groundId] != null &&
-				Block.blocksList[groundId].canSustainPlant(world, x, y, z, ForgeDirection.UP, ((IPlantable)Block.blocksList[_blockId]))));
+				groundId == Blocks.dirt ||
+				groundId == Blocks.grass ||
+				groundId == Blocks.farmland ||
+				_blockId instanceof IPlantable && 
+				groundId.canSustainPlant(world, x, y, z, ForgeDirection.UP, (IPlantable)_blockId));
 	}
 	@Override
 	public void prePlant(World world, int x, int y, int z, ItemStack stack)
 	{
-		int groundId = world.getBlockId(x, y - 1, z);
-		if(groundId == Block.dirt.blockID || groundId == Block.grass.blockID)
+		Block groundId = world.getBlock(x, y - 1, z);
+		if(groundId == Blocks.dirt || groundId == Blocks.grass)
 		{
-			world.setBlock(x, y - 1, z, Block.tilledField.blockID);
+			world.setBlock(x, y - 1, z, Blocks.farmland);
 		}
 	}
 

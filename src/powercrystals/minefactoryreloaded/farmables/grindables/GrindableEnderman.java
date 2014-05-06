@@ -17,7 +17,7 @@ import powercrystals.minefactoryreloaded.api.MobDrop;
 public class GrindableEnderman implements IFactoryGrindable
 {
 	@Override
-	public Class<?> getGrindableEntity()
+	public Class<? extends EntityLivingBase> getGrindableEntity()
 	{
 		return EntityEnderman.class;
 	}
