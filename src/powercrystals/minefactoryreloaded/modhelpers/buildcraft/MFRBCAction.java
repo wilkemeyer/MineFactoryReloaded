@@ -9,7 +9,7 @@ import net.minecraft.util.IIcon;
 
 import buildcraft.api.gates.IAction;
 
-public abstract class MFRBCAction implements IAction
+public abstract class MFRBCAction// implements IAction
 {
 	@SideOnly(Side.CLIENT)
 	protected IIcon _icon;
@@ -24,26 +24,26 @@ public abstract class MFRBCAction implements IAction
 		_iconName = "minefactoryreloaded:buildcraft/action/" + icon;
 	}
 	
-	@Override
+	//@Override
 	public int getLegacyId()
 	{
 		return -1;
 	}
 
-	@Override
+	//@Override
 	public String getUniqueTag()
 	{
 		return _tag;
 	}
 
-	@Override
+	//@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon()
 	{
 		return _icon;
 	}
 
-	@Override
+	//@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)
 	{
@@ -51,13 +51,13 @@ public abstract class MFRBCAction implements IAction
 			_icon = iconRegister.registerIcon(_iconName);
 	}
 
-	@Override
+	//@Override
 	public boolean hasParameter()
 	{
 		return false;
 	}
 
-	@Override
+	//@Override
 	public String getDescription()
 	{
 		return _desc;

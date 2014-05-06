@@ -1,12 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import powercrystals.minefactoryreloaded.gui.container.ContainerHarvester;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiHarvester extends GuiFactoryPowered
 {
@@ -55,13 +53,13 @@ public class GuiHarvester extends GuiFactoryPowered
 	{
 		if(button.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.HarvesterButton,
-					new Object[] { _harvester.xCoord, _harvester.yCoord, _harvester.zCoord, "silkTouch", getNewSettingValue("silkTouch") }));
+			Packets.sendToServer(Packets.HarvesterButton, _tileEntity,
+					"silkTouch", getNewSettingValue("silkTouch"));
 		}
 		else if(button.id == 2)
 		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.HarvesterButton,
-					new Object[] { _harvester.xCoord, _harvester.yCoord, _harvester.zCoord, "harvestSmallMushrooms", getNewSettingValue("harvestSmallMushrooms") }));
+			Packets.sendToServer(Packets.HarvesterButton, _tileEntity,
+					"harvestSmallMushrooms", getNewSettingValue("harvestSmallMushrooms"));
 		}
 		else if(button.id == 3)
 		{

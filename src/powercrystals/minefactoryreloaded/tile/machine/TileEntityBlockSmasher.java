@@ -164,15 +164,15 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		{
 			return null;
 		}
-		int blockId = ((ItemBlock)input.getItem()).getBlockID();
-		Block b = Block.blocksList[blockId];
+		ItemBlock block = (ItemBlock)input.getItem();
+		Block b = block.field_150939_a;
 		if(b == null)
 		{
 			return null;
 		}
 		
 		@SuppressWarnings("rawtypes")
-		ArrayList drops = _smashingWorld.smashBlock(input, b, blockId, input.getItemDamage(), _fortune);
+		ArrayList drops = _smashingWorld.smashBlock(input, b, block.getMetadata(input.getItemDamage()), _fortune);
 		if (drops != null && drops.size() > 0)
 		{
 			return drops;
@@ -292,10 +292,10 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		if (tag.hasKey("SmashedItems"))
 		{
 			List<ItemStack> drops = new ArrayList<ItemStack>();
-			NBTTagList nbttaglist = tag.getTagList("SmashedItems");
+			NBTTagList nbttaglist = tag.getTagList("SmashedItems", 10);
 			for (int i = nbttaglist.tagCount(); i --> 0; )
 			{
-				NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				ItemStack item = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 				if (item != null && item.stackSize > 0)
 				{

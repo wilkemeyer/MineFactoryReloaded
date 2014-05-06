@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,7 +20,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 
 public class ItemPortaSpawner extends ItemFactory
 {
-	private static Block _blockId = Blocks.mob_spawner;
+	private static Block _block = Blocks.mob_spawner;
 	public static final String spawnerTag = "spawner";
 	private static final String placeTag = "placeDelay";
 
@@ -97,7 +96,7 @@ public class ItemPortaSpawner extends ItemFactory
 		}
 		if (getEntityId(itemstack) == null)
 		{
-			if (world.getBlock(x, y, z).equals(_blockId))
+			if (world.getBlock(x, y, z).equals(_block))
 			{
 				TileEntity te = world.getTileEntity(x, y, z);
 				NBTTagCompound tag = new NBTTagCompound();
@@ -124,13 +123,13 @@ public class ItemPortaSpawner extends ItemFactory
 
 	private boolean placeBlock(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
 	{
-		int blockId = world.getBlockId(x, y, z);
+		Block block = world.getBlock(x, y, z);
 
-		if(blockId == Block.snow.blockID && (world.getBlockMetadata(x, y, z) & 7) < 1)
+		if (block == Blocks.snow_layer)
 		{
 			side = 1;
 		}
-		else if(blockId != Block.vine.blockID && blockId != Block.tallGrass.blockID && blockId != Block.deadBush.blockID && (Block.blocksList[blockId] == null || !Block.blocksList[blockId].isBlockReplaceable(world, x, y, z)))
+		else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, z))
 		{
 			switch (side)
 			{
@@ -163,14 +162,13 @@ public class ItemPortaSpawner extends ItemFactory
 		{
 			return false;
 		}
-		else if(y == 255 && Block.blocksList[_blockId].blockMaterial.isSolid())
+		else if(y == 255 && block.getMaterial().isSolid())
 		{
 			return false;
 		}
-		else if(world.canPlaceEntityOnSide(_blockId, x, y, z, false, side, player, itemstack))
+		else if(world.canPlaceEntityOnSide(_block, x, y, z, false, side, player, itemstack))
 		{
-			Block block = Block.blocksList[_blockId];
-			int meta = Block.blocksList[_blockId].onBlockPlaced(world, x, y, z, side, xOffset, yOffset, zOffset, 0);
+			int meta = block.onBlockPlaced(world, x, y, z, side, xOffset, yOffset, zOffset, 0);
 
 			if(placeBlockAt(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset, meta))
 			{
@@ -189,13 +187,13 @@ public class ItemPortaSpawner extends ItemFactory
 	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
 		// TODO: record and read the block that was consumed
-		if (!world.setBlock(x, y, z, _blockId, metadata, 3))
+		if (!world.setBlock(x, y, z, _block, metadata, 3))
 		{
 			return false;
 		}
 
 		Block block = world.getBlock(x, y, z);
-		if (block.equals(_blockId))
+		if (block.equals(_block))
 		{
 			block.onBlockPlacedBy(world, x, y, z, player, stack);
 			block.onPostBlockPlaced(world, x, y, z, metadata);

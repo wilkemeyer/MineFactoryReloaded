@@ -35,14 +35,16 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 1)
 		{
-			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
+			if(player.getCurrentEquippedItem() != null &&
+					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.needlegunItem))
 			{
 				return new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.bagItem.itemID)
+			if(player.getCurrentEquippedItem() != null &&
+					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.bagItem))
 			{
 				return new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
@@ -67,14 +69,16 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 1)
 		{
-			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.needlegunItem.itemID)
+			if(player.getCurrentEquippedItem() != null &&
+					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.needlegunItem))
 			{
 				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
 			}
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().itemID == MineFactoryReloadedCore.bagItem.itemID)
+			if(player.getCurrentEquippedItem() != null &&
+					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.bagItem))
 			{
 				return new GUIBag(new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
 			}

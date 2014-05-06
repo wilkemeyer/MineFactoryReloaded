@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 
@@ -9,10 +11,9 @@ import buildcraft.api.gates.IAction;
 import buildcraft.api.gates.IActionProvider;
 import buildcraft.api.gates.ITrigger;
 import buildcraft.api.gates.ITriggerProvider;
-import buildcraft.api.transport.IPipe;
+import buildcraft.api.transport.IPipeTile;
 
 import java.util.LinkedList;
-import java.util.logging.Level;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -21,13 +22,11 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 @Mod(modid = "MineFactoryReloaded|CompatBuildCraft", name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
-public class Buildcraft implements IActionProvider, ITriggerProvider
+public class Buildcraft// implements IActionProvider, ITriggerProvider
 {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
@@ -35,16 +34,16 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 		if (!Loader.isModLoaded("BuildCraft|Core"))
 			return;
 		
-		for (int[] q : new int[][]{ {14, MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID},
-									{12, MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID}})
-			for(int i = q[0]; i --> 0; )
-				FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", q[1] + "@" + i);
-		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
-				MineFactoryReloadedCore.factoryRoadBlock.blockID + "@0");
-		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
-				MineFactoryReloadedCore.factoryRoadBlock.blockID + "@1");
-		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
-				MineFactoryReloadedCore.factoryRoadBlock.blockID + "@4");
+		//for (int[] q : new int[][]{ {14, MineFactoryReloadedCore.factoryDecorativeBrickBlock.blockID},
+									//{12, MineFactoryReloadedCore.factoryDecorativeStoneBlock.blockID}})
+			//for(int i = q[0]; i --> 0; )
+				//FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", q[1] + "@" + i);
+		//FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
+				//MineFactoryReloadedCore.factoryRoadBlock.blockID + "@0");
+		//FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
+				//MineFactoryReloadedCore.factoryRoadBlock.blockID + "@1");
+		//FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade",
+				//MineFactoryReloadedCore.factoryRoadBlock.blockID + "@4");
 		
 		try
 		{
@@ -55,23 +54,23 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 			isReversed = new TriggerIsReversed();
 			reverse = new ActionReverse();
 			
-			ActionManager.registerTriggerProvider(this);
-			ActionManager.registerTrigger(isBackstuffed);
-			ActionManager.registerTrigger(isRunning);
-			ActionManager.registerTrigger(isReversed);
-			ActionManager.registerActionProvider(this);
-			ActionManager.registerAction(reverse);
+			//ActionManager.registerTriggerProvider(this);
+			//ActionManager.registerTrigger(isBackstuffed);
+			//ActionManager.registerTrigger(isRunning);
+			//ActionManager.registerTrigger(isReversed);
+			//ActionManager.registerActionProvider(this);
+			//ActionManager.registerAction(reverse);
 		}
 		catch (Throwable _)
 		{
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
-			FMLLog.log(This.getModId(), Level.SEVERE, "There was a problem loading %s.", This.getName());
+			FMLLog.log(This.getModId(), Level.ERROR, "There was a problem loading %s.", This.getName());
 			_.printStackTrace();
 		}
 	}
 
-	@Override
-	public LinkedList<ITrigger> getPipeTriggers(IPipe pipe)
+	//@Override
+	public LinkedList<ITrigger> getPipeTriggers(IPipeTile pipe)
 	{
 		return null;
 	}
@@ -81,7 +80,7 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 	private static MFRBCTrigger isReversed;
 	public static MFRBCAction reverse;
 
-	@Override
+	//@Override
 	public LinkedList<ITrigger> getNeighborTriggers(Block block, TileEntity tile)
 	{
 		LinkedList<ITrigger> triggers = new LinkedList<ITrigger>();
@@ -93,11 +92,11 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 	
 	private void addTrigger(LinkedList<ITrigger> triggers, MFRBCTrigger t, TileEntity tile)
 	{
-		if (t.canApplyTo(tile))
-			triggers.add(t);
+		//if (t.canApplyTo(tile))
+			//triggers.add(t);
 	}
 
-	@Override
+	//@Override
 	public LinkedList<IAction> getNeighborActions(Block block, TileEntity tile)
 	{
 		LinkedList<IAction> triggers = new LinkedList<IAction>();
@@ -107,7 +106,7 @@ public class Buildcraft implements IActionProvider, ITriggerProvider
 	
 	private void addAction(LinkedList<IAction> triggers, MFRBCAction t, TileEntity tile)
 	{
-		if (t.canApplyTo(tile))
-			triggers.add(t);
+		//if (t.canApplyTo(tile))
+			//triggers.add(t);
 	}
 }

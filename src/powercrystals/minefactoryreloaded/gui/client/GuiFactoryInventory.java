@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
@@ -18,9 +18,6 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
-import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
@@ -66,8 +63,9 @@ public class GuiFactoryInventory extends GuiContainer
 			SlotFake s = (SlotFake)o;
 			if(x >= s.xDisplayPosition && x <= s.xDisplayPosition + 16 && y >= s.yDisplayPosition && y <= s.yDisplayPosition + 16)
 			{
-				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.FakeSlotChange,
-						new Object[] { _tileEntity.xCoord, _tileEntity.yCoord, _tileEntity.zCoord, s.slotNumber, button }));
+				Packets.sendToServer(Packets.FakeSlotChange, _tileEntity,
+						Minecraft.getMinecraft().thePlayer.getEntityId(),
+						s.slotNumber, (byte)button);
 			}
 		}
 	}

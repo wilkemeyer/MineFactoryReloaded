@@ -1,12 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEnchantmentRouter;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiEnchantmentRouter extends GuiFactoryInventory
 {
@@ -56,15 +54,6 @@ public class GuiEnchantmentRouter extends GuiFactoryInventory
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		if(button.id == 1)
-		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
-					new Object[] { _router.xCoord, _router.yCoord, _router.zCoord, 1 }));
-		}
-		else if(button.id == 2)
-		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
-					new Object[] { _router.xCoord, _router.yCoord, _router.zCoord, 2 }));
-		}
+		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
 	}
 }

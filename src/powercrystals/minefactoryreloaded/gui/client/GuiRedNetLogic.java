@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.StatCollector;
@@ -83,8 +84,8 @@ public class GuiRedNetLogic extends GuiScreenBase
 			@Override
 			protected void onElementClicked(IListBoxElement element)
 			{
-				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicSetCircuit, new Object[]
-						{ _logic.xCoord, _logic.yCoord, _logic.zCoord, _selectedCircuit, element.getValue().getClass().getName() }));
+				Packets.sendToServer(Packets.LogicSetCircuit, _logic,
+						_selectedCircuit, element.getValue().getClass().getName());
 			}
 			
 			@Override
@@ -162,6 +163,8 @@ public class GuiRedNetLogic extends GuiScreenBase
 			@Override
 			public void onClick()
 			{
+				Packets.sendToServer(Packets.LogicReinitialize, _logic,
+						Minecraft.getMinecraft().thePlayer.getEntityId());
 				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicReinitialize,
 						new Object[] { _logic.xCoord, _logic.yCoord, _logic.zCoord }));
 				_reinitCountdown = 0;
@@ -210,8 +213,8 @@ public class GuiRedNetLogic extends GuiScreenBase
 	
 	private void requestCircuit()
 	{
-		PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicRequestCircuitDefinition, new Object[]
-				{ _logic.xCoord, _logic.yCoord, _logic.zCoord, _selectedCircuit }));
+		Packets.sendToServer(Packets.LogicRequestCircuitDefinition, _logic,
+				(int)(_selectedCircuit));
 	}
 	
 	@Override
@@ -300,14 +303,14 @@ public class GuiRedNetLogic extends GuiScreenBase
 	
 	public void setInputPinMapping(int index, int buffer, int pin)
 	{
-		PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicSetPin, new Object[]
-				{ _logic.xCoord, _logic.yCoord, _logic.zCoord, 0, _selectedCircuit, index, buffer, pin }));
+		Packets.sendToServer(Packets.LogicSetPin, _logic,
+				 (byte)0, _selectedCircuit, index, buffer, pin);
 	}
 	
 	public void setOutputPinMapping(int index, int buffer, int pin)
 	{
-		PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicSetPin, new Object[]
-				{ _logic.xCoord, _logic.yCoord, _logic.zCoord, 1, _selectedCircuit, index, buffer, pin }));
+		Packets.sendToServer(Packets.LogicSetPin, _logic,
+				 (byte)1, _selectedCircuit, index, buffer, pin);
 	}
 	
 	public int getVariableCount()

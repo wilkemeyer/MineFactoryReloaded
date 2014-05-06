@@ -1,12 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiAutoJukebox extends GuiFactoryInventory
 {
@@ -45,7 +43,6 @@ public class GuiAutoJukebox extends GuiFactoryInventory
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.AutoJukeboxButton,
-				new Object[] { _jukebox.xCoord, _jukebox.yCoord, _jukebox.zCoord, button.id }));
+		Packets.sendToServer(Packets.AutoJukeboxButton, _tileEntity, (byte)(button.id));
 	}
 }

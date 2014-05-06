@@ -1,15 +1,26 @@
 package powercrystals.minefactoryreloaded.net;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+
 import java.util.List;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.server.management.PlayerManager.PlayerInstance;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
+
 public final class Packets
 {
+	public static void sendToServer(IMessage message)
+	{
+		MineFactoryReloadedCore.networkWrapper.sendToServer(message);
+	}
 	public static void sendToAllPlayersWatching(World world, int x, int y, int z, Packet packet)
 	{
 		if (packet == null)
@@ -46,25 +57,34 @@ public final class Packets
 		}
 	}
 	
-	public static final int TileDescription = 1;
-	public static final int EnchanterButton = 2;
-	public static final int HarvesterButton = 3;
-	public static final int ChronotyperButton = 4;
-	public static final int HAMUpdate = 5;
-	public static final int ConveyorDescription = 6;
-	public static final int AutoJukeboxPlay = 7;
-	public static final int RoadBlockUpdate = 8;
-	public static final int AutoJukeboxButton = 9;
-	public static final int AutoSpawnerButton = 10;
-	public static final int CableDescription = 11;
-	public static final int LogicCircuitDefinition = 12;
-	public static final int LogicRequestCircuitDefinition = 13;
-	public static final int LogicSetCircuit = 14;
-	public static final int LogicSetPin = 15;
-	public static final int LogicReinitialize = 16;
-	public static final int RouterButton = 17;
-	public static final int HistorianValueChanged = 18;
-	public static final int FakeSlotChange = 19;
-	public static final int RocketLaunchWithLock = 20;
-	public static final int EnergyCableDescription = 21;
+	public static final short TileDescription = 1;// UNUSED
+	public static final short EnchanterButton = 2;
+	public static final short HarvesterButton = 3;
+	public static final short ChronotyperButton = 4;
+	public static final short HAMUpdate = 5;
+	public static final short ConveyorDescription = 6;
+	public static final short AutoJukeboxPlay = 7; // UNUSED
+	public static final short RoadBlockUpdate = 8; //UNUSED
+	public static final short AutoJukeboxButton = 9;
+	public static final short AutoSpawnerButton = 10;
+	public static final short CableDescription = 11; // UNUSED
+	public static final short LogicCircuitDefinition = 12; // UNUSED
+	public static final short LogicRequestCircuitDefinition = 13;
+	public static final short LogicSetCircuit = 14;
+	public static final short LogicSetPin = 15;
+	public static final short LogicReinitialize = 16;
+	public static final short RouterButton = 17;
+	public static final short HistorianValueChanged = 18; // UNUSED
+	public static final short FakeSlotChange = 19;
+	public static final short RocketLaunchWithLock = 20;
+	public static final short EnergyCableDescription = 21; // UNUSED
+	
+	public static void sendToServer(short packet, TileEntity te, Object... args)
+	{
+		sendToServer(new MFRMessage(packet, te, args));
+	}
+	public static void sendToServer(short packet, Entity te, Object... args)
+	{
+		sendToServer(new MFRMessage(packet, te, args));
+	}
 }

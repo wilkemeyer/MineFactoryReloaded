@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -8,13 +11,12 @@ import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.item.EntityFallingSand;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockDecorativeStone extends Block implements IRedNetDecorative
 {
@@ -28,7 +30,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 		super(Material.rock);
 		setHardness(2.0F);
 		setResistance(10.0F);
-		setStepSound(soundStoneFootstep);
+		setStepSound(Blocks.stone.stepSound);
 		setBlockName("mfr.decorativestone");
 		setCreativeTab(MFRCreativeTab.tab);
 	}

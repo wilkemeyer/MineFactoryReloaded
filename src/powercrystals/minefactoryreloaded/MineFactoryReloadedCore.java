@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
@@ -137,6 +138,7 @@ import powercrystals.minefactoryreloaded.net.ClientPacketHandler;
 import powercrystals.minefactoryreloaded.net.ConnectionHandler;
 import powercrystals.minefactoryreloaded.net.IMFRProxy;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler;
+import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
@@ -161,9 +163,11 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static IMFRProxy proxy;
 
 	public static final String modId = "MineFactoryReloaded";
-	public static final String modNetworkChannel = "MFReloaded";
 	public static final String version = "1.7.2R2.8.0B1";
 	public static final String modName = "Minefactory Reloaded";
+	public static final String modNetworkChannel = "MFReloaded";
+	
+	public static final SimpleNetworkWrapper networkWrapper;
 
 	public static final String textureFolder      = "minefactoryreloaded:textures/";
 	public static final String guiFolder          = textureFolder + "gui/";
@@ -349,6 +353,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		MFRConfig.loadClientConfig(getClientConfig());
 
 		loadLang();
+		
+		networkWrapper = new SimpleNetworkWrapper(modNetworkChannel);
+		networkWrapper.registerMessage(ServerPacketHandler.class, MFRMessage.class, 0, Side.SERVER);
 
 		/*
 		CarbonContainer.cell = new CarbonContainer(MFRConfig.plasticCellItemId.getInt(), 64, "mfr.bucket.plasticcell", false);
@@ -581,7 +588,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		proxy.init();
 
-		NetworkRegistry.instance().registerGuiHandler(this, new MFRGUIHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MFRGUIHandler());
 
 		IBehaviorDispenseItem behavior = new BehaviorDispenseSafariNet();
 		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetItem, behavior);

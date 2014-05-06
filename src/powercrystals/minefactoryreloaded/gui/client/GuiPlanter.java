@@ -1,11 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
 import net.minecraft.client.gui.GuiButton;
 
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
@@ -43,11 +39,7 @@ public class GuiPlanter extends GuiUpgradable
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		if(button.id == 1)
-		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
-					new Object[] { _planter.xCoord, _planter.yCoord, _planter.zCoord, 1 }));
-		}
+		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
 	}
 	
 	@Override

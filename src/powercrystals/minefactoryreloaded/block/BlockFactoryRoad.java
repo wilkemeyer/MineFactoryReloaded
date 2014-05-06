@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.pcc.util.Util;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -11,14 +10,12 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import powercrystals.minefactoryreloaded.net.Packets;
 
 public class BlockFactoryRoad extends Block
 {
@@ -32,7 +29,7 @@ public class BlockFactoryRoad extends Block
 		setHardness(2.0F);
 		setBlockName("mfr.road");
 		setResistance(25.0F);
-		setStepSound(soundStoneFootstep);
+		setStepSound(Blocks.stone.stepSound);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 

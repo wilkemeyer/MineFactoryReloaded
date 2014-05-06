@@ -1,12 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiChronotyper extends GuiFactoryPowered
 {
@@ -45,8 +43,7 @@ public class GuiChronotyper extends GuiFactoryPowered
 	{
 		if(button.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.ChronotyperButton,
-					new Object[] { _chronotyper.xCoord, _chronotyper.yCoord, _chronotyper.zCoord }));
+			Packets.sendToServer(Packets.ChronotyperButton, _tileEntity);
 		}
 	}
 }

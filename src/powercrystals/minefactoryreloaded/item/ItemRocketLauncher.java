@@ -1,13 +1,10 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import powercrystals.core.net.PacketWrapper;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
@@ -30,10 +27,11 @@ public class ItemRocketLauncher extends ItemFactoryGun
 	@Override
 	protected boolean fire(ItemStack stack, World world, EntityPlayer player)
 	{
-		int slot = -1, id = MineFactoryReloadedCore.rocketItem.itemID;
+		int slot = -1;
+		Item rocket = MineFactoryReloadedCore.rocketItem;
 		ItemStack[] mainInventory = player.inventory.mainInventory;
 		for (int j = 0, e = mainInventory.length; j < e; ++j)
-			if (mainInventory[j] != null && mainInventory[j].itemID == id)
+			if (mainInventory[j] != null && mainInventory[j].getItem() == rocket)
 			{
 				slot = j;
 				break;
@@ -47,13 +45,10 @@ public class ItemRocketLauncher extends ItemFactoryGun
 
 			if (world.isRemote)
 			{
-				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(
-						MineFactoryReloadedCore.modNetworkChannel, Packets.RocketLaunchWithLock,
-						new Object[] { player.entityId,
-								damage == 0 ? MineFactoryReloadedClient.instance.getLockedEntity() : Integer.MIN_VALUE
-						}));
+				Packets.sendToServer(Packets.RocketLaunchWithLock, player,
+						damage == 0 ? MineFactoryReloadedClient.instance.getLockedEntity() : Integer.MIN_VALUE);
 			}
-			else if (!(player instanceof EntityPlayerMP))
+			else if (!player.addedToChunk)
 			{
 				EntityRocket r = new EntityRocket(world, player, null);
 				world.spawnEntityInWorld(r);

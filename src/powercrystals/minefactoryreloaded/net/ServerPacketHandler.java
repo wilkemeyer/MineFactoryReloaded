@@ -1,26 +1,25 @@
 package powercrystals.minefactoryreloaded.net;
 
 import cofh.pcc.util.UtilInventory;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-import ibxm.Player;
-
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
+import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoEnchanter;
@@ -37,141 +36,138 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityMobRouter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
-public class ServerPacketHandler implements IPacketHandler
+public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage>
 {
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
-	{
-		DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
-		int packetType = PacketWrapper.readPacketID(data);
+	public IMessage onMessage(MFRMessage message, MessageContext ctx) {
+		ByteBuf data = message.buf;
 		
-		Class[] decodeAs;
-		Object[] packetReadout;
 		TileEntity te;
+		int x, y, z, a;
+		byte amt;
+		World world = DimensionManager.getWorld(data.readInt());
+		EntityPlayer player;
 		
-		switch (packetType)
+		switch (data.readUnsignedShort())
 		{
 		case Packets.EnchanterButton: // client -> server: autoenchanter GUI buttons
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
 			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
-			if(te instanceof TileEntityAutoEnchanter)
+			amt = data.readByte();
+			if (te instanceof TileEntityAutoEnchanter)
 			{
-				((TileEntityAutoEnchanter)te).setTargetLevel(((TileEntityAutoEnchanter)te).getTargetLevel() + (Integer)packetReadout[3]);
+				((TileEntityAutoEnchanter)te).setTargetLevel(((TileEntityAutoEnchanter)te).getTargetLevel() + amt);
 			}
-			else if(te instanceof TileEntityBlockSmasher)
+			else if (te instanceof TileEntityBlockSmasher)
 			{
-				((TileEntityBlockSmasher)te).setFortune(((TileEntityBlockSmasher)te).getFortune() + (Integer)packetReadout[3]);
+				((TileEntityBlockSmasher)te).setFortune(((TileEntityBlockSmasher)te).getFortune() + amt);
 			}
-			else if(te instanceof TileEntityAutoDisenchanter)
+			else if (te instanceof TileEntityAutoDisenchanter)
 			{
-				Integer v = (Integer)packetReadout[3];
-				((TileEntityAutoDisenchanter)te).setRepeatDisenchant(v == 1 ? true : false);
+				((TileEntityAutoDisenchanter)te).setRepeatDisenchant(amt == 1 ? true : false);
 			}
 			break;
 		case Packets.HarvesterButton: // client -> server: harvester setting
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, String.class, Boolean.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
+
 			if(te instanceof TileEntityHarvester)
 			{
-				((TileEntityHarvester)te).getSettings().put((String)packetReadout[3], (Boolean)packetReadout[4]);
+				((TileEntityHarvester)te).getSettings().put(ByteBufUtils.readUTF8String(data), data.readBoolean());
 			}
 			break;
 		case Packets.ChronotyperButton: // client -> server: toggle chronotyper
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
 			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityChronotyper)
 			{
 				((TileEntityChronotyper)te).setMoveOld(!((TileEntityChronotyper)te).getMoveOld());
 			}
 			break;
 		case Packets.AutoJukeboxButton: // client -> server: copy record
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
 			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityAutoJukebox)
 			{
 				TileEntityAutoJukebox j = ((TileEntityAutoJukebox)te);
-				int button = (Integer)packetReadout[3];
+				int button = data.readByte();
 				if(button == 1) j.playRecord();
 				else if(button == 2) j.stopRecord();
 				else if(button == 3) j.copyRecord();
 			}
 			break;
 		case Packets.AutoSpawnerButton: // client -> server: toggle autospawner
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
 			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityAutoSpawner)
 			{
 				((TileEntityAutoSpawner)te).setSpawnExact(!((TileEntityAutoSpawner)te).getSpawnExact());
 			}
 			break;
 		case Packets.LogicRequestCircuitDefinition: // client -> server: request circuit from server
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
 			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
 			if(te instanceof TileEntityRedNetLogic)
 			{
-				((TileEntityRedNetLogic)te).sendCircuitDefinition((Integer)packetReadout[3]);
+				((TileEntityRedNetLogic)te).sendCircuitDefinition(data.readInt());
 			}
 			break;
 		case Packets.LogicSetCircuit: // client -> server: set circuit
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, String.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
+
+			int circuit = data.readInt();
 			if(te instanceof TileEntityRedNetLogic)
 			{
-				((TileEntityRedNetLogic)te).initCircuit((Integer)packetReadout[3], (String)packetReadout[4]);
-				((TileEntityRedNetLogic)te).sendCircuitDefinition((Integer)packetReadout[3]);
+				((TileEntityRedNetLogic)te).initCircuit(circuit, ByteBufUtils.readUTF8String(data));
+				((TileEntityRedNetLogic)te).sendCircuitDefinition(circuit);
 			}
 			break;
 		case Packets.LogicSetPin: // client -> server: set pin
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
+
+			amt = data.readByte();
+			int circuitIndex = data.readInt(),
+					pinIndex = data.readInt(),
+					buffer = data.readInt(),
+					pin = data.readInt();
 			if(te instanceof TileEntityRedNetLogic)
 			{
-				if((Integer)packetReadout[3] == 0)
+				if(amt == 0)
 				{
-					((TileEntityRedNetLogic)te).setInputPinMapping((Integer)packetReadout[4], (Integer)packetReadout[5], (Integer)packetReadout[6], (Integer)packetReadout[7]);
+					((TileEntityRedNetLogic)te).setInputPinMapping(circuitIndex, pinIndex, buffer, pin);
 				}
-				else if((Integer)packetReadout[3] == 1)
+				else if(amt == 1)
 				{
-					((TileEntityRedNetLogic)te).setOutputPinMapping((Integer)packetReadout[4], (Integer)packetReadout[5], (Integer)packetReadout[6], (Integer)packetReadout[7]);
+					((TileEntityRedNetLogic)te).setOutputPinMapping(circuitIndex, pinIndex, buffer, pin);
 				}
-				((TileEntityRedNetLogic)te).sendCircuitDefinition((Integer)packetReadout[4]);
+				((TileEntityRedNetLogic)te).sendCircuitDefinition(circuitIndex);
 			}
 			break;
 		case Packets.LogicReinitialize: // client -> server: set circuit
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
+			player = (EntityPlayer)world.getEntityByID(data.readInt());
+
 			if(te instanceof TileEntityRedNetLogic)
 			{
-				((TileEntityRedNetLogic)te).reinitialize((EntityPlayer)player);
+				((TileEntityRedNetLogic)te).reinitialize(player);
 			}
 			break;
 		case Packets.RouterButton: // client -> server: toggle 'levels'/'reject unmapped' mode
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
 			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			a = data.readInt();
 			if(te instanceof TileEntityEnchantmentRouter)
 			{
-				switch ((Integer)packetReadout[3])
+				switch (a)
 				{
 				case 2:
 					((TileEntityItemRouter)te).setRejectUnmapped(!((TileEntityItemRouter)te).getRejectUnmapped());
@@ -187,7 +183,7 @@ public class ServerPacketHandler implements IPacketHandler
 			}
 			else if(te instanceof TileEntityEjector)
 			{
-				switch ((Integer)packetReadout[3])
+				switch (a)
 				{
 				case 1:
 					((TileEntityEjector)te).setIsWhitelist(!((TileEntityEjector)te).getIsWhitelist());
@@ -206,7 +202,7 @@ public class ServerPacketHandler implements IPacketHandler
 			}
 			else if(te instanceof TileEntityChunkLoader)
 			{
-				((TileEntityChunkLoader)te).setRadius((short)(int)(Integer)packetReadout[3]);
+				((TileEntityChunkLoader)te).setRadius((short)a);
 			}
 			else if(te instanceof TileEntityPlanter)
 			{
@@ -214,7 +210,7 @@ public class ServerPacketHandler implements IPacketHandler
 			}
 			else if(te instanceof TileEntityMobRouter)
 			{
-				switch ((Integer)packetReadout[3])
+				switch (a)
 				{
 				case 1:
 					((TileEntityMobRouter)te).setWhiteList(!((TileEntityMobRouter)te).getWhiteList());
@@ -229,41 +225,38 @@ public class ServerPacketHandler implements IPacketHandler
 			}
 			break;
 		case Packets.FakeSlotChange: // client -> server: client clicked on a fake slot
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
+			player = (EntityPlayer)world.getEntityByID(data.readInt());
 			
-			ItemStack playerStack = ((EntityPlayer)player).inventory.getItemStack();
-			Integer slotNumber = (Integer)packetReadout[3];
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
+			ItemStack playerStack = player.inventory.getItemStack();
+			int slotNumber = data.readInt(), click = data.readByte();
 			if(te instanceof IInventory)
 			{
-				if(playerStack == null)
+				if (playerStack == null)
 				{
 					((IInventory)te).setInventorySlotContents(slotNumber, null);
 				}
 				else
 				{
 					playerStack = playerStack.copy();
-					playerStack.stackSize = (Integer)packetReadout[4] == 1 ? -1 : 1;
-					ItemStack a = ((IInventory)te).getStackInSlot(slotNumber);
-					if (!UtilInventory.stacksEqual(a, playerStack))
+					playerStack.stackSize = click == 1 ? -1 : 1;
+					ItemStack s = ((IInventory)te).getStackInSlot(slotNumber);
+					if (!UtilInventory.stacksEqual(s, playerStack))
 						playerStack.stackSize = 1;
 					else
-						playerStack.stackSize = Math.min(playerStack.stackSize + a.stackSize, 1);
+						playerStack.stackSize = Math.min(playerStack.stackSize + s.stackSize, 1);
 					((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
 				}
 			}
 			break;
 		case Packets.RocketLaunchWithLock: // client -> server: client firing SPAMR missile
-			decodeAs = new Class[]{ Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			World world = ((EntityPlayer)player).worldObj;
-			Entity owner = world.getEntityByID((Integer)packetReadout[0]);
+			Entity owner = world.getEntityByID(data.readInt());
+			int t = data.readInt();
 			Entity target = null;
-			if(((Integer)packetReadout[1]) != Integer.MIN_VALUE)
+			if (t != Integer.MIN_VALUE)
 			{
-				target = world.getEntityByID((Integer)packetReadout[1]);
+				target = world.getEntityByID(t);
 			}
 			
 			if(owner instanceof EntityLivingBase)
@@ -272,19 +265,87 @@ public class ServerPacketHandler implements IPacketHandler
 				world.spawnEntityInWorld(r);
 			}
 			break;
-		case Packets.HAMUpdate: // client -> server: client requesting harvest area update
-			decodeAs = new Class[]{ Integer.class, Integer.class, Integer.class };
-			packetReadout = PacketWrapper.readPacketData(data, decodeAs);
-			
-			te = ((EntityPlayer)player).worldObj.getTileEntity((Integer)packetReadout[0], (Integer)packetReadout[1], (Integer)packetReadout[2]);
-			if (te instanceof TileEntityFactory)
+		}
+		return null;
+	}
+	
+	public static class MFRMessage implements IMessage
+	{
+		public ByteBuf buf;
+		public MFRMessage() {}
+		public MFRMessage(short packet, TileEntity te, Object... args)
+		{
+			ByteBuf buff = Unpooled.buffer();
+			buff.writeInt(te.getWorldObj().provider.dimensionId);
+			buff.writeShort(packet);
+			buff.writeInt(te.xCoord);
+			buff.writeInt(te.yCoord);
+			buff.writeInt(te.zCoord);
+			handleObjects(buff, args);
+			buf = buff;
+		}
+		public MFRMessage(short packet, Entity e, Object... args)
+		{
+			ByteBuf buff = Unpooled.buffer();
+			buff.writeInt(e.worldObj.provider.dimensionId);
+			buff.writeShort(packet);
+			buff.writeInt(e.getEntityId());
+			handleObjects(buff, args);
+			buf = buff;
+		}
+		
+		@Override
+		public void fromBytes(ByteBuf buf)
+		{
+			this.buf = buf;
+		}
+
+		@Override
+		public void toBytes(ByteBuf buf)
+		{
+			buf.writeBytes(this.buf);
+		}
+		
+		private static void handleObjects(ByteBuf data, Object[] objects)
+		{
+			for (Object obj : objects)
 			{
-				TileEntityFactory tef = (TileEntityFactory)te;
-				if (tef.hasHAM())
+				Class<?> objClass = obj.getClass(); 
+				if (objClass.equals(Integer.class))
 				{
-					Packet t = PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel,
-							Packets.HAMUpdate, new Object[]{te.xCoord, te.yCoord, te.zCoord, tef.getHAM().getUpgradeLevel()});;
-					PacketDispatcher.sendPacketToPlayer(t, player);
+					data.writeInt((Integer) obj);
+				}
+				else if (objClass.equals(Boolean.class))
+				{
+					data.writeBoolean((Boolean) obj);
+				}
+				else if (objClass.equals(Byte.class))
+				{
+					data.writeByte((Byte) obj);
+				}
+				else if (objClass.equals(Short.class))
+				{
+					data.writeShort((Short) obj);
+				}
+				else if (objClass.equals(String.class))
+				{
+					ByteBufUtils.writeUTF8String(data, (String)obj);
+				}
+				else if (Entity.class.isAssignableFrom(objClass))
+				{
+					data.writeInt(((Entity)obj).getEntityId());
+				}
+				else if (objClass.equals(Double.class))
+				{
+					data.writeDouble((Double) obj);
+				}
+				else if (objClass.equals(Float.class))
+				{
+					data.writeFloat((Float) obj);
+				}
+				else if (objClass.equals(Long.class))
+				{
+					data.writeLong((Long) obj);
 				}
 			}
 		}

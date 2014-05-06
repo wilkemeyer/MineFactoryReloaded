@@ -1,11 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
 import net.minecraft.client.gui.GuiButton;
 
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.container.ContainerMobRouter;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityMobRouter;
@@ -72,15 +68,6 @@ public class GuiMobRouter extends GuiFactoryPowered
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		if(button.id == 1)
-		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
-					new Object[] { _tileEntity.xCoord, _tileEntity.yCoord, _tileEntity.zCoord, 1 }));
-		}
-		else if(button.id == 2)
-		{
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.RouterButton,
-					new Object[] { _tileEntity.xCoord, _tileEntity.yCoord, _tileEntity.zCoord, 2 }));
-		}
+		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
 	}
 }

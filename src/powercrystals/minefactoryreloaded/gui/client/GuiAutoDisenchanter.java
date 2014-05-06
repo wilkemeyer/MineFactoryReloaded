@@ -1,12 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import powercrystals.core.net.PacketWrapper;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import net.minecraft.client.gui.GuiButton;
+
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
-import net.minecraft.client.gui.GuiButton;
 
 public class GuiAutoDisenchanter extends GuiFactoryPowered
 {
@@ -42,8 +40,8 @@ public class GuiAutoDisenchanter extends GuiFactoryPowered
 		if(button.id == 1)
 		{
 			_disenchanter.setRepeatDisenchant(!_disenchanter.getRepeatDisenchant());
-			PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.EnchanterButton,
-					new Object[] { _disenchanter.xCoord, _disenchanter.yCoord, _disenchanter.zCoord, _disenchanter.getRepeatDisenchant() ? 1 : 0 }));
+			Packets.sendToServer(Packets.EnchanterButton, _tileEntity,
+					(byte)(_disenchanter.getRepeatDisenchant() ? 1 : 0));
 		}
 	}
 }

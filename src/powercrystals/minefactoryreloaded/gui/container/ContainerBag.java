@@ -30,7 +30,7 @@ public class ContainerBag extends Container
 	
 	public String getName()
 	{
-		return _ncw.getInvName();
+		return _ncw.getInventoryName();
 	}
 	
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)

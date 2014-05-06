@@ -34,9 +34,7 @@ public class NeedlegunContainerWrapper implements IInventory
 		}
 		else
 		{
-			ItemStack s = new ItemStack(0, 0, 0);
-			s.readFromNBT(_stack.getTagCompound().getCompoundTag("ammo"));
-			return s;
+			return ItemStack.loadItemStackFromNBT(_stack.getTagCompound().getCompoundTag("ammo"));
 		}
 	}
 
@@ -47,18 +45,17 @@ public class NeedlegunContainerWrapper implements IInventory
 		{
 			return null;
 		}
-		ItemStack s = new ItemStack(0, 0, 0);
-		s.readFromNBT(_stack.getTagCompound().getCompoundTag("ammo"));
+		ItemStack s = ItemStack.loadItemStackFromNBT(_stack.getTagCompound().getCompoundTag("ammo"));
 		ItemStack r = s.splitStack(j);
 		if(s.stackSize <= 0)
 		{
-			_stack.getTagCompound().setCompoundTag("ammo", new NBTTagCompound());
+			_stack.getTagCompound().setTag("ammo", new NBTTagCompound());
 		}
 		else
 		{
 			NBTTagCompound t = new NBTTagCompound();
 			s.writeToNBT(t);
-			_stack.getTagCompound().setCompoundTag("ammo", t);
+			_stack.getTagCompound().setTag("ammo", t);
 		}
 		return r;
 	}
@@ -74,24 +71,24 @@ public class NeedlegunContainerWrapper implements IInventory
 	{
 		if(itemstack == null)
 		{
-			_stack.getTagCompound().setCompoundTag("ammo", new NBTTagCompound());
+			_stack.getTagCompound().setTag("ammo", new NBTTagCompound());
 		}
 		else
 		{
 			NBTTagCompound t = new NBTTagCompound();
 			itemstack.writeToNBT(t);
-			_stack.getTagCompound().setCompoundTag("ammo", t);
+			_stack.getTagCompound().setTag("ammo", t);
 		}
 	}
 
 	@Override
-	public String getInvName()
+	public String getInventoryName()
 	{
 		return "Needlegun";
 	}
 
 	@Override
-	public boolean isInvNameLocalized()
+	public boolean hasCustomInventoryName()
 	{
 		return false;
 	}
@@ -103,7 +100,7 @@ public class NeedlegunContainerWrapper implements IInventory
 	}
 
 	@Override
-	public void onInventoryChanged()
+	public void markDirty()
 	{
 	}
 
@@ -114,12 +111,12 @@ public class NeedlegunContainerWrapper implements IInventory
 	}
 
 	@Override
-	public void openChest()
+	public void openInventory()
 	{
 	}
 
 	@Override
-	public void closeChest()
+	public void closeInventory()
 	{
 	}
 

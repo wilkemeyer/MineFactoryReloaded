@@ -5,7 +5,6 @@ import java.util.Random;
 import java.util.TreeSet;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -472,7 +471,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 		Block block = worldObj.getBlock(basePos[0], basePos[1] - 1, basePos[2]);
 
 		if (block == null || !block.canSustainPlant(worldObj, basePos[0], basePos[1] - 1, basePos[2],
-				ForgeDirection.UP, ((BlockSapling)MineFactoryReloadedCore.rubberSaplingBlock)))
+				ForgeDirection.UP, MineFactoryReloadedCore.rubberSaplingBlock))
 			return false;
 		else
 		{

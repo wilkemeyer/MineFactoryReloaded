@@ -3,10 +3,10 @@ package powercrystals.minefactoryreloaded.world;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class WorldGenRubberTree extends WorldGenerator
@@ -59,7 +59,7 @@ public class WorldGenRubberTree extends WorldGenerator
 			block = world.getBlock(x, y - 1, z);
 
 			if((block != null && block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP,
-					((BlockSapling)MineFactoryReloadedCore.rubberSaplingBlock))) &&
+					MineFactoryReloadedCore.rubberSaplingBlock)) &&
 					y < worldHeight - treeHeight - 1)
 			{
 				for(yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset)
