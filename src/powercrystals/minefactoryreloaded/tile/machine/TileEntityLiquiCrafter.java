@@ -10,6 +10,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,7 +73,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 					_inventory[9] != null &&
 					(_inventory[10] == null ||
 					(_inventory[10].stackSize + _inventory[9].stackSize <= _inventory[9].getMaxStackSize() &&
-					_inventory[9].itemID == _inventory[10].itemID &&
+					_inventory[9].getItem() == _inventory[10].getItem() &&
 					_inventory[9].getItemDamage() == _inventory[10].getItemDamage())))
 			{
 				checkResources();
@@ -109,13 +110,13 @@ inv:	for(int i = 0; i < 9; i++)
 
 				for(ItemResourceTracker t : requiredItems)
 				{
-					if(t.id == _inventory[i].itemID && t.meta == _inventory[i].getItemDamage())
+					if(t.id == _inventory[i].getItem() && t.meta == _inventory[i].getItemDamage())
 					{
 						t.required++;
 						continue inv;
 					}
 				}
-				requiredItems.add(new ItemResourceTracker(_inventory[i].itemID, _inventory[i].getItemDamage(), _inventory[i].getTagCompound(), 1));
+				requiredItems.add(new ItemResourceTracker(_inventory[i].getItem(), _inventory[i].getItemDamage(), _inventory[i].getTagCompound(), 1));
 			}
 		}
 		
@@ -126,10 +127,10 @@ inv:	for(int i = 0; i < 9; i++)
 			{
 				for(ItemResourceTracker t : requiredItems)
 				{
-					if(t.id == item.itemID &&
+					if(t.id == item.getItem() &&
 							(t.meta == item.getItemDamage() || item.getItem().isDamageable()))
 					{
-						if(!item.getItem().hasContainerItem())
+						if(!item.getItem().hasContainerItem(item))
 						{
 							t.found += item.stackSize;
 						}
@@ -174,13 +175,13 @@ inv:	for(int i = 0; i < 9; i++)
 			{
 				for(ItemResourceTracker t : requiredItems)
 				{
-					if(t.id == _inventory[i].itemID && (t.meta == _inventory[i].getItemDamage() || _inventory[i].getItem().isDamageable()))
+					if(t.id == _inventory[i].getItem() && (t.meta == _inventory[i].getItemDamage() || _inventory[i].getItem().isDamageable()))
 					{
 						int use;
-						if(_inventory[i].getItem().hasContainerItem())
+						if(_inventory[i].getItem().hasContainerItem(_inventory[i]))
 						{
 							use = 1;
-							ItemStack container = _inventory[i].getItem().getContainerItemStack(_inventory[i]);
+							ItemStack container = _inventory[i].getItem().getContainerItem(_inventory[i]);
 							if(container.isItemStackDamageable() && container.getItemDamage() > container.getMaxDamage())
 							{
 								_inventory[i] = null;
@@ -470,7 +471,7 @@ inv:	for(int i = 0; i < 9; i++)
 	
 	private static class ItemResourceTracker
 	{
-		public ItemResourceTracker(int id, int meta, NBTTagCompound nbtdata, int required)
+		public ItemResourceTracker(Item id, int meta, NBTTagCompound nbtdata, int required)
 		{
 			this.id = id;
 			this.meta = meta;
@@ -486,7 +487,7 @@ inv:	for(int i = 0; i < 9; i++)
 		}
 		public boolean isFluid;
 		public FluidStack fluid;
-		public int id;
+		public Item id;
 		public int meta;
 		@SuppressWarnings("unused")
 		public NBTTagCompound tag; // TODO: check NBT data appropriately. via recipe?

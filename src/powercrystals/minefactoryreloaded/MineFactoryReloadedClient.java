@@ -1,22 +1,38 @@
 package powercrystals.minefactoryreloaded;
 
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.conveyorBlock;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.factoryGlassPaneBlock;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.logicCardItem;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.needlegunItem;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.plasticCupItem;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdConveyor;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdDetCord;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdFactoryGlass;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdFactoryGlassPane;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdRedNet;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.rocketItem;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.rocketLauncherItem;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.syringeEmptyItem;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.villagerFolder;
 
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelSlime;
@@ -36,18 +52,11 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
 
-import cofh.util.position.BlockPosition;
-import powercrystals.core.render.RenderBlockFluidClassic;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
@@ -60,7 +69,6 @@ import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
-import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
@@ -121,8 +129,8 @@ public class MineFactoryReloadedClient
 				new ConveyorRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdFactoryGlassPane,
 				new FactoryGlassPaneRenderer());
-		RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
-				new RenderBlockFluidClassic(renderIdFluidClassic));
+		/*RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
+				new RenderBlockFluidClassic(renderIdFluidClassic));//*/
 		/*RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
 				new VineScaffoldRenderer());//*/
 		RenderingRegistry.registerBlockHandler(renderIdFactoryGlass,

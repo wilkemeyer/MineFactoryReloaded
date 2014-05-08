@@ -9,6 +9,7 @@ import net.minecraft.block.BlockIce;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
@@ -17,10 +18,9 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 {
 	public BlockVanillaIce()
 	{
-		super(79);
 		setHardness(0.5F);
 		setLightOpacity(3);
-		setStepSound(soundGlassFootstep);
+		setStepSound(soundTypeGlass);
 		setBlockName("ice");
 	}
 	
@@ -36,7 +36,7 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
-		player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+		player.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(this)], 1);
 		player.addExhaustion(0.025F);
 		
 		if(this.canSilkHarvest() && EnchantmentHelper.getSilkTouchModifier(player))
@@ -45,7 +45,7 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 			
 			if(droppedStack != null)
 			{
-				this.dropBlockAsItem_do(world, x, y, z, droppedStack);
+				this.dropBlockAsItem(world, x, y, z, droppedStack);
 			}
 		}
 		else
@@ -57,11 +57,11 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 			
 			int fortune = EnchantmentHelper.getFortuneModifier(player);
 			this.dropBlockAsItem(world, x, y, z, meta, fortune);
-			Material var8 = world.getBlockMaterial(x, y - 1, z);
+			Material var8 = world.getBlock(x, y - 1, z).getMaterial();
 			
 			if((var8.blocksMovement() || var8.isLiquid()) && meta == 0)
 			{
-				world.setBlock(x, y, z, Block.waterMoving.blockID);
+				world.setBlock(x, y, z, Blocks.flowing_water);
 			}
 		}
 	}

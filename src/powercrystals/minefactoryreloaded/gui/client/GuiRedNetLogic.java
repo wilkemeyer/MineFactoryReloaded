@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
+import cofh.util.position.BlockPosition;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -18,8 +20,6 @@ import powercrystals.core.gui.controls.Button;
 import powercrystals.core.gui.controls.IListBoxElement;
 import powercrystals.core.gui.controls.ListBox;
 import powercrystals.core.gui.controls.SliderVertical;
-import powercrystals.core.net.PacketWrapper;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -31,7 +31,6 @@ import powercrystals.minefactoryreloaded.gui.control.LogicButtonType;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic.PinMapping;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiRedNetLogic extends GuiScreenBase
 {
@@ -165,8 +164,6 @@ public class GuiRedNetLogic extends GuiScreenBase
 			{
 				Packets.sendToServer(Packets.LogicReinitialize, _logic,
 						Minecraft.getMinecraft().thePlayer.getEntityId());
-				PacketDispatcher.sendPacketToServer(PacketWrapper.createPacket(MineFactoryReloadedCore.modNetworkChannel, Packets.LogicReinitialize,
-						new Object[] { _logic.xCoord, _logic.yCoord, _logic.zCoord }));
 				_reinitCountdown = 0;
 			}
 		};
@@ -176,7 +173,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 		
 		_reinitConfirm.setVisible(false);
 		
-		int rotation = logic.worldObj.getBlockMetadata(logic.xCoord, logic.yCoord, logic.zCoord);
+		int rotation = logic.getWorldObj().getBlockMetadata(logic.xCoord, logic.yCoord, logic.zCoord);
 		
 		for(int i = 0; i < _inputIOPinButtons.length; i++)
 		{
@@ -214,7 +211,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 	private void requestCircuit()
 	{
 		Packets.sendToServer(Packets.LogicRequestCircuitDefinition, _logic,
-				(int)(_selectedCircuit));
+				_selectedCircuit);
 	}
 	
 	@Override
@@ -281,14 +278,14 @@ public class GuiRedNetLogic extends GuiScreenBase
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		fontRenderer.drawString("Programmable RedNet Controller", 8, 6, 4210752);
-		fontRenderer.drawString((_selectedCircuit + 1) + " of " + _logic.getCircuitCount(), 336, 60, 4210752);
+		fontRendererObj.drawString("Programmable RedNet Controller", 8, 6, 4210752);
+		fontRendererObj.drawString((_selectedCircuit + 1) + " of " + _logic.getCircuitCount(), 336, 60, 4210752);
 		
 		for(int i = 0; i < _inputIOPinButtons.length; i++)
 		{
 			if(i < _logic.getCircuit(_selectedCircuit).getInputCount())
 			{
-				fontRenderer.drawString(_logic.getCircuit(_selectedCircuit).getInputPinLabel(i), 4, 20 + i * 14, 4210752);
+				fontRendererObj.drawString(_logic.getCircuit(_selectedCircuit).getInputPinLabel(i), 4, 20 + i * 14, 4210752);
 			}
 		}
 		
@@ -296,7 +293,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 		{
 			if(i < _logic.getCircuit(_selectedCircuit).getOutputCount())
 			{
-				fontRenderer.drawString(_logic.getCircuit(_selectedCircuit).getOutputPinLabel(i), 232, 20 + i * 14, 4210752);
+				fontRendererObj.drawString(_logic.getCircuit(_selectedCircuit).getOutputPinLabel(i), 232, 20 + i * 14, 4210752);
 			}
 		}
 	}

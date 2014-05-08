@@ -12,7 +12,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -134,8 +133,6 @@ import powercrystals.minefactoryreloaded.item.ItemSyringeSlime;
 import powercrystals.minefactoryreloaded.item.ItemSyringeZombie;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemXpExtractor;
-import powercrystals.minefactoryreloaded.net.ClientPacketHandler;
-import powercrystals.minefactoryreloaded.net.ConnectionHandler;
 import powercrystals.minefactoryreloaded.net.IMFRProxy;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
@@ -167,7 +164,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static final String modName = "Minefactory Reloaded";
 	public static final String modNetworkChannel = "MFReloaded";
 	
-	public static final SimpleNetworkWrapper networkWrapper;
+	public static SimpleNetworkWrapper networkWrapper = null;
 
 	public static final String textureFolder      = "minefactoryreloaded:textures/";
 	public static final String guiFolder          = textureFolder + "gui/";
@@ -387,9 +384,8 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		if(MFRConfig.vanillaOverrideMilkBucket.getBoolean(true))
 		{
-			int milkBucketId = Item.bucketMilk.itemID;
-			Item.itemsList[milkBucketId] = null;
-			Item.bucketMilk = new ItemFactoryBucket(milkLiquid).setUnlocalizedName("mfr.bucket.milk");
+			Items.milk_bucket = new ItemFactoryBucket(milkLiquid).setUnlocalizedName("mfr.bucket.milk");
+			Item.itemRegistry.addObject(335, "milk_bucket", Items.milk_bucket);
 		}
 	}
 
@@ -523,17 +519,14 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		if(MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
-			Block.blocksList[Block.thinGlass.blockID] = null;
-			Item.itemsList[Block.thinGlass.blockID] = null;
-			Block.thinGlass = new BlockVanillaGlassPane();
-			GameRegistry.registerBlock(Block.thinGlass, Block.thinGlass.getUnlocalizedName());
+			Blocks.glass_pane = new BlockVanillaGlassPane();
+			Block.blockRegistry.addObject(102, "glass_pane", Blocks.glass_pane);
 		}
 		if(MFRConfig.vanillaOverrideIce.getBoolean(true))
 		{
-			Block.blocksList[Block.ice.blockID] = null;
-			Item.itemsList[Block.ice.blockID] = null;
-			Block.ice = new BlockVanillaIce();
-			GameRegistry.registerBlock(Block.ice, ItemBlockVanillaIce.class, "blockVanillaIce");
+			Blocks.ice = new BlockVanillaIce();
+			Block.blockRegistry.addObject(79, "ice", Blocks.ice);
+			Item.itemRegistry.addObject(79, "ice", new ItemBlockVanillaIce(Blocks.ice));
 		}
 
 		GameRegistry.registerTileEntity(TileEntityConveyor.class, "factoryConveyor");

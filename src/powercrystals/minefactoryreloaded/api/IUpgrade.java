@@ -13,7 +13,7 @@ public interface IUpgrade
 	{
 		RADIUS,
 		SPEED,
-		EFFICENCY,
+		EFFICIENCY,
 		STRENGTH,
 		ENERGY;
 	}

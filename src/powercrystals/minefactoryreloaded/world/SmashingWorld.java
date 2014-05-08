@@ -5,13 +5,11 @@ import cofh.pcc.util.UtilInventory;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
 
 import skyboy.core.world.WorldProxy;
 
@@ -34,7 +32,7 @@ public class SmashingWorld extends WorldProxy
 	}
 
 	@Override
-	public boolean setBlock(int par1, int par2, int par3, int par4, Block par5, int par6, int par7)
+	public boolean setBlock(int par1, int par2, int par3, Block par4, int par5, int par6)
 	{
 		return true;
 	}
@@ -51,8 +49,8 @@ public class SmashingWorld extends WorldProxy
 		return true;
 	}
 
-	@Override
-	public boolean destroyBlock(int par1, int par2, int par3, boolean par4)
+	@Override // destroyBlock
+	public boolean func_147480_a(int par1, int par2, int par3, boolean par4)
 	{
 		return true;
 	}

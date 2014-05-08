@@ -1,17 +1,16 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -72,7 +71,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 		
 		if(getWorkDone() > getWorkMax())
 		{ // TODO: forge fishing API
-			doDrop(new ItemStack(Item.fishRaw));
+			doDrop(new ItemStack(Items.fish));
 			setWorkDone(0);
 		}
 		return true;
