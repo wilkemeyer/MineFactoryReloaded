@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.pcc.util.UtilInventory;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -10,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 

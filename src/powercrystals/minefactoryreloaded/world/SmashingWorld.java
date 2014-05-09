@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.world;
 
-import cofh.pcc.util.UtilInventory;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 import java.util.ArrayList;
 

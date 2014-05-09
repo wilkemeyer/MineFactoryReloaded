@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -18,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;

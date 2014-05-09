@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,6 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiBlockSmasher;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerBlockSmasher;

@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import java.util.Map;
 
 import cofh.pcc.util.Util;
-import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,6 +20,7 @@ import net.minecraftforge.fluids.FluidTank;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiBioReactor;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerBioReactor;

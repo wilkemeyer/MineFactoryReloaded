@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.pcc.random.WeightedRandomItemStack;
-import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,6 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLaserDrill;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;

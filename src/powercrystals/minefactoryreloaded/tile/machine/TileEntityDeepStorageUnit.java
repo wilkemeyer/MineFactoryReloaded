@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -11,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiDeepStorageUnit;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerDeepStorageUnit;

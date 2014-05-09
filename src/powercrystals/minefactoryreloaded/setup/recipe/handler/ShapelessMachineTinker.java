@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.setup.recipe.handler;
 
-import cofh.pcc.util.UtilInventory;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -15,6 +14,7 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class ShapelessMachineTinker extends ShapelessRecipes

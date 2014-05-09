@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.gates.IAction;
 
 import cofh.asm.relauncher.Implementable;
-import cofh.pcc.util.UtilInventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Implementable("buildcraft.core.IMachine")

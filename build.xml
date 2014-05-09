@@ -20,7 +20,6 @@
 	<property name="forge.minor" value="12"/>
 	<property name="forge.patch" value="0"/>
 	<property name="forge.build" value="1055"/>
-	<property name="cofh.commit" value="24600c4cfda893a16316c0631972170413f3a1e3"/>
 	
 	<!-- Packaging -->
 	<property name="dist.dir" value="${build.dir}/dist"/>
@@ -103,6 +102,10 @@
 	<target name="get-dependencies" unless="have.libs">
 		<parallel>
 			<sequential>
+				<echo message="Downloading CCL..."/>
+				<get src="http://files.minecraftforge.net/maven/codechicken/CodeChickenLib/1.7.2-1.1.0.73/CodeChickenLib-1.7.2-1.1.0.73-dev.jar" dest="${download.dir}/codechickenlib.jar"/>
+			</sequential>
+			<sequential>
 				<echo message="Downloading IC2 API... "/>
 				<get src="http://ic2api.player.to:8080/job/IC2_experimental/lastSuccessfulBuild/artifact/build/libs/industrialcraft-2-2.1.476-experimental-api.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
 			</sequential>
@@ -111,16 +114,8 @@
 				<get src="http://nallar.me/buildservice/job/Buildcraft/lastSuccessfulBuild/artifact/build/libs/buildcraft-6.0.8-api.jar" dest="${download.dir}/Buildcraft.jar"/>
 			</sequential><!--
 			<sequential>
-				<echo message="Downloading ThermalExpansion API... "/>
-				<get src="https://github.com/KingLemming/CoFHLib/archive/${cofh.commit}.zip" dest="${download.dir}/cofh-api.zip"/>
-			</sequential>
-			<sequential>
 				<echo message="Downloading Forestry API... "/>
 				<get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.1/forestry-api-2.3.0.1.zip" dest="${download.dir}/ForestryAPI.zip"/>
-			</sequential>
-			<sequential>
-				<echo message="Downloading CCL..."/>
-				<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.55.jar" dest="${download.dir}/codechickenlib.jar"/>
 			</sequential>-->
 		</parallel>
 	</target>
@@ -128,6 +123,9 @@
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="have.libs">
 		<delete dir="${lib.dir}/"/>
 		<mkdir dir="${lib.dir}/"/>
+			
+		<echo message="Extracting CCL... "/>
+		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>
 		
 		<echo message="Extracting BuildCraft API..."/>
 		<copy file="${download.dir}/Buildcraft.jar" todir="${lib.dir}"/>
@@ -142,36 +140,7 @@
 		
 		<echo message="Extracting Forestry API... "/>
 		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}"/>
-		<move file="${download.dir}/forestry" todir="${sources.dir}"/>
-			
-		<echo message="Extracting CCL... "/>
-		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>-->
-	</target>
-	
-	<target name="clone-MFR-Forestry" depends="download-jgit" unless="den-exists">
-		<taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties">
-			<classpath>
-				<pathelement location="${download.dir}/jgit/jgit-ant.jar"/>
-				<pathelement location="${download.dir}/jgit/jgit.jar"/>
-				<pathelement location="${download.dir}/jgit/jsch.jar"/>
-			</classpath>
-		</taskdef>
-		<loadfile property="mfr-forestry-revision" srcFile="mfr-forestry.revision">
-			<filterchain>
-				<striplinebreaks/>
-			</filterchain>
-		</loadfile>
-		<fail unless="mfr-forestry-revision" message="MFR-Forestry revision not found."/>
-		<git-clone uri="https://github.com/denoflionsx/MFR-Forestry.git" dest="${build.dir}/MFR-Forestry"/>
-		<git-checkout branch="${mfr-forestry-revision}" src="${build.dir}/MFR-Forestry"/>
-	</target>
-
-	<target name="download-jgit" unless="should-download-jgit">
-		<echo message="Getting: JGit"/>
-		<mkdir dir="${download.dir}/jgit"/>
-		<get dest="${download.dir}/jgit/jsch.jar" src="http://downloads.sourceforge.net/project/jsch/jsch.jar/0.1.50/jsch-0.1.50.jar"/>
-		<get dest="${download.dir}/jgit/jgit.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit/3.0.3.201309161630-r/org.eclipse.jgit-3.0.3.201309161630-r.jar"/>
-		<get dest="${download.dir}/jgit/jgit-ant.jar" src="https://repo.eclipse.org/content/repositories/jgit-releases/org/eclipse/jgit/org.eclipse.jgit.ant/3.0.3.201309161630-r/org.eclipse.jgit.ant-3.0.3.201309161630-r.jar"/>
+		<move file="${download.dir}/forestry" todir="${sources.dir}"/>-->
 	</target>
 	
 	<macrodef name="move-transformers"><sequential>

@@ -5,7 +5,6 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 import cofh.pcc.inventory.IInventoryManager;
 import cofh.pcc.inventory.InventoryManager;
 import cofh.pcc.util.Util;
-import cofh.pcc.util.UtilInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,7 +14,6 @@ import java.util.Map.Entry;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiEjector;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerEjector;
@@ -100,27 +99,18 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	
 					set: for (Entry<Integer, ItemStack> stack : contents.entrySet())
 					{
-						if (stack == null || stack.getValue() == null)
-						{
-							continue;
-						}
 						ItemStack itemstack = stack.getValue();
-	
-						if (chest.getValue() instanceof ISidedInventory)
-						{// TODO: inventory.canRemoveItem(stack.getValue(), stack.getKey())
-							ISidedInventory sided = (ISidedInventory)chest.getValue();
-							if(!sided.canExtractItem(stack.getKey(), itemstack,
-									chest.getKey().getOpposite().ordinal()))
-							{
-								continue;
-							}
-						}
+						if (itemstack == null || !inventory.canRemoveItem(itemstack, stack.getKey()))
+							continue;
 	
 						boolean hasMatch = false;
 	
 						for (int i = getSizeItemList(); i --> 0; )
 							if (itemMatches(_inventory[i], itemstack))
+							{
 								hasMatch = true;
+								break;
+							}
 	
 						if (_whitelist != hasMatch) continue set;
 	

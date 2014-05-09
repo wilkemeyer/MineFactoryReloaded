@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.pcc.util.UtilInventory;
 
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.NeedlegunContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptNeedlegunAmmo;
 import powercrystals.minefactoryreloaded.gui.slot.SlotViewOnly;

@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
 import cofh.pcc.random.WeightedRandomItemStack;
-import cofh.pcc.util.UtilInventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +29,7 @@ import powercrystals.minefactoryreloaded.api.INeedleAmmo;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.ISafariNetHandler;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public abstract class MFRRegistry
 {
