@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
 import codechicken.core.launch.DepLoader;
+import cofh.core.CoFHProps;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -32,6 +33,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -152,10 +154,10 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 
 @Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
-dependencies = "required-after:Forge@[9.11.1.953,);required-after:PowerCrystalsCore@[1.1.8,);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
+dependencies = "required-after:Forge@[10.12.1.1074,);required-after:CoFHCore@["+CoFHProps.VERSION+",);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
 public class MineFactoryReloadedCore extends BaseMod
 {
-	static{DepLoader.load();}
+	//static{DepLoader.load();}
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy", serverSide = "powercrystals.minefactoryreloaded.net.ServerProxy")
 	public static IMFRProxy proxy;
 
@@ -345,6 +347,10 @@ public class MineFactoryReloadedCore extends BaseMod
 	public void preInit(FMLPreInitializationEvent evt) throws IOException
 	{
 		setConfigFolderBase(evt.getModConfigurationDirectory());
+		
+		machineBlocks.put(0, new BlockFactoryMachine(0));
+		machineBlocks.put(1, new BlockFactoryMachine(1));
+		machineBlocks.put(2, new BlockFactoryMachine(2));
 
 		MFRConfig.loadCommonConfig(getCommonConfig());
 		MFRConfig.loadClientConfig(getClientConfig());
@@ -384,8 +390,9 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		if(MFRConfig.vanillaOverrideMilkBucket.getBoolean(true))
 		{
-			Items.milk_bucket = new ItemFactoryBucket(milkLiquid).setUnlocalizedName("mfr.bucket.milk");
-			Item.itemRegistry.addObject(335, "milk_bucket", Items.milk_bucket);
+			Items.milk_bucket = new ItemBucket(milkLiquid).setUnlocalizedName("mfr.bucket.milk");
+			Item.itemRegistry.addObject(335, "minecraft:milk_bucket", Items.milk_bucket);
+			Item.itemRegistry.putObject("minefactoryreloaded:item.mfr.bucket.milk", Items.milk_bucket);
 		}
 	}
 
@@ -398,9 +405,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		float meatIngotSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.2F : 0.8F;
 
 		conveyorBlock = new BlockConveyor();
-		machineBlocks.put(0, new BlockFactoryMachine(0));
-		machineBlocks.put(1, new BlockFactoryMachine(1));
-		machineBlocks.put(2, new BlockFactoryMachine(2));
 		factoryGlassBlock = new BlockFactoryGlass();
 		factoryGlassPaneBlock = new BlockFactoryGlassPane();
 		factoryRoadBlock = new BlockFactoryRoad();
