@@ -15,7 +15,7 @@
 	<property name="verclass.name" value="MineFactoryReloadedCore.java"/>
 	
 	<!-- Forge version -->
-	<property name="minecraft.version" value="1.7.2"/>
+	<property name="mc.version" value="1.7.2"/>
 	<property name="forge.major" value="10"/>
 	<property name="forge.minor" value="12"/>
 	<property name="forge.patch" value="0"/>
@@ -34,7 +34,7 @@
 	<property name="lib.dir" value="${forgebuild.dir}/libs"/>
 	<property name="sources.dir" value="${forgebuild.dir}/sources/minecraft"/>
 	<property name="transformers.dir" value="${forge.dir}/src/main/resources/"/>
-	<property name="forge.jar" value="${forgebuild.dir}/dirtyArtifacts/forgeSrc-${forge.version}.jar"/>
+	<property name="forge.jar" value="${build.dir}/.gradle/caches/minecraft/net/minecraftforge/forge/${forge.version}/forgeSrc-${forge.version}.jar"/>
 	<property name="reobf.jar" value="${lib.dir}/modid-1.0.jar"/>
 	<property name="forge.url" value="http://files.minecraftforge.net/maven/net/minecraftforge/forge/${forge.version}/forge-${forge.version}-src.zip"/>
 	
@@ -67,7 +67,7 @@
 		<available property="already.compiled" file="${reobf.jar}"/>
 		<available property="forge.exists" file="${download.dir}/forge-${forge.version}-src.zip"/>
 		<condition property="forge.already.installed">
-			<available file="${forge.dir}/build/dirtyArtifacts/forgeSrc-${forge.version}.jar" type="file"/>
+			<available file="${forge.jar}" type="file"/>
 		</condition>
 		<available property="den-exists" file="${build.dir}/MFR-Forestry/build.xml"/>
 		<condition property="should-download-jgit">
@@ -79,12 +79,11 @@
 		</condition>
 		<condition property="have.libs">
 			<and>
-				<available file="${sources.dir}/powercrystals/core" type="dir"/>
-				<available file="${sources.dir}/cofh" type="dir"/>
-				<available file="${sources.dir}/buildcraft" type="dir"/>
-				<available file="${sources.dir}/ic2" type="dir"/>
-				<available file="${sources.dir}/forestry" type="dir"/>
 				<available file="${lib.dir}/codechickenlib.jar" type="file"/>
+				<available file="${lib.dir}/CoFHLib.jar" type="file"/>
+				<available file="${lib.dir}/CoFHCore.jar" type="file"/>
+				<available file="${lib.dir}/Buildcraft.jar" type="file"/>
+				<available file="${lib.dir}/industrialcraft-2-api.jar" type="file"/>
 			</and>
 		</condition>
 	</target>
@@ -92,32 +91,73 @@
 	<!-- Dependency downloading -->
 
 	<target name="download-core" depends="properties" unless="forge.exists">
-		<echo message="Downloading PowerCrystalsCore... "/>
-		<get src="https://github.com/skyboy/PowerCrystalsCore/archive/master.zip" dest="${download.dir}/PowerCrystalsCore-master.zip"/>
-		
-		<echo message="Extracting PowerCrystalsCore... "/>
-		<unzip src="${download.dir}/PowerCrystalsCore-master.zip" dest="${download.dir}"/>
+		<echo message="Downloading CoFHCore... "/>
+		<get src="https://github.com/CoFH/CoFHCore/archive/master.zip" dest="${download.dir}/CoFHCore.zip"/>
+		<delete dir="CoFHCore-master" failonerror="false"/>
+		<unzip src="${download.dir}/CoFHCore.zip" dest="${download.dir}"/>
 	</target>
 
 	<target name="get-dependencies" unless="have.libs">
-		<parallel>
-			<sequential>
-				<echo message="Downloading CCL..."/>
-				<get src="http://files.minecraftforge.net/maven/codechicken/CodeChickenLib/1.7.2-1.1.0.73/CodeChickenLib-1.7.2-1.1.0.73-dev.jar" dest="${download.dir}/codechickenlib.jar"/>
-			</sequential>
-			<sequential>
-				<echo message="Downloading IC2 API... "/>
-				<get src="http://ic2api.player.to:8080/job/IC2_experimental/lastSuccessfulBuild/artifact/build/libs/industrialcraft-2-2.1.476-experimental-api.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
-			</sequential>
-			<sequential>
-				<echo message="Downloading BuildCraft API..."/>
-				<get src="http://nallar.me/buildservice/job/Buildcraft/lastSuccessfulBuild/artifact/build/libs/buildcraft-6.0.8-api.jar" dest="${download.dir}/Buildcraft.jar"/>
-			</sequential><!--
-			<sequential>
-				<echo message="Downloading Forestry API... "/>
-				<get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.1/forestry-api-2.3.0.1.zip" dest="${download.dir}/ForestryAPI.zip"/>
-			</sequential>-->
-		</parallel>
+		<echo message="Downloading CCL..."/>
+		<get src="http://files.minecraftforge.net/maven/codechicken/CodeChickenLib/1.7.2-1.1.0.73/CodeChickenLib-1.7.2-1.1.0.73-dev.jar" dest="${download.dir}/codechickenlib.jar"/>
+
+		<echo message="Downloading IC2 API... "/>
+		<get src="http://ic2api.player.to:8080/job/IC2_experimental/477/artifact/build/libs/industrialcraft-2-2.1.477-experimental-api.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
+
+		<echo message="Downloading Buildcraft API.. "/>
+		<get src="https://github.com/BuildCraft/BuildCraft/archive/master.zip" dest="${download.dir}/Buildcraft.zip"/>
+		<!-- Begin hack -->
+		<unzip src="${download.dir}/Buildcraft.zip" dest="${download.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<mkdir dir="${compile.dir}"/>
+		<javac srcdir="${download.dir}/BuildCraft-master/api/" destdir="${compile.dir}"
+			target="1.6" source="1.6"
+			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
+			<include name="buildcraft/api/**/*.java"/>
+		</javac>
+		<jar destfile="${download.dir}/Buildcraft.jar" compress="true" level="9" basedir="${compile.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<delete dir="BuildCraft-master"/>
+		<!-- End hack -->
+
+		<echo message="Downloading CoFHLib... "/>
+		<get src="https://github.com/CoFH/CoFHLib/archive/master.zip" dest="${download.dir}/CoFHLib.zip"/>
+		<!-- Begin hack -->
+		<unzip src="${download.dir}/CoFHLib.zip" dest="${download.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<mkdir dir="${compile.dir}"/>
+		<javac srcdir="${download.dir}/CoFHLib-master/src/main/java" destdir="${compile.dir}"
+			target="1.6" source="1.6"
+			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
+			<include name="**/*.java"/>
+		      <classpath>
+				<fileset file="${download.dir}/codechickenlib.jar"/>
+		      </classpath>
+		</javac>
+		<jar destfile="${download.dir}/CoFHLib.jar" compress="true" level="9" basedir="${compile.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<delete dir="CoFHLib-master"/>
+		<!-- End hack -->
+		<echo message="Compiling CoFHCore... "/>
+		<!-- Begin hack -->
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<mkdir dir="${compile.dir}"/>
+		<javac srcdir="${download.dir}/CoFHCore-master/src/main/java" destdir="${compile.dir}"
+			target="1.6" source="1.6"
+			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
+			<include name="**/*.java"/>
+		      <classpath>
+				<fileset file="${download.dir}/codechickenlib.jar"/>
+				<fileset file="${download.dir}/CoFHLib.jar"/>
+		      </classpath>
+		</javac>
+		<jar destfile="${download.dir}/CoFHCore.jar" compress="true" level="9" basedir="${compile.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<!-- End hack -->
+		<!--
+		<echo message="Downloading Forestry API... "/>
+		<get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.1/forestry-api-2.3.0.1.zip" dest="${download.dir}/ForestryAPI.zip"/>
+		-->
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="have.libs">
@@ -126,17 +166,18 @@
 			
 		<echo message="Extracting CCL... "/>
 		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>
+
+		<echo message="Extracting CoFHLib..."/>
+		<copy file="${download.dir}/CoFHLib.jar" todir="${lib.dir}"/>
+		
+		<echo message="Extracting CoFHCore..."/>
+		<copy file="${download.dir}/CoFHCore.jar" todir="${lib.dir}"/>
 		
 		<echo message="Extracting BuildCraft API..."/>
 		<copy file="${download.dir}/Buildcraft.jar" todir="${lib.dir}"/>
 		
 		<echo message="Extracting IC2 API... "/>
 		<copy file="${download.dir}/industrialcraft-2-api.jar" todir="${lib.dir}"/><!--
-		
-		<echo message="Extracting ThermalExpansion API... "/>
-		<unzip src="${download.dir}/cofh-api.zip" dest="${download.dir}"/>
-		<mkdir dir="${sources.dir}/cofh"/>
-		<move file="${download.dir}/CoFHLib-${cofh.commit}/cofh/api" todir="${sources.dir}/cofh"/>
 		
 		<echo message="Extracting Forestry API... "/>
 		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}"/>
@@ -145,17 +186,24 @@
 	
 	<macrodef name="move-transformers"><sequential>
 		
-		<copy file="${download.dir}/PowerCrystalsCore-master/pcc_at.cfg" todir="${transformers.dir}"/>
+		<copy file="${download.dir}/CoFHCore-master/src/main/resources/CoFH_at.cfg" todir="${transformers.dir}"/>
 		
 	</sequential></macrodef>
 	
 	<!-- Building process -->
 	<target name="install" depends="build">
-		<move file="${reobf.jar}" tofile="${dist.dir}/${build.name}-${build.full}${build.number}.jar"/>
+		<move file="${reobf.jar}" tofile="${dist.dir}/${build.name}${build.full}${build.number}.jar"/>
 		
 		<!-- Cleanup -->
 		<delete dir="${apiclasses.dir}"/>
 		<delete dir="${classes.dir}"/>
+		<delete>
+			<fileset dir="${dist.dir}">
+				<exclude name="${build.name}${build.full}${build.number}.jar"/>
+				<exclude name="${build.name}${build.full}dev-${build.number}.jar"/>
+				<exclude name="${build.name}-API${build.full}${build.number}.zip"/>
+			</fileset>
+		</delete>
 	</target>
 
 	<macrodef name="install-lite">
@@ -169,7 +217,7 @@
 				<fileset dir="${resources.dir}"/>
 			</copy>
 			<update-languages/>
-			<jar destfile="${dist.dir}/${build.name}-${build.full}@{build}.jar"
+			<jar destfile="${dist.dir}/${build.name}${build.full}@{build}.jar"
 				compress="true" level="9" basedir="${classes.dir}"/>
 		</sequential>
 	</macrodef>
@@ -192,7 +240,7 @@
 		<install-lite build="${build}"/>
 
 		<!-- Reobf -->
-		<copy file="${dist.dir}/${build.name}-${build.full}${build}.jar" tofile="${reobf.jar}"/>
+		<copy file="${dist.dir}/${build.name}${build.full}${build}.jar" tofile="${reobf.jar}"/>
 		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
 			<arg line="-g ../.gradle"/>
 			<arg line="reobf"/>
@@ -214,7 +262,7 @@
 		<copy todir="${apiclasses.dir}/${class.pckg}/api">
 			<fileset dir="${src.dir}/${class.pckg}/api"/>
 		</copy>
-		<zip destfile="${dist.dir}/${build.name}-API-${build.full}${build.number}.zip" basedir="${apiclasses.dir}"/>
+		<zip destfile="${dist.dir}/${build.name}-API${build.full}${build.number}.zip" basedir="${apiclasses.dir}"/>
 	</target>
 
 	<target name="setup-forge" depends="download-forge" unless="forge.already.installed">
@@ -235,6 +283,7 @@
 		</delete>
 		<delete dir="${forge.dir}/eclipse" failonerror="false"/>
 		<delete dir="${forge.dir}/src/main/java" failonerror="false"/>
+		<delete dir="${build.dir}/.gradle/caches/minecraft/net/minecraftforge/forge/${forge.version}/srgs" failonerror="false"/>
 		
 		<!-- Change executables' permissions -->
 		<chmod file="${forge.dir}/gradlew" perm="+x"/>
@@ -244,7 +293,7 @@
 		<!-- Install forge -->
 		<exec executable="./gradlew" failonerror="true" dir="${forge.dir}/" vmlauncher="false">
 			<arg line="-g ../.gradle"/>
-			<arg line="extractForgeSrc"/>
+			<arg line="extractMinecraftSrc"/>
 			<arg line="eclipseClasspath"/>
 		</exec>
 
@@ -252,12 +301,12 @@
 		<mkdir dir="${lib.dir}"/>
 		<javac srcdir="${forge.dir}/build/tmp/recompSrc" destdir="${compile.dir}" target="1.6" source="1.6"
 			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false"/>
-		<jar destfile="${forge.dir}/build/dirtyArtifacts/forgeSrc-${forge.version}.jar" compress="true"
-			level="9" basedir="${compile.dir}"/>
+		<jar destfile="${forge.jar}" compress="true" level="9" basedir="${compile.dir}"/>
+		<copy file="${forge.jar}" todir="${forgebuild.dir}/dirtyArtifacts/"/>
 		<delete dir="${compile.dir}"/>
 	</target>
 
-	<target name="download-forge" depends="download-core" unless="forge-exists">
+	<target name="download-forge" depends="download-core" unless="forge.exists">
 		<echo message="Downloading forge... "/>
 		<get src="${forge.url}" dest="${download.dir}/forge-${forge.version}-src.zip"/>
 	</target>
@@ -286,11 +335,14 @@
 		</sequential>
 	</macrodef>
 	
-	<target name="verify-version" unless="build.full">
+	<target name="verify-version">
 		<script language="javascript"><![CDATA[
-			var name = project.getProperty("verclass.name");
+			var name = project.getProperty("build.full");
 			if (name == null || name == "") {
-				project.setProperty("build.full", "-");
+				name = project.getProperty("verclass.name");
+				if (name == null || name == "") {
+					project.setProperty("build.full", "-");
+				}
 			}
 		]]></script>
 	</target>
@@ -329,26 +381,34 @@
 			project.setProperty("mfrv", mfrversion);
 			project.setProperty("mcv", mcversion);
 			
+			var c = project.getProperty("build.channel");
+			if (c == null || c == "")
+				project.setProperty("build.channel", mfrversion.indexOf("B") > 0 ? "alpha" : (
+													 mfrversion.indexOf("RC") > 0 ? "beta" : "release"));
+			
 			// open file and parse JSON structure
 			var file = new File(project.getProperty("resources.dir") + "/mcmod.info");
-			var mcmod = new Scanner(file, "UTF-8").useDelimiter("\\Z");
-			var data = new JsonParser().parse(mcmod.next()).getAsJsonArray();
-			mcmod.close();
-			
-			// update all version elements
-			for (var i = 0, e = data.size(); i < e; ++i) {
-				var element = data.get(i).getAsJsonObject();
-				element.addProperty("version", mfrversion);
-				element.addProperty("mcversion", mcversion);
+			if (file.exists())
+			{
+				var mcmod = new Scanner(file, "UTF-8").useDelimiter("\\Z");
+				var data = new JsonParser().parse(mcmod.next()).getAsJsonArray();
+				mcmod.close();
+				
+				// update all version elements
+				for (var i = 0, e = data.size(); i < e; ++i) {
+					var element = data.get(i).getAsJsonObject();
+					element.addProperty("version", mfrversion);
+					element.addProperty("mcversion", mcversion);
+				}
+				
+				// write file back, pretty-printed
+				var output = new JsonWriter(new FileWriter(file));
+				output.setIndent("    ");
+				new Gson().toJson(data, output);
+				output.close();
 			}
-			
-			// write file back, pretty-printed
-			var output = new JsonWriter(new FileWriter(file));
-			output.setIndent("    ");
-			new Gson().toJson(data, output);
-			output.close();
 		]]></script>
-		<echo message="Version: ${mfrv}"/>
+		<echo message="Version: ${mfrv}  Channel: ${build.channel}"/>
 		<property name="build.full" value="-[${mcv}]${mfrv}-"/>
 	</target>
 
