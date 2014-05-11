@@ -2,7 +2,9 @@ package powercrystals.minefactoryreloaded.block;
 
 import powercrystals.minefactoryreloaded.render.IconOverlay;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -13,11 +15,20 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 {
 	private IIcon _iconPane;
-	
+
+	private Block _pane;
 	public BlockVanillaGlassPane()
 	{
 		super(false);
 		setBlockName("thinGlass");
+		_pane = Blocks.glass_pane;
+	}
+	
+	@Override public int hashCode() { return _pane.hashCode(); }
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj == _pane | obj == this;
 	}
 
 	@Override

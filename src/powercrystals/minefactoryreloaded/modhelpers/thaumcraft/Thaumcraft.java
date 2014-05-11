@@ -108,7 +108,7 @@ public class Thaumcraft
 				}
 			});
 			
-			MFRRegistry.registerFruitLogBlockId(tcLog);
+			MFRRegistry.registerFruitLogBlock(tcLog);
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
 			
 			MFRRegistry.registerFertilizable(new FertilizableCocoa((IGrowable)tcPod, FertilizerType.GrowMagicalCrop));

@@ -8,7 +8,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -59,7 +59,7 @@ implements IPowerEmitter, IEnergyConnection
 			
 			boolean skipConsumption = ++_ticksSinceLastConsumption < _ticksBetweenConsumption;
 			
-			if (Util.isRedstonePowered(this))
+			if (CoreUtils.isRedstonePowered(this))
 				return;
 			
 			int pulse = Math.min(_buffer, _outputPulseSize);

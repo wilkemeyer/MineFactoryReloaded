@@ -16,12 +16,21 @@ import net.minecraft.world.World;
 
 public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 {
+	private Block _ice;
 	public BlockVanillaIce()
 	{
 		setHardness(0.5F);
 		setLightOpacity(3);
 		setStepSound(soundTypeGlass);
-		setBlockName("ice");
+		setBlockName("_ice");
+		_ice = Blocks.ice;
+	}
+	
+	@Override public int hashCode() { return _ice.hashCode(); }
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj == _ice | obj == this;
 	}
 	
 	@Override

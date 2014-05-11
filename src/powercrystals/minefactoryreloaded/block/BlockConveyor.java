@@ -60,6 +60,12 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.01F, 0.1F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
+
+	@Override
+	public int getRenderBlockPass()
+	{
+		return 1;
+	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)

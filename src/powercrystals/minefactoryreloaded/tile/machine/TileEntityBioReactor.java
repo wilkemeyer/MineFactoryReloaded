@@ -1,10 +1,10 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import java.util.Map;
-
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Map;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -111,7 +111,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				}
 			}
 			
-			if (Util.isRedstonePowered(this))
+			if (CoreUtils.isRedstonePowered(this))
 				return;
 			
 			int newBurn = getOutputValue();

@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -122,7 +122,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 			return;
 		}
 		
-		boolean redstoneState = Util.isRedstonePowered(this);
+		boolean redstoneState = CoreUtils.isRedstonePowered(this);
 		if(redstoneState && !_lastRedstoneState)
 		{
 			stopRecord();

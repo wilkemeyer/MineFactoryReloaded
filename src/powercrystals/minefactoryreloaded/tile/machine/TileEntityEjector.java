@@ -4,7 +4,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.pcc.inventory.IInventoryManager;
 import cofh.pcc.inventory.InventoryManager;
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -78,7 +78,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		{
 			return;
 		}
-		boolean redstoneState = Util.isRedstonePowered(this);
+		boolean redstoneState = CoreUtils.isRedstonePowered(this);
 		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems)))
 		{
 			inv:

@@ -357,7 +357,7 @@ public class MineFactoryReloadedClient
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if(player.inventory.getCurrentItem() == null ||
-				player.inventory.getCurrentItem().getItem().equals(MineFactoryReloadedCore.factoryHammerItem))
+				!player.inventory.getCurrentItem().getItem().equals(MineFactoryReloadedCore.factoryHammerItem))
 		{
 			return;
 		}

@@ -24,7 +24,7 @@ public class EntityRocketRenderer extends Render
 		try
 		{
 			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					"/powercrystals/minefactoryreloaded/models/Rocket.obj"));
+					MineFactoryReloadedCore.modelFolder + "Rocket.obj"));
 		}
 		catch(Exception e)
 		{

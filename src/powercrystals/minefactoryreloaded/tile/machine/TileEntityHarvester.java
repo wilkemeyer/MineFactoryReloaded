@@ -82,7 +82,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		onFactoryInventoryChanged();
 		if (!worldObj.isRemote)
 		{
-			if (_treeManager != null || _areaManager.getHarvestArea().contains(_treeManager.getOrigin()))
+			if (_treeManager != null && _areaManager.getHarvestArea().contains(_treeManager.getOrigin()))
 			{
 				_treeManager.setWorld(worldObj);
 			}
@@ -285,17 +285,18 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		while (!_treeManager.getIsDone())
 		{
 			BlockPosition bp = _treeManager.getNextBlock();
+			_treeManager.moveNext();
 			block = worldObj.getBlock(bp.x, bp.y, bp.z);
 			
 			if (harvestables.containsKey(block))
 			{
 				IFactoryHarvestable obj = harvestables.get(block);
 				HarvestType t = obj.getHarvestType();
-				if (t == HarvestType.Tree | t == HarvestType.TreeFlipped | t == HarvestType.TreeLeaf)
+				if (t == HarvestType.Tree | t == HarvestType.TreeFlipped |
+						t == HarvestType.TreeLeaf | t == HarvestType.TreeFruit)
 					if (obj.canBeHarvested(worldObj, _immutableSettings, bp.x, bp.y, bp.z))
 						return bp;
 			}
-			_treeManager.moveNext();
 		}
 		return null;
 	}

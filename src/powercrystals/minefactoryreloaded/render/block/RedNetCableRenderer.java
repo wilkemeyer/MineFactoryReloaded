@@ -44,7 +44,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	static {
 		try {
 			Map<String, CCModel> cableModels = CCModel.parseObjModels(MineFactoryReloadedCore.class.
-					getResourceAsStream(MineFactoryReloadedCore.modelFolder + "RedNetCable.obj"),
+					getResourceAsStream("/powercrystals/minefactoryreloaded/models/RedNetCable.obj"),
 					7, new Scale(1/16f));
 			Vector3 p = new Vector3(0, 0, 0);
 			base = cableModels.get("base").backfacedCopy();
@@ -106,16 +106,16 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 
 		GL11.glTranslatef(-.5f, -.5f, -.5f);
 		tess.startDrawingQuads();
-		base.render(null, uvt);
-		cable[2].render(null, uvt);
-		cable[3].render(null, uvt);
+		base.render(uvt);
+		cable[2].render(uvt);
+		cable[3].render(uvt);
 		if (metadata == 3 | metadata == 2)
 		{
-			cage.render(null, uvt);
-			wire[2].render(null, uvt);
-			wire[3].render(null, uvt);
-			caps[2].render(null, uvt);
-			caps[3].render(null, uvt);
+			cage.render(uvt);
+			wire[2].render(uvt);
+			wire[3].render(uvt);
+			caps[2].render(uvt);
+			caps[3].render(uvt);
 		}
 		tess.draw();
 	}

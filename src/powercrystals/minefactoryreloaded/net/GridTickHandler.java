@@ -2,8 +2,7 @@ package powercrystals.minefactoryreloaded.net;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -64,10 +63,9 @@ public class GridTickHandler
 	}
 
 	@SubscribeEvent
-	public void tick(WorldTickEvent evt)
+	public void tick(ServerTickEvent evt)
 	{
-		if (evt.side == Side.CLIENT)
-			return;
+		// TODO: this needs split up into groups per-world when worlds are threaded
 		if (evt.phase == Phase.START)
 			tickStart();
 		else

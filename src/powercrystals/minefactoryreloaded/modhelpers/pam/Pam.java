@@ -291,7 +291,7 @@ public class Pam
 			Block fruit = ( Block ) Class.forName( "assets.pamharvestcraft.PamHarvestCraft" ).getField( "pamCinnamon" ).get( null );
 			Item cinnamon = ( Item ) Class.forName( "assets.pamharvestcraft.PamHarvestCraft" ).getField( "cinnamonItem" ).get( null );
 			MFRRegistry.registerFruit( new PamFruitCinnamon( fruit, cinnamon ) );
-			MFRRegistry.registerFruitLogBlockId( fruit );
+			MFRRegistry.registerFruitLogBlock( fruit );
 		}
 		catch ( Exception x )
 		{

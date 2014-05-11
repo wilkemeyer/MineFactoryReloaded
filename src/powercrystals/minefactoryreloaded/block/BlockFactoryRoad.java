@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -71,7 +71,7 @@ public class BlockFactoryRoad extends Block
 		if(!world.isRemote)
 		{
 			int meta = world.getBlockMetadata(x, y, z);
-			boolean isPowered = Util.isRedstonePowered(world, x, y, z);
+			boolean isPowered = CoreUtils.isRedstonePowered(world, x, y, z);
 			int newMeta = -1;
 
 			if(meta == 1 && isPowered)

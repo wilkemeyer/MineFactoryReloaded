@@ -71,7 +71,7 @@ public class IC2
 			if(rubberWood != null)
 			{
 				MFRRegistry.registerHarvestable(new HarvestableIC2RubberWood(Block.getBlockFromItem(rubberWood.getItem()), stickyResin.getItem()));
-				MFRRegistry.registerFruitLogBlockId(Block.getBlockFromItem(rubberWood.getItem()));
+				MFRRegistry.registerFruitLogBlock(Block.getBlockFromItem(rubberWood.getItem()));
 				MFRRegistry.registerFruit(new FruitIC2Resin(rubberWood, stickyResin));
 			}
 

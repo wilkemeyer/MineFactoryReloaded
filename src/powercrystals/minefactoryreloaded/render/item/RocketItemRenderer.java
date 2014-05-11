@@ -13,6 +13,7 @@ import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 
 @SideOnly(Side.CLIENT)
@@ -25,7 +26,7 @@ public class RocketItemRenderer implements IItemRenderer
 		try
 		{
 			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					"/powercrystals/minefactoryreloaded/models/Rocket.obj"));
+					MineFactoryReloadedCore.modelFolder + "Rocket.obj"));
 		}
 		catch(Exception e)
 		{

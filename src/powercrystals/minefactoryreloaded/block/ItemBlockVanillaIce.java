@@ -4,17 +4,27 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 public class ItemBlockVanillaIce extends ItemBlock
 {
-	public ItemBlockVanillaIce(net.minecraft.block.Block blockId)
+	private Item _ice;
+	public ItemBlockVanillaIce(net.minecraft.block.Block blockId, Item ice)
 	{
 		super(blockId);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 		setUnlocalizedName("ice");
+		_ice = ice;
+	}
+	
+	@Override public int hashCode() { return _ice.hashCode(); }
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj == _ice | obj == this;
 	}
 	
 	@Override

@@ -136,8 +136,8 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 
 		int worldHeight = blockAccess.getHeight();
 		int metadata = blockAccess.getBlockMetadata(x, y, z);
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.setBrightness(tile.getMixedBrightnessForBlock(blockAccess, x, y, z));
+		Tessellator tess = Tessellator.instance;
+		tess.setBrightness(tile.getMixedBrightnessForBlock(blockAccess, x, y, z));
 		int color = block.getRenderColor(metadata);
 		float red = (color >> 16 & 255) / 255.0F;
 		float green = (color >> 8 & 255) / 255.0F;
@@ -213,11 +213,13 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 
 		double vertSideZOffset = 0.001D;
 		double vertSideXOffset = 0.002D;
+		
+		double offset = 1 / 16f; 
 
-		double negSideZOffset = xMid - 0.0625D;
-		double posSideZOffset = xMid + 0.0625D;
-		double negSideXOffset = zMid - 0.0625D;
-		double posSideXOffset = zMid + 0.0625D;
+		double negSideZOffset = xMid - offset;
+		double posSideZOffset = xMid + offset;
+		double negSideXOffset = zMid - offset;
+		double posSideXOffset = zMid + offset;
 
 		boolean connectedNegZ = block.canPaneConnectTo(blockAccess, x, y, z - 1, ForgeDirection.NORTH);
 		boolean connectedPosZ = block.canPaneConnectTo(blockAccess, x, y, z + 1, ForgeDirection.SOUTH);
@@ -231,137 +233,113 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 		{
 			if (connectedNegX && !connectedPosX)
 			{
-				tessellator.setColorOpaque_F(red, green, blue);
-				tessellator.addVertexWithUV(xMin, yMax, zMid, minXGlass, minYGlass);
-				tessellator.addVertexWithUV(xMin, yMin, zMid, minXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXGlass, minYGlass);
+				tess.setColorOpaque_F(red, green, blue);
+				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, 0, offset);
+				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, 0, -offset);
 
-				tessellator.setColorOpaque_F(1, 1, 1);
-				tessellator.addVertexWithUV(xMin, yMax, zMid, minXStreaks, minYStreaks);
-				tessellator.addVertexWithUV(xMin, yMin, zMid, minXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXStreaks, minYStreaks);
-
-				tessellator.addVertexWithUV(xMin, yMax, zMid, minXSouth, minYSouth);
-				tessellator.addVertexWithUV(xMin, yMin, zMid, minXSouth, maxYSouth);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXSouth, maxYSouth);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXSouth, minYSouth);
+				tess.setColorOpaque_F(1, 1, 1);
+				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, 0, offset);
+				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, 0, -offset);
+				
+				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXSouth, minYSouth, midXSouth, maxYSouth, 0, offset);
+				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXSouth, minYSouth, midXSouth, maxYSouth, 0, -offset);
 
 				if (!connectedPosZ && !connectedNegZ)
 				{
-					tessellator.addVertexWithUV(xMid, yMax, posSideXOffset, minXSide, minYSide);
-					tessellator.addVertexWithUV(xMid, yMin, posSideXOffset, minXSide, maxYSide);
-					tessellator.addVertexWithUV(xMid, yMin, negSideXOffset, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(xMid, yMax, negSideXOffset, maxXSide, minYSide); 
+					tess.addVertexWithUV(xMid, yMax, posSideXOffset, minXSide, minYSide);
+					tess.addVertexWithUV(xMid, yMin, posSideXOffset, minXSide, maxYSide);
+					tess.addVertexWithUV(xMid, yMin, negSideXOffset, maxXSide, maxYSide);
+					tess.addVertexWithUV(xMid, yMax, negSideXOffset, maxXSide, minYSide); 
 				}
 
 				if (renderTop)
 				{
-					tessellator.addVertexWithUV(xMin, yMax + vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tessellator.addVertexWithUV(xMid, yMax + vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(xMid, yMax + vertSideXOffset, negSideXOffset, minXSide, maxYSide);
-					tessellator.addVertexWithUV(xMin, yMax + vertSideXOffset, negSideXOffset, minXSide, midYSide);
+					tess.addVertexWithUV(xMin, yMax + vertSideXOffset, posSideXOffset, maxXSide, midYSide);
+					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
+					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, negSideXOffset, minXSide, maxYSide);
+					tess.addVertexWithUV(xMin, yMax + vertSideXOffset, negSideXOffset, minXSide, midYSide);
 				}
 
 				if (renderBottom)
 				{
-					tessellator.addVertexWithUV(xMin, yMin - vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tessellator.addVertexWithUV(xMid, yMin - vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(xMid, yMin - vertSideXOffset, negSideXOffset, minXSide, maxYSide);
-					tessellator.addVertexWithUV(xMin, yMin - vertSideXOffset, negSideXOffset, minXSide, midYSide);
+					tess.addVertexWithUV(xMin, yMin - vertSideXOffset, posSideXOffset, maxXSide, midYSide);
+					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
+					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, negSideXOffset, minXSide, maxYSide);
+					tess.addVertexWithUV(xMin, yMin - vertSideXOffset, negSideXOffset, minXSide, midYSide);
 				}
 			}
 			else if (!connectedNegX && connectedPosX)
 			{
-				tessellator.setColorOpaque_F(red, green, blue);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXGlass, minYGlass);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMax, yMin, zMid, maxXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMax, yMax, zMid, maxXGlass, minYGlass);
+				tess.setColorOpaque_F(red, green, blue);
+				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXGlass, minYGlass, maxXGlass, maxYGlass, 0, offset);
+				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXGlass, minYGlass, maxXGlass, maxYGlass, 0, -offset);
 
-				tessellator.setColorOpaque_F(1, 1, 1);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXStreaks, minYStreaks);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMax, yMin, zMid, maxXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMax, yMax, zMid, maxXStreaks, minYStreaks);
-
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXSouth, minYSouth);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXSouth, maxYSouth);
-				tessellator.addVertexWithUV(xMax, yMin, zMid, maxXSouth, maxYSouth);
-				tessellator.addVertexWithUV(xMax, yMax, zMid, maxXSouth, minYSouth);
+				tess.setColorOpaque_F(1, 1, 1);
+				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, offset);
+				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, -offset);
+				
+				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXSouth, minYSouth, maxXSouth, maxYSouth, 0, offset);
+				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXSouth, minYSouth, maxXSouth, maxYSouth, 0, -offset);
 
 				if (!connectedPosZ && !connectedNegZ)
 				{
-					tessellator.addVertexWithUV(xMid, yMax, negSideXOffset, minXSide, minYSide);
-					tessellator.addVertexWithUV(xMid, yMin, negSideXOffset, minXSide, maxYSide);
-					tessellator.addVertexWithUV(xMid, yMin, posSideXOffset, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(xMid, yMax, posSideXOffset, maxXSide, minYSide);
+					tess.addVertexWithUV(xMid, yMax, negSideXOffset, minXSide, minYSide);
+					tess.addVertexWithUV(xMid, yMin, negSideXOffset, minXSide, maxYSide);
+					tess.addVertexWithUV(xMid, yMin, posSideXOffset, maxXSide, maxYSide);
+					tess.addVertexWithUV(xMid, yMax, posSideXOffset, maxXSide, minYSide);
 				}
 
 				if (renderTop)
 				{
-					tessellator.addVertexWithUV(xMid, yMax + vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-					tessellator.addVertexWithUV(xMax, yMax + vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tessellator.addVertexWithUV(xMax, yMax + vertSideXOffset, negSideXOffset, minXSide, midYSide);
-					tessellator.addVertexWithUV(xMid, yMax + vertSideXOffset, negSideXOffset, minXSide, minYSide);
+					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, posSideXOffset, maxXSide, minYSide);
+					tess.addVertexWithUV(xMax, yMax + vertSideXOffset, posSideXOffset, maxXSide, midYSide);
+					tess.addVertexWithUV(xMax, yMax + vertSideXOffset, negSideXOffset, minXSide, midYSide);
+					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, negSideXOffset, minXSide, minYSide);
 				}
 
 				if (renderBottom)
 				{
-					tessellator.addVertexWithUV(xMid, yMin - vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-					tessellator.addVertexWithUV(xMax, yMin - vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tessellator.addVertexWithUV(xMax, yMin - vertSideXOffset, negSideXOffset, minXSide, midYSide);
-					tessellator.addVertexWithUV(xMid, yMin - vertSideXOffset, negSideXOffset, minXSide, minYSide);
+					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, posSideXOffset, maxXSide, minYSide);
+					tess.addVertexWithUV(xMax, yMin - vertSideXOffset, posSideXOffset, maxXSide, midYSide);
+					tess.addVertexWithUV(xMax, yMin - vertSideXOffset, negSideXOffset, minXSide, midYSide);
+					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, negSideXOffset, minXSide, minYSide);
 				}
 			}
 		}
 		else
 		{
-			tessellator.setColorOpaque_F(red, green, blue);
-			tessellator.addVertexWithUV(xMin, yMax, zMid, minXGlass, minYGlass);
-			tessellator.addVertexWithUV(xMin, yMin, zMid, minXGlass, maxYGlass);
-			tessellator.addVertexWithUV(xMax, yMin, zMid, maxXGlass, maxYGlass);
-			tessellator.addVertexWithUV(xMax, yMax, zMid, maxXGlass, minYGlass);
+			tess.setColorOpaque_F(red, green, blue);
+			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXGlass, minYGlass, maxXGlass, maxYGlass, 0, offset);
+			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXGlass, minYGlass, maxXGlass, maxYGlass, 0, -offset);
 
-			tessellator.setColorOpaque_F(1, 1, 1);
-			tessellator.addVertexWithUV(xMin, yMax, zMid, minXStreaks, minYStreaks);
-			tessellator.addVertexWithUV(xMin, yMin, zMid, minXStreaks, maxYStreaks);
-			tessellator.addVertexWithUV(xMax, yMin, zMid, maxXStreaks, maxYStreaks);
-			tessellator.addVertexWithUV(xMax, yMax, zMid, maxXStreaks, minYStreaks);
-
-			tessellator.addVertexWithUV(xMin, yMax, zMid, minXSouth, minYSouth);
-			tessellator.addVertexWithUV(xMin, yMin, zMid, minXSouth, maxYSouth);
-			tessellator.addVertexWithUV(xMax, yMin, zMid, maxXSouth, maxYSouth);
-			tessellator.addVertexWithUV(xMax, yMax, zMid, maxXSouth, minYSouth);
+			tess.setColorOpaque_F(1, 1, 1);
+			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, offset);
+			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, -offset);
+			
+			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXSouth, minYSouth, maxXSouth, maxYSouth, 0, offset);
+			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXSouth, minYSouth, maxXSouth, maxYSouth, 0, -offset);
 
 			if (!connectedPosX && !connectedNegX)
 			{
-				tessellator.addVertexWithUV(xMin, yMax, negSideXOffset, minXSide, minYSide);
-				tessellator.addVertexWithUV(xMin, yMin, negSideXOffset, minXSide, maxYSide);
-				tessellator.addVertexWithUV(xMin, yMin, posSideXOffset, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(xMin, yMax, posSideXOffset, maxXSide, minYSide);
-
-				tessellator.addVertexWithUV(xMax, yMax, negSideXOffset, minXSide, minYSide);
-				tessellator.addVertexWithUV(xMax, yMin, negSideXOffset, minXSide, maxYSide);
-				tessellator.addVertexWithUV(xMax, yMin, posSideXOffset, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(xMax, yMax, posSideXOffset, maxXSide, minYSide);
+				drawBox(tess, xMin, yMin, negSideXOffset, xMin, yMax, posSideXOffset, minXSide, minYSide, maxXSide, maxYSide, 0, 0);
+				
+				drawBox(tess, xMax, yMin, negSideXOffset, xMax, yMax, posSideXOffset, minXSide, minYSide, maxXSide, maxYSide, 0, 0, true);
 			}
 
 			if (renderTop)
 			{
-				tessellator.addVertexWithUV(xMin, yMax + vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(xMax, yMax + vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-				tessellator.addVertexWithUV(xMax, yMax + vertSideXOffset, negSideXOffset, minXSide, minYSide);
-				tessellator.addVertexWithUV(xMin, yMax + vertSideXOffset, negSideXOffset, minXSide, maxYSide);
+				tess.addVertexWithUV(xMin, yMax + vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
+				tess.addVertexWithUV(xMax, yMax + vertSideXOffset, posSideXOffset, maxXSide, minYSide);
+				tess.addVertexWithUV(xMax, yMax + vertSideXOffset, negSideXOffset, minXSide, minYSide);
+				tess.addVertexWithUV(xMin, yMax + vertSideXOffset, negSideXOffset, minXSide, maxYSide);
 			}
 
 			if (renderBottom)
 			{
-				tessellator.addVertexWithUV(xMin, yMin - vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(xMax, yMin - vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-				tessellator.addVertexWithUV(xMax, yMin - vertSideXOffset, negSideXOffset, minXSide, minYSide);
-				tessellator.addVertexWithUV(xMin, yMin - vertSideXOffset, negSideXOffset, minXSide, maxYSide);
+				tess.addVertexWithUV(xMin, yMin - vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
+				tess.addVertexWithUV(xMax, yMin - vertSideXOffset, posSideXOffset, maxXSide, minYSide);
+				tess.addVertexWithUV(xMax, yMin - vertSideXOffset, negSideXOffset, minXSide, minYSide);
+				tess.addVertexWithUV(xMin, yMin - vertSideXOffset, negSideXOffset, minXSide, maxYSide);
 			}
 		}
 
@@ -369,141 +347,149 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 		{
 			if (connectedNegZ && !connectedPosZ)
 			{
-				tessellator.setColorOpaque_F(red, green, blue);
-				tessellator.addVertexWithUV(xMid, yMax, zMin, minXGlass, minYGlass);
-				tessellator.addVertexWithUV(xMid, yMin, zMin, minXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXGlass, minYGlass);
+				tess.setColorOpaque_F(red, green, blue);
+				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, offset, 0);
+				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, -offset, 0);
 
-				tessellator.setColorOpaque_F(1, 1, 1);
-				tessellator.addVertexWithUV(xMid, yMax, zMin, minXStreaks, minYStreaks);
-				tessellator.addVertexWithUV(xMid, yMin, zMin, minXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXStreaks, minYStreaks);
-
-				tessellator.addVertexWithUV(xMid, yMax, zMin, minXWest, minYWest);
-				tessellator.addVertexWithUV(xMid, yMin, zMin, minXWest, maxYWest);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXWest, maxYWest);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXWest, minYWest);
+				tess.setColorOpaque_F(1, 1, 1);
+				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, offset, 0);
+				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, -offset, 0);
+				
+				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXWest, minYWest, midXWest, maxYWest, offset, 0);
+				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXWest, minYWest, midXWest, maxYWest, -offset, 0);
 
 				if (!connectedPosX && !connectedNegX)
 				{
-					tessellator.addVertexWithUV(negSideZOffset, yMax, zMid, minXSide, minYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMin, zMid, minXSide, maxYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMin, zMid, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMax, zMid, maxXSide, minYSide);
+					tess.addVertexWithUV(negSideZOffset, yMax, zMid, minXSide, minYSide);
+					tess.addVertexWithUV(negSideZOffset, yMin, zMid, minXSide, maxYSide);
+					tess.addVertexWithUV(posSideZOffset, yMin, zMid, maxXSide, maxYSide);
+					tess.addVertexWithUV(posSideZOffset, yMax, zMid, maxXSide, minYSide);
 				}
 
 				if (renderTop)
 				{
-					tessellator.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMin, maxXSide, minYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMid, maxXSide, midYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMid, minXSide, midYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMin, minXSide, minYSide);
+					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMin, maxXSide, minYSide);
+					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMid, maxXSide, midYSide);
+					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMid, minXSide, midYSide);
+					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMin, minXSide, minYSide);
 				}
 
 				if (renderBottom)
 				{
-					tessellator.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMin, maxXSide, minYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMid, maxXSide, midYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMid, minXSide, midYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMin, minXSide, minYSide);
+					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMin, maxXSide, minYSide);
+					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMid, maxXSide, midYSide);
+					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMid, minXSide, midYSide);
+					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMin, minXSide, minYSide);
 				}
 			}
 			else if (!connectedNegZ && connectedPosZ)
 			{
-				tessellator.setColorOpaque_F(red, green, blue);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXGlass, minYGlass);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMid, yMin, zMax, maxXGlass, maxYGlass);
-				tessellator.addVertexWithUV(xMid, yMax, zMax, maxXGlass, minYGlass);
+				tess.setColorOpaque_F(red, green, blue);
+				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXGlass, minYGlass, maxXGlass, maxYGlass, offset, 0);
+				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXGlass, minYGlass, maxXGlass, maxYGlass, -offset, 0);
 
-				tessellator.setColorOpaque_F(1, 1, 1);
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXStreaks, minYStreaks);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMid, yMin, zMax, maxXStreaks, maxYStreaks);
-				tessellator.addVertexWithUV(xMid, yMax, zMax, maxXStreaks, minYStreaks);
-
-				tessellator.addVertexWithUV(xMid, yMax, zMid, midXWest, minYWest);
-				tessellator.addVertexWithUV(xMid, yMin, zMid, midXWest, maxYWest);
-				tessellator.addVertexWithUV(xMid, yMin, zMax, maxXWest, maxYWest);
-				tessellator.addVertexWithUV(xMid, yMax, zMax, maxXWest, minYWest);
+				tess.setColorOpaque_F(1, 1, 1);
+				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, offset, 0);
+				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, -offset, 0);
+				
+				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXWest, minYWest, maxXWest, maxYWest, offset, 0);
+				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXWest, minYWest, maxXWest, maxYWest, -offset, 0);
 
 				if (!connectedPosX && !connectedNegX)
 				{
-					tessellator.addVertexWithUV(posSideZOffset, yMax, zMid, minXSide, minYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMin, zMid, minXSide, maxYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMin, zMid, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMax, zMid, maxXSide, minYSide);
+					tess.addVertexWithUV(posSideZOffset, yMax, zMid, minXSide, minYSide);
+					tess.addVertexWithUV(posSideZOffset, yMin, zMid, minXSide, maxYSide);
+					tess.addVertexWithUV(negSideZOffset, yMin, zMid, maxXSide, maxYSide);
+					tess.addVertexWithUV(negSideZOffset, yMax, zMid, maxXSide, minYSide);
 				}
 
 				if (renderTop)
 				{
-					tessellator.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMid, minXSide, midYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMax, minXSide, maxYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMax, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMid, maxXSide, midYSide);
+					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMid, minXSide, midYSide);
+					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMax, minXSide, maxYSide);
+					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMax, maxXSide, maxYSide);
+					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMid, maxXSide, midYSide);
 				}
 
 				if (renderBottom)
 				{
-					tessellator.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMid, minXSide, midYSide);
-					tessellator.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMax, minXSide, maxYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMax, maxXSide, maxYSide);
-					tessellator.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMid, maxXSide, midYSide);
+					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMid, minXSide, midYSide);
+					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMax, minXSide, maxYSide);
+					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMax, maxXSide, maxYSide);
+					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMid, maxXSide, midYSide);
 				}
 			}
 		}
 		else
 		{
-			tessellator.setColorOpaque_F(red, green, blue);
-			tessellator.addVertexWithUV(xMid, yMax, zMin, minXGlass, minYGlass);
-			tessellator.addVertexWithUV(xMid, yMin, zMin, minXGlass, maxYGlass);
-			tessellator.addVertexWithUV(xMid, yMin, zMax, maxXGlass, maxYGlass);
-			tessellator.addVertexWithUV(xMid, yMax, zMax, maxXGlass, minYGlass);
+			tess.setColorOpaque_F(red, green, blue);
+			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXGlass, minYGlass, maxXGlass, maxYGlass, offset, 0);
+			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXGlass, minYGlass, maxXGlass, maxYGlass, -offset, 0);
 
-			tessellator.setColorOpaque_F(1, 1, 1);
-			tessellator.addVertexWithUV(xMid, yMax, zMin, minXStreaks, minYStreaks);
-			tessellator.addVertexWithUV(xMid, yMin, zMin, minXStreaks, maxYStreaks);
-			tessellator.addVertexWithUV(xMid, yMin, zMax, maxXStreaks, maxYStreaks);
-			tessellator.addVertexWithUV(xMid, yMax, zMax, maxXStreaks, minYStreaks);
-
-			tessellator.addVertexWithUV(xMid, yMax, zMin, minXWest, minYWest);
-			tessellator.addVertexWithUV(xMid, yMin, zMin, minXWest, maxYWest);
-			tessellator.addVertexWithUV(xMid, yMin, zMax, maxXWest, maxYWest);
-			tessellator.addVertexWithUV(xMid, yMax, zMax, maxXWest, minYWest);
+			tess.setColorOpaque_F(1, 1, 1);
+			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, offset, 0);
+			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, -offset, 0);
+			
+			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXWest, minYWest, maxXWest, maxYWest, offset, 0);
+			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXWest, minYWest, maxXWest, maxYWest, -offset, 0);
 
 			if (!connectedPosZ && !connectedNegZ)
 			{
-				tessellator.addVertexWithUV(negSideZOffset, yMax, zMin, minXSide, minYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMin, zMin, minXSide, maxYSide);
-				tessellator.addVertexWithUV(posSideZOffset, yMin, zMin, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(posSideZOffset, yMax, zMin, maxXSide, minYSide);
-
-				tessellator.addVertexWithUV(posSideZOffset, yMax, zMax, minXSide, minYSide);
-				tessellator.addVertexWithUV(posSideZOffset, yMin, zMax, minXSide, maxYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMin, zMax, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMax, zMax, maxXSide, minYSide);
+				drawBox(tess, negSideZOffset, yMin, zMin, posSideZOffset, yMax, zMin, minXSide, minYSide, maxXSide, maxYSide, 0, 0);
+				
+				drawBox(tess, negSideZOffset, yMin, zMax, posSideZOffset, yMax, zMax, minXSide, minYSide, maxXSide, maxYSide, 0, 0, true);
 			}
 
 			if (renderTop)
 			{
-				tessellator.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMax, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMin, maxXSide, minYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMin, minXSide, minYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMax, minXSide, maxYSide);
+				tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMax, maxXSide, maxYSide);
+				tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMin, maxXSide, minYSide);
+				tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMin, minXSide, minYSide);
+				tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMax, minXSide, maxYSide);
 			}
 			// TODO: fix slightly awkward rendering when pane on top/bottom doesn't connect on both sides
 			if (renderBottom)
 			{
-				tessellator.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMax, maxXSide, maxYSide);
-				tessellator.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMin, maxXSide, minYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMin, minXSide, minYSide);
-				tessellator.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMax, minXSide, maxYSide);
+				tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMax, maxXSide, maxYSide);
+				tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMin, maxXSide, minYSide);
+				tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMin, minXSide, minYSide);
+				tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMax, minXSide, maxYSide);
 			}
 		}
 
 		return true;
+	}
+
+	private void drawBox(Tessellator t, double xMin, double yMin, double zMin,
+													double xMax, double yMax, double zMax,
+													double uMin, double vMin,
+													double uMax, double vMax,
+													double xOff, double zOff)
+	{
+		drawBox(t, xMin, yMin, zMin, xMax, yMax, zMax, uMin, vMin, uMax, uMax, xOff, zOff, (xOff > 0) | zOff < 0);
+	}
+	
+	private void drawBox(Tessellator t, double xMin, double yMin, double zMin,
+													double xMax, double yMax, double zMax,
+													double uMin, double vMin,
+													double uMax, double vMax,
+													double xOff, double zOff,
+													boolean backwards)
+	{
+		if (!backwards)
+		{
+			t.addVertexWithUV(xMin + xOff, yMax, zMin + zOff, uMin, vMin);
+			t.addVertexWithUV(xMin + xOff, yMin, zMin + zOff, uMin, vMax);
+			t.addVertexWithUV(xMax + xOff, yMin, zMax + zOff, uMax, vMax);
+			t.addVertexWithUV(xMax + xOff, yMax, zMax + zOff, uMax, vMin);
+		}
+		else
+		{
+			t.addVertexWithUV(xMin + xOff, yMin, zMin + zOff, uMin, vMin);
+			t.addVertexWithUV(xMin + xOff, yMax, zMin + zOff, uMin, vMax);
+			t.addVertexWithUV(xMax + xOff, yMax, zMax + zOff, uMax, vMax);
+			t.addVertexWithUV(xMax + xOff, yMin, zMax + zOff, uMax, vMin);
+		}
 	}
 
 	@Override

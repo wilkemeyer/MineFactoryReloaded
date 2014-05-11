@@ -262,12 +262,12 @@ public abstract class MFRRegistry
 		return _laserOres;
 	}
 
-	public static void registerFruitLogBlockId(Block fruitLogBlock)
+	public static void registerFruitLogBlock(Block fruitLogBlock)
 	{
 		_fruitLogBlocks.add(fruitLogBlock);
 	}
 
-	public static List<Block> getFruitLogBlockIds()
+	public static List<Block> getFruitLogBlocks()
 	{
 		return _fruitLogBlocks;
 	}

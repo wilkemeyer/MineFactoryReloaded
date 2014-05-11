@@ -78,6 +78,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					++c;
 			if (c > 1)
 				_grid.regenerate();
+			deadCache = true;
+			_grid = null;
 		}
 	}
 

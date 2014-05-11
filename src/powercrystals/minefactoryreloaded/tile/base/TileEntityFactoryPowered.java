@@ -7,7 +7,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 
 import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -16,8 +16,8 @@ import ic2.api.energy.tile.IEnergySink;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -123,7 +123,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			return;
 		}
 		
-		if(Util.isRedstonePowered(this))
+		if(CoreUtils.isRedstonePowered(this))
 		{
 			setIdleTicks(getIdleTicksMax());
 		}

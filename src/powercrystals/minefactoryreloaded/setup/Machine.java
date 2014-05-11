@@ -79,27 +79,27 @@ public class Machine
 	private static Map<Integer, Machine> _machineMappings = new HashMap<Integer, Machine>();
 	private static Map<Integer, Integer> _highestMetas = new HashMap<Integer, Integer>();
 	
-	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, "factoryPlanter", 160, 8000);
-	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, "factoryFisher", 20, 16000);
-	public static Machine Harvester = new Machine(0, 2, "Harvester", TileEntityHarvester.class, "factoryHarvester", 240, 16000);
-	public static Machine Rancher = new Machine(0, 3, "Rancher", TileEntityRancher.class, "factoryRancher", 320, 32000);
-	public static Machine Fertilizer = new Machine(0, 4, "Fertilizer", TileEntityFertilizer.class, "factoryFertilizer", 960, 32000);
-	public static Machine Vet = new Machine(0, 5, "Vet", TileEntityVet.class, "factoryVet", 320, 32000);
-	public static Machine ItemCollector = new Machine(0, 6, "ItemCollector", TileEntityCollector.class, "factoryItemCollector");
-	public static Machine BlockBreaker = new Machine(0, 7, "BlockBreaker", TileEntityBlockBreaker.class, "factoryBlockBreaker", 960, 64000);
-	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, "factoryWeather", 10, 16000);
-	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, "factorySludgeBoiler", 20, 16000);
-	public static Machine Sewer = new Machine(0, 10, "Sewer", TileEntitySewer.class, "factorySewer");
-	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, "factoryComposter", 20, 16000);
-	public static Machine Breeder = new Machine(0, 12, "Breeder", TileEntityBreeder.class, "factoryBreeder", 640, 16000);
-	public static Machine Grinder = new Machine(0, 13, "Grinder", TileEntityGrinder.class, "factoryGrinder", 3200, 32000);
-	public static Machine AutoEnchanter = new Machine(0, 14, "AutoEnchanter", TileEntityAutoEnchanter.class, "factoryEnchanter", 160, 16000);
-	public static Machine Chronotyper = new Machine(0, 15, "Chronotyper", TileEntityChronotyper.class, "factoryChronotyper", 1280, 16000);
+	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, 160, 8000);
+	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, 20, 16000);
+	public static Machine Harvester = new Machine(0, 2, "Harvester", TileEntityHarvester.class, 240, 16000);
+	public static Machine Rancher = new Machine(0, 3, "Rancher", TileEntityRancher.class, 320, 32000);
+	public static Machine Fertilizer = new Machine(0, 4, "Fertilizer", TileEntityFertilizer.class, 960, 32000);
+	public static Machine Vet = new Machine(0, 5, "Vet", TileEntityVet.class, 320, 32000);
+	public static Machine ItemCollector = new Machine(0, 6, "ItemCollector", TileEntityCollector.class);
+	public static Machine BlockBreaker = new Machine(0, 7, "BlockBreaker", TileEntityBlockBreaker.class, 960, 64000);
+	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, 10, 16000);
+	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, 20, 16000);
+	public static Machine Sewer = new Machine(0, 10, "Sewer", TileEntitySewer.class);
+	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, 20, 16000);
+	public static Machine Breeder = new Machine(0, 12, "Breeder", TileEntityBreeder.class, 640, 16000);
+	public static Machine Grinder = new Machine(0, 13, "Grinder", TileEntityGrinder.class, 3200, 32000);
+	public static Machine AutoEnchanter = new Machine(0, 14, "AutoEnchanter", TileEntityAutoEnchanter.class, 160, 16000);
+	public static Machine Chronotyper = new Machine(0, 15, "Chronotyper", TileEntityChronotyper.class, 1280, 16000);
 	
-	public static Machine Ejector = new Machine(1, 0, "Ejector", TileEntityEjector.class, "factoryEjector");
-	public static Machine ItemRouter = new Machine(1, 1, "ItemRouter", TileEntityItemRouter.class, "factoryItemRouter");
-	public static Machine LiquidRouter = new Machine(1, 2, "LiquidRouter", TileEntityLiquidRouter.class, "factoryLiquidRouter");
-	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class, "factoryDeepStorageUnit") {
+	public static Machine Ejector = new Machine(1, 0, "Ejector", TileEntityEjector.class);
+	public static Machine ItemRouter = new Machine(1, 1, "ItemRouter", TileEntityItemRouter.class);
+	public static Machine LiquidRouter = new Machine(1, 2, "LiquidRouter", TileEntityLiquidRouter.class);
+	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class) {
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
@@ -119,14 +119,14 @@ public class Machine
 			super.addInformation(stack, player, info, adv);
 		}
 	};
-	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class, "factoryLiquiCrafter");
-	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, "factoryLavaFabricator", 200, 16000);
-	public static Machine OilFabricator = new Machine(1, 6, "OilFabricator", TileEntityOilFabricator.class, "factoryOilFabricator", 5880, 16000);
-	public static Machine AutoJukebox = new Machine(1, 7, "AutoJukebox", TileEntityAutoJukebox.class, "factoryAutoJukebox");
-	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class, "factoryUnifier");
-	public static Machine AutoSpawner = new Machine(1, 9, "AutoSpawner", TileEntityAutoSpawner.class, "factoryAutoSpawner", 600, 32000);
-	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class, "factoryBioReactor");
-	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, "factoryBioFuelGenerator", 160, 10000) {
+	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class);
+	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, 200, 16000);
+	public static Machine OilFabricator = new Machine(1, 6, "OilFabricator", TileEntityOilFabricator.class, 5880, 16000);
+	public static Machine AutoJukebox = new Machine(1, 7, "AutoJukebox", TileEntityAutoJukebox.class);
+	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class);
+	public static Machine AutoSpawner = new Machine(1, 9, "AutoSpawner", TileEntityAutoSpawner.class, 600, 32000);
+	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class);
+	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, 160, 10000) {
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
@@ -134,21 +134,21 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, "factoryDisenchanter", 320, 16000);
-	public static Machine Slaughterhouse = new Machine(1, 13, "Slaughterhouse", TileEntitySlaughterhouse.class, "factorySlaughterhouse", 1000, 16000);
-	public static Machine MeatPacker = new Machine(1, 14, "MeatPacker", TileEntityMeatPacker.class, "factoryMeatPacker", 20, 16000);
-	public static Machine EnchantmentRouter = new Machine(1, 15, "EnchantmentRouter", TileEntityEnchantmentRouter.class, "factoryEnchantmentRouter");
+	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, 320, 16000);
+	public static Machine Slaughterhouse = new Machine(1, 13, "Slaughterhouse", TileEntitySlaughterhouse.class, 1000, 16000);
+	public static Machine MeatPacker = new Machine(1, 14, "MeatPacker", TileEntityMeatPacker.class, 20, 16000);
+	public static Machine EnchantmentRouter = new Machine(1, 15, "EnchantmentRouter", TileEntityEnchantmentRouter.class);
 	
-	public static Machine LaserDrill = new Machine(2, 0, "LaserDrill", TileEntityLaserDrill.class, "factoryLaserDrill");
-	public static Machine LaserDrillPrecharger = new Machine(2, 1, "LaserDrillPrecharger", TileEntityLaserDrillPrecharger.class, "factoryLaserDrillPrecharger", 5000, 96000);
-	public static Machine AutoAnvil = new Machine(2, 2, "AutoAnvil", TileEntityAutoAnvil.class, "factoryAnvil", 160, 16000);
-	public static Machine BlockSmasher = new Machine(2, 3, "BlockSmasher", TileEntityBlockSmasher.class, "factoryBlockSmasher", 10, 16000);
-	public static Machine RedNote = new Machine(2, 4, "RedNote", TileEntityRedNote.class, "factoryRedNote");
-	public static Machine AutoBrewer = new Machine(2, 5, "AutoBrewer", TileEntityAutoBrewer.class, "factoryAutoBrewer", 40, 16000);
-	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, "factoryFruitPicker", 320, 16000);
-	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, "factoryBlockPlacer", 10, 16000);
-	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class, "factoryMobCounter");
-	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, "factorySteamTurbine", 160, 10000) {
+	public static Machine LaserDrill = new Machine(2, 0, "LaserDrill", TileEntityLaserDrill.class);
+	public static Machine LaserDrillPrecharger = new Machine(2, 1, "LaserDrillPrecharger", TileEntityLaserDrillPrecharger.class, 5000, 96000);
+	public static Machine AutoAnvil = new Machine(2, 2, "AutoAnvil", TileEntityAutoAnvil.class, 160, 16000);
+	public static Machine BlockSmasher = new Machine(2, 3, "BlockSmasher", TileEntityBlockSmasher.class, 10, 16000);
+	public static Machine RedNote = new Machine(2, 4, "RedNote", TileEntityRedNote.class);
+	public static Machine AutoBrewer = new Machine(2, 5, "AutoBrewer", TileEntityAutoBrewer.class, 40, 16000);
+	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, 320, 16000);
+	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, 10, 16000);
+	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class);
+	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, 160, 10000) {
 		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 		{
@@ -156,9 +156,9 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, "factoryChunkLoader", Short.MAX_VALUE, Integer.MAX_VALUE, false);
-	public static Machine Fountain = new Machine(2, 11, "Fountain", TileEntityFountain.class, "factoryFountain", 80, 16000);
-	public static Machine MobRouter = new Machine(2, 12, "MobRouter", TileEntityMobRouter.class, "factoryMobRouter", 2560, 16000);
+	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, Short.MAX_VALUE, Integer.MAX_VALUE, false);
+	public static Machine Fountain = new Machine(2, 11, "Fountain", TileEntityFountain.class, 80, 16000);
+	public static Machine MobRouter = new Machine(2, 12, "MobRouter", TileEntityMobRouter.class, 2560, 16000);
 	
 	private final int _blockIndex;
 	private final int _meta;
@@ -179,20 +179,20 @@ public class Machine
 	private Property _isRecipeEnabled;
 	
 	private Machine(int blockIndex, int meta, String name,
-			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName)
+			Class<? extends TileEntityFactory> tileEntityClass)
 	{
-		this(blockIndex, meta, name, tileEntityClass, tileEntityName, 0, 0);
+		this(blockIndex, meta, name, tileEntityClass, 0, 0);
 	}
 	
 	private Machine(int blockIndex, int meta, String name,
-			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName,
+			Class<? extends TileEntityFactory> tileEntityClass,
 			int activationEnergy, int energyStoredMax)
 	{
-		this(blockIndex, meta, name, tileEntityClass, tileEntityName, activationEnergy, energyStoredMax, true);
+		this(blockIndex, meta, name, tileEntityClass, activationEnergy, energyStoredMax, true);
 	}
 	
 	private Machine(int blockIndex, int meta, String name,
-			Class<? extends TileEntityFactory> tileEntityClass, String tileEntityName,
+			Class<? extends TileEntityFactory> tileEntityClass,
 			int activationEnergy, int energyStoredMax, boolean configurable)
 	{
 		_blockIndex = blockIndex;
@@ -212,7 +212,7 @@ public class Machine
 				
 		_name = name;
 		_internalName = "tile.mfr.machine." + name.toLowerCase();
-		_tileEntityName = tileEntityName;
+		_tileEntityName = "factory" + name;
 		_tileEntityClass = tileEntityClass;
 		
 		_activationEnergy = activationEnergy;

@@ -18,19 +18,23 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class ItemFactoryBucket extends ItemBucket
 {
-	public ItemFactoryBucket(Block liquidBlock)
+	private boolean _register;
+	public ItemFactoryBucket(Block liquidBlock) { this(liquidBlock, true); }
+	public ItemFactoryBucket(Block liquidBlock, boolean reg)
 	{
 		super(liquidBlock);
 		setCreativeTab(MFRCreativeTab.tab);
 		setMaxStackSize(1);
 		setContainerItem(Items.bucket);
+		_register = reg;
 	}
 	
 	@Override
 	public Item setUnlocalizedName(String name)
 	{
 		super.setUnlocalizedName(name);
-		GameRegistry.registerItem(this, getUnlocalizedName());
+		if (_register)
+			GameRegistry.registerItem(this, getUnlocalizedName());
 		return this;
 	}
 	

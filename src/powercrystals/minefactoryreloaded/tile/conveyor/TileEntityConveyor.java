@@ -5,7 +5,7 @@ import buildcraft.api.gates.IActionReceptor;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import cofh.pcc.util.Util;
+import cofh.util.CoreUtils;
 import cofh.util.position.IRotateableTile;
 
 import net.minecraft.block.Block;
@@ -474,7 +474,7 @@ public class TileEntityConveyor extends TileEntity
 	
 	public void updateConveyorActive()
 	{
-		setConveyorActive(_gateAllowsActive & _redNetAllowsActive && !Util.isRedstonePowered(this));
+		setConveyorActive(_gateAllowsActive & _redNetAllowsActive && !CoreUtils.isRedstonePowered(this));
 	}
 	
 	public boolean getConveyorActive()

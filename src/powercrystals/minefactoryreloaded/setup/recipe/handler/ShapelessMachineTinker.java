@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -49,6 +50,7 @@ public abstract class ShapelessMachineTinker extends ShapelessRecipes
 		_tinkerItems = new LinkedList<List<ItemStack>>();
 		for (String s : tinkerItems)
 			_tinkerItems.add(OreDictionary.getOres(s));
+		RecipeSorter.register("minefactoryreloaded:shapelessTinker", getClass(), RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 	}
 
 	public ShapelessMachineTinker(Machine machine, String lore, ItemStack... tinkerItems)
@@ -62,6 +64,7 @@ public abstract class ShapelessMachineTinker extends ShapelessRecipes
 			l.add(s);
 			_tinkerItems.add(l);
 		}
+		RecipeSorter.register("minefactoryreloaded:shapelessTinker", getClass(), RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 	}
 	
 	protected abstract boolean isMachineTinkerable(ItemStack machine);

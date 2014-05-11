@@ -26,7 +26,7 @@ public class RocketLauncherItemRenderer implements IItemRenderer
 		try
 		{
 			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					"/powercrystals/minefactoryreloaded/models/RocketLauncher.obj"));
+					MineFactoryReloadedCore.modelFolder + "RocketLauncher.obj"));
 		}
 		catch(Exception e)
 		{

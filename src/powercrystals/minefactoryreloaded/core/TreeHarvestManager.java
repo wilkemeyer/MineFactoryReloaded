@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.core;
 
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
+
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -7,8 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
@@ -58,7 +59,8 @@ public class TreeHarvestManager implements IHarvestManager
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
 		
-		if (getType(bn.bp, harvestables) == HarvestType.TreeFruit)
+		HarvestType type = getType(bn.bp, harvestables);
+		if (type == null | type == HarvestType.TreeFruit)
 			return;
 
 		SideOffset[] sides = !_harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
@@ -68,7 +70,7 @@ public class TreeHarvestManager implements IHarvestManager
 		{
 			SideOffset side = sides[i];
 			cur = BlockPool.getNext(bp.x + side.offsetX, bp.y + side.offsetY, bp.z + side.offsetZ);
-			addIfValid(getType(bn.bp, harvestables), cur);
+			addIfValid(getType(cur.bp, harvestables), cur);
 		}
 
 		bn.free();

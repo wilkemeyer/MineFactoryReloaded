@@ -26,7 +26,7 @@ public class NeedleGunItemRenderer implements IItemRenderer
 		try
 		{
 			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					"/powercrystals/minefactoryreloaded/models/NeedleGun.obj"));
+					MineFactoryReloadedCore.modelFolder + "NeedleGun.obj"));
 		}
 		catch(Exception e)
 		{
