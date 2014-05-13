@@ -37,9 +37,9 @@ public class IMCHandler
 			{
 				String k = m.key;
 				/*
-				 * Laser Prefered Ores
+				 * Laser Preferred Ores
 				 */
-				if ("addLaserPreferedOre".equals(k))
+				if ("addLaserPreferredOre".equals(k))
 				{
 					ValuedItem item = (ValuedItem)getValue(m);
 					MFRRegistry.addLaserPreferredOre(item.value, item.item);

@@ -51,7 +51,9 @@ public class HarvestableShrub implements IFactoryHarvestable
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		
 		int meta = world.getBlockMetadata(x, y, z);
-		if (_block == Blocks.tallgrass && meta == 1 && !harvesterSettings.get("silkTouch"))
+		if (!harvesterSettings.get("silkTouch") && (
+				(_block == Blocks.tallgrass && meta == 1) ||
+				(_block == Blocks.double_plant && meta == 2)))
 		{
 			drops.addAll(_block.getDrops(world, x, y, z, meta, 0));
 		}

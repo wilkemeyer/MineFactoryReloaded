@@ -36,7 +36,7 @@ public class BlockFactoryRoad extends Block
 	@Override
 	public void onEntityWalking(World world, int x, int y, int z, Entity e)
 	{
-		double boost = 1.6;
+		double boost = 1.5;
 
 		double a = Math.atan2(e.motionX, e.motionZ);
 		e.motionX += Math.sin(a) * boost * slipperiness;

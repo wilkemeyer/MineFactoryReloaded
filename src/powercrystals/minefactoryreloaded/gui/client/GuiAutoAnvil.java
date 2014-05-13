@@ -38,10 +38,7 @@ public class GuiAutoAnvil extends GuiFactoryPowered
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		if(button.id == 1)
-		{
-			Packets.sendToServer(Packets.RouterButton, _tileEntity);
-		}
+		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
 	}
 
 }

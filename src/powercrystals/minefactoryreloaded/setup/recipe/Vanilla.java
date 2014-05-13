@@ -37,18 +37,19 @@ public class Vanilla
 	public final void registerRecipes()
 	{
 		gatherItems();
+		registerConveyors();
 		registerMachines();
 		registerMachineUpgrades();
 		registerMachineTinkers();
-		registerConveyors();
+		registerPlastics();
 		registerDecorative();
+		registerMiscItems();
+		registerSmelting();
+		registerVanillaImprovements();
+		registerSafariNets();
+		registerRails();
 		if (MFRConfig.enableSyringes.getBoolean(true))
 				registerSyringes();
-		registerPlastics();
-		registerMiscItems();
-		registerSafariNets();
-		registerVanillaImprovements();
-		registerRails();
 		if (MFRConfig.enableGuns.getBoolean(true))
 			registerGuns();
 		registerRedNet();
@@ -336,14 +337,14 @@ public class Vanilla
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
-		registerMachine(Machine.OilFabricator, new Object[]
+		registerMachine(Machine.SteamBoiler, new Object[]
 					{
 				"GGG",
 				"OTO",
 				"OMO",
 				'G', "sheetPlastic",
 				'O', Blocks.obsidian,
-				'T', Blocks.tnt,
+				'T', Items.bucket,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -1230,8 +1231,6 @@ public class Vanilla
 			new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 13)
 				}));
 		
-		Block brickID = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
-		FurnaceRecipes.smelting().func_151394_a(new ItemStack(brickID, 1, 13), new ItemStack(Items.coal, 3, 1), 0.001F);
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.meatIngotRawItem), new Object[]
 				{
@@ -1498,6 +1497,25 @@ public class Vanilla
 			'I', Items.iron_ingot,
 			'R', Items.redstone,
 				} ));
+	}
+	
+	protected void registerSmelting()
+	{
+		for(ItemStack s : OreDictionary.getOres("itemRubber"))
+		{
+			FurnaceRecipes.smelting().func_151394_a(s,
+					new ItemStack(MineFactoryReloadedCore.rawPlasticItem), 0.3F);
+		}
+
+		FurnaceRecipes.smelting().func_151396_a(Items.sugar,
+				new ItemStack(MineFactoryReloadedCore.sugarCharcoalItem), 0.1F);
+		FurnaceRecipes.smelting().func_151396_a(MineFactoryReloadedCore.meatIngotRawItem,
+				new ItemStack(MineFactoryReloadedCore.meatIngotCookedItem), 0.5F);
+		FurnaceRecipes.smelting().func_151396_a(MineFactoryReloadedCore.meatNuggetRawItem,
+				new ItemStack(MineFactoryReloadedCore.meatNuggetCookedItem), 0.3F);
+		Block brickID = MineFactoryReloadedCore.factoryDecorativeBrickBlock; // cooked meat block
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(brickID, 1, 13),
+				new ItemStack(Items.coal, 3, 1), 0.001F);
 	}
 	
 	protected void registerVanillaImprovements()

@@ -27,7 +27,7 @@ public abstract class FactoryFruitStandard implements IFactoryFruit
 	
 	public FactoryFruitStandard(Block block, Block replacement, int meta)
 	{
-		this(block, replacement == null ? null : new ReplacementBlock(replacement, meta));
+		this(block, replacement == null ? null : new ReplacementBlock(replacement).setMeta(meta));
 	}
 	
 	public FactoryFruitStandard(Block block, Block replacement)

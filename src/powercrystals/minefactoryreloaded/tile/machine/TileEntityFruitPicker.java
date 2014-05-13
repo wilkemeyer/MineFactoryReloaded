@@ -110,7 +110,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		}
 		else
 		{
-			if (!replacement.replaceBlock(worldObj, targetCoords.x, targetCoords.y, targetCoords.z))
+			if (!replacement.replaceBlock(worldObj, targetCoords.x, targetCoords.y, targetCoords.z, null))
 				return false;
 		}
 		

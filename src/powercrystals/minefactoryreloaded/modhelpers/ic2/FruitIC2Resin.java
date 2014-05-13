@@ -16,11 +16,19 @@ public class FruitIC2Resin implements IFactoryFruit
 {
 	private Block _rubberWood;
 	private ItemStack _resin;
+	private ReplacementBlock _repl;
 
 	public FruitIC2Resin(ItemStack rubberWood, ItemStack resin)
 	{
 		this._rubberWood = ((ItemBlock)rubberWood.getItem()).field_150939_a;
 		this._resin = resin;
+		_repl = new ReplacementBlock(_rubberWood) {
+			@Override
+			protected int getMeta(World world, int x, int y, int z, ItemStack stack)
+			{
+				return world.getBlockMetadata(x, y, z) + 6;
+			}
+		};
 	}
 
 	@Override
@@ -46,8 +54,7 @@ public class FruitIC2Resin implements IFactoryFruit
 	@Override
 	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
 	{
-		int meta = world.getBlockMetadata(x, y, z);
-		return new ReplacementBlock(_rubberWood, meta + 6);
+		return _repl;
 	}
 
 	@Override

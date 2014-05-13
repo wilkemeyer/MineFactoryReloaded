@@ -24,6 +24,7 @@ public class ThermalExpansion extends Vanilla
 {
 	ItemStack conduitLiquid;
 	ItemStack tankBasic;
+	ItemStack tankHardened;
 	ItemStack lamp;
 	ItemStack machineFrame;
 	ItemStack pneumaticServo;
@@ -55,6 +56,7 @@ public class ThermalExpansion extends Vanilla
 		}
 		conduitLiquid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
 		tankBasic = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
+		tankHardened = GameRegistry.findItemStack("ThermalExpansion", "tankHardened", 1);
 		lamp = GameRegistry.findItemStack("ThermalExpansion", "lamp", 1);
 		machineFrame = GameRegistry.findItemStack("ThermalExpansion", "machineFrame", 1);
 		pneumaticServo = GameRegistry.findItemStack("ThermalExpansion", "pneumaticServo", 1);
@@ -340,15 +342,14 @@ public class ThermalExpansion extends Vanilla
 				'C', powerCoilGold
 					} );
 		
-		registerMachine(Machine.OilFabricator, new Object[] {
-				"PTP",
-				"OFO",
-				"OCO",
+		registerMachine(Machine.SteamBoiler, new Object[] {
+				"PPP",
+				"TFT",
+				"OOO",
 				'P', "sheetPlastic",
-				'T', Blocks.tnt,
+				'T', tankHardened,
 				'F', machineFrame,
-				'O', Blocks.obsidian,
-				'C', powerCoilGold
+				'O', Blocks.obsidian
 					} );
 		
 		registerMachine(Machine.AutoJukebox, new Object[] {

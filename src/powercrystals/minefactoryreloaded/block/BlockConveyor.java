@@ -51,6 +51,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		0x8a3ecd, 0x3440a1, 0x603f29, 0x4a6029, 0xc2403b, 0x2d2a2a, 0xf6a82c};
 	@SideOnly(Side.CLIENT)
 	private IIcon base, overlay, overlayFast, overlayStopped;
+	private int renderPass;
 	
 	public BlockConveyor()
 	{
@@ -62,9 +63,10 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 
 	@Override
-	public int getRenderBlockPass()
+	public boolean canRenderInPass(int pass)
 	{
-		return 1;
+		renderPass = pass;
+		return pass <= 1;
 	}
 	
 	@Override
@@ -171,14 +173,16 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	@Override
 	public int getRenderColor(int meta)
 	{
-		return colors[meta];
+		if (renderPass == 0)
+			return colors[meta];
+		return 0xFFFFFF;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
-		if (side == 1)
+		if (renderPass == 1)
 			switch (meta)
 			{
 			case 0:
@@ -196,7 +200,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
     {
     	int meta = 0;
-    	if (side == 1)
+    	if (renderPass == 1)
     	{
     		TileEntity tile = world.getTileEntity(x, y, z);
     		if (tile instanceof TileEntityConveyor)
@@ -552,6 +556,11 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 				ret.add(new ItemStack(Items.glowstone_dust, 1));
 		}
 		return ret;
+	}
+	
+	@Override
+	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
+	{
 	}
 	
 	@Override

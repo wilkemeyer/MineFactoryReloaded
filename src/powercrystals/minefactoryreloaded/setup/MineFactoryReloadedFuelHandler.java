@@ -13,15 +13,15 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		if (fuel == null)
 			return 0;
 		Item item = fuel.getItem();
-		if(item.equals(MineFactoryReloadedCore.rubberWoodBlock))
+		if(item.equals(MineFactoryReloadedCore.rubberWoodItem))
 		{
 			return 350;
 		}
-		if(item.equals(MineFactoryReloadedCore.rubberLeavesBlock))
+		if(item.equals(MineFactoryReloadedCore.rubberLeavesItem))
 		{
 			return 4 * (fuel.getItemDamage() + 1);
 		}
-		else if(item.equals(MineFactoryReloadedCore.rubberSaplingBlock))
+		else if(item.equals(MineFactoryReloadedCore.rubberSaplingItem))
 		{
 			return 100;
 		}

@@ -321,14 +321,7 @@ public abstract class UtilInventory {
 
 	public static void mergeStacks(ItemStack to, ItemStack from) {
 
-		if (to == null || from == null) {
-			return;
-		}
-
-		if (!to.getItem().equals(from.getItem()) || to.getItemDamage() != from.getItemDamage()) {
-			return;
-		}
-		if (to.getTagCompound() != null || from.getTagCompound() != null) {
+		if (!stacksEqual(to, from)) {
 			return;
 		}
 

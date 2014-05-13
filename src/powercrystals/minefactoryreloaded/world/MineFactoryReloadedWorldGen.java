@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.world;
 
+import cpw.mods.fml.common.IWorldGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,14 +9,28 @@ import java.util.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
-import cpw.mods.fml.common.IWorldGenerator;
 
 public class MineFactoryReloadedWorldGen implements IWorldGenerator
 {
 	private static List<Integer> _blacklistedDimensions;
+	
+	public static boolean generateMegaRubberTree(World world, Random random, int x, int y, int z)
+	{
+		return new WorldGenMassiveTree(false).setTreeScale(3 + (random.nextInt(3)), 0.8, 0.7).
+					setLeafAttenuation(0.6).
+					generate(world, random, x, y, z);
+	}
+	
+	public static boolean generateSacredSpringRubberTree(World world, Random random, int x, int y, int z)
+	{
+		return new WorldGenMassiveTree(false).setTreeScale(6 + (random.nextInt(3)), 1, 0.9).
+					setLeafAttenuation(0.35).
+					generate(world, random, x, y, z);
+	}
 	
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
@@ -36,12 +52,22 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 		if (b == null)
 			return;
 		
+		String biomeName = b.biomeName;
+		
 		if(MFRConfig.rubberTreeWorldGen.getBoolean(true))
 		{
-			if(MFRRegistry.getRubberTreeBiomes().contains(b.biomeName))
+			if(MFRRegistry.getRubberTreeBiomes().contains(biomeName))
 			{
 				if(random.nextInt(100) < 40)
 				{
+					String ln = b.biomeName.toLowerCase();
+					if (random.nextInt(30) == 0)
+					{
+						if (ln.contains("mega"))
+							generateMegaRubberTree(world, random, x, world.getHeightValue(x, z), z);
+						else if (ln.contains("sacred"))
+							generateSacredSpringRubberTree(world, random, x, world.getHeightValue(x, z), z);
+					}
 					new WorldGenRubberTree().generate(world, random, x, random.nextInt(3) + 4, z);
 				}
 			}

@@ -1,16 +1,20 @@
 package powercrystals.minefactoryreloaded.block;
 
-import powercrystals.minefactoryreloaded.render.IconOverlay;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import powercrystals.minefactoryreloaded.render.IconOverlay;
 
 public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 {
@@ -22,6 +26,8 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 		super(false);
 		setBlockName("thinGlass");
 		_pane = Blocks.glass_pane;
+		ObfuscationReflectionHelper.setPrivateValue(ItemBlock.class,
+				(ItemBlock)Item.getItemFromBlock(_pane), this, "field_150939_a");
 	}
 	
 	@Override public int hashCode() { return _pane.hashCode(); }

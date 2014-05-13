@@ -56,7 +56,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	/**
 	 * Sets the limit of the random value used to initialize the height limit.
 	 */
-	int heightLimitLimit = 190;
+	int heightLimitLimit = 250;
 
 	/**
 	 * Sets the distance limit for how far away the generator will populate leaves from the base leaf node.
@@ -130,7 +130,8 @@ public class WorldGenMassiveTree extends WorldGenerator
 					if (this.checkBlockLine(var17, var18) == -1)
 					{
 						int[] var19 = new int[] {basePos[0], basePos[1], basePos[2]};
-						double var20 = Math.sqrt(Math.pow(Math.abs(basePos[0] - var17[0]), 2.0D) + Math.pow(Math.abs(basePos[2] - var17[2]), 2.0D));
+						double var20 = Math.sqrt(Math.pow(Math.abs(basePos[0] - var17[0]), 2.0D) 
+								+ Math.pow(Math.abs(basePos[2] - var17[2]), 2.0D));
 						double var22 = var20 * branchSlope;
 
 						if (var17[1] - var22 > var5)
@@ -190,13 +191,13 @@ public class WorldGenMassiveTree extends WorldGenerator
 					var11[var9] = var10[var9] + var13;
 					Block var14 = worldObj.getBlock(var11[0], var11[1], var11[2]);
 
-					if (!var14.equals(MineFactoryReloadedCore.rubberLeavesBlock))
+					if (var14.equals(Blocks.bedrock))
 					{
 						++var13;
 					}
 					else
 					{
-						this.setBlockAndNotifyAdequately(worldObj, var11[0], var11[1], var11[2], par6, 4);
+						this.setBlockAndNotifyAdequately(worldObj, var11[0], var11[1], var11[2], par6, 0);
 						++var13;
 					}
 				}
@@ -209,7 +210,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 */
 	float layerSize(int par1)
 	{
-		if (par1 < (heightLimit) * 0.3D)
+		if (par1 < (heightLimit) * heightAttenuation)
 			return -1.618F;
 		else
 		{
@@ -480,12 +481,15 @@ public class WorldGenMassiveTree extends WorldGenerator
 			newHeight = this.checkBlockLine(var1, var2);
 
 			if (newHeight == -1)
+			{
+				heightLimit = Math.min(heightLimit, heightLimitLimit);
 				return true;
+			}
 			else if (newHeight < minHeight)
 				return false;
 			else
 			{
-				heightLimit = newHeight;
+				heightLimit = Math.min(newHeight, heightLimitLimit);
 				return true;
 			}
 		}
@@ -497,15 +501,30 @@ public class WorldGenMassiveTree extends WorldGenerator
 	@Override
 	public void setScale(double par1, double par3, double par5)
 	{
-		heightLimitLimit = (int)(par1 * 12.0D);
+		setTreeScale(par1, par3, par5);
+	}
+	
+	public WorldGenMassiveTree setTreeScale(double height, double width, double leaves)
+	{
+		heightLimitLimit = (int)(height * 12.0D);
+		minHeight = heightLimitLimit / 2;
+		trunkSize = (int)(height / 3.0D);
 
-		if (par1 > 0.5D)
+		if (height > 0.5D)
 		{
 			leafDistanceLimit = 5;
 		}
 
-		scaleWidth = par3;
-		leafDensity = par5;
+		scaleWidth = width;
+		leafDensity = leaves;
+		branchDensity = leaves * 3.5;
+		return this;
+	}
+	
+	public WorldGenMassiveTree setLeafAttenuation(double a)
+	{
+		heightAttenuation = a;
+		return this;
 	}
 
 	@Override
@@ -520,7 +539,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 		if (heightLimit == 0)
 		{
-			heightLimit = 200;
+			heightLimit = heightLimitLimit;
 		}
 		if (minHeight == -1)
 		{
@@ -553,7 +572,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 		ExtendedBlockStorage subChunk = storage[y >> 4];
 		if (subChunk == null)
-			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !this.worldObj.provider.hasNoSky);
+			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !world.provider.hasNoSky);
 		subChunk.func_150818_a(x & 15, y & 15, z & 15, block);
 		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
 		subChunk.setExtBlocklightValue(x & 15, y & 15, z & 15, 0);

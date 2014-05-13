@@ -87,4 +87,8 @@ public final class Packets
 	{
 		sendToServer(new MFRMessage(packet, te, args));
 	}
+	public static void sendToAllPlayersWatching(TileEntity te)
+	{
+		sendToAllPlayersWatching(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord, te.getDescriptionPacket());
+	}
 }

@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityGenerator extends TileEntityFactoryInventory
-implements IPowerEmitter, IEnergyConnection
+										implements IPowerEmitter, IEnergyConnection
 {
 	private int _ticksBetweenConsumption;
 	private int _outputPulseSize;

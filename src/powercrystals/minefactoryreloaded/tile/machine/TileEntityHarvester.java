@@ -78,10 +78,10 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	public void validate()
 	{
 		super.validate();
-		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
-		onFactoryInventoryChanged();
 		if (!worldObj.isRemote)
 		{
+			_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+			onFactoryInventoryChanged();
 			if (_treeManager != null && _areaManager.getHarvestArea().contains(_treeManager.getOrigin()))
 			{
 				_treeManager.setWorld(worldObj);
@@ -152,7 +152,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
-		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
 		
 		Block harvestedBlock = worldObj.getBlock(targetCoords.x, targetCoords.y, targetCoords.z);
 		int harvestedBlockMetadata = worldObj.getBlockMetadata(targetCoords.x,
@@ -166,7 +165,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, _immutableSettings,
 													targetCoords.x, targetCoords.y, targetCoords.z);
 		
-		if(harvestable.breakBlock())
+		if (harvestable.breakBlock())
 		{
 			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, Blocks.air, 0, 2))
 				return false;

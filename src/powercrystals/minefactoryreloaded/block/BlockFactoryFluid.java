@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.pcc.random.WeightedRandomItemStack;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,6 +24,7 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -35,10 +37,17 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	private IIcon _iconFlowing;
 	private IIcon _iconStill;
 	protected String fluidName;
+	private static Fluid ensureFluid(String name)
+	{
+		Fluid fluid = FluidRegistry.getFluid(name);
+		if (fluid.canBePlacedInWorld())
+			ReflectionHelper.setPrivateValue(Fluid.class, fluid, null, "block");
+		return fluid;
+	}
 
 	public BlockFactoryFluid(String liquidName)
 	{
-		super(FluidRegistry.getFluid(liquidName), Material.water);
+		super(ensureFluid(liquidName), Material.water);
 		setBlockName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);

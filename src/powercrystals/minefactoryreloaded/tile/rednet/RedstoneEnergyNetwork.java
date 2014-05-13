@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import cofh.api.energy.EnergyStorage;
+import cofh.util.position.BlockPosition;
 
 import java.util.LinkedHashSet;
 
@@ -8,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
 public class RedstoneEnergyNetwork
@@ -174,6 +174,7 @@ public class RedstoneEnergyNetwork
 		int size = nodeSet.size();
 		int toDistribute = storage.getEnergyStored() / size;
 		int sideDistribute = toDistribute / 6;
+		EnergyStorage storage = this.storage;
 		
 		distribution = toDistribute;
 		distributionSide = sideDistribute;

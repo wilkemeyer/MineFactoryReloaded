@@ -41,6 +41,7 @@ public class ClientProxy extends CommonProxy
 		setIcons("pinkslime", MineFactoryReloadedCore.pinkSlimeLiquid);
 		setIcons("chocolatemilk", MineFactoryReloadedCore.chocolateMilkLiquid);
 		setIcons("mushroomsoup", MineFactoryReloadedCore.mushroomSoupLiquid);
+		setIcons("steam", MineFactoryReloadedCore.steamFluid);
 	}
 	
 	private void setIcons(String name, Block block)

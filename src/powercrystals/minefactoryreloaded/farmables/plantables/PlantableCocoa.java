@@ -11,6 +11,7 @@ import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
 public class PlantableCocoa extends PlantableStandard
 {
+	
 	public PlantableCocoa(Item source, Block plantedBlock)
 	{
 		this(source, plantedBlock, WILDCARD);
@@ -21,8 +22,8 @@ public class PlantableCocoa extends PlantableStandard
 		super(source, plantedBlock, validMeta);
 		_plantedBlock = new ReplacementBlock(_block) {
 			@Override
-			public boolean replaceBlock(World world, int x, int y, int z)
-		{
+			public int getMeta(World world, int x, int y, int z, ItemStack stack)
+			{
 				int blockDirection = 4; // NORTH
 				if (isGoodLog(world, x-1, y, z))
 					blockDirection = 5; // SOUTH
@@ -31,13 +32,7 @@ public class PlantableCocoa extends PlantableStandard
 				else if (isGoodLog(world, x, y, z-1))
 					blockDirection = 3; // WEST
 				
-				boolean r;
-				synchronized (this)
-				{
-					meta = blockDirection;
-					r = super.replaceBlock(world, x, y, z);
-				}
-				return r;
+				return blockDirection;
 			}
 		};
 	}

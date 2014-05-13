@@ -1,22 +1,19 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.mj.IBatteryObject;
+import buildcraft.api.mj.IBatteryProvider;
+import buildcraft.api.mj.MjAPI;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
 import cofh.util.CoreUtils;
 
-import ic2.api.Direction;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySink;
+//import ic2.api.energy.event.EnergyTileLoadEvent;
+//import ic2.api.energy.event.EnergyTileUnloadEvent;
+//import ic2.api.energy.tile.IEnergySink;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -34,7 +31,8 @@ import powercrystals.minefactoryreloaded.setup.Machine;
  */
 
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-											implements IPowerReceptor, IEnergySink,
+											implements IBatteryProvider,
+														// IEnergySink,
 														IEnergyHandler, IEnergyInfo
 {	
 	public static final int energyPerEU = 4;
@@ -53,9 +51,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	private int _idleTicks;
 	
-	// buildcraft-related fields
+	// bc-related fields
 	
-	protected PowerHandler _powerProvider;
+	private BuildCraftGremlin gremlin;
 	
 	// IC2-related fields
 	
@@ -73,7 +71,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		super(machine);
 		_maxEnergyStored = machine.getMaxEnergyStorage();
-		_powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
+		gremlin = new BuildCraftGremlin();
 		setActivationEnergy(activationCost);
 		setIsActive(false);
 	}
@@ -84,7 +82,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		_energyActivation = activationCost;
 		_maxEnergyTick = Math.min(activationCost * 4, _maxEnergyStored);
-		configurePowerProvider();
 	}
 	
 	@Override
@@ -94,7 +91,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		
 		_energyStored = Math.min(_energyStored, getEnergyStoredMax());
 		
-		if(worldObj.isRemote)
+		if (worldObj.isRemote)
 		{
 			return;
 		}
@@ -103,7 +100,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		{
 			if(!worldObj.isRemote)
 			{
-				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+				//MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			}
 			_addToNetOnNextTick = false;
 			_isAddedToIC2EnergyNet = true;
@@ -123,17 +120,17 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			return;
 		}
 		
-		if(CoreUtils.isRedstonePowered(this))
+		if (CoreUtils.isRedstonePowered(this))
 		{
 			setIdleTicks(getIdleTicksMax());
 		}
-		else if(_idleTicks > 0)
+		else if (_idleTicks > 0)
 		{
 			_idleTicks--;
 		}
-		else if(_energyStored >= _energyActivation)
+		else if (_energyStored >= _energyActivation)
 		{
-			if(activateMachine())
+			if (activateMachine())
 			{
 				_energyStored -= _energyActivation;
 			}
@@ -158,7 +155,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		{
 			if(worldObj != null && !worldObj.isRemote)
 			{
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+				//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 			_isAddedToIC2EnergyNet = false;
 		}
@@ -174,7 +171,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		{
 			if(worldObj != null && !worldObj.isRemote)
 			{
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+				//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 			_isAddedToIC2EnergyNet = false;
 		}
@@ -242,7 +239,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		tag.setInteger("energyStored", _energyStored);
 		tag.setInteger("workDone", _workDone);
 		NBTTagCompound pp = new NBTTagCompound();
-		_powerProvider.writeToNBT(pp);
 		tag.setTag("powerProvider", pp);
 	}
 	
@@ -253,11 +249,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		
 		_energyStored = Math.min(tag.getInteger("energyStored"), getEnergyStoredMax());
 		_workDone = Math.min(tag.getInteger("workDone"), getWorkMax());
-		if (tag.hasKey("powerProvider"))
-		{
-			_powerProvider.readFromNBT(tag.getCompoundTag("powerProvider"));
-		}
-		configurePowerProvider();
 	}
 	
 	public int getEnergyRequired()
@@ -335,46 +326,77 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	
 	// BC methods
 	
-	protected void configurePowerProvider()
-	{
-		int maxReceived = getMaxEnergyPerTick() / energyPerMJ;
-		_powerProvider.configure(getMinMJ(), maxReceived, 0.1f, 1000);
-		_powerProvider.configurePowerPerdition(0, 0);
-	}
-	
 	protected float getMinMJ()
 	{
 		return getActivationEnergy() < 100 ? 0.1f : 10f;
 	}
 	
 	@Override
-	public final PowerReceiver getPowerReceiver(ForgeDirection side)
+	public IBatteryObject getMjBattery(String kind)
 	{
-		if (getEnergyRequired() > 0)
-		{
-			_powerProvider.configure(getMinMJ(), getEnergyRequired() / energyPerMJ, 0.1f, 1000);
-			return _powerProvider.getPowerReceiver();
-		}
-		_powerProvider.configure(0, 0, 1, 1000);
-		return null;
+		return gremlin;
 	}
 	
-	@Override
-	public final void doWork(PowerHandler pp)
+	private final class BuildCraftGremlin implements IBatteryObject
 	{
-		bcpower: if(pp != null)
+		@Override
+		public final double getEnergyRequested()
 		{
-			float mjRequired = getEnergyRequired() / (float)energyPerMJ;
-			if (mjRequired <= 0) break bcpower;
-			float mjGain = 0.002f;
-			
-			if(pp.useEnergy(0, mjRequired, false) > 0)
-			{
-				int energyGained = (int)((pp.useEnergy(0, mjRequired, true) + 0.009) * energyPerMJ);
-				storeEnergy(energyGained);
-				mjGain += 0.001f;
-			}
-			pp.addEnergy(mjGain);
+			return getEnergyRequired() / energyPerMJ;
+		}
+		
+		@Override
+		public final double addEnergy(double mj)
+		{
+			return storeEnergy((int)(mj * energyPerMJ)) / (float)energyPerMJ;
+		}
+		
+		@Override
+		public final double addEnergy(double mj, boolean ignoreCycleLimit)
+		{
+			return addEnergy(mj);
+		}
+
+		@Override
+		public double getEnergyStored()
+		{
+			return TileEntityFactoryPowered.this.getEnergyStored() / (float)energyPerMJ;
+		}
+
+		@Override
+		public String kind()
+		{
+			return MjAPI.DEFAULT_POWER_FRAMEWORK;
+		}
+
+		@Override
+		public double maxCapacity()
+		{
+			return getEnergyStoredMax() / (float)energyPerMJ;
+		}
+
+		@Override
+		public double maxReceivedPerCycle()
+		{
+			return getMaxEnergyPerTick() / (float)energyPerMJ;
+		}
+
+		@Override
+		public double minimumConsumption()
+		{
+			return getMinMJ();
+		}
+
+		@Override
+		public IBatteryObject reconfigure(double arg0, double arg1, double arg2)
+		{
+			return null;
+		}
+
+		@Override
+		public void setEnergyStored(double arg0)
+		{
+			// no.
 		}
 	}
 
@@ -385,7 +407,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		return super.overridePipeConnection(type, with);
 	}
 	
-	// IC2 methods
+	/*/ IC2 methods
 	
 	@Override
 	public double demandedEnergyUnits()
@@ -411,24 +433,5 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int getMaxSafeInput()
 	{
 		return Integer.MAX_VALUE;
-	}
-	
-	// IC2-lf methods
-	
-	public int demandsEnergy()
-	{
-		return Math.max(getEnergyRequired() / energyPerEU, 0);
-	}
-
-	public int injectEnergy(Direction directionFrom, int amount)
-	{
-		int euLeftOver = Math.max(amount, 0);
-		euLeftOver -= storeEnergy(euLeftOver * energyPerEU) / energyPerEU;
-		return euLeftOver;
-	}
-	
-	public boolean acceptsEnergyFrom(TileEntity tile, Direction side)
-	{
-		return true;
-	}
+	}//*/
 }

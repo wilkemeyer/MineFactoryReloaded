@@ -22,7 +22,7 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 		setHardness(0.5F);
 		setLightOpacity(3);
 		setStepSound(soundTypeGlass);
-		setBlockName("_ice");
+		setBlockName("ice");
 		_ice = Blocks.ice;
 	}
 	

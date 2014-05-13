@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
-import ic2.api.crops.CropCard;
-import ic2.api.crops.Crops;
-import ic2.api.crops.ICropTile;
+//import ic2.api.crops.CropCard;
+//import ic2.api.crops.Crops;
+//import ic2.api.crops.ICropTile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,8 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
+		return false;
+		/*
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te == null || !(te instanceof ICropTile))
 		{
@@ -71,12 +73,14 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 			e.printStackTrace();
 		}
 		
-		return true;
+		return true;//*/
 	}
 	
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
+		return new ArrayList<ItemStack>();
+		/*
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		
 		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
@@ -121,7 +125,7 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 			e.printStackTrace();
 		}
 		
-		return drops;
+		return drops;//*/
 	}
 	
 	@Override

@@ -466,7 +466,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 													double uMax, double vMax,
 													double xOff, double zOff)
 	{
-		drawBox(t, xMin, yMin, zMin, xMax, yMax, zMax, uMin, vMin, uMax, uMax, xOff, zOff, (xOff > 0) | zOff < 0);
+		drawBox(t, xMin, yMin, zMin, xMax, yMax, zMax, uMin, vMin, uMax, uMax, xOff, zOff, xOff < 0 || zOff < 0);
 	}
 	
 	private void drawBox(Tessellator t, double xMin, double yMin, double zMin,

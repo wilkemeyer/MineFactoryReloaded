@@ -211,6 +211,11 @@ public class BlockFactoryMachine extends BlockContainer
 	}
 	
 	@Override
+	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
+	{
+	}
+	
+	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
 	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
 		if (!player.capabilities.isCreativeMode)

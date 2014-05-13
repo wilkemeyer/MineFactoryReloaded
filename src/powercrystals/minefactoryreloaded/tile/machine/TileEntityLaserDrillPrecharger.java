@@ -156,12 +156,6 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		}
 		
 	}
-
-	@Override
-	public int getMaxSafeInput()
-	{
-		return Integer.MAX_VALUE;
-	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)

@@ -19,6 +19,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 	public void renderInventoryBlock(Block block, int meta, int modelID, RenderBlocks renderer)
 	{
 		Tessellator tessellator = Tessellator.instance;
+		MineFactoryReloadedCore.conveyorBlock.canRenderInPass(0);
 		int color = block.getRenderColor(meta);
 		float red = (color >> 16 & 255) / 255.0F;
 		float green = (color >> 8 & 255) / 255.0F;
@@ -36,7 +37,8 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		IIcon iconBase, iconOverlay;
 
 		iconBase = block.getIcon(0, meta);
-		iconOverlay = block.getIcon(1, 0);
+		MineFactoryReloadedCore.conveyorBlock.canRenderInPass(1);
+		iconOverlay = block.getIcon(0, 0);
 
 		double minXBase = iconBase.getMinU();
 		double maxXBase = iconBase.getMaxU();
@@ -126,8 +128,6 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 		tessellator.setColorOpaque_F(red, green, blue);
 		draw(tessellator, block.getIcon(world, x, y, z, 0));
-		tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
-		draw(tessellator, block.getIcon(world, x, y, z, 1));
 	}
 	
 	private void draw(Tessellator tessellator, IIcon texture)

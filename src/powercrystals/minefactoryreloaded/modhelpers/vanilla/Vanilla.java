@@ -175,6 +175,7 @@ public class Vanilla
 		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.yellow_flower, HarvestType.Normal));
 		MFRRegistry.registerHarvestable(new HarvestableShrub(Blocks.tallgrass));
 		MFRRegistry.registerHarvestable(new HarvestableShrub(Blocks.deadbush));
+		MFRRegistry.registerHarvestable(new HarvestableShrub(Blocks.double_plant));
 		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.brown_mushroom_block, HarvestType.Tree));
 		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.red_mushroom_block, HarvestType.Tree));
 		MFRRegistry.registerHarvestable(new HarvestableMushroom(Blocks.brown_mushroom));
@@ -259,11 +260,13 @@ public class Vanilla
 		});
 		
 		MFRRegistry.registerSludgeDrop(50, new ItemStack(Blocks.sand));
-		MFRRegistry.registerSludgeDrop(40, new ItemStack(Blocks.dirt));
-		MFRRegistry.registerSludgeDrop(30, new ItemStack(Items.clay_ball, 4));
+		MFRRegistry.registerSludgeDrop(40, new ItemStack(Blocks.dirt, 1, 1));
+		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.clay));
+		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.dirt));
 		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.gravel));
 		MFRRegistry.registerSludgeDrop(5, new ItemStack(Blocks.soul_sand));
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Blocks.mycelium));
+		MFRRegistry.registerSludgeDrop(2, new ItemStack(Blocks.dirt, 1, 2));
 		MFRRegistry.registerSludgeDrop(1, new ItemStack(Blocks.netherrack));
 		
 		MFRRegistry.registerSafariNetHandler(new EntityLivingBaseHandler());
@@ -276,10 +279,17 @@ public class Vanilla
 		
 		MFRRegistry.registerRubberTreeBiome("Swampland");
 		MFRRegistry.registerRubberTreeBiome("Forest");
+		MFRRegistry.registerRubberTreeBiome("ForestHills");
+		MFRRegistry.registerRubberTreeBiome("Roofed Forest");
 		MFRRegistry.registerRubberTreeBiome("Taiga");
 		MFRRegistry.registerRubberTreeBiome("TaigaHills");
+		MFRRegistry.registerRubberTreeBiome("Cold Taiga");
+		MFRRegistry.registerRubberTreeBiome("Cold Taiga Hills");
+		MFRRegistry.registerRubberTreeBiome("Mega Taiga");
+		MFRRegistry.registerRubberTreeBiome("Mega Taiga Hills");
 		MFRRegistry.registerRubberTreeBiome("Jungle");
 		MFRRegistry.registerRubberTreeBiome("JungleHills");
+		MFRRegistry.registerRubberTreeBiome("JungleEdge");
 		
 		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
 		MFRRegistry.registerSafariNetBlacklist(EntityDragon.class);

@@ -41,7 +41,10 @@ public class TreeHarvestManager implements IHarvestManager
 	public BlockPosition getNextBlock()
 	{
 		searchForTreeBlocks(_blocks.poke());
-		return _blocks.shift().bp;
+		BlockNode bn = _blocks.shift();
+		BlockPosition bp = bn.bp.copy();
+		bn.free();
+		return bp;
 	}
 
 	@Override
@@ -60,7 +63,7 @@ public class TreeHarvestManager implements IHarvestManager
 		BlockNode cur;
 		
 		HarvestType type = getType(bn.bp, harvestables);
-		if (type == null | type == HarvestType.TreeFruit)
+		if (type == null || type == HarvestType.TreeFruit)
 			return;
 
 		SideOffset[] sides = !_harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
@@ -72,37 +75,31 @@ public class TreeHarvestManager implements IHarvestManager
 			cur = BlockPool.getNext(bp.x + side.offsetX, bp.y + side.offsetY, bp.z + side.offsetZ);
 			addIfValid(getType(cur.bp, harvestables), cur);
 		}
-
-		bn.free();
 	}
 
 	private void addIfValid(HarvestType type, BlockNode node)
 	{
 		if (type != null)
 		{
-			long size = _blocks.size();
-			if (type == HarvestType.TreeFruit |
+			if (type == HarvestType.TreeFruit ||
 					type == HarvestType.TreeLeaf)
 			{
 				_blocks.unshift(node);
+				return;
 			}
-			else if (type == HarvestType.Tree |
+			else if (type == HarvestType.Tree ||
 					type == HarvestType.TreeFlipped)
 			{
 				_blocks.push(node);
-			}
-			if (size != _blocks.size())
 				return;
+			}
 		}
 		node.free();
 	}
 	
 	private HarvestType getType(BlockPosition bp, Map<Block, IFactoryHarvestable> harvestables)
 	{
-		if ((bp.x > _area.xMax) | (bp.x < _area.xMin) |
-				(bp.z > _area.zMax) | (bp.z < _area.zMin) |
-				(bp.y > _area.yMax) | (bp.y < _area.yMin) ||
-				!_world.blockExists(bp.x, bp.y, bp.z))
+		if (!_area.contains(bp) || !_world.blockExists(bp.x, bp.y, bp.z))
 			return null;
 
 		Block block = _world.getBlock(bp.x, bp.y, bp.z);
@@ -110,7 +107,9 @@ public class TreeHarvestManager implements IHarvestManager
 		{
 			IFactoryHarvestable h = harvestables.get(block);
 			if (h.canBeHarvested(_world, _settings, bp.x, bp.y, bp.z))
+			{
 				return h.getHarvestType();
+			}
 		}
 		return null;
 	}
@@ -195,6 +194,8 @@ public class TreeHarvestManager implements IHarvestManager
 			NBTTagCompound p = list.getCompoundTagAt(i);
 			_blocks.push(BlockPool.getNext(p.getInteger("x"), p.getInteger("y"), p.getInteger("z")));
 		}
+		if (_blocks.size() == 0)
+			_isDone = true;
 	}
 
 	@Override
