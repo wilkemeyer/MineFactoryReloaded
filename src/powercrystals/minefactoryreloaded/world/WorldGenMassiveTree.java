@@ -21,22 +21,24 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 * Contains three sets of two values that provide complimentary indices for a given 'major' index - 1 and 2 for 0, 0
 	 * and 2 for 1, and 0 and 1 for 2.
 	 */
-	static final byte[] otherCoordPairs = new byte[] {(byte)2, (byte)0, (byte)0, (byte)1, (byte)2, (byte)1};
+	private static final byte[] otherCoordPairs = new byte[] {(byte)2, (byte)0, (byte)0, (byte)1, (byte)2, (byte)1};
 
 	/** random seed for GenBigTree */
-	Random rand = new Random();
+	private Random rand = new Random();
 
 	/** Reference to the World object. */
-	World worldObj;
-	int[] basePos = new int[] {0, 0, 0};
-	int heightLimit = 0;
-	int minHeight = -1;
-	int height;
-	double heightAttenuation = 0.45D;
-	double branchDensity = 5.0D;
-	double branchSlope = 0.45D;
-	double scaleWidth = 4.0D;
-	double leafDensity = 5.0D;
+	private World worldObj;
+	private int[] basePos = new int[] {0, 0, 0};
+	private int heightLimit = 0;
+	private int minHeight = -1;
+	private int height;
+	private double heightAttenuation = 0.45D;
+	@SuppressWarnings("unused") // TODO: 
+	private double branchDensity = 4.0D;
+	private double branchSlope = 0.45D;
+	private double scaleWidth = 3.0D;
+	private double leafDensity = 3.0D;
+	private boolean slopeTrunk = false;
 
 	static class ChunkComp implements Comparator<Chunk>
 	{
@@ -51,7 +53,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 	TreeSet<Chunk> modifiedChunks = new TreeSet<Chunk>(new ChunkComp());
 
-	int trunkSize = 5;
+	int trunkSize = 11;
 
 	/**
 	 * Sets the limit of the random value used to initialize the height limit.
@@ -81,13 +83,6 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 */
 	void generateLeafNodeList()
 	{
-		height = (int)(heightLimit * heightAttenuation);
-
-		if (height >= heightLimit)
-		{
-			height = heightLimit - 1;
-		}
-
 		int var1 = (int)(1.382D + Math.pow(leafDensity * heightLimit / 13.0D, 2.0D));
 
 		if (var1 < 1)
@@ -346,8 +341,6 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 * Places the trunk for the big tree that is being generated. Able to generate double-sized trunks by changing a
 	 * field that is always 1 to 2.
 	 */
-
-
 	void generateTrunk()
 	{
 		int var1 = basePos[0];
@@ -358,6 +351,8 @@ public class WorldGenMassiveTree extends WorldGenerator
 		int[] var5 = new int[] {var1, var2, var4};
 		int[] var6 = new int[] {var1, var3, var4};
 		
+		double lim = 400f / trunkSize;
+		
 		for (int i = -trunkSize; i <= trunkSize; i++ )
 		{
 			var5[0] = var1 + i;
@@ -365,17 +360,32 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 			for (int j = -trunkSize; j <= trunkSize; j++ )
 			{
-				if ((j*j + i*i) * 2 < trunkSize * trunkSize * 3)
+				if ((j*j + i*i) * 4 < trunkSize * trunkSize * 5)
 				{
 					var5[2] = var4 + j;
 					var6[2] = var4 + j;
+					
+					if (slopeTrunk)
+						var6[1] = var2 + sinc2(lim * i, lim * j, height);
+					
 					this.placeBlockLine(var5, var6,
 							MineFactoryReloadedCore.rubberWoodBlock, 1);
+					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2],
+							MineFactoryReloadedCore.rubberWoodBlock, 13);
+					// TODO: notify blocks under the trunk of tree growth
 				}
 			}
 		}
 	}
 
+	private static final int sinc2(final double x, final double z, final int y)
+	{
+		final double pi = Math.PI, pi2 = pi / 1.5;
+		double r;
+		r = Math.sqrt((r=(x/pi))*r+(r=(z/pi))*r)*pi/180; 
+		if (r == 0) return y;
+		return (int)Math.round(y * (((Math.sin(r)/r) + (Math.sin(r*pi2)/(r*pi2)))/2));
+	}
 
 
 	/**
@@ -508,7 +518,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	{
 		heightLimitLimit = (int)(height * 12.0D);
 		minHeight = heightLimitLimit / 2;
-		trunkSize = (int)(height / 3.0D);
+		trunkSize = (int)Math.round((height / 2D));
 
 		if (height > 0.5D)
 		{
@@ -524,6 +534,12 @@ public class WorldGenMassiveTree extends WorldGenerator
 	public WorldGenMassiveTree setLeafAttenuation(double a)
 	{
 		heightAttenuation = a;
+		return this;
+	}
+	
+	public WorldGenMassiveTree setSloped(boolean s)
+	{
+		slopeTrunk = s;
 		return this;
 	}
 
@@ -550,7 +566,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return false;
 		else
 		{
-			// TODO: notify blocks under the trunk of tree growth
+			height = (int)(heightLimit * heightAttenuation);
+			if (height >= heightLimit)
+				height = heightLimit - 1;
+			height += rand.nextInt(heightLimit - height);
+			
 			this.generateLeafNodeList();
 			this.generateLeaves();
 			this.generateTrunk();

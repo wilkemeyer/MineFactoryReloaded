@@ -55,7 +55,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 		
 		if (meta == 1)
 		{
-			if (!new WorldGenMassiveTree().generate(world, rand, x, y, z))
+			if (!new WorldGenMassiveTree().setSloped(true).generate(world, rand, x, y, z))
 				world.setBlock(x, y, z, this, 1, 4);
 		}
 		else if (!treeGen.growTree(world, rand, x, y, z))
