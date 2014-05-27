@@ -30,12 +30,12 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 
 		IInventoryManager minecart = InventoryManager.create((IInventory)entity, ForgeDirection.UNKNOWN);
 
-		for(Entry<ForgeDirection, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
+		for (Entry<ForgeDirection, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
 		{
 			IInventoryManager chest = InventoryManager.create(inventory.getValue(), inventory.getKey().getOpposite()); 
-			for(Entry<Integer, ItemStack> contents : chest.getContents().entrySet())
+			for (Entry<Integer, ItemStack> contents : chest.getContents().entrySet())
 			{
-				if(contents.getValue() == null)
+				if (contents.getValue() == null)
 				{
 					continue;
 				}
@@ -43,10 +43,10 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 
 				ItemStack remaining = minecart.addItem(stackToAdd);
 
-				if(remaining != null)
+				if (remaining != null)
 				{
 					stackToAdd.stackSize -= remaining.stackSize;
-					if(stackToAdd.stackSize > 0)
+					if (stackToAdd.stackSize > 0)
 					{
 						chest.removeItem(stackToAdd.stackSize, stackToAdd);
 					}

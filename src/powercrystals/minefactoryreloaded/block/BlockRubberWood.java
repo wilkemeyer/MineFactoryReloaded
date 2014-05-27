@@ -66,17 +66,17 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		return drops;
 	}
 
-    @Override
+	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-    {
-        return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
-    }
-    
-    @Override
-    public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-    {
-        return super.getFlammability(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
-    }
+	{
+		return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
+	}
+
+	@Override
+	public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	{
+		return super.getFlammability(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)

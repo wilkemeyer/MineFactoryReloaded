@@ -27,10 +27,10 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 {
 	private IIcon _sideIcon;
 	private IIcon _topIcon;
-	
+
 	private static final ForgeDirection[] _attachDirections = new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
 	private static final int _attachDistance = 16;
-	
+
 	public BlockVineScaffold()
 	{
 		super(Material.leaves);
@@ -40,12 +40,12 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		setBlockBounds(0F, 1 / 48f, 0F, 1F, 1f - 1 / 48f, 1F);
 		setTickRandomly(true);
 	}
-	
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		//if(entity instanceof EntityPlayerMP)
-			//((EntityPlayerMP)entity).playerNetServerHandler.ticksForFloatKick = 0;
+		//((EntityPlayerMP)entity).playerNetServerHandler.ticksForFloatKick = 0;
 		entity.fallDistance = 0;
 		if (entity.isCollidedHorizontally)
 		{
@@ -63,7 +63,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 			entity.motionY = -0.10D;
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
@@ -72,7 +72,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 				z + this.minZ + shrinkAmount, x + this.maxX - shrinkAmount,
 				y + this.maxY, z + this.maxZ - shrinkAmount);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
@@ -82,46 +82,46 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		_sideIcon = new IconInverted(_sideIcon);
 		_topIcon = new IconInverted(_topIcon);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
 		return side < 2 ? _topIcon : _sideIcon;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdVineScaffold;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return !world.getBlock(x, y, z).isOpaqueCube();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getRenderColor(int meta)
 	{
 		return ColorizerFoliage.getFoliageColorBasic();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
@@ -129,7 +129,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		int r = 0;
 		int g = 0;
 		int b = 0;
-		
+
 		for(int zOffset = -1; zOffset <= 1; ++zOffset)
 		{
 			for(int xOffset = -1; xOffset <= 1; ++xOffset)
@@ -140,10 +140,10 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		b += biomeColor & 255;
 			}
 		}
-		
+
 		return (r / 9 & 255) << 16 | (g / 9 & 255) << 8 | b / 9 & 255;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
@@ -177,13 +177,13 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean canPlaceBlockAt(World world, int x, int y, int z)
 	{
 		return canBlockStay(world, x, y, z);
 	}
-	
+
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z)
 	{
@@ -206,13 +206,13 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		onNeighborBlockChange(world, x, y, z, null);
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
@@ -222,7 +222,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 			world.setBlockToAir(x, y, z);
 		}
 	}
-	
+
 	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{

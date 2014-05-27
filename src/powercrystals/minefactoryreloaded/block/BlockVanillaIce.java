@@ -25,14 +25,14 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 		setBlockName("ice");
 		_ice = Blocks.ice;
 	}
-	
+
 	@Override public int hashCode() { return _ice.hashCode(); }
 	@Override
 	public boolean equals(Object obj)
 	{
 		return obj == _ice | obj == this;
 	}
-	
+
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
@@ -41,17 +41,17 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 			super.updateTick(world, x, y, z, rand);
 		}
 	}
-	
+
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
 		player.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(this)], 1);
 		player.addExhaustion(0.025F);
-		
+
 		if(this.canSilkHarvest() && EnchantmentHelper.getSilkTouchModifier(player))
 		{
 			ItemStack droppedStack = this.createStackedBlock(meta);
-			
+
 			if(droppedStack != null)
 			{
 				this.dropBlockAsItem(world, x, y, z, droppedStack);
@@ -63,11 +63,11 @@ public class BlockVanillaIce extends BlockIce implements IRedNetDecorative
 			{
 				return;
 			}
-			
+
 			int fortune = EnchantmentHelper.getFortuneModifier(player);
 			this.dropBlockAsItem(world, x, y, z, meta, fortune);
 			Material var8 = world.getBlock(x, y - 1, z).getMaterial();
-			
+
 			if((var8.blocksMovement() || var8.isLiquid()) && meta == 0)
 			{
 				world.setBlock(x, y, z, Blocks.flowing_water);

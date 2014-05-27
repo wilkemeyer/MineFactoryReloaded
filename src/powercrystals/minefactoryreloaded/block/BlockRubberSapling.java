@@ -20,7 +20,7 @@ import powercrystals.minefactoryreloaded.world.WorldGenRubberTree;
 public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnection
 {
 	private static WorldGenRubberTree treeGen = new WorldGenRubberTree(true);
-			
+
 	public BlockRubberSapling()
 	{
 		setHardness(0.0F);
@@ -28,20 +28,20 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 		setBlockName("mfr.rubberwood.sapling");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister)
 	{
 		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
-	
+
 	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
 		return blockIcon;
 	}
-	
+
 	@Override
 	public void func_149878_d(World world, int x, int y, int z, Random rand)
 	{
@@ -50,7 +50,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 
 		int meta = damageDropped(world.getBlockMetadata(x, y, z));
 		world.setBlockToAir(x, y, z);
-		
+
 		switch (meta)
 		{
 		case 1:

@@ -52,7 +52,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 	@SideOnly(Side.CLIENT)
 	private IIcon base, overlay, overlayFast, overlayStopped;
 	private int renderPass;
-	
+
 	public BlockConveyor()
 	{
 		super(Material.circuits);
@@ -68,13 +68,13 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		renderPass = pass;
 		return true;
 	}
-	
+
 	@Override
 	public int getRenderBlockPass()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
@@ -84,7 +84,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		overlayFast = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".overlay.fast");
 		overlayStopped = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".overlay.stopped");
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
@@ -129,7 +129,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
@@ -161,7 +161,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
 	{
@@ -175,7 +175,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderColor(int meta)
 	{
@@ -183,7 +183,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			return colors[meta];
 		return 0xFFFFFF;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
@@ -201,25 +201,25 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		return base;
 	}
 
-    @Override
+	@Override
 	@SideOnly(Side.CLIENT)
-    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-    {
-    	int meta = 0;
-    	if (renderPass == 1)
-    	{
-    		TileEntity tile = world.getTileEntity(x, y, z);
-    		if (tile instanceof TileEntityConveyor)
-    		{
-    			TileEntityConveyor tec = (TileEntityConveyor)tile;
-    			meta = tec.isFast() ? 2 : 1;
-    			if (!tec.getConveyorActive())
-    				meta = 0;
-    		}
-    	}
-        return getIcon(side, meta);
-    }
-	
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	{
+		int meta = 0;
+		if (renderPass == 1)
+		{
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if (tile instanceof TileEntityConveyor)
+			{
+				TileEntityConveyor tec = (TileEntityConveyor)tile;
+				meta = tec.isFast() ? 2 : 1;
+				if (!tec.getConveyorActive())
+					meta = 0;
+			}
+		}
+		return getIcon(side, meta);
+	}
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
@@ -244,14 +244,14 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		{
 			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
 		}
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityConveyor)
 		{
 			((TileEntityConveyor)te).setDyeColor(stack.getItemDamage() == 16 ? -1 : stack.getItemDamage());
 		}
 	}
-	
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
@@ -260,36 +260,36 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			for (Class<?> blacklist : MFRRegistry.getConveyerBlacklist())
 				if (blacklist.isInstance(entity))
 					return;
-		
+
 		if (!(isItem || entity instanceof EntityLivingBase || entity instanceof EntityTNTPrimed))
 			return;
-		
+
 		TileEntity conveyor = world.getTileEntity(x, y, z);
 		if(!(conveyor instanceof TileEntityConveyor && ((TileEntityConveyor)conveyor).getConveyorActive()))
 			return;
-		
+
 		if (!world.isRemote && entity instanceof EntityItem)
 			specialRoute(world, x, y, z, (EntityItem)entity);
-		
+
 		if (entity instanceof EntityLivingBase)
-		l: {
+			l: {
 			ItemStack item = ((EntityLivingBase)entity).getEquipmentInSlot(1);
 			if (item == null) break l;
 			if (item.getItem() instanceof ItemPlasticBoots)
 				return;
 		}
 		double mult = ((TileEntityConveyor)conveyor).isFast() ? 2.1 : 1.15;
-		
+
 		double xVelocity = 0;
 		double yVelocity = 0;
 		double zVelocity = 0;
-		
+
 		int md = world.getBlockMetadata(x, y, z);
-		
+
 		int horizDirection = md & 0x03;
 		boolean isUphill = (md & 0x04) != 0;
 		boolean isDownhill = (md & 0x08) != 0;
-		
+
 		if(isUphill)
 		{
 			yVelocity = 0.17D * mult;
@@ -302,12 +302,12 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		{
 			yVelocity = -0.07 * mult;
 		}
-		
+
 		if (isUphill | isDownhill)
 		{
 			entity.onGround = false;
 		}
-		
+
 		switch (horizDirection)
 		{
 		case 0:
@@ -323,7 +323,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			zVelocity = -0.1D * mult;
 			break;
 		}
-		
+
 		if(horizDirection == 0 | horizDirection == 2)
 		{
 			if(entity.posZ > z + 0.55D)
@@ -346,7 +346,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 				xVelocity = 0.1D * mult;
 			}
 		}
-		
+
 		setEntityVelocity(entity, xVelocity, yVelocity, zVelocity);
 
 		entity.fallDistance *= 0.9;
@@ -355,13 +355,13 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			((EntityItem)entity).delayBeforeCanPickup = 40;
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		int md = world.getBlockMetadata(x, y, z);
 		float shrink = 0.125f;
-		
+
 		if((md & 0x0C) == 0)
 		{
 			return AxisAlignedBB.getAABBPool().getAABB(x + shrink, y, z + shrink,
@@ -373,12 +373,12 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 					x + 1 - shrink, y + 0.01F, z + 1 - shrink);
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		int md = world.getBlockMetadata(x, y, z);
-		
+
 		if((md & 0x0C) == 0)
 		{
 			return AxisAlignedBB.getAABBPool().getAABB(x + 0.05F, y, z + 0.05F, x + 1 - 0.05F, y + 0.1F, z + 1 - 0.05F);
@@ -388,20 +388,20 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			return AxisAlignedBB.getAABBPool().getAABB(x + 0.1F, y, z + 0.1F, x + 1 - 0.1F, y + 0.1F, z + 1 - 0.1F);
 		}
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3 vec3d, Vec3 vec3d1)
 	{
 		setBlockBoundsBasedOnState(world, i, j, k);
 		return super.collisionRayTrace(world, i, j, k, vec3d, vec3d1);
 	}
-	
+
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
 	{
@@ -415,44 +415,44 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 		}
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdConveyor;
 	}
-	
+
 	@Override
 	public int quantityDropped(Random random)
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public boolean canPlaceBlockAt(World world, int x, int y, int z)
 	{
 		return canBlockStay(world, x, y, z);
 	}
-	
+
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z)
 	{
 		return world.isSideSolid(x, y - 1, z, ForgeDirection.UP);
 	}
-	
+
 	@Override
 	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
 	{
-        if (world.isRemote)
-        {
-            return false;
-        }
+		if (world.isRemote)
+		{
+			return false;
+		}
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof IRotateableTile)
 		{
@@ -465,12 +465,12 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
 		ItemStack item = player.getHeldItem();
-		
+
 		if (MFRUtil.isHoldingHammer(player))
 		{
 			TileEntity te = world.getTileEntity(x, y, z);
@@ -493,7 +493,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborId)
 	{
@@ -510,24 +510,24 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			((TileEntityConveyor)tec).updateConveyorActive();
 		}
 	}
-	
+
 	private void setEntityVelocity(Entity e, double x, double y, double z)
 	{
 		e.motionX = x;
 		e.motionY = y;
 		e.motionZ = z;
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new TileEntityConveyor();
 	}
-	
-    @Override
-    @SideOnly(Side.CLIENT)
+
+	@Override
+	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
-    {
+	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		int dyeColor = 16;
 		if(te instanceof TileEntityConveyor)
@@ -536,11 +536,11 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			if(dyeColor == -1) dyeColor = 16;
 		}
 		return getRenderColor(dyeColor);
-    }
-	
+	}
+
 	@Override
-    public int getDamageValue(World world, int x, int y, int z)
-    {
+	public int getDamageValue(World world, int x, int y, int z)
+	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		int dyeColor = 16;
 		if(te instanceof TileEntityConveyor)
@@ -549,8 +549,8 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			if(dyeColor == -1) dyeColor = 16;
 		}
 		return dyeColor;
-    }
-	
+	}
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
@@ -563,12 +563,12 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
 	}
-	
+
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
 	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
@@ -577,49 +577,49 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			world.func_147480_a(x, y, z, true);
 		}
 	}
-	
+
 	@Override
-    public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z)
-    {
-        return false;
-    }
-	
+	public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z)
+	{
+		return false;
+	}
+
 	@Override
 	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canProvidePower()
 	{
 		return false;
 	}
-	
+
 	// IRedNetOmniNode
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return RedNetConnectionType.PlateSingle;
 	}
-	
+
 	@Override
 	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
 	}
-	
+
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
@@ -629,7 +629,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			((TileEntityConveyor)te).onRedNetChanged(inputValue);
 		}
 	}
-	
+
 	private void specialRoute(World world, int x, int y, int z, EntityItem entityitem)
 	{
 		TileEntity teBelow = world.getTileEntity(x, y - 1, z);
@@ -639,7 +639,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		}
 		else if (teBelow instanceof IEntityCollidable)
 		{
-				((IEntityCollidable)teBelow).onEntityCollided(entityitem);
+			((IEntityCollidable)teBelow).onEntityCollided(entityitem);
 		}
 		else if(teBelow instanceof TileEntityHopper)
 		{

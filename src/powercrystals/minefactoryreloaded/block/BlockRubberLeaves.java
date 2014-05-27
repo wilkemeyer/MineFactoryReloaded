@@ -86,15 +86,15 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			{
 				int j2 = iba.getBiomeGenForCoords(x + i2, z + l1).getBiomeFoliageColor(x, y, z);
 				r += (j2 & 16711680) >> 16;
-				g += (j2 & 65280) >> 8;
-				b += j2 & 255;
+			g += (j2 & 65280) >> 8;
+			b += j2 & 255;
 			}
-		
+
 		r = (r / 9 & 255);
 		g = (g / 9 & 255);
 		b = (b / 9 & 255);
 		if (meta == 1)
-			 return (r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
+			return (r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
 
 		return r << 16 | g << 8 | b;
 	}
@@ -116,7 +116,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	{
 		return false;
 	}
-	
+
 	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
@@ -206,9 +206,9 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		super.updateTick(world, x, y, z, rand);
 	}
 
-    @Override
-    public void breakBlock(World world, int x, int y, int z, Block id, int meta)
-    {
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block id, int meta)
+	{
 		if (updating.get() != null)
 		{
 			boolean decay = false;
@@ -232,13 +232,13 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			if (decay && world.rand.nextInt(chance) == 0)
 				world.setBlock(x, y, z, id, meta | 1, 2);
 		}
-    }
-    
-    @Override
-    public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-    {
-    	return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) * 2 + 1);
-    }
+	}
+
+	@Override
+	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	{
+		return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) * 2 + 1);
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -254,7 +254,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		subTypes.add(new ItemStack(blockId, 1, 0));
 		subTypes.add(new ItemStack(blockId, 1, 1));
 	}
-	
+
 	@Override public String[] func_150125_e() { return null; }
-	
+
 }

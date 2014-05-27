@@ -29,7 +29,7 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 		ObfuscationReflectionHelper.setPrivateValue(ItemBlock.class,
 				(ItemBlock)Item.getItemFromBlock(_pane), this, "field_150939_a");
 	}
-	
+
 	@Override public int hashCode() { return _pane.hashCode(); }
 	@Override
 	public boolean equals(Object obj)
@@ -42,7 +42,7 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 	{
 		return false;
 	}
-	
+
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
@@ -57,13 +57,13 @@ public class BlockVanillaGlassPane extends BlockFactoryGlassPane
 			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 7);
 		return _iconPane;
 	}
-	
+
 	@Override
 	public IIcon func_150097_e()
 	{
 		return _iconSide;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerBlockIcons(IIconRegister ir)

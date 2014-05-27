@@ -75,7 +75,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 				return;
 			}
 			data.setLong("mfr:fluidTimer" + fluidName, world.getTotalWorldTime() + 40);
-			
+
 			EntityLivingBase ent = (EntityLivingBase)entity;
 			if (this == MineFactoryReloadedCore.milkLiquid)
 			{
@@ -108,31 +108,31 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 		}
 	}
 
-    @Override
-    public int getLightValue(IBlockAccess world, int x, int y, int z)
-    {
-    	int light = super.getLightValue(world, x, y, z); 
-        if (maxScaledLight != 0)
-            light = Math.max(light, 2);
-        return light;
-    }
-    
-    @Override
-    public void onBlockAdded(World world, int x, int y, int z)
-    {
-    	checkCanStay(world, x, y, z, world.rand);
-    }
-    
+	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	{
+		int light = super.getLightValue(world, x, y, z); 
+		if (maxScaledLight != 0)
+			light = Math.max(light, 2);
+		return light;
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		checkCanStay(world, x, y, z, world.rand);
+	}
+
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		checkCanStay(world, x, y, z, rand);
 		super.updateTick(world, x, y, z, rand);
 	}
-    
-    protected void checkCanStay(World world, int x, int y, int z, Random rand)
-    {
-    	/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+
+	protected void checkCanStay(World world, int x, int y, int z, Random rand)
+	{
+		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
 		l: if (world.provider.isHellWorld)
 		{
@@ -222,12 +222,12 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 			{
 				if (drop != null && drop.stackSize > 0)
 					this.dropBlockAsItem(world, x, y, z, drop);
-				
+
 				fizz(world, x, y, z, rand);
 				return;
 			}
 		}
-    }
+	}
 
 	protected void fizz(World world, int x, int y, int z, Random rand)
 	{

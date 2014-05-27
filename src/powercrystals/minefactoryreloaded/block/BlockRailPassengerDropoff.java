@@ -55,19 +55,19 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail
 		int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt();
 
 		bb.offset(0.25, -searchY + 0.01, 0.25);
-		for(int offsetY = -searchY; offsetY <= searchY; offsetY++)
+		for (int offsetY = -searchY; offsetY <= searchY; offsetY++)
 		{
 			bb.offset(-searchX, 0, 0);
-			for(int offsetX = -searchX; offsetX <= searchX; offsetX++)
+			for (int offsetX = -searchX; offsetX <= searchX; offsetX++)
 			{
 				bb.offset(0, 0, -searchX);
-				for(int offsetZ = -searchX; offsetZ <= searchX; offsetZ++)
+				for (int offsetZ = -searchX; offsetZ <= searchX; offsetZ++)
 				{
 					int targetX = MathHelper.floor_double(bb.minX + (bb.maxX - bb.minX) / 2);
 					int targetY = MathHelper.floor_double(bb.minY);
 					int targetZ = MathHelper.floor_double(bb.minZ + (bb.maxZ - bb.minZ) / 2);
 
-					if(world.func_147461_a(bb).isEmpty() &&
+					if (world.func_147461_a(bb).isEmpty() &&
 							!isBadBlockToStandIn(world, targetX, targetY, targetZ) &&
 							!isBadBlockToStandOn(world, targetX, targetY - 1, targetZ))
 					{

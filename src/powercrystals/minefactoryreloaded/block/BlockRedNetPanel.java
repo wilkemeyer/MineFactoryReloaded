@@ -29,16 +29,16 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 {
 	private int[] _blankOutputs = new int[16];
-	
+
 	public BlockRedNetPanel()
 	{
 		super(Machine.MATERIAL);
 		setBlockName("mfr.rednet.panel");
 		setHardness(0.8F);
-		
+
 		setCreativeTab(MFRCreativeTab.tab);
 	}
-	
+
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
@@ -63,7 +63,7 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 			}
 		}
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
@@ -79,7 +79,7 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 			stack.getTagCompound().setInteger("z", z);
 			te.readFromNBT(stack.getTagCompound());
 		}
-		
+
 		if(te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
@@ -101,7 +101,7 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
@@ -110,9 +110,9 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 		{
 			return false;
 		}
-		
+
 		ItemStack s = player.inventory.getCurrentItem();
-		
+
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(MFRUtil.isHoldingHammer(player) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
@@ -133,25 +133,25 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdRedNetPanel;
 	}
-	
+
 	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube()
 	{
@@ -163,7 +163,7 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 	{
 		return new TileEntityRedNetHistorian();
 	}
-	
+
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
@@ -174,19 +174,19 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 		}
 		return RedNetConnectionType.None;
 	}
-	
+
 	@Override
 	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return _blankOutputs;
 	}
-	
+
 	@Override
 	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
@@ -196,12 +196,12 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 			((TileEntityRedNetHistorian)te).valuesChanged(inputValues);
 		}
 	}
-	
+
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
 	}
-	
+
 	@Override
 	public void registerBlockIcons(IIconRegister ir)
 	{

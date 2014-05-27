@@ -25,14 +25,14 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 	@Override
 	public void onMinecartPass(World world, EntityMinecart entity, int x, int y, int z)
 	{
-		if(world.isRemote || !(entity instanceof IInventory))
+		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
 		IInventoryManager minecart = InventoryManager.create((IInventory)entity, ForgeDirection.UNKNOWN);
 
-		for(Entry<Integer, ItemStack> contents : minecart.getContents().entrySet())
+		for (Entry<Integer, ItemStack> contents : minecart.getContents().entrySet())
 		{
-			if(contents.getValue() == null)
+			if (contents.getValue() == null)
 			{
 				continue;
 			}
@@ -40,7 +40,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 			ItemStack stackToAdd = contents.getValue().copy();
 			ItemStack remaining = UtilInventory.dropStack(world, new BlockPosition(x, y, z), contents.getValue(), ForgeDirection.VALID_DIRECTIONS, ForgeDirection.UNKNOWN);
 
-			if(remaining != null)
+			if (remaining != null)
 			{
 				stackToAdd.stackSize -= remaining.stackSize;
 			}

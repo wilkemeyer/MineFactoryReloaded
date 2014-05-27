@@ -21,10 +21,10 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 public class BlockDecorativeStone extends Block implements IRedNetDecorative
 {
 	static String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
-			"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
-			"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
+		"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
+		"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
 	private IIcon[] _icons = new IIcon[_names.length];
-	
+
 	public BlockDecorativeStone()
 	{
 		super(Material.rock);
@@ -34,13 +34,13 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 		setBlockName("mfr.decorativestone");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
-	
+
 	@Override
 	public int damageDropped(int meta)
 	{
 		return meta;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerBlockIcons(IIconRegister ir)
@@ -50,7 +50,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
 		}
 	}
-	
+
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
@@ -77,7 +77,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 			this.tryToFall(par1World, par2, par3, par4);
 		}
 	}
-	
+
 	private void tryToFall(World par1World, int par2, int par3, int par4)
 	{
 		int meta = par1World.getBlockMetadata(par2, par3, par4);

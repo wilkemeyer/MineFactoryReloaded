@@ -16,10 +16,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecorative
 {
 	static String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
-			"glowstone_large", "ice_large", "lapis_large", "obsidian_large", "snow_large", "prc", "meat.raw",
-			"meat.cooked", "pavedstone_large", "brick_large" };
+		"glowstone_large", "ice_large", "lapis_large", "obsidian_large", "snow_large", "prc", "meat.raw",
+		"meat.cooked", "pavedstone_large", "brick_large" };
 	private IIcon[] _icons = new IIcon[_names.length];
-	
+
 	public BlockFactoryDecorativeBricks()
 	{
 		super(Material.rock);
@@ -29,27 +29,27 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 		setBlockName("mfr.decorativebrick");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
-	
+
 	@Override
 	public int damageDropped(int meta)
 	{
 		return meta;
 	}
-	
+
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
 		return meta == 1 | meta == 6 ? 15 : 0;
 	}
-	
+
 	@Override
-    public float getExplosionResistance(Entity e, World world, int x, int y, int z, double eX, double eY, double eZ)
-    {
+	public float getExplosionResistance(Entity e, World world, int x, int y, int z, double eX, double eY, double eZ)
+	{
 		int meta = world.getBlockMetadata(x, y, z);
-        return meta == 3 | meta == 9 ? Blocks.obsidian.getExplosionResistance(e) : getExplosionResistance(e);
-    }
-	
+		return meta == 3 | meta == 9 ? Blocks.obsidian.getExplosionResistance(e) : getExplosionResistance(e);
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerBlockIcons(IIconRegister ir)
@@ -59,7 +59,7 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
 		}
 	}
-	
+
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{

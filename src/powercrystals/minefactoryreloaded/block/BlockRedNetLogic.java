@@ -36,7 +36,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 {
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
-	
+
 	public BlockRedNetLogic()
 	{
 		super(Machine.MATERIAL);
@@ -44,7 +44,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 		setHardness(0.8F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
@@ -74,7 +74,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 2, 3);
 			}//*/
-			
+
 			if(stack.hasTagCompound())
 			{
 				stack.getTagCompound().setInteger("x", x);
@@ -84,27 +84,27 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 			}
 		}
 	}
-	
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
 	{
 		BlockNBTManager.setForBlock(world.getTileEntity(x, y, z));
 		super.breakBlock(world, x, y, z, blockId, meta);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntityRedNetLogic();
 	}
-	
+
 	@Override
 	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
 	{
-        if (world.isRemote)
-        {
-            return false;
-        }
+		if (world.isRemote)
+		{
+			return false;
+		}
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetLogic)
 		{
@@ -117,7 +117,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 		world.setBlockMetadataWithNotify(x, y, z, nextMeta, 3);
 		return true;
 	}
-	
+
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
@@ -131,7 +131,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 		}
 		return RedNetConnectionType.CableAll;
 	}
-	
+
 	@Override
 	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
@@ -145,7 +145,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
 	{
@@ -159,7 +159,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 			return new int[16];
 		}
 	}
-	
+
 	@Override
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
@@ -169,12 +169,12 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 			logic.onInputsChanged(side, inputValues);
 		}
 	}
-	
+
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
@@ -183,7 +183,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 		{
 			return false;
 		}
-		
+
 		if(MFRUtil.isHoldingHammer(player))
 		{
 			if (rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
@@ -191,7 +191,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 				return true;
 			}
 		}
-		
+
 		if(MFRUtil.isHolding(player, ItemLogicUpgradeCard.class))
 		{
 			TileEntityRedNetLogic logic = (TileEntityRedNetLogic)world.getTileEntity(x, y, z);
@@ -218,38 +218,38 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 		}
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
 	{
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdRedNetLogic;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isNormalCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{

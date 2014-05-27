@@ -29,12 +29,12 @@ public class BlockDetCord extends BlockContainer
 		return null;
 	}
 
-    @Override
+	@Override
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
-    {
-        return false; // temporary
-    }
-	
+	{
+		return false; // temporary
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister)
