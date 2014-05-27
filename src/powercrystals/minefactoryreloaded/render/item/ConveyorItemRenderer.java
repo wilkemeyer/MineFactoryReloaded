@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.render.item;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
@@ -39,6 +40,8 @@ public class ConveyorItemRenderer implements IItemRenderer
 
 		if(type == ItemRenderType.INVENTORY)
 		{
+	        GL11.glEnable(GL11.GL_BLEND);
+	        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glScalef(16f, 16f, 16f);
 			GL11.glTranslatef(0.5f, 0.5f, 0.5f);

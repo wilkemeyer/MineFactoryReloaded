@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.conveyor;
 
-import buildcraft.api.gates.IAction;
-import buildcraft.api.gates.IActionReceptor;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
@@ -21,10 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.modhelpers.buildcraft.Buildcraft;
-
 public class TileEntityConveyor extends TileEntity
-			implements IRotateableTile, ISidedInventory, IPipeConnection, IActionReceptor
+			implements IRotateableTile, ISidedInventory, IPipeConnection
 {
 	private int _dye = -1;
 	
@@ -79,7 +75,7 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
 	@Override
-	public void rotate()
+	public void rotate(ForgeDirection axis)
 	{
 		int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		if(md == 0)
@@ -216,7 +212,7 @@ public class TileEntityConveyor extends TileEntity
 	}
 	
 	@Override
-	public boolean canRotate()
+	public boolean canRotate(ForgeDirection axis)
 	{
 		return true;
 	}
@@ -520,6 +516,7 @@ public class TileEntityConveyor extends TileEntity
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void reverseConveyor()
 	{
 		setReversed(_rednetReversed | (_gateReversed = !_isReversed));
@@ -553,12 +550,5 @@ public class TileEntityConveyor extends TileEntity
 		if (with == ForgeDirection.DOWN & type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
-	}
-
-	@Override
-	public void actionActivated(IAction action)
-	{
-		if (action != null && action == Buildcraft.reverse)
-			reverseConveyor();
 	}
 }

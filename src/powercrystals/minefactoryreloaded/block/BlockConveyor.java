@@ -36,15 +36,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 
-public class BlockConveyor extends BlockContainer implements IConnectableRedNet
+public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 {
 	public static final int[] colors = new int[] {0xffffff, 0xfa9753, 0xd263dc,
 		0x7598e2, 0xedde39, 0x50dc43, 0xe790a7, 0x525252, 0xbababa, 0x3785a6,
@@ -66,7 +66,13 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	public boolean canRenderInPass(int pass)
 	{
 		renderPass = pass;
-		return pass <= 1;
+		return true;
+	}
+	
+	@Override
+	public int getRenderBlockPass()
+	{
+		return 1;
 	}
 	
 	@Override
@@ -451,9 +457,9 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		if(te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
-			if (tile.canRotate())
+			if (tile.canRotate(axis))
 			{
-				tile.rotate();
+				tile.rotate(axis);
 				return true;
 			}
 		}
@@ -470,7 +476,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof IRotateableTile)
 			{
-				((IRotateableTile)te).rotate();
+				((IRotateableTile)te).rotate(ForgeDirection.getOrientation(side));
 			}
 			return true;
 		}
@@ -573,6 +579,12 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 	}
 	
 	@Override
+    public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z)
+    {
+        return false;
+    }
+	
+	@Override
 	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
 		return false;
@@ -584,7 +596,7 @@ public class BlockConveyor extends BlockContainer implements IConnectableRedNet
 		return false;
 	}
 	
-	// IConnectableRedNet
+	// IRedNetOmniNode
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{

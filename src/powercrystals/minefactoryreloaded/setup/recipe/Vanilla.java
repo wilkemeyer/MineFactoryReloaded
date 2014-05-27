@@ -1567,6 +1567,12 @@ public class Vanilla
 				Items.water_bucket,
 				Items.wheat
 					} );
+			GameRegistry.addShapelessRecipe(new ItemStack(Blocks.stonebrick, 1, 1), new Object[]
+					{
+				new ItemStack(Blocks.stonebrick, 1, 0),
+				Items.water_bucket,
+				Items.wheat
+					} );
 		}
 		
 		if(MFRConfig.enableSmoothSlabRecipe.getBoolean(true))

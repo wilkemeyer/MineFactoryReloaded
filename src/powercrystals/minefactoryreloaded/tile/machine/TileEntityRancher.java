@@ -73,18 +73,18 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 		
 		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 		
-		for(Object o : entities)
+		for (Object o : entities)
 		{
 			EntityLivingBase e = (EntityLivingBase)o;
-			if(MFRRegistry.getRanchables().containsKey(e.getClass()))
+			if (MFRRegistry.getRanchables().containsKey(e.getClass()))
 			{
 				IFactoryRanchable r = MFRRegistry.getRanchables().get(e.getClass());
 				List<RanchedItem> drops = r.ranch(worldObj, e, this);
-				if(drops != null)
+				if (drops != null)
 				{
-					for(RanchedItem s : drops)
+					for (RanchedItem s : drops)
 					{
-						if(s.hasFluid()) // whitelist fluids? multiple tanks?
+						if (s.hasFluid()) // whitelist fluids? multiple tanks?
 						{
 							fill((FluidStack)s.getResult(), true);
 							didDrop = true;
@@ -94,7 +94,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 						doDrop((ItemStack)s.getResult());
 						didDrop = true;
 					}
-					if(didDrop)
+					if (didDrop)
 					{
 						markDirty();
 						setIdleTicks(20);

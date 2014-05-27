@@ -1,18 +1,12 @@
 package powercrystals.minefactoryreloaded.modhelpers.extrabiomes;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-
-import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -28,7 +22,6 @@ public class ExtraBiomes
 	{
 		if(!Loader.isModLoaded("ExtrabiomesXL"))
 		{
-			FMLLog.warning("ExtraBiomesXL missing - MFR ExtraBiomesXL Compat not loading");
 			return;
 		}
 		
@@ -45,27 +38,28 @@ public class ExtraBiomes
 		
 		try
 		{
+			/*
 			Class<?> xbbs = Class.forName("extrabiomes.lib.BlockSettings");
 			
 			for(String s : new String[] { "AUTUMNLEAVES", "GREENLEAVES" })
 			{
 				Object o = xbbs.getField(s).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
-				//MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(blockID));
+				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(blockID));
 			}
 			
 			for(Entry<String, HarvestType> e : _harvestRegistries.entrySet())
 			{
 				Object o = xbbs.getField(e.getKey()).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
-				//MFRRegistry.registerHarvestable(new HarvestableStandard(blockID, e.getValue()));
+				MFRRegistry.registerHarvestable(new HarvestableStandard(blockID, e.getValue()));
 			}
 			
 			for(String s : new String[] { "SAPLING", "CATTAIL" })
 			{
 				Object o = xbbs.getField(s).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
-				//MFRRegistry.registerPlantable(new PlantableStandard(blockID, blockID));
+				MFRRegistry.registerPlantable(new PlantableStandard(blockID, blockID));
 			}
 			
 			
@@ -75,10 +69,11 @@ public class ExtraBiomes
 			Object o = xbbs.getField("SAPLING").get(null);
 			int saplingBlockID = (Integer)xbbs.getMethod("getID").invoke(o);
 			
-			//MFRRegistry.registerFertilizable(new FertilizableExtraBiomesTree(saplingBlockID, fert));
+			MFRRegistry.registerFertilizable(new FertilizableExtraBiomesTree(saplingBlockID, fert));
 			
-			//MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("QUICKSAND").get(null)), 1, 0));
-			//MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("CRACKEDSAND").get(null)), 1, 0));
+			MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("QUICKSAND").get(null)), 1, 0));
+			MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("CRACKEDSAND").get(null)), 1, 0));
+			//*/
 			
 			MFRRegistry.registerRubberTreeBiome("Autumn Woods");
 			MFRRegistry.registerRubberTreeBiome("Birch Forest");
@@ -98,7 +93,7 @@ public class ExtraBiomes
 			MFRRegistry.registerRubberTreeBiome("Temperate Rainforest");
 			MFRRegistry.registerRubberTreeBiome("Woodlands");
 		}
-		catch(Exception e)
+		catch(Throwable e)
 		{
 			e.printStackTrace();
 		}

@@ -50,14 +50,14 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	@Override
 	protected boolean activateMachine()
 	{
-		if(drain(_tanks[0], 2, false) == 2)
+		if (drain(_tanks[0], 2, false) == 2)
 		{
 			setWorkDone(getWorkDone() + 1);
 			
-			if(getWorkDone() >= getWorkMax())
+			if (getWorkDone() >= getWorkMax())
 			{
 				ItemStack item;
-				if(_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
+				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
 				{
 					item = new ItemStack(MineFactoryReloadedCore.meatIngotRawItem);
 				}
@@ -97,14 +97,14 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
+		if (resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
 				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1))))
 		{
 			return 0;
 		}
 		else
 		{
-			if(drain(_tanks[0], 2, false) == 1)
+			if (drain(_tanks[0], 2, false) == 1)
 			{
 				drain(_tanks[0], 1, true);
 			}

@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import cofh.pcc.inventory.IInventoryManager;
-import cofh.pcc.inventory.InventoryManager;
+import cofh.inventory.IInventoryManager;
+import cofh.inventory.InventoryManager;
 import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -56,9 +56,9 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	}
 	
 	@Override
-	public void rotate()
+	public void rotate(ForgeDirection axis)
 	{
-		super.rotate();
+		super.rotate(axis);
 		onRotate();
 	}
 	

@@ -42,7 +42,7 @@ public class TreeHarvestManager implements IHarvestManager
 	{
 		searchForTreeBlocks(_blocks.poke());
 		BlockNode bn = _blocks.shift();
-		BlockPosition bp = bn.bp.copy();
+		BlockPosition bp = new BlockPosition(bn.x, bn.y, bn.z);
 		bn.free();
 		return bp;
 	}
@@ -58,11 +58,10 @@ public class TreeHarvestManager implements IHarvestManager
 
 	private void searchForTreeBlocks(BlockNode bn)
 	{
-		BlockPosition bp = bn.bp;
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
 		
-		HarvestType type = getType(bn.bp, harvestables);
+		HarvestType type = getType(bn, harvestables);
 		if (type == null || type == HarvestType.TreeFruit)
 			return;
 
@@ -72,8 +71,8 @@ public class TreeHarvestManager implements IHarvestManager
 		for (int i = 0, e = sides.length; i < e; ++i)
 		{
 			SideOffset side = sides[i];
-			cur = BlockPool.getNext(bp.x + side.offsetX, bp.y + side.offsetY, bp.z + side.offsetZ);
-			addIfValid(getType(cur.bp, harvestables), cur);
+			cur = BlockPool.getNext(bn.x + side.offsetX, bn.y + side.offsetY, bn.z + side.offsetZ);
+			addIfValid(getType(cur, harvestables), cur);
 		}
 	}
 
@@ -97,9 +96,13 @@ public class TreeHarvestManager implements IHarvestManager
 		node.free();
 	}
 	
-	private HarvestType getType(BlockPosition bp, Map<Block, IFactoryHarvestable> harvestables)
+	private HarvestType getType(BlockNode bp, Map<Block, IFactoryHarvestable> harvestables)
 	{
-		if (!_area.contains(bp) || !_world.blockExists(bp.x, bp.y, bp.z))
+		Area area = _area;
+		if (bp.x < area.xMin || bp.x > area.xMax ||
+				bp.y < area.yMin || bp.y > area.yMax ||
+				bp.z < area.zMin || bp.z > area.zMax ||
+				!_world.blockExists(bp.x, bp.y, bp.z))
 			return null;
 
 		Block block = _world.getBlock(bp.x, bp.y, bp.z);
@@ -159,11 +162,10 @@ public class TreeHarvestManager implements IHarvestManager
 		BlockNode bn = _blocks.poke();
 		while (bn != null)
 		{
-			BlockPosition bp = bn.bp;
 			NBTTagCompound p = new NBTTagCompound();
-			p.setInteger("x", bp.x);
-			p.setInteger("y", bp.y);
-			p.setInteger("z", bp.z);
+			p.setInteger("x", bn.x);
+			p.setInteger("y", bn.y);
+			p.setInteger("z", bn.z);
 			list.appendTag(p);
 			bn = bn.next;
 		}

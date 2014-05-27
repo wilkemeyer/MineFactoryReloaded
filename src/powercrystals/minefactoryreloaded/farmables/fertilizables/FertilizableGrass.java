@@ -12,6 +12,13 @@ import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 
 public class FertilizableGrass implements IFactoryFertilizable
 {
+	protected Block grass;
+	public FertilizableGrass() { this(Blocks.grass); }
+	public FertilizableGrass(Block grass)
+	{
+		this.grass = grass;
+	}
+	
 	@Override
 	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
@@ -30,6 +37,6 @@ public class FertilizableGrass implements IFactoryFertilizable
 	@Override
 	public Block getPlant()
 	{
-		return Blocks.grass;
+		return grass;
 	}
 }

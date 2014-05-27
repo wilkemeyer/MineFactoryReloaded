@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.pcc.random.WeightedRandomItemStack;
+import cofh.fluid.BlockFluidCoFHBase;
+import cofh.util.RegistryUtils;
+import cofh.util.WeightedRandomItemStack;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,23 +21,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoConnection
+public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoConnection
 { // TODO: convert to BlockFluidFinite
-	private IIcon _iconFlowing;
-	private IIcon _iconStill;
+	private static DamageSource steam = new DamageSource("steam").
+			setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
+
+	@SideOnly(Side.CLIENT)
+	protected IIcon _iconFlowing;
+	@SideOnly(Side.CLIENT)
+	protected IIcon _iconStill;
 	protected String fluidName;
 	private static Fluid ensureFluid(String name)
 	{
@@ -47,10 +54,11 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 
 	public BlockFactoryFluid(String liquidName)
 	{
-		super(ensureFluid(liquidName), Material.water);
+		super(ensureFluid(liquidName), Material.water, liquidName);
 		setBlockName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
+		setDisplaceFluids(true);
 		fluidName = liquidName;
 	}
 
@@ -59,10 +67,10 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	{
 		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 
-		if(entity instanceof EntityLivingBase)
+		if (entity instanceof EntityLivingBase)
 		{
 			NBTTagCompound data = entity.getEntityData();
-			if (world.isRemote | data.getLong("mfr:fluidTimer" + fluidName) > world.getTotalWorldTime())
+			if (world.isRemote || data.getLong("mfr:fluidTimer" + fluidName) > world.getTotalWorldTime())
 			{
 				return;
 			}
@@ -93,6 +101,10 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0));
 			}
+			else if (this == MineFactoryReloadedCore.steamFluid)
+			{
+				ent.attackEntityFrom(steam, 6);
+			}
 		}
 	}
 
@@ -104,11 +116,23 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
             light = Math.max(light, 2);
         return light;
     }
-
+    
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+    	checkCanStay(world, x, y, z, world.rand);
+    }
+    
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
-		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+		checkCanStay(world, x, y, z, rand);
+		super.updateTick(world, x, y, z, rand);
+	}
+    
+    protected void checkCanStay(World world, int x, int y, int z, Random rand)
+    {
+    	/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
 		l: if (world.provider.isHellWorld)
 		{
@@ -203,9 +227,8 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 				return;
 			}
 		}
-		super.updateTick(world, x, y, z, rand);
-	}
-	
+    }
+
 	protected void fizz(World world, int x, int y, int z, Random rand)
 	{
 		world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D,
@@ -228,10 +251,19 @@ public class BlockFactoryFluid extends BlockFluidClassic implements IRedNetNoCon
 	@Override
 	public void registerBlockIcons(IIconRegister ir)
 	{
-		_iconStill = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		_iconFlowing = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName().replace(".still", ".flowing"));
+		setIcons(ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName()),
+				ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName().replace(".still", ".flowing")));
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void setIcons(IIcon still, IIcon flowing)
+	{
+		_iconStill = still;
+		_iconFlowing = flowing;
+		setParticleColor(RegistryUtils.getBlockTextureColor(still.getIconName()));
+	}
+
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{

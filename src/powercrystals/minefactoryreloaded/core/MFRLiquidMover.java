@@ -161,15 +161,17 @@ public abstract class MFRLiquidMover
 	
 	public static void pumpLiquid(IFluidTank iFluidTank, TileEntityFactory from)
 	{
-		if(iFluidTank != null && iFluidTank.getFluid() != null && iFluidTank.getFluid().amount > 0)
+		if (iFluidTank != null && iFluidTank.getFluid() != null && iFluidTank.getFluid().amount > 0)
 		{
 			FluidStack l = iFluidTank.getFluid().copy();
 			l.amount = Math.min(l.amount, FluidContainerRegistry.BUCKET_VOLUME);
-			for(BlockPosition adj : new BlockPosition(from).getAdjacent(true))
+			for (BlockPosition adj : new BlockPosition(from).getAdjacent(true))
 			{
 				TileEntity tile = from.getWorldObj().getTileEntity(adj.x, adj.y, adj.z);
-				if(tile instanceof IFluidHandler)
+				if (tile instanceof IFluidHandler)
 				{
+					if (!((IFluidHandler)tile).canFill(adj.orientation.getOpposite(), l.getFluid()))
+						continue;
 					int filled = ((IFluidHandler)tile).fill(adj.orientation.getOpposite(), l, true);
 					iFluidTank.drain(filled, true);
 					l.amount -= filled;

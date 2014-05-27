@@ -13,8 +13,13 @@ public class ItemBlockFactoryTree extends ItemBlockFactory
 	public ItemBlockFactoryTree(net.minecraft.block.Block id)
 	{
 		super(id);
-		setNames(new String[] {null, "massive"});
-		setHasSubtypes(true);
+		setNames(new String[] {null, "sacred", "mega", "massive"});
+	}
+	
+	@Override
+	public boolean hasEffect(ItemStack stack)
+	{
+		return stack.getItemDamage() == 3;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -22,7 +27,7 @@ public class ItemBlockFactoryTree extends ItemBlockFactory
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
 	{
-		if (stack.getItemDamage() == 1)
+		if (stack.getItemDamage() == 3)
 			info.add("Warning: Pakratt's world ship.");
 	}
 }

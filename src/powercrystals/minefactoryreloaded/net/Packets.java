@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
+import net.minecraft.server.management.PlayerManager;
 import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -27,7 +28,10 @@ public final class Packets
 			return;
 		if (world instanceof WorldServer)
 		{
-			PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
+			PlayerManager manager = ((WorldServer)world).getPlayerManager();
+			if (manager == null)
+				return;
+			PlayerInstance watcher = manager.
 					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
 			if (watcher != null)
 				watcher.sendToAllPlayersWatchingChunk(packet);
@@ -39,7 +43,10 @@ public final class Packets
 			return;
 		if (world instanceof WorldServer)
 		{
-			PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
+			PlayerManager manager = ((WorldServer)world).getPlayerManager();
+			if (manager == null)
+				return;
+			PlayerInstance watcher = manager.
 					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
 			if (watcher != null)
 			{
@@ -62,9 +69,9 @@ public final class Packets
 	public static final short HarvesterButton = 3;
 	public static final short ChronotyperButton = 4;
 	public static final short HAMUpdate = 5;
-	public static final short ConveyorDescription = 6;
+	public static final short ConveyorDescription = 6; // UNUSED
 	public static final short AutoJukeboxPlay = 7; // UNUSED
-	public static final short RoadBlockUpdate = 8; //UNUSED
+	public static final short RoadBlockUpdate = 8; // UNUSED
 	public static final short AutoJukeboxButton = 9;
 	public static final short AutoSpawnerButton = 10;
 	public static final short CableDescription = 11; // UNUSED
@@ -87,8 +94,12 @@ public final class Packets
 	{
 		sendToServer(new MFRMessage(packet, te, args));
 	}
+	public static void sendToAllPlayersWatching(TileEntity te, Packet packet)
+	{
+		sendToAllPlayersWatching(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord, packet);
+	}
 	public static void sendToAllPlayersWatching(TileEntity te)
 	{
-		sendToAllPlayersWatching(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord, te.getDescriptionPacket());
+		sendToAllPlayersWatching(te, te.getDescriptionPacket());
 	}
 }

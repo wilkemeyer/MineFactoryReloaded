@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.pcc.random.WeightedRandomItemStack;
+import cofh.util.WeightedRandomItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -209,7 +209,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		for(WeightedRandom.Item i : MFRRegistry.getLaserOres())
 		{
 			WeightedRandomItemStack oldStack = (WeightedRandomItemStack)i;
-			WeightedRandomItemStack newStack = new WeightedRandomItemStack(oldStack.itemWeight, oldStack.getStack());
+			WeightedRandomItemStack newStack = new WeightedRandomItemStack(oldStack.getStack(), oldStack.itemWeight);
 			drops.add(newStack);
 			for(ItemStack s : _inventory)
 			{

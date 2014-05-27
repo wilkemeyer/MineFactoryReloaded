@@ -59,7 +59,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		
 		ItemStack match = _inventory[getPlanterSlotIdFromBp(bp)];
 		
-		for(int stackIndex = 10; stackIndex <= 25; stackIndex++)
+		for (int stackIndex = 10; stackIndex <= 25; stackIndex++)
 		{		
 			ItemStack availableStack = getStackInSlot(stackIndex);
 			
@@ -192,12 +192,12 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	{
 		if (stack != null)
 		{
-			if(slot > 9)
+			if (slot > 9)
 			{
 				IFactoryPlantable p = MFRRegistry.getPlantables().get(stack.getItem());
 				return p != null && p.canBePlanted(stack);
 			}
-			else if(slot == 9)
+			else if (slot == 9)
 			{
 				return stack.getItem() instanceof ItemUpgrade;
 			}
@@ -208,7 +208,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
-		if(slot >= 10) return true;
+		if (slot >= 10) return true;
 		return false;
 	}
 }

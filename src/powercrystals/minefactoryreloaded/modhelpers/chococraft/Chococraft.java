@@ -23,7 +23,6 @@ public class Chococraft
 	{
 		if (!Loader.isModLoaded("chococraft"))
 		{
-			FMLLog.info("Chococraft is not available; MFR Chococraft Compat not loaded");
 			return;
 		}
 		

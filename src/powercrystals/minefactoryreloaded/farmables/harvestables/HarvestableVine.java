@@ -15,10 +15,17 @@ import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
 public class HarvestableVine implements IFactoryHarvestable
 {
+	protected Block vine;
+	public HarvestableVine() { this(Blocks.vine); }
+	public HarvestableVine(Block vine)
+	{
+		this.vine = vine;
+	}
+	
 	@Override
 	public Block getPlant()
 	{
-		return Blocks.vine;
+		return vine;
 	}
 	
 	@Override
@@ -43,7 +50,7 @@ public class HarvestableVine implements IFactoryHarvestable
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(new ItemStack(Blocks.vine));
+		drops.add(new ItemStack(vine));
 		return drops;
 	}
 	

@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.S21PacketChunkData;
+import net.minecraft.server.management.PlayerManager;
 import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -25,7 +26,6 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
 public class CommonProxy implements IMFRProxy, LoadingCallback 
 {
-	private GridTickHandler gridTickHandler;
 	public static LinkedList<Ticket> ticketsInLimbo = new LinkedList<Ticket>();
 	
 	public static boolean loadTicket(Ticket ticket, boolean addToList)
@@ -56,8 +56,7 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 	@Override
 	public void init()
 	{
-		gridTickHandler = new GridTickHandler();
-		FMLCommonHandler.instance().bus().register(gridTickHandler);
+		FMLCommonHandler.instance().bus().register(GridTickHandler.energy);
 		FMLCommonHandler.instance().bus().register(new ConnectionHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
@@ -93,7 +92,10 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 			World world = chunk.worldObj;
 			if (world instanceof WorldServer)
 			{
-				PlayerInstance watcher = ((WorldServer)world).getPlayerManager().
+				PlayerManager manager = ((WorldServer)world).getPlayerManager();
+				if (manager == null)
+					return;
+				PlayerInstance watcher = manager.
 						getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
 				if (watcher != null)
 					watcher.sendToAllPlayersWatchingChunk(new S21PacketChunkData(chunk, false, -1));

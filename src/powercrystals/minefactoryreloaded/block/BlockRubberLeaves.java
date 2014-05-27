@@ -20,9 +20,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
@@ -146,7 +147,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			chance = Math.max(chance - (2 << fortune), 10);
 
 		if (world.rand.nextInt(chance) == 0)
-			ret.add(new ItemStack(getItemDropped(meta & 3, world.rand, fortune), 1, 0));
+			ret.add(new ItemStack(getItemDropped(meta & 3, world.rand, fortune), 1,
+					world.rand.nextInt(50000) == 0 ? 2 : 0));
 
 		/* TODO: drop book (counts as fuel) with info on MFR
 		chance = 100;
@@ -230,6 +232,12 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			if (decay && world.rand.nextInt(chance) == 0)
 				world.setBlock(x, y, z, id, meta | 1, 2);
 		}
+    }
+    
+    @Override
+    public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+    {
+    	return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) * 2 + 1);
     }
 
 	@Override

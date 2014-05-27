@@ -3,19 +3,17 @@ package powercrystals.minefactoryreloaded.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.BlockSapling;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 import powercrystals.minefactoryreloaded.world.WorldGenMassiveTree;
 import powercrystals.minefactoryreloaded.world.WorldGenRubberTree;
 
@@ -53,26 +51,37 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 		int meta = damageDropped(world.getBlockMetadata(x, y, z));
 		world.setBlockToAir(x, y, z);
 		
-		if (meta == 1)
+		switch (meta)
 		{
-			if (!new WorldGenMassiveTree().setSloped(true).generate(world, rand, x, y, z))
-				world.setBlock(x, y, z, this, 1, 4);
+		case 1:
+			if (MineFactoryReloadedWorldGen.generateSacredSpringRubberTree(world, rand, x, y, z))
+				return;
+			break;
+		case 2:
+			if (MineFactoryReloadedWorldGen.generateMegaRubberTree(world, rand, x, y, z, false))
+				return;
+			break;
+		case 3:
+			if (new WorldGenMassiveTree().setSloped(true).generate(world, rand, x, y, z))
+				return;
+			break;
+		default:
+		case 0:
+			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
+			if (b != null && b.biomeName.toLowerCase().contains("mega"))
+				if (rand.nextInt(50) == 0)
+					if (MineFactoryReloadedWorldGen.generateMegaRubberTree(world, rand, x, y, z, true))
+						return;
+			if (treeGen.growTree(world, rand, x, y, z))
+				return;
+			break;
 		}
-		else if (!treeGen.growTree(world, rand, x, y, z))
-			world.setBlock(x, y, z, this, 0, 4);
+		world.setBlock(x, y, z, this, meta, 4);
 	}
 
 	@Override
 	public int damageDropped(int par1)
 	{
-		return par1 & 3;
-	}
-	
-	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item blockId, CreativeTabs tab, List subBlocks)
-	{
-		subBlocks.add(new ItemStack(blockId, 1, 0));
+		return par1 & 7;
 	}
 }

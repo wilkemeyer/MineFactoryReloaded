@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 
 /**
  * 
- * You should not implement this yourself. Instead, use this to look for cables to notify from your IConnectableRedNet as this does not
+ * You should not implement this yourself. Instead, use this to look for cables to notify from your IRedNetOmniNode as this does not
  * require a block update. This will be implemented on the cable's Block class.
  *
  */

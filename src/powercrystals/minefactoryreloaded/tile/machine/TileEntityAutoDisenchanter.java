@@ -66,11 +66,11 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	{
 		if (stack == null)
 			return false;
-		if(slot == 0)
+		if (slot == 0)
 		{
 			return stack.getEnchantmentTagList() != null;
 		}
-		else if(slot == 1)
+		else if (slot == 1)
 		{
 			return stack.getItem().equals(Items.book);
 		}
@@ -166,23 +166,6 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-	{
-		if(slot == 0)
-		{
-			return itemstack.getEnchantmentTagList() != null;
-		}
-		else if(slot == 1)
-		{
-			return itemstack != null && itemstack.getItem().equals(Items.book);
-		}
-		else
-		{
-			return false;
-		}
 	}
 	
 	@Override

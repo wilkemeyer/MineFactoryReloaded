@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import cofh.util.position.BlockPosition;
-import cpw.mods.fml.common.FMLLog;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,8 +13,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class RedstoneNetwork
@@ -42,11 +44,12 @@ public class RedstoneNetwork
 	private World _world;
 	
 	private static boolean log = false;
+	private static Logger _log = LogManager.getLogger("RedNet Debug");
 	public static void log(String format, Object... data)
 	{
 		if (log && format != null)
 		{
-			FMLLog.info("RedNet Debug: " + format, data);
+			_log.debug(format, data);
 		}
 	}
 	
@@ -203,14 +206,14 @@ public class RedstoneNetwork
 			{
 				return;
 			}
-			else if (block instanceof IConnectableRedNet)
+			else if (block instanceof IRedNetOmniNode)
 			{
-				((IConnectableRedNet)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
+				((IRedNetOmniNode)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
 			}
 		}
-		else if (omniNode && block instanceof IConnectableRedNet)
+		else if (omniNode && block instanceof IRedNetOmniNode)
 		{
-			((IConnectableRedNet)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
+			((IRedNetOmniNode)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
 		}
 		_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
 		_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
@@ -347,9 +350,9 @@ public class RedstoneNetwork
 			{
 				return;
 			}
-			else if (block instanceof IConnectableRedNet)
+			else if (block instanceof IRedNetOmniNode)
 			{
-				((IConnectableRedNet)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), _powerLevelOutput[subnet]);
+				((IRedNetOmniNode)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), _powerLevelOutput[subnet]);
 			}
 			else
 			{
@@ -364,9 +367,9 @@ public class RedstoneNetwork
 		if(isNodeLoaded(node))
 		{
 			Block block = _world.getBlock(node.x, node.y, node.z);
-			if(block instanceof IConnectableRedNet)
+			if(block instanceof IRedNetOmniNode)
 			{
-				((IConnectableRedNet)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
+				((IRedNetOmniNode)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
 			}
 		}
 	}
@@ -377,7 +380,7 @@ public class RedstoneNetwork
 		{
 			return 0;
 		}
-		IConnectableRedNet b = ((IConnectableRedNet)_world.getBlock(node.x, node.y, node.z));
+		IRedNetOmniNode b = ((IRedNetOmniNode)_world.getBlock(node.x, node.y, node.z));
 		if(b != null)
 		{
 			return b.getOutputValue(_world, node.x, node.y, node.z, node.orientation.getOpposite(), subnet);
@@ -404,7 +407,7 @@ public class RedstoneNetwork
 		
 		int ret = 0;
 		
-		if(_weakNodes.contains(node) || block instanceof IConnectableRedNet)
+		if(_weakNodes.contains(node) || block instanceof IRedNetOmniNode)
 		{
 			int weakPower = _world.getIndirectPowerLevelTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
 			int strongPower = _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;

@@ -21,7 +21,7 @@ tile.mfr.machine.liquidrouter.name = Liquid Router
 tile.mfr.machine.deepstorageunit.name = Deep Storage Unit
 tile.mfr.machine.liquicrafter.name = LiquiCrafter
 tile.mfr.machine.lavafabricator.name = Lava Fabricator
-tile.mfr.machine.oilfabricator.name = Oil Fabricator
+tile.mfr.machine.steamboiler.name = Steam Boiler
 tile.mfr.machine.autojukebox.name = Auto-Jukebox
 tile.mfr.machine.unifier.name = Unifier
 tile.mfr.machine.autospawner.name = Auto-Spawner
@@ -141,6 +141,8 @@ tile.mfr.vinescaffold.name = Vine Scaffolding
 tile.mfr.detcord.name = DetCord
 
 tile.mfr.rubberwood.sapling.name = Rubber Sapling
+tile.mfr.rubberwood.sapling.sacred.name = Sacred Rubber Sapling
+tile.mfr.rubberwood.sapling.mega.name = Mega Rubber Sapling
 tile.mfr.rubberwood.sapling.massive.name = Sacred Rubber Sapling
 tile.mfr.rubberwood.log.name = Rubber Wood
 tile.mfr.rubberwood.leaves.name = Rubber Leaves
@@ -167,6 +169,7 @@ fluid.mfr.liquid.meat.still.name = Meat
 fluid.mfr.liquid.pinkslime.still.name = Pink Slime
 fluid.mfr.liquid.chocolatemilk.still.name = Chocolate Milk
 fluid.mfr.liquid.mushroomsoup.still.name = Mushroom Soup
+fluid.mfr.liquid.steam.still.name = Steam
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Pink Slime
 

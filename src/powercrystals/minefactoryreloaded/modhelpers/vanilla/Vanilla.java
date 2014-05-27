@@ -262,7 +262,6 @@ public class Vanilla
 		MFRRegistry.registerSludgeDrop(50, new ItemStack(Blocks.sand));
 		MFRRegistry.registerSludgeDrop(40, new ItemStack(Blocks.dirt, 1, 1));
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.clay));
-		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.dirt));
 		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.gravel));
 		MFRRegistry.registerSludgeDrop(5, new ItemStack(Blocks.soul_sand));
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Blocks.mycelium));

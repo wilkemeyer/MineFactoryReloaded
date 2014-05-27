@@ -92,22 +92,26 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		super.updateEntity();
 		if (!worldObj.isRemote)
 		{
-			setIsActive(_ticksSinceLastConsumption < _ticksUntilConsumption);
+			boolean active = _ticksSinceLastConsumption < _ticksUntilConsumption;
+			setIsActive(active);
 
 			_ticksSinceLastConsumption = Math.min(_ticksSinceLastConsumption + 1, _ticksUntilConsumption);
 			boolean skipConsumption = _ticksSinceLastConsumption < _ticksUntilConsumption;
 
-			if (isActive())
-				_totalBurningTime = Math.max(Math.min(_totalBurningTime + 1, 10648), -80);
+			if (active)
+				_totalBurningTime = Math.max(Math.min(_totalBurningTime + 1, 10649), -80);
 			else
 			{
-				_totalBurningTime = Math.max(_totalBurningTime - 16, -10648);
+				_totalBurningTime = Math.max(_totalBurningTime - 16, -10649);
 				_ticksUntilConsumption = 0;
 			}
+			
+			if (_temp == 0 && !skipConsumption)
+				return; // we're not burning anything and not changing the temp
 
 			float diff = (float)Math.cbrt(_totalBurningTime) / 22f;
 
-			_temp = Math.max(Math.min(_temp + diff, maxTemp), 0);
+			_temp = Math.max(Math.min(_temp + (diff * diff * diff), maxTemp), 0);
 
 			if (_temp > 100)
 			{
@@ -147,11 +151,11 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		if (_inventory[3] == null)
 			return false;
 
-		int burnTime = TileEntityFurnace.getItemBurnTime(_inventory[3]);
+		int burnTime = TileEntityFurnace.getItemBurnTime(_inventory[3]) / 2;
 		if (burnTime <= 0)
 			return false;
 
-		_ticksUntilConsumption = burnTime / 2;
+		_ticksUntilConsumption = burnTime;
 		decrStackSize(3, 1);
 
 		return true;

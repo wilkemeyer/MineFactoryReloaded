@@ -1,11 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import buildcraft.api.power.IPowerEmitter;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.transport.IPipeTile.PipeType;
-
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cofh.util.CoreUtils;
@@ -17,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityGenerator extends TileEntityFactoryInventory
-										implements IPowerEmitter, IEnergyConnection
+										implements IEnergyConnection
 {
 	private int _ticksBetweenConsumption;
 	private int _outputPulseSize;
@@ -27,7 +21,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	private int _buffer;
 
 	private IEnergyHandler[] handlerCache;
-	private IPowerReceptor[] receiverCache;
 	private boolean deadCache;
 	
 	protected TileEntityGenerator(Machine machine, int ticksBetweenConsumption)
@@ -45,7 +38,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 		super.validate();
 		deadCache = true;
 		handlerCache = null;
-		receiverCache = null;
 	}
 
 	@Override
@@ -97,37 +89,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 					return 0;
 			}
 
-		if (receiverCache != null)
-		{
-			float mjS = energy / (float)TileEntityFactoryPowered.energyPerMJ, mj = mjS;
-
-			for (int i = receiverCache.length; i --> 0; )
-			{
-				IPowerReceptor ipr = receiverCache[i];
-				if (ipr == null)
-					continue;
-
-				ForgeDirection from = ForgeDirection.VALID_DIRECTIONS[i];
-				PowerReceiver pp = ipr.getPowerReceiver(from);
-				double max;
-				if(pp != null && Math.min((max = pp.getMaxEnergyReceived()), 
-						pp.getMaxEnergyStored() - pp.getEnergyStored()) > 0)
-				{
-					double mjUsed = Math.min(Math.min(max, mj),
-							pp.getMaxEnergyStored() - pp.getEnergyStored());
-					pp.receiveEnergy(PowerHandler.Type.GATE, mjUsed, from);
-
-					mj -= mjUsed;
-					if(mj <= 0)
-					{
-						return 0;
-					}
-				}
-			}
-
-			energy -= mjS - mj;
-		}
-
 		return energy;
 	}
 	
@@ -178,8 +139,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	{
 		if (handlerCache != null)
 			handlerCache[side] = null;
-		if (receiverCache != null)
-			receiverCache[side] = null;
 
 		if (tile instanceof IEnergyHandler)
 		{
@@ -187,16 +146,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 			{
 				if (handlerCache == null) handlerCache = new IEnergyHandler[6];
 				handlerCache[side] = (IEnergyHandler)tile;
-			}
-		}
-		else if (tile instanceof IPowerReceptor)
-		{
-			PowerReceiver pp = ((IPowerReceptor)tile).
-					getPowerReceiver(ForgeDirection.VALID_DIRECTIONS[side]);
-			if (pp != null)
-			{
-				if (receiverCache == null) receiverCache = new IPowerReceptor[6];
-				receiverCache[side] = (IPowerReceptor)tile;
 			}
 		}
 	}
@@ -222,22 +171,6 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from)
-	{
-		return true;
-	}
-
-	// BC methods
-
-	@Override
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with)
-	{
-		if (type == PipeType.POWER)
-			return ConnectOverride.CONNECT;
-		return super.overridePipeConnection(type, with);
-	}
-
-	@Override
-	public boolean canEmitPowerFrom(ForgeDirection side)
 	{
 		return true;
 	}

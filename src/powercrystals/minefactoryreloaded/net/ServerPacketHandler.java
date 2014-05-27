@@ -20,6 +20,7 @@ import net.minecraftforge.common.DimensionManager;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoEnchanter;
@@ -50,6 +51,14 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		
 		switch (data.readUnsignedShort())
 		{
+		case Packets.HAMUpdate:
+			x = data.readInt(); y = data.readInt(); z = data.readInt();
+			te = world.getTileEntity(x, y, z);
+			if (te instanceof TileEntityFactory && ((TileEntityFactory)te).hasHAM())
+			{
+				Packets.sendToAllPlayersWatching(te, ((TileEntityFactory)te).getHAM().getUpgradePacket(te));
+			}
+			break;
 		case Packets.EnchanterButton: // client -> server: autoenchanter GUI buttons
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);

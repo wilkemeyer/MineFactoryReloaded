@@ -43,7 +43,7 @@ public abstract class TileEntityFactory extends TileEntity
 	private boolean _canRotate = false;
 	
 	private boolean _isActive = false, _prevActive;
-	private long _lastActive;
+	private long _lastActive = -100;
 	
 	private boolean _manageFluids = false;
 	private boolean _manageSolids = false;
@@ -111,21 +111,27 @@ public abstract class TileEntityFactory extends TileEntity
 		return _forwardDirection;
 	}
 	
-	@Override
 	public boolean canRotate()
 	{
 		return _canRotate;
 	}
 	
-	public void setCanRotate(boolean canRotate)
+	@Override
+	public boolean canRotate(ForgeDirection axis)
+	{
+		return _canRotate;
+	}
+	
+	protected void setCanRotate(boolean canRotate)
 	{
 		_canRotate = canRotate;
 	}
 	
 	@Override
-	public void rotate()
+	public void rotate(ForgeDirection axis)
 	{
-		rotate(false);
+		if (canRotate())
+			rotate(false);
 	}
 	
 	public void rotate(boolean reverse)
@@ -268,15 +274,15 @@ public abstract class TileEntityFactory extends TileEntity
 		case 0:
 			rotateDirectlyTo(data.getByte("r"));
 			_isActive = data.getBoolean("a");
-			//net.scheduleOutboundPacket(new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 255, null));
+			if (_lastActive < 0)
+			{
+				Packets.sendToServer(Packets.HAMUpdate, this);
+				_lastActive = 5;
+			}
 			break;
 		case 255:
 			if (hasHAM())
-				if (worldObj.isRemote)
-					getHAM().setUpgradeLevel(data.getInteger("_upgradeLevel"));
-				else
-					Packets.sendToAllPlayersWatching(worldObj, xCoord, yCoord, zCoord,
-							getHAM().getUpgradePacket(this));
+				getHAM().setUpgradeLevel(data.getInteger("_upgradeLevel"));
 			break;
 		}
 	}

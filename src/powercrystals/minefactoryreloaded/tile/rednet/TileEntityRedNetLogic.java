@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.circuits.Noop;
@@ -359,9 +359,9 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 				{
 					((IRedNetNetworkContainer)b).updateNetwork(worldObj, bp.x, bp.y, bp.z);
 				}
-				else if(b instanceof IConnectableRedNet)
+				else if(b instanceof IRedNetOmniNode)
 				{
-					((IConnectableRedNet)b).onInputsChanged(worldObj, bp.x, bp.y, bp.z,
+					((IRedNetOmniNode)b).onInputsChanged(worldObj, bp.x, bp.y, bp.z,
 							o.getOpposite(), _buffers[i + 6]);
 				}
 			}
@@ -606,15 +606,15 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	}
 
 	@Override
-	public boolean canRotate()
+	public boolean canRotate(ForgeDirection axis)
 	{
 		return crafters == 0;
 	}
 
 	@Override
-	public void rotate()
+	public void rotate(ForgeDirection axis)
 	{
-		if (canRotate())
+		if (canRotate(axis))
 		{
 			int nextMeta = (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) + 1) & 3; // % 4
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nextMeta, 3);

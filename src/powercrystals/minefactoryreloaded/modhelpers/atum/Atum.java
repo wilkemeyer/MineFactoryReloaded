@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.atum;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -34,7 +33,6 @@ public class Atum
 	{
 		if(!Loader.isModLoaded("Atum"))
 		{
-			FMLLog.warning("Atum missing - MFR Atum Compat not loading");
 			return;
 		}
 		try

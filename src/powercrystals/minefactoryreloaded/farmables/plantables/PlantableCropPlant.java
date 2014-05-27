@@ -13,6 +13,11 @@ public class PlantableCropPlant extends PlantableStandard
 		super(seed, plant);
 	}
 	
+	public PlantableCropPlant(Item seed, Block plant, int meta)
+	{
+		super(seed, plant, meta);
+	}
+	
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{

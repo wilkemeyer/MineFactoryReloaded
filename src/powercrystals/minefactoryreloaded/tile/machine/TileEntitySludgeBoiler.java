@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.WeightedRandomItemStack;
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,9 +23,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-import cofh.pcc.random.WeightedRandomItemStack;
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;

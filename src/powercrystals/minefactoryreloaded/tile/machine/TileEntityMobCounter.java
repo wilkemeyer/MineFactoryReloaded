@@ -24,16 +24,16 @@ public class TileEntityMobCounter extends TileEntityFactory
 	{
 		super.updateEntity();
 		
-		if(worldObj == null)
+		if (worldObj == null)
 		{
 			return;
 		}
 		
 		int mobCount = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB()).size();
-		if(mobCount != _lastMobCount)
+		if (mobCount != _lastMobCount)
 		{
 			_lastMobCount = mobCount;
-			if(!worldObj.isRemote)
+			if (!worldObj.isRemote)
 			{
 				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MineFactoryReloadedCore.machineBlocks.get(Machine.MobCounter.getBlockIndex()));
 			}

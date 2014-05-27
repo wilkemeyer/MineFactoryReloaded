@@ -15,7 +15,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockDecorativeStone extends Block implements IRedNetDecorative

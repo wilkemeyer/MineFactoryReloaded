@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;

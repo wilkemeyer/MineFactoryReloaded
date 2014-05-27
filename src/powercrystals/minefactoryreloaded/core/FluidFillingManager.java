@@ -29,7 +29,7 @@ public class FluidFillingManager implements IHarvestManager
 	public BlockPosition getNextBlock()
 	{
 		BlockNode bn = _blocks.poke();
-		return bn.bp;
+		return new BlockPosition(bn.x, bn.y, bn.z);
 	}
 
 	@Override
@@ -44,7 +44,6 @@ public class FluidFillingManager implements IHarvestManager
 
 	private void searchForFreeBlocks(BlockNode bn)
 	{
-		BlockPosition bp = bn.bp;
 		BlockNode cur;
 
 		SideOffset[] sides = SideOffset.ADJACENT;
@@ -52,8 +51,8 @@ public class FluidFillingManager implements IHarvestManager
 		for (int i = 0, e = sides.length; i < e; ++i)
 		{
 			SideOffset side = sides[i];
-			cur = BlockPool.getNext(bp.x + side.offsetX, bp.y + side.offsetY, bp.z + side.offsetZ);
-			if (isValid(cur.bp))
+			cur = BlockPool.getNext(bn.x + side.offsetX, bn.y + side.offsetY, bn.z + side.offsetZ);
+			if (isValid(cur))
 				_blocks.push(cur);
 			else
 				cur.free();
@@ -62,16 +61,17 @@ public class FluidFillingManager implements IHarvestManager
 		bn.free();
 	}
 
-	private boolean isValid(BlockPosition bp)
+	private boolean isValid(BlockNode bp)
 	{
-		if ((bp.x > _area.xMax) | (bp.x < _area.xMin) |
-				(bp.z > _area.zMax) | (bp.z < _area.zMin) |
-				(bp.y > _area.yMax) | (bp.y < _area.yMin) ||
+		Area area = _area;
+		if (bp.x < area.xMin || bp.x > area.xMax ||
+				bp.y < area.yMin || bp.y > area.yMax ||
+				bp.z < area.zMin || bp.z > area.zMax ||
 				!_world.blockExists(bp.x, bp.y, bp.z))
 			return false;
 
 		Block block = _world.getBlock(bp.x, bp.y, bp.z);
-		return block == null || block.isReplaceable(_world, bp.x, bp.y, bp.z);
+		return block.isReplaceable(_world, bp.x, bp.y, bp.z);
 	}
 
 	@Override
@@ -116,11 +116,10 @@ public class FluidFillingManager implements IHarvestManager
 		BlockNode bn = _blocks.poke();
 		while (bn != null)
 		{
-			BlockPosition bp = bn.bp;
 			NBTTagCompound p = new NBTTagCompound();
-			p.setInteger("x", bp.x);
-			p.setInteger("y", bp.y);
-			p.setInteger("z", bp.z);
+			p.setInteger("x", bn.x);
+			p.setInteger("y", bn.y);
+			p.setInteger("z", bn.z);
 			list.appendTag(p);
 			bn = bn.next;
 		}

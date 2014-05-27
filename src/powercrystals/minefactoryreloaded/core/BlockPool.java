@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.util.position.BlockPosition;
 import com.google.common.base.Objects;
 import com.google.common.primitives.Ints;
 
@@ -8,20 +7,21 @@ public class BlockPool
 {
 	final public static class BlockNode
 	{
-		public BlockPosition bp;
+		public int x, y, z;
+
 		public BlockNode next;
 		public BlockNode prev;
 		BlockPool pool;
 		public BlockNode(BlockPool pool, int x, int y, int z)
 		{
-			bp = new BlockPosition(x, y, z);
+			reset(x, y, z);
 			this.pool = pool;
 		}
-		void reset(int x, int y, int z)
+		void reset(int _x, int _y, int _z)
 		{
-			bp.x = x;
-			bp.y = y;
-			bp.z = z;
+			x = _x;
+			y = _y;
+			z = _z;
 		}
 		public void free()
 		{
@@ -35,21 +35,22 @@ public class BlockPool
 		{
 			if (n == null || n.getClass() != BlockNode.class)
 				return false;
-			return bp.equals(((BlockNode)n).bp);
+			BlockNode bn = (BlockNode)n;
+			return bn.x == x && bn.y == y && bn.z == z && bn.pool == pool;
 		}
 		@Override
 		public String toString()
 		{
-			return "BlockNode["+bp+";"+pool+"]";
+			return "BlockNode[("+x+","+y+","+z+");"+pool+"]";
 		}
 
 		private static final int HASH_A = 0x19660d;
 		private static final int HASH_C = 0x3c6ef35f;
 		@Override
 		public int hashCode() {
-			final int xTransform = HASH_A * (bp.x ^ 0xBABECAFE) + HASH_C;
-			final int zTransform = HASH_A * (bp.z ^ 0xDEADBEEF) + HASH_C;
-			final int yTransform = HASH_A * (bp.y ^ 0xE73AAE09) + HASH_C;
+			final int xTransform = HASH_A * (x ^ 0xBABECAFE) + HASH_C;
+			final int zTransform = HASH_A * (z ^ 0xDEADBEEF) + HASH_C;
+			final int yTransform = HASH_A * (y ^ 0xE73AAE09) + HASH_C;
 			return xTransform ^ zTransform ^ yTransform;
 		}
 	}
@@ -66,8 +67,8 @@ public class BlockPool
 	private static int hash(BlockNode n)
 	{
 		int h = n.hashCode();
-        h ^= (h >>> 20) ^ (h >>> 12);
-        return h ^ (h >>> 7) ^ (h >>> 4);
+		h ^= (h >>> 20) ^ (h >>> 12);
+		return h ^ (h >>> 7) ^ (h >>> 4);
 	}
 	final static BlockPool pool = new BlockPool(false);
 	volatile BlockNode head;

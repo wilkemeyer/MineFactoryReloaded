@@ -22,8 +22,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -33,7 +33,7 @@ import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
-public class BlockRedNetLogic extends BlockContainer implements IConnectableRedNet
+public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 {
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
 	

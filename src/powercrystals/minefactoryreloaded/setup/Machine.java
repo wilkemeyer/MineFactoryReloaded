@@ -25,7 +25,6 @@ import net.minecraftforge.common.config.Property;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoBrewer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
@@ -326,9 +325,9 @@ public class Machine
 		}
 	}
 	
-	public final int getActivationEnergyMJ()
+	public final int getActivationEnergyDaRF()
 	{
-		return _activationEnergy / TileEntityFactoryPowered.energyPerMJ;
+		return _activationEnergy / 10;
 	}
 	
 	public final int getActivationEnergy()
@@ -343,10 +342,12 @@ public class Machine
 	
 	public void load(Configuration c)
 	{
-		_isRecipeEnabled = c.get("Machine" + _name, "Recipe.Enabled", true);
-		if (_configurable & _activationEnergy > 0)
+		_isRecipeEnabled = c.get("Machine." + _name, "Recipe.Enabled", true);
+		if (_configurable && _activationEnergy > 0)
 		{
-			_activationEnergy = c.get("Machine" + _name, "ActivationCostMJ", getActivationEnergyMJ()).getInt() * TileEntityFactoryPowered.energyPerMJ;
+			_activationEnergy = c.get("Machine." + _name, "ActivationCostDaRF", getActivationEnergyDaRF(),
+					"The energy cost for this machine to complete one work cycle, in units of 10 RF " +
+					"(i.e., 2 DaRF = 20 RF)").getInt() * 10;
 		}
 		
 		MineFactoryReloadedCore.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);

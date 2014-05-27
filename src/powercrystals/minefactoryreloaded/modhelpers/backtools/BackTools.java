@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.backtools;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -24,7 +23,6 @@ public class BackTools
 	{
 		if(!Loader.isModLoaded("mod_BackTools"))
 		{
-			FMLLog.warning("BackTools missing - MFR BackTools Compat not loading");
 			return;
 		}
 		try

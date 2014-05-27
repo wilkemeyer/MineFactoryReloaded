@@ -7,59 +7,55 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+import powercrystals.minefactoryreloaded.core.IGrid;
+import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class GridTickHandler
+public class GridTickHandler<G extends IGrid, N extends INode>
 {
-	private static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToRegenerate =
-			new LinkedHashSet<RedstoneEnergyNetwork>();
-	private static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToAdd =
-			new LinkedHashSet<RedstoneEnergyNetwork>();
-	private static LinkedHashSet<RedstoneEnergyNetwork> tickingGrids =
-			new LinkedHashSet<RedstoneEnergyNetwork>();
-	private static LinkedHashSet<RedstoneEnergyNetwork> tickingGridsToRemove =
-			new LinkedHashSet<RedstoneEnergyNetwork>();
+	private LinkedHashSet<G> tickingGridsToRegenerate = new LinkedHashSet<G>();
+	private LinkedHashSet<G> tickingGridsToAdd = new LinkedHashSet<G>();
+	private LinkedHashSet<G> tickingGrids = new LinkedHashSet<G>();
+	private LinkedHashSet<G> tickingGridsToRemove = new LinkedHashSet<G>();
 	
-	private static LinkedHashSet<TileEntityRedNetEnergy> conduit =
-			new LinkedHashSet<TileEntityRedNetEnergy>();
-	private static LinkedHashSet<TileEntityRedNetEnergy> conduitToAdd =
-			new LinkedHashSet<TileEntityRedNetEnergy>();
-	private static LinkedHashSet<TileEntityRedNetEnergy> conduitToUpd =
-			new LinkedHashSet<TileEntityRedNetEnergy>();
+	private LinkedHashSet<N> conduit = new LinkedHashSet<N>();
+	private LinkedHashSet<N> conduitToAdd = new LinkedHashSet<N>();
+	private LinkedHashSet<N> conduitToUpd = new LinkedHashSet<N>();
 	
-	static GridTickHandler instance = new GridTickHandler();
+	public static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> energy =
+			new GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy>();
 	
-	public static void addGrid(RedstoneEnergyNetwork grid)
+	public void addGrid(G grid)
 	{
 		tickingGridsToAdd.add(grid);
 		tickingGridsToRemove.remove(grid);
 	}
 	
-	public static void removeGrid(RedstoneEnergyNetwork grid)
+	public void removeGrid(G grid)
 	{
 		tickingGridsToRemove.add(grid);
 		tickingGridsToAdd.remove(grid);
 	}
 	
-	public static void regenerateGrid(RedstoneEnergyNetwork grid)
+	public void regenerateGrid(G grid)
 	{
 		tickingGridsToRegenerate.add(grid);
 	}
 	
-	public static boolean isGridTicking(RedstoneEnergyNetwork grid)
+	public boolean isGridTicking(G grid)
 	{
 		return tickingGrids.contains(grid);
 	}
 	
-	public static void addConduitForTick(TileEntityRedNetEnergy grid)
+	public void addConduitForTick(N node)
 	{
-		conduitToAdd.add(grid);
+		conduitToAdd.add(node);
 	}
 	
-	public static void addConduitForUpdate(TileEntityRedNetEnergy grid)
+	public void addConduitForUpdate(N node)
 	{
-		conduitToUpd.add(grid);
+		conduitToUpd.add(node);
 	}
 
 	@SubscribeEvent
@@ -77,7 +73,7 @@ public class GridTickHandler
 		//{ Grids that have had significant conduits removed and need to rebuild/split 
 		if (!tickingGridsToRegenerate.isEmpty())
 		synchronized (tickingGridsToRegenerate) {
-			for (RedstoneEnergyNetwork grid : tickingGridsToRegenerate)
+			for (G grid : tickingGridsToRegenerate)
 				grid.markSweep();
 		}
 		//}
@@ -92,9 +88,9 @@ public class GridTickHandler
 		
 		if (!conduit.isEmpty())
 		{
-			TileEntityRedNetEnergy cond = null;
+			N cond = null;
 			try {
-				Iterator<TileEntityRedNetEnergy> iter = conduit.iterator();
+				Iterator<N> iter = conduit.iterator();
 				while (iter.hasNext())
 				{
 					cond = iter.next();
@@ -110,7 +106,7 @@ public class GridTickHandler
 		
 		//{ Early update pass to extract energy from sources
 		if (!tickingGrids.isEmpty())
-			for (RedstoneEnergyNetwork grid : tickingGrids)
+			for (G grid : tickingGrids)
 				grid.doGridPreUpdate();
 		//}
 	}
@@ -135,7 +131,7 @@ public class GridTickHandler
 		
 		//{ Ticking grids to transfer energy/etc.
 		if (!tickingGrids.isEmpty())
-			for (RedstoneEnergyNetwork grid : tickingGrids)
+			for (G grid : tickingGrids)
 				grid.doGridUpdate();
 		//}
 		
@@ -150,9 +146,9 @@ public class GridTickHandler
 		
 		if (!conduit.isEmpty())
 		{
-			TileEntityRedNetEnergy cond = null;
+			N cond = null;
 			try {
-				Iterator<TileEntityRedNetEnergy> iter = conduit.iterator();
+				Iterator<N> iter = conduit.iterator();
 				while (iter.hasNext())
 				{
 					cond = iter.next();

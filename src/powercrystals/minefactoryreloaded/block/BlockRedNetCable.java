@@ -41,7 +41,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
@@ -374,7 +374,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
-			((TileEntityRedNetCable)te).onNeighboorChanged();
+			((TileEntityRedNetCable)te).markForUpdate();
 		}
 	}
 	

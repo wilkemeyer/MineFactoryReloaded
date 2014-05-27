@@ -18,15 +18,15 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 
-public class BlockRedNetPanel extends BlockContainer implements IConnectableRedNet
+public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 {
 	private int[] _blankOutputs = new int[16];
 	
@@ -116,7 +116,7 @@ public class BlockRedNetPanel extends BlockContainer implements IConnectableRedN
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(MFRUtil.isHoldingHammer(player) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
-			((TileEntityFactory)te).rotate();
+			((TileEntityFactory)te).rotate(ForgeDirection.getOrientation(side));
 			world.markBlockForUpdate(x, y, z);
 			return true;
 		}

@@ -1,12 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelection;
-import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerMJ;
-
-import buildcraft.api.power.IPowerEmitter;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.PowerHandler.Type;
 
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
@@ -26,20 +20,20 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.net.GridTickHandler;
 //import ic2.api.energy.tile.IEnergySink;
 //import ic2.api.energy.tile.IEnergySource;
 //import ic2.api.energy.tile.IEnergyTile;
 
-public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
-									IPowerEmitter,// IEnergySink,
-									IEnergyHandler//, IEnergyInfo
+public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements 
+									// IEnergySink,
+									IEnergyHandler,//, IEnergyInfo
+									INode
 {
 	private byte[] sideMode = {1,1, 1,1,1,1, 0};
-	private IEnergyHandler[] handlerCache = null;
-	private IPowerReceptor[] receiverCache = null;/*
+	private IEnergyHandler[] handlerCache = null;/*
 	private IEnergySource[] sourceCache = null;
 	private IEnergySink[] sinkCache = null;/*/
 	private Object[] sourceCache = null;
@@ -59,12 +53,11 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		super.validate();
 		deadCache = true;
 		handlerCache = null;
-		receiverCache = null;
 		sourceCache = null;
 		sinkCache = null;
 		if (worldObj.isRemote)
 			return;
-		GridTickHandler.addConduitForTick(this);
+		RedstoneEnergyNetwork.HANDLER.addConduitForTick(this);
 	}
 
 	@Override
@@ -93,10 +86,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			// This method is only ever called from the same thread as the tick handler
 			// so this method can be safely called *here* without worrying about threading
 			updateInternalTypes();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
+	@Override
 	public void firstTick() {
 		if (worldObj == null || worldObj.isRemote) return;
 		reCache();
@@ -135,8 +128,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void addCache(TileEntity tile, int side) {
 		if (handlerCache != null)
 			handlerCache[side] = null;
-		if (receiverCache != null)
-			receiverCache[side] = null;
 		if (sourceCache != null)
 			sourceCache[side] = null;
 		if (sinkCache != null)
@@ -171,17 +162,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				sideMode[side] |= 3 << 1;
 			}
 		}//*/
-		else if (tile instanceof IPowerReceptor) {
-			PowerReceiver pp = ((IPowerReceptor)tile).
-					getPowerReceiver(ForgeDirection.VALID_DIRECTIONS[side]);
-			if (pp != null) {
-				if (receiverCache == null) receiverCache = new IPowerReceptor[6];
-				receiverCache[side] = (IPowerReceptor)tile;
-				sideMode[side] |= 2 << 1;
-			}
-		}
 		if (!deadCache) {
-			GridTickHandler.addConduitForUpdate(this);
+			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 			if (lastMode != sideMode[side])
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
@@ -296,13 +278,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		return 0;
 	}
 
-	// IPowerEmitter
-
-	@Override
-	public boolean canEmitPowerFrom(ForgeDirection side) {
-		return canConnectEnergy(side);
-	}
-
 	/*/ IEnergySink
 
 	@Override
@@ -382,8 +357,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 						handlerTile.extractEnergy(side, _grid.storage.receiveEnergy(e, false), false);
 				}//*/
 				break;
-			case 2: // IPowerReceptor
-				// can not extract from IPowerEmitter either
+			case 2: // unused
 				break;
 			case 3: // IEnergyTile
 				if (sourceCache != null)
@@ -418,20 +392,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 						return handlerTile.receiveEnergy(side, energy, false);
 				}
 				break;
-			case 2: // IPowerReceptor
-				IPowerReceptor receiverTile = receiverCache[bSide];
-				PowerReceiver pp = null;
-				if (receiverTile != null)
-					pp = receiverTile.getPowerReceiver(side);
-
-				if (pp != null) {
-					double max = pp.getMaxEnergyReceived();
-					double powerToSend = Math.min(max, pp.getMaxEnergyStored() - pp.getEnergyStored());
-					if (powerToSend > 0) {
-						powerToSend = Math.min(energy / (float)energyPerMJ, powerToSend);
-						return (int)Math.ceil(pp.receiveEnergy(Type.PIPE, powerToSend, side) * energyPerMJ);
-					}
-				}
+			case 2: // unused
 				break;
 			case 3: // IEnergyTile
 				if (sinkCache != null) {/*
@@ -460,6 +421,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			incorporateTiles();
 	}
 
+	@Override
 	public void updateInternalTypes() {
 		if (deadCache) return;
 		isNode = false;
@@ -471,6 +433,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 		if (_grid != null)
 			_grid.addConduit(this);
+		markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -480,7 +444,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				if (!player.worldObj.isRemote) {
 					sideMode[ForgeDirection.OPPOSITES[side]] ^= 1;
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-					GridTickHandler.addConduitForUpdate(this);
+					RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 				}
 				return true;
 			}
@@ -562,7 +526,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 						_grid.storage.getEnergyStored());
 				info.add("Caches: (RF, MJ, EU, EU):(" +
 						Arrays.toString(handlerCache) + ", " +
-						Arrays.toString(receiverCache) + ", " +
 						Arrays.toString(sourceCache) + ", " +
 						Arrays.toString(sinkCache) + ")");
 			} else {

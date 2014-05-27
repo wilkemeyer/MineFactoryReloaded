@@ -9,12 +9,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
-public class RedstoneEnergyNetwork
+public class RedstoneEnergyNetwork implements IGrid
 {
 	public static final int TRANSFER_RATE = 1000;
 	public static final int STORAGE = TRANSFER_RATE * 6;
+	static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> HANDLER =
+			GridTickHandler.energy;
 
 	private LinkedHashSet<TileEntityRedNetEnergy> nodeSet = new LinkedHashSet<TileEntityRedNetEnergy>();
 	private LinkedHashSet<TileEntityRedNetEnergy> conduitSet;
@@ -76,13 +79,14 @@ public class RedstoneEnergyNetwork
 	
 	public void regenerate() {
 		regenerating = true;
-		GridTickHandler.regenerateGrid(this);
+		HANDLER.regenerateGrid(this);
 	}
 
 	public boolean isRegenerating() {
 		return regenerating;
 	}
 	
+	@Override
 	public void markSweep() {
 		destroyGrid();
 		if (conduitSet.isEmpty())
@@ -122,9 +126,9 @@ public class RedstoneEnergyNetwork
 			newGrid.markSweep();
 		}
 		if (nodeSet.isEmpty())
-			GridTickHandler.removeGrid(this);
+			HANDLER.removeGrid(this);
 		else
-			GridTickHandler.addGrid(this);
+			HANDLER.addGrid(this);
 		regenerating = false;
 	}
 	
@@ -135,7 +139,7 @@ public class RedstoneEnergyNetwork
 			destroyNode(curCond);
 		for (TileEntityRedNetEnergy curCond : conduitSet)
 			destroyConduit(curCond);
-		GridTickHandler.removeGrid(this);
+		HANDLER.removeGrid(this);
 	}
 
 	public void destroyNode(TileEntityRedNetEnergy cond) {
@@ -147,11 +151,12 @@ public class RedstoneEnergyNetwork
 		cond._grid = null;
 	}
 
+	@Override
 	public void doGridPreUpdate() {
 		if (regenerating)
 			return;
 		if (nodeSet.isEmpty()) {
-			GridTickHandler.removeGrid(this);
+			HANDLER.removeGrid(this);
 			return;
 		}
 		if (storage.getEnergyStored() >= storage.getMaxEnergyStored())
@@ -163,11 +168,12 @@ public class RedstoneEnergyNetwork
 				cond.extract(directions[i]);
 	}
 
+	@Override
 	public void doGridUpdate() {
 		if (regenerating)
 			return;
 		if (nodeSet.isEmpty()) {
-			GridTickHandler.removeGrid(this);
+			HANDLER.removeGrid(this);
 			return;
 		}
 		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
@@ -206,7 +212,7 @@ public class RedstoneEnergyNetwork
 
 	public void mergeGrid(RedstoneEnergyNetwork theGrid) {
 		theGrid.destroyGrid();
-		boolean r = regenerating | theGrid.regenerating;
+		boolean r = regenerating || theGrid.regenerating;
 		if (!regenerating & r)
 			regenerate();
 		
@@ -222,7 +228,7 @@ public class RedstoneEnergyNetwork
 	public void nodeAdded(TileEntityRedNetEnergy cond) {
 		if (master == null) {
 			master = cond;
-			GridTickHandler.addGrid(this);
+			HANDLER.addGrid(this);
 		}
 		rebalanceGrid();
 		storage.modifyEnergyStored(cond.energyForGrid);
@@ -233,7 +239,7 @@ public class RedstoneEnergyNetwork
 		if (cond == master) {
 			if (nodeSet.isEmpty()) {
 				master = null;
-				GridTickHandler.removeGrid(this);
+				HANDLER.removeGrid(this);
 			} else {
 				master = nodeSet.iterator().next();
 			}
@@ -270,6 +276,6 @@ public class RedstoneEnergyNetwork
 	@Override
 	public String toString() {
 		return "RedstoneEnergyNetwork@" + Integer.toString(hashCode()) + "; master:" + master +
-				"; regenerating:" + regenerating + "; isTicking:" + GridTickHandler.isGridTicking(this);
+				"; regenerating:" + regenerating + "; isTicking:" + HANDLER.isGridTicking(this);
 	}
 }

@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.IconOverlay;
 import cpw.mods.fml.relauncher.Side;

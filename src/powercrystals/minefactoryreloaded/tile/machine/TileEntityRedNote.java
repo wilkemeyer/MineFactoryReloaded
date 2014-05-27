@@ -23,12 +23,12 @@ public class TileEntityRedNote extends TileEntityFactory
 	@Override
 	public void onRedNetChanged(ForgeDirection side, int value)
 	{
-		if(value < 0 || value > 119)
+		if (value < 0 || value > 119)
 		{
 			return;
 		}
 		
-		if(_playedLastChange)
+		if (_playedLastChange)
 		{
 			_playedLastChange = false;
 			return;

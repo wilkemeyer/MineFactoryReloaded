@@ -26,6 +26,7 @@ public class ItemBlockFactory extends ItemBlock
 	protected void setNames(String[] names)
 	{
 		_names = names;
+		setHasSubtypes(true);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -248,12 +248,6 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return isItemValidForSlot(slot, itemstack);
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
 		return ItemSafariNet.isSafariNet(itemstack) &&
 				!ItemSafariNet.isSingleUse(itemstack) &&
 				!ItemSafariNet.isEmpty(itemstack);

@@ -59,19 +59,19 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	@Override
 	public boolean activateMachine()
 	{
-		if(worldObj.getWorldInfo().isRaining() && canSeeSky())
+		if (worldObj.getWorldInfo().isRaining() && canSeeSky())
 		{
-			BiomeGenBase bgb = worldObj.getBiomeGenForCoords(this.xCoord, this.zCoord);
+			BiomeGenBase bgb = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 			
-			if(!bgb.canSpawnLightningBolt() && !bgb.getEnableSnow())
+			if (!bgb.canSpawnLightningBolt() && !bgb.getEnableSnow())
 			{
 				setIdleTicks(getIdleTicksMax());
 				return false;
 			}
 			setWorkDone(getWorkDone() + 1);
-			if(getWorkDone() >= getWorkMax())
+			if (getWorkDone() >= getWorkMax())
 			{
-				if(bgb.getFloatTemperature(xCoord, yCoord, zCoord) >= 0.15F)
+				if (bgb.getFloatTemperature(xCoord, yCoord, zCoord) >= 0.15F)
 				{
 					if(_tanks[0].fill(FluidRegistry.getFluidStack("water", FluidContainerRegistry.BUCKET_VOLUME), true) > 0)
 					{
@@ -104,10 +104,10 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	
 	private boolean canSeeSky()
 	{
-		for(int y = yCoord + 1; y <= 256; y++)
+		for(int y = yCoord + 1; y < 256; y++)
 		{
 			Block block = worldObj.getBlock(xCoord, y, zCoord);
-			if (block.isAir(worldObj, xCoord, y, zCoord))
+			if (!block.isAir(worldObj, xCoord, y, zCoord))
 			{
 				return false;
 			}

@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.render.IconInverted;
 
 public class BlockVineScaffold extends Block implements IRedNetDecorative

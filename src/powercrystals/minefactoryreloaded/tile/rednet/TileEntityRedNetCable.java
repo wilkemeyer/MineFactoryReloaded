@@ -5,7 +5,6 @@ import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelect
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.util.position.BlockPosition;
-import cofh.util.position.INeighboorUpdateTile;
 
 import gnu.trove.map.hash.TObjectByteHashMap;
 
@@ -24,13 +23,13 @@ import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetNoConnection;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdateTile
+public class TileEntityRedNetCable extends TileEntity
 {
 	
 	protected int[] _sideColors = new int [6];
@@ -64,7 +63,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 			int i = 176; // as of 1.7.2
 			while (i --> 0)
 				if (!wl.contains(i))
-					_connectionBlackList.put(Block.getBlockById(i), (byte)1);
+					_connectionBlackList.put(Block.getBlockById(i), (byte)0);
 		}
 	}
 	
@@ -125,56 +124,102 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 			_mode = 1;
 		if (cableMode[6] == 1)
 			_mode = 3;
-		BlockPosition bp = new BlockPosition(this);
-		bp.orientation = side;
-		bp.moveForwards(1);
 		
-		Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
+		int x, y, z;
+		{
+			BlockPosition bp = new BlockPosition(this);
+			bp.orientation = side;
+			bp.moveForwards(1);
+			x = bp.x; y = bp.y; z = bp.z;
+		}
 		
-		if(b == null) // block doesn't exist (air) - never connect
+		Block b = worldObj.getBlock(x, y, z);
+		decorative = false;
+		
+		// air - never connect
+		if (b.isAir(worldObj, x, y, z))
 		{
 			return RedNetConnectionType.None;
 		}
-		else if(b.equals(MineFactoryReloadedCore.rednetCableBlock)) // cables - always connect
+		// cables - always connect
+		else if (b == MineFactoryReloadedCore.rednetCableBlock)
 		{
-			return RedNetConnectionType.CableAll;
+			if (((TileEntityRedNetCable)worldObj.getTileEntity(x, y, z)).canInterface(this))
+				return RedNetConnectionType.CableAll;
+			else
+				return RedNetConnectionType.None;
 		}
-		else if(_mode == 3) // cable-only, and not a cable - don't connect
+		// cable-only, and not a cable - don't connect
+		else if (_mode == 3)
 		{
 			return RedNetConnectionType.None;
 		}
-		else if(b instanceof IConnectableRedNet) // API node - let them figure it out
+		
+		short nodeFlags = -1;
+		if (b instanceof IRedNetConnection) // API node - let them figure it out
 		{
-			RedNetConnectionType type = ((IConnectableRedNet)b).getConnectionType(worldObj, bp.x, bp.y, bp.z, side.getOpposite());
-			return type.isConnectionForced & !(_mode == 1 | _mode == 2) ?
-					RedNetConnectionType.None : type; 
+			RedNetConnectionType type = ((IRedNetConnection)b).
+					getConnectionType(worldObj, x, y, z, side.getOpposite());
+			if (_mode == 0 && type.isConnectionForced)
+				return RedNetConnectionType.None;
+			else if (!type.isDecorative)
+				return type;
+			decorative = true;
+			nodeFlags = type.flags;
 		}
-		else if(b instanceof IRedNetNoConnection || b.isAir(worldObj, bp.x, bp.y, bp.z))
+		
+		// Placed here so subclasses that are API nodes can override
+		else if (b instanceof IRedNetNoConnection)
 		{
 			return RedNetConnectionType.None;
 		}
-		else if (_mode == 2 && b.isSideSolid(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
+		
+		/**
+		 * The else/if chain is broken here and no values are directly
+		 * returned from the function below here for support of API nodes
+		 * that want to use the standard connection logic. 
+		 */
+		RedNetConnectionType ret;
+
+		// mode 2 forces cable mode for strong power
+		if (_mode == 2)
 		{
-			return RedNetConnectionType.ForcedCableSingle;
+			if (b.isSideSolid(worldObj, x, y, z, side.getOpposite()))
+				ret = RedNetConnectionType.ForcedCableSingle;
+			else
+				ret = RedNetConnectionType.ForcedPlateSingle; 
 		}
-		else if(_mode == 1) // mode 1 forces plate mode for weak power
+		// mode 1 forces plate mode for weak power
+		else if (_mode == 1)
 		{
-			return RedNetConnectionType.ForcedPlateSingle;
+			ret = RedNetConnectionType.ForcedPlateSingle;
 		}
-		else if (_connectionBlackList.contains(b) || b instanceof IRedNetDecorative)
-			// standard connection logic, then figure out if we shouldn't connect
-			// mode 1 will skip this
+		// standard connection logic, then figure out if we shouldn't connect
+		// modes 1, 2, and 3 will skip this. _connectionBlackList is a HashMap
+		else if (!decorative && (_connectionBlackList.contains(b) ||
+					b instanceof IRedNetDecorative))
 		{
-			return RedNetConnectionType.None;
+			ret = RedNetConnectionType.None;
 		}
-		else if(b.isSideSolid(worldObj, bp.x, bp.y, bp.z, side.getOpposite()))
+		else if (b.isSideSolid(worldObj, x, y, z, side.getOpposite()))
 		{
-			return RedNetConnectionType.CableSingle;
+			ret = RedNetConnectionType.CableSingle;
 		}
 		else
 		{
-			return RedNetConnectionType.PlateSingle;
+			ret = RedNetConnectionType.PlateSingle;
 		}
+		/**
+		 * End of conditions.
+		 */
+		if (nodeFlags > 0)
+		{
+			short type = ret.flags;
+			type &= ~24; // 24 represents the two connection type bits
+			type |= nodeFlags;
+			return RedNetConnectionType.fromFlags(type);
+		}
+		return ret;
 	}
 	
 	@Override
@@ -310,8 +355,7 @@ public class TileEntityRedNetCable extends TileEntity implements INeighboorUpdat
 		}
 	}
 	
-	@Override
-	public void onNeighboorChanged()
+	public void markForUpdate()
 	{
 		_needsNetworkUpdate = true;
 	}

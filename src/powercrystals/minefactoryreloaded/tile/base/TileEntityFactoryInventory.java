@@ -2,8 +2,6 @@ package powercrystals.minefactoryreloaded.tile.base;
 
 import buildcraft.api.gates.IAction;
 
-import cofh.asm.relauncher.Implementable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,6 @@ import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-@Implementable("buildcraft.core.IMachine")
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
 {
 	private static IFluidTank[] emptyIFluidTank = new IFluidTank[] {};
@@ -366,6 +363,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		if (slot < start ||
 				slot > (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
 			return false;
+		if (itemstack == null)
+			return true;
+		if (itemstack.stackSize > Math.min(itemstack.getMaxStackSize(), getInventoryStackLimit()))
+			return false;
 		ItemStack slotContent = this.getStackInSlot(slot);
 		return slotContent == null || UtilInventory.stacksEqual(itemstack, slotContent);
 	}
@@ -570,12 +571,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		int start = getStartInventorySide(dir);
-		return slot >= start && slot < (start + getSizeInventorySide(dir)) &&
-				itemstack == null ||
-				(this.isItemValidForSlot(slot, itemstack) &&
-				itemstack.stackSize <= Math.min(itemstack.getMaxStackSize(), getInventoryStackLimit()));
+		return itemstack == null || this.isItemValidForSlot(slot, itemstack);
 	}
 	
 	@Override

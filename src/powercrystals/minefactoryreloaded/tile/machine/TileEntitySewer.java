@@ -85,13 +85,13 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		}
 		_tick++;
 		
-		if(_nextSewerCheckTick <= worldObj.getTotalWorldTime())
+		if (_nextSewerCheckTick <= worldObj.getTotalWorldTime())
 		{
 			Area a = new Area(BlockPosition.fromFactoryTile(this), _areaManager.getRadius(), 0, 0);
 			_jammed = false;
-			for(BlockPosition bp : a.getPositionsBottomFirst())
+			for (BlockPosition bp : a.getPositionsBottomFirst())
 			{
-				if(worldObj.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.machineBlocks.get(0)) &&
+				if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.machineBlocks.get(0)) &&
 						worldObj.getBlockMetadata(bp.x, bp.y, bp.z) == Machine.Sewer.getMeta() &&
 						!(bp.x == xCoord && bp.y == yCoord && bp.z == zCoord))
 				{
@@ -103,18 +103,18 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			_nextSewerCheckTick = worldObj.getTotalWorldTime() + 800 + worldObj.rand.nextInt(800);
 		}
 		
-		if(_tick >= 31 && !_jammed)
+		if (_tick >= 31 && !_jammed)
 		{
 			_tick = 0;
 			List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 			double massFound = 0;
-			for(Object o : entities)
+			for (Object o : entities)
 			{
-				if(o instanceof EntityAnimal || o instanceof EntityVillager)
+				if (o instanceof EntityAnimal || o instanceof EntityVillager)
 				{
 					massFound += Math.pow(((EntityLivingBase)o).boundingBox.getAverageEdgeLength(), 2);
 				}
-				else if(o instanceof EntityPlayer && ((EntityPlayer)o).isSneaking())
+				else if (o instanceof EntityPlayer && ((EntityPlayer)o).isSneaking())
 				{
 					massFound += Math.pow(((EntityLivingBase)o).boundingBox.getAverageEdgeLength(), 2);
 				}

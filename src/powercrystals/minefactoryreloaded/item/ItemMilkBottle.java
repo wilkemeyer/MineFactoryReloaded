@@ -10,6 +10,7 @@ public class ItemMilkBottle extends ItemFactory
 {
 	public ItemMilkBottle()
 	{
+		setContainerItem(Items.glass_bottle);
 	}
 	
 	@Override

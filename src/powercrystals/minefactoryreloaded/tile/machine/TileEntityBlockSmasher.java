@@ -46,12 +46,6 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	protected float getMinMJ()
-	{
-		return 10f;
-	}
-	
-	@Override
 	public void setWorldObj(World world)
 	{
 		super.setWorldObj(world);

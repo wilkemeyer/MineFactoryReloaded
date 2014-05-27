@@ -1,11 +1,11 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cofh.pcc.oredict.ItemIdentifier;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,8 @@ public class ItemFactoryArmor extends ItemArmor
 	public static final ItemArmor.ArmorMaterial PLASTIC_ARMOR = EnumHelper.
 			addArmorMaterial("plastic", 3, new int[]{1, 2, 2, 1}, 7);
 
-	protected HashMap<ItemIdentifier, Boolean> repariableItems = new HashMap<ItemIdentifier, Boolean>();
+	protected IdentityHashMap<Item, LinkedList<ItemStack>> repairableItems =
+			new IdentityHashMap<Item, LinkedList<ItemStack>>();
 	protected String textureFile;
 
 	public ItemFactoryArmor(ItemArmor.ArmorMaterial mat, int render, int type)
@@ -37,17 +38,22 @@ public class ItemFactoryArmor extends ItemArmor
 		return addRepairableItem(new ItemStack(item));
 	}
 
-	public ItemFactoryArmor addRepairableItem(ItemStack item)
+	public ItemFactoryArmor addRepairableItem(ItemStack stack)
 	{
-		this.repariableItems.put(ItemIdentifier.fromItemStack(item), true);
+		Item item = stack.getItem();
+		if (!repairableItems.containsKey(item))
+			repairableItems.put(item, new LinkedList<ItemStack>());
+		repairableItems.get(item).add(stack);
 		return this;
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
+	public boolean getIsRepairable(ItemStack armor, ItemStack stack)
 	{
-		return repariableItems.containsKey(ItemIdentifier.fromItemStack(par2ItemStack)) ||
-				super.getIsRepairable(par1ItemStack, par2ItemStack);
+		if (repairableItems.containsKey(stack.getItem()))
+			if (repairableItems.get(stack.getItem()).contains(stack))
+				return true;
+		return super.getIsRepairable(armor, stack);
 	}
 	
 	@Override

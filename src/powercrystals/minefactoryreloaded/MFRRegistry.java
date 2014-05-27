@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
-import cofh.pcc.random.WeightedRandomItemStack;
+import cofh.util.WeightedRandomItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,7 +165,7 @@ public abstract class MFRRegistry
 
 	public static void registerSludgeDrop(int weight, ItemStack drop)
 	{
-		_sludgeDrops.add(new WeightedRandomItemStack(weight, drop.copy()));
+		_sludgeDrops.add(new WeightedRandomItemStack(drop.copy(), weight));
 	}
 
 	public static List<WeightedRandom.Item> getSludgeDrops()
@@ -254,7 +254,7 @@ public abstract class MFRRegistry
 				item.itemWeight /= 2;
 				return;
 			}
-		_laserOres.add(new WeightedRandomItemStack(weight, ore.copy()));
+		_laserOres.add(new WeightedRandomItemStack(ore.copy(), weight));
 	}
 
 	public static List<WeightedRandom.Item> getLaserOres()

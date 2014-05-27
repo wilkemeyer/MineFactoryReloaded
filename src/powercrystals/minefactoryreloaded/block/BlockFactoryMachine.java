@@ -33,8 +33,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IConnectableRedNet;
-import powercrystals.minefactoryreloaded.api.rednet.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
@@ -45,7 +45,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFactoryMachine extends BlockContainer
-							implements IConnectableRedNet, IDismantleable
+							implements IRedNetOmniNode, IDismantleable
 {
 	private int _mfrMachineBlockIndex;
 
@@ -359,9 +359,9 @@ public class BlockFactoryMachine extends BlockContainer
 		if(te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
-			if (tile.canRotate())
+			if (tile.canRotate(axis))
 			{
-				tile.rotate();
+				tile.rotate(axis);
 				return true;
 			}
 		}

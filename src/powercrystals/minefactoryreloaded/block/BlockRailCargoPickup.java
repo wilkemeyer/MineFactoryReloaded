@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded.block;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
-import cofh.pcc.inventory.IInventoryManager;
-import cofh.pcc.inventory.InventoryManager;
+import cofh.inventory.IInventoryManager;
+import cofh.inventory.InventoryManager;
 
 import java.util.Map.Entry;
 

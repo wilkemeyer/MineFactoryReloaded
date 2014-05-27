@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.core;
 import buildcraft.api.transport.IPipeTile;
 
 import cofh.api.transport.IItemDuct;
-import cofh.pcc.inventory.IInventoryManager;
-import cofh.pcc.inventory.InventoryManager;
+import cofh.inventory.IInventoryManager;
+import cofh.inventory.InventoryManager;
 import cofh.util.position.BlockPosition;
 
 import java.util.Arrays;

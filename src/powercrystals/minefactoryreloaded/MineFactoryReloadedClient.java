@@ -1,20 +1,8 @@
 package powercrystals.minefactoryreloaded;
 
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.conveyorBlock;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.factoryGlassPaneBlock;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.logicCardItem;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.needlegunItem;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.plasticCupItem;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdConveyor;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdDetCord;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdFactoryGlass;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdFactoryGlassPane;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdRedNet;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.rocketItem;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.rocketLauncherItem;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.syringeEmptyItem;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.villagerFolder;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
+import cofh.render.FactoryFluidOverlayRenderer;
 import cofh.util.position.BlockPosition;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -74,7 +62,6 @@ import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntitySafariNetRenderer;
 import powercrystals.minefactoryreloaded.render.item.ConveyorItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.FactoryFluidOverlayRenderer;
 import powercrystals.minefactoryreloaded.render.item.FactoryGlassPaneItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.RocketItemRenderer;
@@ -143,28 +130,40 @@ public class MineFactoryReloadedClient
 		// Items
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(conveyorBlock),
 				new ConveyorItemRenderer());
+		
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(factoryGlassPaneBlock),
 				new FactoryGlassPaneItemRenderer());
+		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
+		{
+			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.glass_pane),
+					new FactoryGlassPaneItemRenderer());
+		}
+		
 		MinecraftForgeClient.registerItemRenderer(logicCardItem,
 				new RedNetCardItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(plasticCupItem,
-				new FactoryFluidOverlayRenderer());
 		MinecraftForgeClient.registerItemRenderer(needlegunItem,
 				new NeedleGunItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(rocketItem,
 				new RocketItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem,
 				new RocketLauncherItemRenderer());
+		
+		FactoryFluidOverlayRenderer fluidRender = new FactoryFluidOverlayRenderer();
+		MinecraftForgeClient.registerItemRenderer(plasticCupItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(sewageBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(sludgeBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(mobEssenceBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(bioFuelBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(meatBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(pinkSlimeBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(chocolateMilkBucketItem, fluidRender);
+		MinecraftForgeClient.registerItemRenderer(mushroomSoupBucketItem, fluidRender);
 		if (syringeEmptyItem instanceof IFluidContainerItem)
 			MinecraftForgeClient.registerItemRenderer(syringeEmptyItem,
 					new FactoryFluidOverlayRenderer(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
 		//		new FactoryFluidOverlayRenderer());
-		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
-		{
-			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.glass_pane),
-					new FactoryGlassPaneItemRenderer());
-		}
+		
 
 		// TileEntities
 		RedNetLogicRenderer logicRender = new RedNetLogicRenderer();

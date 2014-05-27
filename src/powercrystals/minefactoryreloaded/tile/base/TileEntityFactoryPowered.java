@@ -1,22 +1,16 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import buildcraft.api.mj.IBatteryObject;
-import buildcraft.api.mj.IBatteryProvider;
-import buildcraft.api.mj.MjAPI;
-import buildcraft.api.transport.IPipeTile.PipeType;
-
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
 import cofh.util.CoreUtils;
-
-//import ic2.api.energy.event.EnergyTileLoadEvent;
-//import ic2.api.energy.event.EnergyTileUnloadEvent;
-//import ic2.api.energy.tile.IEnergySink;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
+//import ic2.api.energy.event.EnergyTileLoadEvent;
+//import ic2.api.energy.event.EnergyTileUnloadEvent;
+//import ic2.api.energy.tile.IEnergySink;
 
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
@@ -29,12 +23,11 @@ import powercrystals.minefactoryreloaded.setup.Machine;
  * Idle ticks cause an artificial delay before activateMachine() is called again. Max should be the highest value the _machine will use, to draw the
  * progress bar correctly.
  */
-
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-											implements IBatteryProvider,
+											implements IEnergyHandler, IEnergyInfo
 														// IEnergySink,
-														IEnergyHandler, IEnergyInfo
 {	
+	public static final int energyPerAE = 2;
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
 	
@@ -50,10 +43,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	private int _workDone;
 	
 	private int _idleTicks;
-	
-	// bc-related fields
-	
-	private BuildCraftGremlin gremlin;
 	
 	// IC2-related fields
 	
@@ -71,7 +60,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		super(machine);
 		_maxEnergyStored = machine.getMaxEnergyStorage();
-		gremlin = new BuildCraftGremlin();
 		setActivationEnergy(activationCost);
 		setIsActive(false);
 	}
@@ -322,89 +310,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int getMaxEnergyStored(ForgeDirection from)
 	{
 		return getEnergyStoredMax();
-	}
-	
-	// BC methods
-	
-	protected float getMinMJ()
-	{
-		return getActivationEnergy() < 100 ? 0.1f : 10f;
-	}
-	
-	@Override
-	public IBatteryObject getMjBattery(String kind)
-	{
-		return gremlin;
-	}
-	
-	private final class BuildCraftGremlin implements IBatteryObject
-	{
-		@Override
-		public final double getEnergyRequested()
-		{
-			return getEnergyRequired() / energyPerMJ;
-		}
-		
-		@Override
-		public final double addEnergy(double mj)
-		{
-			return storeEnergy((int)(mj * energyPerMJ)) / (float)energyPerMJ;
-		}
-		
-		@Override
-		public final double addEnergy(double mj, boolean ignoreCycleLimit)
-		{
-			return addEnergy(mj);
-		}
-
-		@Override
-		public double getEnergyStored()
-		{
-			return TileEntityFactoryPowered.this.getEnergyStored() / (float)energyPerMJ;
-		}
-
-		@Override
-		public String kind()
-		{
-			return MjAPI.DEFAULT_POWER_FRAMEWORK;
-		}
-
-		@Override
-		public double maxCapacity()
-		{
-			return getEnergyStoredMax() / (float)energyPerMJ;
-		}
-
-		@Override
-		public double maxReceivedPerCycle()
-		{
-			return getMaxEnergyPerTick() / (float)energyPerMJ;
-		}
-
-		@Override
-		public double minimumConsumption()
-		{
-			return getMinMJ();
-		}
-
-		@Override
-		public IBatteryObject reconfigure(double arg0, double arg1, double arg2)
-		{
-			return null;
-		}
-
-		@Override
-		public void setEnergyStored(double arg0)
-		{
-			// no.
-		}
-	}
-
-	@Override
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		if (type == PipeType.POWER && getActivationEnergy() > 0)
-			return ConnectOverride.CONNECT;
-		return super.overridePipeConnection(type, with);
 	}
 	
 	/*/ IC2 methods

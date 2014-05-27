@@ -26,15 +26,24 @@ public class WorldGenRubberTree extends WorldGenerator
 	{
 		for(int c = 0; c < retries; c++)
 		{
-			int y = world.getActualHeight() - 1;
-			while(world.isAirBlock(x, y, z) && y > 0)
-			{
-				y--;
-			}
+			int y = world.getActualHeight();
 
-			if(!growTree(world, rand, x, y + 1, z))
-			{
-				retries--;
+			l:{ 
+				Block block;
+				do {
+					if (--y <= 0)
+					{
+						retries--;
+						break l; // we're too low, skip trying to grow the tree
+					}
+					block = world.getBlock(x, y, z);
+				} while (block.isAir(world, x, y, z) ||
+						block.isLeaves(world, x, y, z) ||
+						block.isReplaceable(world, x, y, z) ||
+						block.canBeReplacedByLeaves(world, x, y, z));
+
+				if (!growTree(world, rand, x, y + 1, z))
+					retries--;
 			}
 
 			x += rand.nextInt(16) - 8;
@@ -58,33 +67,44 @@ public class WorldGenRubberTree extends WorldGenerator
 
 			block = world.getBlock(x, y - 1, z);
 
-			if((block != null && block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP,
+			if ((block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP,
 					MineFactoryReloadedCore.rubberSaplingBlock)) &&
 					y < worldHeight - treeHeight - 1)
 			{
-				for(yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset)
+				for (yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset)
 				{
 					byte radius = 1;
 
-					if(yOffset == y)
+					if (yOffset <= y + 1)
 					{
 						radius = 0;
 					}
 
-					if(yOffset >= y + 1 + treeHeight - 2)
+					if (yOffset >= y + 1 + treeHeight - 2)
 					{
 						radius = 2;
 					}
 
-					if(yOffset >= 0 & yOffset < worldHeight)
+					if (yOffset >= 0 & yOffset < worldHeight)
 					{
-						for(xOffset = x - radius; xOffset <= x + radius; ++xOffset)
+						if (radius == 0)
 						{
-							for(zOffset = z - radius; zOffset <= z + radius; ++zOffset)
+							block = world.getBlock(x, yOffset, z);
+							if (!(block.isLeaves(world, x, yOffset, z) ||
+									block.isAir(world, x, yOffset, z) ||
+									block.isReplaceable(world, x, yOffset, z) ||
+									block.canBeReplacedByLeaves(world, x, yOffset, z)))
+							{
+								return false;
+							}
+						}
+						else for (xOffset = x - radius; xOffset <= x + radius; ++xOffset)
+						{
+							for (zOffset = z - radius; zOffset <= z + radius; ++zOffset)
 							{
 								block = world.getBlock(xOffset, yOffset, zOffset);
 
-								if(block != null && !(block.isLeaves(world, xOffset, yOffset, zOffset) ||
+								if (!(block.isLeaves(world, xOffset, yOffset, zOffset) ||
 										block.isAir(world, xOffset, yOffset, zOffset) ||
 										block.canBeReplacedByLeaves(world, xOffset, yOffset, zOffset)))
 								{
@@ -100,30 +120,31 @@ public class WorldGenRubberTree extends WorldGenerator
 				}
 
 				block = world.getBlock(x, y - 1, z);
-				if (block == null)
+				if (!block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, 
+						MineFactoryReloadedCore.rubberSaplingBlock))
 				{ // this HAPPENS. wtf?
 					return false; // abort, something went weird
 				}
 				block.onPlantGrow(world, x, y - 1, z, x, y, z);
 
-				for(yOffset = y - 3 + treeHeight; yOffset <= y + treeHeight; ++yOffset)
+				for (yOffset = y - 3 + treeHeight; yOffset <= y + treeHeight; ++yOffset)
 				{
 					int var12 = yOffset - (y + treeHeight),
 							center = 1 - var12 / 2;
 
-					for(xOffset = x - center; xOffset <= x + center; ++xOffset)
+					for (xOffset = x - center; xOffset <= x + center; ++xOffset)
 					{
 						int xPos = xOffset - x, t = xPos >> 31;
 						xPos = (xPos + t) ^ t;
-
-						for(zOffset = z - center; zOffset <= z + center; ++zOffset)
+	
+						for (zOffset = z - center; zOffset <= z + center; ++zOffset)
 						{
 							int zPos = zOffset - z;
 							zPos = (zPos + (t = zPos >> 31)) ^ t;
-
+	
 							block = world.getBlock(xOffset, yOffset, zOffset);
-
-							if(((xPos != center | zPos != center) ||
+	
+							if (((xPos != center | zPos != center) ||
 									rand.nextInt(2) != 0 && var12 != 0) &&
 									(block == null || block.isLeaves(world, xOffset, yOffset, zOffset) ||
 									block.isAir(world, xOffset, yOffset, zOffset) ||
@@ -136,11 +157,11 @@ public class WorldGenRubberTree extends WorldGenerator
 					}
 				}
 
-				for(yOffset = 0; yOffset < treeHeight; ++yOffset)
+				for (yOffset = 0; yOffset < treeHeight; ++yOffset)
 				{
 					block = world.getBlock(x, y + yOffset, z);
 
-					if(block == null || block.isAir(world, x, y + yOffset, z)  ||
+					if (block == null || block.isAir(world, x, y + yOffset, z)  ||
 							block.isLeaves(world, x, y + yOffset, z) ||
 							block.isReplaceable(world, x, y + yOffset, z)) // replace snow
 					{

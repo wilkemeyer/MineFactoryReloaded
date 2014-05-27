@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 
 import java.util.Random;
 
