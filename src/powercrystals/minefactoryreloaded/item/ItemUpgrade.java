@@ -13,7 +13,7 @@ import powercrystals.minefactoryreloaded.api.IUpgrade;
 
 public class ItemUpgrade extends ItemMulti implements IUpgrade
 {
-	private static String[] _upgradeNames = { "lapis", "iron", "tin", "copper", "bronze",
+	private static String[] _upgradeNames = { "lapis", "tin", "iron", "copper", "bronze",
 		"silver", "gold", "quartz", "diamond", "platinum", "emerald", "cobble" };
 	
 	public ItemUpgrade()
