@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IMobSpawnHandler;
+import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoSpawner;
@@ -41,6 +42,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	{
 		super(Machine.AutoSpawner);
 		setManageSolids(true);
+		_areaManager = new HarvestAreaManager(this, _spawnRange, 0, 2, false);
+		_areaManager.setOverrideDirection(ForgeDirection.UP);
 	}
 	
 	public boolean getSpawnExact()

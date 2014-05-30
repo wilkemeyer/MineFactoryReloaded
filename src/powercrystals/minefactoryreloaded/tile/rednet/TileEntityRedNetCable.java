@@ -73,6 +73,12 @@ public class TileEntityRedNetCable extends TileEntity
 		this.onChunkUnload();
 	}
 	
+	//@Override
+	public boolean isNotValid()
+	{
+		return tileEntityInvalid;
+	}
+	
 	public void setSideColor(ForgeDirection side, int color)
 	{
 		if(side == ForgeDirection.UNKNOWN)
@@ -253,6 +259,7 @@ public class TileEntityRedNetCable extends TileEntity
 			cableMode[6] = (byte)((mode >> 16) & 0xFF);
 			break;
 		}
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
 	@Override
@@ -336,7 +343,7 @@ public class TileEntityRedNetCable extends TileEntity
 	
 	public boolean canInterface(TileEntityRedNetCable with)
 	{
-		return !isInvalid();
+		return !isNotValid();
 	}
 
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
@@ -533,7 +540,7 @@ public class TileEntityRedNetCable extends TileEntity
 		{
 			TileEntityRedNetCable te = (TileEntityRedNetCable)obj;
 			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
-					te.isInvalid() == isInvalid() && worldObj == te.worldObj;
+					te.isNotValid() == isNotValid() && worldObj == te.worldObj;
 		}
 		return false;
 	}

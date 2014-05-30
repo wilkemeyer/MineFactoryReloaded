@@ -8,10 +8,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-//import ic2.api.item.IC2Items;
-//import ic2.api.recipe.IMachineRecipeManager;
-//import ic2.api.recipe.ISemiFluidFuelManager.BurnProperty;
-//import ic2.api.recipe.Recipes;
+import ic2.api.item.IC2Items;
+import ic2.api.recipe.IMachineRecipeManager;
+import ic2.api.recipe.ISemiFluidFuelManager.BurnProperty;
+import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -47,7 +47,7 @@ public class IC2
 		{
 			FMLLog.warning("IC2 missing - MFR IC2 Compat not loading");
 			return;
-		}/*
+		}
 		try
 		{
 			ItemStack crop = IC2Items.getItem("crop");
@@ -127,12 +127,11 @@ public class IC2
 	}
 
 	private static void copyEthanol()
-	{/*
+	{
 		BurnProperty q = Recipes.semiFluidGenerator.getBurnProperty(FluidRegistry.getFluid("bioethanol"));
 		if (q != null)
 			Recipes.semiFluidGenerator.addFluid("biofuel", q.amount, q.power);
 		else if (FluidRegistry.getFluid("bioethanol") == null)
 			Recipes.semiFluidGenerator.addFluid("biofuel", 10, 16);
-		//*/
 	}
 }

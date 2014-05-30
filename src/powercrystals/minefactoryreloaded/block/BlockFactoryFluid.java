@@ -43,6 +43,8 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 	protected IIcon _iconFlowing;
 	@SideOnly(Side.CLIENT)
 	protected IIcon _iconStill;
+	@SideOnly(Side.CLIENT)
+	public int color;
 	protected String fluidName;
 	private static Fluid ensureFluid(String name)
 	{
@@ -260,7 +262,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 	{
 		_iconStill = still;
 		_iconFlowing = flowing;
-		setParticleColor(RegistryUtils.getBlockTextureColor(still.getIconName()));
+		setParticleColor(color = RegistryUtils.getBlockTextureColor(still.getIconName()));
 	}
 
 	@SideOnly(Side.CLIENT)

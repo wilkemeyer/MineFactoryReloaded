@@ -19,7 +19,7 @@
 	<property name="forge.major" value="10"/>
 	<property name="forge.minor" value="12"/>
 	<property name="forge.patch" value="1"/>
-	<property name="forge.build" value="1075"/>
+	<property name="forge.build" value="1080"/>
 	
 	<!-- Packaging -->
 	<property name="dist.dir" value="${build.dir}/dist"/>
@@ -72,6 +72,7 @@
 		</condition>
 		<condition property="have.libs">
 			<and>
+				<istrue value="${forge.exists}"/>
 				<available file="${lib.dir}/codechickenlib.jar" type="file"/>
 				<available file="${lib.dir}/CoFHLib.jar" type="file"/>
 				<available file="${lib.dir}/CoFHCore.jar" type="file"/>

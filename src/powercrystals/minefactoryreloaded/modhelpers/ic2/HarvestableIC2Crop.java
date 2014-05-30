@@ -4,6 +4,12 @@ package powercrystals.minefactoryreloaded.modhelpers.ic2;
 //import ic2.api.crops.Crops;
 //import ic2.api.crops.ICropTile;
 
+import cpw.mods.fml.common.Loader;
+
+import ic2.api.crops.CropCard;
+import ic2.api.crops.Crops;
+import ic2.api.crops.ICropTile;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +53,13 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return false;
-		/*
+		if (!Loader.isModLoaded("IC2"))
+			return false;
+		return canHarvest(world, harvesterSettings, x, y, z);
+	}
+	
+	private boolean canHarvest(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te == null || !(te instanceof ICropTile))
 		{
@@ -61,7 +72,6 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 			int ID = tec.getID();
 			if (ID < 0)
 				return false;
-			// previous error here was PC not emy
 			crop = Crops.instance.getCropList()[ID];
 			if(!crop.canBeHarvested(tec) || crop.canGrow(tec))
 			{
@@ -73,16 +83,20 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 			e.printStackTrace();
 		}
 		
-		return true;//*/
+		return true;
 	}
 	
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return new ArrayList<ItemStack>();
-		/*
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		
+		if (Loader.isModLoaded("IC2"))
+			getDrops(drops, world, rand, harvesterSettings, x, y, z);
+		return drops;
+	}
+	
+	private void getDrops(List<ItemStack> drops, World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	{
 		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
 		CropCard crop;
 		try
@@ -124,8 +138,6 @@ public class HarvestableIC2Crop implements IFactoryHarvestable
 		{
 			e.printStackTrace();
 		}
-		
-		return drops;//*/
 	}
 	
 	@Override

@@ -1,11 +1,11 @@
 package powercrystals.minefactoryreloaded.item;
 
-import java.util.ArrayList;
-
 import cofh.api.block.IBlockDebug;
 import cofh.api.block.IBlockInfo;
-import cofh.block.ITileInfo;
+import cofh.api.tileentity.ITileInfo;
 import cofh.util.ServerHelper;
+
+import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

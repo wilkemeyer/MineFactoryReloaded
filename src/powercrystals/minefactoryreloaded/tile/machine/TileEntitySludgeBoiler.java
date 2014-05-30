@@ -9,8 +9,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -33,15 +34,15 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	
 	private Random _rand;
 	private int _tick;
+	private Area _area;
 	
 	public TileEntitySludgeBoiler()
 	{
 		super(Machine.SludgeBoiler);
 		setManageSolids(true);
-		
+		_activeSyncTimeout = 5;
 		_rand = new Random();
 	}
 	
@@ -59,6 +60,13 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
+	public void validate()
+	{
+		super.validate();
+		_area = new Area(new BlockPosition(this), 3, 3, 3);
+	}
+	
+	@Override
 	public int getWorkMax()
 	{
 		return 100;
@@ -73,13 +81,13 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean activateMachine()
 	{
-		if(drain(_tanks[0], 10, false) == 10)
+		if (drain(_tanks[0], 10, false) == 10)
 		{
 			drain(_tanks[0], 10, true);
 			setWorkDone(getWorkDone() + 1);
 			_tick++;
 			
-			if(getWorkDone() >= getWorkMax())
+			if (getWorkDone() >= getWorkMax())
 			{
 				ItemStack s = ((WeightedRandomItemStack)WeightedRandom.getRandomItem(_rand, MFRRegistry.getSludgeDrops())).getStack();
 				
@@ -88,26 +96,43 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 				setWorkDone(0);
 			}
 			
-			if(_tick >= 23)
+			if (_tick >= 23)
 			{
-				Area a = new Area(new BlockPosition(this), 3, 3, 3);
-				List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, a.toAxisAlignedBB());
-				for(Object o : entities)
+				List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _area.toAxisAlignedBB());
+				for (EntityLivingBase ent : entities)
 				{
-					if(o instanceof EntityPlayer)
-					{
-						((EntityPlayer)o).addPotionEffect(new PotionEffect(Potion.hunger.id, 20 * 20, 0));
-					}
-					if(o instanceof EntityPlayer)
-					{
-						((EntityPlayer)o).addPotionEffect(new PotionEffect(Potion.poison.id, 6 * 20, 0));
-					}
+					ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 20 * 20, 0));
+					ent.addPotionEffect(new PotionEffect(Potion.poison.id, 6 * 20, 0));
 				}
 				_tick = 0;
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	protected boolean updateIsActive(boolean failedDrops)
+	{
+		return super.updateIsActive(failedDrops) && drain(_tanks[0], 10, false) == 10;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void machineDisplayTick()
+	{
+		int s = Minecraft.getMinecraft().gameSettings.particleSetting;
+		if (s < 2 && isActive())
+		{
+			int color = MineFactoryReloadedCore.sludgeLiquid.color;
+			for (int a = 8 >> s, i = 4 >> s;
+					i --> 0; )
+				worldObj.spawnParticle(_rand.nextInt(a) == 0 ? "mobSpell" : "mobSpellAmbient", 
+						_area.xMin + _rand.nextFloat() * (_area.xMax - _area.xMin),
+						_area.yMin + _rand.nextFloat() * (_area.yMax - _area.yMin),
+						_area.zMin + _rand.nextFloat() * (_area.zMax - _area.zMin),
+						((color >> 16) & 255) / 255f, ((color >> 8) & 255) / 255f, (color & 255) / 255f);
+		}
 	}
 	
 	@Override

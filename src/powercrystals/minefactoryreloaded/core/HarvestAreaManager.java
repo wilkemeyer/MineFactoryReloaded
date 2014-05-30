@@ -51,6 +51,12 @@ public class HarvestAreaManager
 	}
 	
 	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
+			int harvestAreaUp, int harvestAreaDown, boolean usesBlocks)
+	{
+		this(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, usesBlocks);
+	}
+	
+	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
 			int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
 	{
 		_owner = owner;
@@ -211,7 +217,7 @@ public class HarvestAreaManager
 	private void recalculateArea()
 	{
 		BlockPosition ourpos = BlockPosition.fromFactoryTile(_owner);
-		if(_overrideDirection != ForgeDirection.UNKNOWN)
+		if (_overrideDirection != ForgeDirection.UNKNOWN)
 		{
 			ourpos.orientation = _overrideDirection;
 		}
@@ -225,7 +231,7 @@ public class HarvestAreaManager
 		int areaUp = _areaUp;
 		int areaDown = _areaDown;
 		
-		if(ourpos.orientation == ForgeDirection.UP || ourpos.orientation == ForgeDirection.DOWN)
+		if (ourpos.orientation == ForgeDirection.UP || ourpos.orientation == ForgeDirection.DOWN)
 		{
 			if (_upgradeVertical)
 				if (ourpos.orientation == ForgeDirection.UP)

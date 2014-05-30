@@ -94,7 +94,7 @@ public class GridTickHandler<G extends IGrid, N extends INode>
 				while (iter.hasNext())
 				{
 					cond = iter.next();
-					if (!cond.isInvalid())
+					if (!cond.isNotValid())
 						cond.updateInternalTypes();
 				}
 				conduit.clear();
@@ -152,7 +152,7 @@ public class GridTickHandler<G extends IGrid, N extends INode>
 				while (iter.hasNext())
 				{
 					cond = iter.next();
-					if (!cond.isInvalid())
+					if (!cond.isNotValid())
 						cond.firstTick();
 				}
 				conduit.clear();

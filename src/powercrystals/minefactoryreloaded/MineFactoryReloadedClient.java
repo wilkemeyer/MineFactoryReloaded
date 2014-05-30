@@ -43,6 +43,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
@@ -91,6 +92,8 @@ public class MineFactoryReloadedClient
 	private int _lockonTicks = 0;
 	private int _lockonLostTicks = 0;
 	private Entity _lastEntityOver = null;
+	@SuppressWarnings("unused")
+	private static boolean gl14 = false;
 
 	public static HashMap<BlockPosition, Integer> prcPages = new HashMap<BlockPosition, Integer>();
 
@@ -130,7 +133,7 @@ public class MineFactoryReloadedClient
 		// Items
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(conveyorBlock),
 				new ConveyorItemRenderer());
-		
+
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(factoryGlassPaneBlock),
 				new FactoryGlassPaneItemRenderer());
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
@@ -138,7 +141,7 @@ public class MineFactoryReloadedClient
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.glass_pane),
 					new FactoryGlassPaneItemRenderer());
 		}
-		
+
 		MinecraftForgeClient.registerItemRenderer(logicCardItem,
 				new RedNetCardItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(needlegunItem,
@@ -147,7 +150,7 @@ public class MineFactoryReloadedClient
 				new RocketItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem,
 				new RocketLauncherItemRenderer());
-		
+
 		FactoryFluidOverlayRenderer fluidRender = new FactoryFluidOverlayRenderer();
 		MinecraftForgeClient.registerItemRenderer(plasticCupItem, fluidRender);
 		MinecraftForgeClient.registerItemRenderer(sewageBucketItem, fluidRender);
@@ -163,7 +166,7 @@ public class MineFactoryReloadedClient
 					new FactoryFluidOverlayRenderer(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
 		//		new FactoryFluidOverlayRenderer());
-		
+
 
 		// TileEntities
 		RedNetLogicRenderer logicRender = new RedNetLogicRenderer();
@@ -192,6 +195,7 @@ public class MineFactoryReloadedClient
 				new ResourceLocation(villagerFolder + "zoologist.png"));
 
 		MinecraftForge.EVENT_BUS.register(instance);
+		gl14 = GLContext.getCapabilities().OpenGL14;
 	}
 
 	@SubscribeEvent
@@ -254,7 +258,7 @@ public class MineFactoryReloadedClient
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
-	
+
 	private void renderHUD(float partialTicks)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
@@ -263,7 +267,7 @@ public class MineFactoryReloadedClient
 		{
 			ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 			Point center = new Point(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2);
-			
+
 			if(MineFactoryReloadedClient.instance.getLockedEntity() != Integer.MIN_VALUE)
 			{
 				mc.renderEngine.bindTexture(targetingBlue);
@@ -272,27 +276,27 @@ public class MineFactoryReloadedClient
 			{
 				mc.renderEngine.bindTexture(targetingRed);
 			}
-			
+
 			GL11.glPushMatrix();
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glTranslatef(center.getX(), center.getY(), 0);
 			GL11.glRotatef((mc.theWorld.getWorldTime() * 4) % 360 + partialTicks, 0, 0, 1);
-			
+
 			float distance = MineFactoryReloadedClient.instance.getLockTimeRemaining();
-			
+
 			drawLockonPart(center, distance, 0);
 			drawLockonPart(center, distance, 90);
 			drawLockonPart(center, distance, 180);
 			drawLockonPart(center, distance, 270);
-			
+
 			GL11.glPopMatrix();
 		}
 	}
-	
+
 	private void drawLockonPart(Point center, float distanceFromCenter, int rotation)
 	{
 		GL11.glPushMatrix();
-		
+
 		GL11.glRotatef(rotation, 0, 0, 1);
 		GL11.glTranslatef(-8, -13, 0);
 		GL11.glTranslatef(0, -distanceFromCenter, 0);
@@ -307,7 +311,7 @@ public class MineFactoryReloadedClient
 		GL11.glTexCoord2f(1, 0);
 		GL11.glVertex2i(16, 0);
 		GL11.glEnd();
-		
+
 		GL11.glPopMatrix();
 	}
 
@@ -372,15 +376,16 @@ public class MineFactoryReloadedClient
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glShadeModel(GL11.GL_FLAT);
 
-		for(IHarvestAreaContainer c : _areaTileEntities)
+		for (IHarvestAreaContainer c : _areaTileEntities)
 		{
 			if(((TileEntity)c).isInvalid())
 				continue;
 
-			float r = (c.getHAM().getOriginX() & 15) / 16.0F;
-			float g = (c.getHAM().getOriginY() & 15) / 16.0F;
-			float b = (c.getHAM().getOriginZ() & 15) / 16.0F;
+			float r = colorFromCoord(c.getHAM().getOriginX(), 0xF8525888);
+			float g = colorFromCoord(c.getHAM().getOriginY(), 0x85BDBD8C);
+			float b = colorFromCoord(c.getHAM().getOriginZ(), 0x997696BF);
 
 			GL11.glPushMatrix();
 			GL11.glColor4f(r, g, b, 0.4F);
@@ -391,6 +396,14 @@ public class MineFactoryReloadedClient
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
+	}
+
+	private float colorFromCoord(int c, long h)
+	{
+		h = (h * c) + 0xBA;
+		h ^= (h >>> 20) ^ (h >>> 12);
+		h ^= (h >>> 7) ^ (h >>> 4);
+		return ((h & 255) / 319f) + 0.1f; // odd values bound to 0.1 <= x < 0.9
 	}
 
 	public static void addTileToAreaList(IHarvestAreaContainer tile)
@@ -483,7 +496,7 @@ public class MineFactoryReloadedClient
 
 	private static void renderAABB(AxisAlignedBB par0AxisAlignedBB)
 	{
-		double eps = 0.01;
+		double eps = 0.006;
 
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
@@ -491,22 +504,27 @@ public class MineFactoryReloadedClient
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
+
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
+
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
+
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
+
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
+
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
 		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);

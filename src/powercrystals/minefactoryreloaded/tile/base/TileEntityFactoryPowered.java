@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded.tile.base;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
 import cofh.util.CoreUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -81,6 +83,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		
 		if (worldObj.isRemote)
 		{
+			machineDisplayTick();
 			return;
 		}
 		
@@ -100,7 +103,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		_energyRequiredThisTick = Math.max(_energyRequiredThisTick + energyRequired,
 				getMaxEnergyPerTick());
 		
-		setIsActive(_energyStored >= _energyActivation * 2);
+		setIsActive(updateIsActive(failedDrops != null));
 		
 		if (failedDrops != null)
 		{
@@ -149,7 +152,17 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		}
 	}
 	
+	protected boolean updateIsActive(boolean failedDrops)
+	{
+		return !failedDrops && hasSufficientPower();
+	}
+	
 	protected abstract boolean activateMachine();
+	
+	@SideOnly(Side.CLIENT)
+	protected void machineDisplayTick()
+	{
+	}
 	
 	@Override
 	public void onDisassembled()
@@ -163,6 +176,11 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			}
 			_isAddedToIC2EnergyNet = false;
 		}
+	}
+	
+	public final boolean hasSufficientPower()
+	{
+		return _energyStored >= _energyActivation * 2;
 	}
 	
 	public int getActivationEnergy()

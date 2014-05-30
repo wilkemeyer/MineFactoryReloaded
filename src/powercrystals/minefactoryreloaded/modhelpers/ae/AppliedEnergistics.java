@@ -26,9 +26,9 @@ public class AppliedEnergistics
 		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
 				"powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor" );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
-				"powercrystals.minefactoryreloaded.tile.conveyor.TileEntityRedNetLogic" );
+				"powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic" );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
-				"powercrystals.minefactoryreloaded.tile.conveyor.TileEntityRedNetCable" );
+				"powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable" );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-redstone",
 				new ItemStack( MineFactoryReloadedCore.rednetCableBlock, 1, 0 ) );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-redstone",

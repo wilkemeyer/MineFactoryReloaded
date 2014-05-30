@@ -42,11 +42,12 @@ public abstract class TileEntityFactory extends TileEntity
 	private ForgeDirection _forwardDirection;
 	private boolean _canRotate = false;
 	
-	private boolean _isActive = false, _prevActive;
-	private long _lastActive = -100;
-	
 	private boolean _manageFluids = false;
 	private boolean _manageSolids = false;
+	
+	private boolean _isActive = false, _prevActive;
+	private long _lastActive = -100;
+	protected byte _activeSyncTimeout = 101;
 	
 	protected int _rednetState;
 	
@@ -162,8 +163,9 @@ public abstract class TileEntityFactory extends TileEntity
 	
 	public void rotateDirectlyTo(int rotation)
 	{
+		ForgeDirection p = _forwardDirection;
 		_forwardDirection = ForgeDirection.getOrientation(rotation);
-		if (worldObj != null)
+		if (worldObj != null && p != _forwardDirection)
 		{
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
@@ -196,7 +198,7 @@ public abstract class TileEntityFactory extends TileEntity
 		if (_isActive != isActive & worldObj != null &&
 				!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime())
 		{
-			_lastActive = worldObj.getTotalWorldTime() + 101;
+			_lastActive = worldObj.getTotalWorldTime() + _activeSyncTimeout;
 			_prevActive = _isActive;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
@@ -273,7 +275,10 @@ public abstract class TileEntityFactory extends TileEntity
 		{
 		case 0:
 			rotateDirectlyTo(data.getByte("r"));
+			_prevActive = _isActive;
 			_isActive = data.getBoolean("a");
+			if (_prevActive != _isActive)
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			if (_lastActive < 0)
 			{
 				Packets.sendToServer(Packets.HAMUpdate, this);
