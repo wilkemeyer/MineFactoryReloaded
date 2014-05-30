@@ -1,5 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
+import cofh.gui.GuiBase;
+import cofh.gui.element.ElementButtonManaged;
+import cofh.gui.element.ElementListBox;
+import cofh.gui.element.listbox.IListBoxElement;
+import cofh.gui.element.listbox.SliderVertical;
 import cofh.util.position.BlockPosition;
 
 import java.util.Collections;
@@ -10,16 +15,11 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import powercrystals.core.gui.Control;
-import powercrystals.core.gui.GuiScreenBase;
-import powercrystals.core.gui.controls.Button;
-import powercrystals.core.gui.controls.IListBoxElement;
-import powercrystals.core.gui.controls.ListBox;
-import powercrystals.core.gui.controls.SliderVertical;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -32,7 +32,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic.PinMapping;
 
-public class GuiRedNetLogic extends GuiScreenBase
+public class GuiRedNetLogic extends GuiBase
 {
 	private class CircuitComparator implements Comparator<IRedNetLogicCircuit>
 	{
@@ -47,7 +47,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 	
 	private int _selectedCircuit;
 	
-	private ListBox _circuitList;
+	private ElementListBox _circuitList;
 	
 	private SliderVertical _circuitScroll;
 	
@@ -57,23 +57,23 @@ public class GuiRedNetLogic extends GuiScreenBase
 	private ButtonLogicPinSelect[] _inputIOPinButtons = new ButtonLogicPinSelect[16];
 	private ButtonLogicPinSelect[] _outputIOPinButtons = new ButtonLogicPinSelect[16];
 	
-	private Button _nextCircuit;
-	private Button _prevCircuit;
+	private ElementButtonManaged _nextCircuit;
+	private ElementButtonManaged _prevCircuit;
 	
-	private Button _reinit;
-	private Button _reinitConfirm;
+	private ElementButtonManaged _reinit;
+	private ElementButtonManaged _reinitConfirm;
 	
 	private int _reinitCountdown;
 	
 	public GuiRedNetLogic(Container container, TileEntityRedNetLogic logic)
 	{	
-		super(container, MineFactoryReloadedCore.guiFolder + "rednetlogic.png");
+		super(container, new ResourceLocation(MineFactoryReloadedCore.guiFolder + "rednetlogic.png"));
 		xSize = 384;
 		ySize = 256;
 		
 		_logic = logic;
 		
-		_circuitList = new ListBox(this, 86, 16, 130, 234)
+		_circuitList = new ElementListBox(this, 86, 16, 130, 234)
 		{
 			@Override
 			protected void onSelectionChanged(int newIndex, IListBoxElement newElement)
@@ -102,7 +102,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 			_circuitList.add(new ListBoxElementCircuit(circuit));
 		}
 		
-		addControl(_circuitList);
+		addElement(_circuitList);
 		
 		_circuitScroll = new SliderVertical(this, 218, 16, 10, 234, _circuitList.getLastScrollPosition())
 		{
@@ -113,9 +113,9 @@ public class GuiRedNetLogic extends GuiScreenBase
 			}
 		};
 		
-		addControl(_circuitScroll);
+		addElement(_circuitScroll);
 		
-		_prevCircuit = new Button(this, 344, 16, 30, 30, "Prev")
+		_prevCircuit = new ElementButtonManaged(this, 344, 16, 30, 30, "Prev")
 		{
 			@Override
 			public void onClick()
@@ -130,7 +130,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 			}
 		};
 		
-		_nextCircuit = new Button(this, 344, 76, 30, 30, "Next")
+		_nextCircuit = new ElementButtonManaged(this, 344, 76, 30, 30, "Next")
 		{
 			@Override
 			public void onClick()
@@ -145,10 +145,10 @@ public class GuiRedNetLogic extends GuiScreenBase
 			}
 		};
 		
-		addControl(_prevCircuit);
-		addControl(_nextCircuit);
+		addElement(_prevCircuit);
+		addElement(_nextCircuit);
 		
-		_reinit = new Button(this, 316, 228, 60, 20, "Reinitialize")
+		_reinit = new ElementButtonManaged(this, 316, 228, 60, 20, "Reinitialize")
 		{
 			@Override
 			public void onClick()
@@ -157,7 +157,7 @@ public class GuiRedNetLogic extends GuiScreenBase
 			}
 		};
 		
-		_reinitConfirm = new Button(this, 316, 228, 60, 20, "Confirm")
+		_reinitConfirm = new ElementButtonManaged(this, 316, 228, 60, 20, "Confirm")
 		{
 			@Override
 			public void onClick()
@@ -168,8 +168,8 @@ public class GuiRedNetLogic extends GuiScreenBase
 			}
 		};
 		
-		addControl(_reinit);
-		addControl(_reinitConfirm);
+		addElement(_reinit);
+		addElement(_reinitConfirm);
 		
 		_reinitConfirm.setVisible(false);
 		
@@ -183,10 +183,10 @@ public class GuiRedNetLogic extends GuiScreenBase
 			_outputIOBufferButtons[i] = new ButtonLogicBufferSelect(this, 254, 16 + i * 14, i, LogicButtonType.Output, rotation);
 			_outputIOPinButtons[i]	= new ButtonLogicPinSelect(   this, 284, 16 + i * 14, i, LogicButtonType.Output);
 			
-			addControl(_inputIOBufferButtons[i]);
-			addControl(_outputIOBufferButtons[i]);
-			addControl(_inputIOPinButtons[i]);
-			addControl(_outputIOPinButtons[i]);
+			addElement(_inputIOBufferButtons[i]);
+			addElement(_outputIOBufferButtons[i]);
+			addElement(_inputIOPinButtons[i]);
+			addElement(_outputIOPinButtons[i]);
 		}
 		
 		
@@ -321,18 +321,12 @@ public class GuiRedNetLogic extends GuiScreenBase
 		mouseX -= guiLeft;
 		mouseY -= guiTop;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(_backgroundTexture);
+		bindTexture(texture);
 		drawLargeTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
 		GL11.glPushMatrix();
 		GL11.glTranslatef(guiLeft, guiTop, 0.0F);
-		for(Control c : _controls)
-		{
-			if(c.getVisible())
-			{
-				c.drawBackground(mouseX, mouseY, gameTicks);
-			}
-		}
+		drawElements(gameTicks, false);
 		GL11.glPopMatrix();
 	}
 	

@@ -77,8 +77,8 @@ public abstract class MFRBCTrigger implements ITrigger
 	public abstract boolean canApplyTo(TileEntity tile);
 
 	@Override
-	public ITrigger rotateLeft() {
-		// TODO Auto-generated method stub
+	public ITrigger rotateLeft()
+	{
 		return null;
 	}
 }

@@ -1,8 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
+import cofh.gui.element.ElementListBox;
+import cofh.gui.element.listbox.IListBoxElement;
+
 import net.minecraft.util.StatCollector;
-import powercrystals.core.gui.controls.IListBoxElement;
-import powercrystals.core.gui.controls.ListBox;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 
 public class ListBoxElementCircuit implements IListBoxElement
@@ -27,7 +28,7 @@ public class ListBoxElementCircuit implements IListBoxElement
 	}
 	
 	@Override
-	public void draw(ListBox listBox, int x, int y, int backColor, int textColor)
+	public void draw(ElementListBox listBox, int x, int y, int backColor, int textColor)
 	{
 		String text = listBox.getContainerScreen().fontRendererObj.trimStringToWidth(StatCollector.translateToLocal(_circuit.getUnlocalizedName()), listBox.getContentWidth());
 		listBox.getContainerScreen().fontRendererObj.drawStringWithShadow(text, x, y, textColor);

@@ -1,9 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
-import powercrystals.core.gui.controls.ButtonOption;
+import cofh.gui.element.ElementButtonOption;
+
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
 
-public class ButtonLogicBufferSelect extends ButtonOption
+public class ButtonLogicBufferSelect extends ElementButtonOption
 {
 	private LogicButtonType _buttonType;
 	private GuiRedNetLogic _logicScreen;

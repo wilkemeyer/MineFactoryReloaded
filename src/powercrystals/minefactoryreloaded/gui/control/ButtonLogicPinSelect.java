@@ -1,12 +1,12 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
-import powercrystals.core.gui.GuiColor;
-import powercrystals.core.gui.GuiRender;
-import powercrystals.core.gui.controls.Button;
+import cofh.gui.GuiColor;
+import cofh.gui.element.ElementButtonManaged;
+
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class ButtonLogicPinSelect extends Button
+public class ButtonLogicPinSelect extends ElementButtonManaged
 {	
 	private static GuiColor[] _pinColors = new GuiColor[]
 			{
@@ -172,12 +172,12 @@ public class ButtonLogicPinSelect extends Button
 		{
 			if(!MFRConfig.colorblindMode.getBoolean(false))
 			{
-				GuiRender.drawRect(x + 3, y + 3, x + width - 3, y + height - 3, _pinColors[_pin].getColor());
+				drawModalRect(posX + 3, posY + 3, posX + sizeX - 3, posY + sizeY - 3, _pinColors[_pin].getColor());
 			}
 			else
 			{
 				
-				GuiRender.drawCenteredString(containerScreen.fontRendererObj, _pinColorNames[_pin], x + width / 2, y + height / 2 - 4, getTextColor(mouseX, mouseY));
+				drawCenteredString(gui.fontRendererObj, _pinColorNames[_pin], posX + sizeX / 2, posY + sizeY / 2 - 4, getTextColor(mouseX, mouseY));
 			}
 		}
 		else if(_buffer < 14)
