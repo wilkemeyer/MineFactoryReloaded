@@ -19,7 +19,7 @@
 	<property name="forge.major" value="10"/>
 	<property name="forge.minor" value="12"/>
 	<property name="forge.patch" value="1"/>
-	<property name="forge.build" value="1080"/>
+	<property name="forge.build" value="1084"/>
 	
 	<!-- Packaging -->
 	<property name="dist.dir" value="${build.dir}/dist"/>
@@ -187,7 +187,7 @@
 	
 	<macrodef name="move-transformers"><sequential>
 		
-		<copy file="${download.dir}/CoFHCore-master/src/main/resources/CoFH_at.cfg" todir="${transformers.dir}"/>
+		<copy file="${download.dir}/CoFHCore-master/src/main/resources/CoFH_at.cfg" tofile="${transformers.dir}/z_CoFH_at.cfg"/>
 		
 	</sequential></macrodef>
 	

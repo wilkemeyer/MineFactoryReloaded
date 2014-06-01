@@ -47,7 +47,9 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem
 	@Override
 	public void registerIcons(IIconRegister r)
 	{
-		String t = (iconString != null ? iconString : "minefactoryreloaded:" + getUnlocalizedName());
+		String t = "minefactoryreloaded:" + getUnlocalizedName();
+		if (iconString != null && !RegistryUtils.itemTextureExists(t))
+			t = iconString;
 		if (RegistryUtils.itemTextureExists(t))
 		{
 			itemIcon = r.registerIcon(t);
@@ -60,9 +62,9 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem
 		}
 		overlayIcon = r.registerIcon("minefactoryreloaded:item.mfr.bucket.fill");
 	}
-	
+
 	@Override
-    public int getRenderPasses(int metadata)
+	public int getRenderPasses(int metadata)
 	{
 		return _needsOverlay ? 2 : 1;
 	}
