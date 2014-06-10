@@ -21,7 +21,7 @@ tile.mfr.machine.liquidrouter.name = Flüssigkeitsrouter
 tile.mfr.machine.deepstorageunit.name = Tiefenspeicher
 tile.mfr.machine.liquicrafter.name = Flüssigkeits-Werkbank
 tile.mfr.machine.lavafabricator.name = Lavafabrik
-tile.mfr.machine.oilfabricator.name = Ölfabrik
+tile.mfr.machine.steamboiler.name = Dampfkessel
 tile.mfr.machine.autojukebox.name = Automatischer Plattenspieler
 tile.mfr.machine.unifier.name = Vereiniger
 tile.mfr.machine.autospawner.name = Automatischer Spawner
@@ -141,7 +141,9 @@ tile.mfr.vinescaffold.name = Lianengerüst
 tile.mfr.detcord.name = Sprengschnur
 
 tile.mfr.rubberwood.sapling.name = Gummibaumsetzling
-tile.mfr.rubberwood.sapling.massive.name = Heiliger Gummibaumsetzlingk
+tile.mfr.rubberwood.sapling.sacred.name = Heiliger Gummibaumsetzling
+tile.mfr.rubberwood.sapling.mega.name = Mega-Gummibaumsetzling
+tile.mfr.rubberwood.sapling.massive.name = Heiliger Gummibaumsetzling
 tile.mfr.rubberwood.log.name = Gummibaumholz
 tile.mfr.rubberwood.leaves.name = Gummibaumblätter
 tile.mfr.rubberwood.leaves.dry.name = Trockene Gummibaumblätter
@@ -167,6 +169,7 @@ fluid.mfr.liquid.meat.still.name = Fleischmasse
 fluid.mfr.liquid.pinkslime.still.name = Rosa Schleim
 fluid.mfr.liquid.chocolatemilk.still.name = Kakao
 fluid.mfr.liquid.mushroomsoup.still.name = Pilzsuppe
+fluid.mfr.liquid.steam.still.name = Dampf
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Rosa Schleim
 
