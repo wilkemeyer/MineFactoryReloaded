@@ -473,6 +473,7 @@ public class Vanilla
 		registerOreDictLaserOre( 20, "oreAmmonium", white, null);
 		registerOreDictLaserOre( 20, "oreCalcite", orange, null);
 		registerOreDictLaserOre( 20, "oreFluorite", silver, null);
+		registerOreDictLaserOre( 20, "oreMagnetite", black, null); // Added missing reactorcraft or, Magnetite, heavily used in building fusion reactor
 	}
 	
 	private void registerOreDictLaserOre(int weight, String suffix, int focus, boolean isGem)
