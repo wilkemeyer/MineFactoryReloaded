@@ -13,6 +13,7 @@ import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntityWitch;
@@ -38,6 +39,7 @@ import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.AutoEnchantmentHelper;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.farmables.grindables.GrindableZombiePigman;
 
 public class VanillaMobProvider implements IRandomMobProvider
 {
@@ -124,6 +126,41 @@ public class VanillaMobProvider implements IRandomMobProvider
 		tntJockey.fuse = 120;
 		tntJockey.mountEntity(tntMount2);
 		mobs.add(new RandomMob(tntMount2, 2));
+
+		EntityPigZombie derp = MFRUtil.prepareMob(EntityPigZombie.class, world);
+		derp.onSpawnWithEgg(null);
+		derp.addPotionEffect(new PotionEffect(Potion.regeneration.id, 120 * 20));
+		derp.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.1);
+		derp.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(18);
+		derp.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(32);
+		derp.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(1);
+		derp.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50);
+		derp.stepHeight = 2;
+		{
+			ItemStack armor = new ItemStack(Items.leather_leggings);
+			int i = EntityLiving.getArmorPosition(armor);
+			armor.setStackDisplayName(new String(new char[]{77, 97, 110, 32, 80, 97, 110, 116, 115}));
+			if (world.rand.nextBoolean()) {
+				derp.setCustomNameTag("Super " + new String(new char[]{90, 105, 115, 116, 101, 97, 117}));
+				armor = AutoEnchantmentHelper.addRandomEnchantment(derp.getRNG(), armor, 60000, true);
+				derp.setCurrentItemOrArmor(i, armor);
+				derp.setEquipmentDropChance(i, 0.01F);
+				armor = derp.getRNG().nextInt(10) == 0 ? new ItemStack(Items.lava_bucket) : GrindableZombiePigman.sign.copy();
+				derp.setCurrentItemOrArmor(0, armor);
+				derp.setEquipmentDropChance(0, 2.0F);
+			} else {
+				derp.setCustomNameTag(new String(new char[]{80, 105, 103, 68, 101, 114, 112}));
+				armor = AutoEnchantmentHelper.addRandomEnchantment(derp.getRNG(), armor, 90, true);
+				derp.setCurrentItemOrArmor(i, armor);
+				derp.setEquipmentDropChance(i, 0.05F);
+				armor = new ItemStack(Items.lava_bucket);
+				derp.setCurrentItemOrArmor(0, armor);
+				derp.setEquipmentDropChance(0, 0.5F);
+			}
+			derp.setAlwaysRenderNameTag(true);
+			derp.func_110163_bv();
+		}
+		mobs.add(new RandomMob(derp, 1, false));
 		
 		creeperJockey = MFRUtil.prepareMob(EntityCreeper.class, world);
 		EntityXPOrb creeperMount2 = prepareXPOrb(world);
@@ -148,7 +185,7 @@ public class VanillaMobProvider implements IRandomMobProvider
 			direBane.setAlwaysRenderNameTag(true);
 			direBane.func_110163_bv();
 			ItemStack armor = new ItemStack(Items.golden_chestplate);
-			AutoEnchantmentHelper.addRandomEnchantment(direBane.getRNG(), armor, 60, true);
+			armor = AutoEnchantmentHelper.addRandomEnchantment(direBane.getRNG(), armor, 60, true);
 			int i = EntityLiving.getArmorPosition(armor);
 			direBane.setCurrentItemOrArmor(i, armor);
 			direBane.setEquipmentDropChance(i, 2.0F);

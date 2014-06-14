@@ -12,6 +12,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -164,7 +165,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

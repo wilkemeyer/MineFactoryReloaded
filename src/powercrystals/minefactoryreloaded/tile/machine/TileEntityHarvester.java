@@ -59,6 +59,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		_settings.put("silkTouch", false);
 		_settings.put("harvestSmallMushrooms", false);
 		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
+		_settings.put("isHarvestingTree", false);
 		_immutableSettings = java.util.Collections.unmodifiableMap(_settings);
 		
 		_rand = new Random();
@@ -201,6 +202,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			return null;
 		}
 		
+		_settings.put("isHarvestingTree", false);
+		
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(search);
 		if(harvestable.canBeHarvested(worldObj, _immutableSettings, bp.x, bp.y, bp.z))
 		{
@@ -260,6 +263,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	private BlockPosition getNextTreeSegment(BlockPosition pos, boolean treeFlipped)
 	{
 		Block block;
+		_settings.put("isHarvestingTree", true);
 		
 		if (!pos.equals(_lastTree) || _treeManager.getIsDone())
 		{
@@ -307,7 +311,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

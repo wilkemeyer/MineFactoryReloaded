@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -383,13 +384,13 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 	
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return !unableToRequestTicket;
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

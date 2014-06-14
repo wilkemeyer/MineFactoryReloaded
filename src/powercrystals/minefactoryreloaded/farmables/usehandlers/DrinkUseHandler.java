@@ -52,7 +52,7 @@ public class DrinkUseHandler implements IUseHandler {
 				((IFluidContainerItem)item.getItem()).drain(drop, FluidContainerRegistry.BUCKET_VOLUME, true);
 				if (drop.getItem().hasContainerItem(drop)) {
 					drop = drop.getItem().getContainerItem(drop);
-					if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
+					if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 						drop = null;
 				}
 				if (item.stackSize < 1)

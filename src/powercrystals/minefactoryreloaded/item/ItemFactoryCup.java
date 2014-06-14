@@ -209,24 +209,33 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack itemStack)
-	{
-		ItemStack r = itemStack.copy();
-		r.stackSize = 1;
-		r.attemptDamageItem(1, itemRand);
-		return r;
-	}
-
-	@Override
 	public Item getContainerItem()
 	{
 		return this;
 	}
 
 	@Override
-	public boolean hasContainerItem()
+	public ItemStack getContainerItem(ItemStack itemStack)
 	{
-		return true;
+		if (itemStack.stackSize <= 0)
+			return null;
+		ItemStack r = itemStack.copy();
+		if (getFluid(r) == null)
+		{
+			r.stackSize = 1;
+			r.attemptDamageItem(1, itemRand);
+		}
+		else
+		{
+			drain(r, getCapacity(r), true);
+		}
+		return r;
+	}
+
+	@Override
+	public boolean hasContainerItem(ItemStack stack)
+	{
+		return stack.stackSize > 0;
 	}
 
 	public boolean hasDrinkableLiquid(ItemStack stack)

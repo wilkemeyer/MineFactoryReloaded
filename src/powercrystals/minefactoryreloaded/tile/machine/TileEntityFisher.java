@@ -9,18 +9,22 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
-import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityFisher extends TileEntityFactoryPowered
 {
-	private boolean _isJammed;
+	public static final int workBase = 1800;
+
+	protected boolean _isJammed = true;
+	protected int _workNeeded = workBase;
 	
 	public TileEntityFisher()
 	{
@@ -37,9 +41,9 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerFisher getContainer(InventoryPlayer inventoryPlayer)
 	{
-		return new ContainerFactoryPowered(this, inventoryPlayer);
+		return new ContainerFisher(this, inventoryPlayer);
 	}
 	
 	@Override
@@ -51,25 +55,37 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	@Override
 	public boolean activateMachine()
 	{
-		if(_isJammed || worldObj.getWorldTime() % 137 == 0)
+		if (_isJammed || worldObj.getWorldTime() % 137 == 0)
 		{
 			Area fishingHole = _areaManager.getHarvestArea();
-			for(BlockPosition bp: fishingHole.getPositionsBottomFirst())
+			int extraBlocks = 0;
+			for (BlockPosition bp: fishingHole.getPositionsBottomFirst())
 			{
-				if(worldObj.getBlock(bp.x, bp.y, bp.z).equals(Blocks.water))
+				if (!worldObj.getBlock(bp.x, bp.y, bp.z).isAssociatedBlock(Blocks.water))
 				{
 					_isJammed = true;
 					setIdleTicks(getIdleTicksMax());
 					return false;
 				}
+				else if (worldObj.getBlock(bp.x, bp.y - 1, bp.z).isAssociatedBlock(Blocks.water))
+				{
+					++extraBlocks;
+				}
+				if (bp.x != xCoord || bp.z != zCoord)
+				{
+					if (worldObj.getBlock(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z)).isAssociatedBlock(Blocks.water))
+					{
+						++extraBlocks;
+					}
+				}
 			}
+			_workNeeded = workBase - extraBlocks * 52;
+			_isJammed = false;
 		}
-		
-		_isJammed = false;
 		
 		setWorkDone(getWorkDone() + 1);
 		
-		if(getWorkDone() > getWorkMax())
+		if (getWorkDone() > getWorkMax())
 		{ // TODO: forge fishing API
 			doDrop(new ItemStack(Items.fish));
 			setWorkDone(0);
@@ -86,7 +102,29 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	@Override
 	public int getWorkMax()
 	{
-		return 900;
+		return _workNeeded;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void setWorkMax(int work)
+	{
+		_workNeeded = work;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		_workNeeded = tag.getInteger("workNeeded");
+		_isJammed = tag.getBoolean("jam");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		tag.setInteger("workNeeded", _workNeeded);
+		tag.setBoolean("jam", _isJammed);
 	}
 	
 	@Override

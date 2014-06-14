@@ -24,7 +24,7 @@ public class GrindableZombiePigman implements IFactoryGrindable
 	private static final UUID signBoostModifierUUID = UUID.fromString("1CBBA087-C48F-4F33-8BD4-0E85FC2F6A0A");
 	private static final AttributeModifier modifier = (new AttributeModifier(signBoostModifierUUID,
 			"Battlesign boost", 10D, 0)).setSaved(false);
-	private static final ItemStack sign;
+	public static final ItemStack sign;
 	static {
 		sign = new ItemStack(Items.sign);
 		sign.addEnchantment(Enchantment.sharpness, 4);

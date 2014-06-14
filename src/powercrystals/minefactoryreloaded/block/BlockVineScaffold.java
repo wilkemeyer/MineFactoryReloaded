@@ -21,7 +21,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
-import powercrystals.minefactoryreloaded.render.IconInverted;
 
 public class BlockVineScaffold extends Block implements IRedNetDecorative
 {
@@ -37,15 +36,23 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		setBlockName("mfr.vinescaffold");
 		setStepSound(soundTypeGrass);
 		setHardness(0.1F);
-		setBlockBounds(0F, 1 / 48f, 0F, 1F, 1f - 1 / 48f, 1F);
+		setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
 		setTickRandomly(true);
+	}
+
+	@Override
+	public int getRenderBlockPass()
+	{
+		return 1;
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		//if(entity instanceof EntityPlayerMP)
-		//((EntityPlayerMP)entity).playerNetServerHandler.ticksForFloatKick = 0;
+		float shrinkAmount = 1f / 45f;
+		if (entity.boundingBox.minY >= y + (1f - shrinkAmount) ||
+				entity.boundingBox.maxY <= y + shrinkAmount)
+			return;
 		entity.fallDistance = 0;
 		if (entity.isCollidedHorizontally)
 		{
@@ -60,7 +67,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		}
 		else
 		{
-			entity.motionY = -0.10D;
+			entity.motionY = -0.12D;
 		}
 	}
 
@@ -79,8 +86,6 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	{
 		_sideIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
 		_topIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
-		_sideIcon = new IconInverted(_sideIcon);
-		_topIcon = new IconInverted(_topIcon);
 	}
 
 	@Override
@@ -130,14 +135,14 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		int g = 0;
 		int b = 0;
 
-		for(int zOffset = -1; zOffset <= 1; ++zOffset)
+		for (int zOffset = -1; zOffset <= 1; ++zOffset)
 		{
-			for(int xOffset = -1; xOffset <= 1; ++xOffset)
+			for (int xOffset = -1; xOffset <= 1; ++xOffset)
 			{
 				int biomeColor = world.getBiomeGenForCoords(x + xOffset, z + zOffset).getBiomeFoliageColor(x, y, z);
 				r += (biomeColor & 16711680) >> 16;
-			g += (biomeColor & 65280) >> 8;
-		b += biomeColor & 255;
+				g += (biomeColor & 65280) >> 8;
+				b += biomeColor & 255;
 			}
 		}
 
@@ -150,10 +155,10 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		ItemStack ci = player.inventory.mainInventory[player.inventory.currentItem];
 		if (ci != null && Block.getBlockFromItem(ci.getItem()).equals(this))
 		{
-			for(int i = y + 1, e = world.getActualHeight(); i < e; ++i)
+			for (int i = y + 1, e = world.getActualHeight(); i < e; ++i)
 			{
 				Block block = world.getBlock(x, i, z);
-				if(block == null || world.isAirBlock(x, i, z) || block.isReplaceable(world, x, i, z))
+				if (block == null || world.isAirBlock(x, i, z) || block.isReplaceable(world, x, i, z))
 				{
 					if (!world.isRemote && world.setBlock(x, i, z, this, 0, 3))
 					{
@@ -187,14 +192,14 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z)
 	{
-		if(world.isSideSolid(x, y - 1, z, ForgeDirection.UP))
+		if (world.isSideSolid(x, y - 1, z, ForgeDirection.UP))
 		{
 			return true;
 		}
-		for(ForgeDirection d : _attachDirections)
+		for (ForgeDirection d : _attachDirections)
 		{
 			BlockPosition bp = new BlockPosition(x, y, z, d);
-			for(int i = 0; i < _attachDistance; i++)
+			for (int i = 0; i < _attachDistance; i++)
 			{
 				bp.moveForwards(1);
 				if (world.getBlock(bp.x, bp.y, bp.z).equals(this) &&
@@ -216,7 +221,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		if(!canBlockStay(world, x, y, z))
+		if (!canBlockStay(world, x, y, z))
 		{
 			dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 			world.setBlockToAir(x, y, z);
@@ -226,6 +231,6 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
-		return (side == ForgeDirection.UP || side == ForgeDirection.DOWN) ? true : false;
+		return side == ForgeDirection.UP || side == ForgeDirection.DOWN;
 	}
 }

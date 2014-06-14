@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
-import cofh.render.FactoryFluidOverlayRenderer;
+import cofh.render.RenderFluidOverlayItem;
 import cofh.util.position.BlockPosition;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -58,6 +58,7 @@ import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
+import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
@@ -121,8 +122,8 @@ public class MineFactoryReloadedClient
 				new FactoryGlassPaneRenderer());
 		/*RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
 				new RenderBlockFluidClassic(renderIdFluidClassic));//*/
-		/*RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
-				new VineScaffoldRenderer());//*/
+		RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
+				new VineScaffoldRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdFactoryGlass,
 				new FactoryGlassRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdDetCord,
@@ -151,7 +152,7 @@ public class MineFactoryReloadedClient
 		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem,
 				new RocketLauncherItemRenderer());
 
-		FactoryFluidOverlayRenderer fluidRender = new FactoryFluidOverlayRenderer();
+		RenderFluidOverlayItem fluidRender = new RenderFluidOverlayItem();
 		MinecraftForgeClient.registerItemRenderer(plasticCupItem, fluidRender);
 		MinecraftForgeClient.registerItemRenderer(sewageBucketItem, fluidRender);
 		MinecraftForgeClient.registerItemRenderer(sludgeBucketItem, fluidRender);
@@ -163,7 +164,7 @@ public class MineFactoryReloadedClient
 		MinecraftForgeClient.registerItemRenderer(mushroomSoupBucketItem, fluidRender);
 		if (syringeEmptyItem instanceof IFluidContainerItem)
 			MinecraftForgeClient.registerItemRenderer(syringeEmptyItem,
-					new FactoryFluidOverlayRenderer(false));
+					new RenderFluidOverlayItem(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
 		//		new FactoryFluidOverlayRenderer());
 

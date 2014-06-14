@@ -403,16 +403,16 @@ implements IRedNetOmniNode, IDismantleable
 		if(te instanceof ITankContainerBucketable)
 		{
 			boolean isFluidContainer = ci != null && ci.getItem() instanceof IFluidContainerItem;
-			if(((ITankContainerBucketable)te).allowBucketDrain() &&
-					(isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)))
+			if((isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)) &&
+					((ITankContainerBucketable)te).allowBucketDrain(ci))
 			{
 				if(MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
 				{
 					return true;
 				}
 			}
-			if(((ITankContainerBucketable)te).allowBucketFill() &&
-					(isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)))
+			if((isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)) &&
+					((ITankContainerBucketable)te).allowBucketFill(ci))
 			{
 				if(MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
 				{

@@ -37,7 +37,7 @@ public abstract class MFRLiquidMover
 				{
 					if (item.hasContainerItem(ci)) {
 						ItemStack drop = item.getContainerItem(ci);
-						if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
+						if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 							drop = null;
 						disposePlayerItem(ci, drop, entityplayer, true);
 					} else
@@ -59,7 +59,7 @@ public abstract class MFRLiquidMover
 				if (!entityplayer.capabilities.isCreativeMode) {
 					if (item.hasContainerItem(drop)) {
 						drop = item.getContainerItem(drop);
-						if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
+						if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 							drop = null;
 					}
 					disposePlayerItem(ci, drop, entityplayer, true);

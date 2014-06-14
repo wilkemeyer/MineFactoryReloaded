@@ -142,7 +142,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 	
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}

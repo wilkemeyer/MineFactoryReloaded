@@ -451,7 +451,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 	
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}

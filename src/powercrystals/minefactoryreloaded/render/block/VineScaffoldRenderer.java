@@ -55,12 +55,15 @@ public class VineScaffoldRenderer implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		if(renderer.renderStandardBlock(block, x, y, z))
+		boolean r = renderer.renderStandardBlock(block, x, y, z); 
+		if (r)
 		{
-			//_invertedRenderer.renderStandardBlock(renderer, block, x, y, z);
+			final float shrink = 1f / 64f;
+			renderer.setRenderBounds(shrink, shrink, shrink, 1f - shrink, 1f - shrink, 1f - shrink);
+			_invertedRenderer.renderStandardBlock(renderer, block, x, y, z);
 		}
 		
-		return true;
+		return r;
 	}
 	
 	@Override

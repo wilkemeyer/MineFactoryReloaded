@@ -383,9 +383,9 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
     {
 		TileEntity te = world.getTileEntity(x, y, z);
 		
-		if(te instanceof TileEntityRedNetEnergy)
+		if(te instanceof TileEntityRedNetCable)
 		{
-			((TileEntityRedNetEnergy)te).onNeighborTileChange(tileX, tileY, tileZ);
+			((TileEntityRedNetCable)te).onNeighborTileChange(tileX, tileY, tileZ);
 		}
     }
 

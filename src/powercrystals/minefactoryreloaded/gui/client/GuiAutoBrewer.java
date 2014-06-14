@@ -9,6 +9,8 @@ public class GuiAutoBrewer extends GuiFactoryPowered
 	{
 		super(container, te);
 		ySize = 255;
+		_tanksOffsetX = 146;
+		_tanksOffsetY = 80;
 	}
 	
 	@Override

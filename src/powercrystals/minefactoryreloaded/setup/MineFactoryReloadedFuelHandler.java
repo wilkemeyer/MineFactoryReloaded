@@ -35,7 +35,7 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		}
 		else if(item.equals(MineFactoryReloadedCore.bioFuelBucketItem))
 		{
-			return 35000;
+			return 32500;
 		}
 		
 		return 0;

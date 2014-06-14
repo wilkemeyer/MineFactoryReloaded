@@ -20,7 +20,7 @@ public enum HarvestType
 	 */
 	Column,
 	/**
-	 * Search for identical blocks above but leave this bottom one for the future. e.g. Cactus, sugarcane.
+	 * Search for identical blocks above but leave the bottom one for the future. e.g. Cactus, sugarcane.
 	 */
 	LeaveBottom,
 	/**

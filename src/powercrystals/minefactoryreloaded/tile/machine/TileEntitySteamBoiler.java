@@ -221,7 +221,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
@@ -235,7 +235,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

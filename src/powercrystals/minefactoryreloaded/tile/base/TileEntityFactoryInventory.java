@@ -181,12 +181,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return false;
 	}
 	
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return false;
 	}
 	
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return false;
 	}

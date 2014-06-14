@@ -174,17 +174,17 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	private void updateDrill()
 	{
 		int y = Integer.MAX_VALUE;
-		for(y = yCoord - 1; y >= 0; y--)
+		for(y = yCoord; y --> 0; )
 		{
 			Block block = worldObj.getBlock(xCoord, y, zCoord);
-			if (block.equals(MineFactoryReloadedCore.fakeLaserBlock))
+			if (!block.equals(MineFactoryReloadedCore.fakeLaserBlock))
 			{
-				if (!block.isAir(worldObj, xCoord, yCoord, zCoord) &&
+				if (!block.isAir(worldObj, xCoord, y, zCoord) &&
 						canReplaceBlock(block, worldObj, xCoord, y, zCoord))
 					if (worldObj.setBlockToAir(xCoord, y, zCoord))
 						continue;
 				
-				if (block.equals(Blocks.bedrock))
+				if (block.isAssociatedBlock(Blocks.bedrock))
 				{
 					_bedrockLevel = y;
 					return;

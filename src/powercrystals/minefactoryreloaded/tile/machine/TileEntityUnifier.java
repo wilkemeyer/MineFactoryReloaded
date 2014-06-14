@@ -229,7 +229,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 	
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
@@ -269,7 +269,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

@@ -48,9 +48,9 @@ public class BlockPool
 		private static final int HASH_C = 0x3c6ef35f;
 		@Override
 		public int hashCode() {
-			final int xTransform = HASH_A * (x ^ 0xBABECAFE) + HASH_C;
-			final int zTransform = HASH_A * (z ^ 0xDEADBEEF) + HASH_C;
-			final int yTransform = HASH_A * (y ^ 0xE73AAE09) + HASH_C;
+			final int xTransform = HASH_A * (x ^ 0x5DDE) + HASH_C;
+			final int zTransform = HASH_A * (z ^ 0x03ED) + HASH_C;
+			final int yTransform = HASH_A * (y ^ 0x06FA) + HASH_C;
 			return xTransform ^ zTransform ^ yTransform;
 		}
 	}
@@ -67,8 +67,9 @@ public class BlockPool
 	private static int hash(BlockNode n)
 	{
 		int h = n.hashCode();
-		h ^= (h >>> 20) ^ (h >>> 12);
-		return h ^ (h >>> 7) ^ (h >>> 4);
+		return h;
+		//h ^= (h >>> 20) ^ (h >>> 12);
+		//return h ^ (h >>> 7) ^ (h >>> 4);
 	}
 	final static BlockPool pool = new BlockPool(false);
 	volatile BlockNode head;

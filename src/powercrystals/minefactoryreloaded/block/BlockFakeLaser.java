@@ -6,7 +6,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
@@ -19,11 +21,12 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFakeLaser extends Block implements IRedNetNoConnection
 {
+	public static Material laser = new MaterialTransparent(MapColor.airColor);
 	private static GrindingDamage laserDamage = new GrindingDamage("mfr.laser");
 
 	public BlockFakeLaser()
 	{
-		super(Material.air);
+		super(laser);
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
 		setBlockBounds(0F, 0F, 0F, 0F, 0F, 0F);

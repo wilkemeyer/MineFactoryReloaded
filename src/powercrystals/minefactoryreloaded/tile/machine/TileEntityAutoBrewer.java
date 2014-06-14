@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.ItemHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -10,7 +11,14 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
+import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoBrewer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -19,7 +27,7 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoBrewer extends TileEntityFactoryPowered
+public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	public TileEntityAutoBrewer()
 	{
@@ -32,11 +40,17 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	private int getResourceSlot(int row, int slot) { return row * 5 + slot + 2; }
 	
 	@Override
+	protected FluidTank[] createTanks()
+	{
+		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+	}
+	
+	@Override
 	public int getSizeInventory()
 	{
 		// 6 sets of: process, template, res, res, res
-		// 30 is output
-		return 31;
+		// 30 is output, 31 is empty bottle input
+		return 32;
 	}
 	
 	@Override
@@ -55,24 +69,34 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_inventory[30] != null)
-		{
-			return false;
-		}
-		
-		boolean hasWorkToDo = false;
+		boolean hasWorkToDo = false, didWork = false;
 		for (int row = 0; row < 6; row++)
 		{
-			if (_inventory[getProcessSlot(row)] != null && _inventory[getProcessSlot(row + 1)] == null && canBrew(row))
+			int processSlot = getProcessSlot(row),
+				templateSlot = getTemplateSlot(row);
+			if (_inventory[31] != null && _inventory[processSlot] == null && _inventory[templateSlot] != null)
 			{
-				hasWorkToDo = true;
+				if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null)
+					if (getPotionResult(0, _inventory[templateSlot]) != 0)
+						if (drain(_tanks[0], 250, false) == 250)
+						{
+							drain(_tanks[0], 250, true);
+							_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
+							_inventory[processSlot] = new ItemStack(Items.potionitem, 1, 0);
+							didWork = true;
+						}
+			}
+			if (_inventory[processSlot] != null)
+			{
+				if (_inventory[getProcessSlot(row + 1)] == null && canBrew(row))
+					hasWorkToDo = true;
 			}
 		}
 		
 		if (!hasWorkToDo)
 		{
 			setWorkDone(0);
-			return false;
+			return didWork;
 		}
 		
 		if (getWorkDone() < getWorkMax())
@@ -83,13 +107,14 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 		
 		setWorkDone(0);
 		
-		for (int row = 5; row >= 0; row--)
+		for (int row = 6; row --> 0;)
 		{
 			ItemStack current = _inventory[getProcessSlot(row)];
 			ItemStack next = _inventory[getProcessSlot(row + 1)];
 			if (next != null && current != null)
 			{
-				return row < 5;
+				continue;
+				// no exiting early, we know there's a potion that can be moved/brewed
 			}
 			
 			ItemStack ingredient = _inventory[getTemplateSlot(row)];
@@ -115,9 +140,10 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 					@SuppressWarnings("unchecked") List<Integer> existingEffects = Items.potionitem.getEffects(existingPotion);
 					@SuppressWarnings("unchecked") List<Integer> newEffects = Items.potionitem.getEffects(newPotion);
 
-					if((existingPotion <= 0 || existingEffects != newEffects) && (existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null))
+					if((existingPotion <= 0 || existingEffects != newEffects) &&
+							(existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null))
 					{
-						if(existingPotion != newPotion)
+						if (existingPotion != newPotion)
 						{
 							current.setItemDamage(newPotion);
 						}
@@ -130,25 +156,25 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 					_inventory[getProcessSlot(row + 1)] = current;
 					_inventory[getProcessSlot(row)] = null;
 					
+					if (existingPotion == newPotion)
+						break;
+					
 					if (ingredient.stackSize > 0)
+					{
 						--ingredient.stackSize;
-					else if (ingredient.getItem().hasContainerItem(ingredient))
+						break;
+					}
+					--_inventory[slot].stackSize;
+					++ingredient.stackSize;
+					if (ingredient.getItem().hasContainerItem(_inventory[slot]))
 					{
 						ItemStack r = ingredient.getItem().getContainerItem(_inventory[slot]);
-						if (r.isItemStackDamageable() && r.getItemDamage() > r.getMaxDamage())
+						if (r != null && r.isItemStackDamageable() && r.getItemDamage() > r.getMaxDamage())
 							r = null;
 						_inventory[slot] = r;
 					}
-					else
-					{
-						--_inventory[slot].stackSize;
-						++ingredient.stackSize;
-						
-						if(_inventory[slot].stackSize <= 0)
-						{
-							_inventory[slot] = null;
-						}
-					}
+					if (_inventory[slot] != null && _inventory[slot].stackSize <= 0)
+						_inventory[slot] = null;
 					break;
 				}
 			}
@@ -199,10 +225,10 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 			@SuppressWarnings("unchecked") List<Integer> newEffects = Items.potionitem.getEffects(newPotion);
 			
 			if ((existingPotion <= 0 || existingEffects != newEffects) &&
-					(existingEffects == null || !existingEffects.equals(newEffects) &&
-					newEffects != null) && existingPotion != newPotion)
+					(existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null))
 			{
-				return true;
+				return true; //existingPotion != newPotion;
+				// push potions without effects that have been previously brewed on through
 			}
 		}
 
@@ -237,9 +263,12 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 		int column = slot % 5;
 		
 		if(itemstack == null) return false;
+		if(slot == 31) return itemstack.getItem().equals(Items.glass_bottle);
 		if(row == 6) return false;
 		if(column == 1) return false;
-		if(column == 0) return _inventory[getTemplateSlot(row)] != null && itemstack.getItem() instanceof ItemPotion && (row == 0 || _inventory[getTemplateSlot(row - 1)] == null);
+		if(column == 0) return _inventory[getTemplateSlot(row)] != null &&
+				itemstack.getItem() instanceof ItemPotion &&
+				(row == 0 || _inventory[getTemplateSlot(row - 1)] == null);
 		return UtilInventory.stacksEqual(_inventory[getTemplateSlot(row)], itemstack);
 	}
 	
@@ -249,7 +278,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 		int row = slot / 5;
 		int column = slot % 5;
 		
-		if(row == 6) return true;
+		if(row == 6) return slot != 31;
 		if(column == 1) return false;
 		if(column == 0) return _inventory[getTemplateSlot(row)] == null;
 		return !UtilInventory.stacksEqual(_inventory[getTemplateSlot(row)], itemstack);
@@ -266,6 +295,59 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
-		return slot % 5 != 1;
+		return slot % 5 != 1 || slot == 31;
+	}
+	
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		if (resource != null && resource.getFluid() == FluidRegistry.WATER)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
+		return 0;
+	}
+	
+	@Override
+	public boolean allowBucketFill(ItemStack stack)
+	{
+		return !stack.getItem().equals(Items.potionitem);
+	}
+	
+	@Override
+	public boolean allowBucketDrain(ItemStack stack)
+	{
+		return !stack.getItem().equals(Items.glass_bottle);
+	}
+	
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		for (FluidTank _tank : (FluidTank[])getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
+	}
+	
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		if (resource != null)
+			for (FluidTank _tank : (FluidTank[])getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
 	}
 }

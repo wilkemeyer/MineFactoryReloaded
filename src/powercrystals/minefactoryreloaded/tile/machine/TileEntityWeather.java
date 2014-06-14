@@ -122,7 +122,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

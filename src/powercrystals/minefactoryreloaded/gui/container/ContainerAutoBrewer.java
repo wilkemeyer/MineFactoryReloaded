@@ -3,8 +3,11 @@ package powercrystals.minefactoryreloaded.gui.container;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptInsertable;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.gui.slot.SlotPotionIngredient;
+import powercrystals.minefactoryreloaded.gui.slot.SlotRemoveOnly;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class ContainerAutoBrewer extends ContainerFactoryPowered
@@ -25,7 +28,8 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered
 			addSlotToContainer(new SlotPotionIngredient(_te, row * 5 + 3, 98, 34 + row * 18));
 			addSlotToContainer(new SlotPotionIngredient(_te, row * 5 + 4, 116, 34 + row * 18));
 		}
-		addSlotToContainer(new Slot(_te, 30, 8, 142));
+		addSlotToContainer(new SlotRemoveOnly(_te, 30, 8, 142));
+		addSlotToContainer(new SlotAcceptInsertable(_te, 31, 146, 142));
 	}
 	
 	@Override

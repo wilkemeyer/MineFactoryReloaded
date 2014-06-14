@@ -162,13 +162,13 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	}
 
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}

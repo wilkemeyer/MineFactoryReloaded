@@ -224,7 +224,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 	
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}

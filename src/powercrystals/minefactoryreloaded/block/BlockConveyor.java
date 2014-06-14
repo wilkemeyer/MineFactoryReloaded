@@ -480,14 +480,15 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			}
 			return true;
 		}
-		else if (item != null && item.equals(Items.glowstone_dust))
+		else if (item != null && item.getItem().equals(Items.glowstone_dust))
 		{
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileEntityConveyor && !((TileEntityConveyor)te).isFast())
 			{
 				((TileEntityConveyor)te).setFast(true);
 				world.markBlockForUpdate(x, y, z);
-				item.stackSize--;
+				if (!player.capabilities.isCreativeMode)
+					item.stackSize--;
 				return true;
 			}
 		}

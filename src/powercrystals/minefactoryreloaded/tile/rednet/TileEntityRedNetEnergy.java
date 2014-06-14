@@ -8,7 +8,6 @@ import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -28,15 +27,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements 
-									// IEnergySink,
-									IEnergyHandler,//, IEnergyInfo
-									INode
+									IEnergyHandler//, IEnergyInfo
 {
+	private static boolean IC2Classes = false;
+	
+	static {
+		try {
+			Class.forName("ic2.api.energy.tile.IEnergyTile");
+			Class.forName("ic2.api.energy.tile.IEnergySource");
+			Class.forName("ic2.api.energy.tile.IEnergySink");
+			IC2Classes = true;
+		} catch(Throwable _) {}
+	}
+	
 	private byte[] sideMode = {1,1, 1,1,1,1, 0};
 	private IEnergyHandler[] handlerCache = null;
 	private IC2Cache ic2Cache = null;
@@ -169,7 +176,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	
 	private boolean checkIC2Tiles(TileEntity tile, int side)
 	{
-		if (!Loader.isModLoaded("IC2"))
+		if (!IC2Classes)
 			return false;
 		if (ic2Cache == null) ic2Cache = new IC2Cache();
 		return ic2Cache.add(tile, side);
@@ -206,9 +213,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
 		data.setIntArray("colors", _sideColors);
-		data.setInteger("mode[0]", cableMode[0] | (cableMode[1] << 8) | (cableMode[2] << 16) |
-				(cableMode[3] << 24));
-		data.setInteger("mode[1]", cableMode[4] | (cableMode[5] << 8) | (cableMode[6] << 16));
+		data.setInteger("mode[0]", _cableMode[0] | (_cableMode[1] << 8) | (_cableMode[2] << 16) |
+				(_cableMode[3] << 24));
+		data.setInteger("mode[1]", _cableMode[4] | (_cableMode[5] << 8) | (_cableMode[6] << 16));
 		data.setInteger("mode[2]", sideMode[0] | (sideMode[1] << 8) | (sideMode[2] << 16) |
 				(sideMode[3] << 24));
 		data.setInteger("mode[3]", sideMode[4] | (sideMode[5] << 8) | (sideMode[6] << 16));
@@ -225,14 +232,14 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		case 0:
 			_sideColors = data.getIntArray("colors");
 			int mode = data.getInteger("mode[0]");
-			cableMode[0] = (byte)(mode & 0xFF);
-			cableMode[1] = (byte)((mode >> 8) & 0xFF);
-			cableMode[2] = (byte)((mode >> 16) & 0xFF);
-			cableMode[3] = (byte)((mode >> 24) & 0xFF);
+			_cableMode[0] = (byte)(mode & 0xFF);
+			_cableMode[1] = (byte)((mode >> 8) & 0xFF);
+			_cableMode[2] = (byte)((mode >> 16) & 0xFF);
+			_cableMode[3] = (byte)((mode >> 24) & 0xFF);
 			mode = data.getInteger("mode[1]");
-			cableMode[4] = (byte)(mode & 0xFF);
-			cableMode[5] = (byte)((mode >> 8) & 0xFF);
-			cableMode[6] = (byte)((mode >> 16) & 0xFF);
+			_cableMode[4] = (byte)(mode & 0xFF);
+			_cableMode[5] = (byte)((mode >> 8) & 0xFF);
+			_cableMode[6] = (byte)((mode >> 16) & 0xFF);
 			mode = data.getInteger("mode[2]");
 			sideMode[0] = (byte)(mode & 0xFF);
 			sideMode[1] = (byte)((mode >> 8) & 0xFF);
@@ -284,32 +291,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return _grid.storage.getMaxEnergyStored();
 		return 0;
 	}
-
-	/*/ IEnergySink
-
-	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
-		return canConnectEnergy(direction);
-	}
-
-	@Override
-	public double demandedEnergyUnits() {
-		return RedstoneEnergyNetwork.TRANSFER_RATE / energyPerEU;
-	}
-
-	@Override
-	public double injectEnergyUnits(ForgeDirection from, double amount) {
-		if ((sideMode[from.ordinal()] & 1) != 0) {
-			int r = (int)(amount * energyPerEU);
-			return amount - (_grid.storage.receiveEnergy(r, false) / (float)energyPerEU);
-		}
-		return amount;
-	}
-
-	@Override
-	public int getMaxSafeInput() {
-		return Integer.MAX_VALUE;
-	}//*/
 
 	// internal
 
@@ -552,7 +533,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 						o += 6;
 					list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
 				}
-				else if (forTrace & f.isConnected && cableMode[6] != 1)
+				else if (forTrace & f.isConnected && _cableMode[6] != 1)
 				{ // cable-only
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 				}

@@ -182,7 +182,7 @@ inv:	for(int i = 0; i < 9; i++)
 						{
 							use = 1;
 							ItemStack container = _inventory[i].getItem().getContainerItem(_inventory[i]);
-							if(container.isItemStackDamageable() && container.getItemDamage() > container.getMaxDamage())
+							if(container != null && container.isItemStackDamageable() && container.getItemDamage() > container.getMaxDamage())
 							{
 								_inventory[i] = null;
 							}
@@ -321,9 +321,9 @@ inv:	for(int i = 0; i < 9; i++)
 	}
 	
 	@Override
-	public boolean allowBucketFill()
+	public boolean allowBucketFill(ItemStack stack)
 	{
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -359,9 +359,9 @@ inv:	for(int i = 0; i < 9; i++)
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
-		return false;
+		return true;
 	}
 	
 	@Override

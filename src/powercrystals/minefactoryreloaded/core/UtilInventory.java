@@ -294,14 +294,11 @@ public abstract class UtilInventory {
 		}
 
 		Item item = stack.getItem();
-
-		if (item == null) {
-			return null;
-		}
-
+		
+		stack.stackSize -= 1;
 		if (item.hasContainerItem(stack)) {
 			ItemStack ret = item.getContainerItem(stack);
-			if (ret.isItemStackDamageable() && ret.getItemDamage() > ret.getMaxDamage()) {
+			if (ret != null && ret.isItemStackDamageable() && ret.getItemDamage() > ret.getMaxDamage()) {
 				ret = null;
 			}
 			if (stack.stackSize < 2) {
@@ -312,7 +309,6 @@ public abstract class UtilInventory {
 			}
 		}
 
-		stack.stackSize -= 1;
 		if (stack.stackSize > 0) {
 			return stack;
 		}

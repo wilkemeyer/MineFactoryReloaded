@@ -118,7 +118,8 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 			}
 
 			List<EnchantmentData> enchantmentList = null;
-			Map<Integer, EnchantmentData> enchantmentMap = mapEnchantmentData(targetEnchantability, stack);
+			Map<Integer, EnchantmentData> enchantmentMap = mapEnchantmentData((blockInvalid ?
+					targetEnchantability : Math.min(40, targetEnchantability)), stack);
 
 			if(enchantmentMap != null && !enchantmentMap.isEmpty())
 			{

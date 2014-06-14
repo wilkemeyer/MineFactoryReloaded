@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded;
 
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+// this import brought to you by the department of redundancies department, the department that brought you this import
+
 import cofh.core.CoFHProps;
 import cofh.mod.BaseMod;
 import cofh.updater.UpdateManager;
@@ -159,18 +162,20 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 
-@Mod(modid = MineFactoryReloadedCore.modId, name = MineFactoryReloadedCore.modName, version = MineFactoryReloadedCore.version,
-dependencies = "required-after:Forge@[10.12.1.1074,);required-after:CoFHCore@["+CoFHProps.VERSION+",);after:BuildCraft|Core;after:BuildCraft|Factory;after:BuildCraft|Energy;after:BuildCraft|Builders;after:BuildCraft|Transport;after:IC2")
+@Mod(modid = modId, name = modName, version = version, dependencies = dependencies)
 public class MineFactoryReloadedCore extends BaseMod
 {
 	//static{DepLoader.load();}
-	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy", serverSide = "powercrystals.minefactoryreloaded.net.ServerProxy")
-	public static IMFRProxy proxy;
-
 	public static final String modId = "MineFactoryReloaded";
+	public static final String modName = "MineFactory Reloaded";
 	public static final String version = "1.7.2R2.8.0B2";
-	public static final String modName = "Minefactory Reloaded";
+	public static final String dependencies = CoFHProps.DEPENDENCIES
+			 + ";required-after:CoFHCore@[" + CoFHProps.VERSION + ",)";
 	public static final String modNetworkChannel = "MFReloaded";
+
+	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy",
+				serverSide = "powercrystals.minefactoryreloaded.net.ServerProxy")
+	public static IMFRProxy proxy;
 
 	public static SimpleNetworkWrapper networkWrapper = null;
 
@@ -506,6 +511,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);
 		registerBlock(detCordBlock, ItemBlockDetCord.class);
 
+		registerBlock(fakeLaserBlock, null);
+
 		registerFluids();
 
 		milkLiquid = new BlockFactoryFluid("milk");
@@ -828,10 +835,9 @@ public class MineFactoryReloadedCore extends BaseMod
 	@SubscribeEvent
 	public void onBonemeal(BonemealEvent e)
 	{
-		if(!e.world.isRemote && e.world.getBlock(e.x, e.y, e.z).equals(rubberSaplingBlock))
+		if (!e.world.isRemote && e.world.getBlock(e.x, e.y, e.z).equals(rubberSaplingBlock))
 		{
-			((BlockRubberSapling)MineFactoryReloadedCore.rubberSaplingBlock).
-			func_149879_c(e.world, e.x, e.y, e.z, e.world.rand);
+			MineFactoryReloadedCore.rubberSaplingBlock.func_149879_c(e.world, e.x, e.y, e.z, e.world.rand);
 			e.setResult(Result.ALLOW);
 		}
 	}

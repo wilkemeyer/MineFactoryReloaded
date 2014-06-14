@@ -199,7 +199,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

@@ -268,8 +268,9 @@ public class ItemSafariNet extends ItemFactory
 			{
 				mobs.addAll(p.getRandomMobs(world));
 			}
-			e = ((RandomMob)WeightedRandom.getRandomItem(world.rand, mobs)).getMob();
-			if (e instanceof EntityLiving)
+			RandomMob mob = ((RandomMob)WeightedRandom.getRandomItem(world.rand, mobs));
+			e = mob.getMob();
+			if (e instanceof EntityLiving && mob.shouldInit)
 				((EntityLiving)e).onSpawnWithEgg(null);
 		}
 		else

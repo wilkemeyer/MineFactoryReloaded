@@ -121,7 +121,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 	
 	@Override
-	public boolean allowBucketDrain()
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}

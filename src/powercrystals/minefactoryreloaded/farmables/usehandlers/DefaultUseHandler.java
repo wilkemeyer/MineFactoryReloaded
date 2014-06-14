@@ -89,7 +89,7 @@ public class DefaultUseHandler implements IUseHandler {
 						container.drain(drop, liquid.amount, true);
 						if (item.hasContainerItem(drop)) {
 							drop = item.getContainerItem(drop);
-							if (drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
+							if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
 								drop = null;
 						}
 						return drop;

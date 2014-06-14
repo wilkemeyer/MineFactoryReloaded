@@ -109,9 +109,9 @@ public class Machine
 				int storedQuantity = c.getInteger("storedQuantity");
 				if (storedItem != null & storedQuantity > 0)
 				{
-					info.add(StatCollector.translateToLocal("tip.info.mfr.dsu.contains") + 
+					info.add(StatCollector.translateToLocal("tip.info.mfr.dsu.contains") +
 							" " + storedQuantity + " " + storedItem.getDisplayName() +
-							(adv ? " (" + Item.itemRegistry.getNameForObject(storedItem.getItem()) + ":" +
+							(adv ? " (" + Item.itemRegistry.getIDForObject(storedItem.getItem()) + ":" +
 							storedItem.getItemDamageForDisplay() + ")" : ""));
 				}
 			}

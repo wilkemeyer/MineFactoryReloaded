@@ -154,10 +154,10 @@ public class Vanilla
 	public void load(FMLInitializationEvent event)
 	{
 		MFRRegistry.registerPlantable(new PlantableSapling(Blocks.sapling));
-		MFRRegistry.registerPlantable(new PlantableStandard(Items.pumpkin_seeds, Blocks.pumpkin_stem));
-		MFRRegistry.registerPlantable(new PlantableStandard(Items.melon_seeds, Blocks.melon_stem));
 		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.brown_mushroom, Blocks.brown_mushroom));
 		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.red_mushroom, Blocks.red_mushroom));
+		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.pumpkin_seeds, Blocks.pumpkin_stem));
+		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.melon_seeds, Blocks.melon_stem));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.wheat_seeds, Blocks.wheat));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.carrot, Blocks.carrots));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.potato, Blocks.potatoes));

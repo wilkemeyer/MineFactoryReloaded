@@ -182,7 +182,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 				if (world.setBlockToAir(x, y, z))
 				{
 					if (MFRConfig.enableFuelExploding.getBoolean(true))
-						world.createExplosion(null, x, y, z, 4, true);
+						world.createExplosion(null, x, y, z, 8, true);
 					fizz(world, x, y, z, rand);
 					return;
 				}
