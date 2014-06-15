@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.core;
 import buildcraft.api.transport.IPipeTile;
 
 import cofh.api.transport.IItemDuct;
-import cofh.asm.relauncher.Stripable;
+import cofh.asm.relauncher.Strippable;
 import cofh.inventory.IInventoryManager;
 import cofh.inventory.InventoryManager;
 import cofh.util.position.BlockPosition;
@@ -65,7 +65,7 @@ public abstract class UtilInventory
 	 * 
 	 * @return Map<ForgeDirection, IPipeTile> specifying all found pipes and their directions.
 	 */
-	@Stripable(pipeClass)
+	@Strippable(pipeClass)
 	public static Map<ForgeDirection, IPipeTile> findPipes(World world, int x, int y, int z)
 	{
 		return findPipes(world, x, y, z, ForgeDirection.VALID_DIRECTIONS);
@@ -76,7 +76,7 @@ public abstract class UtilInventory
 	 * 
 	 * @return Map<ForgeDirection, IPipeTile> specifying all found pipes and their directions.
 	 */
-	@Stripable(pipeClass)
+	@Strippable(pipeClass)
 	public static Map<ForgeDirection, IPipeTile> findPipes(World world, int x, int y, int z,
 			ForgeDirection[] directionstocheck)
 	{

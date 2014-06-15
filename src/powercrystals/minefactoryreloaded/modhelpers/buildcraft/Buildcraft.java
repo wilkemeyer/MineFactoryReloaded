@@ -6,7 +6,7 @@ import buildcraft.api.gates.ITrigger;
 import buildcraft.api.gates.ITriggerProvider;
 import buildcraft.api.transport.IPipeTile;
 
-import cofh.asm.relauncher.Stripable;
+import cofh.asm.relauncher.Strippable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -28,7 +28,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 @Mod(modid = "MineFactoryReloaded|CompatBuildCraft", 
 name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version,
 dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
-@Stripable("buildcraft.api.gates.ITriggerProvider")
+@Strippable("buildcraft.api.gates.ITriggerProvider")
 public class Buildcraft implements ITriggerProvider
 {
 	private static String name(Block obj)
@@ -52,7 +52,7 @@ public class Buildcraft implements ITriggerProvider
 	}
 	
 	@Mod.EventHandler
-	@Stripable("buildcraft.api.gates.ITriggerProvider")
+	@Strippable("buildcraft.api.gates.ITriggerProvider")
 	private void postInit(FMLPostInitializationEvent evt)
 	{
 		try
@@ -77,21 +77,21 @@ public class Buildcraft implements ITriggerProvider
 	}
 
 	@Override
-	@Stripable("buildcraft.api.gates.ITriggerProvider")
+	@Strippable("buildcraft.api.gates.ITriggerProvider")
 	public LinkedList<ITrigger> getPipeTriggers(IPipeTile pipe)
 	{
 		return null;
 	}
 
-	@Stripable("buildcraft.api.gates.ITrigger")
+	@Strippable("buildcraft.api.gates.ITrigger")
 	private static MFRBCTrigger isBackstuffed;
-	@Stripable("buildcraft.api.gates.ITrigger")
+	@Strippable("buildcraft.api.gates.ITrigger")
 	private static MFRBCTrigger isRunning;
-	@Stripable("buildcraft.api.gates.ITrigger")
+	@Strippable("buildcraft.api.gates.ITrigger")
 	private static MFRBCTrigger isReversed;
 
 	@Override
-	@Stripable("buildcraft.api.gates.ITriggerProvider")
+	@Strippable("buildcraft.api.gates.ITriggerProvider")
 	public LinkedList<ITrigger> getNeighborTriggers(Block block, TileEntity tile)
 	{
 		LinkedList<ITrigger> triggers = new LinkedList<ITrigger>();
@@ -101,7 +101,7 @@ public class Buildcraft implements ITriggerProvider
 		return triggers;
 	}
 
-	@Stripable("buildcraft.api.gates.ITriggerProvider")
+	@Strippable("buildcraft.api.gates.ITriggerProvider")
 	private void addTrigger(LinkedList<ITrigger> triggers, MFRBCTrigger t, TileEntity tile)
 	{
 		if (t.canApplyTo(tile))
