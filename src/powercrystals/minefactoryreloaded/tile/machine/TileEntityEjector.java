@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.asm.relauncher.Stripable;
 import cofh.inventory.IInventoryManager;
 import cofh.inventory.InventoryManager;
 import cofh.util.CoreUtils;
@@ -268,6 +269,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	public void setIsIDMatch(boolean idMatch) { _ignoreDamage = idMatch; }
 
 	@Override
+	@Stripable("buildcraft.api.transport.IPipeConnection")
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;

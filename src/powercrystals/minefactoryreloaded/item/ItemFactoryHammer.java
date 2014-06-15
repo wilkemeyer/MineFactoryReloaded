@@ -1,8 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
-import buildcraft.api.tools.IToolWrench;
-
 import cofh.api.block.IDismantleable;
+import cofh.asm.relauncher.Implementable;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
@@ -24,7 +23,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import powercrystals.minefactoryreloaded.api.IToolHammer;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public class ItemFactoryHammer extends ItemFactory implements IToolHammer, IToolWrench
+@Implementable("buildcraft.api.tools.IToolWrench")
+public class ItemFactoryHammer extends ItemFactory implements IToolHammer
 {
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
@@ -57,13 +57,13 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer, ITool
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean canWrench(EntityPlayer player, int x, int y, int z)
 	{
 		return true;
 	}
 
-	@Override
+	//@Override
 	public void wrenchUsed(EntityPlayer player, int x, int y, int z)
 	{
 	}

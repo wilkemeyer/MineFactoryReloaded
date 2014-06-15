@@ -99,7 +99,8 @@ public class EntityRocket extends Entity
 			}
 			
 			Entity entityHit = null;
-			List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,	this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+			List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, 
+					this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double closestRange = 0.0D;
 			double collisionRange = 0.3D;
 			EntityPlayer owner = _owner == null ? null : this.worldObj.getPlayerEntityByName(_owner);

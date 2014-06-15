@@ -328,9 +328,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerFluid("sludge",        1700,           EnumRarity.common);
 		registerFluid("sewage",        1200,           EnumRarity.common);
 		registerFluid("mobessence",     400,  9,  310, EnumRarity.epic);
-		registerFluid("biofuel",        800,           EnumRarity.rare);
+		registerFluid("biofuel",        800,           EnumRarity.uncommon);
 		registerFluid("meat",          2000,           EnumRarity.common);
-		registerFluid("pinkslime",     3000,           EnumRarity.uncommon);
+		registerFluid("pinkslime",     3000,           EnumRarity.rare);
 		registerFluid("chocolatemilk", 1100,           EnumRarity.common);
 		registerFluid("mushroomsoup",  1500,           EnumRarity.common);
 		registerFluid("steam",         -100,  0,  673, EnumRarity.common);

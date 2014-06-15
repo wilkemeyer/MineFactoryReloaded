@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import buildcraft.api.gates.IAction;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -620,10 +618,5 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		float mult = hasTank & hasInventory ? (tankPercent + invPercent) / 2 : hasTank ? tankPercent : hasInventory ? invPercent : 0f;
 		return (int)Math.ceil(15 * mult);
-	}
-	
-	public boolean allowAction(IAction _)
-	{
-		return false;
 	}
 }

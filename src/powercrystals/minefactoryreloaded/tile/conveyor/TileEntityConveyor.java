@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.conveyor;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.asm.relauncher.Stripable;
 import cofh.util.CoreUtils;
 import cofh.util.position.IRotateableTile;
 
@@ -19,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+@Stripable("buildcraft.api.transport.IPipeConnection")
 public class TileEntityConveyor extends TileEntity
 			implements IRotateableTile, ISidedInventory, IPipeConnection
 {
@@ -544,6 +546,7 @@ public class TileEntityConveyor extends TileEntity
 	}
 
 	@Override
+	@Stripable("buildcraft.api.transport.IPipeConnection")
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		if (type == PipeType.ITEM)
 			return ConnectOverride.CONNECT;

@@ -6,11 +6,13 @@ import buildcraft.api.gates.ITrigger;
 import buildcraft.api.gates.ITriggerProvider;
 import buildcraft.api.transport.IPipeTile;
 
+import cofh.asm.relauncher.Stripable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
@@ -23,7 +25,10 @@ import org.apache.logging.log4j.Level;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-@Mod(modid = "MineFactoryReloaded|CompatBuildCraft", name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
+@Mod(modid = "MineFactoryReloaded|CompatBuildCraft", 
+name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version,
+dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
+@Stripable("buildcraft.api.gates.ITriggerProvider")
 public class Buildcraft implements ITriggerProvider
 {
 	private static String name(Block obj)
@@ -31,7 +36,7 @@ public class Buildcraft implements ITriggerProvider
 		return Block.blockRegistry.getNameForObject(obj);
 	}
 	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent evt)
+	public void init(FMLInitializationEvent evt)
 	{
 		if (!Loader.isModLoaded("BuildCraft|Core"))
 			return;
@@ -44,7 +49,12 @@ public class Buildcraft implements ITriggerProvider
 		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", block + "@0");
 		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", block + "@1");
 		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", block + "@4");
-		
+	}
+	
+	@Mod.EventHandler
+	@Stripable("buildcraft.api.gates.ITriggerProvider")
+	private void postInit(FMLPostInitializationEvent evt)
+	{
 		try
 		{
 			IronEngineFuel.addFuel("biofuel", 4, 15000);
@@ -67,16 +77,21 @@ public class Buildcraft implements ITriggerProvider
 	}
 
 	@Override
+	@Stripable("buildcraft.api.gates.ITriggerProvider")
 	public LinkedList<ITrigger> getPipeTriggers(IPipeTile pipe)
 	{
 		return null;
 	}
 
+	@Stripable("buildcraft.api.gates.ITrigger")
 	private static MFRBCTrigger isBackstuffed;
+	@Stripable("buildcraft.api.gates.ITrigger")
 	private static MFRBCTrigger isRunning;
+	@Stripable("buildcraft.api.gates.ITrigger")
 	private static MFRBCTrigger isReversed;
 
 	@Override
+	@Stripable("buildcraft.api.gates.ITriggerProvider")
 	public LinkedList<ITrigger> getNeighborTriggers(Block block, TileEntity tile)
 	{
 		LinkedList<ITrigger> triggers = new LinkedList<ITrigger>();
@@ -85,7 +100,8 @@ public class Buildcraft implements ITriggerProvider
 		addTrigger(triggers, isReversed, tile);
 		return triggers;
 	}
-	
+
+	@Stripable("buildcraft.api.gates.ITriggerProvider")
 	private void addTrigger(LinkedList<ITrigger> triggers, MFRBCTrigger t, TileEntity tile)
 	{
 		if (t.canApplyTo(tile))

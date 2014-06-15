@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.asm.relauncher.Stripable;
 import cofh.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,6 +25,7 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
+@Stripable("buildcraft.api.transport.IPipeConnection")
 public abstract class TileEntityFactory extends TileEntity
 									 implements IRotateableTile, IPipeConnection,
 												IHarvestAreaContainer
@@ -323,6 +325,7 @@ public abstract class TileEntityFactory extends TileEntity
 	}
 
 	@Override
+	@Stripable("buildcraft.api.transport.IPipeConnection")
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		switch (type)
 		{

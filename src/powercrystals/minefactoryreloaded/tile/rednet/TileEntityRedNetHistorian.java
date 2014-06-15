@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.asm.relauncher.Stripable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -166,6 +167,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	}
 
 	@Override
+	@Stripable("buildcraft.api.transport.IPipeConnection")
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		return ConnectOverride.DISCONNECT;
 	}

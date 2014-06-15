@@ -98,12 +98,24 @@ public class MFRUtil
 		{
 			return true;
 		}
-		else if (currentItem instanceof IToolWrench)
+		else if (wrenchExists && canHandleWrench(currentItem, player, x, y, z))
 		{
-			return ((IToolWrench)currentItem).canWrench(player, x, y, z);
+			return true;
 		}
 
 		return false;
+	}
+	
+	private static boolean wrenchExists = false;
+	static {
+		try {
+			Class.forName("buildcraft.api.tools.IToolWrench");
+			wrenchExists = true;
+		} catch(Throwable _) {}
+	}
+	private static boolean canHandleWrench(Item item, EntityPlayer p, int x, int y, int z)
+	{
+		return item instanceof IToolWrench && ((IToolWrench)item).canWrench(p, x, y, z);
 	}
 
 	public static boolean isHoldingHammer(EntityPlayer player)

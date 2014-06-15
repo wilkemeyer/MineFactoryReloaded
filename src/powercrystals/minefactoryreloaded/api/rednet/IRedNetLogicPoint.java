@@ -12,14 +12,21 @@ public interface IRedNetLogicPoint
 	 * @return
 	 */
 	public void transformOutput(int[] out);
-	
+
+	/**
+	 * 
+	 * @param out
+	 * @return
+	 */
+	public void transformOutput(int out);
+
 	/**
 	 * 
 	 * @param in
 	 * @return
 	 */
 	public int[] transformInput(int[] in);
-	
+
 	/**
 	 * 
 	 * @param in
