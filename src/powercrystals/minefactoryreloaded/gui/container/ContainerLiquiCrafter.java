@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.util.fluid.FluidTankAdv;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -9,13 +13,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.FluidTank;
+
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.gui.slot.SlotRemoveOnly;
 import powercrystals.minefactoryreloaded.gui.slot.SlotViewOnly;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerLiquiCrafter extends ContainerFactoryInventory
 {
@@ -87,7 +89,8 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 		else if(var == 1) _tempLiquidId = value;
 		else if(var == 2)
 		{
-			((FluidTank)_crafter.getTanks()[_tempTankIndex]).setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(_tempLiquidId), value));
+			((FluidTankAdv)_crafter.getTanks()[_tempTankIndex]).
+					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(_tempLiquidId), value));
 		}
 	}
 	

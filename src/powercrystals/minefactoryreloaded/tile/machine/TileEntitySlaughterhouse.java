@@ -1,12 +1,13 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.fluid.FluidTankAdv;
+
 import java.util.List;
 
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
@@ -30,10 +31,10 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME),
-				new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME),
+				new FluidTankAdv(2 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 	
 	@Override

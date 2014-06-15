@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.util.fluid.FluidTankAdv;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -8,11 +12,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerFactoryInventory extends Container
 {
@@ -80,7 +82,8 @@ public class ContainerFactoryInventory extends Container
 		
 		if (var == 30) _tankIndex = value;
 		else if (var == 31) _tankAmount = value;
-		else if (var == 32) ((FluidTank)_te.getTanks()[_tankIndex]).setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
+		else if (var == 32) ((FluidTankAdv)_te.getTanks()[_tankIndex]).
+					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
 	}
 	
 	@Override

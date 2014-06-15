@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.WeightedRandomItemStack;
+import cofh.util.fluid.FluidTankAdv;
 import cofh.util.position.Area;
 import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +22,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -44,6 +44,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 		setManageSolids(true);
 		_activeSyncTimeout = 5;
 		_rand = new Random();
+		_tanks[0].setLock(FluidRegistry.getFluid("sludge"));
 	}
 	
 	@Override
@@ -150,29 +151,25 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || !resource.isFluidEqual(FluidRegistry.getFluidStack("sludge", 1)))
-		{
-			return 0;
-		}
-		return _tanks[0].fill(resource, doFill);
+		return fill(resource, doFill);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return null;
+		return drain(maxDrain, doDrain);
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return drain(resource, doDrain);
+	}
+	
+	@Override
+	protected FluidTankAdv[] createTanks()
+	{
+		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 	
 	@Override

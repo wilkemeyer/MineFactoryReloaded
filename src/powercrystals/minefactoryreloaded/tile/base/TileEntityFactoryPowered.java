@@ -185,10 +185,10 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		super.writeToNBT(tag);
 
-		tag.setInteger("energyStored", _energyStored);
-		tag.setInteger("workDone", _workDone);
-		NBTTagCompound pp = new NBTTagCompound();
-		tag.setTag("powerProvider", pp);
+		if (_energyStored > 0)
+			tag.setInteger("energyStored", _energyStored);
+		if (_workDone > 0)
+			tag.setInteger("workDone", _workDone);
 	}
 
 	@Override

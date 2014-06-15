@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -9,7 +10,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -65,9 +65,9 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	protected abstract boolean isFluidFuel(FluidStack fuel);
 
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4)};
 	}
 
 	protected String getFluidName(FluidStack fluid)
@@ -115,29 +115,22 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		if (resource != null && isFluidFuel(resource))
-			for (FluidTank _tank : (FluidTank[])getTanks())
+			for (FluidTankAdv _tank : getTanks())
 				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
 					return _tank.fill(resource, doFill);
 		return 0;
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		for (FluidTank _tank : (FluidTank[])getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
-		return null;
+		return drain(maxDrain, doDrain);
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
-		return null;
+		return drain(resource, doDrain);
 	}
 
 	@Override

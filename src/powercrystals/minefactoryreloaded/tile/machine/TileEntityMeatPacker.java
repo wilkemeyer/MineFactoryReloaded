@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -10,7 +11,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -125,9 +125,9 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 
 	@Override

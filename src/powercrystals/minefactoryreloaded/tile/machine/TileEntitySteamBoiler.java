@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.CoreUtils;
+import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -13,7 +14,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -38,6 +38,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		super(Machine.SteamBoiler);
 		setManageSolids(true);
 		_liquidId = FluidRegistry.getFluid("steam").getID();
+		_tanks[0].setLock(FluidRegistry.getFluid("steam"));
+		_tanks[1].setLock(FluidRegistry.getFluid("water"));
 	}
 	
 	@Override
@@ -214,14 +216,20 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16),
-				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 32)};
+		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 16),
+				new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 32)};
 	}
 
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
@@ -235,15 +243,9 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		FluidTank _tank = _tanks[0];
+		FluidTankAdv _tank = _tanks[0];
 		if (_tank.getFluidAmount() > 0)
 			return _tank.drain(maxDrain, doDrain);
 		return null;
@@ -254,7 +256,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	{
 		if (resource != null)
 		{
-			FluidTank _tank = _tanks[0];
+			FluidTankAdv _tank = _tanks[0];
 			if (resource.isFluidEqual(_tank.getFluid()))
 				return _tank.drain(resource.amount, doDrain);
 		}

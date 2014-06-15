@@ -1,8 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.fluid.FluidTankAdv;
+
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityLiquidGenerator;
@@ -18,9 +19,9 @@ public class TileEntitySteamTurbine extends TileEntityLiquidGenerator
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 8)};
+		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 8)};
 	}
 
 	@Override

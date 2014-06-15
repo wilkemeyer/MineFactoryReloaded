@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import cofh.util.fluid.FluidTankAdv;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -23,7 +23,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
 {
-	private static IFluidTank[] emptyIFluidTank = new IFluidTank[] {};
+	private static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] {};
 	private static FluidTankInfo[] emptyFluidTankInfo = new FluidTankInfo[] {};
 	
 	protected String _invName;
@@ -36,7 +36,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	
 	protected boolean internalChange = false;
 
-	protected FluidTank[] _tanks;
+	protected FluidTankAdv[] _tanks;
 	
 	protected TileEntityFactoryInventory(Machine machine)
 	{
@@ -134,19 +134,19 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return r;
 	}
 	
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
 		return null;
 	}
 	
-	public IFluidTank[] getTanks()
+	public FluidTankAdv[] getTanks()
 	{
 		if (_tanks != null)
 			return _tanks;
 		return emptyIFluidTank;
 	}
 	
-	public int drain(FluidTank _tank, int maxDrain, boolean doDrain)
+	public int drain(FluidTankAdv _tank, int maxDrain, boolean doDrain)
 	{
 		if (_tank.getFluidAmount() > 0)
 		{
@@ -165,12 +165,28 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return 0;
 	}
 	
+	public FluidStack drain(int maxDrain, boolean doDrain)
+	{
+		for (FluidTankAdv _tank : getTanks())
+			if (_tank.getFluidAmount() > 0)
+				return _tank.drain(maxDrain, doDrain);
+		return null;
+	}
+	
+	public FluidStack drain(FluidStack resource, boolean doDrain)
+	{
+		if (resource != null)
+			for (FluidTankAdv _tank : getTanks())
+				if (resource.isFluidEqual(_tank.getFluid()))
+					return _tank.drain(resource.amount, doDrain);
+		return null;
+	}
+	
 	public int fill(FluidStack resource, boolean doFill)
 	{
 		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-					return _tank.fill(resource, doFill);
+			for (FluidTankAdv _tank : getTanks())
+				return _tank.fill(resource, doFill);
 		return 0;
 	}
 	
@@ -392,7 +408,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				NBTTagCompound slot = nbttaglist.getCompoundTagAt(i);
 				int j = slot.getByte("Slot") & 0xff;
-				if(j >= 0 && j < _inventory.length)
+				if ((j >= 0) & (j < _inventory.length))
 				{
 					_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
 					if (_inventory[j].stackSize < 0)
@@ -402,43 +418,22 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		markDirty();
 
-		if (tag.hasKey("mTanks")) {
+		if (tag.hasKey("Tanks")) {
 			IFluidTank[] _tanks = getTanks();
 			
-			nbttaglist = tag.getTagList("mTanks", 10);
-			for(int i = 0; i < nbttaglist.tagCount(); i++)
+			nbttaglist = tag.getTagList("Tanks", 10);
+			for (int i = 0; i < nbttaglist.tagCount(); i++)
 			{
 				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				int j = nbttagcompound1.getByte("Tank") & 0xff;
-				if(j >= 0 && j < _tanks.length)
+				if (j >= 0 && j < _tanks.length)
 				{
 					FluidStack l = FluidStack.loadFluidStackFromNBT(nbttagcompound1);
 					if(l != null)
 					{
-						((FluidTank)_tanks[j]).setFluid(l);
+						((FluidTankAdv)_tanks[j]).setFluid(l);
 					}
 				}
-			}
-		}
-		else if (_tanks != null)
-		{ // TODO: remove in 2.8
-			IFluidTank tank = _tanks[0];
-			if (tank != null && tag.hasKey("tankFluidName"))
-			{
-				int tankAmount = tag.getInteger("tankAmount");
-				FluidStack fluid = FluidRegistry.
-						getFluidStack(tag.getString("tankFluidName"), tankAmount);
-				if (fluid != null)
-				{
-					if(fluid.amount > tank.getCapacity())
-					{
-						fluid.amount = tank.getCapacity();
-					}
-
-					((FluidTank)tank).setFluid(fluid);
-				}
-				tag.removeTag("tankFluidName");
-				tag.removeTag("tankAmount");
 			}
 		}
 		
@@ -475,30 +470,30 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		NBTTagList nbttaglist;
 		if (_inventory.length > 0)
 		{
-			nbttaglist = new NBTTagList();
-			for(int i = 0; i < _inventory.length; i++)
+			NBTTagList items = new NBTTagList();
+			for (int i = 0; i < _inventory.length; i++)
 			{
 				if (_inventory[i] != null && _inventory[i].stackSize >= 0)
 				{
 					NBTTagCompound slot = new NBTTagCompound();
 					slot.setByte("Slot", (byte)i);
 					_inventory[i].writeToNBT(slot);
-					nbttaglist.appendTag(slot);
+					items.appendTag(slot);
 				}
 			}
-			tag.setTag("Items", nbttaglist);
+			if (items.tagCount() > 0)
+				tag.setTag("Items", items);
 		}
 		
 		IFluidTank[] _tanks = getTanks();
 		if (_tanks.length > 0)
 		{
 			NBTTagList tanks = new NBTTagList();
-			for(int i = 0, n = _tanks.length; i < n; i++)
+			for (int i = 0, n = _tanks.length; i < n; i++)
 			{
-				if(_tanks[i].getFluid() != null)
+				if (_tanks[i].getFluid() != null)
 				{
 					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 					nbttagcompound1.setByte("Tank", (byte)i);
@@ -508,7 +503,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 					tanks.appendTag(nbttagcompound1);
 				}
 			}
-			tag.setTag("mTanks", tanks);
+			if (tanks.tagCount() > 0)
+				tag.setTag("Tanks", tanks);
 		}
 		
 		if (hasCustomInventoryName())
@@ -520,14 +516,15 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		
 		if (failedDrops != null)
 		{
-			nbttaglist = new NBTTagList();
+			NBTTagList dropItems = new NBTTagList();
 			for (ItemStack item : failedDrops)
 			{
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				item.writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
+				dropItems.appendTag(nbttagcompound1);
 			}
-			tag.setTag("DropItems", nbttaglist);
+			if (dropItems.tagCount() > 0)
+				tag.setTag("DropItems", dropItems);
 		}
 	}
 	

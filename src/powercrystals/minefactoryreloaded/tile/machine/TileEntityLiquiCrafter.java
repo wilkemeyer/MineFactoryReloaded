@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.CoreUtils;
+import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,7 +19,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -327,12 +327,12 @@ inv:	for(int i = 0; i < 9; i++)
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		FluidTank[] _tanks = new FluidTank[9];
+		FluidTankAdv[] _tanks = new FluidTankAdv[9];
 		for(int i = 0; i < 9; i++)
 		{
-			_tanks[i] = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
+			_tanks[i] = new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 10);
 		}
 		return _tanks;
 	}

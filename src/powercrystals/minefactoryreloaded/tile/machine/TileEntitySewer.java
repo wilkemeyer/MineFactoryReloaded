@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.fluid.FluidTankAdv;
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,11 +21,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -56,12 +55,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	public ContainerSewer getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerSewer(this, inventoryPlayer);
-	}
-	
-	@Override
-	public IFluidTank[] getTanks()
-	{
-		return _tanks;
 	}
 	
 	@Override
@@ -173,27 +166,20 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		for (FluidTank _tank : (FluidTank[])getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
-		return null;
+		return drain(maxDrain, doDrain);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
-		return null;
+		return drain(resource, doDrain);
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[] { new FluidTank(FluidContainerRegistry.BUCKET_VOLUME),
-				new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4) };
+		return new FluidTankAdv[] { new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME),
+				new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4) };
 	}
 	
 	@Override

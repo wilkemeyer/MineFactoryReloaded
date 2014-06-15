@@ -154,8 +154,10 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
 		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
-		nbttagcompound.setInteger("buffer", _buffer);
+		if (_ticksSinceLastConsumption > 0)
+			nbttagcompound.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
+		if (_buffer > 0)
+			nbttagcompound.setInteger("buffer", _buffer);
 	}
 	
 	@Override

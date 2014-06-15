@@ -2,6 +2,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import static net.minecraftforge.fluids.FluidContainerRegistry.BUCKET_VOLUME;
 
+import cofh.util.fluid.FluidTankAdv;
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -13,10 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
@@ -103,9 +103,9 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	}
 
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[] {new FluidTank(BUCKET_VOLUME * 32)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 32)};
 	}
 	
 	@Override
@@ -131,34 +131,23 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 		else
 			_fillingManager = null;
 	}
-
+	
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-					return _tank.fill(resource, doFill);
-		return 0;
+		return fill(resource, doFill);
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		for (FluidTank _tank : (FluidTank[])getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
-		return null;
+		return drain(maxDrain, doDrain);
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
-		return null;
+		return drain(resource, doDrain);
 	}
 
 	@Override

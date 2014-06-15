@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +22,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
@@ -58,6 +58,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		_rand = new Random();
 		setManageSolids(true);
 		setCanRotate(true);
+		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
 	}
 	
 	public TileEntityGrinder()
@@ -215,16 +216,16 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		return 0;
 	}
 	
-	protected void fillTank(FluidTank tank, String fluid, float amount)
+	protected void fillTank(FluidTankAdv tank, String fluid, float amount)
 	{
 		tank.fill(FluidRegistry.getFluidStack(fluid, (int)(100 * amount)), true);
 		markDirty();
 	}
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[]{new FluidTank(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
 	}
 	
 	@Override
@@ -236,20 +237,13 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		for (FluidTank _tank : (FluidTank[])getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
-		return null;
+		return drain(maxDrain, doDrain);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
-		return null;
+		return drain(resource, doDrain);
 	}
 	
 	@Override

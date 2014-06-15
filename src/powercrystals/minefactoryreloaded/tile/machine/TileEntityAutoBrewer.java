@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.ItemHelper;
+import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -16,7 +17,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -33,6 +33,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	{
 		super(Machine.AutoBrewer);
 		setManageSolids(true);
+		_tanks[0].setLock(FluidRegistry.getFluid("water"));
 	}
 	
 	private int getProcessSlot(int row) { return row * 5; }
@@ -40,9 +41,9 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	private int getResourceSlot(int row, int slot) { return row * 5 + slot + 2; }
 	
 	@Override
-	protected FluidTank[] createTanks()
+	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTank[] {new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4)};
 	}
 	
 	@Override
@@ -299,16 +300,6 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if (resource != null && resource.getFluid() == FluidRegistry.WATER)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-					return _tank.fill(resource, doFill);
-		return 0;
-	}
-	
-	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return !stack.getItem().equals(Items.potionitem);
@@ -321,22 +312,21 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	}
 	
 	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		return fill(resource, doFill);
+	}
+	
+	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		for (FluidTank _tank : (FluidTank[])getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
-		return null;
+		return drain(maxDrain, doDrain);
 	}
 	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null)
-			for (FluidTank _tank : (FluidTank[])getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
-		return null;
+		return drain(resource, doDrain);
 	}
 
 	@Override
