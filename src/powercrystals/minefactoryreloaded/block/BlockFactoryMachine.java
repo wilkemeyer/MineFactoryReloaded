@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -218,16 +219,18 @@ implements IRedNetOmniNode, IDismantleable
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
 	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
+		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode)
 		{
-			world.func_147480_a(x, y, z, true);
+			dropBlockAsItem(world, x, y, z, meta, 0);
+			world.setBlock(x, y, z, Blocks.air, 0, 4);
 		}
 	}
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata,
 			int fortune)
-			{
+	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 
 		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
@@ -245,7 +248,7 @@ implements IRedNetOmniNode, IDismantleable
 			drops.add(machine);
 		}
 		return drops;
-			}
+	}
 
 	@Override
 	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
