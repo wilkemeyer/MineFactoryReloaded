@@ -304,26 +304,26 @@ implements IRedNetOmniNode, IDismantleable
 			stack.getTagCompound().setInteger("z", z);
 			te.readFromNBT(stack.getTagCompound());
 		}
-
-		if(te instanceof TileEntityFactory)
-		{
-			if (((TileEntityFactory)te).canRotate())
+		if (te instanceof IRotateableTile)
+			if (((IRotateableTile)te).canRotate())
 				switch (MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3)
 				{
 				case 0:
-					((TileEntityFactory)te).rotateDirectlyTo(3);
+					((IRotateableTile)te).rotateDirectlyTo(3);
 					break;
 				case 1:
-					((TileEntityFactory)te).rotateDirectlyTo(4);
+					((IRotateableTile)te).rotateDirectlyTo(4);
 					break;
 				case 2:
-					((TileEntityFactory)te).rotateDirectlyTo(2);
+					((IRotateableTile)te).rotateDirectlyTo(2);
 					break;
 				case 3:
-					((TileEntityFactory)te).rotateDirectlyTo(5);
+					((IRotateableTile)te).rotateDirectlyTo(5);
 					break;
 				}
 
+		if (te instanceof TileEntityFactory)
+		{
 			if (te instanceof TileEntityFactoryInventory)
 			{
 				if (stack.hasDisplayName())
@@ -359,7 +359,7 @@ implements IRedNetOmniNode, IDismantleable
 			return false;
 		}
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof IRotateableTile)
+		if (te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
 			if (tile.canRotate(axis))

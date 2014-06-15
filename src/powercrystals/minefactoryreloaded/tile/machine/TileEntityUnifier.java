@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.pcc.oredict.OreDictTracker;
 import cofh.util.fluid.FluidTankAdv;
+import cofh.util.oredict.OreDictionaryArbiter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -75,7 +75,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			ItemStack output = null;
 			if(_inventory[0] != null)
 			{
-				List<String> names = OreDictTracker.getNamesFromItem(_inventory[0]);
+				List<String> names = OreDictionaryArbiter.getAllOreNames(_inventory[0]);
 				// tracker does *not* also check the wildcard meta,
 				// avoiding issues with saplings and logs, etc.
 				
@@ -171,7 +171,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			{
 				continue;
 			}
-			List<String> names = OreDictTracker.getNamesFromItem(_inventory[i]);
+			List<String> names = OreDictionaryArbiter.getAllOreNames(_inventory[i]);
 			if(names != null)
 			{
 				for(String name : names)

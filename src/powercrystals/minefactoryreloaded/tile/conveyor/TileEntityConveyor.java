@@ -212,6 +212,18 @@ public class TileEntityConveyor extends TileEntity
 	{
 		world.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newmd, 2);
 	}
+
+	@Override
+	public void rotateDirectlyTo(int facing) {
+		if (facing >= 2 && facing < 6)
+			rotateTo(worldObj, xCoord, yCoord, zCoord, facing - 2);
+	}
+
+	@Override
+	public boolean canRotate()
+	{
+		return true;
+	}
 	
 	@Override
 	public boolean canRotate(ForgeDirection axis)

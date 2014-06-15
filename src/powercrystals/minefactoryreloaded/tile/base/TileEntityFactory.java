@@ -114,6 +114,7 @@ public abstract class TileEntityFactory extends TileEntity
 		return _forwardDirection;
 	}
 	
+	@Override
 	public boolean canRotate()
 	{
 		return _canRotate;
@@ -163,6 +164,7 @@ public abstract class TileEntityFactory extends TileEntity
 		}
 	}
 	
+	@Override
 	public void rotateDirectlyTo(int rotation)
 	{
 		ForgeDirection p = _forwardDirection;

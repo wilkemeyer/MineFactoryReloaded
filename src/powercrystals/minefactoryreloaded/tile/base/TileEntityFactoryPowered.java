@@ -233,13 +233,13 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public int getInfoEnergy()
+	public int getInfoEnergyStored()
 	{
 		return getEnergyStored();
 	}
 
 	@Override
-	public int getInfoMaxEnergy()
+	public int getInfoMaxEnergyStored()
 	{
 		return getEnergyStoredMax();
 	}

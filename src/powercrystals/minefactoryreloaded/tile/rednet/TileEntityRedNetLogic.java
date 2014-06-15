@@ -606,6 +606,12 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	}
 
 	@Override
+	public boolean canRotate()
+	{
+		return crafters == 0;
+	}
+
+	@Override
 	public boolean canRotate(ForgeDirection axis)
 	{
 		return crafters == 0;
@@ -618,6 +624,15 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		{
 			int nextMeta = (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) + 1) & 3; // % 4
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nextMeta, 3);
+		}
+	}
+
+	@Override
+	public void rotateDirectlyTo(int facing)
+	{
+		if (canRotate() && facing >= 2 && facing < 6)
+		{
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facing - 2, 3);
 		}
 	}
 
