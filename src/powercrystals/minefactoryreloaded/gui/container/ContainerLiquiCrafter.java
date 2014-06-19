@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.util.fluid.FluidTankAdv;
+import cofh.gui.slot.SlotRemoveOnly;
+import cofh.gui.slot.SlotViewOnly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,8 +16,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
-import powercrystals.minefactoryreloaded.gui.slot.SlotRemoveOnly;
-import powercrystals.minefactoryreloaded.gui.slot.SlotViewOnly;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
 
 public class ContainerLiquiCrafter extends ContainerFactoryInventory
@@ -89,7 +88,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 		else if(var == 1) _tempLiquidId = value;
 		else if(var == 2)
 		{
-			((FluidTankAdv)_crafter.getTanks()[_tempTankIndex]).
+			_crafter.getTanks()[_tempTankIndex].
 					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(_tempLiquidId), value));
 		}
 	}

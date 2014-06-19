@@ -109,6 +109,7 @@ import powercrystals.minefactoryreloaded.farmables.egghandlers.VanillaEggHandler
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCocoa;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCropPlant;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableGrass;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableIGrowable;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableNetherWart;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
@@ -205,6 +206,7 @@ public class Vanilla
 		MFRRegistry.registerFertilizable(new FertilizableCocoa((IGrowable)Blocks.cocoa));
 		MFRRegistry.registerFertilizable(new FertilizableGrass());
 		MFRRegistry.registerFertilizable(new FertilizableStandard(MineFactoryReloadedCore.rubberSaplingBlock));
+		MFRRegistry.registerFertilizable(new FertilizableIGrowable(MineFactoryReloadedCore.fertileSoil));
 		
 		MFRRegistry.registerFertilizer(new FertilizerStandard(MineFactoryReloadedCore.fertilizerItem, 0));
 		if(MFRConfig.enableBonemealFertilizing.getBoolean(false))

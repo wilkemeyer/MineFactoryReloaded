@@ -28,7 +28,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create((IInventory)entity, ForgeDirection.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, ForgeDirection.UNKNOWN);
 
 		for (Entry<Integer, ItemStack> contents : minecart.getContents().entrySet())
 		{

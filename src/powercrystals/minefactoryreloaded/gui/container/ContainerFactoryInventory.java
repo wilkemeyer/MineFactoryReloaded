@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -82,7 +81,7 @@ public class ContainerFactoryInventory extends Container
 		
 		if (var == 30) _tankIndex = value;
 		else if (var == 31) _tankAmount = value;
-		else if (var == 32) ((FluidTankAdv)_te.getTanks()[_tankIndex]).
+		else if (var == 32) _te.getTanks()[_tankIndex].
 					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
 	}
 	

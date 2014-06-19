@@ -62,7 +62,9 @@ public class ButtonLogicBufferSelect extends ElementButtonOption
 	{
 		_ignoreChanges = true;
 		setSelectedIndex(buffer);
-		_lastValue = buffer;
+		if (getValue() == null)
+			onClick();
+		_lastValue = getSelectedIndex();
 		_ignoreChanges = false;
 	}
 	

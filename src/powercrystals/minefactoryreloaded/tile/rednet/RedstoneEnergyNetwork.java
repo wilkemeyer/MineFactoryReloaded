@@ -107,8 +107,7 @@ public class RedstoneEnergyNetwork implements IGrid
 			World world = main.getWorldObj();
 			for (int i = 6; i --> 0; ) {
 				bp.x = main.xCoord; bp.y = main.yCoord; bp.z = main.zCoord;
-				bp.orientation = dir[i];
-				bp.moveForwards(1);
+				bp.step(dir[i]);
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityRedNetEnergy)

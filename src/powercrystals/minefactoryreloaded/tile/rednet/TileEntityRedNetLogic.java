@@ -19,9 +19,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -54,6 +54,9 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	private int _variableCount = 16;
 
+	@SideOnly(Side.CLIENT)
+	private IRedNetLogicCircuit[] _prevCircuits = new IRedNetLogicCircuit[_circuitCount];
+
 	private IRedNetLogicCircuit[] _circuits = new IRedNetLogicCircuit[_circuitCount];
 	private boolean[] _updatable = new boolean[_circuitCount];
 
@@ -71,14 +74,14 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	public int crafters = 0; 
 
 	public TileEntityRedNetLogic()
-	{	
+	{
 		// init I/O buffers
-		for(int i = 0; i < 12; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			_buffers[i] = new int[16];
 		}
 
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			_backBuffer[i] = new int[16];
 		}
@@ -91,7 +94,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		_buffers[14] = new int[1];
 
 		// init circuits
-		for(int i = 0; i < _circuits.length; i++)
+		for (int i = 0; i < _circuits.length; i++)
 		{
 			initCircuit(i, new Noop());
 		}
@@ -120,6 +123,14 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	public IRedNetLogicCircuit getCircuit(int index)
 	{
 		return _circuits[index];
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IRedNetLogicCircuit getLastCircuit(int index)
+	{
+		IRedNetLogicCircuit r = _prevCircuits[index];
+		_prevCircuits[index] = _circuits[index];
+		return r;
 	}
 
 	public PinMapping getInputPinMapping(int circuitIndex, int pinIndex)
@@ -164,7 +175,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	{
 		_updatable[index] = !(circuit instanceof Noop);
 		_circuits[index] = circuit;
-		if(_pinMappingInputs[index] == null)
+		if (_pinMappingInputs[index] == null)
 		{
 			_pinMappingInputs[index] = new PinMapping[_circuits[index].getInputCount()];
 		}
@@ -173,7 +184,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 			_pinMappingInputs[index] = Arrays.copyOf(_pinMappingInputs[index], _circuits[index].getInputCount());
 		}
 
-		if(_pinMappingOutputs[index] == null)
+		if (_pinMappingOutputs[index] == null)
 		{
 			_pinMappingOutputs[index] = new PinMapping[_circuits[index].getOutputCount()];
 		}
@@ -182,17 +193,17 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 			_pinMappingOutputs[index] = Arrays.copyOf(_pinMappingOutputs[index], _circuits[index].getOutputCount());
 		}
 
-		for(int i = 0; i < _pinMappingInputs[index].length; i++)
+		for (int i = 0; i < _pinMappingInputs[index].length; i++)
 		{
-			if(_pinMappingInputs[index][i] == null)
+			if (_pinMappingInputs[index][i] == null)
 			{
 				_pinMappingInputs[index][i] = new PinMapping(0, 12);
 			}
 		}
 
-		for(int i = 0; i < _pinMappingOutputs[index].length; i++)
+		for (int i = 0; i < _pinMappingOutputs[index].length; i++)
 		{
-			if(_pinMappingOutputs[index][i] == null)
+			if (_pinMappingOutputs[index][i] == null)
 			{
 				_pinMappingOutputs[index][i] = new PinMapping(0, 14);
 			}
@@ -201,12 +212,12 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	public void reinitialize(EntityPlayer player)
 	{
-		for(int i = 0; i < _upgradeLevel.length; i++)
+		for (int i = 0; i < _upgradeLevel.length; i++)
 		{
-			if(_upgradeLevel[i] > 0)
+			if (_upgradeLevel[i] > 0)
 			{
 				ItemStack card = new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, _upgradeLevel[i] - 1);
-				if(!player.inventory.addItemStackToInventory(card))
+				if (!player.inventory.addItemStackToInventory(card))
 				{
 					player.entityDropItem(card, 0.0F);
 				}
@@ -215,12 +226,12 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		}
 		updateUpgradeLevels();
 		// init I/O buffers
-		for(int i = 0; i < 12; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			_buffers[i] = new int[16];
 		}
 
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			_backBuffer[i] = new int[16];
 		}
@@ -233,7 +244,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		_buffers[14] = new int[1];
 
 		// init circuits
-		for(int i = 0; i < _circuits.length; i++)
+		for (int i = 0; i < _circuits.length; i++)
 		{
 			initCircuit(i, new Noop());
 			sendCircuitDefinition(i);
@@ -253,15 +264,14 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 			int len = packet.getByte("input");
 			int[] inputs = packet.getIntArray("inputs");
 			PinMapping[] pins = _pinMappingInputs[circuitIndex];
-			for (int i = 2; i --> 0; )
-			{
-				for(int p = 0; p < len; ++p)
-					pins[p] = new PinMapping(inputs[p << 1], inputs[(p << 1) | 1]);
+			for(int p = 0; p < len; ++p)
+				pins[p] = new PinMapping(inputs[p << 1], inputs[(p << 1) | 1]);
 
-				len = packet.getByte("output");
-				inputs = packet.getIntArray("outputs");
-				pins = _pinMappingOutputs[circuitIndex];
-			}
+			len = packet.getByte("output");
+			inputs = packet.getIntArray("outputs");
+			pins = _pinMappingOutputs[circuitIndex];
+			for(int p = 0; p < len; ++p)
+				pins[p] = new PinMapping(inputs[p << 1], inputs[(p << 1) | 1]);
 		}
 		catch(Throwable x)
 		{
@@ -281,10 +291,10 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		data.setByte("input", len);
 		int[] l = new int[len * 2];
 		PinMapping[] pins = _pinMappingInputs[circuit];
-		for (int p = 0; p < len; )
+		for (int p = 0, i = 0; i < len; ++i)
 		{
-			l[p++] = pins[p].pin;
-			l[p++] = pins[p].buffer;
+			l[p] = pins[i].pin; ++p;
+			l[p] = pins[i].buffer; ++p;
 		}
 		data.setIntArray("inputs", l);
 		
@@ -292,27 +302,26 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		data.setByte("output", len);
 		l = new int[len * 2];
 		pins = _pinMappingOutputs[circuit];
-		for (int p = 0; p < len; )
+		for (int p = 0, i = 0; i < len; ++i)
 		{
-			l[p++] = pins[p].pin;
-			l[p++] = pins[p].buffer;
+			l[p] = pins[i].pin; ++p;
+			l[p] = pins[i].buffer; ++p;
 		}
 		data.setIntArray("outputs", l);
 
-
-		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 7,
+		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 10,
 				new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		if(worldObj.isRemote)
+		if (worldObj.isRemote)
 		{
 			return;
 		}
 
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			int[] buffer = _buffers[i + 6];
 			int[] backbuffer = _backBuffer[i];
@@ -330,7 +339,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 				IRedNetLogicCircuit circuit = _circuits[circuitNum];
 				PinMapping[] mappings = _pinMappingInputs[circuitNum];
 				int[] input = new int[circuit.getInputCount()];
-				for(int pinNum = 0, j = input.length; pinNum < j; ++pinNum)
+				for (int pinNum = 0, j = input.length; pinNum < j; ++pinNum)
 				{
 					PinMapping mapping = mappings[pinNum];
 					input[pinNum] = _buffers[mapping.buffer][mapping.pin];
@@ -338,7 +347,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 				int[] output = circuit.recalculateOutputValues(worldObj.getTotalWorldTime(), input);
 				mappings = _pinMappingOutputs[circuitNum];
-				for(int pinNum = 0, j = output.length; pinNum < j; ++pinNum)
+				for (int pinNum = 0, j = output.length; pinNum < j; ++pinNum)
 				{
 					PinMapping mapping = mappings[pinNum];
 					_buffers[mapping.buffer][mapping.pin] = output[pinNum];
@@ -346,20 +355,20 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 			}
 		}
 
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
-			if(!areEqual(_backBuffer[i], _buffers[i + 6]))
+			if (!areEqual(_backBuffer[i], _buffers[i + 6]))
 			{
 				bp.x = xCoord; bp.y = yCoord; bp.z = zCoord;
 				ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i];
 				bp.orientation = o;
 				bp.moveForwards(1);
 				Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
-				if(b instanceof IRedNetNetworkContainer)
+				if (b instanceof IRedNetNetworkContainer)
 				{
 					((IRedNetNetworkContainer)b).updateNetwork(worldObj, bp.x, bp.y, bp.z);
 				}
-				else if(b instanceof IRedNetOmniNode)
+				else if (b instanceof IRedNetOmniNode)
 				{
 					((IRedNetOmniNode)b).onInputsChanged(worldObj, bp.x, bp.y, bp.z,
 							o.getOpposite(), _buffers[i + 6]);
@@ -370,7 +379,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	public int getOutputValue(ForgeDirection side, int subnet)
 	{
-		if(side == ForgeDirection.UNKNOWN)
+		if (side == ForgeDirection.UNKNOWN)
 		{
 			return 0;
 		}
@@ -379,7 +388,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	public int[] getOutputValues(ForgeDirection side)
 	{
-		if(side == ForgeDirection.UNKNOWN)
+		if (side == ForgeDirection.UNKNOWN)
 		{
 			return new int[16];
 		}
@@ -387,8 +396,8 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	}
 
 	public void onInputsChanged(ForgeDirection side, int[] values)
-	{
-		if(side != ForgeDirection.UNKNOWN)
+	{ 
+		if (side != ForgeDirection.UNKNOWN)
 		{
 			_buffers[side.ordinal()] = values;
 		}
@@ -400,13 +409,13 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		super.writeToNBT(nbttagcompound);
 
 		NBTTagList circuits = new NBTTagList();
-		for(int c = 0; c < _circuits.length; c++)
+		for (int c = 0; c < _circuits.length; c++)
 		{
 			NBTTagCompound circuit = new NBTTagCompound();
 			circuit.setString("circuit", _circuits[c].getClass().getName());
 
 			NBTTagList inputPins = new NBTTagList();
-			for(int p = 0; p < _pinMappingInputs[c].length; p++)
+			for (int p = 0; p < _pinMappingInputs[c].length; p++)
 			{
 				NBTTagCompound pin = new NBTTagCompound();
 				pin.setInteger("buffer", _pinMappingInputs[c][p].buffer);
@@ -417,7 +426,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 			circuit.setTag("inputPins", inputPins);
 
 			NBTTagList outputPins = new NBTTagList();
-			for(int p = 0; p < _pinMappingOutputs[c].length; p++)
+			for (int p = 0; p < _pinMappingOutputs[c].length; p++)
 			{
 				NBTTagCompound pin = new NBTTagCompound();
 				pin.setInteger("buffer", _pinMappingOutputs[c][p].buffer);
@@ -445,14 +454,14 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		super.readFromNBT(nbttagcompound);
 
 		int[] upgrades = nbttagcompound.getIntArray("upgrades");
-		if(upgrades != null && upgrades.length == _upgradeLevel.length)
+		if (upgrades != null && upgrades.length == _upgradeLevel.length)
 		{
 			_upgradeLevel = upgrades;
 		}
 		updateUpgradeLevels();
 
 		int[] vars = nbttagcompound.getIntArray("vars");
-		if(vars != null && vars.length == _buffers[13].length)
+		if (vars != null && vars.length == _buffers[13].length)
 		{
 			_buffers[13] = vars;
 		}
@@ -463,17 +472,17 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 	public void readCircuitsOnly(NBTTagCompound nbttagcompound)
 	{
 		NBTTagList circuits = nbttagcompound.getTagList("circuits", 10);
-		if(circuits != null)
+		if (circuits != null)
 		{
-			for(int c = 0; c < circuits.tagCount(); c++)
+			for (int c = 0; c < circuits.tagCount(); c++)
 			{
 				NBTTagCompound circuit = circuits.getCompoundTagAt(c);
 				initCircuit(c, circuit.getString("circuit"));
 
 				NBTTagList inputPins = circuit.getTagList("inputPins", 10);
-				if(inputPins != null)
+				if (inputPins != null)
 				{
-					for(int i = 0; i < inputPins.tagCount() && i < _pinMappingInputs[c].length; i++)
+					for (int i = 0; i < inputPins.tagCount() && i < _pinMappingInputs[c].length; i++)
 					{
 						NBTTagCompound pin = inputPins.getCompoundTagAt(i);
 						int ipin = pin.getInteger("pin");
@@ -483,9 +492,9 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 				}
 
 				NBTTagList outputPins = circuit.getTagList("outputPins", 10);
-				if(outputPins != null)
+				if (outputPins != null)
 				{
-					for(int i = 0; i < outputPins.tagCount() && i < _pinMappingOutputs[c].length; i++)
+					for (int i = 0; i < outputPins.tagCount() && i < _pinMappingOutputs[c].length; i++)
 					{
 						NBTTagCompound pin = inputPins.getCompoundTagAt(i);
 						int ipin = pin.getInteger("pin");
@@ -495,7 +504,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 				}
 
 				NBTTagCompound circuitState = circuit.getCompoundTag("state");
-				if(circuitState != null)
+				if (circuitState != null)
 				{
 					_circuits[c].readFromNBT(circuitState);
 				}
@@ -520,6 +529,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		case 0:
 			_upgradeLevel = pkt.func_148857_g().getIntArray("upgrades");
 			updateUpgradeLevels();
+			_prevCircuits = Arrays.copyOf(_prevCircuits, _circuitCount);
 			break;
 		case 1:
 			setCircuitFromPacket(pkt.func_148857_g());
@@ -529,11 +539,11 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 	public boolean insertUpgrade(int level)
 	{
-		for(int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
-			if(_upgradeLevel[i] == 0)
+			if (_upgradeLevel[i] == 0)
 			{
-				if(!worldObj.isRemote)
+				if (!worldObj.isRemote)
 				{
 					_upgradeLevel[i] = level;
 					updateUpgradeLevels();
@@ -560,7 +570,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		// recalculate sizes
 		int circuitCount = 6;
 		int variableCount = 16;
-		for(int i = 0; i < _upgradeLevel.length; i++)
+		for (int i = 0; i < _upgradeLevel.length; i++)
 		{
 			circuitCount += ItemLogicUpgradeCard.getCircuitsForLevel(_upgradeLevel[i]);
 			variableCount += ItemLogicUpgradeCard.getVariablesForLevel(_upgradeLevel[i]);
@@ -576,9 +586,9 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 
 		// re-init pinmapping arrays
 		PinMapping[][] inputMappings = new PinMapping[_circuitCount][];
-		for(int i = 0; i < inputMappings.length; i++)
+		for (int i = 0; i < inputMappings.length; i++)
 		{
-			if(i < _pinMappingInputs.length && _pinMappingInputs[i] != null)
+			if (i < _pinMappingInputs.length && _pinMappingInputs[i] != null)
 			{
 				inputMappings[i] = _pinMappingInputs[i];
 			}
@@ -586,9 +596,9 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		_pinMappingInputs = inputMappings;
 
 		PinMapping[][] outputMappings = new PinMapping[_circuitCount][];
-		for(int i = 0; i < outputMappings.length; i++)
+		for (int i = 0; i < outputMappings.length; i++)
 		{
-			if(i < _pinMappingOutputs.length && _pinMappingOutputs[i] != null)
+			if (i < _pinMappingOutputs.length && _pinMappingOutputs[i] != null)
 			{
 				outputMappings[i] = _pinMappingOutputs[i];
 			}
@@ -596,9 +606,9 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 		_pinMappingOutputs = outputMappings;
 
 		// finally, init any new circuits
-		for(int i = 0; i < _circuits.length; i++)
+		for (int i = 0; i < _circuits.length; i++)
 		{
-			if(_circuits[i] == null)
+			if (_circuits[i] == null)
 			{
 				initCircuit(i, new Noop());
 			}

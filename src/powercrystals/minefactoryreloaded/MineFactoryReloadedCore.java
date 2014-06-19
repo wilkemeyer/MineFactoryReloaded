@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
-// this import brought to you by the department of redundancies department, the department that brought you this import
 
 import cofh.core.CoFHProps;
 import cofh.mod.BaseMod;
@@ -73,6 +72,7 @@ import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
+import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
 import powercrystals.minefactoryreloaded.block.BlockPinkSlimeFluid;
 import powercrystals.minefactoryreloaded.block.BlockRailCargoDropoff;
 import powercrystals.minefactoryreloaded.block.BlockRailCargoPickup;
@@ -90,6 +90,7 @@ import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
 import powercrystals.minefactoryreloaded.block.ItemBlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryDecorativeBrick;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlassPane;
@@ -161,6 +162,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
+// this import brought to you by the department of redundancies department, the department that brought you this import
 
 @Mod(modid = modId, name = modName, version = version, dependencies = dependencies)
 public class MineFactoryReloadedCore extends BaseMod
@@ -244,6 +246,8 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Block vineScaffoldBlock;
 
 	public static Block detCordBlock;
+
+	public static Block fertileSoil;
 
 	public static Item machineItem;
 
@@ -401,6 +405,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		fakeLaserBlock = new BlockFakeLaser();
 		vineScaffoldBlock = new BlockVineScaffold();
 		detCordBlock = new BlockDetCord();
+		
+		fertileSoil = new BlockFertileSoil();
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		plasticBootsItem = new ItemPlasticBoots();
@@ -509,6 +515,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(factoryDecorativeStoneBlock, ItemBlockDecorativeStone.class);
 
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);
+		registerBlock(fertileSoil, ItemBlockFactory.class);
+
 		registerBlock(detCordBlock, ItemBlockDetCord.class);
 
 		registerBlock(fakeLaserBlock, null);

@@ -31,8 +31,7 @@ public final class Packets
 			PlayerManager manager = ((WorldServer)world).getPlayerManager();
 			if (manager == null)
 				return;
-			PlayerInstance watcher = manager.
-					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
+			PlayerInstance watcher = manager.getOrCreateChunkWatcher(x >> 4, x >> 4, false);
 			if (watcher != null)
 				watcher.sendToAllPlayersWatchingChunk(packet);
 		}
@@ -46,19 +45,23 @@ public final class Packets
 			PlayerManager manager = ((WorldServer)world).getPlayerManager();
 			if (manager == null)
 				return;
-			PlayerInstance watcher = manager.
-					getOrCreateChunkWatcher(x >> 4, x >> 4, false);
-			if (watcher != null)
+			int xS = (x - range) >> 4, zS = (z - range) >> 4;
+			int xE = (x + range) >> 4, zE = (z + range) >> 4;
+			for (; xS < xE; ++xS) for (; zS < zE; ++zS)
 			{
-				@SuppressWarnings("unchecked")
-				List<EntityPlayerMP> players = watcher.playersWatchingChunk;
-				for (int i = players.size(); i --> 0; )
+				PlayerInstance watcher = manager.getOrCreateChunkWatcher(xS, zS, false);
+				if (watcher != null)
 				{
-					EntityPlayerMP player = players.get(i);
-					if (Math.abs(player.posX - x) < range)
-						if (Math.abs(player.posY - x) < range)
-							if (Math.abs(player.posZ - x) < range)
-								player.playerNetServerHandler.sendPacket(packet);
+					@SuppressWarnings("unchecked")
+					List<EntityPlayerMP> players = watcher.playersWatchingChunk;
+					for (int i = players.size(); i --> 0; )
+					{
+						EntityPlayerMP player = players.get(i);
+						if (Math.abs(x - player.posX) < range)
+							if (Math.abs(y - player.posY) < range)
+								if (Math.abs(z - player.posZ) < range)
+									player.playerNetServerHandler.sendPacket(packet);
+					}
 				}
 			}
 		}

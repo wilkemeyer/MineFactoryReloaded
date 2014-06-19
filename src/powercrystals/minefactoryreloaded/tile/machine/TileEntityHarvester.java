@@ -254,7 +254,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			highestBlockOffset = currentYoffset;
 		}
 		
-		if (highestBlockOffset < 0)
+		if (highestBlockOffset >= 0)
 			return new BlockPosition(x, y + highestBlockOffset, z);
 		
 		return null;

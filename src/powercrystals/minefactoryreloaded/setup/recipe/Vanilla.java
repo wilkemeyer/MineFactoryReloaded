@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.setup.recipe;
 
+import static net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -262,7 +264,7 @@ public class Vanilla
 				"RMR",
 				'G', "sheetPlastic",
 				'D', Blocks.dropper,
-				'R', Items.redstone,
+				'R', "dustRedstone",
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -343,7 +345,7 @@ public class Vanilla
 				"OTO",
 				"OMO",
 				'G', "sheetPlastic",
-				'O', Blocks.obsidian,
+				'O', Blocks.nether_brick,
 				'T', Items.bucket,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -375,7 +377,7 @@ public class Vanilla
 				"ECE",
 				"NMS",
 				'G', "sheetPlastic",
-				'E', Items.emerald,
+				'E', "gemEmerald",
 				'C', Items.magma_cream,
 				'N', Items.nether_wart,
 				'S', Items.sugar,
@@ -458,7 +460,7 @@ public class Vanilla
 				"DMD",
 				'G', "sheetPlastic",
 				'L', Blocks.glowstone,
-				'D', Items.diamond,
+				'D', "gemDiamond",
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		
@@ -469,7 +471,7 @@ public class Vanilla
 				"DMD",
 				'G', "sheetPlastic",
 				'L', Blocks.glowstone,
-				'D', Items.diamond,
+				'D', "gemDiamond",
 				'S', MineFactoryReloadedCore.pinkSlimeballItem,
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
@@ -571,7 +573,7 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'F', Items.nether_star,
 				'P', Machine.DeepStorageUnit.getItemStack(),
-				'R', Blocks.redstone_block,
+				'R', "blockRedstone",
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		if (MFRConfig.enableCheapCL.getBoolean(false))
@@ -582,9 +584,9 @@ public class Vanilla
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', Blocks.gold_block,
+				'F', "blockGold",
 				'P', Items.ender_eye,
-				'R', Blocks.redstone_block,
+				'R', "blockRedstone",
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		}
@@ -642,9 +644,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', new ItemStack(Items.dye, 1, 4),
+			'I', "dustLapis",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -655,7 +657,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotTin",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -666,7 +668,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotIron",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -677,7 +679,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotCopper",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -688,7 +690,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotBronze",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -699,7 +701,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotSilver",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -710,7 +712,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotGold",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -721,7 +723,7 @@ public class Vanilla
 			"RGR",
 			'I', Items.quartz,
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -730,9 +732,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', Items.diamond,
+			'I', "gemDiamond",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -743,7 +745,7 @@ public class Vanilla
 			"RGR",
 			'I', "ingotPlatinum",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -752,9 +754,9 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', Items.emerald,
+			'I', "gemEmerald",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -765,7 +767,7 @@ public class Vanilla
 			"RGR",
 			'I', "cobblestone",
 			'P', "dustPlastic",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'G', "nuggetGold",
 				} ));
 		
@@ -776,7 +778,7 @@ public class Vanilla
 				"ENE",
 				"NGN",
 				"ENE",
-				'E', Items.emerald,
+				'E', "gemEmerald",
 				'N', "nuggetGold",
 				'G', new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i)
 					} ));
@@ -824,8 +826,8 @@ public class Vanilla
 			"UUU",
 			"RIR",
 			'U', "itemRubber",
-			'R', Items.redstone,
-			'I', Items.iron_ingot,
+			'R', "dustRedstone",
+			'I', "ingotIron",
 				} ));
 
 		String[] dyes = { "Black", "Red", "Green", "Brown", "Blue", "Purple",
@@ -873,25 +875,29 @@ public class Vanilla
 				"Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow",
 				"LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 		
-		ItemStack pane = new ItemStack(Blocks.glass_pane);
-		for(int i = 0; i < 16; i++)
+		String pane = "paneGlass", glass = "blockGlass";
+		ItemStack glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, WILDCARD_VALUE);
+		ItemStack paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, WILDCARD_VALUE);
+		OreDictionary.registerOre(glass, glassStack.copy());
+		OreDictionary.registerOre(pane, paneStack.copy());
+		for (int i = 0; i < 16; i++)
 		{
 			ItemStack dye = new ItemStack(MineFactoryReloadedCore.ceramicDyeItem, 4, i);
 			GameRegistry.addRecipe(new ShapelessOreRecipe(dye, new ItemStack(Items.clay_ball), "dye" + dyes[15 - i]));
 			dye.stackSize = 1;
-			ItemStack glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i);
-			ItemStack paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i);
-			OreDictionary.registerOre("glass" + dyes[15 - i], glassStack.copy());
-			OreDictionary.registerOre("glassPane" + dyes[15 - i], paneStack.copy());
+			glassStack = new ItemStack(MineFactoryReloadedCore.factoryGlassBlock, 1, i);
+			paneStack = new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 1, i);
+			OreDictionary.registerOre(glass + dyes[15 - i], glassStack.copy());
+			OreDictionary.registerOre(pane + dyes[15 - i], paneStack.copy());
 			OreDictionary.registerOre("dyeCeramic" + dyes[15 - i], dye.copy());
-			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, "glass"));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, glass));
 			glassStack.stackSize = 3;
-			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, "glass", "glass", "glass"));
-			GameRegistry.addShapelessRecipe(paneStack.copy(), dye, pane);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(glassStack, dye, glass, glass, glass));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(paneStack, dye, pane));
 			paneStack.stackSize = 3;
-			GameRegistry.addShapelessRecipe(paneStack.copy(), dye, pane, pane, pane);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(paneStack, dye, pane, pane, pane));
 			paneStack.stackSize = 8;
-			GameRegistry.addShapelessRecipe(paneStack.copy(), dye, pane, pane, pane, pane, pane, pane, pane, pane);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(paneStack, dye, pane, pane, pane, pane, pane, pane, pane, pane));
 			
 			GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryGlassPaneBlock, 16, i), new Object[]
 					{
@@ -921,14 +927,14 @@ public class Vanilla
 			'M', Blocks.glowstone,
 				} );
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 2), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 2), new Object[]
 				{
 			"M M",
 			" B ",
 			"M M",
 			'B', Blocks.brick_block,
-			'M', Blocks.lapis_block,
-				} );
+			'M', "blockLapis",
+				}));
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 3), new Object[]
 				{
@@ -975,14 +981,14 @@ public class Vanilla
 			'M', Blocks.ice,
 				} );
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 8), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 8), new Object[]
 				{
 			"M M",
 			" B ",
 			"M M",
 			'B', Blocks.stonebrick,
-			'M', Blocks.lapis_block,
-				} );
+			'M', "blockLapis",
+				}));
 		
 		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 8, 9), new Object[]
 				{
@@ -1029,7 +1035,7 @@ public class Vanilla
 			"SDS",
 			"SSS",
 			'S', "stone",
-			'D', new ItemStack(Items.dye, 1, 0),
+			'D', "dyeBlack",
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 1), new Object[]
@@ -1058,7 +1064,7 @@ public class Vanilla
 			"SDS",
 			"SSS",
 			'S', "cobblestone",
-			'D', new ItemStack(Items.dye, 1, 0),
+			'D', "dyeBlack",
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 3), new Object[]
@@ -1078,118 +1084,116 @@ public class Vanilla
 		/**
 		 * Large brick:
 		 **/
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 4), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 4), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', Blocks.stonebrick,
-			'D', new ItemStack(Items.dye, 1, 0),
-				} );
+			'D', "dyeBlack",
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 5), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 5), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', Blocks.stonebrick,
 			'D', Items.sugar,
-				} );
+				}));
 		
 		// smooth->large brick
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 4), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 4), new Object[]
 				{
 			"SS",
 			"SS",
 			'S', new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0),
-				} );
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 5), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 5), new Object[]
 				{
 			"SS",
 			"SS",
 			'S', new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1),
-				} );
+				}));
 		
 		/**
 		 * Small brick:
 		 **/
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 6), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 6), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', Blocks.brick_block,
-			'D', new ItemStack(Items.dye, 1, 0),
-				} );
+			'D', "dyeBlack",
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 7), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 7), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', Blocks.brick_block,
 			'D', Items.sugar,
-				} );
+				}));
 		
 		// large brick->small brick
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 6), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 6), new Object[]
 				{
 			"SS",
 			"SS",
 			'S', new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 4),
-				} );
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 7), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 7), new Object[]
 				{
 			"SS",
 			"SS",
 			'S', new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 5),
-				} );
+				}));
 		
 		/**
 		 * Gravel:
 		 **/
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 8), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 8), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', Blocks.gravel,
-			'D', new ItemStack(Items.dye, 1, 0),
-				} );
+			'D', "dyeBlack",
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 9), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, 9), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', Blocks.gravel,
 			'D', Items.sugar,
-				} );
-		
-		// FZ grinder?
+				}));
 		
 		/**
 		 * Paved:
 		 **/
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 10), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 10), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', new ItemStack(Blocks.stone_slab, 1, 0),
-			'D', new ItemStack(Items.dye, 1, 0),
-				} );
+			'D', "dyeBlack",
+				}));
 		
-		GameRegistry.addRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 11), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, 11), new Object[]
 				{
 			"SSS",
 			"SDS",
 			"SSS",
 			'S', new ItemStack(Blocks.stone_slab, 1, 0),
 			'D', Items.sugar,
-				} );
+				}));
 		
 		// smooth->paved
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 10), 
@@ -1284,7 +1288,7 @@ public class Vanilla
 			" I ",
 			'P', "sheetPlastic",
 			'R', "itemRubber",
-			'I', Items.iron_ingot,
+			'I', "ingotIron",
 				} ));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.syringeHealthItem), new Object[] { MineFactoryReloadedCore.syringeEmptyItem, Items.apple });
@@ -1305,7 +1309,7 @@ public class Vanilla
 			" S ",
 			"BLB",
 			'B', "slimeball",
-			'L', new ItemStack(Items.dye, 1, 4),
+			'L', "dustLapis",
 			'S', MineFactoryReloadedCore.syringeEmptyItem,
 				}));
 		
@@ -1425,7 +1429,7 @@ public class Vanilla
 			"GLG",
 			'G', "ingotGold",
 			'L', "glass",
-			'D', Items.diamond,
+			'D', "gemDiamond",
 			'N', Items.nether_star
 				}));
 		
@@ -1494,8 +1498,8 @@ public class Vanilla
 			'P', "sheetPlastic",
 			'L', Items.glowstone_dust,
 			'G', Items.gunpowder,
-			'I', Items.iron_ingot,
-			'R', Items.redstone,
+			'I', "ingotIron",
+			'R', "dustRedstone",
 				} ));
 	}
 	
@@ -1596,6 +1600,20 @@ public class Vanilla
 				{
 			Items.milk_bucket,
 			Items.glass_bottle
+				} );
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.fertileSoil), new Object[]
+				{
+			new ItemStack(Blocks.dirt, 1, 2),
+			MineFactoryReloadedCore.fertilizerItem,
+			MineFactoryReloadedCore.milkBottleItem
+				} );
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.fertileSoil), new Object[]
+				{
+			new ItemStack(Blocks.dirt, 1, 2),
+			MineFactoryReloadedCore.fertilizerItem,
+			Items.milk_bucket,
 				} );
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.chocolateMilkBucketItem), Items.milk_bucket, Items.bucket, new ItemStack(Items.dye, 1, 3));
@@ -1705,7 +1723,7 @@ public class Vanilla
 					"PLP",
 					"SIS",
 					'P', "sheetPlastic",
-					'I', Items.iron_ingot,
+					'I', "ingotIron",
 					'S', Items.magma_cream,
 					'L', MineFactoryReloadedCore.safariNetLauncherItem,
 					'G', MineFactoryReloadedCore.spyglassItem
@@ -1729,7 +1747,7 @@ public class Vanilla
 					"PIP",
 					"PPP",
 					'P', "sheetPlastic",
-					'I', Items.iron_ingot,
+					'I', "ingotIron",
 				}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rocketItem, 2, 0), new Object[]
@@ -1805,7 +1823,7 @@ public class Vanilla
 			"PPP",
 			"RRR",
 			"PPP",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'P', "sheetPlastic",
 				} ));
 		
@@ -1814,8 +1832,8 @@ public class Vanilla
 			"nuggetGold",
 			"nuggetGold",
 			"nuggetGold",
-			Items.redstone,
-			Items.redstone,
+			"dustRedstone",
+			"dustRedstone",
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 				} ));
 		
@@ -1823,7 +1841,7 @@ public class Vanilla
 				{
 			"ingotGold",
 			"ingotGold",
-			Blocks.redstone_block,
+			"blockRedstone",
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
@@ -1837,10 +1855,10 @@ public class Vanilla
 			"PRP",
 			"RGR",
 			"PIP",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 			'P', "sheetPlastic",
 			'G', "glass",
-			'I', Items.iron_ingot,
+			'I', "ingotIron",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetLogicBlock), new Object[]
@@ -1851,9 +1869,9 @@ public class Vanilla
 			'H', new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'L', new ItemStack(Items.dye, 1, 4),
-			'D', Items.diamond,
-			'R', Items.redstone,
+			'L', "dustLapis",
+			'D', "gemDiamond",
+			'R', "dustRedstone",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0), new Object[]
@@ -1863,7 +1881,7 @@ public class Vanilla
 			"RPR",
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1), new Object[]
@@ -1874,7 +1892,7 @@ public class Vanilla
 			'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 0),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 2), new Object[]
@@ -1885,8 +1903,8 @@ public class Vanilla
 			'C', new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, 1),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'D', Items.diamond,
-			'R', Items.redstone,
+			'D', "gemDiamond",
+			'R', "dustRedstone",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMeterItem, 1, 0), new Object[]
@@ -1896,7 +1914,7 @@ public class Vanilla
 			"PP",
 			'P', "sheetPlastic",
 			'G', "nuggetGold",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new Object[]
@@ -1906,7 +1924,7 @@ public class Vanilla
 			"PPP",
 			'P', "sheetPlastic",
 			'G', "nuggetGold",
-			'R', Items.redstone,
+			'R', "dustRedstone",
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetPanelBlock, 1, 0), new Object[]
@@ -1917,7 +1935,7 @@ public class Vanilla
 			'P', "sheetPlastic",
 			'C', MineFactoryReloadedCore.rednetCableBlock,
 			'B', Blocks.bookshelf,
-			'K', new ItemStack(Items.dye, 1, 0)
+			'K', "dyeBlack"
 				} ));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0));
@@ -1931,6 +1949,7 @@ public class Vanilla
 		}
 		_registeredRedNetManual = true;
 		
-		GameRegistry.addShapelessRecipe(ItemBlockRedNetLogic.manual, MineFactoryReloadedCore.plasticSheetItem, Items.redstone, Items.book);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ItemBlockRedNetLogic.manual,
+				MineFactoryReloadedCore.plasticSheetItem, "dustRedstone", Items.book));
 	}
 }

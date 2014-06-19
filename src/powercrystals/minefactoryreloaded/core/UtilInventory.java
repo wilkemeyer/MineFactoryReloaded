@@ -368,7 +368,7 @@ public abstract class UtilInventory
 			if (ret != null && ret.isItemStackDamageable() && ret.getItemDamage() > ret.getMaxDamage())
 				ret = null;
 
-			if (stack.stackSize < 2)
+			if (stack.stackSize < 1)
 				return ret;
 
 			if (ret != null && !player.inventory.addItemStackToInventory(ret))

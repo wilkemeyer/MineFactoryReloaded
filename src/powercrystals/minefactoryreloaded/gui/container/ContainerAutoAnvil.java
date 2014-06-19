@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.gui.slot.SlotRemoveOnly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -7,7 +8,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 
-import powercrystals.minefactoryreloaded.gui.slot.SlotRemoveOnly;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 
 public class ContainerAutoAnvil extends ContainerFactoryPowered

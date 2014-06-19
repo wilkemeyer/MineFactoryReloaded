@@ -38,7 +38,7 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 		"LIME",
 		"PINK",
 		"GRAY",
-		"L_GR",
+		"SILV",
 		"CYAN",
 		"PURP",
 		"BLUE",

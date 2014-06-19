@@ -1,10 +1,11 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 
+import cofh.gui.slot.SlotViewOnly;
+
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.NeedlegunContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptNeedlegunAmmo;
-import powercrystals.minefactoryreloaded.gui.slot.SlotViewOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

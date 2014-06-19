@@ -28,14 +28,14 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create((IInventory)entity, ForgeDirection.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, ForgeDirection.UNKNOWN);
 
 		for (Entry<ForgeDirection, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
 		{
 			IInventoryManager chest = InventoryManager.create(inventory.getValue(), inventory.getKey().getOpposite()); 
 			for (Entry<Integer, ItemStack> contents : chest.getContents().entrySet())
 			{
-				if (contents.getValue() == null)
+				if (contents.getValue() == null || !chest.canRemoveItem(contents.getValue(), contents.getKey()))
 				{
 					continue;
 				}
