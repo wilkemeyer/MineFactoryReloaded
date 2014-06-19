@@ -41,6 +41,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 		setStepSound(soundTypeGravel);
 		setBlockBounds(0f,0f,0f, 1f,15f/16f,1f);
 		setCreativeTab(MFRCreativeTab.tab);
+		useNeighborBrightness = true; // THIS IS SET IN THE DUMBEST DAMN WAY ON FARMLAND
 	}
 
 	@Override
