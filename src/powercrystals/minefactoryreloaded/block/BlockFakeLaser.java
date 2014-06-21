@@ -41,7 +41,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		entity.attackEntityFrom(laserDamage, 2);
+		entity.attackEntityFrom(laserDamage, 4);
 		entity.setFire(10);
 	}
 

@@ -262,8 +262,9 @@ public class Vanilla
 		});
 		
 		MFRRegistry.registerSludgeDrop(50, new ItemStack(Blocks.sand));
-		MFRRegistry.registerSludgeDrop(40, new ItemStack(Blocks.dirt, 1, 1));
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.clay));
+		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.dirt, 1, 1));
+		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.dirt));
 		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.gravel));
 		MFRRegistry.registerSludgeDrop(5, new ItemStack(Blocks.soul_sand));
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Blocks.mycelium));
@@ -475,7 +476,34 @@ public class Vanilla
 		registerOreDictLaserOre( 20, "oreAmmonium", white, null);
 		registerOreDictLaserOre( 20, "oreCalcite", orange, null);
 		registerOreDictLaserOre( 20, "oreFluorite", silver, null);
-		registerOreDictLaserOre( 20, "oreMagnetite", black, null); // Added missing reactorcraft or, Magnetite, heavily used in building fusion reactor
+		registerOreDictLaserOre( 20, "oreMagnetite", black, null);
+		// focus also unknown
+		registerOreDictLaserOre( 20, "oreManganese", pink, null);
+		registerOreDictLaserOre( 20, "oreMeutoite", pink, null);
+		registerOreDictLaserOre( 20, "oreEximite", pink, null);
+		registerOreDictLaserOre( 20, "oreAtlarus", pink, null);
+		registerOreDictLaserOre( 20, "oreOrichalcum", pink, null);
+		registerOreDictLaserOre( 20, "oreRubracium", pink, null);
+		registerOreDictLaserOre( 20, "oreCarmot", pink, null);
+		registerOreDictLaserOre( 20, "oreAstralSilver", pink, null);
+		registerOreDictLaserOre( 20, "oreOureclase", pink, null);
+		registerOreDictLaserOre( 20, "oreInfuscolium", pink, null);
+		registerOreDictLaserOre( 20, "oreDeepIron", pink, null);
+		registerOreDictLaserOre( 20, "orePrometheum", pink, null);
+		registerOreDictLaserOre( 20, "oreSanguinite", pink, null);
+		registerOreDictLaserOre( 20, "oreVulcanite", pink, null);
+		registerOreDictLaserOre( 20, "oreKalendrite", pink, null);
+		registerOreDictLaserOre( 20, "oreAlduorite", pink, null);
+		registerOreDictLaserOre( 20, "oreCeruclase", pink, null);
+		registerOreDictLaserOre( 20, "oreVyroxeres", pink, null);
+		registerOreDictLaserOre( 20, "oreMidasium", pink, null);
+		registerOreDictLaserOre( 20, "oreLemurite", pink, null);
+		registerOreDictLaserOre( 20, "oreShadowIron", pink, null);
+		registerOreDictLaserOre( 20, "oreIgnatius", pink, null);
+		registerOreDictLaserOre( 20, "orePotash", pink, null);
+		registerOreDictLaserOre( 20, "oreBitumen", pink, null);
+		registerOreDictLaserOre( 20, "oreMagnesium", pink, null);
+		registerOreDictLaserOre( 20, "orePhosphorite", pink, null);
 	}
 	
 	private void registerOreDictLaserOre(int weight, String suffix, int focus, boolean isGem)
