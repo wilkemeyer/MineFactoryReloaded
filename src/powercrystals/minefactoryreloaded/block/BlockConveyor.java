@@ -186,6 +186,20 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 
 	@Override
 	@SideOnly(Side.CLIENT)
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity te = world.getTileEntity(x, y, z);
+		int dyeColor = 16;
+		if(te instanceof TileEntityConveyor)
+		{
+			dyeColor = ((TileEntityConveyor)te).getDyeColor();
+			if(dyeColor == -1) dyeColor = 16;
+		}
+		return colors[dyeColor];
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
 		if (renderPass == 1)
@@ -523,20 +537,6 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new TileEntityConveyor();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
-	{
-		TileEntity te = world.getTileEntity(x, y, z);
-		int dyeColor = 16;
-		if(te instanceof TileEntityConveyor)
-		{
-			dyeColor = ((TileEntityConveyor)te).getDyeColor();
-			if(dyeColor == -1) dyeColor = 16;
-		}
-		return getRenderColor(dyeColor);
 	}
 
 	@Override
