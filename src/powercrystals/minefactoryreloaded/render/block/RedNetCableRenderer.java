@@ -55,45 +55,38 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			compute(cage);
 
 			cable[5] = cableModels.get("cable").backfacedCopy();
-			CCModel.generateSidedModels(cable, 5, p);
-			calculateNormals(cable);
+			calculateSidedModels(cable, p);
 
 			iface[5] = cableModels.get("interface").backfacedCopy();
-			CCModel.generateSidedModels(iface, 5, p);
-			calculateNormals(iface);
+			calculateSidedModels(iface, p);
 
 			band[5] = cableModels.get("band").backfacedCopy();
-			CCModel.generateSidedModels(band, 5, p);
-			calculateNormals(band);
+			calculateSidedModels(band, p);
 
 			plate[5] = cableModels.get("plate").backfacedCopy();
-			CCModel.generateSidedModels(plate, 5, p);
-			calculateNormals(plate);
+			calculateSidedModels(plate, p);
 
 			platef[5] = cableModels.get("plateface").backfacedCopy();
-			CCModel.generateSidedModels(platef, 5, p);
-			calculateNormals(platef);
+			calculateSidedModels(platef, p);
 
 			grip[5] = cableModels.get("grip").backfacedCopy();
-			CCModel.generateSidedModels(grip, 5, p);
-			calculateNormals(grip);
+			calculateSidedModels(grip, p);
 
 			wire[5] = cableModels.get("wire").backfacedCopy();
-			CCModel.generateSidedModels(wire, 5, p);
-			calculateNormals(wire);
+			calculateSidedModels(wire, p);
 
 			caps[5] = cableModels.get("cap").backfacedCopy();
-			CCModel.generateSidedModels(caps, 5, p);
-			calculateNormals(caps);
+			calculateSidedModels(caps, p);
 		} catch (Throwable _) { _.printStackTrace(); }
 	}
 
-	private static void calculateNormals(CCModel[] m) { 
-		for (int i = m.length; i --> 0;) {
-			if (i == 4) // all 5 other sides are rotated correctly
-				m[i].apply(new Rotation(Math.PI, 1, 0, 0));
-			compute(m[i]);
-		}
+	private static void calculateSidedModels(CCModel[] m, Vector3 p) {
+		compute(m[4] = m[5].copy().apply(new Rotation(Math.PI * 1.0, 0, 1, 0)));
+		compute(m[3] = m[5].copy().apply(new Rotation(Math.PI * -.5, 0, 1, 0)));
+		compute(m[2] = m[5].copy().apply(new Rotation(Math.PI * 0.5, 0, 1, 0)));
+		compute(m[1] = m[5].copy().apply(new Rotation(Math.PI * 0.5, 0, 0, 1).with(new Rotation(Math.PI, 0, 1, 0))));
+		compute(m[0] = m[5].copy().apply(new Rotation(Math.PI * -.5, 0, 0, 1)));
+		compute(m[5]);
 	}
 
 	private static void compute(CCModel m) {
@@ -135,7 +128,6 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.reset();
 		CCRenderState.useNormals = true;
-		//CCRenderState.useModelColours(true);
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getTileEntity(x, y, z);
 		TileEntityRedNetEnergy _cond = null;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
