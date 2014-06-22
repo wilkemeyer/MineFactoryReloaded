@@ -494,7 +494,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
-		IndexedCuboid6 main = new IndexedCuboid6(1, subSelection[1]); 
+		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[1]); // main body
 		list.add(main);
 
 		ForgeDirection[] side = ForgeDirection.VALID_DIRECTIONS;
@@ -520,22 +520,23 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 								if (iface | mode == 4)
 									o += 6;
 								list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
-										subSelection[o]).setSide(i, i & 1).add(offset));
+										subSelection[o]).setSide(i, i & 1).add(offset)); // cable part or energy selection box
 							}
 							continue;
 						}
-					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
 					o = 2 + 6*2 + i;
-					if (c.isSingleSubnet)
+					if (c.isSingleSubnet) // color band
 						list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 					o += 6;
 					if (iface | (!forTrace & mode == 4))
 						o += 6;
+					// cable part or energy selection box
 					list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
 				}
 				else if (forTrace & f.isConnected && _cableMode[6] != 1)
 				{ // cable-only
-					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
 				}
 		}
 		main.add(offset);

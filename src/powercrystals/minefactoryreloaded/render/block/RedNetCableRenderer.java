@@ -4,6 +4,7 @@ import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.uv.IconTransformation;
+import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
@@ -86,13 +87,22 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			calculateNormals(caps);
 		} catch (Throwable _) { _.printStackTrace(); }
 	}
-	private static void calculateNormals(CCModel[] _m) { for (CCModel m : _m) compute(m); }
+
+	private static void calculateNormals(CCModel[] m) { 
+		for (int i = m.length; i --> 0;) {
+			if (i == 4) // all 5 other sides are rotated correctly
+				m[i].apply(new Rotation(Math.PI, 1, 0, 0));
+			compute(m[i]);
+		}
+	}
+
 	private static void compute(CCModel m) {
 		m.computeNormals();
 		m.apply(new Translation(0.5, 0.5, 0.5));
 		m.computeLighting(LightModel.standardLightModel);
 		//m.smoothNormals();
 	}
+
 	public static void updateUVT(IIcon icon) {
 		uvt = new IconTransformation(icon);
 		brightBand = MFRConfig.brightRednetBand.getBoolean(true);

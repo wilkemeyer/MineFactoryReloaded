@@ -5,10 +5,13 @@ import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelect
 
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
+import cofh.render.hitbox.CustomHitBox;
+import cofh.render.hitbox.ICustomHitBox;
 import cofh.util.position.BlockPosition;
 
 import gnu.trove.set.hash.THashSet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +35,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectio
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class TileEntityRedNetCable extends TileEntity implements INode
+public class TileEntityRedNetCable extends TileEntity implements INode, ICustomHitBox
 {
 	
 	protected int[] _sideColors = new int [6];
@@ -236,7 +239,7 @@ public class TileEntityRedNetCable extends TileEntity implements INode
 	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 		
-		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); 
+		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
 		
 		ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
@@ -256,24 +259,65 @@ public class TileEntityRedNetCable extends TileEntity implements INode
 							main.setSide(i, i & 1);
 						else {
 							o = 2 + 6*3 + i;
-							list.add((IndexedCuboid6)new IndexedCuboid6(1,
+							list.add((IndexedCuboid6)new IndexedCuboid6(1, // cable part
 									subSelection[o]).setSide(i, i & 1).add(offset));
 						}
 						continue;
 					}
-				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
 				o = 2 + 6*2 + i;
-				if (c.isSingleSubnet)
+				if (c.isSingleSubnet) // color band
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 				o += 6;
-				list.add((IndexedCuboid6)new IndexedCuboid6(1, subSelection[o]).add(offset));
+				list.add((IndexedCuboid6)new IndexedCuboid6(1, subSelection[o]).add(offset)); // cable part
 			}
 			else if (forTrace & f.isConnected && _cableMode[6] != 1)
 			{ // cable-only
-				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
 			}
 		}
 		main.add(offset);
+	}
+
+	@Override
+	public boolean shouldRenderCustomHitBox(int subHit)
+	{
+		return subHit < 2;
+	}
+
+	@Override
+	public CustomHitBox getCustomHitBox(int hit)
+	{
+		final List<IndexedCuboid6> list = new ArrayList<IndexedCuboid6>(7);
+		addTraceableCuboids(list, true, false);
+		IndexedCuboid6 cube = list.get(0);
+		cube.expand(0.003);
+		Vector3 min = cube.min, max = cube.max.sub(min);
+		CustomHitBox box = new CustomHitBox(max.x, max.y, max.z, min.x, min.y, min.z);
+		for (int i = 1, e = list.size(); i < e; ++i)
+		{
+			cube = list.get(i);
+			if (shouldRenderCustomHitBox((Integer)cube.data))
+			{
+				cube.sub(min);
+				if (cube.min.y < 0)
+					box.sideLength[0] = Math.max(box.sideLength[0], -cube.min.y);
+				if (cube.min.z < 0)
+					box.sideLength[2] = Math.max(box.sideLength[2], -cube.min.z);
+				if (cube.min.x < 0)
+					box.sideLength[4] = Math.max(box.sideLength[4], -cube.min.x);
+				cube.sub(max);
+				if (cube.max.y > 0)
+					box.sideLength[1] = Math.max(box.sideLength[1], cube.max.y);
+				if (cube.max.z > 0)
+					box.sideLength[3] = Math.max(box.sideLength[3], cube.max.z);
+				if (cube.max.x > 0)
+					box.sideLength[5] = Math.max(box.sideLength[5], cube.max.x);
+			}
+		}
+		for (int i = box.sideLength.length; i --> 0; )
+			box.drawSide[i] = box.sideLength[i] > 0;
+		return box;
 	}
 	
 	public boolean canInterface(TileEntityRedNetCable with)

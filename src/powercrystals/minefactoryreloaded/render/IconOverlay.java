@@ -137,18 +137,6 @@ public class IconOverlay implements IIcon {
 		return overlayIcon.getIconName();
 	}
 
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public int getSheetWidth() {
-		return overlayIcon.getSheetWidth();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getSheetHeight() {
-		return overlayIcon.getSheetHeight();
-	}//*/
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getIconWidth() {

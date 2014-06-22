@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.block;
 
-import codechicken.lib.raytracer.ExtendedMOP;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.BlockCoord;
@@ -8,6 +7,8 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.api.block.IBlockInfo;
 import cofh.api.block.IDismantleable;
+import cofh.render.hitbox.ICustomHitBox;
+import cofh.render.hitbox.RenderHitbox;
 import cofh.util.position.BlockPosition;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -163,7 +164,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			if (part == null)
 				return false;
 			
-			int subHit = ((ExtendedMOP)part).subHit;
+			int subHit = part.subHit;
 			side = _subSideMappings[subHit];
 
 			ItemStack s = player.inventory.getCurrentItem();
@@ -317,8 +318,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
 		}
 	}
-	
-	private ThreadLocal<Boolean> trace = new ThreadLocal<Boolean>();
 
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
@@ -326,7 +325,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
-			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true, trace.get() == Boolean.TRUE);
+			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true);
 		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
 	}
 
@@ -334,17 +333,18 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@SubscribeEvent
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
 		MovingObjectPosition mop = event.target;
-		if (mop.typeOfHit == MovingObjectType.BLOCK
-				&& event.player.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ).equals(this)) {
-			MovingObjectPosition part = RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
+		World world = event.player.worldObj;
+		int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
+		if (mop.typeOfHit == MovingObjectType.BLOCK && world.getBlock(x, y, z).equals(this)) {
+			MovingObjectPosition part = RayTracer.retraceBlock(world, event.player, x, y, z);
 			if (part == null)
 				return;
-			int subHit = ((ExtendedMOP)part).subHit;
-			if (subHit < 2 | (subHit >= (2 + 6 * 3) & subHit < (2 + 6 * 5)))
-			{ // extended checking for hitboxes behind hitboxes
-				trace.set(Boolean.TRUE);
-				RayTracer.retraceBlock(event.player.worldObj, event.player, mop.blockX, mop.blockY, mop.blockZ);
-				trace.set(null);
+			int subHit = part.subHit;
+			ICustomHitBox tile = ((ICustomHitBox) world.getTileEntity(x, y, z));
+			if (tile.shouldRenderCustomHitBox(subHit))
+			{
+				event.setCanceled(true);
+				RenderHitbox.drawSelectionBox(event.player, mop, event.partialTicks, tile.getCustomHitBox(subHit));
 			}
 		}
 	}
@@ -433,7 +433,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 				RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 		if (part == null)
 			return false;
-		int subHit = ((ExtendedMOP)part).subHit;
+		int subHit = part.subHit;
 		return subHit < (2 + 6 * 2) | (subHit > (2 + 6 * 3));
 	}
 
