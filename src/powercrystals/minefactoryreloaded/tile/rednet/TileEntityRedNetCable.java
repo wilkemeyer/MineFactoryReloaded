@@ -37,7 +37,6 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class TileEntityRedNetCable extends TileEntity implements INode, ICustomHitBox
 {
-	
 	protected int[] _sideColors = new int [6];
 	protected byte[] _cableMode = {0,0,0, 0,0,0, 0};
 	protected RedNetConnectionType[] _connectionState = {None,None,None, None,None,None};

@@ -1602,6 +1602,17 @@ public class Vanilla
 			Items.glass_bottle
 				} );
 		
+		{
+			ItemStack dirt = new ItemStack(Blocks.dirt);
+			ItemStack pine = new ItemStack(Blocks.leaves, 1, 1);
+		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.dirt, 1, 2), new Object[]
+				{
+			pine, pine, pine,
+			pine, dirt, pine,
+			pine, pine, pine
+				} );
+		}
+		
 		GameRegistry.addShapelessRecipe(new ItemStack(MineFactoryReloadedCore.fertileSoil), new Object[]
 				{
 			new ItemStack(Blocks.dirt, 1, 2),

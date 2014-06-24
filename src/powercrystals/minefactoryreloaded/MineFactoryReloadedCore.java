@@ -40,6 +40,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockSapling;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.ai.EntityMinecartMobSpawner;
 import net.minecraft.init.Blocks;
@@ -632,7 +633,7 @@ public class MineFactoryReloadedCore extends BaseMod
 					return obj == milkBucket || obj == this;
 				}
 			}.setUnlocalizedName("mfr.bucket.milk").setTextureName("minecraft:bucket_milk").
-			setCreativeTab(milkBucket.getCreativeTab());
+			setCreativeTab(CreativeTabs.tabMisc);
 			RegistryUtils.overwriteEntry(Item.itemRegistry, "minecraft:milk_bucket", Items.milk_bucket);
 		}
 	}

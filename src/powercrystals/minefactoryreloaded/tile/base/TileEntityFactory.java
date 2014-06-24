@@ -142,18 +142,18 @@ public abstract class TileEntityFactory extends TileEntity
 	{
 		if (worldObj != null && !worldObj.isRemote)
 		{
-			switch (reverse ? _forwardDirection.getOpposite() : _forwardDirection)
+			switch ((reverse ? _forwardDirection.getOpposite() : _forwardDirection).ordinal())
 			{
-			case NORTH:
+			case 2://NORTH:
 				_forwardDirection = ForgeDirection.EAST;
 				break;
-			case EAST:
+			case 5://EAST:
 				_forwardDirection = ForgeDirection.SOUTH;
 				break;
-			case SOUTH:
+			case 3://SOUTH:
 				_forwardDirection = ForgeDirection.WEST;
 				break;
-			case WEST:
+			case 4://WEST:
 				_forwardDirection = ForgeDirection.NORTH;
 				break;
 			default:
@@ -329,17 +329,13 @@ public abstract class TileEntityFactory extends TileEntity
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		switch (type)
-		{
-		case FLUID:
+		if (type == PipeType.FLUID)
 			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
-		case ITEM: 
+		if (type == PipeType.ITEM) 
 			return manageSolids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
-		case STRUCTURE:
+		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
-		default:
-			return ConnectOverride.DISCONNECT;
-		}
+		return ConnectOverride.DISCONNECT;
 	}
 	
 	// hoisted IMachine methods

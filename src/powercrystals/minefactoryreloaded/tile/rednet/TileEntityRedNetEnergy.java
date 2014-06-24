@@ -482,6 +482,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				if (!player.worldObj.isRemote) {
 					sideMode[ForgeDirection.OPPOSITES[side]] ^= 1;
 					RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
+					Packets.sendToAllPlayersWatching(this);
 				}
 				return true;
 			}

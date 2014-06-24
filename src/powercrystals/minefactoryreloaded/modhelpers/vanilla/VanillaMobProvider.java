@@ -71,6 +71,11 @@ public class VanillaMobProvider implements IRandomMobProvider
 		
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMinecartHopper.class, world), 15));
 		
+		EntityPig sheep = MFRUtil.prepareMob(EntityPig.class, world);
+		sheep.setCustomNameTag("SHEEP");
+		sheep.setAlwaysRenderNameTag(true);
+		mobs.add(new RandomMob(sheep, 10));
+		
 		EntityCreeper chargedCreeper = MFRUtil.prepareMob(EntityCreeper.class, world);
 		NBTTagCompound creeperNBT = new NBTTagCompound(); 
 		chargedCreeper.writeToNBT(creeperNBT);

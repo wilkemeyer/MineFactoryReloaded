@@ -128,6 +128,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.reset();
 		CCRenderState.useNormals = true;
+		CCRenderState.alphaOverride = 0xff;
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getTileEntity(x, y, z);
 		TileEntityRedNetEnergy _cond = null;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
