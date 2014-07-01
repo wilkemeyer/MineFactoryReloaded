@@ -42,7 +42,7 @@ import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
-import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 {
@@ -378,12 +378,12 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 
 		if((md & 0x0C) == 0)
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x + shrink, y, z + shrink,
+			return AxisAlignedBB.getBoundingBox(x + shrink, y, z + shrink,
 					x + 1 - shrink, y + 0.1F, z + 1 - shrink);
 		}
 		else
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x + shrink, y, z + shrink,
+			return AxisAlignedBB.getBoundingBox(x + shrink, y, z + shrink,
 					x + 1 - shrink, y + 0.01F, z + 1 - shrink);
 		}
 	}
@@ -395,11 +395,11 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 
 		if((md & 0x0C) == 0)
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x + 0.05F, y, z + 0.05F, x + 1 - 0.05F, y + 0.1F, z + 1 - 0.05F);
+			return AxisAlignedBB.getBoundingBox(x + 0.05F, y, z + 0.05F, x + 1 - 0.05F, y + 0.1F, z + 1 - 0.05F);
 		}
 		else
 		{
-			return AxisAlignedBB.getAABBPool().getAABB(x + 0.1F, y, z + 0.1F, x + 1 - 0.1F, y + 0.1F, z + 1 - 0.1F);
+			return AxisAlignedBB.getBoundingBox(x + 0.1F, y, z + 0.1F, x + 1 - 0.1F, y + 0.1F, z + 1 - 0.1F);
 		}
 	}
 

@@ -140,6 +140,8 @@ tile.mfr.vinescaffold.name = Vine Scaffolding
 
 tile.mfr.detcord.name = DetCord
 
+tile.mfr.farmland.name = Fertile Soil
+
 tile.mfr.rubberwood.sapling.name = Rubber Sapling
 tile.mfr.rubberwood.sapling.sacred.name = Sacred Rubber Sapling
 tile.mfr.rubberwood.sapling.mega.name = Mega Rubber Sapling

@@ -32,7 +32,7 @@ public interface IRedNetInputNode extends IRedNetConnection
 	 * @param y This block's Y coordinate.
 	 * @param z This block's Z coordinate.
 	 * @param side The side the input values are being changed on.
-	 * @param inputValues The new set of input values. This array will be 16 elements long.
+	 * @param inputValues The new set of input values. This array will be 16 elements long. Do not alter or cache.
 	 */
 	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues);
 

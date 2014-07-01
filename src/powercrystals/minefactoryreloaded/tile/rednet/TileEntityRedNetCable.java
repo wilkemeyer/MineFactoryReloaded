@@ -42,8 +42,8 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	protected RedNetConnectionType[] _connectionState = {None,None,None, None,None,None};
 	protected IRedNetLogicPoint[] _sideUpgrade = {null,null,null, null,null,null};
 	
-	private RedstoneNetwork _network;
-	private boolean _needsNetworkUpdate;
+	RedstoneNetwork _network;
+	boolean isRSNode = false;
 	
 	private static THashSet<Block> _connectionBlackList;
 	
@@ -78,7 +78,6 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	public void validate()
 	{
 		super.validate();
-		_needsNetworkUpdate = true;
 	}
 	
 	@Override
@@ -94,21 +93,9 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	}
 	
 	@Override
-	public void updateEntity()
+	public boolean canUpdate()
 	{
-		if(worldObj.isRemote)
-			return;
-		if(_network != null && _network.isInvalid())
-		{
-			_network = null;
-			_needsNetworkUpdate = true;
-		}
-		if(_needsNetworkUpdate)
-		{
-			_needsNetworkUpdate = false;
-			updateNetwork();
-		}
-		_network.tick();
+		return false;
 	}
 
 	@Override
@@ -120,11 +107,6 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	public void onNeighborTileChange(int x, int y, int z)
 	{
 		
-	}
-	
-	public void markForUpdate()
-	{
-		_needsNetworkUpdate = true;
 	}
 
 	@Override
@@ -279,13 +261,13 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	}
 
 	@Override
-	public boolean shouldRenderCustomHitBox(int subHit)
+	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player)
 	{
 		return subHit < 2;
 	}
 
 	@Override
-	public CustomHitBox getCustomHitBox(int hit)
+	public CustomHitBox getCustomHitBox(int hit, EntityPlayer player)
 	{
 		final List<IndexedCuboid6> list = new ArrayList<IndexedCuboid6>(7);
 		addTraceableCuboids(list, true, false);
@@ -296,7 +278,7 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 		for (int i = 1, e = list.size(); i < e; ++i)
 		{
 			cube = list.get(i);
-			if (shouldRenderCustomHitBox((Integer)cube.data))
+			if (shouldRenderCustomHitBox((Integer)cube.data, player))
 			{
 				cube.sub(min);
 				if (cube.min.y < 0)

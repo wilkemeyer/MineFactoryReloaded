@@ -23,7 +23,7 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		}
 		else if(item.equals(MineFactoryReloadedCore.rubberSaplingItem))
 		{
-			return 100;
+			return 130;
 		}
 		else if(item.equals(MineFactoryReloadedCore.sugarCharcoalItem))
 		{
@@ -31,11 +31,11 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		}
 		else if(item.equals(MineFactoryReloadedCore.rawRubberItem))
 		{
-			return 20;
+			return 30;
 		}
 		else if(item.equals(MineFactoryReloadedCore.bioFuelBucketItem))
 		{
-			return 32500;
+			return 22500;
 		}
 		
 		return 0;

@@ -5,7 +5,7 @@ import buildcraft.api.gates.ITriggerParameter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 public class TriggerIsReversed extends TriggerIsRunning
 {

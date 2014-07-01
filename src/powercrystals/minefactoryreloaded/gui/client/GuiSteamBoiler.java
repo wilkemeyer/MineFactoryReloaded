@@ -33,7 +33,7 @@ public class GuiSteamBoiler extends GuiFactoryInventory
 		}
 		else if(isPointInRegion(160, 15, 8, 60, mouseX, mouseY))
 		{
-			drawBarTooltip("Temperature", "C", (int)_boiler.getTemp(), TileEntitySteamBoiler.maxTemp, mouseX, mouseY);
+			drawBarTooltip("Temperature", "C", (int)_boiler.getTemp() + 20, TileEntitySteamBoiler.maxTemp + 20, mouseX, mouseY);
 		}
 		else
 			super.drawTooltips(mouseX, mouseY);

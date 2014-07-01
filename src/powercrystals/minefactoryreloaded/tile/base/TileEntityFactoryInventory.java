@@ -195,6 +195,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return false;
 	}
 	
+	protected boolean shouldPumpTank(IFluidTank tank)
+	{
+		return true;
+	}
+	
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return false;
@@ -213,7 +218,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		if(!worldObj.isRemote && shouldPumpLiquid())
 		{
 			for (IFluidTank tank : getTanks())
-				MFRLiquidMover.pumpLiquid(tank, this);
+				if (shouldPumpTank(tank))
+					MFRLiquidMover.pumpLiquid(tank, this);
 		}
 		
 		if (failedDrops != null)

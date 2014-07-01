@@ -266,7 +266,7 @@ public class MineFactoryReloadedClient
 		if(!mc.isGamePaused() && mc.currentScreen == null && mc.thePlayer != null && mc.thePlayer.inventory.getCurrentItem() != null
 				&& mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemRocketLauncher)
 		{
-			ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+			ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 			Point center = new Point(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2);
 
 			if(MineFactoryReloadedClient.instance.getLockedEntity() != Integer.MIN_VALUE)

@@ -177,7 +177,7 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 			else
 			{
 				
-				drawCenteredString(gui.fontRendererObj, _pinColorNames[_pin], posX + sizeX / 2, posY + sizeY / 2 - 4, getTextColor(mouseX, mouseY));
+				drawCenteredString(gui.getFontRenderer(), _pinColorNames[_pin], posX + sizeX / 2, posY + sizeY / 2 - 4, getTextColor(mouseX, mouseY));
 			}
 		}
 		else if(_buffer < 14)

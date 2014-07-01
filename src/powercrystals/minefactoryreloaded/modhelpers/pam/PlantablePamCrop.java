@@ -21,7 +21,7 @@ public class PlantablePamCrop implements IFactoryPlantable
 	public Item getSeed()
 	{
 		return _itemId;
-	}	@Override	public boolean canBePlanted(ItemStack stack)	{		// Auto-generated method stub		return true;	}
+	}	@Override	public boolean canBePlanted(ItemStack stack, boolean forFermenting)	{		// Auto-generated method stub		return true;	}
 	@Override
 	public ReplacementBlock getPlantedBlock(World world, int x, int y, int z, ItemStack stack)
 	{

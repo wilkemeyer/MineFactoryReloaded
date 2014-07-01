@@ -91,7 +91,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				if (item == null)
 					continue;
 				if (plantables.containsKey(item.getItem()) &&
-						plantables.get(item.getItem()).canBePlanted(item))
+						plantables.get(item.getItem()).canBePlanted(item, true))
 				{
 					int targetSlot = findMatchingSlot(_inventory[i]);
 					if (targetSlot < 0)
@@ -187,7 +187,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 			if(slot < 9)
 			{
 				IFactoryPlantable p = MFRRegistry.getPlantables().get(stack.getItem());
-				return p != null && p.canBePlanted(stack);
+				return p != null && p.canBePlanted(stack, true);
 			}
 		return false;
 	}

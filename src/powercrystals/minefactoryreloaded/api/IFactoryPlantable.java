@@ -18,9 +18,10 @@ public interface IFactoryPlantable
 
 	/**
 	 * @param stack The stack being planted.
+	 * @param forFermenting True if this stack will be converted to biofuel
 	 * @return True if this plantable can be planted (useful for metadata items).
 	 */
-	public boolean canBePlanted(ItemStack stack);
+	public boolean canBePlanted(ItemStack stack, boolean forFermenting);
 	
 	/**
 	 * @param world The world instance this block or item will be placed into.

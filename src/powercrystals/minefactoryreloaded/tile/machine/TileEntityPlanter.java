@@ -79,7 +79,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			}
 			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(availableStack.getItem());
 			
-			if (!plantable.canBePlanted(availableStack) ||
+			if (!plantable.canBePlanted(availableStack, false) ||
 					!plantable.canBePlantedHere(worldObj, bp.x, bp.y, bp.z, availableStack))
 				continue;
 
@@ -195,7 +195,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			if (slot > 9)
 			{
 				IFactoryPlantable p = MFRRegistry.getPlantables().get(stack.getItem());
-				return p != null && p.canBePlanted(stack);
+				return p != null && p.canBePlanted(stack, false);
 			}
 			else if (slot == 9)
 			{

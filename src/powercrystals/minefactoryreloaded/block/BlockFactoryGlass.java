@@ -95,7 +95,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		if (block == null)
 			return false;
 		block.setBlockBoundsBasedOnState(world, x, y, z);
-		return AxisAlignedBB.getAABBPool().getAABB(block.getBlockBoundsMinX(),
+		return AxisAlignedBB.getBoundingBox(block.getBlockBoundsMinX(),
 				block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(),
 				block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(),
 				block.getBlockBoundsMaxZ()).getAverageEdgeLength() >= 1.0D;

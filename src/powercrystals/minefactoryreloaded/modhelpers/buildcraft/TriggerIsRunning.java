@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 import buildcraft.api.gates.ITriggerParameter;
 

@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
+//this import brought to you by the department of redundancies department, the department that brought you this import
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
 import cofh.core.CoFHProps;
@@ -156,14 +157,13 @@ import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
 import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
-import powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
-// this import brought to you by the department of redundancies department, the department that brought you this import
 
 @Mod(modid = modId, name = modName, version = version, dependencies = dependencies)
 public class MineFactoryReloadedCore extends BaseMod
@@ -171,9 +171,9 @@ public class MineFactoryReloadedCore extends BaseMod
 	//static{DepLoader.load();}
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modName = "MineFactory Reloaded";
-	public static final String version = "1.7.2R2.8.0B2";
-	public static final String dependencies = CoFHProps.DEPENDENCIES
-			 + ";required-after:CoFHCore@[" + CoFHProps.VERSION + ",)";
+	public static final String version = "1.7.10R2.8.0B3";
+	public static final String dependencies = CoFHProps.DEPENDENCIES +
+			";required-after:CoFHCore@[" + CoFHProps.VERSION + ",)";
 	public static final String modNetworkChannel = "MFReloaded";
 
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy",

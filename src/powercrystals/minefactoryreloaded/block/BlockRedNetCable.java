@@ -341,10 +341,10 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 				return;
 			int subHit = part.subHit;
 			ICustomHitBox tile = ((ICustomHitBox) world.getTileEntity(x, y, z));
-			if (tile.shouldRenderCustomHitBox(subHit))
+			if (tile.shouldRenderCustomHitBox(subHit, event.player))
 			{
 				event.setCanceled(true);
-				RenderHitbox.drawSelectionBox(event.player, mop, event.partialTicks, tile.getCustomHitBox(subHit));
+				RenderHitbox.drawSelectionBox(event.player, mop, event.partialTicks, tile.getCustomHitBox(subHit, event.player));
 			}
 		}
 	}
@@ -392,12 +392,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block id, int meta)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable)
-		{
-			if (((TileEntityRedNetCable)te).getNetwork() != null)
-				((TileEntityRedNetCable)te).getNetwork().setInvalid();
-		}
 		super.breakBlock(world, x, y, z, id, meta);
 		for(ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
 		{
@@ -453,7 +447,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 
 			int subnet = ((TileEntityRedNetCable)te).getSideColor(ForgeDirection.getOrientation(side).getOpposite());
 			power = Math.min(Math.max(((TileEntityRedNetCable)te).getNetwork().getPowerLevelOutput(subnet), 0), 15);
-			RedstoneNetwork.log("Asked for weak power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
+			RedstoneNetwork.log("Asked for weak power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().hashCode() + ":" + subnet);
 		}
 		return power;
 	}
@@ -485,7 +479,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 			else
 			{
 				power = Math.min(Math.max(cable.getNetwork().getPowerLevelOutput(subnet), 0), 15);
-				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().getId() + ":" + subnet);
+				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().hashCode() + ":" + subnet);
 			}
 		}
 		return power;

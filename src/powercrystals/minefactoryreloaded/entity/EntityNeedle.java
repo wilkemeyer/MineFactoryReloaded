@@ -125,15 +125,15 @@ public class EntityNeedle extends Entity implements IProjectile
 		}
 		
 		++this.ticksInAir;
-		Vec3 pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
-		Vec3 nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+		Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+		Vec3 nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 		MovingObjectPosition hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
-		pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
-		nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+		pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+		nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 		
 		if(hit != null)
 		{
-			nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(hit.hitVec.xCoord, hit.hitVec.yCoord,	hit.hitVec.zCoord);
+			nextPos = Vec3.createVectorHelper(hit.hitVec.xCoord, hit.hitVec.yCoord,	hit.hitVec.zCoord);
 		}
 		
 		Entity entityHit = null;

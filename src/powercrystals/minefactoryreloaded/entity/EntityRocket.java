@@ -87,15 +87,15 @@ public class EntityRocket extends Entity
 		
 		if(!worldObj.isRemote)
 		{
-			Vec3 pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
-			Vec3 nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+			Vec3 nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			MovingObjectPosition hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
-			pos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX, this.posY, this.posZ);
-			nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+			nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			
 			if(hit != null)
 			{
-				nextPos = this.worldObj.getWorldVec3Pool().getVecFromPool(hit.hitVec.xCoord, hit.hitVec.yCoord,	hit.hitVec.zCoord);
+				nextPos = Vec3.createVectorHelper(hit.hitVec.xCoord, hit.hitVec.yCoord,	hit.hitVec.zCoord);
 			}
 			
 			Entity entityHit = null;
@@ -248,7 +248,7 @@ public class EntityRocket extends Entity
             double y = _lostTarget.getDouble("yTarget");
             double z = _lostTarget.getDouble("zTarget");
             List list = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.
-            		getAABBPool().getAABB(x - 5, y - 5, z - 5, x + 5, y + 5, z + 5));
+            		getBoundingBox(x - 5, y - 5, z - 5, x + 5, y + 5, z + 5));
             Iterator iterator = list.iterator();
 
             while (iterator.hasNext())
@@ -262,11 +262,11 @@ public class EntityRocket extends Entity
                     break findTarget;
                 }
             }
-            return worldObj.getWorldVec3Pool().getVecFromPool(x - posX, y - posY, z - posZ);
+            return Vec3.createVectorHelper(x - posX, y - posY, z - posZ);
 		}
 		if (_target != null)
 		{
-			return worldObj.getWorldVec3Pool().getVecFromPool(_target.posX - posX,
+			return Vec3.createVectorHelper(_target.posX - posX,
 					_target.posY - posY + _target.getEyeHeight(), _target.posZ - posZ);
 		}
 		return null;

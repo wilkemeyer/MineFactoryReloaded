@@ -285,7 +285,7 @@ public class CarbonContainer extends ItemBucket {
 		float f1 = entity.rotationPitch;
 		float f2 = entity.rotationYaw;
 		double y = entity.posY + entity.getEyeHeight() - entity.yOffset;
-		Vec3 vec3 = world.getWorldVec3Pool().getVecFromPool(entity.posX, y, entity.posZ);
+		Vec3 vec3 = Vec3.createVectorHelper(entity.posX, y, entity.posZ);
 		float f3 = MathHelper.cos(-f2 * 0.017453292F - (float)Math.PI);
 		float f4 = MathHelper.sin(-f2 * 0.017453292F - (float)Math.PI);
 		float f5 = -MathHelper.cos(-f1 * 0.017453292F);

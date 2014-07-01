@@ -41,7 +41,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 		int k = MathHelper.floor_double(bb.minZ + 0.001D);
 		int l = MathHelper.floor_double(bb.maxX - 0.001D);
 		int j1 = MathHelper.floor_double(bb.maxZ - 0.001D);
-		return hit.worldObj.getWorldVec3Pool().getVecFromPool((i + l) / 2, bb.minY + 0.25, (k + j1) / 2);
+		return Vec3.createVectorHelper((i + l) / 2, bb.minY + 0.25, (k + j1) / 2);
 	}
 
 	@Override

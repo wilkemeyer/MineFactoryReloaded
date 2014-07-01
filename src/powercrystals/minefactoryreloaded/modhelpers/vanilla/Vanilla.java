@@ -133,6 +133,7 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCocoa;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableNetherWart;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSoil;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableChicken;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableCow;
@@ -155,8 +156,8 @@ public class Vanilla
 	public void load(FMLInitializationEvent event)
 	{
 		MFRRegistry.registerPlantable(new PlantableSapling(Blocks.sapling));
-		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.brown_mushroom, Blocks.brown_mushroom));
-		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.red_mushroom, Blocks.red_mushroom));
+		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.brown_mushroom));
+		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.red_mushroom));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.pumpkin_seeds, Blocks.pumpkin_stem));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.melon_seeds, Blocks.melon_stem));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.wheat_seeds, Blocks.wheat));
@@ -165,6 +166,7 @@ public class Vanilla
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
 		MFRRegistry.registerPlantable(new PlantableCocoa(Items.dye, Blocks.cocoa, 3));
 		MFRRegistry.registerPlantable(new PlantableSapling(MineFactoryReloadedCore.rubberSaplingBlock));
+		MFRRegistry.registerPlantable(new PlantableSoil(MineFactoryReloadedCore.fertileSoil));
 		
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.log));
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.log2));

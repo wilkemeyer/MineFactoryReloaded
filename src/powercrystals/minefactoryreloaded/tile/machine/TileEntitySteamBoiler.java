@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -27,6 +28,12 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 								implements IFluidHandler
 {
 	public static final int maxTemp = 730;
+	public static final int getItemBurnTime(ItemStack stack)
+	{
+		// TODO: special-case some items (e.g., TE's dynamo)
+		return TileEntityFurnace.getItemBurnTime(stack) / 2;
+	}
+
 	private final int _liquidId;
 	private int _ticksUntilConsumption = 0;
 	private int _ticksSinceLastConsumption = 0;
@@ -71,6 +78,12 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 	
 	@SideOnly(Side.CLIENT)
+	public int getFuelConsumptionPerTick()
+	{
+		return 1 + (Math.abs(Math.max(_totalBurningTime, -180)) + 1063) / 1064;
+	}
+	
+	@SideOnly(Side.CLIENT)
 	public void setTemp(int temp)
 	{
 		_temp = (temp / 100f);
@@ -97,28 +110,36 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 			boolean active = _ticksSinceLastConsumption < _ticksUntilConsumption;
 			setIsActive(active);
 
-			_ticksSinceLastConsumption = Math.min(_ticksSinceLastConsumption + 1, _ticksUntilConsumption);
+			if (_ticksUntilConsumption > 0)
+			{
+				int inc = 1 + (Math.abs(_totalBurningTime) + 1063) / 1064;
+				_ticksSinceLastConsumption = Math.min(_ticksSinceLastConsumption + inc, _ticksUntilConsumption);
+			}
 			boolean skipConsumption = _ticksSinceLastConsumption < _ticksUntilConsumption;
 
 			if (active)
-				_totalBurningTime = Math.max(Math.min(_totalBurningTime + 1, 10649), -80);
-			else
+				_totalBurningTime = Math.max(Math.min(_totalBurningTime + 1, 10649), -180);
+			else if (_temp != 0)
 			{
-				_totalBurningTime = Math.max(_totalBurningTime - 16, -10649);
+				_totalBurningTime = Math.max(_totalBurningTime - 16, -(10649 * 2));
 				_ticksUntilConsumption = 0;
 			}
 			
-			if (_temp == 0 && !skipConsumption)
+			if (_temp == 0 && _inventory[3] == null)
 				return; // we're not burning anything and not changing the temp
 
-			float diff = (float)Math.cbrt(_totalBurningTime) / 22f;
-
-			_temp = Math.max(Math.min(_temp + (diff * diff * diff), maxTemp), 0);
-
-			if (_temp > 100)
+			if (_temp == maxTemp ? _totalBurningTime < 0 : _temp > 0 && _totalBurningTime != 0)
 			{
-				int i = drain(_tanks[1], 80, true);
-				_tanks[0].fill(new FluidStack(_liquidId, i + i / 2), true);
+				float diff = (float)Math.sqrt(Math.abs(_totalBurningTime)) / 103f;
+				diff = Math.copySign(diff, _totalBurningTime) / 1.26f;
+
+				_temp = Math.max(Math.min(_temp + (diff * diff * diff) / 50f, maxTemp), 0);
+			}
+
+			if (_temp > 80)
+			{
+				int i = drain(_tanks[1], 100, true);
+				_tanks[0].fill(new FluidStack(_liquidId, i * 4), true);
 			}
 
 			if (CoreUtils.isRedstonePowered(this))
@@ -153,7 +174,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		if (_inventory[3] == null)
 			return false;
 
-		int burnTime = TileEntityFurnace.getItemBurnTime(_inventory[3]) / 2;
+		int burnTime = getItemBurnTime(_inventory[3]);
 		if (burnTime <= 0)
 			return false;
 
@@ -196,15 +217,15 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
 		if (stack != null)
-			return TileEntityFurnace.getItemBurnTime(stack) > 0;
+			return getItemBurnTime(stack) > 0;
 
-			return false;
+		return false;
 	}
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
-		return TileEntityFurnace.getItemBurnTime(_inventory[slot]) <= 0;
+		return getItemBurnTime(_inventory[slot]) <= 0;
 	}
 	//}
 
@@ -213,6 +234,12 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	protected boolean shouldPumpLiquid()
 	{
 		return true;
+	}
+	
+	@Override
+	protected boolean shouldPumpTank(IFluidTank tank)
+	{
+		return tank == _tanks[0];
 	}
 	
 	@Override

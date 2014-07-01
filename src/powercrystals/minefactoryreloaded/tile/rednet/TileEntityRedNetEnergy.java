@@ -394,8 +394,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		
 		void erase(int side)
 		{
-			sourceCache[side] = null;
-			sinkCache[side] = null;
+			if (sourceCache != null)
+				sourceCache[side] = null;
+			if (sinkCache != null)
+				sinkCache[side] = null;
 		}
 		public boolean add(TileEntity tile, int side)
 		{

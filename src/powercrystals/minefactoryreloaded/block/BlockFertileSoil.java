@@ -47,6 +47,8 @@ public class BlockFertileSoil extends Block implements IGrowable
 	@Override
 	public boolean canSustainPlant(IBlockAccess world, int x, int y, int z, ForgeDirection direction, IPlantable plantable)
 	{
+		if (direction != ForgeDirection.UP)
+			return false;
 		EnumPlantType plantType = plantable.getPlantType(world, x, y + 1, z);
 
 		switch (plantType)
@@ -185,7 +187,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
-		return side != ForgeDirection.UP & side != ForgeDirection.DOWN;
+		return side != ForgeDirection.UP;
 	}
 
 	@Override

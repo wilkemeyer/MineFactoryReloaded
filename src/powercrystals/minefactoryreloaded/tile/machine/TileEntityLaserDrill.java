@@ -181,7 +181,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			{
 				if (!block.isAir(worldObj, xCoord, y, zCoord) &&
 						canReplaceBlock(block, worldObj, xCoord, y, zCoord))
-					if (worldObj.setBlockToAir(xCoord, y, zCoord))
+					if (worldObj.func_147480_a(xCoord, y, zCoord, true))
 						continue;
 				
 				if (block.isAssociatedBlock(Blocks.bedrock))

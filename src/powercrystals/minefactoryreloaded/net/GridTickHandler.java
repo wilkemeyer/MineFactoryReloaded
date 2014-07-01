@@ -10,6 +10,8 @@ import java.util.LinkedHashSet;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork;
+import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
 public class GridTickHandler<G extends IGrid, N extends INode>
@@ -25,6 +27,8 @@ public class GridTickHandler<G extends IGrid, N extends INode>
 	
 	public static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> energy =
 			new GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy>();
+	public static final GridTickHandler<RedstoneNetwork, TileEntityRedNetCable> redstone =
+			new GridTickHandler<RedstoneNetwork, TileEntityRedNetCable>();
 	
 	public void addGrid(G grid)
 	{

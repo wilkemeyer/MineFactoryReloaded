@@ -5,6 +5,10 @@ import java.util.List;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -43,6 +47,7 @@ import powercrystals.minefactoryreloaded.farmables.grindables.GrindableZombiePig
 
 public class VanillaMobProvider implements IRandomMobProvider
 {
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<RandomMob> getRandomMobs(World world)
 	{
@@ -72,6 +77,16 @@ public class VanillaMobProvider implements IRandomMobProvider
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMinecartHopper.class, world), 15));
 		
 		EntityPig sheep = MFRUtil.prepareMob(EntityPig.class, world);
+		for (EntityAITaskEntry a : (List<EntityAITaskEntry>)sheep.tasks.taskEntries)
+			if (a.action instanceof EntityAIPanic)
+			{
+				sheep.tasks.removeTask(a.action);
+				break;
+			}
+		sheep.tasks.addTask(1, new EntityAIAttackOnCollide(sheep, EntityPlayer.class, 1.5D, true));
+		sheep.targetTasks.addTask(1, new EntityAIHurtByTarget(sheep, false));
+		sheep.setCurrentItemOrArmor(0, new ItemStack(Items.golden_axe, 1, 5));
+		sheep.setEquipmentDropChance(0, Float.NEGATIVE_INFINITY);
 		sheep.setCustomNameTag("SHEEP");
 		sheep.setAlwaysRenderNameTag(true);
 		mobs.add(new RandomMob(sheep, 10));

@@ -25,6 +25,11 @@ public class PlantableStandard implements IFactoryPlantable
 	protected ReplacementBlock _plantedBlock;
 	protected int _validMeta;
 	
+	public PlantableStandard(Block block)
+	{
+		this(Item.getItemFromBlock(block), block);
+	}
+	
 	public PlantableStandard(Block block, Block plantedBlock)
 	{
 		this(Item.getItemFromBlock(block), plantedBlock);
@@ -44,7 +49,7 @@ public class PlantableStandard implements IFactoryPlantable
 	}
 	
 	@Override
-	public boolean canBePlanted(ItemStack stack)
+	public boolean canBePlanted(ItemStack stack, boolean forFermenting)
 	{
 		return _validMeta == WILDCARD || stack.getItemDamage() == _validMeta;
 	}

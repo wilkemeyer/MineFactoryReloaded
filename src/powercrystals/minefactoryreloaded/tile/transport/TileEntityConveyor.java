@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.tile.conveyor;
+package powercrystals.minefactoryreloaded.tile.transport;
 
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;

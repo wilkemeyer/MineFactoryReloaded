@@ -37,6 +37,6 @@ public class ListBoxElementCircuit implements IListBoxElement
 	@Override
 	public void draw(ElementListBox listBox, int x, int y, int backColor, int textColor)
 	{
-		listBox.getContainerScreen().fontRendererObj.drawString(StatCollector.translateToLocal(_circuit.getUnlocalizedName()), x, y, textColor);
+		listBox.getContainerScreen().getFontRenderer().drawString(StatCollector.translateToLocal(_circuit.getUnlocalizedName()), x, y, textColor);
 	}
 }
