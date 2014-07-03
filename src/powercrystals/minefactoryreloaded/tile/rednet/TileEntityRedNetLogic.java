@@ -366,7 +366,7 @@ public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
 				Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
 				if (b instanceof IRedNetNetworkContainer)
 				{
-					((IRedNetNetworkContainer)b).updateNetwork(worldObj, bp.x, bp.y, bp.z);
+					((IRedNetNetworkContainer)b).updateNetwork(worldObj, bp.x, bp.y, bp.z, o.getOpposite());
 				}
 				else if (b instanceof IRedNetInputNode)
 				{

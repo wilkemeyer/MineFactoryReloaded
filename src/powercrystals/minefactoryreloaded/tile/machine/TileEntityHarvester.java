@@ -26,7 +26,6 @@ import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -52,7 +51,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	public TileEntityHarvester()
 	{
 		super(Machine.Harvester);
-		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+		createHAM(this, 1);
 		setManageSolids(true);
 		
 		_settings = new HashMap<String, Boolean>();
@@ -81,7 +80,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		super.validate();
 		if (!worldObj.isRemote)
 		{
-			_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+			createHAM(this, 1);
 			onFactoryInventoryChanged();
 			if (_treeManager != null && _areaManager.getHarvestArea().contains(_treeManager.getOrigin()))
 			{

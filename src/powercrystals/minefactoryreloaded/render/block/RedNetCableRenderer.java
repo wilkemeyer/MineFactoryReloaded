@@ -148,7 +148,7 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 
 		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS) {
 			int side = f.ordinal();
-			RedNetConnectionType state = _cable.getConnectionState(f);
+			RedNetConnectionType state = _cable.getCachedConnectionState(f);
 			switch (state.flags & 31) {
 			case 11: // isCable, isSingleSubnet
 				tess.setBrightness(bandBrightness);

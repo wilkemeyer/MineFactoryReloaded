@@ -262,7 +262,7 @@ public class MFRConfig
 		rubberTreeBiomeBlacklist = c.get(subCategory, "Biome.Blacklist", new String[] {});
 		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
 		enableMassiveTree = c.get(subCategory, "SacredRubberSapling", true);
-		enableMassiveTree.comment = "If true, enable adding Sacred Rubber Sapling to jungle temple loot.";
+		enableMassiveTree.comment = "If true, enable adding enchanted Sacred Rubber Saplings to jungle temple loot.";
 		
 		subCategory = category + ".Lakes";
 		mfrLakeWorldGen = c.get(subCategory, "Enable", true);
@@ -284,9 +284,9 @@ public class MFRConfig
 		//}
 		
 		// Alternate recipe sets TODO: auto-register for config handling
-		vanillaRecipes = c.get("RecipeSets", "EnableVanillaRecipes", true);
+		vanillaRecipes = c.get("RecipeSets", "Vanilla", true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
-		thermalExpansionRecipes = c.get("RecipeSets", "EnableThermalExpansionRecipes", false);
+		thermalExpansionRecipes = c.get("RecipeSets", "ThermalExpansion", false);
 		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
 		//}
 
@@ -320,7 +320,7 @@ public class MFRConfig
 		enableCheapDSU = c.get(category, "CheaperDSU",  false);
 		enableCheapDSU.comment = "If true, the DSU can be built out of chests instead of ender pearls. Does nothing if the recipe is disabled.";
 		craftSingleDSU = c.get(category, "SingleDSU",  true);
-		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, GT recipes, etc).";
+		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, etc).";
 		enableMossyCobbleRecipe = c.get(category, "MossyCobble",  true);
 		enableMossyCobbleRecipe.comment = "If true, mossy cobble can be crafted.";
 		enablePortaSpawner = c.get(category, "PortaSpawner", true);

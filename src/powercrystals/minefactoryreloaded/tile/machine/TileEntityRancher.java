@@ -17,7 +17,6 @@ import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -30,7 +29,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	public TileEntityRancher()
 	{
 		super(Machine.Rancher);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		createEntityHAM(this);
 		setManageSolids(true);
 		setCanRotate(true);
 	}

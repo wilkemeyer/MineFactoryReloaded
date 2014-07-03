@@ -27,7 +27,6 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -54,7 +53,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	protected TileEntityGrinder(Machine machine)
 	{
 		super(machine);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1); 
+		createEntityHAM(this); 
 		_rand = new Random();
 		setManageSolids(true);
 		setCanRotate(true);

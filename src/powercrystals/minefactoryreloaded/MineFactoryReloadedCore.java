@@ -789,12 +789,6 @@ public class MineFactoryReloadedCore extends BaseMod
 			MFRRegistry.registerRubberTreeBiome(biome);
 		}
 
-		list = MFRConfig.rubberTreeBiomeBlacklist.getStringList();
-		for (String biome : list)
-		{
-			MFRRegistry.getRubberTreeBiomes().remove(biome);
-		}
-
 		list = MFRConfig.unifierBlacklist.getStringList();
 		for (String entry : list)
 		{
@@ -831,6 +825,13 @@ public class MineFactoryReloadedCore extends BaseMod
 	{
 		complete = true;
 		IMCHandler.processIMC(FMLInterModComms.fetchRuntimeMessages(this));
+
+		// catch biomes whitelisted via IMC that are in the config blacklist
+		String[] list = MFRConfig.rubberTreeBiomeBlacklist.getStringList();
+		for (String biome : list)
+		{
+			MFRRegistry.getRubberTreeBiomes().remove(biome);
+		}
 		_log.info("Load Complete.");
 	}
 

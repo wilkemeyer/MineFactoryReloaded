@@ -23,7 +23,6 @@ import net.minecraftforge.fluids.IFluidBlock;
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -39,7 +38,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	public TileEntityFountain()
 	{
 		super(Machine.Fountain);
-		_areaManager = new HarvestAreaManager(this, 0, 0, 0, 1.0f, false);
+		createHAM(this, 0, 0, 0, 1.0f, false);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
 		_areaManager.setUpgradeVertical(true);
 		_reverse = false;

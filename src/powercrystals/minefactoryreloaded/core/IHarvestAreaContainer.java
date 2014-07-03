@@ -4,5 +4,5 @@ public interface IHarvestAreaContainer
 {
 	public boolean hasHAM();
 	
-	public HarvestAreaManager getHAM();
+	public HarvestAreaManager<?> getHAM();
 }

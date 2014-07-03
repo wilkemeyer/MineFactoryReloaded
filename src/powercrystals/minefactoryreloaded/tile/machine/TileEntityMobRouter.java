@@ -1,9 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import static powercrystals.minefactoryreloaded.item.ItemSafariNet.getEntityClass;
-import static powercrystals.minefactoryreloaded.item.ItemSafariNet.isSingleUse;
-import static powercrystals.minefactoryreloaded.item.ItemSafariNet.isSafariNet;
+import static powercrystals.minefactoryreloaded.item.ItemSafariNet.*;
 
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,9 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiMobRouter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerMobRouter;
@@ -31,7 +28,7 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 	public TileEntityMobRouter()
 	{
 		super(Machine.MobRouter);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		createEntityHAM(this);
 		setCanRotate(true);
 	}
 	
@@ -94,7 +91,7 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 			}
 			if (match ^ _blacklist)
 			{
-				BlockPosition bp = BlockPosition.fromFactoryTile(this);
+				BlockPosition bp = BlockPosition.fromRotateableTile(this);
 				bp.moveBackwards(1);
 				entity.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
 				

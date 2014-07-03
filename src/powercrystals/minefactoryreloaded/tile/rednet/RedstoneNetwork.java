@@ -18,7 +18,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetOutputNode;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -56,7 +58,7 @@ public class RedstoneNetwork implements IGrid
 		}
 	}
 	
-	public RedstoneNetwork(World world)
+	private RedstoneNetwork(World world)
 	{
 		_world = world;
 		log = MFRConfig.redNetDebug.getBoolean(false);
@@ -65,6 +67,13 @@ public class RedstoneNetwork implements IGrid
 		{
 			_singleNodes.put(i, new LinkedHashSet<BlockPosition>());
 		}
+	}
+
+	public RedstoneNetwork(TileEntityRedNetCable base) { this(base.getWorldObj());
+		conduitSet = new LinkedHashSet<TileEntityRedNetCable>();
+		regenerating = true;
+		addConduit(base);
+		regenerating = false;
 	}
 	
 	public void tick()
@@ -244,6 +253,11 @@ public class RedstoneNetwork implements IGrid
 		return nodeSet.size();
 	}
 	
+	public int getPowerLevelOutput(int subnet)
+	{
+		return _powerLevelOutput[subnet];
+	}
+	
 	@Override
 	public String toString() {
 		return "RedstoneEnergyNetwork@" + Integer.toString(hashCode()) + "" +
@@ -251,11 +265,6 @@ public class RedstoneNetwork implements IGrid
 	}
 	
 	 /// OLD CODE
-	
-	public int getPowerLevelOutput(int subnet)
-	{
-		return _powerLevelOutput[subnet];
-	}
 	
 	public boolean isWeakNode(BlockPosition node)
 	{
@@ -320,7 +329,7 @@ public class RedstoneNetwork implements IGrid
 			_weakNodes.remove(node);
 		}
 		
-		int power = getSingleNodePowerLevel(node);
+		int power = getSingleNodePowerLevel(node, subnet);
 		RedstoneNetwork.log("Network with ID %d:%d calculated power for node %s as %d", hashCode(), subnet, node.toString(), power);
 		if(Math.abs(power) > Math.abs(_powerLevelOutput[subnet]))
 		{
@@ -411,7 +420,7 @@ public class RedstoneNetwork implements IGrid
 			{
 				continue;
 			}
-			int power = getSingleNodePowerLevel(node);
+			int power = getSingleNodePowerLevel(node, subnet);
 			if(Math.abs(power) > Math.abs(_powerLevelOutput[subnet]))
 			{
 				_powerLevelOutput[subnet] = power;
@@ -495,9 +504,9 @@ public class RedstoneNetwork implements IGrid
 		if(isNodeLoaded(node))
 		{
 			Block block = _world.getBlock(node.x, node.y, node.z);
-			if(block instanceof IRedNetOmniNode)
+			if(block instanceof IRedNetInputNode)
 			{
-				((IRedNetOmniNode)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
+				((IRedNetInputNode)block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
 			}
 		}
 	}
@@ -519,27 +528,31 @@ public class RedstoneNetwork implements IGrid
 		}
 	}
 	
-	private int getSingleNodePowerLevel(BlockPosition node)
+	private int getSingleNodePowerLevel(BlockPosition node, int subnet)
 	{
-		if(!isNodeLoaded(node))
+		if (!isNodeLoaded(node))
 		{
 			return 0;
 		}
 		
-		int offset = 0;
 		Block block = _world.getBlock(node.x, node.y, node.z);
+		if (block instanceof IRedNetOutputNode)
+		{
+			return ((IRedNetOutputNode)block).getOutputValue(_world, node.x, node.y, node.z, node.orientation, subnet);
+		}
+
+		int offset = 0;
 		if (block.equals(Blocks.redstone_wire))
 		{
 			offset = -1;
 		}
 		
 		int ret = 0;
-		
-		if(_weakNodes.contains(node) || block instanceof IRedNetOmniNode)
+		if (_weakNodes.contains(node))
 		{
 			int weakPower = _world.getIndirectPowerLevelTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
 			int strongPower = _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
-			ret = Math.abs(weakPower) > Math.abs(strongPower) ? weakPower : strongPower;
+			ret = Math.max(weakPower, strongPower);
 		}
 		else
 		{
@@ -550,4 +563,6 @@ public class RedstoneNetwork implements IGrid
 			return 0;
 		return ret;
 	}
+	
+	
 }

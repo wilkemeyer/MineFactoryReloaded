@@ -41,14 +41,15 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		long t = entity.getEntityData().getLong("mfr:laserTime");
-		int d = entity.getEntityData().getInteger("mfr:laserDamage") | 2;
-		if (entity.attackEntityFrom(laserDamage, d))
+		if (world.isRemote)
+			return;
+		long t = entity.getEntityData().getLong("mfr:laserTime"), t2 = world.getTotalWorldTime();
+		t = t2 - t; 
+		int d = t/20 >= 5 ? 1 : entity.getEntityData().getInteger("mfr:laserDamage") | 1;
+		if (t > 10 && entity.attackEntityFrom(laserDamage, d))
 		{
-			long t2 = world.getTotalWorldTime();
-			entity.getEntityData().setLong("mfr:laserTime", t2);
-			if ((t2 - t) / 20 < 3)
-				entity.getEntityData().setInteger("mfr:laserDamage", d * 2);
+			entity.getEntityData().setLong("mfr:laserTime", t2 + (d == 1 ? 20 : 0));
+			entity.getEntityData().setInteger("mfr:laserDamage", d * 2);
 		}
 		entity.setFire(15);
 	}

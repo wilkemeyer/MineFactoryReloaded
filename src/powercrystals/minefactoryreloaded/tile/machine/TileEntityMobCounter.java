@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
@@ -15,7 +14,7 @@ public class TileEntityMobCounter extends TileEntityFactory
 	public TileEntityMobCounter()
 	{
 		super(Machine.MobCounter);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		createEntityHAM(this);
 		setCanRotate(true);
 	}
 	

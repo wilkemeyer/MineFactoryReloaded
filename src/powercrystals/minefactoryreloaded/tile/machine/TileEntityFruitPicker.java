@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.position.Area;
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -12,13 +14,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.core.FruitHarvestManager;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -37,7 +36,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	public TileEntityFruitPicker()
 	{
 		super(Machine.FruitPicker);
-		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+		createHAM(this, 1);
 		_rand = new Random();
 		setManageSolids(true);
 		setCanRotate(true);

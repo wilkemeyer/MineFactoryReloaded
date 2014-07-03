@@ -27,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
@@ -99,13 +100,15 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = false;
 			// This method is only ever called from the same thread as the tick handler
 			// so this method can be safely called *here* without worrying about threading
-			updateInternalTypes();
+			updateInternalTypes(RedstoneEnergyNetwork.HANDLER);
 		}
 	}
 
 	@Override
-	public void firstTick() {
+	public void firstTick(IGridController grid) {
+		super.firstTick(grid);
 		if (worldObj == null || worldObj.isRemote) return;
+		if (grid != RedstoneEnergyNetwork.HANDLER) return;
 		reCache();
 		if (_grid == null) {
 			incorporateTiles();
@@ -219,6 +222,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		data.setInteger("mode[2]", sideMode[0] | (sideMode[1] << 8) | (sideMode[2] << 16) |
 				(sideMode[3] << 24));
 		data.setInteger("mode[3]", sideMode[4] | (sideMode[5] << 8) | (sideMode[6] << 16));
+		data.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
+				(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
+				(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
@@ -226,21 +232,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
+		super.onDataPacket(net, pkt);
 		NBTTagCompound data = pkt.func_148857_g();
 		switch (pkt.func_148853_f())
 		{
 		case 0:
-			_sideColors = data.getIntArray("colors");
-			int mode = data.getInteger("mode[0]");
-			_cableMode[0] = (byte)(mode & 0xFF);
-			_cableMode[1] = (byte)((mode >> 8) & 0xFF);
-			_cableMode[2] = (byte)((mode >> 16) & 0xFF);
-			_cableMode[3] = (byte)((mode >> 24) & 0xFF);
-			mode = data.getInteger("mode[1]");
-			_cableMode[4] = (byte)(mode & 0xFF);
-			_cableMode[5] = (byte)((mode >> 8) & 0xFF);
-			_cableMode[6] = (byte)((mode >> 16) & 0xFF);
-			mode = data.getInteger("mode[2]");
+			int mode = data.getInteger("mode[2]");
 			sideMode[0] = (byte)(mode & 0xFF);
 			sideMode[1] = (byte)((mode >> 8) & 0xFF);
 			sideMode[2] = (byte)((mode >> 16) & 0xFF);
@@ -462,8 +459,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void updateInternalTypes() {
+	public void updateInternalTypes(IGridController grid) {
+		super.updateInternalTypes(grid);
 		if (deadCache) return;
+		if (grid != RedstoneEnergyNetwork.HANDLER) return;
 		isNode = false;
 		for (int i = 0; i < 6; i++) {
 			int mode = sideMode[i] >> 1;
@@ -575,10 +574,5 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			info.add("Node: " + isNode);
 			return;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "(x="+xCoord+",y="+yCoord+",z="+zCoord+")@"+System.identityHashCode(this);
 	}
 }

@@ -23,7 +23,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSewer;
@@ -40,7 +39,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	public TileEntitySewer()
 	{
 		super(Machine.Sewer);
-		_areaManager = new HarvestAreaManager(this, 0, 1, 0);
+		createHAM(this, 0, 1, 0, false);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
 	}
 	
@@ -81,7 +80,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		
 		if (_nextSewerCheckTick <= worldObj.getTotalWorldTime())
 		{
-			Area a = new Area(BlockPosition.fromFactoryTile(this), _areaManager.getRadius(), 0, 0);
+			Area a = new Area(BlockPosition.fromRotateableTile(this), _areaManager.getRadius(), 0, 0);
 			_jammed = false;
 			for (BlockPosition bp : a.getPositionsBottomFirst())
 			{

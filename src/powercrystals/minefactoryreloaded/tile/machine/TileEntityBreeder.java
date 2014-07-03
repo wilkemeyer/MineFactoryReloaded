@@ -14,7 +14,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -28,7 +27,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 	public TileEntityBreeder()
 	{
 		super(Machine.Breeder);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		createEntityHAM(this);
 		setManageSolids(true);
 		setCanRotate(true);
 	}

@@ -52,7 +52,7 @@ public abstract class TileEntityFactory extends TileEntity
 	
 	protected int _rednetState;
 	
-	protected HarvestAreaManager _areaManager;
+	protected HarvestAreaManager<TileEntityFactory> _areaManager;
 	protected Machine _machine;
 	
 	protected String _owner = "";
@@ -89,6 +89,40 @@ public abstract class TileEntityFactory extends TileEntity
 			MineFactoryReloadedClient.removeTileFromAreaList(this);
 		}
 	}
+
+	/**
+	 * Used to create HarvestAreas for entity-interacting machines.
+	 */
+	protected static void createEntityHAM(TileEntityFactory owner)
+	{
+		createHAM(owner, 2, 2, 1, 1.0f, false);
+	}
+
+	/**
+	 * Used to create HarvestAreas for block-interacting machines
+	 */
+	protected static void createHAM(TileEntityFactory owner, int harvestRadius)
+	{
+		createHAM(owner, harvestRadius, 0, 0, 1.0f, true);
+	}
+
+	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown)
+	{
+		createHAM(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, true);
+	}
+	
+	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
+			boolean usesBlocks)
+	{
+		createHAM(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, usesBlocks);
+	}
+	
+	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
+			float upgradeModifier, boolean usesBlocks)
+	{
+		owner._areaManager = new HarvestAreaManager<TileEntityFactory>(owner, harvestRadius, harvestAreaUp, harvestAreaDown,
+				upgradeModifier, usesBlocks);
+	}
 	
 	@Override
 	public boolean hasHAM()
@@ -97,7 +131,7 @@ public abstract class TileEntityFactory extends TileEntity
 	}
 	
 	@Override
-	public HarvestAreaManager getHAM()
+	public HarvestAreaManager<TileEntityFactory> getHAM()
 	{
 		return _areaManager;
 	}

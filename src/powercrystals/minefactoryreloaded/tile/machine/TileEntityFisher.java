@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
@@ -29,7 +28,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	public TileEntityFisher()
 	{
 		super(Machine.Fisher);
-		_areaManager = new HarvestAreaManager(this, 1, 0, 0);
+		createHAM(this, 1);
 		setManageSolids(true);
 	}
 	

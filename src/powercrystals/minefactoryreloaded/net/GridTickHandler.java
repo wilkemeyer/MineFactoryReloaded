@@ -8,13 +8,14 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import powercrystals.minefactoryreloaded.core.IGrid;
+import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class GridTickHandler<G extends IGrid, N extends INode>
+public class GridTickHandler<G extends IGrid, N extends INode> implements IGridController
 {
 	private LinkedHashSet<G> tickingGridsToRegenerate = new LinkedHashSet<G>();
 	private LinkedHashSet<G> tickingGridsToAdd = new LinkedHashSet<G>();
@@ -99,7 +100,7 @@ public class GridTickHandler<G extends IGrid, N extends INode>
 				{
 					cond = iter.next();
 					if (!cond.isNotValid())
-						cond.updateInternalTypes();
+						cond.updateInternalTypes(this);
 				}
 				conduit.clear();
 			} catch(Throwable _) {
@@ -157,7 +158,7 @@ public class GridTickHandler<G extends IGrid, N extends INode>
 				{
 					cond = iter.next();
 					if (!cond.isNotValid())
-						cond.firstTick();
+						cond.firstTick(this);
 				}
 				conduit.clear();
 			} catch(Throwable _) {

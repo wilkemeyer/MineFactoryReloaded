@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -9,8 +10,6 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import cofh.util.position.BlockPosition;
-import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiChronotyper;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerChronotyper;
@@ -24,7 +23,7 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered
 	public TileEntityChronotyper()
 	{
 		super(Machine.Chronotyper);
-		_areaManager = new HarvestAreaManager(this, 2, 2, 1);
+		createEntityHAM(this);
 		setCanRotate(true);
 	}
 	
@@ -61,7 +60,7 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered
 			EntityAgeable a = (EntityAgeable)o;
 			if((a.getGrowingAge() < 0 && !_moveOld) || (a.getGrowingAge() >= 0 && _moveOld))
 			{
-				BlockPosition bp = BlockPosition.fromFactoryTile(this);
+				BlockPosition bp = BlockPosition.fromRotateableTile(this);
 				bp.moveBackwards(1);
 				a.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
 				

@@ -56,7 +56,7 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered
 			ItemBlock item = (ItemBlock)stack.getItem();
             Block block = item.field_150939_a;
 			
-			BlockPosition bp = BlockPosition.fromFactoryTile(this);
+			BlockPosition bp = BlockPosition.fromRotateableTile(this);
 			bp.moveForwards(1);
 			if (worldObj.isAirBlock(bp.x, bp.y, bp.z) &&
 					block.canPlaceBlockOnSide(worldObj, bp.x, bp.y, bp.z, 0))

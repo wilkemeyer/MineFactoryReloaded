@@ -16,9 +16,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.api.IUpgrade;
 import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 
-public class HarvestAreaManager
+public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 {
-	private IRotateableTile _owner;
+	private T _owner;
 	
 	private int _originX;
 	private int _originY;
@@ -44,19 +44,7 @@ public class HarvestAreaManager
 	private float _upgradeModifier;
 	private boolean hasDirtyUpgrade;
 	
-	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
-			int harvestAreaUp, int harvestAreaDown)
-	{
-		this(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, true);
-	}
-	
-	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
-			int harvestAreaUp, int harvestAreaDown, boolean usesBlocks)
-	{
-		this(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, usesBlocks);
-	}
-	
-	public HarvestAreaManager(IRotateableTile owner, int harvestRadius,
+	public HarvestAreaManager(T owner, int harvestRadius,
 			int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
 	{
 		_owner = owner;
@@ -206,9 +194,9 @@ public class HarvestAreaManager
 		
 		if(		(_overrideDirection != ForgeDirection.UNKNOWN && _originOrientation != _overrideDirection)
 				|| (_overrideDirection == ForgeDirection.UNKNOWN && _originOrientation != _owner.getDirectionFacing())
-				|| _originX != ((TileEntity)_owner).xCoord + _originOffsetX
-				|| _originY != ((TileEntity)_owner).yCoord + _originOffsetY
-				|| _originZ != ((TileEntity)_owner).zCoord + _originOffsetZ)
+				|| _originX != _owner.xCoord + _originOffsetX
+				|| _originY != _owner.yCoord + _originOffsetY
+				|| _originZ != _owner.zCoord + _originOffsetZ)
 		{
 			recalculateArea();
 		}
@@ -216,7 +204,7 @@ public class HarvestAreaManager
 	
 	private void recalculateArea()
 	{
-		BlockPosition ourpos = BlockPosition.fromFactoryTile(_owner);
+		BlockPosition ourpos = BlockPosition.fromRotateableTile(_owner);
 		if (_overrideDirection != ForgeDirection.UNKNOWN)
 		{
 			ourpos.orientation = _overrideDirection;

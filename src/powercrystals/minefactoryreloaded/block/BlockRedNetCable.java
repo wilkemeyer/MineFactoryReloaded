@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.BlockCoord;
@@ -40,9 +42,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
-import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
@@ -195,7 +195,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 						return true;
 					}
 				}
-				else if (s != null && s.getItem().equals(MineFactoryReloadedCore.rednetMeterItem))
+				else if (s != null && s.getItem().equals(rednetMeterItem))
 				{
 					// TODO: move to client-side when forge fixes player.getEyeHeight on client
 					if (!world.isRemote)
@@ -272,7 +272,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 						}
 					}
 				}
-				else if (s != null && s.getItem().equals(MineFactoryReloadedCore.rednetMeterItem))
+				else if (s != null && s.getItem().equals(rednetMeterItem))
 				{
 					// TODO: move to client-side when forge fixes player.getEyeHeight on client
 					if (!world.isRemote)
@@ -365,16 +365,16 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockId)
 	{
 		super.onNeighborBlockChange(world, x, y, z, blockId);
-		if (blockId.equals(this) || world.isRemote)
+		if (world.isRemote)
 		{
 			return;
 		}
 		RedstoneNetwork.log("Cable block at %d, %d, %d got update from ID %d", x, y, z, blockId);
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable)
+		if (te instanceof TileEntityRedNetCable)
 		{
-			((TileEntityRedNetCable)te).markForUpdate();
+			((TileEntityRedNetCable)te).onNeighborBlockChange();
 		}
 	}
 	
@@ -383,27 +383,30 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
     {
 		TileEntity te = world.getTileEntity(x, y, z);
 		
-		if(te instanceof TileEntityRedNetCable)
+		if (te instanceof TileEntityRedNetCable)
 		{
 			((TileEntityRedNetCable)te).onNeighborTileChange(tileX, tileY, tileZ);
 		}
     }
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block id, int meta)
+	public void breakBlock(World world, int X, int Y, int Z, Block id, int meta)
 	{
-		super.breakBlock(world, x, y, z, id, meta);
-		for(ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
+		super.breakBlock(world, X, Y, Z, id, meta);
+		for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
 		{
-			BlockPosition bp = new BlockPosition(x, y, z);
-			bp.orientation = d;
-			bp.moveForwards(1);
-			if (!world.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.rednetCableBlock))
+			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
+			if (world.blockExists(x, y, z) && !world.getBlock(x, y, z).equals(rednetCableBlock))
 			{
-				world.notifyBlockOfNeighborChange(bp.x, bp.y, bp.z,
-						MineFactoryReloadedCore.rednetCableBlock);
-				world.notifyBlocksOfNeighborChange(bp.x, bp.y, bp.z,
-						MineFactoryReloadedCore.rednetCableBlock);
+				world.notifyBlockOfNeighborChange(x, y, z, rednetCableBlock);
+				for (ForgeDirection d2 : ForgeDirection.VALID_DIRECTIONS)
+				{
+					if (d2.getOpposite() == d)
+						continue;
+					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
+					if (world.blockExists(x2, y2, z2) && !world.getBlock(x2, y2, z2).equals(rednetCableBlock))
+						world.notifyBlockOfNeighborChange(x2, y2, z2, rednetCableBlock);
+				}
 			}
 		}
 	}
@@ -412,8 +415,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
-		ItemStack machine = new ItemStack(getItemDropped(meta, world.rand, 0), 1,
-				damageDropped(meta));
+		ItemStack machine = new ItemStack(getItemDropped(meta, world.rand, 0), 1, damageDropped(meta));
 		world.setBlockToAir(x, y, z);
 		if (!returnBlock)
 			dropBlockAsItem(world, x, y, z, machine);
@@ -438,16 +440,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
-			TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
-			RedNetConnectionType state = cable.getConnectionState(ForgeDirection.getOrientation(side).getOpposite());
-			if(cable.getNetwork() == null || !state.isConnected | !state.isSingleSubnet)
-			{
-				return 0;
-			}
-
-			int subnet = ((TileEntityRedNetCable)te).getSideColor(ForgeDirection.getOrientation(side).getOpposite());
-			power = Math.min(Math.max(((TileEntityRedNetCable)te).getNetwork().getPowerLevelOutput(subnet), 0), 15);
-			RedstoneNetwork.log("Asked for weak power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().hashCode() + ":" + subnet);
+			power = ((TileEntityRedNetCable)te).getWeakPower(ForgeDirection.getOrientation(side).getOpposite());
 		}
 		return power;
 	}
@@ -459,28 +452,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetCable)
 		{
-			TileEntityRedNetCable cable = ((TileEntityRedNetCable)te);
-			RedNetConnectionType state = cable.getConnectionState(ForgeDirection.getOrientation(side).getOpposite());
-			if(cable.getNetwork() == null || !state.isConnected | !state.isSingleSubnet)
-			{
-				return 0;
-			}
-
-			BlockPosition nodebp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side).getOpposite());
-			nodebp.moveForwards(1);
-
-			int subnet = cable.getSideColor(nodebp.orientation);
-
-			if(cable.getNetwork().isWeakNode(nodebp))
-			{
-				power = 0;
-				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - weak node, power 0");
-			}
-			else
-			{
-				power = Math.min(Math.max(cable.getNetwork().getPowerLevelOutput(subnet), 0), 15);
-				RedstoneNetwork.log("Asked for strong power at " + x + "," + y + "," + z + ";" + ForgeDirection.getOrientation(side).getOpposite() + " - got " + power + " from network " + ((TileEntityRedNetCable)te).getNetwork().hashCode() + ":" + subnet);
-			}
+			power = ((TileEntityRedNetCable)te).getStrongPower(ForgeDirection.getOrientation(side).getOpposite());
 		}
 		return power;
 	}
@@ -517,7 +489,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public int getRenderType()
 	{
-		return MineFactoryReloadedCore.renderIdRedNet;
+		return renderIdRedNet;
 	}
 
 	@Override
@@ -529,24 +501,22 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	}
 
 	@Override
-	public void updateNetwork(World world, int x, int y, int z)
+	public void updateNetwork(World world, int x, int y, int z, ForgeDirection from)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
+		if (te instanceof TileEntityRedNetCable)
 		{
-			//((TileEntityRedNetCable)te).getNetwork().updatePowerLevels();
-			((TileEntityRedNetCable)te).updateNodes();
+			((TileEntityRedNetCable)te).updateNearbyNode(from);
 		}
 	}
 
 	@Override
-	public void updateNetwork(World world, int x, int y, int z, int subnet)
+	public void updateNetwork(World world, int x, int y, int z, int subnet, ForgeDirection from)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof TileEntityRedNetCable && ((TileEntityRedNetCable)te).getNetwork() != null)
+		if (te instanceof TileEntityRedNetCable)
 		{
-			//((TileEntityRedNetCable)te).getNetwork().updatePowerLevels(subnet);
-			((TileEntityRedNetCable)te).updateNodes();
+			((TileEntityRedNetCable)te).updateNearbyNode(subnet, from);
 		}
 	}
 

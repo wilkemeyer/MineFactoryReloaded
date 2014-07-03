@@ -29,7 +29,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	public boolean activateMachine()
 	{		
-		BlockPosition bp = BlockPosition.fromFactoryTile(this);
+		BlockPosition bp = BlockPosition.fromRotateableTile(this);
 		bp.moveForwards(1);
 		Block block = worldObj.getBlock(bp.x, bp.y, bp.z);
 		int blockMeta = worldObj.getBlockMetadata(bp.x, bp.y, bp.z);
