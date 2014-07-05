@@ -11,7 +11,6 @@ import cofh.api.block.IBlockInfo;
 import cofh.api.block.IDismantleable;
 import cofh.render.hitbox.ICustomHitBox;
 import cofh.render.hitbox.RenderHitbox;
-import cofh.util.position.BlockPosition;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -148,7 +147,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side);
+		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
 		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
 		{
 			return false;

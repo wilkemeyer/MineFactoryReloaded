@@ -190,9 +190,15 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	@Override
 	public void updateInternalTypes(IGridController grid)
 	{
+		boolean lastNode = isRSNode;
 		if (grid != RedstoneNetwork.HANDLER) return;
 		for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
 			updateNearbyNode(d);
+		isRSNode = false;
+		for (int i = _connectionState.length; i --> 0; )
+			isRSNode |= _connectionState[i].isConnected;
+		if (lastNode != isRSNode)
+			_network.addConduit(this);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
@@ -241,12 +247,23 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 		{
 			return 0;
 		}
+
+		BlockPosition nodebp = new BlockPosition(xCoord, yCoord, zCoord, to);
+		nodebp.step(to);
 		
-		int subnet = getSideColor(to);
+		int subnet = getSideColor(to), power;
 		
 		RedstoneNetwork.log("Asked for weak power at " + xCoord + "," + yCoord + "," + zCoord + ";" + to);
-		int power = Math.min(Math.max(_network.getPowerLevelOutput(subnet), 0), 15);
-		RedstoneNetwork.log("\t- got " + power + " from network " + _network.hashCode() + ":" + subnet);
+		if (_network.isPowerProvider(subnet, nodebp))
+		{
+			RedstoneNetwork.log("\t- power provider for network " + _network.hashCode() + ", power 0");
+			return 0;
+		}
+		else
+		{
+			power = Math.min(Math.max(_network.getPowerLevelOutput(subnet), 0), 15);
+			RedstoneNetwork.log("\t- got " + power + " from network " + _network.hashCode() + ":" + subnet);
+		}
 		return power;
 	}
 	
@@ -266,9 +283,14 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 		int subnet = getSideColor(nodebp.orientation);
 
 		RedstoneNetwork.log("Asked for strong power at " + xCoord + "," + yCoord + "," + zCoord + ";" + to);
-		if (_network.isWeakNode(nodebp))
+		if (_network.isPowerProvider(subnet, nodebp))
 		{
-			RedstoneNetwork.log("\t- weak node, power 0");
+			RedstoneNetwork.log("\t- power provider for network " + _network.hashCode() + ", power 0");
+			return 0;
+		}
+		else if (_network.isWeakNode(nodebp))
+		{
+			RedstoneNetwork.log("\t- weak node for network " + _network.hashCode() + ", power 0");
 			return 0;
 		}
 		else

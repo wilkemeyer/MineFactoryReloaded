@@ -34,7 +34,7 @@ public class ItemFactoryHammer extends ItemFactory implements IToolHammer
 		if (block != null)
 		{
 			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK,
-					x, y, z, side);
+					x, y, z, side, world);
 			if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY
 					|| e.useBlock == Result.DENY || e.useItem == Result.DENY)
 			{

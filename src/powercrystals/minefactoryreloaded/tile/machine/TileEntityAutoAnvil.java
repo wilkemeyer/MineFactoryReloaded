@@ -13,7 +13,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -179,7 +181,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		this.maximumCost = 0;
 		int totalEnchCost = 0;
 		
-		if(startingItem == null)
+		if (startingItem == null)
 		{
 			return null;
 		}
@@ -216,12 +218,21 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			int repairCost = outputItem.getRepairCost() + (addedItem == null ? 0 : addedItem.getRepairCost());
 			this.stackSizeToBeUsedInRepair = 0;
 			
-			if(addedItem != null)
+			if (addedItem != null)
 			{
+				{ // anvil event (canceled: don't anvil; output != null: item & cost calculated by listener)
+					AnvilUpdateEvent e = new AnvilUpdateEvent(outputItem.copy(), addedItem.copy(), "", repairCost);
+					if (MinecraftForge.EVENT_BUS.post(e)) return null;
+					if (e.output != null)
+					{
+						maximumCost = e.cost;
+						return e.output;
+					}
+				}
 				enchantingWithBook = addedItem.getItem().equals(Items.enchanted_book) &&
 						Items.enchanted_book.func_92110_g(addedItem).tagCount() > 0;
 				
-				if(outputItem.isItemStackDamageable() &&
+				if (outputItem.isItemStackDamageable() &&
 						outputItem.getItem().getIsRepairable(outputItem, addedItem))
 				{
 					int currentDamage = Math.min(outputItem.getItemDamageForDisplay(), outputItem.getMaxDamage() / 4);
@@ -243,13 +254,13 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				}
 				else
 				{
-					if(!enchantingWithBook && (!outputItem.getItem().equals(addedItem.getItem()) ||
+					if (!enchantingWithBook && (!outputItem.getItem().equals(addedItem.getItem()) ||
 							!outputItem.isItemStackDamageable()))
 					{
 						return null;
 					}
 					
-					if(outputItem.isItemStackDamageable() && !enchantingWithBook)
+					if (outputItem.isItemStackDamageable() && !enchantingWithBook)
 					{
 						int currentDamage = outputItem.getMaxDamage() - outputItem.getItemDamageForDisplay();
 						int addedItemDamage = addedItem.getMaxDamage() - addedItem.getItemDamageForDisplay();
@@ -257,12 +268,12 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 						int leftoverDamage = currentDamage + newDamage;
 						int repairedDamage = outputItem.getMaxDamage() - leftoverDamage;
 						
-						if(repairedDamage < 0)
+						if (repairedDamage < 0)
 						{
 							repairedDamage = 0;
 						}
 						
-						if(repairedDamage < outputItem.getItemDamage())
+						if (repairedDamage < outputItem.getItemDamage())
 						{
 							outputItem.setItemDamage(repairedDamage);
 							totalEnchCost += Math.max(1, newDamage / 100);
@@ -272,14 +283,14 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 					@SuppressWarnings("unchecked")
 					Map<Integer, Integer> addedEnchantments = EnchantmentHelper.getEnchantments(addedItem);
 					
-					for(Integer addedEnchId : addedEnchantments.keySet())
+					for (Integer addedEnchId : addedEnchantments.keySet())
 					{
 						Enchantment enchantment = Enchantment.enchantmentsList[addedEnchId];
 						int existingEnchLevel = existingEnchantments.containsKey(addedEnchId) ? existingEnchantments.get(addedEnchId) : 0;
 						int addedEnchLevel = addedEnchantments.get(addedEnchId);
 						int newEnchLevel;
 						
-						if(existingEnchLevel == addedEnchLevel)
+						if (existingEnchLevel == addedEnchLevel)
 						{
 							++addedEnchLevel;
 							newEnchLevel = addedEnchLevel;
@@ -298,18 +309,18 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 							canEnchantmentBeAdded = true;
 						}
 						
-						for(Integer existingEnchId : existingEnchantments.keySet())
+						for (Integer existingEnchId : existingEnchantments.keySet())
 						{
-							if(existingEnchId != addedEnchId && !enchantment.canApplyTogether(Enchantment.enchantmentsList[existingEnchId]))
+							if (existingEnchId != addedEnchId && !enchantment.canApplyTogether(Enchantment.enchantmentsList[existingEnchId]))
 							{
 								canEnchantmentBeAdded = false;
 								totalEnchCost += levelDifference;
 							}
 						}
 						
-						if(canEnchantmentBeAdded)
+						if (canEnchantmentBeAdded)
 						{
-							if(newEnchLevel > enchantment.getMaxLevel())
+							if (newEnchLevel > enchantment.getMaxLevel())
 							{
 								newEnchLevel = enchantment.getMaxLevel();
 							}
@@ -317,7 +328,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 							existingEnchantments.put(Integer.valueOf(addedEnchId), Integer.valueOf(newEnchLevel));
 							int enchCost = 0;
 							
-							switch(enchantment.getWeight())
+							switch (enchantment.getWeight())
 							{
 							case 1:
 								enchCost = 8;
@@ -339,7 +350,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 								enchCost = 1;
 							}
 							
-							if(enchantingWithBook)
+							if (enchantingWithBook)
 							{
 								enchCost = Math.max(1, enchCost / 2);
 							}
@@ -352,14 +363,14 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			
 			int enchCount = 0;
 			
-			for(Integer existingEnchId : existingEnchantments.keySet())
+			for (Integer existingEnchId : existingEnchantments.keySet())
 			{
 				Enchantment enchantment = Enchantment.enchantmentsList[existingEnchId];
 				int existingEnchLevel = existingEnchantments.get(existingEnchId);
 				int enchCost = 0;
 				++enchCount;
 				
-				switch(enchantment.getWeight())
+				switch (enchantment.getWeight())
 				{
 				case 1:
 					enchCost = 8;
@@ -381,31 +392,31 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 					enchCost = 1;
 				}
 				
-				if(enchantingWithBook)
+				if (enchantingWithBook)
 				{
 					enchCost = Math.max(1, enchCost / 2);
 				}
 				repairCost += enchCount + existingEnchLevel * enchCost;
 			}
 			
-			if(enchantingWithBook)
+			if (enchantingWithBook)
 			{
 				repairCost = Math.max(1, repairCost / 2);
 			}
 			
-			if(enchantingWithBook && !outputItem.getItem().isBookEnchantable(outputItem, addedItem))
+			if (enchantingWithBook && !outputItem.getItem().isBookEnchantable(outputItem, addedItem))
 			{
 				outputItem = null;
 			}
 			
 			this.maximumCost = repairCost + totalEnchCost;
 			
-			if(totalEnchCost <= 0)
+			if (totalEnchCost <= 0)
 			{
 				outputItem = null;
 			}
 			
-			if(outputItem != null)
+			if (outputItem != null)
 			{
 				EnchantmentHelper.setEnchantments(existingEnchantments, outputItem);
 			}
