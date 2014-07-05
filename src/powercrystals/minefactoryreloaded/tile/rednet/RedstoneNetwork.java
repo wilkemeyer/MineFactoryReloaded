@@ -3,9 +3,7 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import cofh.util.position.BlockPosition;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -34,7 +32,8 @@ public class RedstoneNetwork implements IGrid
 	private boolean _mustUpdate, updatePowerLevels;
 	private boolean[] _updateSubnets = new boolean[16];
 	
-	private Map<Integer, Set<BlockPosition>> _singleNodes = new HashMap<Integer, Set<BlockPosition>>();
+	@SuppressWarnings("unchecked") // cast is a warning too. using a generic type is an error?
+	private Set<BlockPosition>[] _singleNodes = new Set[16];
 	private Set<BlockPosition> _omniNodes = new LinkedHashSet<BlockPosition>();
 	
 	private Set<BlockPosition> _weakNodes = new LinkedHashSet<BlockPosition>();
@@ -65,7 +64,7 @@ public class RedstoneNetwork implements IGrid
 		
 		for (int i = 0; i < 16; i++)
 		{
-			_singleNodes.put(i, new LinkedHashSet<BlockPosition>());
+			_singleNodes[i] = new LinkedHashSet<BlockPosition>();
 		}
 	}
 
@@ -317,12 +316,12 @@ public class RedstoneNetwork implements IGrid
 			return;
 		}
 		
-		if (!_singleNodes.get(subnet).contains(node))
+		if (!_singleNodes[subnet].contains(node))
 		{
 			removeNode(node);
 			RedstoneNetwork.log("Network with ID %d:%d adding node %s", hashCode(), subnet, node.toString());
 			
-			_singleNodes.get(subnet).add(node);
+			_singleNodes[subnet].add(node);
 			notifySingleNode(node, subnet);
 		}
 		
@@ -363,11 +362,11 @@ public class RedstoneNetwork implements IGrid
 		
 		for (int subnet = 0; subnet < 16; subnet++)
 		{
-			if (_singleNodes.get(subnet).contains(node))
+			if (_singleNodes[subnet].contains(node))
 			{
 				notify = true;
 				RedstoneNetwork.log("Network with ID %d:%d removing node %s", hashCode(), subnet, node.toString());
-				_singleNodes.get(subnet).remove(node);
+				_singleNodes[subnet].remove(node);
 			}
 			
 			if (node.equals(_powerProviders[subnet]))
@@ -418,9 +417,9 @@ public class RedstoneNetwork implements IGrid
 		_powerLevelOutput[subnet] = 0;
 		_powerProviders[subnet] = null;
 		
-		log("Network with ID %d:%d recalculating power levels for %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes.get(subnet).size(), _omniNodes.size());
+		log("Network with ID %d:%d recalculating power levels for %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
 		
-		for (BlockPosition node : _singleNodes.get(subnet))
+		for (BlockPosition node : _singleNodes[subnet])
 		{
 			if (!isNodeLoaded(node))
 			{
@@ -465,8 +464,8 @@ public class RedstoneNetwork implements IGrid
 		}
 		_updateSubnets[subnet] = false;
 		_ignoreUpdates = true;
-		RedstoneNetwork.log("Network with ID %d:%d notifying %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes.get(subnet).size(), _omniNodes.size());
-		for (BlockPosition bp : _singleNodes.get(subnet))
+		RedstoneNetwork.log("Network with ID %d:%d notifying %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
+		for (BlockPosition bp : _singleNodes[subnet])
 		{
 			RedstoneNetwork.log("Network with ID %d:%d notifying node %s of power state change to %d", hashCode(), subnet, bp.toString(), _powerLevelOutput[subnet]);
 			notifySingleNode(bp, subnet);
