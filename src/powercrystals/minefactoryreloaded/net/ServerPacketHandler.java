@@ -117,7 +117,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 				((TileEntityAutoSpawner)te).setSpawnExact(!((TileEntityAutoSpawner)te).getSpawnExact());
 			}
 			break;
-		case Packets.LogicRequestCircuitDefinition: // client -> server: request circuit from server
+		case Packets.CircuitDefinition: // client -> server: request circuit from server
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
 			
@@ -259,7 +259,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 				}
 			}
 			break;
-		case Packets.RocketLaunchWithLock: // client -> server: client firing SPAMR missile
+		case Packets.RocketLaunch: // client -> server: client firing SPAMR missile
 			Entity owner = world.getEntityByID(data.readInt());
 			int t = data.readInt();
 			Entity target = null;

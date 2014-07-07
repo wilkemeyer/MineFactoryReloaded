@@ -162,6 +162,8 @@ tile.mfr.cable.redstone.energyglass.name = RedNet Energy Cable
 tile.mfr.rednet.logic.name = Programmable RedNet Controller
 tile.mfr.rednet.panel.historian.name = RedNet Historian
 
+tile.mfr.machineblock = item.mfr.machineblock
+
 fluid.mfr.liquid.milk.still.name = Milk
 fluid.mfr.liquid.sludge.still.name = Sludge
 fluid.mfr.liquid.sewage.still.name = Sewage
@@ -197,6 +199,7 @@ item.mfr.armor.chest.plastic.name = Plastic Breastplate
 item.mfr.armor.legs.plastic.name  = Plastic Leggings
 item.mfr.armor.boots.plastic.name = Plastic Boots
 
+item.mfr.machineblock.name = Factory Machine Block
 item.mfr.hammer.name = Precision Sledgehammer
 item.mfr.fertilizer.name = Industrial Fertilizer
 item.mfr.plastic.sheet.name = Plastic Sheets
@@ -216,7 +219,6 @@ item.mfr.safarinet.reusable.name = Safari Net (Reusable)
 item.mfr.safarinet.singleuse.name = Safari Net (Single-Use)
 item.mfr.safarinet.jailer.name = Jailer's Safari Net
 item.mfr.safarinet.launcher.name = Safari Net Launcher
-item.mfr.machineblock.name = Factory Machine Block
 item.mfr.sugarcharcoal.name = Sugar Charcoal
 item.mfr.milkbottle.name = Milk Bottle
 item.mfr.spyglass.name = Spyglass

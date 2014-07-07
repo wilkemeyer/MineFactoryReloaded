@@ -45,7 +45,7 @@ public class ItemRocketLauncher extends ItemFactoryGun
 
 			if (world.isRemote)
 			{
-				Packets.sendToServer(Packets.RocketLaunchWithLock, player,
+				Packets.sendToServer(Packets.RocketLaunch, player,
 						damage == 0 ? MineFactoryReloadedClient.instance.getLockedEntity() : Integer.MIN_VALUE);
 			}
 			else if (!player.addedToChunk)

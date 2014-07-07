@@ -78,7 +78,7 @@ implements IRedNetOmniNode, IDismantleable
 		int md = iblockaccess.getBlockMetadata(x, y, z);
 		boolean isActive = false;
 		TileEntity te = iblockaccess.getTileEntity(x, y, z);
-		if(te instanceof TileEntityFactory)
+		if (te instanceof TileEntityFactory)
 		{
 			side = ((TileEntityFactory)te).getRotatedSide(side);
 			isActive = ((TileEntityFactory)te).isActive();
@@ -86,24 +86,18 @@ implements IRedNetOmniNode, IDismantleable
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, md).getIcon(side, isActive);
 	}
 
+	private static int[] itemRotation = { 0, 1, 3, 2, 5, 4 };
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		if(side > 1)
-		{
-			side += 2;
-			if(side > 5)
-			{
-				side -= 4;
-			}
-		}
+		side = itemRotation[side];
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getIcon(side, false);
 	}
 
 	@Override
 	public int getLightOpacity(IBlockAccess world, int x, int y, int z)
 	{
-		if(world.getTileEntity(x, y, z) instanceof TileEntityLaserDrill)
+		if (world.getTileEntity(x, y, z) instanceof TileEntityLaserDrill)
 		{
 			return 0;
 		}
@@ -144,7 +138,7 @@ implements IRedNetOmniNode, IDismantleable
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 
-		if(te instanceof TileEntityFactory)
+		if (te instanceof TileEntityFactory)
 		{
 			((TileEntityFactory)te).onNeighborTileChange(tileX, tileY, tileZ);
 		}
@@ -292,12 +286,12 @@ implements IRedNetOmniNode, IDismantleable
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity,
 			ItemStack stack)
 	{
-		if(entity == null)
+		if (entity == null)
 		{
 			return;
 		}
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(stack.getTagCompound() != null)
+		if (stack.getTagCompound() != null)
 		{
 			stack.getTagCompound().setInteger("x", x);
 			stack.getTagCompound().setInteger("y", y);
@@ -392,42 +386,42 @@ implements IRedNetOmniNode, IDismantleable
 	{
 		PlayerInteractEvent e = new PlayerInteractEvent(entityplayer, Action.RIGHT_CLICK_BLOCK,
 				x, y, z, side, world);
-		if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
+		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
 		{
 			return false;
 		}
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te == null)
+		if (te == null)
 		{
 			return false;
 		}
 		ItemStack ci = entityplayer.inventory.getCurrentItem();
-		if(te instanceof ITankContainerBucketable)
+		if (te instanceof ITankContainerBucketable)
 		{
 			boolean isFluidContainer = ci != null && ci.getItem() instanceof IFluidContainerItem;
-			if((isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)) &&
+			if ((isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)) &&
 					((ITankContainerBucketable)te).allowBucketDrain(ci))
 			{
-				if(MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
+				if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
 				{
 					return true;
 				}
 			}
-			if((isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)) &&
+			if ((isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)) &&
 					((ITankContainerBucketable)te).allowBucketFill(ci))
 			{
-				if(MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
+				if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
 				{
 					return true;
 				}
 			}
 		}
 
-		if(te instanceof TileEntityFactory &&
+		if (te instanceof TileEntityFactory &&
 				((TileEntityFactory)te).getContainer(entityplayer.inventory) != null)
 		{
-			if(!world.isRemote)
+			if (!world.isRemote)
 			{
 				entityplayer.openGui(MineFactoryReloadedCore.instance(), 0, world, x, y, z);
 			}
@@ -458,7 +452,7 @@ implements IRedNetOmniNode, IDismantleable
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof TileEntityFactory)
+		if (te instanceof TileEntityFactory)
 		{
 			return ((TileEntityFactory)te).getRedNetOutput(ForgeDirection.getOrientation(side));
 		}
@@ -474,7 +468,7 @@ implements IRedNetOmniNode, IDismantleable
 	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return RedNetConnectionType.CableSingle;
+		return RedNetConnectionType.DecorativeSingle;
 	}
 
 	@Override
@@ -498,7 +492,7 @@ implements IRedNetOmniNode, IDismantleable
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof TileEntityFactory)
+		if (te instanceof TileEntityFactory)
 		{
 			((TileEntityFactory)te).onRedNetChanged(side, inputValue);
 			onNeighborBlockChange(world, x, y, z, MineFactoryReloadedCore.rednetCableBlock);

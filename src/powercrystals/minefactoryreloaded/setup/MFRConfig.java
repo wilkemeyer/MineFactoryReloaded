@@ -217,7 +217,7 @@ public class MFRConfig
 		//config = c;
 		
 		String category = "Entity", subCategory = "";
-		zoolologistEntityId = c.get(category, "ID.Zoologist", 330);
+		zoolologistEntityId = c.get(category, "ID.Zoologist", 330).setRequiresMcRestart(true);
 		enableSpawnerCarts = c.get(category, "EnableSpawnerCarts", true);
 		enableSpawnerCarts.comment = "If true, using a portaspawner on an empty minecart will make it into a spawner cart";
 		
@@ -245,63 +245,63 @@ public class MFRConfig
 		category = CATEGORY_GENERAL + ".RedNet";
 		redNetDebug = c.get(category, "Debug", false);
 		redNetDebug.comment = "If true, RedNet cables will dump a massive amount of data to the log file. You should probably only use this if PC tells you to.";
-		redNetConnectionBlacklist = c.get(category, "ConnectionBlackList", new String[] {});
+		redNetConnectionBlacklist = c.get(category, "ConnectionBlackList", new String[] {}).setRequiresMcRestart(true);
 		redNetConnectionBlacklist.comment = "A list of block IDs to prevent RedNet cables from connecting to. (e.g., minecraft:torch)";
 		//}
 		
 		//{ Worldgen
 		category = CATEGORY_GENERAL + ".WorldGen";
-		worldGenDimensionBlacklist = c.get(category, "Dimension.Blacklist", new int[] {});
+		worldGenDimensionBlacklist = c.get(category, "Dimension.Blacklist", new int[] {}).setRequiresMcRestart(true);
 		worldGenDimensionBlacklist.comment = "A list of dimension IDs to disable MFR worldgen in.";
 		
 		subCategory = category + ".RubberTrees";
-		rubberTreeWorldGen = c.get(subCategory, "Enable", true);
+		rubberTreeWorldGen = c.get(subCategory, "Enable", true).setRequiresMcRestart(true);
 		rubberTreeWorldGen.comment = "Whether or not to generate MFR rubber trees during map generation";
-		rubberTreeBiomeWhitelist = c.get(subCategory, "Biome.Whitelist", new String[] {});
+		rubberTreeBiomeWhitelist = c.get(subCategory, "Biome.Whitelist", new String[] {}).setRequiresMcRestart(true);
 		rubberTreeBiomeWhitelist.comment = "A list of biomes to allow rubber trees to spawn in. Does nothing if rubber tree worldgen is disabled.";
-		rubberTreeBiomeBlacklist = c.get(subCategory, "Biome.Blacklist", new String[] {});
+		rubberTreeBiomeBlacklist = c.get(subCategory, "Biome.Blacklist", new String[] {}).setRequiresMcRestart(true);
 		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
-		enableMassiveTree = c.get(subCategory, "SacredRubberSapling", true);
+		enableMassiveTree = c.get(subCategory, "SacredRubberSapling", true).setRequiresMcRestart(true);
 		enableMassiveTree.comment = "If true, enable adding enchanted Sacred Rubber Saplings to jungle temple loot.";
 		
 		subCategory = category + ".Lakes";
-		mfrLakeWorldGen = c.get(subCategory, "Enable", true);
+		mfrLakeWorldGen = c.get(subCategory, "Enable", true).setRequiresMcRestart(true);
 		mfrLakeWorldGen.comment = "Whether or not to generate MFR lakes during map generation. By default, MFR will not attempt lake worldgen in dimensions where the player cannot respawn.";
 		
-		mfrLakeSludgeRarity = c.get(subCategory + ".Sludge", "Rarity", 32);
+		mfrLakeSludgeRarity = c.get(subCategory + ".Sludge", "Rarity", 32).setRequiresMcRestart(true);
 		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk. 0 will disable.";
-		mfrLakeSludgeBiomeList = c.get(subCategory + ".Sludge", "BiomeList", new String[] {});
+		mfrLakeSludgeBiomeList = c.get(subCategory + ".Sludge", "BiomeList", new String[] {}).setRequiresMcRestart(true);
 		mfrLakeSludgeBiomeList.comment = "A list of biomes to allow/disallow Sludge lakes to spawn in. Does nothing if lake worldgen is disabled.";
-		mfrLakeSludgeBiomeListToggle = c.get(subCategory + ".Sludge", "BiomeList.Mode", false);
+		mfrLakeSludgeBiomeListToggle = c.get(subCategory + ".Sludge", "BiomeList.Mode", false).setRequiresMcRestart(true);
 		mfrLakeSludgeBiomeListToggle.comment = "If false, the biome list is a blacklist. If true, the biome list is a whitelist.";
 		
-		mfrLakeSewageRarity = c.get(subCategory + ".Sewage", "Rarity", 32);
+		mfrLakeSewageRarity = c.get(subCategory + ".Sewage", "Rarity", 32).setRequiresMcRestart(true);
 		mfrLakeSewageRarity.comment = "Higher numbers make Sewage lakes rarer. A value of one will be approximately one per chunk. 0 will disable.";
-		mfrLakeSewageBiomeList = c.get(subCategory + ".Sewage", "BiomeList", new String[] {});
+		mfrLakeSewageBiomeList = c.get(subCategory + ".Sewage", "BiomeList", new String[] {}).setRequiresMcRestart(true);
 		mfrLakeSewageBiomeList.comment = "A list of biomes to allow/disallow Sewage lakes to spawn in. Does nothing if lake worldgen is disabled.";
-		mfrLakeSewageBiomeListToggle = c.get(subCategory + ".Sewage", "BiomeList.Mode", false);
+		mfrLakeSewageBiomeListToggle = c.get(subCategory + ".Sewage", "BiomeList.Mode", false).setRequiresMcRestart(true);
 		mfrLakeSewageBiomeListToggle.comment = "If false, the biome list is a blacklist. If true, the biome list is a whitelist.";
 		//}
 		
 		// Alternate recipe sets TODO: auto-register for config handling
-		vanillaRecipes = c.get("RecipeSets", "Vanilla", true);
+		vanillaRecipes = c.get("RecipeSets", "Vanilla", true).setRequiresMcRestart(true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
-		thermalExpansionRecipes = c.get("RecipeSets", "ThermalExpansion", false);
+		thermalExpansionRecipes = c.get("RecipeSets", "ThermalExpansion", false).setRequiresMcRestart(true);
 		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
 		//}
 
 		//{ Item/block behavior overriding
 		category = CATEGORY_ITEM + ".VanillaOverride";
-		vanillaOverrideGlassPane = c.get(category, "GlassPanes", true);
+		vanillaOverrideGlassPane = c.get(category, "GlassPanes", true).setRequiresMcRestart(true);
 		vanillaOverrideGlassPane.comment = "If true, allows vanilla glass panes to connect to MFR stained glass panes.";
-		vanillaOverrideIce = c.get(category, "Ice", true);
+		vanillaOverrideIce = c.get(category, "Ice", true).setRequiresMcRestart(true);
 		vanillaOverrideIce.comment = "If true, enables MFR unmelting ice as well as vanilla ice.";
-		vanillaOverrideMilkBucket = c.get(category, "MilkBucket", true);
+		vanillaOverrideMilkBucket = c.get(category, "MilkBucket", true).setRequiresMcRestart(true);
 		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
 		//}
 		
 		//{ misc. item changes
-		meatSaturation = c.get(CATEGORY_ITEM, "Meat.IncreasedSaturation", false);
+		meatSaturation = c.get(CATEGORY_ITEM, "Meat.IncreasedSaturation", false).setRequiresMcRestart(true);
 		meatSaturation.comment = "If true, meat will be worth steak saturation instead of cookie saturation.";
 		fishingDropRate = c.get(CATEGORY_ITEM, "FishDropRate", 5);
 		fishingDropRate.comment = "The rate at which fish are dropped from the fishing rod. The drop rate is 1 / this number. Must be greater than 0.";
@@ -311,57 +311,57 @@ public class MFRConfig
 		enableFuelExploding = c.get(CATEGORY_ITEM, "Biofuel.Exploding", true);
 		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
 		
-		enableLiquidSyringe = c.get(CATEGORY_ITEM, "LiquidSyringes", true);
+		enableLiquidSyringe = c.get(CATEGORY_ITEM, "LiquidSyringes", true).setRequiresMcRestart(true);
 		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
 		//}
 		
 		//{ Alterations to recipes
 		category = CATEGORY_ITEM + ".Recipe";
-		enableCheapDSU = c.get(category, "CheaperDSU",  false);
+		enableCheapDSU = c.get(category, "CheaperDSU",  false).setRequiresMcRestart(true);
 		enableCheapDSU.comment = "If true, the DSU can be built out of chests instead of ender pearls. Does nothing if the recipe is disabled.";
-		craftSingleDSU = c.get(category, "SingleDSU",  true);
+		craftSingleDSU = c.get(category, "SingleDSU",  true).setRequiresMcRestart(true);
 		craftSingleDSU.comment = "DSU recipes will always craft one DSU. Does nothing for recipes that already only craft one DSU (cheap mode, etc).";
-		enableMossyCobbleRecipe = c.get(category, "MossyCobble",  true);
+		enableMossyCobbleRecipe = c.get(category, "MossyCobble",  true).setRequiresMcRestart(true);
 		enableMossyCobbleRecipe.comment = "If true, mossy cobble can be crafted.";
-		enablePortaSpawner = c.get(category, "PortaSpawner", true);
+		enablePortaSpawner = c.get(category, "PortaSpawner", true).setRequiresMcRestart(true);
 		enablePortaSpawner.comment = "If true, the PortaSpawner will be craftable.";
-		enableSyringes = c.get(category, "Syringes", true);
+		enableSyringes = c.get(category, "Syringes", true).setRequiresMcRestart(true);
 		enableSyringes.comment = "If true, the Syringes will be craftable.";
-		enableGuns = c.get(category, "Guns", true);
+		enableGuns = c.get(category, "Guns", true).setRequiresMcRestart(true);
 		enableGuns.comment = "If true, the Guns will be craftable.";
-		enableNetLauncher = c.get(category, "NetLauncher", true);
+		enableNetLauncher = c.get(category, "NetLauncher", true).setRequiresMcRestart(true);
 		enableNetLauncher.comment = "If true, the safarinet launcher will be craftable.";
-		enableSmoothSlabRecipe = c.get(category, "SmoothSlab", true);
+		enableSmoothSlabRecipe = c.get(category, "SmoothSlab", true).setRequiresMcRestart(true);
 		enableSmoothSlabRecipe.comment = "If true, smooth double stone slabs can be craftable.";
-		enableCheapCL = c.get(category, "CheaperChunkLoader", false);
+		enableCheapCL = c.get(category, "CheaperChunkLoader", false).setRequiresMcRestart(true);
 		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
 		//}
 		
 		//{ Additional machine configs
-		conveyorCaptureNonItems = c.get("Machine.Conveyor", "CaptureNonItems", true);
+		conveyorCaptureNonItems = c.get("Machine.Conveyor", "CaptureNonItems", true).setRequiresMcRestart(true);
 		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
-		conveyorNeverCapturesPlayers = c.get("Machine.Conveyor", "NeverCapturePlayers", false);
+		conveyorNeverCapturesPlayers = c.get("Machine.Conveyor", "NeverCapturePlayers", false).setRequiresMcRestart(true);
 		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
-		conveyorNeverCapturesTCGolems = c.get("Machine.Conveyor", "NeverCaptureTCGolems", false);
+		conveyorNeverCapturesTCGolems = c.get("Machine.Conveyor", "NeverCaptureTCGolems", false).setRequiresMcRestart(true);
 		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture ThaumCraft golems regardless of other settings.";
 		
 		enableChunkLimitBypassing = c.get("Machine." + Machine.ChunkLoader.getName(), "IgnoreChunkLimit", false);
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
 		enableChunkLoaderRequiresOwner = c.get("Machine." + Machine.ChunkLoader.getName(), "RequiresOwnerOnline", false);
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
-		autospawnerCostExact = c.get("Machine." + Machine.AutoSpawner.getName(), "Work.Exact", 50);
+		autospawnerCostExact = c.get("Machine." + Machine.AutoSpawner.getName(), "Work.Exact", 50).setRequiresMcRestart(true);
 		autospawnerCostExact.comment = "The work required to generate a mob in exact mode.";
-		autospawnerCostStandard = c.get("Machine." + Machine.AutoSpawner.getName(), "Work.Standard", 15);
+		autospawnerCostStandard = c.get("Machine." + Machine.AutoSpawner.getName(), "Work.Standard", 15).setRequiresMcRestart(true);
 		autospawnerCostStandard.comment = "The work required to generate a mob in standard (non-exact) mode.";
-		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300);
+		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
-		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"});
+		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);
 		unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
-		spawnerBlacklist = c.get("Machine." + Machine.AutoSpawner.getName(), "Blacklist", new String[] {});
+		spawnerBlacklist = c.get("Machine." + Machine.AutoSpawner.getName(), "Blacklist", new String[] {}).setRequiresMcRestart(true);
 		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, butterflyGE) to blacklist from the AutoSpawner.";
-		breederShutdownThreshold = c.get("Machine." + Machine.Breeder.getName(), "ShutdownThreshold", 50);
+		breederShutdownThreshold = c.get("Machine." + Machine.Breeder.getName(), "ShutdownThreshold", 50).setRequiresMcRestart(true);
 		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
-		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false);
+		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
 		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
 		//}
 		

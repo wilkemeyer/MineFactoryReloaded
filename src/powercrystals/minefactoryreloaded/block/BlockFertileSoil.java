@@ -64,6 +64,12 @@ public class BlockFertileSoil extends Block implements IGrowable
 			return false;
 		}
 	}
+	
+	@Override
+	public void setBlockBoundsForItemRender()
+	{
+		setBlockBounds(0f,0f,0f, 1f,15f/16f,1f);
+	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)

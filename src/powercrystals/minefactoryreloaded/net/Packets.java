@@ -67,27 +67,19 @@ public final class Packets
 		}
 	}
 	
-	public static final short TileDescription = 1;// UNUSED
-	public static final short EnchanterButton = 2;
-	public static final short HarvesterButton = 3;
-	public static final short ChronotyperButton = 4;
-	public static final short HAMUpdate = 5;
-	public static final short ConveyorDescription = 6; // UNUSED
-	public static final short AutoJukeboxPlay = 7; // UNUSED
-	public static final short RoadBlockUpdate = 8; // UNUSED
-	public static final short AutoJukeboxButton = 9;
-	public static final short AutoSpawnerButton = 10;
-	public static final short CableDescription = 11; // UNUSED
-	public static final short LogicCircuitDefinition = 12; // UNUSED
-	public static final short LogicRequestCircuitDefinition = 13;
-	public static final short LogicSetCircuit = 14;
-	public static final short LogicSetPin = 15;
-	public static final short LogicReinitialize = 16;
-	public static final short RouterButton = 17;
-	public static final short HistorianValueChanged = 18; // UNUSED
-	public static final short FakeSlotChange = 19;
-	public static final short RocketLaunchWithLock = 20;
-	public static final short EnergyCableDescription = 21; // UNUSED
+	public static final short EnchanterButton	= 0;
+	public static final short HarvesterButton	= 1;
+	public static final short ChronotyperButton	= 2;
+	public static final short HAMUpdate			= 3;
+	public static final short AutoJukeboxButton	= 4;
+	public static final short AutoSpawnerButton	= 5;
+	public static final short CircuitDefinition	= 6;
+	public static final short LogicSetCircuit	= 7;
+	public static final short LogicSetPin		= 8;
+	public static final short LogicReinitialize	= 9;
+	public static final short RouterButton		= 10;
+	public static final short RocketLaunch		= 11;
+	public static final short FakeSlotChange		= 20; // TODO: remove in favor of CoFH fake slots
 	
 	public static void sendToServer(short packet, TileEntity te, Object... args)
 	{

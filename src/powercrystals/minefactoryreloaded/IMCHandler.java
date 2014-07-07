@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -456,11 +457,11 @@ public class IMCHandler
 				 * Unknown IMC message
 				 */
 				else
-					_log.debug("Unknown IMC message (%s) from %s", k, m.getSender());
+					bigWarning(_log, Level.WARN, "Unknown IMC message (%s) from %s", k, m.getSender());
 			}
 			catch (Throwable _)
 			{
-				_log.error("Bad IMC message (%s) from %s", m.key, m.getSender(), _);
+				bigWarning(_log, Level.ERROR, "Bad IMC message (%s) from %s", m.key, m.getSender(), _);
 			}
 		}
 	}
@@ -468,5 +469,20 @@ public class IMCHandler
 	private static Object getValue(IMCMessage m)
 	{
 		return ReflectionHelper.getPrivateValue(IMCMessage.class, m, "value");
+	}
+	
+	private static void bigWarning(Logger log, Level Level, String format, Object... data)
+	{
+		String o = String.format(format, data);
+        log.log(Level, "****************************************");
+        log.log(Level, "****************************************");
+        for (String line : o.split(".{1,36}"))
+        {
+        	while (line.length() < 36)
+        		line += " ";
+        	log.log(Level, "* %s *");
+        }
+        log.log(Level, "****************************************");
+        log.log(Level, "****************************************");
 	}
 }

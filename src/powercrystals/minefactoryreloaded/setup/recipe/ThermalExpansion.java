@@ -344,11 +344,11 @@ public class ThermalExpansion extends Vanilla
 		
 		registerMachine(Machine.SteamBoiler, new Object[] {
 				"PPP",
-				"TFT",
+				"TBT",
 				"OOO",
 				'P', "sheetPlastic",
 				'T', tankHardened,
-				'F', machineFrame,
+				'B', Machine.SludgeBoiler.getItemStack(),
 				'O', Blocks.nether_brick
 					} );
 		

@@ -125,9 +125,13 @@ public class RedstoneNetwork implements IGrid
 			return;
 		TileEntityRedNetCable main = conduitSet.iterator().next();
 		nodeSet.clear();
+		//{ clearing nodes (TODO: this needs handled better)
+		_omniNodes.clear(); _weakNodes.clear();
+		for (Set<BlockPosition> a : _singleNodes)
+			a.clear();
+		//}
 		LinkedHashSet<TileEntityRedNetCable> oldSet = conduitSet;
 		conduitSet = new LinkedHashSet<TileEntityRedNetCable>(Math.min(oldSet.size() / 6, 5));
-		rebalanceGrid();
 		
 		LinkedHashSet<TileEntityRedNetCable> toCheck = new LinkedHashSet<TileEntityRedNetCable>();
 		BlockPosition bp = new BlockPosition(0,0,0);
@@ -182,20 +186,16 @@ public class RedstoneNetwork implements IGrid
 	}
 
 	public void nodeAdded(TileEntityRedNetCable cond) {
-		rebalanceGrid();
+		HANDLER.addConduitForUpdate(cond);
 		if (!nodeSet.isEmpty()) {
 			HANDLER.addGrid(this);
 		}
 	}
 
 	public void nodeRemoved(TileEntityRedNetCable cond) {
-		rebalanceGrid();
 		if (nodeSet.isEmpty()) {
 			HANDLER.removeGrid(this);
 		}
-	}
-
-	public void rebalanceGrid() {
 	}
 
 	public boolean conduitAdded(TileEntityRedNetCable cond) {

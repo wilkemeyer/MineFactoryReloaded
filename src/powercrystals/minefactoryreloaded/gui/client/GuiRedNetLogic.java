@@ -352,7 +352,7 @@ public class GuiRedNetLogic extends GuiBase
 	
 	private void requestCircuit()
 	{
-		Packets.sendToServer(Packets.LogicRequestCircuitDefinition, _logic,
+		Packets.sendToServer(Packets.CircuitDefinition, _logic,
 				_selectedCircuit);
 	}
 	

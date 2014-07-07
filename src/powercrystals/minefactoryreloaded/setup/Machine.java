@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.setup;
 
+import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
+
+import cofh.util.RegistryUtils;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -221,7 +224,7 @@ public class Machine
 		_machineMappings.put(_machineIndex, this);
 		_machines.add(this);
 		
-		if(_highestMetas.get(_blockIndex) == null || _highestMetas.get(_blockIndex) < _meta)
+		if (_highestMetas.get(_blockIndex) == null || _highestMetas.get(_blockIndex) < _meta)
 		{
 			_highestMetas.put(_blockIndex, _meta);
 		}
@@ -249,9 +252,9 @@ public class Machine
 	
 	public static void LoadTextures(int blockIndex, IIconRegister ir)
 	{
-		for(Machine m : _machines)
+		for (Machine m : _machines)
 		{
-			if(m.getBlockIndex() == blockIndex)
+			if (m.getBlockIndex() == blockIndex)
 			{
 				m.loadIcons(ir);
 			}
@@ -313,12 +316,12 @@ public class Machine
 			TileEntityFactory tileEntity = _tileEntityClass.newInstance();
 			return tileEntity;
 		}
-		catch(IllegalAccessException x)
+		catch (IllegalAccessException x)
 		{
 			FMLLog.severe("Unable to create instance of TileEntity from %s", _tileEntityClass.getName());
 			return null;
 		}
-		catch(InstantiationException x)
+		catch (InstantiationException x)
 		{
 			FMLLog.severe("Unable to create instance of TileEntity from %s", _tileEntityClass.getName());
 			return null;
@@ -342,37 +345,96 @@ public class Machine
 	
 	public void load(Configuration c)
 	{
-		_isRecipeEnabled = c.get("Machine." + _name, "Recipe.Enabled", true);
+		_isRecipeEnabled = c.get("Machine." + _name, "Recipe.Enabled", true).setRequiresMcRestart(true);
 		if (_configurable && _activationEnergy > 0)
 		{
 			_activationEnergy = c.get("Machine." + _name, "ActivationCostDaRF", getActivationEnergyDaRF(),
 					"The energy cost for this machine to complete one work cycle, in units of 10 RF " +
-					"(i.e., 2 DaRF = 20 RF)").getInt() * 10;
+					"(i.e., 2 DaRF = 20 RF)").setRequiresMcRestart(true).getInt() * 10;
 		}
 		
 		MineFactoryReloadedCore.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);
 		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 	
-	public void loadIcons(IIconRegister ir)
-	{
-		_iconsActive[0] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.bottom");
-		_iconsActive[1] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.top");
-		_iconsActive[2] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.front");
-		_iconsActive[3] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.back");
-		_iconsActive[4] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.left");
-		_iconsActive[5] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".active.right");
-		_iconsIdle[0] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.bottom");
-		_iconsIdle[1] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.top");
-		_iconsIdle[2] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.front");
-		_iconsIdle[3] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.back");
-		_iconsIdle[4] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.left");
-		_iconsIdle[5] = ir.registerIcon("minefactoryreloaded:" + getInternalName() + ".idle.right");
-	}
-	
 	public IIcon getIcon(int side, boolean isActive)
 	{
-		if(isActive) return _iconsActive[side];
-		return _iconsIdle[side];
+		return (isActive ? _iconsActive : _iconsIdle)[side];
+	}
+	
+	public void loadIcons(IIconRegister ir)
+	{
+		_iconsActive[0] = ir.registerIcon(loadIcon(bottom, true));
+		_iconsActive[1] = ir.registerIcon(loadIcon(   top, true));
+		_iconsActive[2] = ir.registerIcon(loadIcon( front, true));
+		_iconsActive[3] = ir.registerIcon(loadIcon(  back, true));
+		_iconsActive[4] = ir.registerIcon(loadIcon(  left, true));
+		_iconsActive[5] = ir.registerIcon(loadIcon( right, true));
+		_iconsIdle[0]   = ir.registerIcon(loadIcon(bottom, false));
+		_iconsIdle[1]   = ir.registerIcon(loadIcon(   top, false));
+		_iconsIdle[2]   = ir.registerIcon(loadIcon( front, false));
+		_iconsIdle[3]   = ir.registerIcon(loadIcon(  back, false));
+		_iconsIdle[4]   = ir.registerIcon(loadIcon(  left, false));
+		_iconsIdle[5]   = ir.registerIcon(loadIcon( right, false));
+	}
+	
+	private String loadIcon(Side side, boolean active)
+	{
+		final String base = "minefactoryreloaded:machines/";
+		final String a = side.getMain(active);
+		final String name = getInternalName() + ".";
+		String t;
+		if (RegistryUtils.blockTextureExists(t = base + name + a))
+			return t;
+		else if (side.hasAlt && RegistryUtils.blockTextureExists(t = base + name + side.getAlt(active)))
+			return t;
+		else if (RegistryUtils.blockTextureExists(t = base + name + side.name))
+			return t;
+		else if (side.hasAlt && RegistryUtils.blockTextureExists(t = base + name + side.alt))
+			return t;
+		else if (RegistryUtils.blockTextureExists(t = base + "tile.mfr.machine.0." + a))
+			return t;
+		else if (side.hasAlt && RegistryUtils.blockTextureExists(t = base + "tile.mfr.machine.0." + side.getAlt(active)))
+			return t;
+		else if (RegistryUtils.blockTextureExists(t = base + "tile.mfr.machine.0." + side.name))
+			return t;
+		else
+			return base + "tile.mfr.machine.0." + side.alt;
+	}
+	
+	static enum Side
+	{
+		bottom(null),
+		top(null),
+		front("side"),
+		back("side"),
+		left("side"),
+		right("side");
+		
+		private Side(String _alt)
+		{
+			name = name();
+			hasAlt = _alt != null;
+			if (hasAlt)
+				alt = _alt;
+			else
+				alt = name;
+		}
+		
+		private String active = "active.";
+		private String idle = "idle.";
+		public final String name;
+		public final String alt;
+		public boolean hasAlt;
+		
+		public String getMain(boolean _active)
+		{
+			return (_active ? active : idle) + name();
+		}
+		
+		public String getAlt(boolean _active)
+		{
+			return hasAlt ? ((_active ? active : idle) + alt) : "";
+		}
 	}
 }

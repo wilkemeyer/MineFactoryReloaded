@@ -343,10 +343,11 @@ public class Vanilla
 					{
 				"GGG",
 				"OTO",
-				"OMO",
+				"OBO",
 				'G', "sheetPlastic",
-				'O', Blocks.nether_brick,
 				'T', Items.bucket,
+				'O', Blocks.nether_brick,
+				'B', Machine.SludgeBoiler.getItemStack(),
 				'M', MineFactoryReloadedCore.machineBaseItem,
 					} );
 		

@@ -67,6 +67,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import powercrystals.minefactoryreloaded.block.BlockConveyor;
 import powercrystals.minefactoryreloaded.block.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.BlockDetCord;
+import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.BlockFactoryDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
@@ -250,7 +251,8 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static Block fertileSoil;
 
-	public static Item machineItem;
+	public static Block machineItem;
+	public static Item machineBaseItem;
 
 	public static Item factoryHammerItem;
 	public static Item fertilizerItem;
@@ -264,7 +266,6 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Item syringeHealthItem;
 	public static Item syringeGrowthItem;
 	public static Item rawRubberItem;
-	public static Item machineBaseItem;
 	public static Item safariNetItem;
 	public static Item ceramicDyeItem;
 	public static Item blankRecordItem;
@@ -408,6 +409,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		detCordBlock = new BlockDetCord();
 		
 		fertileSoil = new BlockFertileSoil();
+		
+		machineItem = new BlockFactory();
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		plasticBootsItem = new ItemPlasticBoots();
@@ -420,7 +423,6 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		plasticBootsItem.addRepairableItem(plasticSheetItem).addRepairableItem(rawPlasticItem);
 
-		machineBaseItem = (new ItemFactory()).setUnlocalizedName("mfr.machineblock");
 		upgradeItem = (new ItemUpgrade()).setUnlocalizedName("mfr.upgrade.radius").setMaxStackSize(1);
 
 		rednetMeterItem = (new ItemRedNetMeter()).setUnlocalizedName("mfr.rednet.meter").setMaxStackSize(1);
@@ -487,6 +489,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
 		registerBlock(conveyorBlock, ItemBlockConveyor.class);
+		registerBlock(machineItem, ItemBlockFactory.class);
+		machineBaseItem = Item.getItemFromBlock(machineItem);
 
 		for (Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{

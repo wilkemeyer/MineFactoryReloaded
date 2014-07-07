@@ -39,6 +39,18 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 	}
 	
 	@Override
+	public boolean isFull3D()
+	{
+		return true; // TODO: replace this with a proper renderer so it looks right in 3rd person
+	}
+	
+	@Override
+	public boolean shouldRotateAroundWhenRendering()
+	{
+		return false;
+	}
+	
+	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
