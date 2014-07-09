@@ -18,7 +18,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 {
 	private static final ResourceLocation background = new ResourceLocation(MineFactoryReloadedCore.guiFolder + "liquicrafter.png");
 	private TileEntityLiquiCrafter _crafter;
-	private static int TANK_OFFSET_X = -22;
+	private static final int TANK_OFFSET_X = -22;
 	
 	public GuiLiquiCrafter(ContainerLiquiCrafter container, TileEntityLiquiCrafter router)
 	{
@@ -61,20 +61,16 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	@Override
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		if(isPointInRegion(TANK_OFFSET_X, 10, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY))
+		if (isPointInRegion(TANK_OFFSET_X + 1, 11, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY))
 		{
 			int tankX = mouseX - TANK_OFFSET_X - this.guiLeft;
 			int tankY = mouseY - 10 - this.guiTop;
-			if (tankX % 18 > 16 | tankY % 35 > 33)
+			if ((tankX % 18 >= 16) | tankY % 35 >= 33)
 				return;
 			tankX /= 18;
 			tankY /= 35;
 			int i = tankX + tankY * 3;
-			FluidTankInfo tank = _crafter.getTankInfo(ForgeDirection.UNKNOWN)[i];
-			if (tank.fluid == null || tank.fluid.amount == 0)
-				return;
-			drawBarTooltip(tank.fluid.getFluid().getLocalizedName(), "mB",
-					tank.fluid.amount, tank.capacity, mouseX, mouseY);
+			drawTankTooltip(_crafter.getTanks()[i], mouseX, mouseY);
 		}
 	}
 	

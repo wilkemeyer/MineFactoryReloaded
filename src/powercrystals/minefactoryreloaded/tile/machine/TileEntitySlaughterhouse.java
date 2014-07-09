@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
@@ -20,6 +21,8 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		super(Machine.Slaughterhouse);
 		_damageSource = new GrindingDamage("mfr.slaughterhouse", 2);
 		setManageSolids(false);
+		_tanks[0].setLock(FluidRegistry.getFluid("meat"));
+		_tanks[1].setLock(FluidRegistry.getFluid("pinkslime"));
 	}
 	
 	@Override

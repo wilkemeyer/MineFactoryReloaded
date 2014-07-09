@@ -14,6 +14,7 @@ public class EntityPinkSlime extends EntitySlime
 	public EntityPinkSlime(World world)
 	{
 		super(world);
+		setSlimeSize(1);
 	}
 	
 	@Override
@@ -31,7 +32,7 @@ public class EntityPinkSlime extends EntitySlime
 	@Override
 	public void setSlimeSize(int size)
 	{
-		if(size > 4)
+		if (size > 4)
 		{
 			worldObj.newExplosion(this, posX, posY, posZ, 0.1F, false, true);
 			this.attackEntityFrom(DamageSource.generic, 50);

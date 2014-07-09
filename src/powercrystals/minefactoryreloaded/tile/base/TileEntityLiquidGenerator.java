@@ -96,7 +96,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	@Override
 	public String getGuiBackground()
 	{
-		return "biofuelgenerator.png";
+		return "fluidgenerator.png";
 	}
 
 	@Override

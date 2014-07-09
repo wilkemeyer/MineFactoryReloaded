@@ -245,6 +245,6 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return false;
+		return true;
 	}
 }

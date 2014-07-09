@@ -5,8 +5,8 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityBioReactor;
 
 public class GuiBioReactor extends GuiFactoryInventory
 {
-	private static final int _barColorBurn =  (79)  | (44 << 8)  | (63 << 16)  | (255 << 24);
-	private static final int _barColorValue = (55)  | (182 << 8) | (211 << 16) | (255 << 24);
+	private static final int _barBurnIndex  = 1;
+	private static final int _barValueIndex = 0;
 	
 	public GuiBioReactor(ContainerBioReactor container, TileEntityBioReactor tileentity)
 	{
@@ -20,8 +20,8 @@ public class GuiBioReactor extends GuiFactoryInventory
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		drawBar(150, 75, ((TileEntityBioReactor)_tileEntity).getOutputValueMax(), ((TileEntityBioReactor)_tileEntity).getOutputValue(), _barColorValue);
-		drawBar(160, 75, ((TileEntityBioReactor)_tileEntity).getBurnTimeMax(), ((TileEntityBioReactor)_tileEntity).getBurnTime(), _barColorBurn);
+		drawBar(150, 75, ((TileEntityBioReactor)_tileEntity).getOutputValueMax(), ((TileEntityBioReactor)_tileEntity).getOutputValue(), _barValueIndex);
+		drawBar(160, 75, ((TileEntityBioReactor)_tileEntity).getBurnTimeMax(), ((TileEntityBioReactor)_tileEntity).getBurnTime(), _barBurnIndex);
 	}
 	
 	@Override

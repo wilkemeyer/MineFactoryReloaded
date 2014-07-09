@@ -1,10 +1,11 @@
 package powercrystals.minefactoryreloaded.core;
 
-import static org.lwjgl.input.Keyboard.*;
 import static net.minecraft.util.EnumChatFormatting.*;
+import static org.lwjgl.input.Keyboard.*;
 
 import buildcraft.api.tools.IToolWrench;
 
+import cofh.util.StringHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,6 +23,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
 
@@ -53,15 +56,32 @@ public class MFRUtil
 
 	public static String shiftForInfo()
 	{
-		return GRAY +
-				localize("tip.info.mfr.holdShift1", true) + " " + YELLOW + ITALIC +
-				localize("tip.info.mfr.holdShift2", true) + " " + RESET + GRAY +
-				localize("tip.info.mfr.holdShift3", true) + RESET;
+		return StringHelper.shiftForInfo();
+	}
+
+	public static String empty()
+	{
+		return ITALIC + "<" + localize("info.cofh.empty", true) + ">" + RESET;
+	}
+
+	public static String energy()
+	{
+		return localize("info.cofh.energy", true);
+	}
+	
+	public static String getFluidName(FluidStack fluid)
+	{
+		return StringHelper.getFluidName(fluid);
+	}
+	
+	public static String getFluidName(Fluid fluid)
+	{
+		return StringHelper.getFluidName(fluid);
 	}
 
 	public static String localize(String s)
 	{
-		return localize(s + ".name", false);
+		return localize(s + ".name", false, s);
 	}
 
 	public static String localize(String prefix, String s)
@@ -76,8 +96,9 @@ public class MFRUtil
 
 	public static String localize(String s, boolean exists, String def)
 	{
-		if (exists && !StatCollector.canTranslate(s))
-			return def;
+		if (!StatCollector.canTranslate(s))
+			return exists ? def :
+				StatCollector.canTranslate(def) ? localize(StatCollector.translateToLocal(def), true) : def;
 		return StatCollector.translateToLocal(s);
 	}
 

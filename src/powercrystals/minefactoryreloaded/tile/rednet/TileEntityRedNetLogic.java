@@ -24,9 +24,9 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.net.Packets;
-import powercrystals.minefactoryreloaded.tile.base.TileEntity;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityRedNetLogic extends TileEntity implements IRotateableTile
+public class TileEntityRedNetLogic extends TileEntityBase implements IRotateableTile
 {
 	public static class PinMapping
 	{

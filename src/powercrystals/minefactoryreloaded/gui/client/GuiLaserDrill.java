@@ -9,8 +9,8 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class GuiLaserDrill extends GuiFactoryInventory
 {
-	private static final int _barColorEnergy = (0)   | (0 << 8)   | (255 << 16) | (255 << 24);
-	private static final int _barColorWork =   (0)   | (255 << 8) | (0 << 16)   | (255 << 24);
+	private static final int _barEnergyIndex = 0;
+	private static final int _barWorkIndex   = 1;
 	
 	private TileEntityLaserDrill _drill;
 	
@@ -24,8 +24,8 @@ public class GuiLaserDrill extends GuiFactoryInventory
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		drawBar(150, 75, _drill.getEnergyMax(), _drill.getEnergyStored(), _barColorEnergy);
-		drawBar(160, 75, _drill.getWorkMax(), _drill.getWorkDone(), _barColorWork);
+		drawBar(150, 75, _drill.getEnergyMax(), _drill.getEnergyStored(), _barEnergyIndex);
+		drawBar(160, 75, _drill.getWorkMax(), _drill.getWorkDone(), _barWorkIndex);
 		
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}

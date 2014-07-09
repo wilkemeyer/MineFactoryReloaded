@@ -522,7 +522,8 @@ public class RedstoneNetwork implements IGrid
 		{
 			return 0;
 		}
-		return getOmniNodePowerLevel(node)[subnet];
+		int[] levels = getOmniNodePowerLevel(node);
+		return levels == null ? 0 : levels[subnet];
 	}
 	
 	private int[] getOmniNodePowerLevel(BlockPosition node)

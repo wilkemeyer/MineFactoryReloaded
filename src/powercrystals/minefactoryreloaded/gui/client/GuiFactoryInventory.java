@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
+import cofh.util.fluid.FluidTankAdv;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -26,6 +29,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class GuiFactoryInventory extends GuiContainer
 {
+	protected ResourceLocation background;
 	protected TileEntityFactoryInventory _tileEntity;
 	protected int _barSizeMax = 60;
 	
@@ -40,6 +44,8 @@ public class GuiFactoryInventory extends GuiContainer
 	{
 		super(container);
 		_tileEntity = tileentity;
+		background = new ResourceLocation(MineFactoryReloadedCore.guiFolder +
+				_tileEntity.getGuiBackground());
 	}
 	
 	protected boolean isPointInRegion(int x, int y, int w, int h, int a, int b) {
@@ -98,8 +104,7 @@ public class GuiFactoryInventory extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder +
-				_tileEntity.getGuiBackground()));
+		bindTexture(background);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -115,35 +120,36 @@ public class GuiFactoryInventory extends GuiContainer
 	
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
-		FluidTankInfo[] tanks = _tileEntity.getTankInfo(ForgeDirection.UNKNOWN);
+		FluidTankAdv[] tanks = _tileEntity.getTanks();
 		int n = tanks.length > 3 ? 3 : tanks.length;
-		tanks: if(n > 0 && isPointInRegion(_tanksOffsetX - ((n - 1) * 20), _tanksOffsetY,
-											n * 20 - n, _tankSizeMax, mouseX, mouseY))
+		tanks: if (n > 0 && isPointInRegion(_tanksOffsetX - ((n - 1) * 20) + 1, _tanksOffsetY + 1,
+											n * 20 - n - 1, _tankSizeMax - 2, mouseX, mouseY))
 		{
 			int tankX = mouseX - this.guiLeft - _tanksOffsetX + (n - 1) * 20;
-			if (tankX % 20 > 16)
+			if (tankX % 20 >= 16)
 				break tanks;
 			tankX /= 20;
 			tankX = n - tankX - 1;
-			if (tanks[tankX].fluid != null && tanks[tankX].fluid.amount > 0)
-				drawBarTooltip(tanks[tankX].fluid.getFluid().getLocalizedName(), "mB",
-					tanks[tankX].fluid.amount, tanks[tankX].capacity, mouseX, mouseY);
+			drawTankTooltip(tanks[tankX], mouseX, mouseY);
 		}
 	}
 	
-	protected void drawBar(int xOffset, int yOffset, int max, int current, int color)
+	protected final void drawBar(int xOffset, int yOffset, int max, int current, int tOffset)
 	{
 		int size = max > 0 ? current * _barSizeMax / max : 0;
-		if(size > _barSizeMax) size = max;
-		if(size < 0) size = 0;
-		drawRect(xOffset, yOffset - size, xOffset + 8, yOffset, color);
+		if (size > _barSizeMax) size = max;
+		if (size < 0) size = 0;
+		bindTexture(background);
+		drawTexturedModalRect(xOffset, yOffset - size,
+				xSize + tOffset * 8 + tOffset, 60 + _barSizeMax - size,
+				8, size);
 	}
 	
 	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level)
 	{
 		if (stack == null) return;
 		Fluid fluid = stack.getFluid();
-		if(fluid == null) return;
+		if (fluid == null) return;
 		
 		IIcon icon = fluid.getIcon(stack);
 		if (icon == null)
@@ -151,11 +157,11 @@ public class GuiFactoryInventory extends GuiContainer
 		
 		int vertOffset = 0;
 		
-		while(level > 0)
+		while (level > 0)
 		{
 			int texHeight = 0;
 			
-			if(level > 16)
+			if (level > 16)
 			{
 				texHeight = 16;
 				level -= 16;
@@ -173,9 +179,13 @@ public class GuiFactoryInventory extends GuiContainer
 			vertOffset = vertOffset + 16;
 		}
 		
-		this.mc.renderEngine.bindTexture(new ResourceLocation(MineFactoryReloadedCore.guiFolder +
-				_tileEntity.getGuiBackground()));
+		bindTexture(background);
 		this.drawTexturedModalRect(xOffset, yOffset - 60, 176, 0, 16, 60);
+	}
+	
+	protected void bindTexture(ResourceLocation tex)
+	{
+		this.mc.renderEngine.bindTexture(tex);
 	}
 	
 	protected void bindTexture(Fluid fluid)
@@ -186,11 +196,25 @@ public class GuiFactoryInventory extends GuiContainer
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
 	}
 	
+	protected void drawTankTooltip(FluidTankAdv tank, int x, int y)
+	{
+		FluidStack fluid = tank.getFluid(); 
+		if (fluid != null)
+			drawBarTooltip(MFRUtil.getFluidName(fluid), "mB",
+					fluid.amount, tank.getCapacity(), x, y);
+		else
+			drawBarTooltip(MFRUtil.empty(), "mB", 0, tank.getCapacity(), x, y);
+	}
+	
 	protected void drawBarTooltip(String name, String unit, int value, int max, int x, int y)
 	{
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<String>(2);
 		lines.add(name);
-		lines.add(value + " / " + max + " " + unit);
+		String m = String.valueOf(max);
+		String v = String.valueOf(value);
+		while (v.length() < m.length())
+			v = " " + v;
+		lines.add(v + " / " + m + " " + unit);
 		drawTooltip(lines, x, y);
 	}
 	

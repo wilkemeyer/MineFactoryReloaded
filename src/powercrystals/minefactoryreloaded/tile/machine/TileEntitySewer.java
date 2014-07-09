@@ -41,6 +41,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		super(Machine.Sewer);
 		createHAM(this, 0, 1, 0, false);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		_tanks[0].setLock(FluidRegistry.getFluid("sewage"));
 	}
 	
 	@Override
@@ -116,7 +117,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			{
 				_tanks[0].fill(FluidRegistry.getFluidStack("sewage", (int)(25 * massFound)), true);
 			}
-			int maxAmount = Math.max(_tanks[1].getCapacity() - (_tanks[1].getFluidAmount()), 0);
+			int maxAmount = _tanks[1].getSpace();
 			if (maxAmount <= 0)
 			{
 				return;

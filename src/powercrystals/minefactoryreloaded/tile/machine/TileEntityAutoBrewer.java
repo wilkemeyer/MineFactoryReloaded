@@ -29,6 +29,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
+	protected boolean _inventoryDirty; 
 	public TileEntityAutoBrewer()
 	{
 		super(Machine.AutoBrewer);
@@ -71,32 +72,40 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	protected boolean activateMachine()
 	{
 		boolean hasWorkToDo = false, didWork = false;
-		for (int row = 0; row < 6; row++)
+		boolean doingWork = getWorkDone() > 0;
+		if (doingWork & !_inventoryDirty)
+			hasWorkToDo = true;
+		else
 		{
-			int processSlot = getProcessSlot(row),
-				templateSlot = getTemplateSlot(row);
-			if (_inventory[31] != null && _inventory[processSlot] == null && _inventory[templateSlot] != null)
+			for (int row = 0; row < 6; row++)
 			{
-				if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null)
-					if (getPotionResult(0, _inventory[templateSlot]) != 0)
-						if (drain(_tanks[0], 250, false) == 250)
-						{
-							drain(_tanks[0], 250, true);
-							_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
-							_inventory[processSlot] = new ItemStack(Items.potionitem, 1, 0);
-							didWork = true;
-						}
+				int processSlot = getProcessSlot(row),
+					templateSlot = getTemplateSlot(row);
+				if (_inventory[31] != null && _inventory[processSlot] == null && _inventory[templateSlot] != null)
+				{
+					if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null)
+						if (getPotionResult(0, _inventory[templateSlot]) != 0)
+							if (drain(_tanks[0], 250, false) == 250)
+							{
+								drain(_tanks[0], 250, true);
+								_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
+								_inventory[processSlot] = new ItemStack(Items.potionitem, 1, 0);
+								didWork = true;
+							}
+				}
+				if (_inventory[processSlot] != null)
+				{
+					if (_inventory[getProcessSlot(row + 1)] == null && canBrew(row))
+						hasWorkToDo = true;
+				}
 			}
-			if (_inventory[processSlot] != null)
-			{
-				if (_inventory[getProcessSlot(row + 1)] == null && canBrew(row))
-					hasWorkToDo = true;
-			}
+			_inventoryDirty = false;
 		}
 		
 		if (!hasWorkToDo)
 		{
 			setWorkDone(0);
+			setIdleTicks(getIdleTicksMax());
 			return didWork;
 		}
 		
@@ -254,7 +263,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	@Override
 	public int getIdleTicksMax()
 	{
-		return 1;
+		return 10;
 	}
 	
 	@Override
@@ -291,6 +300,12 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 		if (itemstack != null && !shouldDropSlotWhenBroken(slot))
 			itemstack.stackSize = 0;
 		super.setInventorySlotContents(slot, itemstack);
+	}
+	
+	@Override
+	protected void onFactoryInventoryChanged()
+	{
+		_inventoryDirty = true;
 	}
 	
 	@Override

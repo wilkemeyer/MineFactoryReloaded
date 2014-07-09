@@ -5,8 +5,8 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntitySteamBoiler;
 
 public class GuiSteamBoiler extends GuiFactoryInventory
 {
-	protected static final int _barColorWork =   (0)   | (255 << 8) | (0 << 16)   | (255 << 24);
-	protected static final int _barColorTemp =   (0)   | (0 << 8)   | (255 << 16) | (255 << 24);
+	protected static final int _barWorkIndex = 1;
+	protected static final int _barTempIndex = 0;
 	private TileEntitySteamBoiler _boiler;
 
 	public GuiSteamBoiler(ContainerFactoryInventory container, TileEntitySteamBoiler tileentity)
@@ -18,8 +18,8 @@ public class GuiSteamBoiler extends GuiFactoryInventory
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		drawBar(150, 75, _boiler.getWorkMax(), _boiler.getWorkDone(), _barColorWork);
-		drawBar(160, 75, TileEntitySteamBoiler.maxTemp + 20, (int)_boiler.getTemp() + 20, _barColorTemp);
+		drawBar(150, 75, _boiler.getWorkMax(), _boiler.getWorkDone(), _barWorkIndex);
+		drawBar(160, 75, TileEntitySteamBoiler.maxTemp + 20, (int)_boiler.getTemp() + 20, _barTempIndex);
 		
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}

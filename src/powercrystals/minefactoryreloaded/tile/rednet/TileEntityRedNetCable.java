@@ -38,8 +38,9 @@ import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityRedNetCable extends TileEntity implements INode, ICustomHitBox
+public class TileEntityRedNetCable extends TileEntityBase implements INode, ICustomHitBox
 {
 	protected int[] _sideColors = new int [6];
 	protected byte[] _cableMode = {0,0,0, 0,0,0, 0};
@@ -86,12 +87,6 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 			return;
 		RedstoneNetwork.HANDLER.addConduitForTick(this);
 	}
-	
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		this.onChunkUnload();
-	}
 
 	@Override
 	public void onChunkUnload() {
@@ -120,11 +115,7 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 		return false;
 	}
 	
-	public void onNeighborTileChange(int x, int y, int z)
-	{
-		
-	}
-	
+	@Override
 	public void onNeighborBlockChange()
 	{
 		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
@@ -431,7 +422,7 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	{
 		boolean mustUpdate = (mode != _cableMode[side]);
 		_cableMode[side] = mode;
-		if (mustUpdate)
+		if (mustUpdate && side != 6)
 		{
 			getConnectionState(ForgeDirection.getOrientation(side));
 		}
@@ -559,7 +550,6 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 	{
 		super.writeToNBT(tag);
 		tag.setIntArray("sideSubnets", _sideColors);
-		tag.setByte("mode", _cableMode[0]);
 		tag.setByte("v", (byte)3);
 		tag.setByteArray("cableMode", _cableMode);
 	}
@@ -665,33 +655,5 @@ public class TileEntityRedNetCable extends TileEntity implements INode, ICustomH
 			break;
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-
-	private static final int HASH_A = 0x19660d;
-	private static final int HASH_C = 0x3c6ef35f;
-
-	@Override
-	public int hashCode() {
-		final int xTransform = HASH_A * (xCoord ^ 0xBABECAFE) + HASH_C;
-		final int zTransform = HASH_A * (zCoord ^ 0xDEADBEEF) + HASH_C;
-		final int yTransform = HASH_A * (yCoord ^ 0xE73AAE09) + HASH_C;
-		return xTransform ^ zTransform ^ yTransform;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof TileEntityRedNetCable)
-		{
-			TileEntityRedNetCable te = (TileEntityRedNetCable)obj;
-			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
-					te.isNotValid() == isNotValid() && worldObj == te.worldObj;
-		}
-		return false;
-	}
-
-	@Override
-	public String toString() {
-		return "(x="+xCoord+",y="+yCoord+",z="+zCoord+")@"+System.identityHashCode(this);
 	}
 }

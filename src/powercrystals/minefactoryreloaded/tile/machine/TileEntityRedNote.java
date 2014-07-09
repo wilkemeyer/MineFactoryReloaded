@@ -7,7 +7,6 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 public class TileEntityRedNote extends TileEntityFactory
 {
 	private static final String[] _noteNames = new String[] { "harp", "bd", "snare", "hat", "bassattack" };
-	private boolean _playedLastChange = true;
 	
 	public TileEntityRedNote()
 	{
@@ -23,21 +22,12 @@ public class TileEntityRedNote extends TileEntityFactory
 	@Override
 	public void onRedNetChanged(ForgeDirection side, int value)
 	{
-		if (value < 0 || value > 119)
+		if (value <= 0 || value > 120)
 		{
 			return;
 		}
-		
-		if (_playedLastChange)
-		{
-			_playedLastChange = false;
-			return;
-		}
-		else
-		{
-			_playedLastChange = true;
-		}
-		
+
+		value--;
 		int instrument = value / 25;
 		int note = value % 25;
 		

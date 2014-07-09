@@ -6,11 +6,12 @@ import cofh.util.RegistryUtils;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -78,8 +79,8 @@ public class Machine
 {
 	public static final Material MATERIAL = new MachineMaterial(MapColor.ironColor);
 	private static List<Machine> _machines = new LinkedList<Machine>();
-	private static Map<Integer, Machine> _machineMappings = new HashMap<Integer, Machine>();
-	private static Map<Integer, Integer> _highestMetas = new HashMap<Integer, Integer>();
+	private static TIntObjectHashMap<Machine> _machineMappings = new TIntObjectHashMap<Machine>();
+	private static TIntArrayList _highestMetas = new TIntArrayList();
 	
 	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, 160, 8000);
 	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, 20, 16000);
@@ -206,7 +207,7 @@ public class Machine
 			throw new IllegalArgumentException("Maximum meta value for machines is 15");
 		}
 		
-		if (_machineMappings.containsKey(_machineIndex))
+		if (_machineMappings.get(_machineIndex) != null)
 		{
 			throw new IllegalArgumentException("Machine with index " + blockIndex + " and meta " +
 												meta + " already exists.");
@@ -224,9 +225,10 @@ public class Machine
 		_machineMappings.put(_machineIndex, this);
 		_machines.add(this);
 		
-		if (_highestMetas.get(_blockIndex) == null || _highestMetas.get(_blockIndex) < _meta)
+		_highestMetas.ensureCapacity(_blockIndex);
+		if (_highestMetas.getQuick(_blockIndex) < _meta)
 		{
-			_highestMetas.put(_blockIndex, _meta);
+			_highestMetas.setQuick(_blockIndex, _meta);
 		}
 	}
 	
@@ -237,12 +239,12 @@ public class Machine
 	
 	public static Machine getMachineFromId(BlockFactoryMachine block, int meta)
 	{
-		return  _machineMappings.get(meta | ((block.getBlockIndex() << 4)));
+		return  _machineMappings.get(meta | (block.getBlockIndex() << 4));
 	}
 	
 	public static int getHighestMetadata(int blockIndex)
 	{
-		return _highestMetas.get(blockIndex);
+		return _highestMetas.getQuick(blockIndex);
 	}
 	
 	public static List<Machine> values()

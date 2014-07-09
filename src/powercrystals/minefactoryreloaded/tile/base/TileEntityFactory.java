@@ -25,7 +25,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
-public abstract class TileEntityFactory extends TileEntity
+public abstract class TileEntityFactory extends TileEntityBase
 									 implements IRotateableTile, IPipeConnection,
 												IHarvestAreaContainer
 {
@@ -71,13 +71,6 @@ public abstract class TileEntityFactory extends TileEntity
 		{
 			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
-	}
-	
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-		this.onChunkUnload();
 	}
 	
 	@Override
@@ -329,8 +322,6 @@ public abstract class TileEntityFactory extends TileEntity
 		}
 	}
 	
-	public void onNeighborTileChange(int x, int y, int z) {}
-	
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
@@ -405,27 +396,4 @@ public abstract class TileEntityFactory extends TileEntity
     {
         return pass == 0 && getMaxRenderDistanceSquared() != -1D;
     }
-
-	private static final int HASH_A = 0x19660d;
-	private static final int HASH_C = 0x3c6ef35f;
-
-	@Override
-	public int hashCode() {
-		final int xTransform = HASH_A * (xCoord ^ 0xBABECAFE) + HASH_C;
-		final int zTransform = HASH_A * (zCoord ^ 0xDEADBEEF) + HASH_C;
-		final int yTransform = HASH_A * (yCoord ^ 0xE73AAE09) + HASH_C;
-		return xTransform ^ zTransform ^ yTransform;
-	}
-	
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof TileEntityFactory)
-		{
-			TileEntityFactory te = (TileEntityFactory)obj;
-			return (te.xCoord == xCoord) & te.yCoord == yCoord & te.zCoord == zCoord &&
-					te.isInvalid() == isInvalid() && worldObj == te.worldObj;
-		}
-		return false;
-	}
 }

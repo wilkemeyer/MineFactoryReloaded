@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.CoreUtils;
+import cofh.util.ItemHelper;
 import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -128,7 +129,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 			if (_temp == 0 && _inventory[3] == null)
 				return; // we're not burning anything and not changing the temp
 
-			if (_temp == maxTemp ? _totalBurningTime < 0 : _temp > 0 && _totalBurningTime != 0)
+			if (_temp == maxTemp ? _totalBurningTime < 0 : _totalBurningTime > 0 ? true : _temp != 0)
 			{
 				float diff = (float)Math.sqrt(Math.abs(_totalBurningTime)) / 103f;
 				diff = Math.copySign(diff, _totalBurningTime) / 1.26f;
@@ -179,7 +180,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 			return false;
 
 		_ticksUntilConsumption = burnTime;
-		decrStackSize(3, 1);
+		_inventory[3] = ItemHelper.consumeItem(_inventory[3]);
+		notifyNeighborTileChange();
 
 		return true;
 	}
@@ -293,7 +295,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return fluid == FluidRegistry.WATER;
+		return fluid == null || fluid == FluidRegistry.WATER;
 	}
 
 	@Override

@@ -411,10 +411,6 @@ chat.info.mfr.chunkloader.noticket = You have too many chunk loaders and this on
 
 tip.info.mfr.cannotplace = Cannot place for %s more seconds.
 
-tip.info.mfr.holdShift1 = Hold
-tip.info.mfr.holdShift2 = Shift
-tip.info.mfr.holdShift3 = for more information
-
 tip.info.mfr.safarinet.mode = Sneak-click to change mode
 tip.info.mfr.safarinet.jailer = Released creatures don't despawn normally
 tip.info.mfr.safarinet.mystery = It is a mystery
@@ -427,7 +423,7 @@ tip.info.mfr.upgrade.radius = Radius increase:
 
 tip.info.mfr.xpextractor = Requires an empty container to fill
 
-tip.info.mfr.generator.produces = Produces MJ, and RF.
+tip.info.mfr.generator.produces = Produces RF only.
 
 tip.info.mfr.dsu.contains = Contains
 
