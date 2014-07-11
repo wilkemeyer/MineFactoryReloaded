@@ -139,7 +139,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || resource.getFluid().isGaseous(resource))
+		if (resource == null || resource.getFluid().isGaseous(resource)
+				|| stack.stackSize != 1)
 			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
