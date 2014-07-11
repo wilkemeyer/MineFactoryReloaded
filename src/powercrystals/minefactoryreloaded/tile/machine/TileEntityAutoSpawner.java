@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -79,7 +78,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	protected boolean activateMachine()
 	{
 		ItemStack item = getStackInSlot(0);
-		if(!isItemValidForSlot(0, item))
+		if (item == null || !isItemValidForSlot(0, item))
 		{
 			setIdleTicks(getIdleTicksMax());
 			setWorkDone(0);
@@ -210,7 +209,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 4)};
 	}
 	
 	@Override

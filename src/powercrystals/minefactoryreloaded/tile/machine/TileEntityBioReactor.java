@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -219,7 +218,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
 	
 	@Override

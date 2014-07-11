@@ -5,6 +5,7 @@ import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -60,19 +61,19 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 			int extraBlocks = 0;
 			for (BlockPosition bp: fishingHole.getPositionsBottomFirst())
 			{
-				if (!worldObj.getBlock(bp.x, bp.y, bp.z).isAssociatedBlock(Blocks.water))
+				if (!isValidBlock(bp.x, bp.y, bp.z))
 				{
 					_isJammed = true;
 					setIdleTicks(getIdleTicksMax());
 					return false;
 				}
-				else if (worldObj.getBlock(bp.x, bp.y - 1, bp.z).isAssociatedBlock(Blocks.water))
+				else if (isValidBlock(bp.x, bp.y - 1, bp.z))
 				{
 					++extraBlocks;
 				}
 				if (bp.x != xCoord || bp.z != zCoord)
 				{
-					if (worldObj.getBlock(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z)).isAssociatedBlock(Blocks.water))
+					if (isValidBlock(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z)))
 					{
 						++extraBlocks;
 					}
@@ -90,6 +91,14 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 			setWorkDone(0);
 		}
 		return true;
+	}
+	
+	protected boolean isValidBlock(int x, int y, int z)
+	{
+		int meta = worldObj.getBlockMetadata(x, y, z);
+		if (meta != 0) return false;
+		Block block = worldObj.getBlock(x, y, z);
+		return block.isAssociatedBlock(Blocks.water) || block.isAssociatedBlock(Blocks.flowing_water);
 	}
 	
 	@Override

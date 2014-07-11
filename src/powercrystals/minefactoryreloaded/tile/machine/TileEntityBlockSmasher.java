@@ -16,7 +16,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -31,6 +30,7 @@ import powercrystals.minefactoryreloaded.world.SmashingWorld;
 
 public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
+	public static final int MAX_FORTUNE = 3;
 	private int _fortune = 0;
 	
 	private ItemStack _lastInput;
@@ -182,9 +182,9 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	
 	public void setFortune(int fortune)
 	{
-		if(fortune >= 0 && fortune <= 3)
+		if (fortune >= 0 && fortune <= MAX_FORTUNE)
 		{
-			if(_fortune < fortune)
+			if (_fortune < fortune)
 			{
 				setWorkDone(0);
 			}
@@ -245,7 +245,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
 	
 	@Override

@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.fluid.FluidTankAdv;
 
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -23,7 +22,7 @@ public class TileEntitySteamTurbine extends TileEntityLiquidGenerator
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 8)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 8)};
 	}
 
 	@Override

@@ -55,6 +55,11 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	public boolean activateMachine()
 	{
 		BlockPosition bp = _areaManager.getNextBlock();
+		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
+		{
+			setIdleTicks(getIdleTicksMax());
+			return false;
+		}
 		
 		ItemStack match = _inventory[getPlanterSlotIdFromBp(bp)];
 		

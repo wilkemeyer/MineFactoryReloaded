@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -87,7 +86,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 10)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 10)};
 	}
 	
 	@Override

@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -247,8 +246,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 16),
-				new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 32)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 32),
+				new FluidTankAdv(BUCKET_VOLUME * 16)};
 	}
 
 	@Override

@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -44,7 +43,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 4)};
 	}
 	
 	@Override

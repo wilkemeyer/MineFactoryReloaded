@@ -61,6 +61,12 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 	public boolean activateMachine()
 	{
 		BlockPosition bp = _areaManager.getNextBlock();
+		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
+		{
+			setIdleTicks(getIdleTicksMax());
+			return false;
+		}
+
 		Map<Block, IFactoryFertilizable> fertalizables = MFRRegistry.getFertilizables();
 		
 		Block target = worldObj.getBlock(bp.x, bp.y, bp.z);

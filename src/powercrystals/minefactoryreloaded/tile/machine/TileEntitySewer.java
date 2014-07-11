@@ -18,7 +18,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -178,8 +177,8 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] { new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME),
-				new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4) };
+		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME),
+				new FluidTankAdv(BUCKET_VOLUME * 4) };
 	}
 	
 	@Override

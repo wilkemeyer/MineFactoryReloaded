@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import static net.minecraftforge.fluids.FluidRegistry.WATER;
+
+import cofh.util.FluidHelper;
 import cofh.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,8 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -24,11 +25,15 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityWeather extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
+	protected int _canSeeSky = 0;
+	protected boolean _canWeather = false, _willSnow = false, _openSky = false;
+	protected BiomeGenBase _biome = null;
 	
 	public TileEntityWeather()
 	{
 		super(Machine.WeatherCollector);
 		setManageSolids(true);
+		_tanks[0].setLock(WATER);
 	}
 	
 	@Override
@@ -59,11 +64,23 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	@Override
 	public boolean activateMachine()
 	{
-		if (worldObj.getWorldInfo().isRaining() && canSeeSky())
+		if (worldObj.getWorldInfo().isRaining())
 		{
-			BiomeGenBase bgb = worldObj.getBiomeGenForCoords(xCoord, zCoord);
-			
-			if (!bgb.canSpawnLightningBolt() && !bgb.getEnableSnow())
+			l: {
+				BiomeGenBase bgb = worldObj.getBiomeGenForCoords(xCoord, zCoord);
+
+				if (_canWeather & _biome == bgb) break l;
+				_biome = bgb;
+				if (!bgb.canSpawnLightningBolt() && !bgb.getEnableSnow())
+				{
+					_canWeather = false;
+					setIdleTicks(getIdleTicksMax());
+					return false;
+				}
+				_canWeather = true;
+				_willSnow = bgb.getFloatTemperature(xCoord, yCoord, zCoord) < 0.15F;
+			}
+			if (!canSeeSky())
 			{
 				setIdleTicks(getIdleTicksMax());
 				return false;
@@ -71,23 +88,27 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 			setWorkDone(getWorkDone() + 1);
 			if (getWorkDone() >= getWorkMax())
 			{
-				if (bgb.getFloatTemperature(xCoord, yCoord, zCoord) >= 0.15F)
+				if (!_willSnow)
 				{
-					if(_tanks[0].fill(FluidRegistry.getFluidStack("water", FluidContainerRegistry.BUCKET_VOLUME), true) > 0)
+					if (_tanks[0].getSpace() >= BUCKET_VOLUME &&
+							_tanks[0].fill(FluidHelper.WATER, true) > 0)
 					{
 						setWorkDone(0);
+						setIdleTicks(3);
 						return true;
 					}
 					else
 					{
 						setWorkDone(getWorkMax());
+						setIdleTicks(10);
 						return false;
 					}
 				}
 				else
 				{
-					doDrop(new ItemStack(Items.snowball));
+					doDrop(new ItemStack(Items.snowball, 3));
 					setWorkDone(0);
+					setIdleTicks(1);
 				}
 			}
 			return true;
@@ -104,15 +125,26 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	
 	private boolean canSeeSky()
 	{
-		for(int y = yCoord + 1; y < 256; y++)
+		if (--_canSeeSky > 0) return _openSky;
+		_canSeeSky = 70;
+		int h = worldObj.getHeight();
+		_openSky = true;
+		for (int y = yCoord + 1; y < h; y++)
 		{
 			Block block = worldObj.getBlock(xCoord, y, zCoord);
 			if (!block.isAir(worldObj, xCoord, y, zCoord))
 			{
-				return false;
+				_openSky = false;
+				break;
 			}
 		}
-		return true;
+		return _openSky;
+	}
+	
+	@Override
+	public int getSizeInventory()
+	{
+		return 0;
 	}
 	
 	@Override
@@ -121,6 +153,12 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 		return 0;
 	}
 	
+	@Override
+	public boolean shouldPumpLiquid()
+	{
+		return true;
+	}
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
@@ -142,22 +180,18 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
-	}
-	
-	@Override
-	public int getSizeInventory()
-	{
-		return 0;
+		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
 		return false;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
 		return true;
 	}
 }

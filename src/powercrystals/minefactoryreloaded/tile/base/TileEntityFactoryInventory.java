@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
@@ -23,8 +24,9 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
 {
-	private static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] {};
-	private static FluidTankInfo[] emptyFluidTankInfo = new FluidTankInfo[] {};
+	protected final static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] {};
+	protected final static FluidTankInfo[] emptyFluidTankInfo = new FluidTankInfo[] {};
+	protected final static int BUCKET_VOLUME = FluidContainerRegistry.BUCKET_VOLUME;
 	
 	protected String _invName;
 	protected boolean _hasInvName = false;

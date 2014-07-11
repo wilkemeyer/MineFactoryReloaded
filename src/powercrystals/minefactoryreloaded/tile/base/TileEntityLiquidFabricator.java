@@ -8,7 +8,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -19,33 +18,28 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	private int _liquidId;
+	private FluidStack fluid;
 	private int _liquidFabPerTick;
 	
 	protected TileEntityLiquidFabricator(int liquidId, int liquidFabPerTick, Machine machine)
 	{
 		super(machine, machine.getActivationEnergy() * liquidFabPerTick);
-		_liquidId = liquidId;
 		_liquidFabPerTick = liquidFabPerTick;
+		if (liquidId > 0)
+			fluid = new FluidStack(liquidId, liquidFabPerTick);
+		else
+			fluid = null;
 	}
 	
 	@Override
 	protected boolean activateMachine()
 	{
-		if(_liquidId < 0)
-		{
-			setIdleTicks(getIdleTicksMax());
-			return false;
-		}
-		
-		FluidStack fluid = new FluidStack(_liquidId, _liquidFabPerTick);
-		
-		if (fill(ForgeDirection.UNKNOWN, fluid, false) != _liquidFabPerTick)
-			return false;
-		
-		fill(ForgeDirection.UNKNOWN, fluid, true);
-		
-		return true;
+		if (fluid != null && _tanks[0].getSpace() >= _liquidFabPerTick)
+			if (_tanks[0].fill(fluid, true) > 0)
+				return true;
+
+		setIdleTicks(getIdleTicksMax());
+		return false;
 	}
 	
 	@Override
@@ -75,7 +69,7 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME)};
 	}
 	
 	@Override

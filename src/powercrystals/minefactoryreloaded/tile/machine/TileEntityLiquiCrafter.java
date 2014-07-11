@@ -332,7 +332,7 @@ inv:	for(int i = 0; i < 9; i++)
 		FluidTankAdv[] _tanks = new FluidTankAdv[9];
 		for(int i = 0; i < 9; i++)
 		{
-			_tanks[i] = new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 10);
+			_tanks[i] = new FluidTankAdv(BUCKET_VOLUME * 10);
 		}
 		return _tanks;
 	}

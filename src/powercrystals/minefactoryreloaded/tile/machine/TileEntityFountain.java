@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import static net.minecraftforge.fluids.FluidContainerRegistry.BUCKET_VOLUME;
-
 import cofh.util.fluid.FluidTankAdv;
 import cofh.util.position.Area;
 import cofh.util.position.BlockPosition;
@@ -75,6 +73,8 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 					x = bp.x; y = bp.y; z = bp.z;
 					_fillingManager.moveNext();
 				}
+				if (!worldObj.blockExists(x, y, z)) break l;
+
 				Block block = worldObj.getBlock(x, y, z);
 				if (_reverse)
 				{

@@ -19,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -192,6 +191,10 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			return getNextTreeSegment(_lastTree, false);
 		BlockPosition bp = _areaManager.getNextBlock();
 		_lastTree = null;
+		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
+		{
+			return null;
+		}
 		
 		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
 		
@@ -288,6 +291,10 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		{
 			BlockPosition bp = _treeManager.getNextBlock();
 			_treeManager.moveNext();
+			if (!worldObj.blockExists(bp.x, bp.y, bp.z))
+			{
+				return null;
+			}
 			block = worldObj.getBlock(bp.x, bp.y, bp.z);
 			
 			if (harvestables.containsKey(block))
@@ -330,7 +337,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * FluidContainerRegistry.BUCKET_VOLUME)};
+		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
 	
 	@Override

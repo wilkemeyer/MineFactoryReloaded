@@ -123,6 +123,10 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	private BlockPosition getNextTree()
 	{
 		BlockPosition bp = _areaManager.getNextBlock();
+		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
+		{
+			return null;
+		}
 		
 		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
 		

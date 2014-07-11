@@ -8,7 +8,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -67,7 +66,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(FluidContainerRegistry.BUCKET_VOLUME * 4)};
+		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 4)};
 	}
 
 	protected String getFluidName(FluidStack fluid)
