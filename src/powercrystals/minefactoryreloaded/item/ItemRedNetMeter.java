@@ -8,6 +8,8 @@ import cofh.util.ServerHelper;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -31,10 +33,19 @@ public class ItemRedNetMeter extends ItemMulti
 	}
 	
 	@Override
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity)
+	{
+		if (player.worldObj.isRemote)
+			return true;
+		player.addChatMessage(new ChatComponentText("ID: " + EntityList.getEntityString(entity)));
+		return true;
+	}
+	
+	@Override
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world,
 			int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
 	{
-		if(world.isRemote)
+		if (world.isRemote)
 		{
 			return true;
 		}

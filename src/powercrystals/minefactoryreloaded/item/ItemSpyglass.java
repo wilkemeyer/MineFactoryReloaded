@@ -72,7 +72,7 @@ public class ItemSpyglass extends ItemFactory
 	
 	private String getEntityName(Entity entity)
 	{
-		String name = (String)EntityList.classToStringMapping.get(entity.getClass());
+		String name = EntityList.getEntityString(entity);
 		return name != null ? StatCollector.translateToLocal("entity." + name + ".name") : "Unknown Entity";
 	}
 	

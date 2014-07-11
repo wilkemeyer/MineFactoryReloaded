@@ -380,7 +380,7 @@ public class ItemSafariNet extends ItemFactory
 			
 			entity.writeToNBT(c);
 			
-			c.setString("id", (String)EntityList.classToStringMapping.get(entity.getClass()));
+			c.setString("id", EntityList.getEntityString(entity));
 			if (itemstack.equals(MineFactoryReloadedCore.safariNetJailerItem))
 			{
 				c.setBoolean("PersistenceRequired", true);
