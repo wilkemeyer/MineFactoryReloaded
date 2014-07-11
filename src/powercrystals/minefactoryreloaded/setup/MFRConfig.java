@@ -357,7 +357,7 @@ public class MFRConfig
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
 		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);
 		unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
-		spawnerBlacklist = c.get("Machine." + Machine.AutoSpawner.getName(), "Blacklist", new String[] {}).setRequiresMcRestart(true);
+		spawnerBlacklist = c.get("Machine." + Machine.AutoSpawner.getName(), "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
 		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, butterflyGE) to blacklist from the AutoSpawner.";
 		breederShutdownThreshold = c.get("Machine." + Machine.Breeder.getName(), "ShutdownThreshold", 50).setRequiresMcRestart(true);
 		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";

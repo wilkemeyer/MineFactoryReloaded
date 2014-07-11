@@ -384,8 +384,6 @@ public class Vanilla
 		MFRRegistry.registerFruitLogBlock(Blocks.log);
 		MFRRegistry.registerFruit(new FruitCocoa(Blocks.cocoa));
 		
-		MFRRegistry.registerAutoSpawnerBlacklist("VillagerGolem");
-		
 		MFRRegistry.registerSpawnHandler(new SpawnableHorse());
 		MFRRegistry.registerSpawnHandler(new SpawnableEnderman());
 		
