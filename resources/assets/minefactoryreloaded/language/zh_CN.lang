@@ -1,6 +1,4 @@
 #zh_CN
-#translated by crafteverywhere
-#version=2.6.X
 
 tile.mfr.machine.planter.name = 播种机
 tile.mfr.machine.fisher.name = 钓鱼机
@@ -25,7 +23,7 @@ tile.mfr.machine.liquidrouter.name = 液体路由机
 tile.mfr.machine.deepstorageunit.name = 异次元储存器
 tile.mfr.machine.liquicrafter.name = 液体加工机
 tile.mfr.machine.lavafabricator.name = 岩浆制造机
-tile.mfr.machine.oilfabricator.name = 原油制造机
+tile.mfr.machine.steamboiler.name = 蒸汽锅炉
 tile.mfr.machine.autojukebox.name = 自动音乐盒
 tile.mfr.machine.unifier.name = 统一化机器(转化通用矿石)
 tile.mfr.machine.autospawner.name = 自动刷怪机
@@ -46,6 +44,9 @@ tile.mfr.machine.fruitpicker.name = 果实采摘器
 tile.mfr.machine.blockplacer.name = 方块放置器
 tile.mfr.machine.mobcounter.name = 生物计数器
 tile.mfr.machine.steamturbine.name = 蒸汽涡轮
+tile.mfr.machine.chunkloader.name = 区块加载器
+tile.mfr.machine.fountain.name = 喷泉
+tile.mfr.machine.mobrouter.name = 怪物路由器
 
 tile.mfr.conveyor.default.name = 传送带
 tile.mfr.conveyor.white.name = 白色传送带
@@ -117,6 +118,10 @@ tile.mfr.decorativebrick.lapis_large.name = 大型青金石砖块
 tile.mfr.decorativebrick.obsidian_large.name = 大型黑曜石砖块
 tile.mfr.decorativebrick.snow_large.name = 大型雪砖块
 tile.mfr.decorativebrick.prc.name = 可编程红石网络控制器外壳
+tile.mfr.decorativebrick.meat.raw.name = 生肉块
+tile.mfr.decorativebrick.meat.cooked.name = 烤肉块
+tile.mfr.decorativebrick.pavedstone_large.name = 大型铺路石砖
+tile.mfr.decorativebrick.brick_large.name = 大型砖块
 
 tile.mfr.decorativestone.black.smooth.name = 光滑黑岩
 tile.mfr.decorativestone.black.cobble.name = 黑岩圆石
@@ -130,16 +135,22 @@ tile.mfr.decorativestone.white.brick.small.name = 小型白岩砖块
 tile.mfr.decorativestone.white.brick.large.name = 大型白岩砖块
 tile.mfr.decorativestone.white.gravel.name = 白岩砂砾
 tile.mfr.decorativestone.white.paved.name = 铺路白岩
-tile.mfr.decorativebrick.meat.raw.name = 生肉块
-tile.mfr.decorativebrick.meat.cooked.name = 烤肉块
+
 
 tile.ice.unmelting.name = 不融冰
 
 tile.mfr.vinescaffold.name = 藤蔓脚手架
 
+tile.mfr.detcord.name = DetCord
+
+tile.mfr.farmland.name = 沃土
 tile.mfr.rubberwood.sapling.name = 橡胶树树苗
+tile.mfr.rubberwood.sapling.sacred.name = 神圣橡胶树树苗
+tile.mfr.rubberwood.sapling.mega.name = 宏伟橡胶树树苗
+tile.mfr.rubberwood.sapling.massive.name = 神圣橡胶树树苗
 tile.mfr.rubberwood.log.name = 橡胶木
 tile.mfr.rubberwood.leaves.name = 橡胶树叶
+tile.mfr.rubberwood.leaves.dry.name = 干枯橡胶树叶
 
 tile.mfr.rail.cargo.dropoff.name = 货运卸载轨道
 tile.mfr.rail.cargo.pickup.name = 货运装载轨道
@@ -147,32 +158,30 @@ tile.mfr.rail.passenger.dropoff.name = 乘客下车轨道
 tile.mfr.rail.passenger.pickup.name = 乘客搭车轨道
 
 tile.mfr.cable.redstone.name = 红石线缆
+tile.mfr.cable.redstone.glass.name = 红石线缆
+tile.mfr.cable.redstone.energy.name = 红石能量线缆
+tile.mfr.cable.redstone.energyglass.name = 红石能量线缆
 tile.mfr.rednet.logic.name = 可编程红石控制器
 tile.mfr.rednet.panel.historian.name = 波形记录器
 
 fluid.mfr.liquid.milk.flowing.name = 牛奶
 fluid.mfr.liquid.milk.still.name = 牛奶
-fluid.mfr.liquid.sludge.flowing.name = 污泥
+
 fluid.mfr.liquid.sludge.still.name = 污泥
-fluid.mfr.liquid.sewage.flowing.name = 污水
+
 fluid.mfr.liquid.sewage.still.name = 污水
-fluid.mfr.liquid.mobessence.flowing.name = 精华液
+
 fluid.mfr.liquid.mobessence.still.name = 精华液
-fluid.mfr.liquid.biofuel.flowing.name = 生物燃油
+
 fluid.mfr.liquid.biofuel.still.name = 生物燃油
 fluid.mfr.liquid.meat.still.name = 肉汤
 fluid.mfr.liquid.pinkslime.still.name = 粉色粘液
 fluid.mfr.liquid.chocolatemilk.still.name = 巧克力牛奶
 fluid.mfr.liquid.mushroomsoup.still.name = 蘑菇汤
+fluid.mfr.liquid.steam.still.name = 蒸汽
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = 粉色史莱姆
 
-item.mfr.hammer.name = 精密工厂锤
-item.mfr.fertilizer.name = 工业肥料
-item.mfr.plastic.sheet.name = 塑料片
-item.mfr.plastic.raw.name = 生塑料
-item.mfr.rubber.bar.name = 树胶块
-item.mfr.rubber.raw.name = 树胶
 item.mfr.bucket.milk.name = 牛奶桶
 item.mfr.bucket.sewage.name = 污水桶
 item.mfr.bucket.sludge.name = 污泥桶
@@ -190,7 +199,19 @@ item.mfr.bucket.plasticcell.name = 塑料单元
 item.mfr.bucket.plasticcell.prefix.name =
 item.mfr.bucket.plasticcell.suffix.name =单元
 
-item.mfr.syringe.cure.name = 僵尸病毒抗体注射器
+item.mfr.armor.helm.plastic.name  = 塑料头盔
+item.mfr.armor.chest.plastic.name = 塑料胸甲
+item.mfr.armor.legs.plastic.name  = 塑料护腿
+item.mfr.armor.boots.plastic.name = 塑料靴子
+
+item.mfr.machineblock.name = 工厂机械块
+item.mfr.hammer.name = 精密锻造锤
+item.mfr.fertilizer.name = 工业肥料
+item.mfr.plastic.sheet.name = 塑料片
+item.mfr.plastic.raw.name = 生塑料
+item.mfr.rubber.bar.name = 橡胶杆
+item.mfr.rubber.raw.name = 生橡胶
+item.mfr.syringe.cure.name = 去僵尸化注射器
 item.mfr.syringe.empty.name = 空注射器
 item.mfr.syringe.empty.prefix.name =
 item.mfr.syringe.empty.suffix.name = 注射器
@@ -203,7 +224,7 @@ item.mfr.safarinet.reusable.name = 大师球
 item.mfr.safarinet.singleuse.name = 一次性大师球
 item.mfr.safarinet.jailer.name = 狱卒的大师球
 item.mfr.safarinet.launcher.name = 大师球发射器
-item.mfr.machineblock.name = 工厂机器方块
+
 item.mfr.sugarcharcoal.name = 竹炭
 item.mfr.milkbottle.name = 奶瓶
 item.mfr.spyglass.name = 单筒望远镜
@@ -223,6 +244,7 @@ item.mfr.rocket.smart.name = 追踪型自导航反物质火箭
 item.mfr.rocketlauncher.name = 自推进反物质火箭发射筒
 
 item.mfr.fishingrod.name = 炸鱼竿
+item.mfr.plastic.bag.name = 塑料包
 
 item.mfr.ceramicdye.white.name = 陶瓷颜料(白色)
 item.mfr.ceramicdye.orange.name = 陶瓷颜料(橙色)
@@ -299,6 +321,8 @@ circuit.mfr.boolean.lessequal = 判断器：小于等于
 circuit.mfr.boolean.notequal = 判断器：不等于
 circuit.mfr.counter = 计数器
 circuit.mfr.decompose.decimal = 整型转浮点
+circuit.mfr.delay = 延时器
+circuit.mfr.delay8ch = 延时器 (8-频道)
 circuit.mfr.demux.16.analog = 分路器(16-输出, 模拟)
 circuit.mfr.demux.4 = 分路器(4-输出)
 circuit.mfr.fanout = 多路输出口
@@ -315,6 +339,7 @@ circuit.mfr.max.4 = 比较器：最大值(4-输入)
 circuit.mfr.min.2 = 比较器：最小值(2-输入)
 circuit.mfr.min.3 = 比较器：最小值(3-输入)
 circuit.mfr.min.4 = 比较器：最小值(4-输入)
+circuit.mfr.multiplier = 倍增器
 circuit.mfr.multipulse = 多路脉冲器
 circuit.mfr.mux.16.analog = 多路复用器(15-输入，模拟)
 circuit.mfr.mux.4 = 多路复用器(4-输入)
@@ -329,8 +354,7 @@ circuit.mfr.oneshot = 单次脉冲器
 circuit.mfr.or.2 = 或门(2-输入)
 circuit.mfr.or.3 = 或门(3-输入)
 circuit.mfr.or.4 = 或门(4-输入)
-circuit.mfr.delay = 延时器
-circuit.mfr.delay8ch = 延时器 (8-频道)
+
 circuit.mfr.passthrough = 通过器
 circuit.mfr.passthrough.gated = 通过器(门控)
 circuit.mfr.passthrough.roundrobin = 通过器(环形)
@@ -353,6 +377,8 @@ circuit.mfr.xor.2 = 异或(2-输入)
 circuit.mfr.xor.3 = 异或(3-输入)
 circuit.mfr.xor.4 = 异或(4-输入)
 
+container.mfr.radius = 半径:
+container.mfr.power = 能量图:
 chat.info.mfr.safarinet.capture=切换为捕获模式
 chat.info.mfr.safarinet.release=切换为释放模式
 
@@ -383,10 +409,32 @@ chat.info.mfr.rednet.connection.forced=设置线缆为强制连接模式
 chat.info.mfr.rednet.connection.forcedstrong=设置线缆为强连接模式
 chat.info.mfr.rednet.connection.cableonly=设置线缆为均与线缆连接模式
 death.attack.mfr.slaughterhouse=%1$s被加工成了肉汤。
-death.attack.mfr.slaughterhouse.player=%1$s被%2$s加工成了肉汤。 
-death.attack.mfr.slaughterhouse.1=%1$s被加工成了肉酱。
-death.attack.mfr.slaughterhouse.1.player=%1$s被%2$s加工成了肉酱。
+tip.info.mfr.cannotplace = 无法放置%s 秒.
+
+tip.info.mfr.safarinet.mode = 潜行点击改变模式
+tip.info.mfr.safarinet.jailer = 释放出来的生物不会正常消失
+tip.info.mfr.safarinet.mystery = 这是个秘密
+
+tip.info.mfr.prc = 如果你不知所措,请阅读(游戏内) 手册
+
+tip.info.mfr.needlegun.ammo = 圈
+
+tip.info.mfr.upgrade.radius = 半径增加:
+
+tip.info.mfr.xpextractor = 需要一个空箱
+
+tip.info.mfr.generator.produces = 只产生RF.
+
+tip.info.mfr.dsu.contains = 包含
+
+tip.info.mfr.mobcounter = 发生一个模拟红石信号\n部分计数\n范围内产生的怪物.
+
+tip.info.mfr.laserdrill = 放置于基岩或者虚空之上
+tip.info.mfr.laserdrillprecharger = 放置于有些激光目标一个远的地方
 death.attack.mfr.grinder=%1$s被磨碎成了渣渣。
 death.attack.mfr.grinder.player=%2$s确信%1$s已经被磨碎成了渣渣。
 death.attack.mfr.laser=%1$s被激光分解了.
 death.attack.mfr.laser.player=%2$s确信%1$s已经被激光分解掉了.
+death.attack.mfr.slaughterhouse.player=%1$s被%2$s加工成了肉汤。 
+death.attack.mfr.slaughterhouse.1=%1$s被加工成了肉酱。
+death.attack.mfr.slaughterhouse.1.player=%1$s被%2$s加工成了肉酱。
