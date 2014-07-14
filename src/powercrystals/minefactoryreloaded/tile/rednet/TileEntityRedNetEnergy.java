@@ -6,6 +6,7 @@ import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwor
 
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
+import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -50,8 +51,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private IC2Cache ic2Cache = null;
 	private boolean deadCache = false;
 
-	int energyForGrid = 0;
 	boolean isNode = false;
+	int energyForGrid = 0;
 
 	RedstoneEnergyNetwork _grid;
 
@@ -70,8 +71,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 	
 	@Override // cannot share mcp names
-	public boolean isNotValid()
-	{
+	public boolean isNotValid() {
 		return tileEntityInvalid;
 	}
 
@@ -201,7 +201,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityRedNetEnergy && ((TileEntityRedNetEnergy)tile)._grid != null) {
+				if (tile instanceof TileEntityRedNetEnergy &&
+						((TileEntityRedNetEnergy)tile)._grid != null &&
+						((TileEntityRedNetEnergy)tile).canInterface(this)) {
 					((TileEntityRedNetEnergy)tile)._grid.addConduit(this);
 					break;
 				}
@@ -327,7 +329,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			energyForGrid = 0;
 	}
 
-	void extract(ForgeDirection side) {
+	void extract(ForgeDirection side, EnergyStorage storage) {
 		if (deadCache) return;
 		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
@@ -339,7 +341,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					{
 						int e = handlerTile.extractEnergy(side, TRANSFER_RATE, true);
 						if (e > 0)
-							handlerTile.extractEnergy(side, _grid.storage.receiveEnergy(e, false), false);
+							handlerTile.extractEnergy(side, storage.receiveEnergy(e, false), false);
 					}
 				}
 				break;

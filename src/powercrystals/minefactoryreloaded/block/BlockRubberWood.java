@@ -29,6 +29,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	{
 		setBlockName("mfr.rubberwood.log");
 		setCreativeTab(MFRCreativeTab.tab);
+		setHarvestLevel("axe", 0);
 	}
 
 	@Override

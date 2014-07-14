@@ -44,7 +44,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if(!worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
 			if (deadCache) reCache();
 			setIsActive(_buffer > _outputPulseSize * 2);

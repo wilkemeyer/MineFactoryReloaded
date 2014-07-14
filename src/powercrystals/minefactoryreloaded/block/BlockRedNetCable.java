@@ -77,23 +77,24 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 	private static float _bandDepthStart = _bandOffset;
 	private static float _bandDepthEnd   = _bandOffset + _bandDepth;
 
-	private static int[] _subSideMappings = new int[] { 6, 6,
+	static int[] _subSideMappings = new int[] { 6, 6,
+		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5 };
 
-	public static Cuboid6[] subSelection = new Cuboid6[2 + 6 * 5];
+	public static Cuboid6[] subSelection = new Cuboid6[2 + 6 * 6];
 
 	static {
 		int i = 0;
-		// cable hitbox
+		// ** 0 **  cable hitbox
 		subSelection[i++] = new Cuboid6(_wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd, _wireEnd);
-		// wire cage hitbox
+		// ** 1 **  wire cage hitbox
 		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd);
 
-		// grip hitbox
+		// ** 6[0] ** grip hitbox
 		subSelection[i++] = new Cuboid6(_gripStart, 0, _gripStart, _gripEnd, _plateDepth, _gripEnd);
 		subSelection[i++] = new Cuboid6(_gripStart, 1 - _plateDepth, _gripStart, _gripEnd, 1, _gripEnd);
 		subSelection[i++] = new Cuboid6(_gripStart, _gripStart, 0, _gripEnd, _gripEnd, _plateDepth);
@@ -101,7 +102,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		subSelection[i++] = new Cuboid6(0, _gripStart, _gripStart, _plateDepth, _gripEnd, _gripEnd);
 		subSelection[i++] = new Cuboid6(1 - _plateDepth, _gripStart, _gripStart, 1, _gripEnd, _gripEnd);
 
-		// plate hitbox
+		// ** 6[1] ** plate hitbox
 		subSelection[i++] = new Cuboid6(_plateStart, 0, _plateStart, _plateEnd, _plateDepth, _plateEnd);
 		subSelection[i++] = new Cuboid6(_plateStart, 1 - _plateDepth, _plateStart, _plateEnd, 1, _plateEnd);
 		subSelection[i++] = new Cuboid6(_plateStart, _plateStart, 0, _plateEnd, _plateEnd, _plateDepth);
@@ -109,7 +110,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		subSelection[i++] = new Cuboid6(0, _plateStart, _plateStart, _plateDepth, _plateEnd, _plateEnd);
 		subSelection[i++] = new Cuboid6(1 - _plateDepth, _plateStart, _plateStart, 1, _plateEnd, _plateEnd);
 
-		// color band hitbox
+		// ** 6[2] ** color band hitbox
 		subSelection[i++] = new Cuboid6(_bandWidthStart, _bandDepthStart, _bandWidthStart, _bandWidthEnd, _bandDepthEnd, _bandWidthEnd);
 		subSelection[i++] = new Cuboid6(_bandWidthStart, 1 - _bandDepthEnd, _bandWidthStart, _bandWidthEnd, 1 - _bandDepthStart, _bandWidthEnd);
 		subSelection[i++] = new Cuboid6(_bandWidthStart, _bandWidthStart, _bandDepthStart, _bandWidthEnd, _bandWidthEnd, _bandDepthEnd);
@@ -117,7 +118,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		subSelection[i++] = new Cuboid6(_bandDepthStart, _bandWidthStart, _bandWidthStart, _bandDepthEnd, _bandWidthEnd, _bandWidthEnd);
 		subSelection[i++] = new Cuboid6(1 - _bandDepthEnd, _bandWidthStart, _bandWidthStart, 1 - _bandDepthStart, _bandWidthEnd, _bandWidthEnd);
 
-		// cable connection hitbox
+		// ** 6[3] ** cable connection hitbox
 		subSelection[i++] = new Cuboid6(_wireStart, _plateDepth, _wireStart, _wireEnd, _wireStart, _wireEnd);
 		subSelection[i++] = new Cuboid6(_wireStart, _wireEnd, _wireStart, _wireEnd, 1 - _plateDepth, _wireEnd);
 		subSelection[i++] = new Cuboid6(_wireStart, _wireStart, _plateDepth, _wireEnd, _wireEnd, _wireStart);
@@ -125,13 +126,21 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		subSelection[i++] = new Cuboid6(_plateDepth, _wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd);
 		subSelection[i++] = new Cuboid6(_wireEnd, _wireStart, _wireStart, 1 - _plateDepth, _wireEnd, _wireEnd);
 		
-		// wire cage connection hitbox
+		// ** 6[4] ** wire cage minus band connection hitbox
 		subSelection[i++] = new Cuboid6(_cageStart, _bandDepthEnd, _cageStart, _cageEnd, _cageStart, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - _bandDepthEnd, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _bandDepthEnd, _cageEnd, _cageEnd, _cageStart);
 		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd, 1 - _bandDepthEnd);
 		subSelection[i++] = new Cuboid6(_bandDepthEnd, _cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - _bandDepthEnd, _cageEnd, _cageEnd);
+		
+		// ** 6[5] ** wire cage connection hitbox
+		subSelection[i++] = new Cuboid6(_cageStart, _plateDepth, _cageStart, _cageEnd, _cageStart, _cageEnd);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - _plateDepth, _cageEnd);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _plateDepth, _cageEnd, _cageEnd, _cageStart);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd, 1 - _plateDepth);
+		subSelection[i++] = new Cuboid6(_plateDepth, _cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd);
+		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - _plateDepth, _cageEnd, _cageEnd);
 	}
 
 	public BlockRedNetCable()
@@ -142,6 +151,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable
 		setHardness(0.8F);
 
 		setCreativeTab(MFRCreativeTab.tab);
+		setHarvestLevel("pickaxe", 0);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.control;
 import cofh.gui.GuiColor;
 import cofh.gui.element.ElementButtonManaged;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
@@ -88,10 +89,26 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 	@Override
 	public void onClick()
 	{
-		_pin++;
-		if((_buffer == 14 && _pin > 0) || (_buffer == 13 && _pin >= _containerScreen.getVariableCount()) || (_buffer == 12 && _pin > 255) || (_buffer < 12 && _pin > 15))
+		int mult = getMult();
+		_pin += mult;
+		switch (_buffer)
 		{
+		case 14:
 			_pin = 0;
+			break;
+		case 13:
+			int t = _containerScreen.getVariableCount();
+			if (_pin >= t)
+				_pin %= t;
+			break;
+		case 12:
+			if (_pin >= 10000)
+				_pin -= 10000;
+			break;
+		default:
+			if (_pin > 15)
+				_pin %= 16;
+			break;
 		}
 		
 		updatePin();
@@ -100,25 +117,26 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 	@Override
 	public void onRightClick()
 	{
-		_pin--;
+		int mult = getMult();
+		_pin -= mult;
 		
-		if(_pin < 0)
+		if (_pin < 0)
 		{
-			if(_buffer == 14)
+			switch (_buffer)
 			{
+			case 14:
 				_pin = 0;
-			}
-			else if(_buffer == 13)
-			{
-				_pin = _containerScreen.getVariableCount() - 1;
-			}
-			else if(_buffer == 12)
-			{
-				_pin = 255;
-			}
-			else
-			{
-				_pin = 15;
+				break;
+			case 13:
+				int t = _containerScreen.getVariableCount();
+				_pin = t + (_pin % t);
+				break;
+			case 12:
+				_pin = 10000 + _pin;
+			break;
+			default:
+				_pin = 16 + (_pin % 16);
+				break;
 			}
 		}
 		
@@ -128,22 +146,22 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 	@Override
 	public void onMiddleClick()
 	{
-		if(_buffer == 13)
+		// TODO: replace text display with text input instead
+		int mult = getMult();
+		if (_buffer == 13)
 		{
-			_pin += 16;
+			_pin += 16 * mult;
 			if(_pin >= _containerScreen.getVariableCount())
 			{
 				_pin = _pin - _containerScreen.getVariableCount();
 			}
 			updatePin();
 		}
-		else if(_buffer == 12)
+		else if (_buffer == 12)
 		{
-			_pin += 16;
-			if(_pin >= 256)
-			{
-				_pin = _pin - 256;
-			}
+			_pin += 16 * mult;
+			if (_pin >= 10000)
+				_pin -= 10000;
 			updatePin();
 		}
 		else
@@ -152,10 +170,35 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 		}
 	}
 	
+	private static final int getMult()
+	{
+		// ctrl = *2; alt = *4; shift = *8;
+		if (MFRUtil.isAltKeyDown())
+			if (MFRUtil.isShiftKeyDown())
+				if (MFRUtil.isCtrlKeyDown())
+					return 64;
+				else
+					return 32;
+			else
+				if (MFRUtil.isCtrlKeyDown())
+					return 6; // break from multiplying so there's not two 8s
+				else
+					return 4;
+		else if (MFRUtil.isShiftKeyDown())
+			if (MFRUtil.isCtrlKeyDown())
+				return 16;
+			else
+				return 8;
+		else if (MFRUtil.isCtrlKeyDown())
+			return 2;
+		else
+			return 1;
+	}
+	
 	private void updatePin()
 	{
-		setText(((Integer)_pin).toString());
-		if(_buttonType == LogicButtonType.Input)
+		setText(String.valueOf(_pin));
+		if (_buttonType == LogicButtonType.Input)
 		{
 			_containerScreen.setInputPinMapping(_pinIndex, _buffer, _pin);
 		}
@@ -168,9 +211,9 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		if(_buffer < 12)
+		if (_buffer < 12)
 		{
-			if(!MFRConfig.colorblindMode.getBoolean(false))
+			if (!MFRConfig.colorblindMode.getBoolean(false))
 			{
 				drawModalRect(posX + 3, posY + 3, posX + sizeX - 3, posY + sizeY - 3, _pinColors[_pin].getColor());
 			}
@@ -180,7 +223,7 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 				drawCenteredString(gui.getFontRenderer(), _pinColorNames[_pin], posX + sizeX / 2, posY + sizeY / 2 - 4, getTextColor(mouseX, mouseY));
 			}
 		}
-		else if(_buffer < 14)
+		else if (_buffer < 14)
 		{
 			super.drawForeground(mouseX, mouseY);
 		}

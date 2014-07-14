@@ -14,6 +14,8 @@ import powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
+import powercrystals.minefactoryreloaded.tile.transport.FluidNetwork;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 public class GridTickHandler<G extends IGrid, N extends INode> implements IGridController
 {
@@ -30,6 +32,8 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			new GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy>();
 	public static final GridTickHandler<RedstoneNetwork, TileEntityRedNetCable> redstone =
 			new GridTickHandler<RedstoneNetwork, TileEntityRedNetCable>();
+	public static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> fluid =
+			new GridTickHandler<FluidNetwork, TileEntityPlasticPipe>();
 	
 	public void addGrid(G grid)
 	{

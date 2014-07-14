@@ -58,6 +58,7 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 	{
 		FMLCommonHandler.instance().bus().register(GridTickHandler.energy);
 		FMLCommonHandler.instance().bus().register(GridTickHandler.redstone);
+		FMLCommonHandler.instance().bus().register(GridTickHandler.fluid);
 		FMLCommonHandler.instance().bus().register(new ConnectionHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}

@@ -57,6 +57,7 @@ import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
 import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
+import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
@@ -107,13 +108,13 @@ public class MineFactoryReloadedClient
 		// IDs
 		MineFactoryReloadedCore.renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdFactoryGlassPane = RenderingRegistry.getNextAvailableRenderId();
-		//MineFactoryReloadedCore.renderIdUnused = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdFluidClassic = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdRedNetLogic = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdVineScaffold = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdFactoryGlass = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdDetCord = RenderingRegistry.getNextAvailableRenderId();
 		MineFactoryReloadedCore.renderIdRedNet = RenderingRegistry.getNextAvailableRenderId();
+		MineFactoryReloadedCore.renderIdPPipe = RenderingRegistry.getNextAvailableRenderId();
 
 		// Blocks
 		RenderingRegistry.registerBlockHandler(renderIdConveyor,
@@ -130,6 +131,8 @@ public class MineFactoryReloadedClient
 				new DetCordRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdRedNet,
 				new RedNetCableRenderer());
+		RenderingRegistry.registerBlockHandler(renderIdPPipe,
+				new PlasticPipeRenderer());
 
 		// Items
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(conveyorBlock),

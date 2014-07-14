@@ -159,6 +159,8 @@ tile.mfr.cable.redstone.name = RedNet Cable
 tile.mfr.cable.redstone.glass.name = RedNet Cable
 tile.mfr.cable.redstone.energy.name = RedNet Energy Cable
 tile.mfr.cable.redstone.energyglass.name = RedNet Energy Cable
+tile.mfr.cable.plastic.name = Plastic Pipe
+
 tile.mfr.rednet.logic.name = Programmable RedNet Controller
 tile.mfr.rednet.panel.historian.name = RedNet Historian
 
@@ -404,6 +406,13 @@ chat.info.mfr.rednet.connection.standard = Set side to standard connection mode
 chat.info.mfr.rednet.connection.forced = Set side to forced-connection mode
 chat.info.mfr.rednet.connection.forcedstrong = Set side to strong-connection mode
 chat.info.mfr.rednet.connection.cableonly = Set side to cable-only connection mode
+
+chat.info.mfr.fluid.connection.disabled = Set side to disabled connection mode
+chat.info.mfr.fluid.connection.output = Set side to output connection mode
+chat.info.mfr.fluid.connection.extract = Set side to extract connection mode
+
+chat.info.mfr.fluid.install.torch = Installed Redstone Torch, RS control inverted
+chat.info.mfr.fluid.install.block = Installed Redstone Block, RS control disabled
 
 chat.info.mfr.bag.stacksize = You can only open one bag at a time
 

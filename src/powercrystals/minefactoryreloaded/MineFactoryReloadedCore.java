@@ -77,6 +77,7 @@ import powercrystals.minefactoryreloaded.block.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
 import powercrystals.minefactoryreloaded.block.BlockPinkSlimeFluid;
+import powercrystals.minefactoryreloaded.block.BlockPlasticPipe;
 import powercrystals.minefactoryreloaded.block.BlockRailCargoDropoff;
 import powercrystals.minefactoryreloaded.block.BlockRailCargoPickup;
 import powercrystals.minefactoryreloaded.block.BlockRailPassengerDropoff;
@@ -164,6 +165,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 
 @Mod(modid = modId, name = modName, version = version, dependencies = dependencies)
@@ -196,7 +198,6 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static int renderIdConveyor = 1000;
 	public static int renderIdFactoryGlassPane = 1001;
-	public static int renderIdUnused = 1002;
 	public static int renderIdFluidClassic = 1003;
 	public static int renderIdRedNetLogic = 1004;
 	public static int renderIdVineScaffold = 1005;
@@ -204,6 +205,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static int renderIdFactoryGlass = 1007;
 	public static int renderIdDetCord = 1008;
 	public static int renderIdRedNet = 1009;
+	public static int renderIdPPipe = 1009;
 
 	public static Map<Integer, Block> machineBlocks = new HashMap<Integer, Block>();
 
@@ -229,6 +231,8 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Block railDropoffPassengerBlock;
 
 	public static BlockRedNetCable rednetCableBlock;
+	public static BlockPlasticPipe plasticPipeBlock;
+
 	public static BlockRedNetLogic rednetLogicBlock;
 	public static BlockRedNetPanel rednetPanelBlock;
 
@@ -407,6 +411,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		fakeLaserBlock = new BlockFakeLaser();
 		vineScaffoldBlock = new BlockVineScaffold();
 		detCordBlock = new BlockDetCord();
+		plasticPipeBlock = new BlockPlasticPipe();
 		
 		fertileSoil = new BlockFertileSoil();
 		
@@ -500,6 +505,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(rednetCableBlock, ItemBlockRedNetCable.class);
 		registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class);
 		registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class);
+		
+		registerBlock(plasticPipeBlock, ItemBlockFactory.class);
 
 		registerBlock(railPickupCargoBlock, ItemBlock.class);
 		registerBlock(railDropoffCargoBlock, ItemBlock.class);
@@ -555,9 +562,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		Blocks.fire.setFireInfo(rubberSaplingBlock, 20, 40);
 		Blocks.fire.setFireInfo(detCordBlock, 10, 20);
 
-		rednetCableBlock.setHarvestLevel("pickaxe", 0);
-		rubberWoodBlock.setHarvestLevel("axe", 0);
-
 		if(MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
 		{
 			Blocks.glass_pane = new BlockVanillaGlassPane();
@@ -576,6 +580,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerTileEntity(TileEntityRedNetLogic.class, "factoryRednetLogic");
 		GameRegistry.registerTileEntity(TileEntityRedNetHistorian.class, "factoryRednetHistorian");
 		GameRegistry.registerTileEntity(TileEntityRedNetEnergy.class, "factoryRedstoneCableEnergy");
+		GameRegistry.registerTileEntity(TileEntityPlasticPipe.class, "factoryPlasticPipe");
 
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "entitySafariNet", 0, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);
@@ -648,6 +653,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		MinecraftForge.EVENT_BUS.register(instance);
 		MinecraftForge.EVENT_BUS.register(proxy);
 		MinecraftForge.EVENT_BUS.register(rednetCableBlock);
+		MinecraftForge.EVENT_BUS.register(plasticPipeBlock);
 
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
 

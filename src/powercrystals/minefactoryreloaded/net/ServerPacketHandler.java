@@ -40,9 +40,16 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage>
 {
 	@Override
-	public IMessage onMessage(MFRMessage message, MessageContext ctx) {
-		ByteBuf data = message.buf;
-		
+	public IMessage onMessage(MFRMessage message, MessageContext ctx)
+	{
+		//readData(message.buf);
+		// to deal with changes this occurs when the MFRMessage object is created.
+		// the message object contains no data
+		return null;
+	}
+	
+	private static void readData(ByteBuf data)
+	{
 		TileEntity te;
 		int x, y, z, a;
 		byte amt;
@@ -275,7 +282,6 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			}
 			break;
 		}
-		return null;
 	}
 	
 	public static class MFRMessage implements IMessage
@@ -306,7 +312,8 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		@Override
 		public void fromBytes(ByteBuf buf)
 		{
-			this.buf = buf;
+			//this.buf = buf;
+			readData(buf);
 		}
 
 		@Override

@@ -1,6 +1,7 @@
-package powercrystals.minefactoryreloaded.tile.rednet;
+package powercrystals.minefactoryreloaded.tile.transport;
 
-import cofh.api.energy.EnergyStorage;
+import cofh.util.FluidHelper;
+import cofh.util.fluid.FluidTankAdv;
 import cofh.util.position.BlockPosition;
 
 import java.util.LinkedHashSet;
@@ -8,48 +9,49 @@ import java.util.LinkedHashSet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
-public class RedstoneEnergyNetwork implements IGrid
+public class FluidNetwork implements IGrid
 {
-	public static final int TRANSFER_RATE = 1000;
+	public static final int TRANSFER_RATE = 80;
 	public static final int STORAGE = TRANSFER_RATE * 6;
-	static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> HANDLER =
-			GridTickHandler.energy;
+	static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> HANDLER =
+			GridTickHandler.fluid;
 
-	private LinkedHashSet<TileEntityRedNetEnergy> nodeSet = new LinkedHashSet<TileEntityRedNetEnergy>();
-	private LinkedHashSet<TileEntityRedNetEnergy> conduitSet;
-	private TileEntityRedNetEnergy master;
+	private LinkedHashSet<TileEntityPlasticPipe> nodeSet = new LinkedHashSet<TileEntityPlasticPipe>();
+	private LinkedHashSet<TileEntityPlasticPipe> conduitSet;
+	private TileEntityPlasticPipe master;
 	private boolean regenerating = false;
-	EnergyStorage storage = new EnergyStorage(480, 80);
+	FluidTankAdv storage = new FluidTankAdv(320);
 	
 	public int distribution;
 	public int distributionSide;
 	
-	protected RedstoneEnergyNetwork() {
-		storage.setCapacity(STORAGE);
-		storage.setMaxTransfer(TRANSFER_RATE);
+	protected FluidNetwork() {
+		storage.setCapacity(0);
 	}
 
-	public RedstoneEnergyNetwork(TileEntityRedNetEnergy base) { this();
-		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>();
+
+	public FluidNetwork(TileEntityPlasticPipe base) { this();
+		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
 	}
 
-	public int getNodeShare(TileEntityRedNetEnergy cond) {
+	public int getNodeShare(TileEntityPlasticPipe cond) {
 		int size = nodeSet.size();
 		if (size == 1)
-			return storage.getEnergyStored();
+			return storage.getCapacity();
 		int amt = 0;
-		if (master == cond) amt = storage.getEnergyStored() % size;
-		return amt + storage.getEnergyStored() / size;
+		if (master == cond) amt = storage.getCapacity() % size;
+		return amt + storage.getCapacity() / size;
 	}
 
-	public void addConduit(TileEntityRedNetEnergy cond) {
+	public void addConduit(TileEntityPlasticPipe cond) {
 		if (conduitSet.add(cond))
 			if (!conduitAdded(cond))
 				return;
@@ -60,21 +62,22 @@ public class RedstoneEnergyNetwork implements IGrid
 		} else if (!nodeSet.isEmpty()) {
 			int share = getNodeShare(cond);
 			if (nodeSet.remove(cond)) {
-				cond.energyForGrid = storage.extractEnergy(share, false);
+				cond.fluidForGrid = storage.drain(share, true);
 				nodeRemoved(cond);
 			}
 		}
 	}
 
-	public void removeConduit(TileEntityRedNetEnergy cond) {
+	public void removeConduit(TileEntityPlasticPipe cond) {
 		conduitSet.remove(cond);
 		if (!nodeSet.isEmpty()) {
 			int share = getNodeShare(cond);
 			if (nodeSet.remove(cond)) {
-				cond.energyForGrid = storage.extractEnergy(share, false);
+				cond.fluidForGrid = storage.drain(share, true);
 				nodeRemoved(cond);
 			}
 		}
+		rebalanceGrid();
 	}
 	
 	public void regenerate() {
@@ -85,22 +88,24 @@ public class RedstoneEnergyNetwork implements IGrid
 	public boolean isRegenerating() {
 		return regenerating;
 	}
-	
+
 	@Override
 	public void markSweep() {
 		destroyGrid();
 		if (conduitSet.isEmpty())
 			return;
-		TileEntityRedNetEnergy main = conduitSet.iterator().next();
-		LinkedHashSet<TileEntityRedNetEnergy> oldSet = conduitSet;
+		TileEntityPlasticPipe main = conduitSet.iterator().next();
+		LinkedHashSet<TileEntityPlasticPipe> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>(Math.min(oldSet.size() / 6, 5));
+		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>(Math.min(oldSet.size() / 6, 5));
 		rebalanceGrid();
 		
-		LinkedHashSet<TileEntityRedNetEnergy> toCheck = new LinkedHashSet<TileEntityRedNetEnergy>();
+		LinkedHashSet<TileEntityPlasticPipe> toCheck = new LinkedHashSet<TileEntityPlasticPipe>();
+		LinkedHashSet<TileEntityPlasticPipe> checked = new LinkedHashSet<TileEntityPlasticPipe>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
+		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.iterator().next();
 			addConduit(main);
@@ -110,16 +115,18 @@ public class RedstoneEnergyNetwork implements IGrid
 				bp.step(dir[i]);
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
-					if (te instanceof TileEntityRedNetEnergy)
-						if (main.canInterface((TileEntityRedNetEnergy)te) && !conduitSet.contains(te))
-							toCheck.add((TileEntityRedNetEnergy)te);
+					if (te instanceof TileEntityPlasticPipe) {
+						checked.add((TileEntityPlasticPipe)te);
+						if (main.canInterface((TileEntityPlasticPipe)te) && !checked.contains(te))
+							toCheck.add((TileEntityPlasticPipe)te);
+					}
 				}
 			}
 			toCheck.remove(main);
 			oldSet.remove(main);
 		}
 		if (!oldSet.isEmpty()) {
-			RedstoneEnergyNetwork newGrid = new RedstoneEnergyNetwork();
+			FluidNetwork newGrid = new FluidNetwork();
 			newGrid.conduitSet = oldSet;
 			newGrid.regenerating = true;
 			newGrid.markSweep();
@@ -134,19 +141,19 @@ public class RedstoneEnergyNetwork implements IGrid
 	public void destroyGrid() {
 		master = null;
 		regenerating = true;
-		for (TileEntityRedNetEnergy curCond : nodeSet)
+		for (TileEntityPlasticPipe curCond : nodeSet)
 			destroyNode(curCond);
-		for (TileEntityRedNetEnergy curCond : conduitSet)
+		for (TileEntityPlasticPipe curCond : conduitSet)
 			destroyConduit(curCond);
 		HANDLER.removeGrid(this);
 	}
 
-	public void destroyNode(TileEntityRedNetEnergy cond) {
-		cond.energyForGrid = getNodeShare(cond);
+	public void destroyNode(TileEntityPlasticPipe cond) {
+		cond.fluidForGrid = storage.drain(getNodeShare(cond), false);
 		cond._grid = null;
 	}
 
-	public void destroyConduit(TileEntityRedNetEnergy cond) {
+	public void destroyConduit(TileEntityPlasticPipe cond) {
 		cond._grid = null;
 	}
 
@@ -158,12 +165,12 @@ public class RedstoneEnergyNetwork implements IGrid
 			HANDLER.removeGrid(this);
 			return;
 		}
-		EnergyStorage tank = storage;
-		if (tank.getEnergyStored() >= tank.getMaxEnergyStored())
+		FluidTankAdv tank = storage;
+		if (tank.getSpace() <= 0)
 			return;
 		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
 		
-		for (TileEntityRedNetEnergy cond : nodeSet)
+		for (TileEntityPlasticPipe cond : nodeSet)
 			for (int i = 6; i --> 0; )
 				cond.extract(directions[i], tank);
 	}
@@ -176,43 +183,44 @@ public class RedstoneEnergyNetwork implements IGrid
 			HANDLER.removeGrid(this);
 			return;
 		}
-		EnergyStorage storage = this.storage;
-		if (storage.getEnergyStored() <= 0)
+		FluidTankAdv storage = this.storage;
+		if (storage.getFluidAmount() <= 0)
 			return;
 		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
 		int size = nodeSet.size();
-		int toDistribute = storage.getEnergyStored() / size;
+		int toDistribute = storage.getFluidAmount() / size;
 		int sideDistribute = toDistribute / 6;
 		
 		distribution = toDistribute;
 		distributionSide = sideDistribute;
+		FluidStack stack = storage.drain(sideDistribute, false); 
 		
-		if (sideDistribute > 0) for (TileEntityRedNetEnergy cond : nodeSet)
+		if (sideDistribute > 0) for (TileEntityPlasticPipe cond : nodeSet)
 			if (cond != master) {
 				int e = 0;
 				for (int i = 6; i --> 0; )
-					e += cond.transfer(directions[i], sideDistribute);
-				if (e > 0) storage.modifyEnergyStored(-e);
+					e += cond.transfer(directions[i], stack);
+				if (e > 0) storage.drain(e, true);
 			}
 		
-		toDistribute += storage.getEnergyStored() % size;
+		toDistribute += storage.getFluidAmount() % size;
 		sideDistribute = toDistribute / 6;
+		stack.amount = sideDistribute;
 		
 		if (sideDistribute > 0) {
 			int e = 0;
 			for (int i = 6; i --> 0; ) 
-				e += master.transfer(directions[i], sideDistribute);
-			if (e > 0) storage.modifyEnergyStored(-e);
+				e += master.transfer(directions[i], stack);
+			if (e > 0) storage.drain(e, true);
 		}
 	}
 
-	public boolean canMergeGrid(RedstoneEnergyNetwork otherGrid) {
-		LinkedHashSet<TileEntityRedNetEnergy> toCheck = otherGrid.conduitSet;
-		return !toCheck.isEmpty() && !conduitSet.isEmpty() &&
-				toCheck.iterator().next().canInterface(conduitSet.iterator().next());
+	public boolean canMergeGrid(FluidNetwork grid) {
+		if (grid == null) return false;
+		return FluidHelper.isFluidEqual(grid.storage.getFluid(), storage.getFluid());
 	}
 
-	public void mergeGrid(RedstoneEnergyNetwork grid) {
+	public void mergeGrid(FluidNetwork grid) {
 		if (grid == this) return;
 		grid.destroyGrid();
 		boolean r = regenerating || grid.regenerating;
@@ -220,7 +228,7 @@ public class RedstoneEnergyNetwork implements IGrid
 			regenerate();
 		
 		regenerating = true;
-		for (TileEntityRedNetEnergy cond : grid.conduitSet)
+		for (TileEntityPlasticPipe cond : grid.conduitSet)
 			addConduit(cond);
 		regenerating = r;
 		
@@ -228,17 +236,15 @@ public class RedstoneEnergyNetwork implements IGrid
 		grid.nodeSet.clear();
 	}
 
-	public void nodeAdded(TileEntityRedNetEnergy cond) {
+	public void nodeAdded(TileEntityPlasticPipe cond) {
 		if (master == null) {
 			master = cond;
 			HANDLER.addGrid(this);
 		}
-		rebalanceGrid();
-		storage.modifyEnergyStored(cond.energyForGrid);
+		storage.fill(cond.fluidForGrid, true);
 	}
 
-	public void nodeRemoved(TileEntityRedNetEnergy cond) {
-		rebalanceGrid();
+	public void nodeRemoved(TileEntityPlasticPipe cond) {
 		if (cond == master) {
 			if (nodeSet.isEmpty()) {
 				master = null;
@@ -249,7 +255,7 @@ public class RedstoneEnergyNetwork implements IGrid
 		}
 	}
 
-	public boolean conduitAdded(TileEntityRedNetEnergy cond) {
+	public boolean conduitAdded(TileEntityPlasticPipe cond) {
 		if (cond._grid != null) {
 			if (cond._grid != this) {
 				conduitSet.remove(cond);
@@ -261,11 +267,12 @@ public class RedstoneEnergyNetwork implements IGrid
 				return false;
 		} else
 			cond.setGrid(this);
+		rebalanceGrid();
 		return true;
 	}
 
 	public void rebalanceGrid() {
-		storage.setCapacity(nodeSet.size() * STORAGE);
+		storage.setCapacity(conduitSet.size() * STORAGE);
 	}
 
 	public int getConduitCount() {
@@ -278,7 +285,7 @@ public class RedstoneEnergyNetwork implements IGrid
 	
 	@Override
 	public String toString() {
-		return "RedstoneEnergyNetwork@" + Integer.toString(hashCode()) + "; master:" + master +
+		return "FluidNetwork@" + Integer.toString(hashCode()) + "; master:" + master +
 				"; regenerating:" + regenerating + "; isTicking:" + HANDLER.isGridTicking(this);
 	}
 }

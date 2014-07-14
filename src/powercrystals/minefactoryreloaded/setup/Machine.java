@@ -91,9 +91,9 @@ public class Machine
 	public static Machine ItemCollector = new Machine(0, 6, "ItemCollector", TileEntityCollector.class);
 	public static Machine BlockBreaker = new Machine(0, 7, "BlockBreaker", TileEntityBlockBreaker.class, 960, 64000);
 	public static Machine WeatherCollector = new Machine(0, 8, "WeatherCollector", TileEntityWeather.class, 10, 16000);
-	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, 20, 16000);
+	public static Machine SludgeBoiler = new Machine(0, 9, "SludgeBoiler", TileEntitySludgeBoiler.class, 30, 16000);
 	public static Machine Sewer = new Machine(0, 10, "Sewer", TileEntitySewer.class);
-	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, 20, 16000);
+	public static Machine Composter = new Machine(0, 11, "Composter", TileEntityComposter.class, 40, 16000);
 	public static Machine Breeder = new Machine(0, 12, "Breeder", TileEntityBreeder.class, 640, 16000);
 	public static Machine Grinder = new Machine(0, 13, "Grinder", TileEntityGrinder.class, 3200, 32000);
 	public static Machine AutoEnchanter = new Machine(0, 14, "AutoEnchanter", TileEntityAutoEnchanter.class, 160, 16000);

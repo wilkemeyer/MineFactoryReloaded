@@ -1390,6 +1390,14 @@ public class Vanilla
 			"P P",
 			'P', "sheetPlastic",
 				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.plasticPipeBlock, 8), new Object[]
+				{
+			"PPP",
+			"   ",
+			"PPP",
+			'P', "sheetPlastic",
+				} ));
 	}
 	
 	protected void registerMiscItems()

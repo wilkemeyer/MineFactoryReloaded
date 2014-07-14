@@ -39,16 +39,6 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		public int pin;
 		public int buffer;
 	}
-	private static int[] CONSTS = new int[256];
-
-	static
-	{
-		//init constants
-		for(int i = 0, e = CONSTS.length; i < e; ++i)
-		{
-			CONSTS[i] = i;
-		}
-	}
 
 	private int _circuitCount = 6;
 
@@ -87,7 +77,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 
 		//init constants
-		_buffers[12] = CONSTS;
+		_buffers[12] = null;
 		// init variable buffer
 		_buffers[13] = new int[_variableCount];
 		// init null buffer
@@ -237,7 +227,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 
 		//init constants
-		_buffers[12] = CONSTS;
+		_buffers[12] = null;
 		// init variable buffer
 		_buffers[13] = new int[_variableCount];
 		// init null buffer
@@ -342,7 +332,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 				for (int pinNum = 0, j = input.length; pinNum < j; ++pinNum)
 				{
 					PinMapping mapping = mappings[pinNum];
-					input[pinNum] = _buffers[mapping.buffer][mapping.pin];
+					input[pinNum] = mapping.buffer == 12 ? mapping.pin : _buffers[mapping.buffer][mapping.pin];
 				}
 
 				int[] output = circuit.recalculateOutputValues(worldObj.getTotalWorldTime(), input);
@@ -361,8 +351,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 			{
 				bp.x = xCoord; bp.y = yCoord; bp.z = zCoord;
 				ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i];
-				bp.orientation = o;
-				bp.moveForwards(1);
+				bp.step(o);
 				Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
 				if (b instanceof IRedNetNetworkContainer)
 				{
