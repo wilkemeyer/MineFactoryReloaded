@@ -214,8 +214,8 @@ public class RedstoneEnergyNetwork implements IGrid
 
 	public void mergeGrid(RedstoneEnergyNetwork grid) {
 		if (grid == this) return;
-		grid.destroyGrid();
 		boolean r = regenerating || grid.regenerating;
+		grid.destroyGrid();
 		if (!regenerating & r)
 			regenerate();
 		

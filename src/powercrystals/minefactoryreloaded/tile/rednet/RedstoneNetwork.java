@@ -202,7 +202,7 @@ public class RedstoneNetwork implements IGrid
 		if (cond._network != null) {
 			if (cond._network != this) {
 				conduitSet.remove(cond);
-				if (canGridMerge(cond._network)) {
+				if (canMergeGrid(cond._network)) {
 					mergeGrid(cond._network);
 				} else
 					return false;
@@ -213,25 +213,26 @@ public class RedstoneNetwork implements IGrid
 		return true;
 	}
 	
-	public boolean canGridMerge(RedstoneNetwork otherGrid) {
+	public boolean canMergeGrid(RedstoneNetwork otherGrid) {
 		LinkedHashSet<TileEntityRedNetCable> toCheck = otherGrid.conduitSet;
 		return !toCheck.isEmpty() && !conduitSet.isEmpty() &&
 				toCheck.iterator().next().canInterface(conduitSet.iterator().next());
 	}
 
-	public void mergeGrid(RedstoneNetwork theGrid) {
-		theGrid.destroyGrid();
-		boolean r = regenerating || theGrid.regenerating;
+	public void mergeGrid(RedstoneNetwork grid) {
+		if (grid == this) return;
+		boolean r = regenerating || grid.regenerating;
+		grid.destroyGrid();
 		if (!regenerating & r)
 			regenerate();
 		
 		regenerating = true;
-		for (TileEntityRedNetCable cond : theGrid.conduitSet)
+		for (TileEntityRedNetCable cond : grid.conduitSet)
 			addConduit(cond);
 		regenerating = r;
 		
-		theGrid.conduitSet.clear();
-		theGrid.nodeSet.clear();
+		grid.conduitSet.clear();
+		grid.nodeSet.clear();
 	}
 	
 	public void regenerate() {

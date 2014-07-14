@@ -371,6 +371,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		upgradeItem = nbt.getByte("Upgrade");
+		isPowered = nbt.getBoolean("Power");
 		sideMode = nbt.getByteArray("SideMode");
 		if (sideMode.length != 7)
 			sideMode = new byte[]{1,1, 1,1,1,1, 0};
@@ -382,6 +383,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setByte("Upgrade", upgradeItem);
+		nbt.setBoolean("Power", isPowered);
 		nbt.setByteArray("SideMode", sideMode);
 		if (_grid != null) {
 			if (isNode) {

@@ -116,9 +116,9 @@ public class FluidNetwork implements IGrid
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityPlasticPipe) {
-						checked.add((TileEntityPlasticPipe)te);
 						if (main.canInterface((TileEntityPlasticPipe)te) && !checked.contains(te))
 							toCheck.add((TileEntityPlasticPipe)te);
+						checked.add((TileEntityPlasticPipe)te);
 					}
 				}
 			}
@@ -222,8 +222,8 @@ public class FluidNetwork implements IGrid
 
 	public void mergeGrid(FluidNetwork grid) {
 		if (grid == this) return;
-		grid.destroyGrid();
 		boolean r = regenerating || grid.regenerating;
+		grid.destroyGrid();
 		if (!regenerating & r)
 			regenerate();
 		
