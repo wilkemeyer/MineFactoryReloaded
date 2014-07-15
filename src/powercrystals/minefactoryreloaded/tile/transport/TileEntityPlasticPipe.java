@@ -161,7 +161,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		sideMode[side] &= 3;
 		if (tile instanceof TileEntityPlasticPipe) {
 			sideMode[side] = (2 << 2);
-			if (((TileEntityPlasticPipe)tile).canInterface(this)) {
+			if (((TileEntityPlasticPipe)tile)._grid == _grid) {
 				 sideMode[side] |= 1; // always enable
 			}
 		} else if (tile instanceof IFluidHandler) {
@@ -239,6 +239,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 				(sideMode[3] << 24));
 		data.setInteger("mode[1]", sideMode[4] | (sideMode[5] << 8) | (sideMode[6] << 16) |
 				(isPowered ? 1 << 24 : 0));
+		data.setByte("upgrade", upgradeItem);
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
@@ -260,6 +261,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 			sideMode[5] = (byte)((mode >>  8) & 0xFF);
 			sideMode[6] = (byte)((mode >> 16) & 0xFF);
 			isPowered = (mode >> 24) > 0;
+			upgradeItem = data.getByte("upgrade");
 			break;
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);

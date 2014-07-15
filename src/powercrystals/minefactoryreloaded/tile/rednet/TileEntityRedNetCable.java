@@ -36,6 +36,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnec
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
+import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
@@ -183,11 +184,16 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 	{
 		boolean lastNode = isRSNode;
 		if (grid != RedstoneNetwork.HANDLER) return;
-		for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
+		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		for (ForgeDirection d : dirs)
 			updateNearbyNode(d);
 		isRSNode = false;
-		for (int i = _connectionState.length; i --> 0; )
-			isRSNode |= _connectionState[i].isConnected;
+		for (int i = _connectionState.length; i --> 0; ) {
+			ForgeDirection d = dirs[i];
+			int x = xCoord + d.offsetX, y = yCoord + d.offsetY, z = zCoord + d.offsetZ;
+			if (!worldObj.getBlock(x, y, z).equals(MineFactoryReloadedCore.rednetCableBlock))
+				isRSNode |= _connectionState[i].isConnected;
+		}
 		if (lastNode != isRSNode)
 			_network.addConduit(this);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -391,19 +397,40 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 	{
 		return !isNotValid();
 	}
+	
+	public String getRedNetInfo(ForgeDirection side, EntityPlayer player) {
+		// TODO: localize
+		String o;
+		if (side != ForgeDirection.UNKNOWN)
+			o = "Side " + side + " is " + ItemRedNetMeter._colorNames[getSideColor(side)];
+		else {
+			o = "Sides are: ";
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+				o += dir + ": " + ItemRedNetMeter._colorNames[getSideColor(dir)] + "; ";
+		}
+		return o;
+	}
 
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
-		if (debug) {
+		if (!debug) {
+			info.add(getRedNetInfo(side, player));
+		} else { // debug
 			if (_network != null) {
-				info.add("Grid:" + _network);/*
-				info.add("Conduits: " + _network. + ", Nodes: " + grid.getNodeCount());
-				info.add("Grid Max: " + grid.storage.getMaxEnergyStored());
-				info.add("Grid Cur: " + grid.storage.getEnergyStored());//*/
+				info.add("Grid:" + _network);
+				info.add("Conduits: " + _network.getConduitCount() + ", Nodes: " + _network.getNodeCount());
+				String o = "[";
+				for (int i = 0; i < 15; ++i)
+					o += _network.getPowerLevelOutput(i) + ",";
+				o += _network.getPowerLevelOutput(15) + "]";
+				info.add("Outputs: " + o);
 			} else {
 				info.add("Null Grid");
 			}
+			info.add("ConnectionState: " + Arrays.toString(_connectionState));
 			info.add("SideMode: " + Arrays.toString(_cableMode));
-			//info.add("Node: " + isNode);
+			info.add("Colors: " + Arrays.toString(_sideColors));
+			info.add("Upgrades: " + Arrays.toString(_sideUpgrade));
+			info.add("Node: " + isRSNode);
 			return;
 		}
 	}

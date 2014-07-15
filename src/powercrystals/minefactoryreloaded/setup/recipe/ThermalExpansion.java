@@ -730,7 +730,7 @@ public class ThermalExpansion extends Vanilla
 			'H', new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'L', "dustLapis",
+			'L', "gemLapis",
 			'D', "gemDiamond",
 			'R', "dustRedstone",
 				} ));

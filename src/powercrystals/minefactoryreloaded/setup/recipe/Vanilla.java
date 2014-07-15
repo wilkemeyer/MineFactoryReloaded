@@ -645,7 +645,7 @@ public class Vanilla
 			"III",
 			"PPP",
 			"RGR",
-			'I', "dustLapis",
+			'I', "gemLapis",
 			'P', "dustPlastic",
 			'R', "dustRedstone",
 			'G', "nuggetGold",
@@ -1310,7 +1310,7 @@ public class Vanilla
 			" S ",
 			"BLB",
 			'B', "slimeball",
-			'L', "dustLapis",
+			'L', "gemLapis",
 			'S', MineFactoryReloadedCore.syringeEmptyItem,
 				}));
 		
@@ -1889,7 +1889,7 @@ public class Vanilla
 			'H', new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
-			'L', "dustLapis",
+			'L', "gemLapis",
 			'D', "gemDiamond",
 			'R', "dustRedstone",
 				} ));

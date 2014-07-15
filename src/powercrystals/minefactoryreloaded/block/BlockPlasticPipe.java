@@ -136,6 +136,7 @@ public class BlockPlasticPipe extends BlockContainer
 						{
 							te = BlockPosition.getAdjacentTileEntity(cable, ForgeDirection.getOrientation(oldSide));
 							if (te instanceof TileEntityPlasticPipe &&
+									!cable.isInterfacing(ForgeDirection.getOrientation(oldSide).getOpposite()) &&
 									cable.couldInterface((TileEntityPlasticPipe)te))
 								{
 									cable.mergeWith((TileEntityPlasticPipe)te);

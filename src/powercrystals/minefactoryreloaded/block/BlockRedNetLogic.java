@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -12,6 +13,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,6 +25,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.BlockNBTManager;
@@ -33,7 +37,7 @@ import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
-public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
+public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode, IRedNetInfo
 {
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
 
@@ -258,5 +262,37 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode
 		prc.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
 		drops.add(prc);
 		return drops;
+	}
+
+	@Override
+	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,
+			EntityPlayer player, List<IChatComponent> info)
+	{
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof TileEntityRedNetLogic)
+		{
+			int value;
+			int foundNonZero = 0;
+			for (int i = 0; i < ((TileEntityRedNetLogic)te).getBufferLength(13); i++)
+			{
+				value = ((TileEntityRedNetLogic)te).getVariableValue(i);
+				
+				if (value != 0)
+				{
+					info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.varprefix")
+							.appendText(" " + i + ": " + value));
+					++foundNonZero;
+				}
+			}
+			
+			if (foundNonZero == 0)
+			{
+				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.allzero"));
+			}
+			else if (foundNonZero < 16)
+			{
+				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.restzero"));
+			}
+		}
 	}
 }

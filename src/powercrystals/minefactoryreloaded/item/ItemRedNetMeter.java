@@ -16,11 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 
 public class ItemRedNetMeter extends ItemMulti
 {
@@ -35,6 +35,9 @@ public class ItemRedNetMeter extends ItemMulti
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity)
 	{
+		if (stack.getItemDamage() != 2)
+			return false;
+		player.swingItem();
 		if (player.worldObj.isRemote)
 			return true;
 		player.addChatMessage(new ChatComponentText("ID: " + EntityList.getEntityString(entity)));
@@ -107,66 +110,19 @@ public class ItemRedNetMeter extends ItemMulti
 			}
 			return false;
 		case 0:
-			TileEntity te = world.getTileEntity(x, y, z);
-			if(te instanceof TileEntityRedNetCable)
-			{
-				int value;
-				int foundNonZero = 0;
-				for(int i = 0; i < 16; i++)
-				{
-					value = ((TileEntityRedNetCable)te).getNetwork().getPowerLevelOutput(i);
-					
-					if(value != 0)
-					{
-						// TODO: localize color names v
-						player.addChatMessage(new ChatComponentText(_colorNames[i])
-								.appendText(": " + value));
-						++foundNonZero;
-					}
-				}
-				
-				if(foundNonZero == 0)
-				{
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.cable.allzero"));
-				}
-				else if (foundNonZero < 16)
-				{
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.cable.restzero"));
-				}
-				
-				return true;
-			}
-			else if(te instanceof TileEntityRedNetLogic)
-			{
-				int value;
-				int foundNonZero = 0;
-				for(int i = 0; i < ((TileEntityRedNetLogic)te).getBufferLength(13); i++)
-				{
-					value = ((TileEntityRedNetLogic)te).getVariableValue(i);
-					
-					if(value != 0)
-					{
-						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.varprefix")
-								.appendText(" " + i + ": " + value));
-						++foundNonZero;
-					}
-				}
-				
-				if(foundNonZero == 0)
-				{
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.allzero"));
-				}
-				else if (foundNonZero < 16)
-				{
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.restzero"));
-				}
-				
-				return true;
-			}
-			else if(world.getBlock(x, y, z).equals(Blocks.redstone_wire))
+			block = world.getBlock(x, y, z);
+			ArrayList<IChatComponent> info2 = new ArrayList<IChatComponent>();
+			if (block.equals(Blocks.redstone_wire))
 			{
 				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
 						.appendText(": " + world.getBlockMetadata(x, y, z)));
+			}
+			else if (block instanceof IRedNetInfo) {
+				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info2);
+				for (int i = 0; i < info2.size(); i++) {
+					player.addChatMessage(info2.get(i));
+				}
+				return true;
 			}
 			return false;
 		}

@@ -616,9 +616,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("listAllmilk", MineFactoryReloadedCore.milkBottleItem);
 
 		OreDictionary.registerOre("slimeball", Items.slime_ball);
-		OreDictionary.registerOre("glass", Blocks.glass);
-		OreDictionary.registerOre("nuggetGold", Items.gold_nugget);
-		OreDictionary.registerOre("ingotGold", Items.gold_ingot);
 		Items.wooden_door.setMaxStackSize(8);
 		Items.iron_door.setMaxStackSize(8);
 

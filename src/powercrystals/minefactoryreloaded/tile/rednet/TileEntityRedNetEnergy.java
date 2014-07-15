@@ -153,8 +153,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		int lastMode = sideMode[side];
 		sideMode[side] &= 1;
 		if (tile instanceof TileEntityRedNetEnergy) {
-			if (((TileEntityRedNetEnergy)tile).canInterface(this)) {
-				sideMode[side] = (4 << 1) | 1; // always enable
+			sideMode[side] = (4 << 1);
+			if (((TileEntityRedNetEnergy)tile)._grid == _grid) {
+				sideMode[side] |= 1; // always enable
 			}
 		} else if (tile instanceof IEnergyHandler) {
 			if (((IEnergyHandler)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
@@ -548,7 +549,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+		info.add("-Redstone-");
 		super.getTileInfo(info, side, player, debug && player.isSneaking());
+		info.add("-Energy-");
 		if (_grid != null) {/* TODO: advanced monitoring
 			if (isNode) {
 				info.add("Throughput All: " + _grid.distribution);
@@ -566,7 +569,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				info.add("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount());
 				info.add("Grid Max: " + _grid.storage.getMaxEnergyStored() + ", Grid Cur: " +
 						_grid.storage.getEnergyStored());
-				info.add("Caches: (RF, MJ, EU):(" +
+				info.add("Caches: (RF, EU):(" +
 						Arrays.toString(handlerCache) + ", " +
 						ic2Cache + ")");
 			} else {
