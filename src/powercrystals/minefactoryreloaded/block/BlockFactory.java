@@ -13,17 +13,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public class BlockFactory extends Block implements IRedNetOmniNode, IDismantleable
+public class BlockFactory extends Block implements IRedNetConnection, IDismantleable
 {
+	public static String[] _names = new String [] { null, "prc" };
 	@SideOnly(Side.CLIENT)
 	private IIcon topIcon;
 	@SideOnly(Side.CLIENT)
 	private IIcon bottomIcon;
+	@SideOnly(Side.CLIENT)
+	private IIcon[] icons = new IIcon[_names.length];
 	
 	public BlockFactory()
 	{
@@ -60,12 +63,17 @@ public class BlockFactory extends Block implements IRedNetOmniNode, IDismantleab
 		bottomIcon = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.machine.0.bottom");
 		blockIcon = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.machine.0.active.side");
 		topIcon = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.machine.0.top");
+		for (int i = _names.length; i --> 1; )
+			icons[i] = ir.registerIcon("minefactoryreloaded:tile.mfr.machineblock." + _names[i]);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
+		if (meta > 0)
+			return icons[Math.min(Math.max(meta, 1), 15)];
+
 		switch (side)
 		{
 		case 0:
@@ -111,27 +119,5 @@ public class BlockFactory extends Block implements IRedNetOmniNode, IDismantleab
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return RedNetConnectionType.DecorativeSingle;
-	}
-
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return null;
-	}
-
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
-	{
-		return 0;
-	}
-
-	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
-	{
-	}
-
-	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
-	{
 	}
 }

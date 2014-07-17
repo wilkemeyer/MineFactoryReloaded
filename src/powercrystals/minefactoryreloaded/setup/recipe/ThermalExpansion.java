@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.setup.recipe;
 
+import static cofh.util.ItemHelper.*;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.MissingModsException;
@@ -606,16 +608,14 @@ public class ThermalExpansion extends Vanilla
 					} );
 		
 		registerMachine(Machine.MobRouter, new Object[] {
-				"PBP",
-				"CFR",
-				"OGO",
+				"PPP",
+				"BRB",
+				"OCO",
 				'P', "sheetPlastic",
 				'B', Blocks.iron_bars,
-				'C', Machine.Chronotyper.getItemStack(),
 				'R', Machine.ItemRouter.getItemStack(),
-				'F', machineFrame,
 				'O', "dyeOrange",
-				'G', powerCoilGold
+				'C', Machine.Chronotyper.getItemStack(),
 					} );
 	}
 
@@ -639,7 +639,7 @@ public class ThermalExpansion extends Vanilla
 			"PLP",
 			" S ",
 			'G', "ingotGold",
-			'L', "glass",
+			'L', "blockGlass",
 			'P', "sheetPlastic",
 			'S', "stickWood",
 				} ));
@@ -651,8 +651,8 @@ public class ThermalExpansion extends Vanilla
 			"DND",
 			"GLG",
 			'G', "ingotInvar",
-			'L', "glass",
-			'D', "thermalexpansion:machineEnderium",
+			'L', "blockGlass",
+			'D', "ingotEnderium",
 			'N', Items.nether_star
 				} ));
 		
@@ -688,6 +688,11 @@ public class ThermalExpansion extends Vanilla
 			'P', "sheetPlastic",
 				} ));
 		
+		{
+			ItemStack pipe = stack(plasticPipeBlock);
+			addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), pipe, pipe, pipe, pipe, pipe, "dustRedstone", "dustRedstone"));
+		}
+		
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 2), new Object[]
 				{
 			"nuggetElectrum",
@@ -711,14 +716,14 @@ public class ThermalExpansion extends Vanilla
 			new ItemStack(MineFactoryReloadedCore.rednetCableBlock),
 				} ));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.machineItem, 1, 1), new Object[]
 				{
 			"PRP",
 			"RGR",
 			"PIP",
 			'R', "dustRedstone",
 			'P', "sheetPlastic",
-			'G', "glass",
+			'G', "blockGlass",
 			'I', "ingotIron",
 				} ));
 		
@@ -727,7 +732,7 @@ public class ThermalExpansion extends Vanilla
 			"RDR",
 			"LGL",
 			"PHP",
-			'H', new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 11),
+			'H', new ItemStack(MineFactoryReloadedCore.machineItem, 1, 1),
 			'P', "sheetPlastic",
 			'G', "ingotGold",
 			'L', "gemLapis",
@@ -774,8 +779,20 @@ public class ThermalExpansion extends Vanilla
 			"PR",
 			"PP",
 			'P', "sheetPlastic",
-			'G', "nuggetGold",
+			'G', "nuggetElectrum",
 			'R', "dustRedstone",
+				} ));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMeterItem, 1, 1), new Object[]
+				{
+			"RGR",
+			"IMI",
+			"PPP",
+			'P', "sheetPlastic",
+			'G', powerCoilElectrum,
+			'I', "ingotCopper",
+			'R', "dustRedstone",
+			'M', new ItemStack(MineFactoryReloadedCore.rednetMeterItem, 1, 0)
 				} ));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MineFactoryReloadedCore.rednetMemoryCardItem, 1, 0), new Object[]

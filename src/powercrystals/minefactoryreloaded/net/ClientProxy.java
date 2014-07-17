@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.BlockFactoryFluid;
+import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 
 public class ClientProxy extends CommonProxy
 {

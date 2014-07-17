@@ -101,7 +101,7 @@ public class FactoryRegistry
 		{
 			Method m = FMLInterModComms.class.getDeclaredMethod("enqueueMessage", Object.class, String.class, IMCMessage.class);
 			m.setAccessible(true);
-			Constructor<IMCMessage> c = IMCMessage.class.getConstructor(String.class, Object.class);
+			Constructor<IMCMessage> c = IMCMessage.class.getDeclaredConstructor(String.class, Object.class);
 			c.setAccessible(true);
 			m.invoke(null, Loader.instance().activeModContainer(), "MineFactoryReloaded", c.newInstance(message, value));
 		}

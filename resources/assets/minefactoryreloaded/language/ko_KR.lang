@@ -109,7 +109,7 @@ tile.mfr.decorativebrick.ice_large.name = 큰 얼음 벽돌
 tile.mfr.decorativebrick.lapis_large.name = 큰 청금석재 벽돌
 tile.mfr.decorativebrick.obsidian_large.name = 큰 흑요석재 벽돌
 tile.mfr.decorativebrick.snow_large.name = 큰 눈 벽돌
-tile.mfr.decorativebrick.prc.name = 프로그램 가능한 레드넷 제어기 틀
+tile.mfr.machineblock.prc.name = 프로그램 가능한 레드넷 제어기 틀
 tile.mfr.decorativebrick.meat.raw.name = 익히지 않은 고기 블록
 tile.mfr.decorativebrick.meat.cooked.name = 익힌 고기 블록
 

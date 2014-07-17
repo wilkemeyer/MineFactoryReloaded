@@ -115,7 +115,6 @@ tile.mfr.decorativebrick.ice_large.name = Large Ice Bricks
 tile.mfr.decorativebrick.lapis_large.name = Large Lapis Bricks
 tile.mfr.decorativebrick.obsidian_large.name = Large Obsidian Bricks
 tile.mfr.decorativebrick.snow_large.name = Large Snow Bricks
-tile.mfr.decorativebrick.prc.name = Programmable RedNet Controller Housing
 tile.mfr.decorativebrick.meat.raw.name = Raw Meat Block
 tile.mfr.decorativebrick.meat.cooked.name = Cooked Meat Block
 tile.mfr.decorativebrick.pavedstone_large.name = Large Paved Stone Bricks
@@ -165,6 +164,7 @@ tile.mfr.rednet.logic.name = Programmable RedNet Controller
 tile.mfr.rednet.panel.historian.name = RedNet Historian
 
 tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.prc.name = Programmable RedNet Controller Housing
 
 fluid.mfr.liquid.milk.still.name = Milk
 fluid.mfr.liquid.sludge.still.name = Sludge
@@ -227,8 +227,12 @@ item.mfr.spyglass.name = Spyglass
 item.mfr.xpextractor.name = XP Extractor
 item.mfr.portaspawner.name = PortaSpawner
 item.mfr.straw.name = Straw
+
 item.mfr.rednet.meter.name = RedNet Meter
+item.mfr.rednet.meter.info.name = RedNet Multimeter
+item.mfr.rednet.meter.debug.name = Debugger
 item.mfr.rednet.memorycard.name = PRC Memory Card
+
 item.mfr.ruler.name = Ruler
 item.mfr.meat.ingot.raw.name = Raw Meat Ingot
 item.mfr.meat.ingot.cooked.name = Cooked Meat Ingot

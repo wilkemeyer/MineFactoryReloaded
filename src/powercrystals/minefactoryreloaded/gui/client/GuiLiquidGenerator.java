@@ -1,8 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityLiquidGenerator;
 
@@ -32,10 +30,7 @@ public class GuiLiquidGenerator extends GuiFactoryInventory
 		{
 			int buffer = ((TileEntityLiquidGenerator)_tileEntity).getBuffer();
 			int bufferMax = ((TileEntityLiquidGenerator)_tileEntity).getBufferMax();
-			List<String> lines = new ArrayList<String>();
-			lines.add("Energy");
-			lines.add(buffer + " / " + bufferMax + " " + "RF");
-			drawTooltip(lines, mouseX, mouseY);
+			drawBarTooltip(MFRUtil.energy(), "RF", buffer, bufferMax, mouseX, mouseY);
 		}
 		else
 			super.drawTooltips(mouseX, mouseY);

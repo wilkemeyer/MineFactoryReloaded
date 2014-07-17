@@ -109,7 +109,7 @@ tile.mfr.decorativebrick.ice_large.name = Ladrillos Grandes de Hielo
 tile.mfr.decorativebrick.lapis_large.name = Ladrillos Grandes de Lapislázuli
 tile.mfr.decorativebrick.obsidian_large.name = Ladrillos Grandes de Obsidiana
 tile.mfr.decorativebrick.snow_large.name = Ladrillos Grandes de Nieve
-tile.mfr.decorativebrick.prc.name = Caja del Controlador Programable RedNet
+tile.mfr.machineblock.prc.name = Caja del Controlador Programable RedNet
 tile.mfr.decorativebrick.meat.raw.name = Bloque de Carne Cruda
 tile.mfr.decorativebrick.meat.cooked.name = Bloque de Carne Cocinada
 

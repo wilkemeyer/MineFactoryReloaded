@@ -109,7 +109,7 @@ tile.mfr.decorativebrick.ice_large.name = Velike Ledene Cigle
 tile.mfr.decorativebrick.lapis_large.name = Velike Lapis Cigle
 tile.mfr.decorativebrick.obsidian_large.name = Velike Opsidijanske Cigle
 tile.mfr.decorativebrick.snow_large.name = Velike Snežne Cigle
-tile.mfr.decorativebrick.prc.name = Kućište Programerskog RedNet Kontrolera
+tile.mfr.machineblock.prc.name = Kućište Programerskog RedNet Kontrolera
 tile.mfr.decorativebrick.meat.raw.name = Kocka Sirovog Mesa
 tile.mfr.decorativebrick.meat.cooked.name = Kocka Kuvanog Mesa
 

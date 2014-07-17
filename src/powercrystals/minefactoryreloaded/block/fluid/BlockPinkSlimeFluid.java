@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.fluid;
 
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 

@@ -9,6 +9,5 @@ public class MachineMaterial extends Material
     {
     	super(color);
     	setAdventureModeExempt();
-    	setImmovableMobility();
     }
 }

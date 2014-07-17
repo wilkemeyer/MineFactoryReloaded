@@ -46,6 +46,7 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode,
 		super(Machine.MATERIAL);
 		setBlockName("mfr.rednet.logic");
 		setHardness(0.8F);
+		setStepSound(soundTypeMetal);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 

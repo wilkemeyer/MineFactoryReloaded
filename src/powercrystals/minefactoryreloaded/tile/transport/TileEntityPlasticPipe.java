@@ -9,6 +9,7 @@ import cofh.render.hitbox.CustomHitBox;
 import cofh.render.hitbox.ICustomHitBox;
 import cofh.util.CoreUtils;
 import cofh.util.FluidHelper;
+import cofh.util.StringHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -555,10 +556,12 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 				info.add("Throughput All: " + _grid.distribution);
 				info.add("Throughput Side: " + _grid.distributionSide);
 			} else//*/
-			if (!debug)
+			if (!debug) {
+				info.add("Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>"));
 				info.add("Saturation: " +
 					(Math.ceil(_grid.storage.getFluidAmount() /
 							(float)_grid.storage.getCapacity() * 1000) / 10f));
+			}
 		} else if (!debug)
 			info.add("Null Grid");
 		if (debug) {
@@ -567,9 +570,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 				info.add("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount());
 				info.add("Grid Max: " + _grid.storage.getCapacity() + ", Grid Cur: " +
 						_grid.storage.getFluidAmount());
+				info.add("Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>"));
 				info.add("Cache: (" + Arrays.toString(handlerCache) + ")");
 			} else {
-				info.add("Null Grid");
+				info.add("Grid: Null");
+				info.add("FluidForGrid: " + fluidForGrid);
 			}
 			info.add("SideType: " + Arrays.toString(sideMode));
 			info.add("Node: " + isNode);

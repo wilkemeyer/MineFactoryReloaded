@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.fluid;
 
 import cofh.fluid.BlockFluidCoFHBase;
 import cofh.util.RegistryUtils;
@@ -32,7 +32,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoConnection
 { // TODO: convert to BlockFluidFinite
@@ -122,6 +121,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
+		super.onBlockAdded(world, x, y, z);
 		checkCanStay(world, x, y, z, world.rand);
 	}
 
@@ -172,17 +172,6 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoCo
 						world.spawnEntityInWorld(new EntityXPOrb(world,
 								x + rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(), j));
 					}
-					fizz(world, x, y, z, rand);
-					return;
-				}
-				break l;
-			}
-			else if (this == MineFactoryReloadedCore.biofuelLiquid)
-			{
-				if (world.setBlockToAir(x, y, z))
-				{
-					if (MFRConfig.enableFuelExploding.getBoolean(true))
-						world.createExplosion(null, x, y, z, 8, true);
 					fizz(world, x, y, z, rand);
 					return;
 				}

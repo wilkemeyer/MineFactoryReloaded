@@ -22,6 +22,12 @@ public class ItemBlockFactory extends ItemBlock
 	{
 		super(p_i45328_1_);
 	}
+	
+	public ItemBlockFactory(Block p_i45328_1_, String[] names)
+	{
+		this(p_i45328_1_);
+		setNames(names);
+	}
 
 	protected void setNames(String[] names)
 	{

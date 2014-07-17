@@ -236,7 +236,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	@Override
 	public boolean hasContainerItem(ItemStack stack)
 	{
-		return stack.stackSize > 0;
+		return getFluid(stack) != null;
 	}
 
 	public boolean hasDrinkableLiquid(ItemStack stack)

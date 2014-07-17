@@ -16,8 +16,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecorative
 {
 	static String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
-		"glowstone_large", "ice_large", "lapis_large", "obsidian_large", "snow_large", "prc", "meat.raw",
-		"meat.cooked", "pavedstone_large", "brick_large" };
+		"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
+		"meat.raw", "meat.cooked", "brick_large" };
 	private IIcon[] _icons = new IIcon[_names.length];
 
 	public BlockFactoryDecorativeBricks()
@@ -40,7 +40,7 @@ public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecora
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
-		return meta == 1 | meta == 6 ? 15 : 0;
+		return meta == 1 | meta == 7 ? 15 : 0;
 	}
 
 	@Override

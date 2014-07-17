@@ -116,7 +116,7 @@ tile.mfr.decorativebrick.ice_large.name = 大型冰磚塊
 tile.mfr.decorativebrick.lapis_large.name = 大型青金石磚塊
 tile.mfr.decorativebrick.obsidian_large.name = 大型黑曜石磚塊
 tile.mfr.decorativebrick.snow_large.name = 大型雪磚塊
-tile.mfr.decorativebrick.prc.name = 可編程紅石網絡控制器外殼
+tile.mfr.machineblock.prc.name = 可編程紅石網絡控制器外殼
 
 tile.mfr.decorativestone.black.smooth.name = 光滑黑岩
 tile.mfr.decorativestone.black.cobble.name = 黑岩圓石

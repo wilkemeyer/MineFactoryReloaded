@@ -44,7 +44,7 @@ public class MFRGUIHandler implements IGuiHandler
 		else if(ID == 2)
 		{
 			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.bagItem))
+					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.plasticBagItem))
 			{
 				return new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
@@ -78,7 +78,7 @@ public class MFRGUIHandler implements IGuiHandler
 		else if(ID == 2)
 		{
 			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.bagItem))
+					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.plasticBagItem))
 			{
 				return new GUIBag(new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
 			}
