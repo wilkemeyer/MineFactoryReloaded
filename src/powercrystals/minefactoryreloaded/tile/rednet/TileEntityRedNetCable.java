@@ -19,7 +19,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemDye;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -36,6 +35,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnec
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -437,7 +437,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 	
 	public int getSideColorValue(ForgeDirection side)
 	{
-		return (ItemDye.field_150922_c[~getSideColor(side) & 15] << 8) | 0xFF;
+		return (MFRUtil.COLORS[getSideColor(side) & 15] << 8) | 0xFF;
 	}
 	
 	public byte getMode(int side)

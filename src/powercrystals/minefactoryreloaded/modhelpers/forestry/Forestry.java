@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.forestry;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,7 +17,6 @@ public class Forestry
 	{
 		if(!Loader.isModLoaded("Forestry"))
 		{
-			FMLLog.warning("Forestry missing - MFR Forestry Compat not loading");
 			return;
 		}
 		try

@@ -49,7 +49,6 @@ public class Pam
 		Class<?>[] fertilizeOpts = new Class<?> []{World.class, int.class, int.class, int.class};
 		if ( !Loader.isModLoaded( "pamharvestcraft" ) )
 		{
-			FMLLog.warning( "Pam's HC base missing - MFR Pam HC Compat not loading" );
 		}
 		else
 		{
@@ -192,7 +191,6 @@ public class Pam
 
 		if ( !Loader.isModLoaded( "pamweeeflowers" ) )
 		{
-			FMLLog.warning( "Pam's Weee! Flowers missing - MFR Pam Weee! Flowers Compat not loading" );
 		}
 		else
 		{

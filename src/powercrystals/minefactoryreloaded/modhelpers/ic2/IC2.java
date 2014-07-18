@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -45,7 +44,6 @@ public class IC2
 	{
 		if(!Loader.isModLoaded("IC2"))
 		{
-			FMLLog.warning("IC2 missing - MFR IC2 Compat not loading");
 			return;
 		}
 		try

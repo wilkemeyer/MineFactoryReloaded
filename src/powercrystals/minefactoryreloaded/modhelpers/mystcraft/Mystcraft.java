@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.mystcraft;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-
 
 @Mod(modid = "MineFactoryReloaded|CompatMystcraft", name = "MFR Compat: Mystcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Mystcraft")
 public class Mystcraft
@@ -24,7 +22,6 @@ public class Mystcraft
 	{
 		if(!Loader.isModLoaded("Mystcraft"))
 		{
-			FMLLog.warning("Mystcraft missing - MFR Mystcraft Compat not loading");
 			return;
 		}
 		try

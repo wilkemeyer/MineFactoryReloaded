@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.twilightforest;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -36,7 +35,6 @@ public class TwilightForest
 	{
 		if(!Loader.isModLoaded("TwilightForest"))
 		{
-			FMLLog.warning("Twilight Forest missing - MFR Twilight Forest Compat not loading");
 			return;
 		}
 		

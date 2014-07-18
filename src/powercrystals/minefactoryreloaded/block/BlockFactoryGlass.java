@@ -1,23 +1,25 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.util.position.BlockPosition;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemDye;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.util.position.BlockPosition;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.IconOverlay;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
@@ -59,7 +61,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	@Override
 	public int getRenderColor(int meta)
 	{
-		return ItemDye.field_150922_c[15 - Math.min(Math.max(meta, 0), 15)];
+		return MFRUtil.COLORS[Math.min(Math.max(meta, 0), 15)];
 	}
 
 	@Override

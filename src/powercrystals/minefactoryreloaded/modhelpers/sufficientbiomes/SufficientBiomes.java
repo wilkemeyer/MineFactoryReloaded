@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.sufficientbiomes;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,7 +17,6 @@ public class SufficientBiomes
 	{
 		if(!Loader.isModLoaded("EmasherWorldGen"))
 		{
-			FMLLog.warning("Sufficient Biomes missing - MFR Sufficient Biomes Compat not loading");
 			return;
 		}
 		try

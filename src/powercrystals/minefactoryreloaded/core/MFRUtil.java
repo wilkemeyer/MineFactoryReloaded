@@ -54,6 +54,15 @@ public class MFRUtil
 		return Keyboard.isKeyDown(KEY_LSHIFT) || Keyboard.isKeyDown(KEY_RSHIFT);
 	}
 
+	//                                                                
+	public static final int[] COLORS_DYE = { 0x1e1e1e, 0xb62222, 0x47691D, 0x804020, 0x404080, 0x803880,
+		0x54a69b, 0xa3a3a3, 0x505050, 0xd881a4, 0x49c14a, 0xd8b920, 0x8da7f6, 0xc730a5, 0xe36600, 0xf0f0f0 };
+	public static final int[] COLORS; static {
+		COLORS = new int[16];
+		for (int i = 16, o = 0; i --> 0; ++o)
+			COLORS[o] = COLORS_DYE[i];
+	}
+
 	public static String shiftForInfo()
 	{
 		return StringHelper.shiftForInfo();

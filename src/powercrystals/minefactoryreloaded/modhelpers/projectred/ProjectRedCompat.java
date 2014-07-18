@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.projectred;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -25,7 +24,6 @@ public class ProjectRedCompat
 	{
 		if(!Loader.isModLoaded("ProjRed|Exploration"))
 		{
-			FMLLog.warning("ProjRed|Exploration missing - MFR ProjectRed Compat not loading");
 			return;
 		}
 		try

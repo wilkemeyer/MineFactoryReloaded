@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.rp2;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -27,7 +26,6 @@ public class RP2
 	{
 		if(!Loader.isModLoaded("RedPowerWorld"))
 		{
-			FMLLog.warning("RedPowerWorld missing - MFR RedPower2 Compat not loading");
 			return;
 		}
 		try

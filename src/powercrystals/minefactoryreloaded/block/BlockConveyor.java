@@ -46,9 +46,11 @@ import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 {
-	public static final int[] colors = new int[] {0xffffff, 0xfa9753, 0xd263dc,
-		0x7598e2, 0xedde39, 0x50dc43, 0xe790a7, 0x525252, 0xbababa, 0x3785a6,
-		0x8a3ecd, 0x3440a1, 0x603f29, 0x4a6029, 0xc2403b, 0x2d2a2a, 0xf6a82c};
+	public static final int[] colors = new int[17];static {
+		for (int i = 16; i --> 0; )
+			colors[i] = MFRUtil.COLORS[i];
+		colors[16] = 0xf6a82c;
+	};
 	@SideOnly(Side.CLIENT)
 	private IIcon base, overlay, overlayFast, overlayStopped;
 	private int renderPass;
@@ -195,7 +197,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			dyeColor = ((TileEntityConveyor)te).getDyeColor();
 			if(dyeColor == -1) dyeColor = 16;
 		}
-		return colors[dyeColor];
+		return getRenderColor(dyeColor);
 	}
 
 	@Override

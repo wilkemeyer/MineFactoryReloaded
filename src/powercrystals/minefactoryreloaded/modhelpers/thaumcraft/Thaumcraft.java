@@ -44,7 +44,6 @@ public class Thaumcraft
 	{
 		if(!Loader.isModLoaded("Thaumcraft"))
 		{
-			FMLLog.warning("Thaumcraft missing - MFR Thaumcraft Compat not loading");
 			return;
 		}
 		
