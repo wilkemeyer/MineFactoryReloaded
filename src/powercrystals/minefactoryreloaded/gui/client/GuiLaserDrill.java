@@ -24,10 +24,10 @@ public class GuiLaserDrill extends GuiFactoryInventory
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
 		drawBar(150, 75, _drill.getEnergyMax(), _drill.getEnergyStored(), _barEnergyIndex);
 		drawBar(160, 75, _drill.getWorkMax(), _drill.getWorkDone(), _barWorkIndex);
-		
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}
 	
 	@Override

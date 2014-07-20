@@ -126,7 +126,11 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 			}
 			
 			if (_temp == 0 && _inventory[3] == null)
+			{
+				if ((worldObj.getTotalWorldTime() & 0x6F) == 0 && !CoreUtils.isRedstonePowered(this))
+					mergeFuel();
 				return; // we're not burning anything and not changing the temp
+			}
 
 			if (_temp == maxTemp ? _totalBurningTime < 0 : _totalBurningTime > 0 ? true : _temp != 0)
 			{
@@ -142,31 +146,33 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 				_tanks[0].fill(new FluidStack(_liquidId, i * 4), true);
 			}
 
-			if (CoreUtils.isRedstonePowered(this))
-				return;
-			
-			if (_inventory[3] != null)
-				for (int i = 0; _inventory[3].stackSize < _inventory[3].getMaxStackSize() && i < 3; ++i)
-				{
-					UtilInventory.mergeStacks(_inventory[3], _inventory[i]);
-					if (_inventory[i] != null && _inventory[i].stackSize == 0)
-						_inventory[i] = null;
-				}
-			else
-				for (int i = 0; i < 3; ++i)
-					if (_inventory[i] != null)
-					{
-						_inventory[3] = _inventory[i];
-						_inventory[i] = null;
-						break;
-					}
-			
-			if (skipConsumption)
+			if (skipConsumption || CoreUtils.isRedstonePowered(this))
 				return;
 
 			if (consumeFuel())
 				_ticksSinceLastConsumption = 0;
+			
+			mergeFuel();
 		}
+	}
+
+	protected void mergeFuel()
+	{
+		if (_inventory[3] != null)
+			for (int i = 0; _inventory[3].stackSize < _inventory[3].getMaxStackSize() && i < 3; ++i)
+			{
+				UtilInventory.mergeStacks(_inventory[3], _inventory[i]);
+				if (_inventory[i] != null && _inventory[i].stackSize == 0)
+					_inventory[i] = null;
+			}
+		else
+			for (int i = 0; i < 3; ++i)
+				if (_inventory[i] != null)
+				{
+					_inventory[3] = _inventory[i];
+					_inventory[i] = null;
+					break;
+				}
 	}
 
 	protected boolean consumeFuel()

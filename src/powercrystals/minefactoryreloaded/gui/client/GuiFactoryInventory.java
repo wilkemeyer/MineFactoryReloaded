@@ -79,6 +79,7 @@ public class GuiFactoryInventory extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		GL11.glColor4f(1f, 1f, 1f, 1f);
 		fontRendererObj.drawString(_tileEntity.getInventoryName(), _xOffset, 6, 4210752);
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 5, 4210752);
 		
@@ -93,8 +94,7 @@ public class GuiFactoryInventory extends GuiContainer
 				{
 					if (tanks[i].fluid == null) continue;
 					int tankSize = tanks[i].fluid.amount * _tankSizeMax / tanks[i].capacity;
-					drawTank(_tanksOffsetX - (i * 20), _tanksOffsetY + _tankSizeMax, tanks[i].fluid,
-							tankSize);
+					drawTank(_tanksOffsetX - (i * 20), _tanksOffsetY + _tankSizeMax, tanks[i].fluid, tankSize);
 				}
 			}
 		}

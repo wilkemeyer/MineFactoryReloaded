@@ -16,6 +16,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -271,6 +272,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 						default:
 						}
 					}
+					MFRUtil.usedWrench(player, x, y, z);
 				}
 				else if (s != null && s.getItem().equals(Items.dye))
 				{
@@ -410,14 +412,16 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 	}
 
 	@Override
-	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
 	{
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
 		int meta = world.getBlockMetadata(x, y, z);
 		ItemStack machine = new ItemStack(getItemDropped(meta, world.rand, 0), 1, damageDropped(meta));
+		list.add(machine);
 		world.setBlockToAir(x, y, z);
 		if (!returnBlock)
 			dropBlockAsItem(world, x, y, z, machine);
-		return machine;
+		return list;
 	}
 
 	@Override
@@ -519,8 +523,8 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
-			ForgeDirection side, EntityPlayer player, List<String> info, boolean debug)
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,
+			EntityPlayer player, List<IChatComponent> info, boolean debug)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityRedNetCable)

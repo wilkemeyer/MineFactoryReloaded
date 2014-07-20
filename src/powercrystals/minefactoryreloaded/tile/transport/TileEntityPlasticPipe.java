@@ -10,6 +10,7 @@ import cofh.render.hitbox.ICustomHitBox;
 import cofh.util.CoreUtils;
 import cofh.util.FluidHelper;
 import cofh.util.StringHelper;
+import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,6 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -41,8 +43,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	private IFluidHandler[] handlerCache = null;
 	private byte upgradeItem = 0;
 	private boolean deadCache = true;
-	private boolean isPowered = false;
+	
+	private boolean readFromNBT = false;
 
+	private boolean isPowered = false;
 	boolean isNode = false;
 	FluidStack fluidForGrid = null;
 
@@ -74,7 +78,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 			_grid.storage.drain(fluidForGrid, true);
 			int c = 0;
 			for (int i = 6; i --> 0; )
-				if ((sideMode[i] >> 2) == 2)
+				if (sideMode[i] == ((2 << 2) | 1))
 					++c;
 			if (c > 1)
 				_grid.regenerate();
@@ -108,8 +112,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	private void reCache() {
 		if (deadCache) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				onNeighborTileChange(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
 			// This method is only ever called from the same thread as the tick handler
 			// so this method can be safely called *here* without worrying about threading
@@ -127,6 +130,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 				markDirty();
 			}
 		}
+		readFromNBT = true;
 		if (_grid == null) {
 			setGrid(new FluidNetwork(this));
 			markDirty();
@@ -137,9 +141,27 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 
 	@Override
 	public void onNeighborTileChange(int x, int y, int z) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote | deadCache)
 			return;
 		TileEntity tile = worldObj.getTileEntity(x, y, z);
+
+		if (x < xCoord)
+			addCache(tile, 5);
+		else if (x > xCoord)
+			addCache(tile, 4);
+		else if (z < zCoord)
+			addCache(tile, 3);
+		else if (z > zCoord)
+			addCache(tile, 2);
+		else if (y < yCoord)
+			addCache(tile, 1);
+		else if (y > yCoord)
+			addCache(tile, 0);
+	}
+	
+	private void addCache(TileEntity tile) {
+		if (tile == null) return;
+		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
 
 		if (x < xCoord)
 			addCache(tile, 5);
@@ -183,28 +205,38 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	private void incorporateTiles() {
 		if (_grid != null) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				if (worldObj.blockExists(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-					TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
-							yCoord + dir.offsetY, zCoord + dir.offsetZ);
-					if (tile instanceof TileEntityPlasticPipe &&
-							((TileEntityPlasticPipe)tile).canInterface(this))
-						_grid.addConduit((TileEntityPlasticPipe)tile);
+				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
+				if (BlockPosition.blockExists(this, dir)) {
+					TileEntityPlasticPipe pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
+					if (pipe != null)
+						if (pipe.canInterface(this))
+							_grid.addConduit(pipe);
 				}
 			}
-		} else for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			if (worldObj.blockExists(xCoord + dir.offsetX,
-					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityPlasticPipe &&
-						((TileEntityPlasticPipe)tile)._grid != null &&
-						((TileEntityPlasticPipe)tile).canInterface(this)) {
-					((TileEntityPlasticPipe)tile)._grid.addConduit(this);
-					break;
+		} else {
+			boolean hasGrid = false;
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
+				if (BlockPosition.blockExists(this, dir)) {
+					TileEntityPlasticPipe pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
+					if (pipe != null) {
+						if (pipe._grid != null && pipe.canInterface(this)) {
+							if (hasGrid) {
+								pipe._grid.mergeGrid(_grid);
+							} else {
+								pipe._grid.addConduit(this);
+								hasGrid = _grid != null;
+							}
+						}
+					}
 				}
 			}
 		}
+	}
+
+	public boolean canInterface(TileEntityPlasticPipe te, ForgeDirection dir) {
+		if ((sideMode[dir.ordinal()] & 1) == 0) return false;
+		return canInterface(te);
 	}
 
 	public boolean canInterface(TileEntityPlasticPipe te) {
@@ -373,6 +405,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		readFromNBT = true;
 		upgradeItem = nbt.getByte("Upgrade");
 		isPowered = nbt.getBoolean("Power");
 		sideMode = nbt.getByteArray("SideMode");
@@ -451,8 +484,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	}
 
 	public void setGrid(FluidNetwork newGrid) {
+		if (fluidForGrid == null)
+			fluidForGrid = newGrid.storage.drain(0, false);
 		_grid = newGrid;
-		if (_grid != null && !_grid.isRegenerating())
+		if (readFromNBT && _grid != null && !_grid.isRegenerating())
 			incorporateTiles();
 	}
 
@@ -460,13 +495,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	public void updateInternalTypes(IGridController grid) {
 		if (deadCache) return;
 		if (grid != FluidNetwork.HANDLER) return;
-		isNode = false;
+		boolean node = false;
 		for (int i = 0; i < 6; i++) {
-			int mode = sideMode[i] >> 2;
-			if (((sideMode[i] & 1) != 0) & (mode != 0) & (mode != 2)) {
-				isNode = true;
-			}
+			final int t = sideMode[i];
+			final int mode = t >> 2;
+			node = ((t & 1) != 0) & (mode != 0) & (mode != 2) | node;
 		}
+		isNode = node;
 		if (_grid != null)
 			_grid.addConduit(this);
 		markDirty();
@@ -550,34 +585,34 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		main.add(offset);
 	}
 
-	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
 		if (_grid != null) {/* TODO: advanced monitoring
 			if (isNode) {
 				info.add("Throughput All: " + _grid.distribution);
 				info.add("Throughput Side: " + _grid.distributionSide);
 			} else//*/
 			if (!debug) {
-				info.add("Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>"));
-				info.add("Saturation: " +
+				info.add(text("Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>")));
+				info.add(text("Saturation: " +
 					(Math.ceil(_grid.storage.getFluidAmount() /
-							(float)_grid.storage.getCapacity() * 1000) / 10f));
+							(float)_grid.storage.getCapacity() * 1000) / 10f)));
 			}
 		} else if (!debug)
-			info.add("Null Grid");
+			info.add(text("Null Grid"));
 		if (debug) {
 			if (_grid != null) {
-				info.add("Grid:" + _grid);
-				info.add("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount());
-				info.add("Grid Max: " + _grid.storage.getCapacity() + ", Grid Cur: " +
-						_grid.storage.getFluidAmount());
-				info.add("Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>"));
-				info.add("Cache: (" + Arrays.toString(handlerCache) + ")");
+				info.add(text("Grid:" + _grid));
+				info.add(text("    Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount()));
+				info.add(text("    Grid Max: " + _grid.storage.getCapacity() + ", Grid Cur: " +
+						_grid.storage.getFluidAmount()));
+				info.add(text("    Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>")));
 			} else {
-				info.add("Grid: Null");
-				info.add("FluidForGrid: " + fluidForGrid);
+				info.add(text("Grid: Null"));
 			}
-			info.add("SideType: " + Arrays.toString(sideMode));
-			info.add("Node: " + isNode);
+			info.add(text("Cache: (" + Arrays.toString(handlerCache) + ")"));
+			info.add(text("FluidForGrid: " + fluidForGrid));
+			info.add(text("SideType: " + Arrays.toString(sideMode)));
+			info.add(text("Node: " + isNode));
 			return;
 		}
 	}

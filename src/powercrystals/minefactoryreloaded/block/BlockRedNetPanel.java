@@ -114,10 +114,11 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 		ItemStack s = player.inventory.getCurrentItem();
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		if(MFRUtil.isHoldingHammer(player) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
+		if (MFRUtil.isHoldingUsableTool(player, x, y, z) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			((TileEntityFactory)te).rotate(ForgeDirection.getOrientation(side));
 			world.markBlockForUpdate(x, y, z);
+			MFRUtil.usedWrench(player, x, y, z);
 			return true;
 		}
 		else if(te instanceof TileEntityFactory && ((TileEntityFactory)te).getContainer(player.inventory) != null)

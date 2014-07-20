@@ -31,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
@@ -136,12 +137,13 @@ public class BlockPlasticPipe extends BlockContainer
 						{
 							te = BlockPosition.getAdjacentTileEntity(cable, ForgeDirection.getOrientation(oldSide));
 							if (te instanceof TileEntityPlasticPipe &&
-									!cable.isInterfacing(ForgeDirection.getOrientation(oldSide).getOpposite()) &&
+									!cable.isInterfacing(ForgeDirection.getOrientation(oldSide)) &&
 									cable.couldInterface((TileEntityPlasticPipe)te))
 								{
 									cable.mergeWith((TileEntityPlasticPipe)te);
 									((TileEntityPlasticPipe)te).notifyNeighborTileChange();
 									cable.notifyNeighborTileChange();
+									MFRUtil.usedWrench(player, x, y, z);
 									break l;
 								}
 
@@ -186,6 +188,7 @@ public class BlockPlasticPipe extends BlockContainer
 						default:
 						}
 					}
+					MFRUtil.usedWrench(player, x, y, z);
 				}
 			}
 		}
@@ -193,14 +196,16 @@ public class BlockPlasticPipe extends BlockContainer
 	}
 
 	@Override
-	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
 	{
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
 		int meta = world.getBlockMetadata(x, y, z);
 		ItemStack machine = new ItemStack(getItemDropped(meta, world.rand, 0), 1, damageDropped(meta));
+		list.add(machine);
 		world.setBlockToAir(x, y, z);
 		if (!returnBlock)
 			dropBlockAsItem(world, x, y, z, machine);
-		return machine;
+		return list;
 	}
 
 	@Override
@@ -302,8 +307,8 @@ public class BlockPlasticPipe extends BlockContainer
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
-			ForgeDirection side, EntityPlayer player, List<String> info, boolean debug)
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,
+			EntityPlayer player, List<IChatComponent> info, boolean debug)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityPlasticPipe)

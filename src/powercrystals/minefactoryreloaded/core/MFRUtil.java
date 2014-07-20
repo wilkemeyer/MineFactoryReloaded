@@ -5,6 +5,7 @@ import static org.lwjgl.input.Keyboard.*;
 
 import buildcraft.api.tools.IToolWrench;
 
+import cofh.api.item.IToolHammer;
 import cofh.util.StringHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,8 +30,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.input.Keyboard;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.IToolHammer;
-import powercrystals.minefactoryreloaded.api.IToolHammerAdvanced;
+import powercrystals.minefactoryreloaded.api.IMFRHammer;
 
 public class MFRUtil
 {
@@ -65,7 +65,7 @@ public class MFRUtil
 
 	public static String shiftForInfo()
 	{
-		return StringHelper.shiftForInfo();
+		return StringHelper.shiftForDetails();
 	}
 
 	public static String empty()
@@ -120,32 +120,57 @@ public class MFRUtil
 			return false;
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
-		if (currentItem instanceof IToolHammerAdvanced)
+		if (currentItem instanceof IToolHammer)
 		{
-			return ((IToolHammerAdvanced)currentItem).isActive(player.inventory.getCurrentItem());
+			return ((IToolHammer)currentItem).isUsable(player.inventory.getCurrentItem(), player, x, y, z);
 		}
-		else if (currentItem instanceof IToolHammer)
+		else if (currentItem instanceof IMFRHammer)
 		{
 			return true;
 		}
-		else if (wrenchExists && canHandleWrench(currentItem, player, x, y, z))
+		else if (bcWrenchExists && canHandleBCWrench(currentItem, player, x, y, z))
 		{
 			return true;
 		}
 
 		return false;
 	}
+
+	public static void usedWrench(EntityPlayer player, int x, int y, int z)
+	{
+		if (player.inventory.getCurrentItem() == null)
+		{
+			return;
+		}
+		Item currentItem = player.inventory.getCurrentItem().getItem();
+		if (currentItem instanceof IToolHammer)
+		{
+			((IToolHammer)currentItem).toolUsed(player.inventory.getCurrentItem(), player, x, y, z);
+		}
+		else if (currentItem instanceof IMFRHammer)
+		{
+			;
+		}
+		else if (bcWrenchExists)
+		{
+			bcWrenchUsed(currentItem, player, x, y, z);
+		}
+	}
 	
-	private static boolean wrenchExists = false;
+	private static boolean bcWrenchExists = false;
 	static {
 		try {
 			Class.forName("buildcraft.api.tools.IToolWrench");
-			wrenchExists = true;
+			bcWrenchExists = true;
 		} catch(Throwable _) {}
 	}
-	private static boolean canHandleWrench(Item item, EntityPlayer p, int x, int y, int z)
+	private static boolean canHandleBCWrench(Item item, EntityPlayer p, int x, int y, int z)
 	{
 		return item instanceof IToolWrench && ((IToolWrench)item).canWrench(p, x, y, z);
+	}
+	private static void bcWrenchUsed(Item item, EntityPlayer p, int x, int y, int z)
+	{
+		if (item instanceof IToolWrench) ((IToolWrench)item).wrenchUsed(p, x, y, z);
 	}
 
 	public static boolean isHoldingHammer(EntityPlayer player)
@@ -155,11 +180,7 @@ public class MFRUtil
 			return false;
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
-		if (currentItem instanceof IToolHammerAdvanced)
-		{
-			return ((IToolHammerAdvanced)currentItem).isActive(player.inventory.getCurrentItem());
-		}
-		else if (currentItem instanceof IToolHammer)
+		if (currentItem instanceof IMFRHammer)
 		{
 			return true;
 		}

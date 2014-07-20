@@ -116,7 +116,7 @@ public class FluidNetwork implements IGrid
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityPlasticPipe) {
-						if (main.canInterface((TileEntityPlasticPipe)te) && !checked.contains(te))
+						if (main.canInterface((TileEntityPlasticPipe)te, dir[i^1]) && !checked.contains(te))
 							toCheck.add((TileEntityPlasticPipe)te);
 						checked.add((TileEntityPlasticPipe)te);
 					}
@@ -154,6 +154,7 @@ public class FluidNetwork implements IGrid
 	}
 
 	public void destroyConduit(TileEntityPlasticPipe cond) {
+		cond.fluidForGrid = storage.drain(0, false);
 		cond._grid = null;
 	}
 
@@ -222,7 +223,11 @@ public class FluidNetwork implements IGrid
 
 	public void mergeGrid(FluidNetwork grid) {
 		if (grid == this) return;
-		boolean r = regenerating || grid.regenerating;
+		if (storage.getFluid() == null && grid.storage.getFluid() != null) {
+			grid.mergeGrid(this);
+			return;
+		}
+		boolean r = regenerating | grid.regenerating;
 		grid.destroyGrid();
 		if (!regenerating & r)
 			regenerate();
@@ -242,6 +247,7 @@ public class FluidNetwork implements IGrid
 			HANDLER.addGrid(this);
 		}
 		storage.fill(cond.fluidForGrid, true);
+		cond.fluidForGrid = storage.drain(0, false);
 	}
 
 	public void nodeRemoved(TileEntityPlasticPipe cond) {
@@ -265,8 +271,15 @@ public class FluidNetwork implements IGrid
 					return false;
 			} else
 				return false;
-		} else
+		} else if (cond.fluidForGrid != null) {
+			if (!FluidHelper.isFluidEqualOrNull(cond.fluidForGrid, storage.getFluid())) {
+				conduitSet.remove(cond);
+				return false;
+			} else
+				cond.setGrid(this);
+		} else {
 			cond.setGrid(this);
+		}
 		rebalanceGrid();
 		return true;
 	}

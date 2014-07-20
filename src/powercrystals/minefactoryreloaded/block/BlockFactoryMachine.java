@@ -144,7 +144,7 @@ implements IRedNetOmniNode, IDismantleable
 		}
 	}
 
-	private void dropContents(TileEntity te)
+	private void dropContents(TileEntity te, ArrayList<ItemStack> list)
 	{
 		if (te instanceof IInventory)
 		{
@@ -154,7 +154,7 @@ implements IRedNetOmniNode, IDismantleable
 			if (te instanceof TileEntityFactoryInventory)
 				factoryInv = (TileEntityFactoryInventory)te;
 
-			inv: for (int i = inventory.getSizeInventory(); i --> 0 ; )
+			for (int i = inventory.getSizeInventory(); i --> 0 ; )
 			{
 				if (factoryInv != null)
 					if (!factoryInv.shouldDropSlotWhenBroken(i))
@@ -164,31 +164,40 @@ implements IRedNetOmniNode, IDismantleable
 				if (itemstack == null)
 					continue;
 				inventory.setInventorySlotContents(i, null);
-
-				do
+				if (list != null)
 				{
-					if (itemstack.stackSize <= 0)
-						continue inv;
-
-					float xOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-					float yOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-					float zOffset = world.rand.nextFloat() * 0.8F + 0.1F;
-
-					int amountToDrop = Math.min(world.rand.nextInt(21) + 10, itemstack.stackSize);
-
-					EntityItem entityitem = new EntityItem(world,
-							te.xCoord + xOffset, te.yCoord + yOffset, te.zCoord + zOffset,
-							itemstack.splitStack(amountToDrop));
-
-					float motionMultiplier = 0.05F;
-					entityitem.motionX = (float)world.rand.nextGaussian() * motionMultiplier;
-					entityitem.motionY = (float)world.rand.nextGaussian() * motionMultiplier + 0.2F;
-					entityitem.motionZ = (float)world.rand.nextGaussian() * motionMultiplier;
-
-					world.spawnEntityInWorld(entityitem);
-				} while(true);
+					list.add(itemstack);
+				}
+				else
+					dropStack(world, te.xCoord, te.yCoord, te.zCoord, itemstack);
 			}
 		}
+	}
+	
+	private void dropStack(World world, int x, int y, int z, ItemStack itemstack)
+	{
+		do
+		{
+			if (itemstack.stackSize <= 0)
+				break;
+
+			float xOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+			float yOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+			float zOffset = world.rand.nextFloat() * 0.8F + 0.1F;
+
+			int amountToDrop = Math.min(world.rand.nextInt(21) + 10, itemstack.stackSize);
+
+			EntityItem entityitem = new EntityItem(world,
+					x + xOffset, y + yOffset, z + zOffset,
+					itemstack.splitStack(amountToDrop));
+
+			float motionMultiplier = 0.05F;
+			entityitem.motionX = (float)world.rand.nextGaussian() * motionMultiplier;
+			entityitem.motionY = (float)world.rand.nextGaussian() * motionMultiplier + 0.2F;
+			entityitem.motionZ = (float)world.rand.nextGaussian() * motionMultiplier;
+
+			world.spawnEntityInWorld(entityitem);
+		} while(true);
 	}
 
 	@Override
@@ -197,7 +206,7 @@ implements IRedNetOmniNode, IDismantleable
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null)
 		{
-			dropContents(te);
+			dropContents(te, null);
 
 			if (te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory)te).onBlockBroken();
@@ -245,16 +254,18 @@ implements IRedNetOmniNode, IDismantleable
 	}
 
 	@Override
-	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
 			boolean returnBlock)
 	{
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
+		ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z),
+				world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
+		list.add(machine);
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityFactory)
 		{
-			ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z),
-					world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
+			dropContents(te, list);
 
-			dropContents(te);
 			if(te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory)te).onDisassembled();
 
@@ -270,10 +281,11 @@ implements IRedNetOmniNode, IDismantleable
 
 			world.setBlockToAir(x, y, z);
 			if (!returnBlock)
-				dropBlockAsItem(world, x, y, z, machine);
-			return machine;
+				for (ItemStack stack : list)
+					dropStack(world, x, y, z, stack);
+			return list;
 		}
-		return null;
+		return list;
 	}
 
 	@Override

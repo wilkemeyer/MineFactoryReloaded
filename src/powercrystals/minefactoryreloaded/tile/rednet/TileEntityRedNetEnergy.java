@@ -25,6 +25,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -548,35 +549,35 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
-		info.add("-Redstone-");
+	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+		info.add(text("-Redstone-"));
 		super.getTileInfo(info, side, player, debug && player.isSneaking());
-		info.add("-Energy-");
+		info.add(text("-Energy-"));
 		if (_grid != null) {/* TODO: advanced monitoring
 			if (isNode) {
 				info.add("Throughput All: " + _grid.distribution);
 				info.add("Throughput Side: " + _grid.distributionSide);
 			} else//*/
 			if (!debug)
-				info.add("Saturation: " +
+				info.add(text("Saturation: " +
 					(Math.ceil(_grid.storage.getEnergyStored() /
-							(float)_grid.storage.getMaxEnergyStored() * 1000) / 10f));
+							(float)_grid.storage.getMaxEnergyStored() * 1000) / 10f)));
 		} else if (!debug)
-			info.add("Null Grid");
+			info.add(text("Null Grid"));
 		if (debug) {
 			if (_grid != null) {
-				info.add("Grid:" + _grid);
-				info.add("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount());
-				info.add("Grid Max: " + _grid.storage.getMaxEnergyStored() + ", Grid Cur: " +
-						_grid.storage.getEnergyStored());
-				info.add("Caches: (RF, EU):(" +
+				info.add(text("Grid:" + _grid));
+				info.add(text("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount()));
+				info.add(text("Grid Max: " + _grid.storage.getMaxEnergyStored() + ", Grid Cur: " +
+						_grid.storage.getEnergyStored()));
+				info.add(text("Caches: (RF, EU):(" +
 						Arrays.toString(handlerCache) + ", " +
-						ic2Cache + ")");
+						ic2Cache + ")"));
 			} else {
-				info.add("Null Grid");
+				info.add(text("Null Grid"));
 			}
-			info.add("SideType: " + Arrays.toString(sideMode));
-			info.add("Node: " + isNode);
+			info.add(text("SideType: " + Arrays.toString(sideMode)));
+			info.add(text("Node: " + isNode));
 			return;
 		}
 	}

@@ -11,6 +11,14 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 public class ItemFactoryBag extends ItemFactory
 {
 	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null && tag.hasKey("inventory"))
+			return 1;
+		return maxStackSize;
+	}
+
+	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		if (stack.stackSize != 1)

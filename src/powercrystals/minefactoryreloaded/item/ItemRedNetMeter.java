@@ -48,27 +48,23 @@ public class ItemRedNetMeter extends ItemMulti
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world,
 			int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
 	{
-		if (world.isRemote)
-		{
-			return true;
-		}
 		switch (itemstack.getItemDamage())
 		{
 		case 2:
 			Block block = world.getBlock(x, y, z);
-			ArrayList<String> info = new ArrayList<String>();
+			ArrayList<IChatComponent> info = new ArrayList<IChatComponent>();
 			if (player.isSneaking() && block instanceof IBlockDebug) {
 				((IBlockDebug) (block)).debugBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player);
 				return true;
 			} else if (block instanceof IBlockInfo) {
 				if (ServerHelper.isClientWorld(world)) {
-					info.add("-Client-");
+					info.add(new ChatComponentText("-Client-"));
 				} else {
-					info.add("-Server-");
+					info.add(new ChatComponentText("-Server-"));
 				}
 				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info, true);
 				for (int i = 0; i < info.size(); i++) {
-					player.addChatMessage(new ChatComponentText(info.get(i)));
+					player.addChatMessage(info.get(i));
 				}
 				return true;
 			} else {
@@ -77,7 +73,7 @@ public class ItemRedNetMeter extends ItemMulti
 					if (ServerHelper.isServerWorld(world)) {
 						((ITileInfo) theTile).getTileInfo(info, ForgeDirection.UNKNOWN, player, player.isSneaking());
 						for (int i = 0; i < info.size(); i++) {
-							player.addChatMessage(new ChatComponentText(info.get(i)));
+							player.addChatMessage(info.get(i));
 						}
 					}
 					return true;
@@ -89,11 +85,11 @@ public class ItemRedNetMeter extends ItemMulti
 				return false;
 			}
 			block = world.getBlock(x, y, z);
-			info = new ArrayList<String>();
+			info = new ArrayList<IChatComponent>();
 			if (block instanceof IBlockInfo) {
 				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info, false);
 				for (int i = 0; i < info.size(); i++) {
-					player.addChatMessage(new ChatComponentText(info.get(i)));
+					player.addChatMessage(info.get(i));
 				}
 				return true;
 			} else {
@@ -102,7 +98,7 @@ public class ItemRedNetMeter extends ItemMulti
 					if (ServerHelper.isServerWorld(world)) {
 						((ITileInfo) theTile).getTileInfo(info, ForgeDirection.UNKNOWN, player, false);
 						for (int i = 0; i < info.size(); i++) {
-							player.addChatMessage(new ChatComponentText(info.get(i)));
+							player.addChatMessage(info.get(i));
 						}
 					}
 					return true;
@@ -110,17 +106,20 @@ public class ItemRedNetMeter extends ItemMulti
 			}
 			return false;
 		case 0:
+			if (ServerHelper.isClientWorld(world)) {
+				return false;
+			}
 			block = world.getBlock(x, y, z);
-			ArrayList<IChatComponent> info2 = new ArrayList<IChatComponent>();
+			info = new ArrayList<IChatComponent>();
 			if (block.equals(Blocks.redstone_wire))
 			{
 				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
 						.appendText(": " + world.getBlockMetadata(x, y, z)));
 			}
 			else if (block instanceof IRedNetInfo) {
-				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info2);
-				for (int i = 0; i < info2.size(); i++) {
-					player.addChatMessage(info2.get(i));
+				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info);
+				for (int i = 0; i < info.size(); i++) {
+					player.addChatMessage(info.get(i));
 				}
 				return true;
 			}

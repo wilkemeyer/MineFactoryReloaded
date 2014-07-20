@@ -24,6 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -387,6 +388,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 				if (cube.max.x > 0)
 					box.sideLength[5] = Math.max(box.sideLength[5], cube.max.x);
 			}
+			// TODO: clamp side to smaller than the non-custom render parts
 		}
 		for (int i = box.sideLength.length; i --> 0; )
 			box.drawSide[i] = box.sideLength[i] > 0;
@@ -411,26 +413,26 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 		return o;
 	}
 
-	public void getTileInfo(List<String> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
 		if (!debug) {
-			info.add(getRedNetInfo(side, player));
+			info.add(text(getRedNetInfo(side, player)));
 		} else { // debug
 			if (_network != null) {
-				info.add("Grid:" + _network);
-				info.add("Conduits: " + _network.getConduitCount() + ", Nodes: " + _network.getNodeCount());
+				info.add(text("Grid:" + _network));
+				info.add(text("Conduits: " + _network.getConduitCount() + ", Nodes: " + _network.getNodeCount()));
 				String o = "[";
 				for (int i = 0; i < 15; ++i)
 					o += _network.getPowerLevelOutput(i) + ",";
 				o += _network.getPowerLevelOutput(15) + "]";
-				info.add("Outputs: " + o);
+				info.add(text("Outputs: " + o));
 			} else {
-				info.add("Null Grid");
+				info.add(text("Null Grid"));
 			}
-			info.add("ConnectionState: " + Arrays.toString(_connectionState));
-			info.add("SideMode: " + Arrays.toString(_cableMode));
-			info.add("Colors: " + Arrays.toString(_sideColors));
-			info.add("Upgrades: " + Arrays.toString(_sideUpgrade));
-			info.add("Node: " + isRSNode);
+			info.add(text("ConnectionState: " + Arrays.toString(_connectionState)));
+			info.add(text("SideMode: " + Arrays.toString(_cableMode)));
+			info.add(text("Colors: " + Arrays.toString(_sideColors)));
+			info.add(text("Upgrades: " + Arrays.toString(_sideUpgrade)));
+			info.add(text("Node: " + isRSNode));
 			return;
 		}
 	}

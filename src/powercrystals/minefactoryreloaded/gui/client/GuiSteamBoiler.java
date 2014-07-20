@@ -18,10 +18,10 @@ public class GuiSteamBoiler extends GuiFactoryInventory
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
 		drawBar(150, 75, _boiler.getWorkMax(), _boiler.getWorkDone(), _barWorkIndex);
 		drawBar(160, 75, TileEntitySteamBoiler.maxTemp + 20, (int)_boiler.getTemp() + 20, _barTempIndex);
-		
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}
 	
 	@Override

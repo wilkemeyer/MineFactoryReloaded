@@ -57,6 +57,14 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		useHandlers.add(defaultUseAction);
 		useHandlers.add(drinkUseAction);
 	}
+	
+	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null && tag.hasKey("fluid"))
+			return 1;
+		return maxStackSize;
+	}
 
 	@Override
 	public boolean addUseHandler(IUseHandler handler) {
@@ -169,8 +177,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 				tag = stack.stackTagCompound = new NBTTagCompound();
 			fluid.amount += fillAmount;
 			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
-			tag.setLong("uniqifier", (System.identityHashCode(resource) << 32) |
-					System.identityHashCode(stack));
 		}
 		return fillAmount;
 	}
@@ -188,7 +194,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		if (doDrain)
 		{
 			tag.removeTag("fluid");
-			tag.removeTag("uniqifier");
+			tag.setBoolean("drained", true);
 			fluid.amount -= drainAmount;
 			if (fluid.amount > 0)
 				fill(stack, fluid, true);
@@ -216,19 +222,24 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack itemStack)
+	public ItemStack getContainerItem(ItemStack stack)
 	{
-		if (itemStack.stackSize <= 0)
+		if (stack.stackSize <= 0)
 			return null;
-		ItemStack r = itemStack.copy();
-		if (getFluid(r) == null)
+		ItemStack r = stack.copy();
+		NBTTagCompound tag = r.getTagCompound();
+		if (tag != null)
 		{
-			r.stackSize = 1;
-			r.attemptDamageItem(1, itemRand);
-		}
-		else
-		{
-			drain(r, getCapacity(r), true);
+			if (tag.hasKey("drained"))
+			{
+				r.stackSize = 1;
+				r.attemptDamageItem(1, itemRand);
+			}
+			tag.removeTag("drained");
+			tag.removeTag("fluid");
+			tag.removeTag("toDrain");
+			if (tag.hasNoTags())
+				r.setTagCompound(null);
 		}
 		return r;
 	}
@@ -236,7 +247,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	@Override
 	public boolean hasContainerItem(ItemStack stack)
 	{
-		return getFluid(stack) != null;
+		NBTTagCompound tag = stack.getTagCompound();
+		return tag != null && (tag.hasKey("fluid") || tag.hasKey("drained"));
 	}
 
 	public boolean hasDrinkableLiquid(ItemStack stack)

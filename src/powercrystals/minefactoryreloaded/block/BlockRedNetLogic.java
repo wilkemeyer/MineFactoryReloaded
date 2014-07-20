@@ -189,10 +189,11 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode,
 			return false;
 		}
 
-		if(MFRUtil.isHoldingHammer(player))
+		if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 		{
 			if (rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
 			{
+				MFRUtil.usedWrench(player, x, y, z);
 				return true;
 			}
 		}

@@ -10,15 +10,29 @@ import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
 public class BagContainerWrapper implements IInventory
 {
 	private ItemStack _stack;
+	private NBTTagCompound _inventory;
+	private ItemStack[] _stacks = new ItemStack[getSizeInventory()];
 	
 	public BagContainerWrapper(ItemStack stack)
 	{
 		_stack = stack;
+		_inventory = stack.getTagCompound().getCompoundTag("inventory");
+		for (int i = _stacks.length; i --> 0; )
+			_stacks[i] = ItemStack.loadItemStackFromNBT(_inventory.getCompoundTag("slot" + i));
+		markDirty();
+	}
+
+	@Override
+	public void markDirty()
+	{
+		for (int i = _stacks.length; i --> 0; )
+			_inventory.setTag("slot" + i, _stacks[i] == null ? null : _stacks[i].writeToNBT(new NBTTagCompound()));
+		_stack.setTagInfo("inventory", _inventory);
 	}
 	
 	public ItemStack getStack()
 	{
-		_stack.getTagCompound().setLong("code", (_stack.hashCode() << 32) | _stack.getTagCompound().hashCode());
+		markDirty();
 		return _stack;
 	}
 
@@ -31,57 +45,27 @@ public class BagContainerWrapper implements IInventory
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		if(_stack.getTagCompound().getCompoundTag("slot" + i) == null || _stack.getTagCompound().getCompoundTag("slot" + i).hasNoTags())
-		{
-			return null;
-		}
-		else
-		{
-			return ItemStack.loadItemStackFromNBT(_stack.getTagCompound().getCompoundTag("slot" + i));
-		}
+		return _stacks[i];
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{
-		if(_stack.getTagCompound().getCompoundTag("slot" + i) == null || _stack.getTagCompound().getCompoundTag("slot" + i).hasNoTags())
-		{
+		ItemStack s = _stacks[i];
+		if (s == null)
 			return null;
-		}
-		ItemStack s = ItemStack.loadItemStackFromNBT(_stack.getTagCompound().getCompoundTag("slot" + i));
 		ItemStack r = s.splitStack(j);
-		if(s.stackSize <= 0)
+		if (s.stackSize <= 0)
 		{
-			_stack.getTagCompound().setTag("slot" + i, new NBTTagCompound());
-		}
-		else
-		{
-			NBTTagCompound t = new NBTTagCompound();
-			s.writeToNBT(t);
-			_stack.getTagCompound().setTag("slot" + i, t);
+			_stacks[i] = null;
 		}
 		return r;
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		return null;
-	}
-
-	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		if(itemstack == null)
-		{
-			_stack.getTagCompound().setTag("slot" + i, new NBTTagCompound());
-		}
-		else
-		{
-			NBTTagCompound t = new NBTTagCompound();
-			itemstack.writeToNBT(t);
-			_stack.getTagCompound().setTag("slot" + i, t);
-		}
+		_stacks[i] = itemstack;
 	}
 
 	@Override
@@ -97,14 +81,21 @@ public class BagContainerWrapper implements IInventory
 	}
 
 	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return itemstack != null && !(itemstack.getItem() instanceof ItemFactoryBag);
+	}
+
+	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
 
 	@Override
-	public void markDirty()
+	public ItemStack getStackInSlotOnClosing(int i)
 	{
+		return null;
 	}
 
 	@Override
@@ -121,11 +112,5 @@ public class BagContainerWrapper implements IInventory
 	@Override
 	public void closeInventory()
 	{
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return itemstack != null && !(itemstack.getItem() instanceof ItemFactoryBag);
 	}
 }

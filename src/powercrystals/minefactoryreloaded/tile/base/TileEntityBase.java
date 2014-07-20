@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+
 public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 {
 	@Override
@@ -7,6 +10,11 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	{
 		super.invalidate();
 		this.onChunkUnload();
+	}
+	
+	protected final IChatComponent text(String str)
+	{
+		return new ChatComponentText(str);
 	}
 	
 	public void onNeighborTileChange(int x, int y, int z) {}

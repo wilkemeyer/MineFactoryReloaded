@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
+import java.util.ArrayList;
+
 import cofh.api.block.IDismantleable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -44,16 +46,18 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
 			boolean returnBlock)
 	{
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
 		ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z),
 				world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
 
+		list.add(machine);
 		world.setBlockToAir(x, y, z);
 		if (!returnBlock)
 			dropBlockAsItem(world, x, y, z, machine);
-		return machine;
+		return list;
 	}
 
 	@Override

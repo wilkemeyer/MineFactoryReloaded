@@ -21,11 +21,11 @@ public class GuiFactoryPowered extends GuiFactoryInventory
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
 		drawBar(140, 75, _tePowered.getEnergyStoredMax(), _tePowered.getEnergyStored(), _barEnergyIndex);
 		drawBar(150, 75, _tePowered.getWorkMax(), _tePowered.getWorkDone(), _barWorkIndex);
 		drawBar(160, 75, _tePowered.getIdleTicksMax(), _tePowered.getIdleTicks(), _barIdleIndex);
-		
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 	}
 	
 	@Override

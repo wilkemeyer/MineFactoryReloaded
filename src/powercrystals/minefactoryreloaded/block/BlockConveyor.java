@@ -487,13 +487,14 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 	{
 		ItemStack item = player.getHeldItem();
 
-		if (MFRUtil.isHoldingHammer(player))
+		if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 		{
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof IRotateableTile)
 			{
 				((IRotateableTile)te).rotate(ForgeDirection.getOrientation(side));
 			}
+			MFRUtil.usedWrench(player, x, y, z);
 			return true;
 		}
 		else if (item != null && item.getItem().equals(Items.glowstone_dust))

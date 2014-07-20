@@ -20,11 +20,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
-import powercrystals.minefactoryreloaded.api.IToolHammer;
+import powercrystals.minefactoryreloaded.api.IMFRHammer;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Implementable("buildcraft.api.tools.IToolWrench")
-public class ItemFactoryHammer extends ItemFactory implements IToolHammer
+public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 {
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
