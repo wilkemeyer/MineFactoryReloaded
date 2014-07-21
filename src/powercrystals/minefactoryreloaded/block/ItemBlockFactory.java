@@ -21,6 +21,7 @@ public class ItemBlockFactory extends ItemBlock
 	public ItemBlockFactory(Block p_i45328_1_)
 	{
 		super(p_i45328_1_);
+		setMaxDamage(0);
 	}
 	
 	public ItemBlockFactory(Block p_i45328_1_, String[] names)

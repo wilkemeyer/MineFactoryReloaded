@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
@@ -36,7 +36,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
@@ -44,9 +44,11 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
-public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
+public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 {
-	public static final int[] colors = new int[17];static {
+	public static final String[] _names = {"white", "orange", "magenta", "lightblue", "yellow", "lime",
+		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default"};
+	private static final int[] colors = new int[17];static {
 		for (int i = 16; i --> 0; )
 			colors[i] = MFRUtil.COLORS[i];
 		colors[16] = 0xf6a82c;
@@ -244,7 +246,8 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 			return;
 		}
 		int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
-		if(facing == 0)
+		world.setBlockMetadataWithNotify(x, y, z, (facing + 1) & 3, 2);
+		/*if(facing == 0)
 		{
 			world.setBlockMetadataWithNotify(x, y, z, 1, 2);
 		}
@@ -259,13 +262,19 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 		if(facing == 3)
 		{
 			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-		}
+		}//*/
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityConveyor)
 		{
 			((TileEntityConveyor)te).setDyeColor(stack.getItemDamage() == 16 ? -1 : stack.getItemDamage());
 		}
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		onNeighborBlockChange(world, x, y, z, this);
 	}
 
 	@Override
@@ -517,8 +526,8 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 	{
 		if(!canBlockStay(world, x, y, z))
 		{
-			world.setBlockToAir(x, y, z);
 			dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+			world.setBlockToAir(x, y, z);
 			return;
 		}
 
@@ -605,18 +614,6 @@ public class BlockConveyor extends BlockContainer implements IRedNetOmniNode
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
 		return RedNetConnectionType.PlateSingle;
-	}
-
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return null;
-	}
-
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
-	{
-		return 0;
 	}
 
 	@Override

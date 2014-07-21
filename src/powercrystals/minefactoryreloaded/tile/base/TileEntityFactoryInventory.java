@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import cofh.api.item.IAugmentItem;
+import cofh.util.FluidHelper;
 import cofh.util.fluid.FluidTankAdv;
 
 import java.util.ArrayList;
@@ -27,16 +29,18 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	protected final static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] {};
 	protected final static FluidTankInfo[] emptyFluidTankInfo = new FluidTankInfo[] {};
 	protected final static int BUCKET_VOLUME = FluidContainerRegistry.BUCKET_VOLUME;
-	
+
 	protected String _invName;
 	protected boolean _hasInvName = false;
-	
+
+	protected boolean internalChange = false;
+
+	protected ItemStack[] _inventory;
+
 	protected List<ItemStack> failedDrops = null;
 	private List<ItemStack> missedDrops = new ArrayList<ItemStack>(5);
 	protected int _failedDropTicksMax = 20;
 	private int _failedDropTicks = 0;
-	
-	protected boolean internalChange = false;
 
 	protected FluidTankAdv[] _tanks;
 	
@@ -188,7 +192,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	{
 		if (resource != null)
 			for (FluidTankAdv _tank : getTanks())
-				return _tank.fill(resource, doFill);
+				if (FluidHelper.isFluidEqualOrNull(_tank.getFluid(), resource))
+					return _tank.fill(resource, doFill);
 		return 0;
 	}
 	
@@ -300,8 +305,35 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	{
 		return failedDrops != null;
 	}
+
+	protected int getUpgradeSlot()
+	{
+		return -1;
+	}
+
+	protected boolean canUseUpgrade(ItemStack stack, IAugmentItem item)
+	{
+		return item.getAugmentLevel(stack, "radius") != 0;
+	}
 	
-	protected ItemStack[] _inventory;
+	public boolean isUsableAugment(ItemStack stack)
+	{
+		if (stack == null || !(stack.getItem() instanceof IAugmentItem))
+			return false;
+		return canUseUpgrade(stack, (IAugmentItem)stack.getItem());
+	}
+	
+	public boolean acceptUpgrade(ItemStack stack)
+	{
+		int slot = getUpgradeSlot();
+		if (slot < 0 | stack == null || !isUsableAugment(stack))
+			return false;
+		if (getStackInSlot(slot) != null)
+			return false;
+
+		setInventorySlotContents(slot, stack);
+		return true;
+	}
 	
 	@Override
 	public ItemStack getStackInSlot(int i)

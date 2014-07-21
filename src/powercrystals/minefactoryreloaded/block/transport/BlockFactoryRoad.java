@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;

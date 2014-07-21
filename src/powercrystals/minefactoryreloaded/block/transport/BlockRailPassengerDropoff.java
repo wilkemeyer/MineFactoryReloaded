@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.transport;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;

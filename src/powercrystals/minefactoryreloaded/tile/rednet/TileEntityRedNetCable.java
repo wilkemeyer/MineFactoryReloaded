@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import static powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType.None;
-import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
 
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
@@ -36,13 +36,14 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnec
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
+import powercrystals.minefactoryreloaded.core.ITraceable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityRedNetCable extends TileEntityBase implements INode, ICustomHitBox
+public class TileEntityRedNetCable extends TileEntityBase implements INode, ITraceable, ICustomHitBox
 {
 	protected int[] _sideColors = new int [6];
 	protected byte[] _cableMode = {0,0,0, 0,0,0, 0};
@@ -299,9 +300,16 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 		}
 	}
 	
+	@Override
 	public boolean onPartHit(EntityPlayer player, int side, int subHit)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean isLargePart(EntityPlayer player, int subHit)
+	{
+		return subHit < 2 | ((subHit >= (2 + 6 * 3)) & subHit < (2 + 6 * 5));
 	}
 	
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
@@ -309,6 +317,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 		addTraceableCuboids(list, forTrace, false);
 	}
 	
+	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw)
 	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
@@ -413,6 +422,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ICus
 		return o;
 	}
 
+	@Override
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
 		if (!debug) {
 			info.add(text(getRedNetInfo(side, player)));

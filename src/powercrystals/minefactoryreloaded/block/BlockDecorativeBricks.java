@@ -13,14 +13,14 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFactoryDecorativeBricks extends Block implements IRedNetDecorative
+public class BlockDecorativeBricks extends Block implements IRedNetDecorative
 {
-	static String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
-		"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
+	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone",
+		"snow", "ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
 		"meat.raw", "meat.cooked", "brick_large" };
 	private IIcon[] _icons = new IIcon[_names.length];
 
-	public BlockFactoryDecorativeBricks()
+	public BlockDecorativeBricks()
 	{
 		super(Material.rock);
 		setHardness(2.0F);

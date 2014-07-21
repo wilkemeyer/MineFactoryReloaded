@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import cofh.api.item.IAugmentItem;
 import cofh.util.fluid.FluidTankAdv;
 import cofh.util.position.Area;
 import cofh.util.position.BlockPosition;
@@ -18,8 +19,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 
-import powercrystals.minefactoryreloaded.api.IUpgrade;
-import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -152,34 +151,31 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	public void onFactoryInventoryChanged()
 	{
 		_reverse = false;
-		if (_inventory[0] != null && _inventory[0].getItem() instanceof IUpgrade)
+		if (isUsableAugment(_inventory[0]))
 		{
-			IUpgrade upgrade = (IUpgrade)_inventory[0].getItem();
-			if (upgrade.isApplicableFor(UpgradeType.RADIUS, _inventory[0]))
+			IAugmentItem upgrade = (IAugmentItem)_inventory[0].getItem();
+			int r = upgrade.getAugmentLevel(_inventory[0], "radius");
+			if (r > 0)
 			{
-				int r = upgrade.getUpgradeLevel(UpgradeType.RADIUS, _inventory[0]);
-				if (r > 0)
+				_areaManager.setUpgradeLevel(r);
+				Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+				if (_fillingManager == null)
+					_fillingManager = new FluidFillingManager(worldObj, area);
+				else
+					_fillingManager.reset(worldObj, area, null, null);
+			}
+			else
+			{
+				_reverse = true;
+				r = -r;
+				if (r > 1)
 				{
-					_areaManager.setUpgradeLevel(r);
+					_areaManager.setUpgradeLevel(r - 1);
 					Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
 					if (_fillingManager == null)
 						_fillingManager = new FluidFillingManager(worldObj, area);
 					else
 						_fillingManager.reset(worldObj, area, null, null);
-				}
-				else
-				{
-					_reverse = true;
-					r = -r;
-					if (r > 1)
-					{
-						_areaManager.setUpgradeLevel(r - 1);
-						Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
-						if (_fillingManager == null)
-							_fillingManager = new FluidFillingManager(worldObj, area);
-						else
-							_fillingManager.reset(worldObj, area, null, null);
-					}
 				}
 			}
 		}
@@ -251,13 +247,19 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	}
 	
 	@Override
+	public int getUpgradeSlot()
+	{
+		return 0;
+	}
+	
+	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
 		if (stack != null)
 		{
 			if (slot == 0)
 			{
-				return stack.getItem() instanceof IUpgrade;
+				return isUsableAugment(stack);
 			}
 		}
 		return false;

@@ -407,4 +407,22 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	{
 		return true;
 	}
+	
+	@Override
+	public int getUpgradeSlot()
+	{
+		return 0;
+	}
+	
+	@Override
+	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
+	{
+		return slot == 0 && isUsableAugment(itemstack);
+	}
+	
+	@Override
+	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	{
+		return false;
+	}
 }

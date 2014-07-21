@@ -50,19 +50,6 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	}
 	
 	@Override
-	public void rotateDirectlyTo(int r)
-	{
-		super.rotateDirectlyTo(r);
-		onRotate();
-	}
-	
-	@Override
-	public void rotate(ForgeDirection axis)
-	{
-		super.rotate(axis);
-		onRotate();
-	}
-	
 	protected void onRotate()
 	{
 		LinkedList<ForgeDirection> list = new LinkedList<ForgeDirection>();

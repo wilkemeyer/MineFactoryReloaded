@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
-import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
 import static powercrystals.minefactoryreloaded.tile.transport.FluidNetwork.TRANSFER_RATE;
 
 import codechicken.lib.raytracer.IndexedCuboid6;
@@ -34,10 +34,11 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
+import powercrystals.minefactoryreloaded.core.ITraceable;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICustomHitBox, IFluidHandler
+public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITraceable, ICustomHitBox, IFluidHandler
 {
 	private byte[] sideMode = {1,1, 1,1,1,1, 0};
 	private IFluidHandler[] handlerCache = null;
@@ -325,7 +326,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		sideMode[side] = (byte) ((t & ~3) | mode);
 		if (mustUpdate)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			FluidNetwork.HANDLER.addConduitForUpdate(this);
 		}
 	}
 	
@@ -334,8 +335,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		if (_grid == null | sideMode[6] == 1) return 0;
-		int t = sideMode[from.ordinal()];
-		if ((t & 1) != 0 & isPowered & (t & 2) == 2)
+		int t = sideMode[from.ordinal()^1];
+		if (((t & 1) != 0) & isPowered & (t & 2) == 2)
 		{
 			return _grid.storage.fill(resource, doFill);
 		}
@@ -345,8 +346,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
 		if (_grid == null | sideMode[6] == 1) return null;
-		int t = sideMode[from.ordinal()];
-		if ((t & 1) != 0 & (t & 2) == 0)
+		int t = sideMode[from.ordinal()^1];
+		if (((t & 1) != 0) & (t & 2) == 0)
 		{
 			return _grid.storage.drain(resource, doDrain);
 		}
@@ -356,8 +357,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
 		if (_grid == null | sideMode[6] == 1) return null;
-		int t = sideMode[from.ordinal()];
-		if ((t & 1) != 0 & (t & 2) == 0)
+		int t = sideMode[from.ordinal()^1];
+		if (((t & 1) != 0) & (t & 2) == 0)
 			return _grid.storage.drain(maxDrain, doDrain);
 		return null;
 	}
@@ -365,15 +366,15 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		if (sideMode[6] == 1) return false;
-		int t = sideMode[from.ordinal()];
-		return (t & 1) != 0 & (t & 2) == 2;
+		int t = sideMode[from.ordinal()^1];
+		return ((t & 1) != 0) & (t & 2) == 2;
 	}
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		if (sideMode[6] == 1) return false;
-		int t = sideMode[from.ordinal()];
-		return (t & 1) != 0 & (t & 2) == 0;
+		int t = sideMode[from.ordinal()^1];
+		return ((t & 1) != 0) & (t & 2) == 0;
 	}
 
 	@Override
@@ -496,10 +497,12 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		if (deadCache) return;
 		if (grid != FluidNetwork.HANDLER) return;
 		boolean node = false;
-		for (int i = 0; i < 6; i++) {
-			final int t = sideMode[i];
-			final int mode = t >> 2;
-			node = ((t & 1) != 0) & (mode != 0) & (mode != 2) | node;
+		if (sideMode[6] != 1) {
+			for (int i = 0; i < 6; i++) {
+				final int t = sideMode[i];
+				final int mode = t >> 2;
+				node = ((t & 1) != 0) & (mode != 0) & (mode != 2) | node;
+			}
 		}
 		isNode = node;
 		if (_grid != null)
@@ -508,8 +511,15 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		Packets.sendToAllPlayersWatching(this);
 	}
 
+	@Override
 	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
 		return false;
+	}
+
+	@Override
+	public boolean isLargePart(EntityPlayer player, int subHit)
+	{
+		return subHit < 2 | ((subHit >= (2 + 6 * 3)) & subHit < (2 + 6 * 5));
 	}
 
 	@Override
@@ -549,6 +559,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		return box;
 	}
 
+	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw) {
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
@@ -585,8 +596,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ICus
 		main.add(offset);
 	}
 
+	@Override
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
-		if (_grid != null) {/* TODO: advanced monitoring
+		if (_grid != null) {
+			info.add(text("Powered: " + isPowered));
+			/* TODO: advanced monitoring
 			if (isNode) {
 				info.add("Throughput All: " + _grid.distribution);
 				info.add("Throughput Side: " + _grid.distributionSide);

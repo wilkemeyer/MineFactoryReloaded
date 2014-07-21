@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
@@ -20,6 +21,7 @@ public class ClientProxy extends CommonProxy
 	public void init()
 	{
 		super.init();
+		FMLCommonHandler.instance().bus().register(this);
 		MineFactoryReloadedClient.init();
 	}
 	

@@ -20,7 +20,7 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockDecorativeStone extends Block implements IRedNetDecorative
 {
-	static String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
+	public static final String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
 		"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
 		"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
 	private IIcon[] _icons = new IIcon[_names.length];

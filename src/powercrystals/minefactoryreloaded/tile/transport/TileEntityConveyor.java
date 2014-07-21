@@ -89,7 +89,7 @@ public class TileEntityConveyor extends TileEntityBase
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 4);
 			}
-			else if (isSideSolid(- 1, 0, EAST))
+			else if (isSideSolid(-1, 0, EAST))
 			{
 				rotateTo(worldObj, xCoord, yCoord, zCoord, 8);
 			}
@@ -214,8 +214,9 @@ public class TileEntityConveyor extends TileEntityBase
 	private boolean isSideSolid(int x, int z, ForgeDirection dir)
 	{
 		return worldObj.isSideSolid(xCoord + x, yCoord, zCoord + z, dir) &&
-				!(worldObj.isSideSolid(xCoord + x, yCoord + 1, zCoord + z, dir) ||
-						worldObj.isSideSolid(xCoord - x, yCoord - 1, zCoord - z, UP));
+				((!worldObj.isSideSolid(xCoord + x, yCoord + 1, zCoord + z, dir) ||
+						!worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) ||
+							!worldObj.isSideSolid(xCoord - x, yCoord - 1, zCoord - z, UP));
 	}
 	
 	private void rotateTo(World world, int xCoord, int yCoord, int zCoord, int newmd)

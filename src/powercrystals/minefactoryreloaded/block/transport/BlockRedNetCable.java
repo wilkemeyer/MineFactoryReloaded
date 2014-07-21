@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.transport;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
@@ -8,55 +8,42 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.api.block.IBlockInfo;
-import cofh.api.block.IDismantleable;
-import cofh.render.hitbox.ICustomHitBox;
-import cofh.render.hitbox.RenderHitbox;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
+import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
-import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class BlockRedNetCable extends BlockContainer
-implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
+public class BlockRedNetCable extends BlockFactory
+implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 {
+	public static final String[] _names = {null, "glass", "energy", "energyglass"};
+	
 	private static float _wireSize   =  4.0F / 16.0F;
 	private static float _cageSize   =  6.0F / 16.0F;
 	private static float _gripWidth  =  8.0F / 16.0F;
@@ -148,24 +135,13 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 
 	public BlockRedNetCable()
 	{
-		super(Machine.MATERIAL);
-
+		super(0.8F);
 		setBlockName("mfr.cable.redstone");
-		setHardness(0.8F);
-
-		setCreativeTab(MFRCreativeTab.tab);
-		setHarvestLevel("pickaxe", 0);
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
+	public boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
-		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
-		{
-			return false;
-		}
-
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
 		{
@@ -288,38 +264,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 		return false;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
-	{
-		TileEntity cable = world.getTileEntity(x, y, z);
-		if (cable instanceof TileEntityRedNetCable)
-		{
-			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-			((TileEntityRedNetCable)cable).addTraceableCuboids(cuboids, false);
-			for (IndexedCuboid6 c : cuboids)
-			{
-				AxisAlignedBB aabb = c.toAABB();
-				if (collisionTest.intersectsWith(aabb))
-					collisionBoxList.add(aabb);
-			}
-		}
-		else
-		{
-			super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
-		}
-	}
-
-	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
-	{
-		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileEntityRedNetCable)
-			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true);
-		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
-	}
-
 	public MovingObjectPosition collisionRayTrace(IBlockAccess world, int x, int y, int z, Vec3 start, Vec3 end)
 	{
 		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
@@ -327,26 +271,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 		if (te instanceof TileEntityRedNetCable)
 			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true);
 		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onBlockHighlight(DrawBlockHighlightEvent event) {
-		MovingObjectPosition mop = event.target;
-		World world = event.player.worldObj;
-		int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
-		if (mop.typeOfHit == MovingObjectType.BLOCK && world.getBlock(x, y, z).equals(this)) {
-			MovingObjectPosition part = RayTracer.retraceBlock(world, event.player, x, y, z);
-			if (part == null)
-				return;
-			int subHit = part.subHit;
-			ICustomHitBox tile = ((ICustomHitBox) world.getTileEntity(x, y, z));
-			if (tile.shouldRenderCustomHitBox(subHit, event.player))
-			{
-				event.setCanceled(true);
-				RenderHitbox.drawSelectionBox(event.player, mop, event.partialTicks, tile.getCustomHitBox(subHit, event.player));
-			}
-		}
 	}
 
 	@Override
@@ -360,34 +284,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 	{
 		return false;
 	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockId)
-	{
-		super.onNeighborBlockChange(world, x, y, z, blockId);
-		if (world.isRemote)
-		{
-			return;
-		}
-		RedstoneNetwork.log("Cable block at %d, %d, %d got update from ID %d", x, y, z, blockId);
-
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileEntityRedNetCable)
-		{
-			((TileEntityRedNetCable)te).onNeighborBlockChange();
-		}
-	}
-	
-	@Override
-	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
-    {
-		TileEntity te = world.getTileEntity(x, y, z);
-		
-		if (te instanceof TileEntityRedNetCable)
-		{
-			((TileEntityRedNetCable)te).onNeighborTileChange(tileX, tileY, tileZ);
-		}
-    }
 
 	@Override
 	public void breakBlock(World world, int X, int Y, int Z, Block id, int meta)
@@ -409,19 +305,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 				}
 			}
 		}
-	}
-
-	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
-	{
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
-		int meta = world.getBlockMetadata(x, y, z);
-		ItemStack machine = new ItemStack(getItemDropped(meta, world.rand, 0), 1, damageDropped(meta));
-		list.add(machine);
-		world.setBlockToAir(x, y, z);
-		if (!returnBlock)
-			dropBlockAsItem(world, x, y, z, machine);
-		return list;
 	}
 
 	@Override
@@ -467,12 +350,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 			return ((TileEntityRedNetCable)te).isSolidOnSide(side.ordinal());
 		
 		return false;
-	}
-
-	@Override
-	public boolean canProvidePower()
-	{
-		return true;
 	}
 
 	@Override
@@ -580,11 +457,5 @@ implements IRedNetNetworkContainer, IBlockInfo, IDismantleable, IRedNetInfo
 				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.cable.restzero"));
 			}
 		}
-	}
-
-	@Override
-	public int damageDropped(int i)
-	{
-		return i;
 	}
 }

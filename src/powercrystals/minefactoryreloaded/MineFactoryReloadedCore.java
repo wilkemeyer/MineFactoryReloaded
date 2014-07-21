@@ -7,10 +7,6 @@ import cofh.core.CoFHProps;
 import cofh.mod.BaseMod;
 import cofh.updater.UpdateManager;
 import cofh.util.RegistryUtils;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLModContainer;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -20,7 +16,6 @@ import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -31,7 +26,6 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -65,23 +59,15 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import powercrystals.minefactoryreloaded.block.BlockConveyor;
+import powercrystals.minefactoryreloaded.block.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.BlockDetCord;
-import powercrystals.minefactoryreloaded.block.BlockFactory;
-import powercrystals.minefactoryreloaded.block.BlockFactoryDecorativeBricks;
+import powercrystals.minefactoryreloaded.block.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
-import powercrystals.minefactoryreloaded.block.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
-import powercrystals.minefactoryreloaded.block.BlockPlasticPipe;
-import powercrystals.minefactoryreloaded.block.BlockRailCargoDropoff;
-import powercrystals.minefactoryreloaded.block.BlockRailCargoPickup;
-import powercrystals.minefactoryreloaded.block.BlockRailPassengerDropoff;
-import powercrystals.minefactoryreloaded.block.BlockRailPassengerPickup;
-import powercrystals.minefactoryreloaded.block.BlockRedNetCable;
 import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
@@ -90,18 +76,12 @@ import powercrystals.minefactoryreloaded.block.BlockRubberWood;
 import powercrystals.minefactoryreloaded.block.BlockVanillaGlassPane;
 import powercrystals.minefactoryreloaded.block.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
-import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
-import powercrystals.minefactoryreloaded.block.ItemBlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
-import powercrystals.minefactoryreloaded.block.ItemBlockFactoryDecorativeBrick;
-import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlass;
-import powercrystals.minefactoryreloaded.block.ItemBlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryLeaves;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryTree;
-import powercrystals.minefactoryreloaded.block.ItemBlockRedNetCable;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.ItemBlockVanillaIce;
@@ -109,6 +89,14 @@ import powercrystals.minefactoryreloaded.block.ItemBlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockPinkSlimeFluid;
+import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
+import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
+import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
+import powercrystals.minefactoryreloaded.block.transport.BlockRailCargoDropoff;
+import powercrystals.minefactoryreloaded.block.transport.BlockRailCargoPickup;
+import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerDropoff;
+import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerPickup;
+import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
@@ -399,7 +387,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		factoryGlassBlock = new BlockFactoryGlass();
 		factoryGlassPaneBlock = new BlockFactoryGlassPane();
 		factoryRoadBlock = new BlockFactoryRoad();
-		factoryDecorativeBrickBlock = new BlockFactoryDecorativeBricks();
+		factoryDecorativeBrickBlock = new BlockDecorativeBricks();
 		factoryDecorativeStoneBlock = new BlockDecorativeStone();
 		rubberWoodBlock = new BlockRubberWood();
 		rubberLeavesBlock = new BlockRubberLeaves();
@@ -418,7 +406,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		fertileSoil = new BlockFertileSoil();
 		
-		machineItem = new BlockFactory();
+		machineItem = new BlockFactoryDecoration();
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		plasticBootsItem = new ItemPlasticBoots();
@@ -496,20 +484,20 @@ public class MineFactoryReloadedCore extends BaseMod
 		rocketLauncherItem = (new ItemRocketLauncher()).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
-		registerBlock(conveyorBlock, ItemBlockConveyor.class);
-		registerBlock(machineItem, ItemBlockFactory.class, new Object[] {BlockFactory._names});
-		(machineBaseItem = Item.getItemFromBlock(machineItem)).setMaxDamage(0).setHasSubtypes(true);
+		registerBlock(conveyorBlock, ItemBlockFactory.class, new Object[] {BlockConveyor._names});
+		registerBlock(machineItem, ItemBlockFactory.class, new Object[] {BlockFactoryDecoration._names});
+		machineBaseItem = Item.getItemFromBlock(machineItem);
 
 		for (Entry<Integer, Block> machine : machineBlocks.entrySet())
 		{
 			registerBlock(machine.getValue(), ItemBlockFactoryMachine.class);
 		}
-
-		registerBlock(rednetCableBlock, ItemBlockRedNetCable.class);
-		registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class);
-		registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class);
 		
 		registerBlock(plasticPipeBlock, ItemBlockFactory.class);
+
+		registerBlock(rednetCableBlock, ItemBlockFactory.class, new Object[] {BlockRedNetCable._names});
+		registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class);
+		registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class);
 
 		registerBlock(railPickupCargoBlock, ItemBlock.class);
 		registerBlock(railDropoffCargoBlock, ItemBlock.class);
@@ -523,11 +511,11 @@ public class MineFactoryReloadedCore extends BaseMod
 		rubberWoodItem = Item.getItemFromBlock(rubberWoodBlock);
 		rubberLeavesItem = Item.getItemFromBlock(rubberLeavesBlock);
 
-		registerBlock(factoryGlassBlock, ItemBlockFactoryGlass.class);
-		registerBlock(factoryGlassPaneBlock, ItemBlockFactoryGlassPane.class);
+		registerBlock(factoryGlassBlock, ItemBlockFactory.class, new Object[] {BlockFactoryGlass._names});
+		registerBlock(factoryGlassPaneBlock, ItemBlockFactory.class, new Object[] {BlockFactoryGlass._names});
 		registerBlock(factoryRoadBlock, ItemBlockFactoryRoad.class);
-		registerBlock(factoryDecorativeBrickBlock, ItemBlockFactoryDecorativeBrick.class);
-		registerBlock(factoryDecorativeStoneBlock, ItemBlockDecorativeStone.class);
+		registerBlock(factoryDecorativeBrickBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeBricks._names});
+		registerBlock(factoryDecorativeStoneBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeStone._names});
 
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);
 		registerBlock(fertileSoil, ItemBlockFactory.class);
@@ -711,15 +699,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerWorldGenerator(new MineFactoryReloadedWorldGen(), 0);
 
 		UpdateManager.registerUpdater(new UpdateManager(this));
-
-		try {
-			Field eBus = FMLModContainer.class.getDeclaredField("eventBus");
-			eBus.setAccessible(true);
-			EventBus FMLbus = (EventBus) eBus.get(FMLCommonHandler.instance().findContainerFor(this));
-			FMLbus.register(this);
-		} catch (Throwable t) {
-			_log.debug("Error hooking LoadComplete", t);
-		}
 	}
 
 	private void registerBlock(Block block, Class<? extends ItemBlock> item, Object... args)
@@ -833,12 +812,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		IMCHandler.processIMC(e.getMessages());
 	}
 
-	private boolean complete = false;
-
-	@Subscribe
+	@EventHandler
 	public void loadComplete(FMLLoadCompleteEvent evt)
 	{
-		complete = true;
 		IMCHandler.processIMC(FMLInterModComms.fetchRuntimeMessages(this));
 
 		// catch biomes whitelisted via IMC that are in the config blacklist
@@ -848,13 +824,6 @@ public class MineFactoryReloadedCore extends BaseMod
 			MFRRegistry.getRubberTreeBiomes().remove(biome);
 		}
 		_log.info("Load Complete.");
-	}
-
-	@EventHandler
-	public void serverStarting(FMLServerAboutToStartEvent evt)
-	{
-		if (!complete)
-			loadComplete(null);
 	}
 
 	@SubscribeEvent

@@ -184,7 +184,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return false;
+		return slot == 0 && isUsableAugment(itemstack);
 	}
 	
 	@Override
@@ -197,6 +197,12 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[0]);
+	}
+	
+	@Override
+	public int getUpgradeSlot()
+	{
+		return 0;
 	}
 	
 	@Override

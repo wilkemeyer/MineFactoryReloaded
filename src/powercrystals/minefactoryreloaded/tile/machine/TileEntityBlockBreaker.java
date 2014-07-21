@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -19,6 +20,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 {
+	protected BlockPosition bp;
 	public TileEntityBlockBreaker()
 	{
 		super(Machine.BlockBreaker);
@@ -27,23 +29,36 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public boolean activateMachine()
-	{		
-		BlockPosition bp = BlockPosition.fromRotateableTile(this);
-		bp.moveForwards(1);
-		Block block = worldObj.getBlock(bp.x, bp.y, bp.z);
-		int blockMeta = worldObj.getBlockMetadata(bp.x, bp.y, bp.z);
+	public void onRotate()
+	{
+		bp = BlockPosition.fromRotateableTile(this).moveForwards(1);
+	}
 
-		if (!block.isAir(worldObj, bp.x, bp.y, bp.z) &&
+	@Override
+	public void onNeighborBlockChange()
+	{
+		if (!worldObj.isAirBlock(bp.x, bp.y, bp.z))
+			setIdleTicks(0);
+	}
+	
+	@Override
+	public boolean activateMachine()
+	{
+		int x = bp.x, y = bp.y, z = bp.z;
+		World worldObj = this.worldObj;
+		Block block = worldObj.getBlock(x, y, z);
+		int blockMeta = worldObj.getBlockMetadata(x, y, z);
+
+		if (!block.isAir(worldObj, x, y, z) &&
 				!block.getMaterial().isLiquid() &&
-				block.getBlockHardness(worldObj, bp.x, bp.y, bp.z) >= 0)
+				block.getBlockHardness(worldObj, x, y, z) >= 0)
 		{
-			List<ItemStack> drops = block.getDrops(worldObj, bp.x, bp.y, bp.z, blockMeta, 0);
-			if (worldObj.setBlockToAir(bp.x, bp.y, bp.z))
+			List<ItemStack> drops = block.getDrops(worldObj, x, y, z, blockMeta, 0);
+			if (worldObj.setBlockToAir(x, y, z))
 			{
 				doDrop(drops);
-				if(MFRConfig.playSounds.getBoolean(true))
-					worldObj.playAuxSFXAtEntity(null, 2001, bp.x, bp.y, bp.z, 
+				if (MFRConfig.playSounds.getBoolean(true))
+					worldObj.playAuxSFXAtEntity(null, 2001, x, y, z, 
 							Block.getIdFromBlock(block) + (blockMeta << 12));
 			}
 			return true;
@@ -74,7 +89,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	public int getIdleTicksMax()
 	{
-		return 20;
+		return 60;
 	}
 	
 	@Override

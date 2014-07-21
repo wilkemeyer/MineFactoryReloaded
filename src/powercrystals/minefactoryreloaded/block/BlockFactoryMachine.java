@@ -1,61 +1,42 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.api.block.IDismantleable;
 import cofh.util.position.IRotateableTile;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.core.IEntityCollidable;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
-import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-public class BlockFactoryMachine extends BlockContainer
-implements IRedNetOmniNode, IDismantleable
+public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 {
 	private int _mfrMachineBlockIndex;
 
 	public BlockFactoryMachine(int index)
 	{
-		super(Machine.MATERIAL);
-		setHardness(0.5F);
-		setStepSound(soundTypeMetal);
-		setCreativeTab(MFRCreativeTab.tab);
+		super(0.5F);
 		setBlockName("mfr.machine." + index);
 		_mfrMachineBlockIndex = index;
 	}
@@ -102,35 +83,6 @@ implements IRedNetOmniNode, IDismantleable
 			return 0;
 		}
 		return super.getLightOpacity(world, x, y, z);
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof IEntityCollidable)
-		{
-			float shrinkAmount = 0.125F;
-			return AxisAlignedBB.getBoundingBox(x + shrinkAmount, y + shrinkAmount, z + shrinkAmount,
-					x + 1 - shrinkAmount, y + 1 - shrinkAmount, z + 1 - shrinkAmount);
-		}
-		else
-		{
-			return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-		}
-	}
-
-	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-	{
-		if (world.isRemote)
-			return;
-
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof IEntityCollidable)
-			((IEntityCollidable)te).onEntityCollided(entity);
-
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 	}
 
 	@Override
@@ -212,22 +164,6 @@ implements IRedNetOmniNode, IDismantleable
 				((TileEntityFactoryInventory)te).onBlockBroken();
 		}
 		super.breakBlock(world, x, y, z, blockId, meta);
-	}
-
-	@Override
-	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
-	{
-	}
-
-	@Override
-	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
-	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
-		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
-		if (!player.capabilities.isCreativeMode)
-		{
-			dropBlockAsItem(world, x, y, z, meta, 0);
-			world.setBlock(x, y, z, Blocks.air, 0, 4);
-		}
 	}
 
 	@Override
@@ -346,12 +282,6 @@ implements IRedNetOmniNode, IDismantleable
 	}
 
 	@Override
-	public int damageDropped(int i)
-	{
-		return i;
-	}
-
-	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getNewTileEntity();
@@ -393,41 +323,14 @@ implements IRedNetOmniNode, IDismantleable
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer,
-			int side, float xOffset, float yOffset, float zOffset)
+	public boolean activated(World world, int x, int y, int z, EntityPlayer entityplayer, int side)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(entityplayer, Action.RIGHT_CLICK_BLOCK,
-				x, y, z, side, world);
-		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
-		{
-			return false;
-		}
-
+		if (super.activated(world, x, y, z, entityplayer, side))
+			return true;
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te == null)
 		{
 			return false;
-		}
-		ItemStack ci = entityplayer.inventory.getCurrentItem();
-		if (te instanceof ITankContainerBucketable)
-		{
-			boolean isFluidContainer = ci != null && ci.getItem() instanceof IFluidContainerItem;
-			if ((isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)) &&
-					((ITankContainerBucketable)te).allowBucketDrain(ci))
-			{
-				if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, entityplayer))
-				{
-					return true;
-				}
-			}
-			if ((isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)) &&
-					((ITankContainerBucketable)te).allowBucketFill(ci))
-			{
-				if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, entityplayer))
-				{
-					return true;
-				}
-			}
 		}
 
 		if (te instanceof TileEntityFactory &&
@@ -444,18 +347,6 @@ implements IRedNetOmniNode, IDismantleable
 
 	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isNormalCube()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canProvidePower()
 	{
 		return true;
 	}
@@ -490,14 +381,14 @@ implements IRedNetOmniNode, IDismantleable
 	}
 
 	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
+	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
 	{
-		return 0;
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
+	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
+		return 0;
 	}
 
 	@Override

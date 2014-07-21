@@ -672,138 +672,24 @@ public class Vanilla
 			return;
 		}
 		_registeredMachineUpgrades = true;
+		
+		String[] materials = {"gemLapis", "ingotTin", "ingotIron", "ingotCopper", "ingotBronze",
+				"ingotSilver", "ingotGold", "gemQuartz", "gemDiamond", "ingotPlatinum", "gemEmerald",
+				"cobblestone"};
 
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 0), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "gemLapis",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 1), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotTin",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 2), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotIron",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 3), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotCopper",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 4), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotBronze",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 5), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotSilver",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 6), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotGold",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 7), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', quartz,
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 8), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "gemDiamond",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 9), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "ingotPlatinum",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 10), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "gemEmerald",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
-
-		addRecipe(ShapedRecipe(stack(upgradeItem, 1, 11), new Object[]
-				{
-			"III",
-			"PPP",
-			"RGR",
-			'I', "cobblestone",
-			'P', "dustPlastic",
-			'R', "dustRedstone",
-			'G', "nuggetGold",
-				} ));
+		for (int i = 0, e = materials.length; i < e; ++i)
+		{
+			addRecipe(ShapedRecipe(stack(upgradeItem, 1, i), new Object[]
+					{
+				"III",
+				"PPP",
+				"RGR",
+				'I', materials[i],
+				'P', "dustPlastic",
+				'R', "dustRedstone",
+				'G', "nuggetGold",
+					} ));
+		}
 
 		for(int i = 0; i < 16; i++)
 		{
@@ -1471,13 +1357,13 @@ public class Vanilla
 
 		addRecipe(ShapedRecipe(stack(needlegunAmmoAnvilItem), new Object[]
 				{
-			"SMS",
 			"SAS",
 			"STS",
-			'A', stack(anvil, 1, 0),
-			'M', needlegunAmmoEmptyItem,
+			"SMS",
 			'S', string,
-			'T', tnt
+			'A', stack(anvil, 1, 0),
+			'T', tnt,
+			'M', needlegunAmmoEmptyItem,
 				}));
 
 		addShapelessRecipe(stack(needlegunAmmoFireItem),

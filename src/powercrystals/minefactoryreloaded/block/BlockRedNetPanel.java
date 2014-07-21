@@ -1,8 +1,5 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-
-import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,31 +9,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
+import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 
-public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
+public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 {
-	private int[] _blankOutputs = new int[16];
-
 	public BlockRedNetPanel()
 	{
-		super(Machine.MATERIAL);
+		super(0.8F);
 		setBlockName("mfr.rednet.panel");
-		setHardness(0.8F);
-
-		setCreativeTab(MFRCreativeTab.tab);
 	}
 
 	@Override
@@ -103,14 +90,8 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
+	public boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
-		if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
-		{
-			return false;
-		}
-
 		ItemStack s = player.inventory.getCurrentItem();
 
 		TileEntity te = world.getTileEntity(x, y, z);
@@ -174,18 +155,6 @@ public class BlockRedNetPanel extends BlockContainer implements IRedNetOmniNode
 			return side == ((TileEntityFactory)te).getDirectionFacing() ? RedNetConnectionType.CableAll : RedNetConnectionType.None;
 		}
 		return RedNetConnectionType.None;
-	}
-
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side)
-	{
-		return _blankOutputs;
-	}
-
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
-	{
-		return 0;
 	}
 
 	@Override

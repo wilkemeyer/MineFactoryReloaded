@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
-import static powercrystals.minefactoryreloaded.block.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
 import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerEU;
 import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork.TRANSFER_RATE;
 

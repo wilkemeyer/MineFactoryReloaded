@@ -16,7 +16,6 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiPlanter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerPlanter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
-import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -192,6 +191,12 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	}
 	
 	@Override
+	protected int getUpgradeSlot()
+	{
+		return 9;
+	}
+	
+	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
 		if (stack != null)
@@ -203,7 +208,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			}
 			else if (slot == 9)
 			{
-				return stack.getItem() instanceof ItemUpgrade;
+				return isUsableAugment(stack);
 			}
 		}
 		return false;

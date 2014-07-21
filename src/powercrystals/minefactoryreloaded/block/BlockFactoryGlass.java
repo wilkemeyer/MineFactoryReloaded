@@ -23,6 +23,8 @@ import powercrystals.minefactoryreloaded.render.IconOverlay;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
+	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
+		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" };
 	static IIcon _texture;
 
 	public BlockFactoryGlass()

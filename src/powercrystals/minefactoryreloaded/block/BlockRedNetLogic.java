@@ -6,12 +6,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -19,35 +18,25 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.core.BlockNBTManager;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMemoryCard;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
-import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
-public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode, IRedNetInfo
+public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, IRedNetInfo
 {
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
 
 	public BlockRedNetLogic()
 	{
-		super(Machine.MATERIAL);
+		super(0.8F);
 		setBlockName("mfr.rednet.logic");
-		setHardness(0.8F);
-		setStepSound(soundTypeMetal);
-		setCreativeTab(MFRCreativeTab.tab);
 	}
 
 	@Override
@@ -88,13 +77,6 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode,
 				te.readFromNBT(stack.getTagCompound());
 			}
 		}
-	}
-
-	@Override
-	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
-	{
-		BlockNBTManager.setForBlock(world.getTileEntity(x, y, z));
-		super.breakBlock(world, x, y, z, blockId, meta);
 	}
 
 	@Override
@@ -181,14 +163,8 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode,
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
+	public boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
-		if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
-		{
-			return false;
-		}
-
 		if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 		{
 			if (rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
@@ -245,15 +221,9 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode,
 	}
 
 	@Override
-	public boolean isNormalCube()
-	{
-		return false;
-	}
-
-	@Override
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
-		return true;
+		return side.ordinal() <= 1 || side.ordinal() >= 6 || world.getBlockMetadata(x, y, z) != _sideRemap[side.ordinal() - 2];
 	}
 
 	@Override
@@ -261,7 +231,9 @@ public class BlockRedNetLogic extends BlockContainer implements IRedNetOmniNode,
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 		ItemStack prc = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1, damageDropped(0));
-		prc.setTagCompound(BlockNBTManager.getForBlock(x, y, z));
+		NBTTagCompound tag = new NBTTagCompound();
+		world.getTileEntity(x, y, z).writeToNBT(tag);
+		prc.setTagCompound(tag);
 		drops.add(prc);
 		return drops;
 	}

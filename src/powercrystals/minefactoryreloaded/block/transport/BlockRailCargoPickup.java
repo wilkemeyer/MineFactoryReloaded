@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.transport;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 

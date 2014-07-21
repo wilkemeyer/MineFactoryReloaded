@@ -1,7 +1,11 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 {
@@ -16,10 +20,6 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	{
 		return new ChatComponentText(str);
 	}
-	
-	public void onNeighborTileChange(int x, int y, int z) {}
-
-	public void onNeighborBlockChange() {}
 
 	public void markChunkDirty()
 	{
@@ -33,6 +33,12 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 			worldObj.func_147453_f(this.xCoord, this.yCoord, this.zCoord, this.getBlockType());
 		}
 	}
+	
+	public void onNeighborTileChange(int x, int y, int z) {}
+
+	public void onNeighborBlockChange() {}
+
+	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {}
 
 	private static final long HASH_A = 0x1387D;
 	private static final long HASH_C = 0x3A8F05C5;

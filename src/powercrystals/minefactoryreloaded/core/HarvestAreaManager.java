@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
+import cofh.api.item.IAugmentItem;
 import cofh.util.position.Area;
 import cofh.util.position.BlockPosition;
 import cofh.util.position.IRotateableTile;
@@ -12,9 +13,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import powercrystals.minefactoryreloaded.api.IUpgrade;
-import powercrystals.minefactoryreloaded.api.IUpgrade.UpgradeType;
 
 public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 {
@@ -173,11 +171,12 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		}
 		
 		int newUpgradeLevel = 0;
-		if (stack.getItem() instanceof IUpgrade)
+		if (stack.getItem() instanceof IAugmentItem)
 		{
-			IUpgrade upgrade = (IUpgrade)stack.getItem();
-			if (upgrade.isApplicableFor(UpgradeType.RADIUS, stack))
-				newUpgradeLevel = (int)(upgrade.getUpgradeLevel(UpgradeType.RADIUS, stack) * _upgradeModifier);
+			IAugmentItem upgrade = (IAugmentItem)stack.getItem();
+			int r = upgrade.getAugmentLevel(stack, "radius");
+			if (r != 0)
+				newUpgradeLevel = (int)(r * _upgradeModifier);
 		}
 		
 		if(newUpgradeLevel != _upgradeLevel)
