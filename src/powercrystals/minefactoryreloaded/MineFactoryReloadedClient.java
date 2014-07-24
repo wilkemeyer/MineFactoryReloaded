@@ -59,6 +59,7 @@ import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
+import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
@@ -73,7 +74,6 @@ import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillPrechargerR
 import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetCardItemRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
@@ -133,6 +133,12 @@ public class MineFactoryReloadedClient
 				new RedNetCableRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdPPipe,
 				new PlasticPipeRenderer());
+		RenderingRegistry.registerBlockHandler(renderIdRedNetLogic,
+				new RedNetLogicRenderer());
+		
+		// TODO: convert card renderer and remove this
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class,
+				new powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer());
 
 		// Items
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(conveyorBlock),
@@ -173,10 +179,6 @@ public class MineFactoryReloadedClient
 
 
 		// TileEntities
-		RedNetLogicRenderer logicRender = new RedNetLogicRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRender);
-		RenderingRegistry.registerBlockHandler(logicRender);
-
 		RedNetHistorianRenderer panelRenderer = new RedNetHistorianRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, panelRenderer);
 		RenderingRegistry.registerBlockHandler(panelRenderer);

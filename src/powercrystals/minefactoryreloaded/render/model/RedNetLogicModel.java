@@ -17,55 +17,58 @@ public class RedNetLogicModel extends ModelBase
 	
 	public RedNetLogicModel()
 	{
-		textureWidth = 68;
-		textureHeight = 45;
+		textureWidth = 64;
+		textureHeight = 64;
 		
 		Top = new ModelRenderer(this, 0, 0);
 		Top.mirror = true;
 		Top.addBox(-8F, 0, -8F, 16, 1, 16);
 		Top.setRotationPoint(0F, -7, 0F);
-		Top.setTextureSize(68, 45);
+		Top.setTextureSize(textureWidth, textureHeight);
 		setRotation(Top, 0, 0F,(float)Math.PI);
 		Bottom = new ModelRenderer(this, 0, 0);
 		Bottom.addBox(-8F, 7F, -8F, 16, 1, 16);
 		Bottom.setRotationPoint(0F, 0F, 0F);
-		Bottom.setTextureSize(68, 45);
+		Bottom.setTextureSize(textureWidth, textureHeight);
 		setRotation(Bottom, 0F, 0F, 0F);
 		North = new ModelRenderer(this, 30, 17);
 		North.mirror = true;
 		North.addBox(-8F, -7F, -8F, 16, 14, 1);
 		North.setRotationPoint(0F, 0F, 0F);
-		North.setTextureSize(68, 45);
+		North.setTextureSize(textureWidth, textureHeight);
 		setRotation(North, 0F, 0F, 0F);
 		South = new ModelRenderer(this, 30, 17);
 		South.addBox(-8F, -7F, 0F, 16, 14, 1);
 		South.setRotationPoint(0F, 0F, 8F);
-		South.setTextureSize(68, 45);
+		South.setTextureSize(textureWidth, textureHeight);
 		setRotation(South, 0F, (float)Math.PI, 0F);
 		West = new ModelRenderer(this, 0, 17);
 		West.addBox(-8F, -7F, -7F, 1, 14, 14);
 		West.setRotationPoint(0F, 0F, 0F);
-		West.setTextureSize(68, 45);
+		West.setTextureSize(textureWidth, textureHeight);
 		setRotation(West, 0F, 0F, 0F);
-		Mandatory1 = new ModelRenderer(this, 30, 32);
+		
+		int cardU = 1, cardV = 47;
+		Mandatory1 = new ModelRenderer(this, cardU, cardV);
 		Mandatory1.addBox(-7F, -6F, 5F, 14, 5, 1);
 		Mandatory1.setRotationPoint(0F, 0F, 0F);
-		Mandatory1.setTextureSize(68, 45);
+		Mandatory1.setTextureSize(textureWidth, textureHeight);
 		setRotation(Mandatory1, 0F, 0F, 0F);
-		Mandatory2 = new ModelRenderer(this, 30, 32);
+		Mandatory2 = new ModelRenderer(this, cardU, cardV);
 		Mandatory2.addBox(-7F, 0F, 5F, 14, 5, 1);
 		Mandatory2.setRotationPoint(0F, 0F, 0F);
-		Mandatory2.setTextureSize(68, 45);
+		Mandatory2.setTextureSize(textureWidth, textureHeight);
 		setRotation(Mandatory2, 0F, 0F, 0F);
-		Mandatory3 = new ModelRenderer(this, 30, 38);
+		cardV = 53;
+		Mandatory3 = new ModelRenderer(this, cardU, cardV);
 		Mandatory3.addBox(-7F, 5.5F, -6F, 14, 1, 5);
 		Mandatory3.setRotationPoint(0F, 0F, 0F);
-		Mandatory3.setTextureSize(68, 45);
+		Mandatory3.setTextureSize(textureWidth, textureHeight);
 		setRotation(Mandatory3, 0F, 0F, 0F);
-		Mandatory4 = new ModelRenderer(this, 30, 38);
+		Mandatory4 = new ModelRenderer(this, cardU, cardV);
 		Mandatory4.addBox(-7F, 5.5F, 0F, 14, 1, 5);
 		Mandatory4.setRotationPoint(0F, 0F, 0F);
-		Mandatory4.setTextureSize(68, 45);
+		Mandatory4.setTextureSize(textureWidth, textureHeight);
 		setRotation(Mandatory4, 0F, 0F, 0F);
 	}
 	

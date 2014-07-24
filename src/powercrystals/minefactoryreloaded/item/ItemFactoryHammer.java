@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
 import cofh.api.block.IDismantleable;
+import cofh.api.item.IToolHammer;
 import cofh.asm.relauncher.Implementable;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -9,6 +10,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +26,7 @@ import powercrystals.minefactoryreloaded.api.IMFRHammer;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Implementable("buildcraft.api.tools.IToolWrench")
-public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
+public class ItemFactoryHammer extends ItemFactory implements IMFRHammer, IToolHammer
 {
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
@@ -35,7 +37,7 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 		{
 			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK,
 					x, y, z, side, world);
-			if(MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY
+			if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY
 					|| e.useBlock == Result.DENY || e.useItem == Result.DENY)
 			{
 				return false;
@@ -55,6 +57,17 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isUsable(ItemStack item, EntityLivingBase user, int x, int y, int z)
+	{
+		return true;
+	}
+
+	@Override
+	public void toolUsed(ItemStack item, EntityLivingBase user, int x, int y, int z)
+	{
 	}
 
 	//@Override
@@ -80,7 +93,8 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 		if (block == null)
 			return false;
 		Material mat = block.getMaterial();
-		return 	mat == Material.cake |
+		return 	mat == Material.ice |
+				mat == Material.cake |
 				mat == Material.iron |
 				mat == Material.rock |
 				mat == Material.wood |
@@ -90,7 +104,8 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 				mat == Material.piston |
 				mat == Material.plants |
 				mat == Machine.MATERIAL |
-				mat == Material.circuits;
+				mat == Material.circuits |
+				mat == Material.packedIce;
 	}
 
 	@Override
@@ -99,8 +114,10 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 		if (block == null)
 			return 0;
 		Material mat = block.getMaterial();
-		if (mat == Material.gourd |
-				mat == Material.cake)
+		if (mat == Material.ice |
+				mat == Material.cake |
+				mat == Material.gourd |
+				mat == Material.glass)
 			return 15f;
 		return canHarvestBlock(block, stack) ? 1.35f : 0.15f;
 	}
@@ -135,7 +152,7 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer
 	{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(stack);
 		multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),
-				new AttributeModifier(field_111210_e, "Weapon modifier", 1, 0));
+				new AttributeModifier(field_111210_e, "Weapon modifier", 4, 0));
 		return multimap;
 	}
 

@@ -70,9 +70,6 @@ public class RedNetLogicRenderer extends TileEntitySpecialRenderer implements IS
 		GL11.glRotatef(180, 0, 0, 1);
 		GL11.glRotatef(180 + (90 * rotation), 0, 1, 0);
 		
-		// Render the base, with no cards or slots
-		_logicModel.render(0.0625f);
-		
 		// Manually translate and then render each slot with the cards texture
 		// up
 		bindTexture(RedNetCardItemRenderer.cards);

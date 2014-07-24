@@ -27,7 +27,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 		setManageSolids(true);
 		setCanRotate(true);
 	}
-	
+
 	@Override
 	public void onRotate()
 	{
@@ -40,7 +40,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 		if (!worldObj.isAirBlock(bp.x, bp.y, bp.z))
 			setIdleTicks(0);
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
@@ -66,32 +66,32 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 60;
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{

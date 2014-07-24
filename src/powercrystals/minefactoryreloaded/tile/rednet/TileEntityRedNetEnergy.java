@@ -37,7 +37,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 									IEnergyHandler//, IEnergyInfo
 {
 	private static boolean IC2Classes = false;
-	
+
 	static {
 		try {
 			Class.forName("ic2.api.energy.tile.IEnergyTile");
@@ -46,7 +46,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			IC2Classes = true;
 		} catch(Throwable _) {}
 	}
-	
+
 	private byte[] sideMode = {1,1, 1,1,1,1, 0};
 	private IEnergyHandler[] handlerCache = null;
 	private IC2Cache ic2Cache = null;
@@ -70,7 +70,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return;
 		RedstoneEnergyNetwork.HANDLER.addConduitForTick(this);
 	}
-	
+
 	@Override // cannot share mcp names
 	public boolean isNotValid() {
 		return tileEntityInvalid;
@@ -178,7 +178,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
-	
+
 	private boolean checkIC2Tiles(TileEntity tile, int side)
 	{
 		if (!IC2Classes)
@@ -212,7 +212,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			}
 		}
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -232,7 +232,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
@@ -387,12 +387,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 		return 0;
 	}
-	
+
 	private class IC2Cache
 	{
 		IEnergySource[] sourceCache = null;
 		IEnergySink[] sinkCache = null;
-		
+
 		void erase(int side)
 		{
 			if (sourceCache != null)
@@ -510,40 +510,47 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			RedNetConnectionType c = getConnectionState(side[i], true);
 			RedNetConnectionType f = getConnectionState(side[i], false);
 			int mode = sideMode[opposite[i]] >> 1;
-				boolean iface = mode > 0 & mode != 4;
-				int o = 2 + i;
-				if (c.isConnected)
-				{
-					if (c.isPlate)
-						o += 6;
-					else if (c.isCable)
-						if (c.isAllSubnets)
-						{
-							if (forDraw)
-								main.setSide(i, i & 1);
-							else {
-								o = 2 + 6*3 + i;
-								if (iface | mode == 4)
-									o += 6;
-								list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
-										subSelection[o]).setSide(i, i & 1).add(offset)); // cable part or energy selection box
-							}
-							continue;
-						}
-					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
-					o = 2 + 6*2 + i;
-					if (c.isSingleSubnet) // color band
-						list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+			boolean iface = mode > 0 & mode != 4;
+			int o = 2 + i;
+			if (c.isConnected)
+			{
+				if (c.isPlate)
 					o += 6;
-					if (iface | (!forTrace & mode == 4))
-						o += 6;
-					// cable part or energy selection box
-					list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
-				}
-				else if (forTrace & f.isConnected && _cableMode[6] != 1)
-				{ // cable-only
-					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
-				}
+				else if (c.isCable)
+					if (c.isAllSubnets)
+					{
+						if (forDraw)
+							main.setSide(i, i & 1);
+						else {
+							o = 2 + 6*3 + i;
+							if (iface | mode == 4)
+								o += 6;
+							list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
+									subSelection[o]).setSide(i, i & 1).add(offset)); // cable part or energy selection box
+						}
+						continue;
+					}
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
+				o = 2 + 6*2 + i;
+				if (c.isSingleSubnet) // color band
+					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
+				o += 6;
+				if (iface | (!forTrace & mode == 4))
+					o += 6;
+				// cable part or energy selection box
+				list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
+				iface = false;
+				mode = 0;
+			}
+			else if (forTrace & f.isConnected && _cableMode[6] != 1)
+			{ // cable-only
+				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
+			}
+			if (iface | (!forTrace & mode == 4))
+			{
+				o = 2 + 6*4 + i;
+				list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
+			}
 		}
 		main.add(offset);
 	}

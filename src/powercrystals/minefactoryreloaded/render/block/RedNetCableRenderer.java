@@ -90,10 +90,9 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	}
 
 	private static void compute(CCModel m) {
-		m.computeNormals();
 		m.apply(new Translation(0.5, 0.5, 0.5));
+		m.computeNormals();
 		m.computeLighting(LightModel.standardLightModel);
-		//m.smoothNormals();
 	}
 
 	public static void updateUVT(IIcon icon) {
@@ -128,7 +127,6 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.reset();
 		CCRenderState.useNormals = true;
-		CCRenderState.alphaOverride = 0xff;
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getTileEntity(x, y, z);
 		TileEntityRedNetEnergy _cond = null;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);

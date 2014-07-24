@@ -27,6 +27,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMemoryCard;
 import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
+import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, IRedNetInfo
@@ -206,6 +207,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	public void registerBlockIcons(IIconRegister ir)
 	{
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		RedNetLogicRenderer.updateUVT(blockIcon);
 	}
 
 	@Override

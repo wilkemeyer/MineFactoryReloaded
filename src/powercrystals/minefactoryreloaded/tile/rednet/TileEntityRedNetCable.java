@@ -219,7 +219,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return;
 		RedNetConnectionType connectionType = getConnectionState(bp.orientation);
 		
-		if (connectionType.isConnected && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
+		if (!connectionType.isDecorative & connectionType.isConnected && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
 		{
 			if (connectionType.isAllSubnets)
 			{

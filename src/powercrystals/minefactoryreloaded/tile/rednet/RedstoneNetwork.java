@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOutputNode;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedstoneAlike;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -291,6 +292,8 @@ public class RedstoneNetwork implements IGrid
 		}
 		
 		int[] powers = getOmniNodePowerLevel(node);
+		if (powers == null)
+			return;
 		for (int subnet = 0; subnet < 16; subnet++)
 		{
 			int power = powers[subnet];
@@ -558,7 +561,7 @@ public class RedstoneNetwork implements IGrid
 		}
 
 		int offset = 0;
-		if (block.equals(Blocks.redstone_wire))
+		if (block == Blocks.redstone_wire || block instanceof IRedstoneAlike)
 		{
 			offset = -1;
 		}

@@ -19,7 +19,7 @@
 	<property name="forge.major" value="10"/>
 	<property name="forge.minor" value="13"/>
 	<property name="forge.patch" value="0"/>
-	<property name="forge.build" value="1152"/>
+	<property name="forge.build" value="1180"/>
 	
 	<!-- Packaging -->
 	<property name="dist.dir" value="${build.dir}/dist"/>
@@ -99,7 +99,7 @@
 		<mkdir dir="${lib.dir}/"/>
 
 		<echo message="Downloading CCL..."/>
-		<get src="http://files.minecraftforge.net/maven/codechicken/CodeChickenLib/1.7.2-1.1.0.73/CodeChickenLib-1.7.2-1.1.0.73-dev.jar" dest="${download.dir}/codechickenlib.jar"/>
+		<get src="http://files.minecraftforge.net/maven/codechicken/CodeChickenLib/1.7.10-1.1.1.88/CodeChickenLib-1.7.10-1.1.1.88-dev.jar" dest="${download.dir}/codechickenlib.jar"/>
 
 		<echo message="Downloading IC2 API... "/>
 		<get src="http://ic2api.player.to:8080/job/IC2_experimental/477/artifact/build/libs/industrialcraft-2-2.1.477-experimental-api.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>

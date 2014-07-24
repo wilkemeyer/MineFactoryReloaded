@@ -24,7 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
@@ -79,11 +78,6 @@ public class MFRUtil
 	}
 	
 	public static String getFluidName(FluidStack fluid)
-	{
-		return StringHelper.getFluidName(fluid);
-	}
-	
-	public static String getFluidName(Fluid fluid)
 	{
 		return StringHelper.getFluidName(fluid);
 	}
