@@ -244,7 +244,10 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side)
 	{
-		return isOpaqueCube() ? super.shouldSideBeRendered(iba, x, y, z, side) : true;
+		boolean cube = isOpaqueCube();
+		if (cube && iba.getBlock(x, y, z) == this)
+			return false;
+		return cube ? super.shouldSideBeRendered(iba, x, y, z, side) : true;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
