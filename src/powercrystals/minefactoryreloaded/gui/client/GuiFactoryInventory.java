@@ -136,7 +136,7 @@ public class GuiFactoryInventory extends GuiContainer
 	
 	protected final void drawBar(int xOffset, int yOffset, int max, int current, int tOffset)
 	{
-		int size = max > 0 ? current * _barSizeMax / max : 0;
+		int size = max > 0 ? (int)(current * (long)_barSizeMax / max) : 0;
 		if (size > _barSizeMax) size = max;
 		if (size < 0) size = 0;
 		bindTexture(background);
