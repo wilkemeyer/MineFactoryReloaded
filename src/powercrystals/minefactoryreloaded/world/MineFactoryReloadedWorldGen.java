@@ -58,7 +58,7 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 		if (b == null)
 			return;
 
-		String biomeName = b.biomeName, ln = biomeName.toLowerCase();
+		String biomeName = b.biomeName;
 
 		if (_rubberTreesEnabled)
 		{
@@ -68,6 +68,7 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 				{
 					if (random.nextInt(30) == 0)
 					{
+						String ln = biomeName.toLowerCase();
 						if (ln.contains("mega"))
 							generateMegaRubberTree(world, random, x, world.getHeightValue(x, z), z, false);
 						else if (ln.contains("sacred") && random.nextInt(20) == 0)
@@ -99,6 +100,7 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(world.getActualHeight());
 				int lakeZ = z - 8 + random.nextInt(16);
+				String ln = biomeName.toLowerCase();
 				if (ln.contains("mushroom"))
 				{
 					new WorldGenLakesMeta(mushroomSoupLiquid, 0).generate(world, random, lakeX, lakeY, lakeZ);

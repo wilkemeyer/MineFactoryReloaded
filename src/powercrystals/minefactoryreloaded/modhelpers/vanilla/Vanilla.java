@@ -282,18 +282,31 @@ public class Vanilla
 		MFRRegistry.registerMobEggHandler(new VanillaEggHandler());
 		
 		MFRRegistry.registerRubberTreeBiome("Swampland");
+		MFRRegistry.registerRubberTreeBiome("Swampland M");
 		MFRRegistry.registerRubberTreeBiome("Forest");
+		MFRRegistry.registerRubberTreeBiome("Flower Forest");
 		MFRRegistry.registerRubberTreeBiome("ForestHills");
+		MFRRegistry.registerRubberTreeBiome("ForestHills M");
 		MFRRegistry.registerRubberTreeBiome("Roofed Forest");
+		MFRRegistry.registerRubberTreeBiome("Roofed Forest M");
 		MFRRegistry.registerRubberTreeBiome("Taiga");
+		MFRRegistry.registerRubberTreeBiome("Taiga M");
 		MFRRegistry.registerRubberTreeBiome("TaigaHills");
+		MFRRegistry.registerRubberTreeBiome("TaigaHills M");
 		MFRRegistry.registerRubberTreeBiome("Cold Taiga");
+		MFRRegistry.registerRubberTreeBiome("Cold Taiga M");
 		MFRRegistry.registerRubberTreeBiome("Cold Taiga Hills");
+		MFRRegistry.registerRubberTreeBiome("Cold Taiga Hills M");
 		MFRRegistry.registerRubberTreeBiome("Mega Taiga");
+		MFRRegistry.registerRubberTreeBiome("Mega Spruce Taiga");
 		MFRRegistry.registerRubberTreeBiome("Mega Taiga Hills");
+		MFRRegistry.registerRubberTreeBiome("Mega Spruce Taiga Hills");
 		MFRRegistry.registerRubberTreeBiome("Jungle");
+		MFRRegistry.registerRubberTreeBiome("Jungle M");
 		MFRRegistry.registerRubberTreeBiome("JungleHills");
+		MFRRegistry.registerRubberTreeBiome("JungleHills M");
 		MFRRegistry.registerRubberTreeBiome("JungleEdge");
+		MFRRegistry.registerRubberTreeBiome("JungleEdge M");
 		
 		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
 		MFRRegistry.registerSafariNetBlacklist(EntityDragon.class);
