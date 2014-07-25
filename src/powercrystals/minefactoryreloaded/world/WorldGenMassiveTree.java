@@ -1,8 +1,9 @@
 package powercrystals.minefactoryreloaded.world;
 
-import java.util.Comparator;
+import gnu.trove.iterator.TLongObjectIterator;
+import gnu.trove.map.hash.TLongObjectHashMap;
+
 import java.util.Random;
-import java.util.TreeSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
@@ -23,37 +24,27 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 * and 2 for 1, and 0 and 1 for 2.
 	 */
 	private static final byte[] otherCoordPairs = new byte[] {(byte)2, (byte)0, (byte)0, (byte)1, (byte)2, (byte)1};
+	private static final float PI = (float)Math.PI;
 
-	/** random seed for GenBigTree */
 	private Random rand = new Random();
 
-	/** Reference to the World object. */
+	/** Running variables */
 	private World worldObj;
 	private int[] basePos = new int[] {0, 0, 0};
 	private int heightLimit = 0;
 	private int minHeight = -1;
 	private int height;
-	private double heightAttenuation = 0.45D;
-	private double branchSlope = 0.45D;
-	private double scaleWidth = 4.0D;
-	private double branchDensity = 3.0D;
+	private int leafBases;
+	private int density;
+	
+	/** Setup variables */
+	private float heightAttenuation = 0.45f;
+	private float branchSlope = 0.45f;
+	private float scaleWidth = 4.0f;
+	private float branchDensity = 3.0f;
+	private int trunkSize = 11;
 	private boolean slopeTrunk = false;
 	private boolean safeGrowth = false;
-
-	private static class ChunkComp implements Comparator<Chunk>
-	{
-		@Override
-		public int compare(Chunk o1, Chunk o2)
-		{
-			if (o1.xPosition != o2.xPosition)
-				return o1.xPosition - o2.xPosition;
-			return o1.zPosition - o2.zPosition;
-		}
-	}
-
-	private TreeSet<Chunk> modifiedChunks = new TreeSet<Chunk>(new ChunkComp());
-
-	private int trunkSize = 11;
 
 	/**
 	 * Sets the limit of the random value used to initialize the height limit.
@@ -67,6 +58,9 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 	/** Contains a list of a points at which to generate groups of leaves. */
 	private int[][] leafNodes;
+	
+	public Block leaves = MineFactoryReloadedCore.rubberLeavesBlock;
+	public Block log = MineFactoryReloadedCore.rubberWoodBlock;
 
 	public WorldGenMassiveTree(boolean par1)
 	{
@@ -78,18 +72,47 @@ public class WorldGenMassiveTree extends WorldGenerator
 		super();
 	}
 
+	private void setup() {
+		leafBases = MathHelper.ceiling_float_int(heightLimit * heightAttenuation);
+		density = Math.max(1, (int)(1.382D + Math.pow(branchDensity * heightLimit / 13.0D, 2.0D)));
+	}
+
+	private float layerSize(int par1)
+	{
+		if (par1 < leafBases)
+			return -1.618F;
+		else
+		{
+			float var2 = heightLimit * .5F;
+			float var3 = heightLimit * .5F - par1;
+			float var4;
+
+			if (var3 == 0.0F)
+			{
+				var4 = var2;
+			}
+			else if (Math.abs(var3) >= var2)
+			{
+				return 0.0F;
+			}
+			else
+			{
+				var4 = (float)Math.sqrt(var2*var2 - var3*var3);
+			}
+
+			var4 *= 0.5F;
+			return var4;
+		}
+	}
+
 	/**
 	 * Generates a list of leaf nodes for the tree, to be populated by generateLeaves.
 	 */
 	private void generateLeafNodeList()
 	{
-		int var1 = (int)(1.382D + Math.pow(branchDensity * heightLimit / 13.0D, 2.0D));
+		int var1 = density;
 
-		if (var1 < 1)
-		{
-			var1 = 1;
-		}
-
+		int[] basePos = this.basePos;
 		int[][] var2 = new int[var1 * heightLimit][4];
 		int var3 = basePos[1] + heightLimit - leafDistanceLimit;
 		int var4 = 1;
@@ -107,10 +130,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 			float var8 = this.layerSize(var6);
 
 			if (var8 > 0.0F)
-				for (double var9 = 0.5D; var7 < var1; ++var7)
+				for (float var9 = 0.5f; var7 < var1; ++var7)
 				{
-					double var11 = scaleWidth * var8 * (rand.nextFloat() + 0.328D);
-					double var13 = rand.nextFloat() * 2.0D * Math.PI;
+					float var11 = scaleWidth * var8 * (rand.nextFloat() + 0.328f);
+					float var13 = rand.nextFloat() * 2.0f * PI;
 					int var15 = MathHelper.floor_double(var11 * Math.sin(var13) + basePos[0] + var9);
 					int var16 = MathHelper.floor_double(var11 * Math.cos(var13) + basePos[2] + var9);
 					int[] var17 = new int[] {var15, var3, var16};
@@ -118,12 +141,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 					if (this.checkBlockLine(var17, var18) == -1)
 					{
-						int[] var19 = new int[] {basePos[0], basePos[1], basePos[2]};
 						int t;
 						double var20 = Math.sqrt((t=basePos[0] - var17[0])*t + (t=basePos[2] - var17[2])*t);
 						int var22 = (int)(var20 * branchSlope);
 
-						var19[1] = Math.min(var17[1] - var22, var5);
+						int[] var19 = new int[] {basePos[0], Math.min(var17[1] - var22, var5), basePos[2]};
 
 						if (this.checkBlockLine(var19, var17) == -1)
 						{
@@ -143,120 +165,84 @@ public class WorldGenMassiveTree extends WorldGenerator
 		System.arraycopy(var2, 0, leafNodes, 0, var4);
 	}
 
-	private void genTreeLayer(int x, int y, int z, float par4, byte par5, Block par6)
+	private void genLeafLayer(int x, int y, int z, final int size)
 	{
 		int t;
-		int var7 = (int)(par4 + 0.618D);
-		byte var8 = otherCoordPairs[par5];
-		byte var9 = otherCoordPairs[par5 + 3];
-		int[] var10 = new int[] {x, y, z};
-		int[] var11 = new int[] {0, 0, 0};
-		int var12 = -var7;
-		int var13;
-		double par4a = par4 * par4;
+		final int X = x;
+		final int Z = z;
+		final float maxDistSq = size * size;
 
-		for (var11[par5] = var10[par5]; var12 <= var7; ++var12)
+		for (int xMod = -size; xMod <= size; ++xMod)
 		{
-			var11[var8] = var10[var8] + var12;
-			int var12a = var12*var12+(((t=var12>>31)^var12)-t);
+			x = X + xMod;
+			final int xDistSq = xMod*xMod+(((t=xMod>>31)^xMod)-t);
 
-			for (var13 = 0; var13 <= var7; )
-			{
-				double var15 = var12a + var13*var13+var13 + 0.5;
+			for (int zMod = 0; zMod <= size; )
+			{ // negative values handled below
+				final float distSq = xDistSq + zMod*zMod+zMod + 0.5f;
 
-				if (var15 > par4a)
+				if (distSq > maxDistSq)
 				{
 					break;
 				}
 				else
 				{
 					t = -1;
-					for (int i = 2; i --> 0; t = 1)
-					{
-						var11[var9] = var10[var9] + var13 * t;
-						x = var11[0]; y = var11[1]; z = var11[2];
-						Block var14 = worldObj.getBlock(x, y, z);
+					do {
+						z = Z + zMod * t;
+						Block block = worldObj.getBlock(x, y, z);
 
-						if (safeGrowth ? (var14.isAir(worldObj, x, y, z) ||
-								var14.isLeaves(worldObj, x, y, z) ||
-								var14.canBeReplacedByLeaves(worldObj, x, y, z)) :
-									!var14.equals(Blocks.bedrock))
+						if (safeGrowth ? (block.isAir(worldObj, x, y, z) ||
+								block.isLeaves(worldObj, x, y, z) ||
+								block.canBeReplacedByLeaves(worldObj, x, y, z)) :
+									block != Blocks.bedrock)
 						{
-							this.setBlockAndNotifyAdequately(worldObj, x, y, z, par6, 0);
+							this.setBlockAndNotifyAdequately(worldObj, x, y, z, leaves, 0);
 						}
-					}
-					++var13;
+
+						if (t == 1) break;
+						t = 1;
+					} while (true);
+					++zMod;
 				}
 			}
 		}
 	}
 
 	/**
-	 * Gets the rough size of a layer of the tree.
+	 * Generates the leaf portion of the tree as specified by the leafNodes list.
 	 */
-	private float layerSize(int par1)
+	private void generateLeaves()
 	{
-		if (par1 < (heightLimit) * heightAttenuation)
-			return -1.618F;
-		else
+		int[][] leafNodes = this.leafNodes;
+
+		for (int i = 0, e = leafNodes.length; i < e; ++i)
 		{
-			float var2 = heightLimit / 2.0F;
-			float var3 = heightLimit / 2.0F - par1;
-			float var4;
+			int[] n = leafNodes[i];
+			int x = n[0], yO = n[1], z = n[2];
+			int y = 0;
 
-			if (var3 == 0.0F)
+			for (int var5 = y + leafDistanceLimit; y < var5; ++y)
 			{
-				var4 = var2;
+				int size = (y != 0) & y != leafDistanceLimit - 1 ? 3 : 2;
+				genLeafLayer(x, yO++, z, size);
 			}
-			else if (Math.abs(var3) >= var2)
-			{
-				var4 = 0.0F;
-			}
-			else
-			{
-				var4 = (float)Math.sqrt(Math.pow(var2, 2.0D) - Math.pow(var3, 2.0D));
-			}
-
-			var4 *= 0.5F;
-			return var4;
 		}
 	}
 
-	private float leafSize(int par1)
-	{
-		return par1 >= 0 && par1 < leafDistanceLimit ?
-				(par1 != 0 && par1 != leafDistanceLimit - 1 ? 3.0F : 2.0F) : -1.0F;
-	}
-
-	/**
-	 * Generates the leaves surrounding an individual entry in the leafNodes list.
-	 */
-	private void generateLeafNode(int par1, int par2, int par3)
-	{
-		int var4 = par2;
-
-		for (int var5 = par2 + leafDistanceLimit; var4 < var5; ++var4)
-		{
-			float var6 = this.leafSize(var4 - par2);
-			if (var6 > 0)
-				genTreeLayer(par1, var4, par3, var6, (byte)1, MineFactoryReloadedCore.rubberLeavesBlock);
-		}
-	}
-	
+	private int[] placeScratch = new int[3];
 	private void placeBlockLine(int[] par1, int[] par2, Block par3, int meta)
 	{
 		int t;
-		int[] var4 = new int[] {0, 0, 0};
-		byte var5 = 0;
-		byte var6;
+		int[] var4 = placeScratch;
+		byte var6 = 0;
 
-		for (var6 = 0; var5 < 3; ++var5)
+		for (byte i = 0; i < 3; ++i)
 		{
-			int a = par2[var5] - par1[var5],
-					b = ((t=a>>31)^a)-t;
-			var4[var5] = a;
+			int a = par2[i] - par1[i], b = ((t=a>>31)^a)-t;
+			var4[i] = a;
 			if (b > ((a=var4[var6])^(t=a>>31))-t)
-				var6 = var5;
+				var6 = i;
 		}
 
 		if (var4[var6] != 0)
@@ -276,10 +262,11 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 			float var10 = (float)var4[var7] / (float)var4[var6];
 			float var12 = (float)var4[var8] / (float)var4[var6];
-			int[] var14 = new int[] {0, 0, 0};
-			int var15 = 0;
+			int var16 = var4[var6] + var9;
 
-			for (int var16 = var4[var6] + var9; var15 != var16; var15 += var9)
+			int[] var14 = var4;
+
+			for (int var15 = 0; var15 != var16; var15 += var9)
 			{
 				var14[var6] = MathHelper.floor_float(par1[var6] + var15 + 0.5F);
 				var14[var7] = MathHelper.floor_float(par1[var7] + var15 * var10 + 0.5F);
@@ -304,30 +291,6 @@ public class WorldGenMassiveTree extends WorldGenerator
 				this.setBlockAndNotifyAdequately(worldObj, var14[0], var14[1], var14[2], par3, meta | var17);
 			}
 		}
-	}
-
-	/**
-	 * Generates the leaf portion of the tree as specified by the leafNodes list.
-	 */
-	private void generateLeaves()
-	{
-		int var1 = 0;
-
-		for (int var2 = leafNodes.length; var1 < var2; ++var1)
-		{
-			int var3 = leafNodes[var1][0];
-			int var4 = leafNodes[var1][1];
-			int var5 = leafNodes[var1][2];
-			this.generateLeafNode(var3, var4, var5);
-		}
-	}
-
-	/**
-	 * Indicates whether or not a leaf node requires additional wood to be added to preserve integrity.
-	 */
-	private boolean leafNodeNeedsBase(int par1)
-	{
-		return par1 >= heightLimit * 0.2D;
 	}
 
 	/**
@@ -361,10 +324,8 @@ public class WorldGenMassiveTree extends WorldGenerator
 					if (slopeTrunk)
 						var6[1] = var2 + sinc2(lim * i, lim * j, height) - (rand.nextInt(3) - 1);
 					
-					this.placeBlockLine(var5, var6,
-							MineFactoryReloadedCore.rubberWoodBlock, 1);
-					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2],
-							MineFactoryReloadedCore.rubberWoodBlock, 12 | 1);
+					this.placeBlockLine(var5, var6, log, 1);
+					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2], log, 12 | 1);
 					worldObj.getBlock(var5[0], var5[1], var5[2]).
 							onPlantGrow(worldObj, var5[0], var5[1], var5[2], var1, var2, var4);
 				}
@@ -386,23 +347,23 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 */
 	void generateLeafNodeBases()
 	{
-		int var1 = 0;
-		int var2 = leafNodes.length;
+		int[] start = new int[] {basePos[0], basePos[1], basePos[2]};
 
-		for (int[] var3 = new int[] {basePos[0], basePos[1], basePos[2]}; var1 < var2; ++var1)
+		int heightLimit = (int) (this.heightLimit * 0.2f);
+		for (int i = 0, e = leafNodes.length; i < e; ++i)
 		{
-			int[] var4 = leafNodes[var1];
-			int[] var5 = new int[] {var4[0], var4[1], var4[2]};
-			var3[1] = var4[3];
-			int var6 = var3[1] - basePos[1];
+			int[] end = leafNodes[i];
+			start[1] = end[3];
+			int height = start[1] - basePos[1];
 
-			if (this.leafNodeNeedsBase(var6))
+			if (height >= heightLimit)
 			{
-				this.placeBlockLine(var3, var5, MineFactoryReloadedCore.rubberWoodBlock, 12 | 1);
+				this.placeBlockLine(start, end, log, 12 | 1);
 			}
 		}
 	}
 
+	private int[] checkScratch = new int[3];
 	/**
 	 * Checks a line of blocks in the world from the first coordinate to triplet to the second, returning the distance
 	 * (in blocks) before a non-air, non-leaf block is encountered and/or the end is encountered.
@@ -410,17 +371,16 @@ public class WorldGenMassiveTree extends WorldGenerator
 	private int checkBlockLine(int[] par1, int[] par2)
 	{
 		int t;
-		int[] var3 = new int[] {0, 0, 0};
-		byte var4 = 0;
-		byte var5;
+		int[] var3 = checkScratch;
+		byte var5 = 0;
 
-		for (var5 = 0; var4 < 3; ++var4)
+		for (byte i = 0; i < 3; ++i)
 		{
-			int a = par2[var4] - par1[var4],
+			int a = par2[i] - par1[i],
 					b = ((t=a>>31)^a)-t;
-			var3[var4] = a;
+			var3[i] = a;
 			if (b > ((a=var3[var5])^(t=a>>31))-t)
-				var5 = var4;
+				var5 = i;
 		}
 
 		if (var3[var5] == 0)
@@ -440,17 +400,18 @@ public class WorldGenMassiveTree extends WorldGenerator
 				var8 = -1;
 			}
 
-			double var9 = (double)var3[var6] / (double)var3[var5];
-			double var11 = (double)var3[var7] / (double)var3[var5];
-			int[] var13 = new int[] {0, 0, 0};
+			float var9 = (float)var3[var6] / (float)var3[var5];
+			float var11 = (float)var3[var7] / (float)var3[var5];
 			int var14 = 0;
-			int var15;
+			int var15 = var3[var5] + var8;
+			
+			int[] var13 = var3;
 
-			for (var15 = var3[var5] + var8; var14 != var15; var14 += var8)
+			for (; var14 != var15; var14 += var8)
 			{
 				var13[var5] = par1[var5] + var14;
-				var13[var6] = MathHelper.floor_double(par1[var6] + var14 * var9);
-				var13[var7] = MathHelper.floor_double(par1[var7] + var14 * var11);
+				var13[var6] = MathHelper.floor_float(par1[var6] + var14 * var9);
+				var13[var7] = MathHelper.floor_float(par1[var7] + var14 * var11);
 				int x = var13[0], y = var13[1], z = var13[2];
 				Block var16 = worldObj.getBlock(x, y, z);
 
@@ -460,7 +421,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 						var16.isLeaves(worldObj, x, y, z) ||
 						var16.isWood(worldObj, x, y, z) ||
 						var16 instanceof BlockSapling) :
-							var16.equals(Blocks.bedrock))
+							var16 == Blocks.bedrock)
 					break;
 			}
 
@@ -546,10 +507,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 	@Override
 	public void setScale(double par1, double par3, double par5)
 	{
-		setTreeScale(par1, par3, par5);
+		setTreeScale((float)par1, (float)par3, (float)par5);
 	}
 	
-	public WorldGenMassiveTree setTreeScale(double height, double width, double leaves)
+	public WorldGenMassiveTree setTreeScale(float height, float width, float leaves)
 	{
 		heightLimitLimit = (int)(height * 12.0D);
 		minHeight = heightLimitLimit / 2;
@@ -571,7 +532,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 		return this;
 	}
 	
-	public WorldGenMassiveTree setLeafAttenuation(double a)
+	public WorldGenMassiveTree setLeafAttenuation(float a)
 	{
 		heightAttenuation = a;
 		return this;
@@ -592,50 +553,81 @@ public class WorldGenMassiveTree extends WorldGenerator
 	@Override
 	public boolean generate(World world, Random par2Random, int x, int y, int z)
 	{
+		//long time = System.nanoTime();
 		worldObj = world;
 		long var6 = par2Random.nextLong();
 		rand.setSeed(var6);
 		basePos[0] = x;
 		basePos[1] = y;
 		basePos[2] = z;
-
 		if (heightLimit == 0)
-		{
 			heightLimit = heightLimitLimit;
-		}
 		if (minHeight == -1)
-		{
 			minHeight = 80;
-		}
 
 		if (!this.validTreeLocation())
 			return false;
 		else
 		{
+			this.setup();
+			//chunkMap = new TLongObjectHashMap<Chunk>((int) (scaleWidth * heightLimit));
+			//time = System.nanoTime() - time;
+			//logger.info("Verified spawn position of massive rubber tree in: " + time + "ns");
+			//long time2 = time = System.nanoTime();
 			this.generateLeafNodeList();
+			//long nodes = System.nanoTime();
 			this.generateLeaves();
+			//long leaves = System.nanoTime();
 			this.generateLeafNodeBases();
+			//long bases = System.nanoTime();
 			this.generateTrunk();
-			while (modifiedChunks.size() > 0)
-				MineFactoryReloadedCore.proxy.relightChunk(modifiedChunks.pollFirst());
+			//long trunk = System.nanoTime();
+			//time = System.nanoTime() - time;
+			//logger.info("Generated massive rubber tree in: " + time + "ns");
+			//trunk -= bases; bases -= leaves; leaves -= nodes; nodes -= time2;
+			//logger.info(String.format("%s for trunk, %s for leaf nodes, %s for leaves, %s for branches", trunk, nodes, leaves, bases));
+			//logger.info("\tTree contains " + blocksAdded + " Blocks");
+			//time = System.nanoTime();
+			for (TLongObjectIterator<Chunk> iter = chunkMap.iterator(); iter.hasNext(); ) {
+				iter.advance();
+				MineFactoryReloadedCore.proxy.relightChunk(iter.value());
+			}
+			//time = System.nanoTime() - time;
+			//logger.info("Lit massive rubber tree in: " + time + "ns");
 			return true;
 		}
 	}
+	
+	//private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger("Tree logger");
+	//private int blocksAdded = 0;
+	private TLongObjectHashMap<Chunk> chunkMap;
 
 	@Override
 	public void setBlockAndNotifyAdequately(World world, int x, int y, int z, Block block, int meta)
 	{
 		if (y < 0 || y > 255)
 			return;
-		Chunk chunk = world.getChunkFromBlockCoords(x, z);
-		modifiedChunks.add(chunk);
-		chunk.removeTileEntity(x & 15, y, z & 15);
+		//++blocksAdded;
+		long pos = ((long)(x & ~15) << 32) | (z & ~15);
+		Chunk chunk = chunkMap.get(pos);
+		if (chunk == null)
+		{
+			chunk = world.getChunkFromBlockCoords(x, z);
+			chunkMap.put(pos, chunk);
+		}
+
 		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 		ExtendedBlockStorage subChunk = storage[y >> 4];
 		if (subChunk == null)
 			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !world.provider.hasNoSky);
-		subChunk.func_150818_a(x & 15, y & 15, z & 15, block);
-		subChunk.setExtBlockMetadata(x & 15, y & 15, z & 15, meta);
-		subChunk.setExtBlocklightValue(x & 15, y & 15, z & 15, 0);
+
+		x &= 15; z &= 15;
+		if (subChunk.getBlockByExtId(x, y & 15, z).hasTileEntity(subChunk.getExtBlockMetadata(x, y & 15, z)))
+			chunk.removeTileEntity(x & 15, y, z & 15);
+		y &= 15;
+
+		subChunk.func_150818_a(x, y, z, block);
+		subChunk.setExtBlockMetadata(x, y, z, meta);
+		subChunk.setExtBlocklightValue(x, y, z, 0);
 	}
 }

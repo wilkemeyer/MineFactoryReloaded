@@ -25,15 +25,15 @@ public class MineFactoryReloadedWorldGen implements IWorldGenerator
 
 	public static boolean generateMegaRubberTree(World world, Random random, int x, int y, int z, boolean safe)
 	{
-		return new WorldGenMassiveTree(false).setTreeScale(4 + (random.nextInt(3)), 0.8, 0.7).
-				setLeafAttenuation(0.6).setSloped(true).setSafe(safe).
+		return new WorldGenMassiveTree(false).setTreeScale(4 + (random.nextInt(3)), 0.8f, 0.7f).
+				setLeafAttenuation(0.6f).setSloped(true).setSafe(safe).
 				generate(world, random, x, y, z);
 	}
 
 	public static boolean generateSacredSpringRubberTree(World world, Random random, int x, int y, int z)
 	{
-		return new WorldGenMassiveTree(false).setTreeScale(6 + (random.nextInt(4)), 1, 0.9).
-				setLeafAttenuation(0.35).setSloped(false).setMinTrunkSize(4).
+		return new WorldGenMassiveTree(false).setTreeScale(6 + (random.nextInt(4)), 1f, 0.9f).
+				setLeafAttenuation(0.35f).setSloped(false).setMinTrunkSize(4).
 				generate(world, random, x, y, z);
 	}
 
