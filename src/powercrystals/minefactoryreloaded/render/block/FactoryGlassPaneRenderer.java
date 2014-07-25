@@ -170,36 +170,41 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 			iconOverlayWest = block.getIcon(blockAccess, x, y, z, 5);
 		}
 
-		double minXGlass = iconGlass.getMinU();
-		double midXGlass = iconGlass.getInterpolatedU(8.0D);
-		double maxXGlass = iconGlass.getMaxU();
-		double minYGlass = iconGlass.getMinV();
-		double maxYGlass = iconGlass.getMaxV();
+		double minUGlass = iconGlass.getMinU();
+		double midUGlassA = iconGlass.getInterpolatedU(9.0D);
+		double midUGlassB = iconGlass.getInterpolatedU(7.0D);
+		double maxUGlass = iconGlass.getMaxU();
+		double minVGlass = iconGlass.getMinV();
+		double maxVGlass = iconGlass.getMaxV();
 
-		double minXStreaks = iconStreaks.getMinU();
-		double midXStreaks = iconStreaks.getInterpolatedU(8.0D);
-		double maxXStreaks = iconStreaks.getMaxU();
-		double minYStreaks = iconStreaks.getMinV();
-		double maxYStreaks = iconStreaks.getMaxV();
+		double minUStreaks = iconStreaks.getMinU();
+		double midUStreaksA = iconStreaks.getInterpolatedU(9.0D);
+		double midUStreaksB = iconStreaks.getInterpolatedU(7.0D);
+		double maxUStreaks = iconStreaks.getMaxU();
+		double minVStreaks = iconStreaks.getMinV();
+		double maxVStreaks = iconStreaks.getMaxV();
 
-		double minXSide = iconSide.getInterpolatedU(7.0D);
-		double maxXSide = iconSide.getInterpolatedU(9.0D);
-		double minYSide = iconSide.getMinV();
-		double midYSide = iconSide.getInterpolatedV(8.0D);
-		double maxYSide = iconSide.getMaxV();
+		double minUEdge = iconSide.getInterpolatedU(7.0D);
+		double maxUEdge = iconSide.getInterpolatedU(9.0D);
+		double minVEdge = iconSide.getMinV();
+		double midVEdgeA = iconSide.getInterpolatedV(9.0D);
+		double midVEdgeB = iconSide.getInterpolatedV(7.0D);
+		double maxVEdge = iconSide.getMaxV();
 
-		double minXSouth = iconOverlaySouth.getMinU();
-		double midXSouth = iconOverlaySouth.getInterpolatedU(8.0D);
-		double maxXSouth = iconOverlaySouth.getMaxU();
-		double minYSouth = iconOverlaySouth.getMinV();
-		double maxYSouth = iconOverlaySouth.getMaxV();
+		double minUSouth = iconOverlaySouth.getMinU();
+		double midUSouthA = iconOverlaySouth.getInterpolatedU(9.0D);
+		double midUSouthB = iconOverlaySouth.getInterpolatedU(7.0D);
+		double maxUSouth = iconOverlaySouth.getMaxU();
+		double minVSouth = iconOverlaySouth.getMinV();
+		double maxVSouth = iconOverlaySouth.getMaxV();
 
-		double minXWest = iconOverlayWest.getMinU();
-		double midXWest = iconOverlayWest.getInterpolatedU(8.0D);
-		double maxXWest = iconOverlayWest.getMaxU();
-		double minYWest = iconOverlayWest.getMinV();
-		double maxYWest = iconOverlayWest.getMaxV();
-
+		double minUWest = iconOverlayWest.getMinU();
+		double midUWestA = iconOverlayWest.getInterpolatedU(9.0D);
+		double midUWestB = iconOverlayWest.getInterpolatedU(7.0D);
+		double maxUWest = iconOverlayWest.getMaxU();
+		double minVWest = iconOverlayWest.getMinV();
+		double maxVWest = iconOverlayWest.getMaxV();
+		
 		double xMin = x;
 		double xMid = x + 0.5D;
 		double xMax = x + 1;
@@ -211,15 +216,19 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 		double yMin = y;
 		double yMax = y + 1;
 
-		double vertSideZOffset = 0.001D;
-		double vertSideXOffset = 0.002D;
-		
-		double offset = 1 / 16f; 
+		final double vertSideZOffset = 0.00D;
+		final double vertSideXOffset = 0.00D;
+		final double offset = 1 / 16f; 
 
-		double negSideZOffset = xMid - offset;
-		double posSideZOffset = xMid + offset;
-		double negSideXOffset = zMid - offset;
-		double posSideXOffset = zMid + offset;
+		//double yMinZ = yMin - vertSideZOffset;
+		//double yMaxZ = yMax + vertSideZOffset;
+		//double yMinX = yMin - vertSideXOffset;
+		//double yMaxX = yMax + vertSideXOffset;
+
+		double minEdgeZ = xMid - offset;
+		double maxEdgeZ = xMid + offset;
+		double minEdgeX = zMid - offset;
+		double maxEdgeX = zMid + offset;
 
 		boolean connectedNegZ = block.canPaneConnectTo(blockAccess, x, y, z - 1, ForgeDirection.NORTH);
 		boolean connectedPosZ = block.canPaneConnectTo(blockAccess, x, y, z + 1, ForgeDirection.SOUTH);
@@ -229,266 +238,275 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 		boolean renderTop = y >= worldHeight || block.shouldSideBeRendered(blockAccess, x, y + 1, z, 1);
 		boolean renderBottom = y <= 0 || block.shouldSideBeRendered(blockAccess, x, y - 1, z, 0);
 
-		if ((!connectedNegX || !connectedPosX) && (connectedNegX || connectedPosX || connectedNegZ || connectedPosZ))
+		if ((!connectedNegX | !connectedPosX) & (connectedNegX | connectedPosX | connectedNegZ | connectedPosZ))
 		{
-			if (connectedNegX && !connectedPosX)
+			if (connectedNegX & !connectedPosX)
 			{
 				tess.setColorOpaque_F(red, green, blue);
-				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, 0, offset);
-				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, 0, -offset);
+				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUGlass, minVGlass, midUGlassA, maxVGlass, 0, offset);
+				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUGlass, minVGlass, midUGlassA, maxVGlass, 0, -offset);
 
 				tess.setColorOpaque_F(1, 1, 1);
-				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, 0, offset);
-				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, 0, -offset);
+				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, 0, offset);
+				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, 0, -offset);
 				
-				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXSouth, minYSouth, midXSouth, maxYSouth, 0, offset);
-				drawBox(tess, xMin, yMin, zMid, xMid, yMax, zMid, minXSouth, minYSouth, midXSouth, maxYSouth, 0, -offset);
+				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUSouth, minVSouth, midUSouthA, maxVSouth, 0, offset);
+				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUSouth, minVSouth, midUSouthA, maxVSouth, 0, -offset);
 
-				if (!connectedPosZ && !connectedNegZ)
+				if (!connectedPosZ & !connectedNegZ)
 				{
-					tess.addVertexWithUV(xMid, yMax, posSideXOffset, minXSide, minYSide);
-					tess.addVertexWithUV(xMid, yMin, posSideXOffset, minXSide, maxYSide);
-					tess.addVertexWithUV(xMid, yMin, negSideXOffset, maxXSide, maxYSide);
-					tess.addVertexWithUV(xMid, yMax, negSideXOffset, maxXSide, minYSide); 
+					tess.addVertexWithUV(xMid + offset, yMax, maxEdgeX, minUEdge, minVEdge);
+					tess.addVertexWithUV(xMid + offset, yMin, maxEdgeX, minUEdge, maxVEdge);
+					tess.addVertexWithUV(xMid + offset, yMin, minEdgeX, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(xMid + offset, yMax, minEdgeX, maxUEdge, minVEdge); 
 				}
 
 				if (renderTop)
 				{
-					tess.addVertexWithUV(xMin, yMax + vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, negSideXOffset, minXSide, maxYSide);
-					tess.addVertexWithUV(xMin, yMax + vertSideXOffset, negSideXOffset, minXSide, midYSide);
+					tess.addVertexWithUV(xMin, yMax + vertSideXOffset, maxEdgeX, maxUEdge, midVEdgeA);
+					tess.addVertexWithUV(xMid + offset, yMax + vertSideXOffset, maxEdgeX, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(xMid + offset, yMax + vertSideXOffset, minEdgeX, minUEdge, maxVEdge);
+					tess.addVertexWithUV(xMin, yMax + vertSideXOffset, minEdgeX, minUEdge, midVEdgeA);
 				}
 
 				if (renderBottom)
 				{
-					tess.addVertexWithUV(xMin, yMin - vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, negSideXOffset, minXSide, maxYSide);
-					tess.addVertexWithUV(xMin, yMin - vertSideXOffset, negSideXOffset, minXSide, midYSide);
+					tess.addVertexWithUV(xMin, yMin - vertSideXOffset, minEdgeX, minUEdge, midVEdgeA);
+					tess.addVertexWithUV(xMid + offset, yMin - vertSideXOffset, minEdgeX, minUEdge, maxVEdge);
+					tess.addVertexWithUV(xMid + offset, yMin - vertSideXOffset, maxEdgeX, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(xMin, yMin - vertSideXOffset, maxEdgeX, maxUEdge, midVEdgeA);
 				}
 			}
-			else if (!connectedNegX && connectedPosX)
+			else if (!connectedNegX & connectedPosX)
 			{
 				tess.setColorOpaque_F(red, green, blue);
-				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXGlass, minYGlass, maxXGlass, maxYGlass, 0, offset);
-				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXGlass, minYGlass, maxXGlass, maxYGlass, 0, -offset);
+				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUGlassB, minVGlass, maxUGlass, maxVGlass, 0, offset);
+				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUGlassB, minVGlass, maxUGlass, maxVGlass, 0, -offset);
 
 				tess.setColorOpaque_F(1, 1, 1);
-				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, offset);
-				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, -offset);
+				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, 0, offset);
+				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, 0, -offset);
 				
-				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXSouth, minYSouth, maxXSouth, maxYSouth, 0, offset);
-				drawBox(tess, xMid, yMin, zMid, xMax, yMax, zMid, midXSouth, minYSouth, maxXSouth, maxYSouth, 0, -offset);
+				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUSouthB, minVSouth, maxUSouth, maxVSouth, 0, offset);
+				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUSouthB, minVSouth, maxUSouth, maxVSouth, 0, -offset);
 
-				if (!connectedPosZ && !connectedNegZ)
+				if (!connectedPosZ & !connectedNegZ)
 				{
-					tess.addVertexWithUV(xMid, yMax, negSideXOffset, minXSide, minYSide);
-					tess.addVertexWithUV(xMid, yMin, negSideXOffset, minXSide, maxYSide);
-					tess.addVertexWithUV(xMid, yMin, posSideXOffset, maxXSide, maxYSide);
-					tess.addVertexWithUV(xMid, yMax, posSideXOffset, maxXSide, minYSide);
+					tess.addVertexWithUV(xMid - offset, yMax, minEdgeX, minUEdge, minVEdge);
+					tess.addVertexWithUV(xMid - offset, yMin, minEdgeX, minUEdge, maxVEdge);
+					tess.addVertexWithUV(xMid - offset, yMin, maxEdgeX, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(xMid - offset, yMax, maxEdgeX, maxUEdge, minVEdge);
 				}
 
 				if (renderTop)
 				{
-					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-					tess.addVertexWithUV(xMax, yMax + vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tess.addVertexWithUV(xMax, yMax + vertSideXOffset, negSideXOffset, minXSide, midYSide);
-					tess.addVertexWithUV(xMid, yMax + vertSideXOffset, negSideXOffset, minXSide, minYSide);
+					tess.addVertexWithUV(xMid - offset, yMax + vertSideXOffset, maxEdgeX, maxUEdge, minVEdge);
+					tess.addVertexWithUV(xMax, yMax + vertSideXOffset, maxEdgeX, maxUEdge, midVEdgeB);
+					tess.addVertexWithUV(xMax, yMax + vertSideXOffset, minEdgeX, minUEdge, midVEdgeB);
+					tess.addVertexWithUV(xMid - offset, yMax + vertSideXOffset, minEdgeX, minUEdge, minVEdge);
 				}
 
 				if (renderBottom)
 				{
-					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-					tess.addVertexWithUV(xMax, yMin - vertSideXOffset, posSideXOffset, maxXSide, midYSide);
-					tess.addVertexWithUV(xMax, yMin - vertSideXOffset, negSideXOffset, minXSide, midYSide);
-					tess.addVertexWithUV(xMid, yMin - vertSideXOffset, negSideXOffset, minXSide, minYSide);
+					tess.addVertexWithUV(xMid - offset, yMin - vertSideXOffset, minEdgeX, minUEdge, minVEdge);
+					tess.addVertexWithUV(xMax, yMin - vertSideXOffset, minEdgeX, minUEdge, midVEdgeB);
+					tess.addVertexWithUV(xMax, yMin - vertSideXOffset, maxEdgeX, maxUEdge, midVEdgeB);
+					tess.addVertexWithUV(xMid - offset, yMin - vertSideXOffset, maxEdgeX, maxUEdge, minVEdge);
 				}
 			}
 		}
 		else
 		{
 			tess.setColorOpaque_F(red, green, blue);
-			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXGlass, minYGlass, maxXGlass, maxYGlass, 0, offset);
-			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXGlass, minYGlass, maxXGlass, maxYGlass, 0, -offset);
+			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUGlass, minVGlass, maxUGlass, maxVGlass, 0, offset);
+			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUGlass, minVGlass, maxUGlass, maxVGlass, 0, -offset);
 
 			tess.setColorOpaque_F(1, 1, 1);
-			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, offset);
-			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, 0, -offset);
+			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, 0, offset);
+			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, 0, -offset);
 			
-			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXSouth, minYSouth, maxXSouth, maxYSouth, 0, offset);
-			drawBox(tess, xMin, yMin, zMid, xMax, yMax, zMid, minXSouth, minYSouth, maxXSouth, maxYSouth, 0, -offset);
+			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUSouth, minVSouth, maxUSouth, maxVSouth, 0, offset);
+			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUSouth, minVSouth, maxUSouth, maxVSouth, 0, -offset);
 
-			if (!connectedPosX && !connectedNegX)
+			if (!connectedPosX & !connectedNegX)
 			{
-				drawBox(tess, xMin, yMin, negSideXOffset, xMin, yMax, posSideXOffset, minXSide, minYSide, maxXSide, maxYSide, 0, 0);
+				drawPlane(tess, xMin, yMin, minEdgeX, xMin, yMax, maxEdgeX, minUEdge, minVEdge, maxUEdge, maxVEdge, false);
 				
-				drawBox(tess, xMax, yMin, negSideXOffset, xMax, yMax, posSideXOffset, minXSide, minYSide, maxXSide, maxYSide, 0, 0, true);
+				drawPlane(tess, xMax, yMin, minEdgeX, xMax, yMax, maxEdgeX, minUEdge, minVEdge, maxUEdge, maxVEdge, true);
 			}
 
 			if (renderTop)
 			{
-				tess.addVertexWithUV(xMin, yMax + vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-				tess.addVertexWithUV(xMax, yMax + vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-				tess.addVertexWithUV(xMax, yMax + vertSideXOffset, negSideXOffset, minXSide, minYSide);
-				tess.addVertexWithUV(xMin, yMax + vertSideXOffset, negSideXOffset, minXSide, maxYSide);
+				tess.addVertexWithUV(xMin, yMax + vertSideXOffset, maxEdgeX, maxUEdge, minVEdge);
+				tess.addVertexWithUV(xMax, yMax + vertSideXOffset, maxEdgeX, maxUEdge, maxVEdge);
+				tess.addVertexWithUV(xMax, yMax + vertSideXOffset, minEdgeX, minUEdge, maxVEdge);
+				tess.addVertexWithUV(xMin, yMax + vertSideXOffset, minEdgeX, minUEdge, minVEdge);
 			}
 
 			if (renderBottom)
 			{
-				tess.addVertexWithUV(xMin, yMin - vertSideXOffset, posSideXOffset, maxXSide, maxYSide);
-				tess.addVertexWithUV(xMax, yMin - vertSideXOffset, posSideXOffset, maxXSide, minYSide);
-				tess.addVertexWithUV(xMax, yMin - vertSideXOffset, negSideXOffset, minXSide, minYSide);
-				tess.addVertexWithUV(xMin, yMin - vertSideXOffset, negSideXOffset, minXSide, maxYSide);
+				tess.addVertexWithUV(xMin, yMin - vertSideXOffset, minEdgeX, minUEdge, minVEdge);
+				tess.addVertexWithUV(xMax, yMin - vertSideXOffset, minEdgeX, minUEdge, maxVEdge);
+				tess.addVertexWithUV(xMax, yMin - vertSideXOffset, maxEdgeX, maxUEdge, maxVEdge);
+				tess.addVertexWithUV(xMin, yMin - vertSideXOffset, maxEdgeX, maxUEdge, minVEdge);
 			}
 		}
 
-		if ((!connectedNegZ || !connectedPosZ) && (connectedNegX || connectedPosX || connectedNegZ || connectedPosZ))
+		if ((!connectedNegZ | !connectedPosZ) & (connectedNegX | connectedPosX | connectedNegZ | connectedPosZ))
 		{
-			if (connectedNegZ && !connectedPosZ)
+			if (connectedNegZ & !connectedPosZ)
 			{
 				tess.setColorOpaque_F(red, green, blue);
-				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, offset, 0);
-				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXGlass, minYGlass, midXGlass, maxYGlass, -offset, 0);
+				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUGlass, minVGlass, midUGlassA, maxVGlass, offset, 0);
+				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUGlass, minVGlass, midUGlassA, maxVGlass, -offset, 0);
 
 				tess.setColorOpaque_F(1, 1, 1);
-				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, offset, 0);
-				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXStreaks, minYStreaks, midXStreaks, maxYStreaks, -offset, 0);
+				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, offset, 0);
+				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, -offset, 0);
 				
-				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXWest, minYWest, midXWest, maxYWest, offset, 0);
-				drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMid, minXWest, minYWest, midXWest, maxYWest, -offset, 0);
+				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUWest, minVWest, midUWestA, maxVWest, offset, 0);
+				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUWest, minVWest, midUWestA, maxVWest, -offset, 0);
 
-				if (!connectedPosX && !connectedNegX)
+				if (!connectedPosX & !connectedNegX)
 				{
-					tess.addVertexWithUV(negSideZOffset, yMax, zMid, minXSide, minYSide);
-					tess.addVertexWithUV(negSideZOffset, yMin, zMid, minXSide, maxYSide);
-					tess.addVertexWithUV(posSideZOffset, yMin, zMid, maxXSide, maxYSide);
-					tess.addVertexWithUV(posSideZOffset, yMax, zMid, maxXSide, minYSide);
+					tess.addVertexWithUV(minEdgeZ, yMax, zMid + offset, minUEdge, minVEdge);
+					tess.addVertexWithUV(minEdgeZ, yMin, zMid + offset, minUEdge, maxVEdge);
+					tess.addVertexWithUV(maxEdgeZ, yMin, zMid + offset, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(maxEdgeZ, yMax, zMid + offset, maxUEdge, minVEdge);
 				}
 
 				if (renderTop)
 				{
-					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMin, maxXSide, minYSide);
-					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMid, maxXSide, midYSide);
-					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMid, minXSide, midYSide);
-					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMin, minXSide, minYSide);
+					tess.addVertexWithUV(minEdgeZ, yMax + vertSideZOffset, zMin, maxUEdge, minVEdge);
+					tess.addVertexWithUV(minEdgeZ, yMax + vertSideZOffset, zMid + offset, maxUEdge, midVEdgeA);
+					tess.addVertexWithUV(maxEdgeZ, yMax + vertSideZOffset, zMid + offset, minUEdge, midVEdgeA);
+					tess.addVertexWithUV(maxEdgeZ, yMax + vertSideZOffset, zMin, minUEdge, minVEdge);
 				}
 
 				if (renderBottom)
 				{
-					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMin, maxXSide, minYSide);
-					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMid, maxXSide, midYSide);
-					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMid, minXSide, midYSide);
-					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMin, minXSide, minYSide);
+					tess.addVertexWithUV(maxEdgeZ, yMin - vertSideZOffset, zMin, minUEdge, minVEdge);
+					tess.addVertexWithUV(maxEdgeZ, yMin - vertSideZOffset, zMid + offset, minUEdge, midVEdgeA);
+					tess.addVertexWithUV(minEdgeZ, yMin - vertSideZOffset, zMid + offset, maxUEdge, midVEdgeA);
+					tess.addVertexWithUV(minEdgeZ, yMin - vertSideZOffset, zMin, maxUEdge, minVEdge);
 				}
 			}
-			else if (!connectedNegZ && connectedPosZ)
+			else if (!connectedNegZ & connectedPosZ)
 			{
 				tess.setColorOpaque_F(red, green, blue);
-				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXGlass, minYGlass, maxXGlass, maxYGlass, offset, 0);
-				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXGlass, minYGlass, maxXGlass, maxYGlass, -offset, 0);
+				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUGlassB, minVGlass, maxUGlass, maxVGlass, offset, 0);
+				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUGlassB, minVGlass, maxUGlass, maxVGlass, -offset, 0);
 
 				tess.setColorOpaque_F(1, 1, 1);
-				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, offset, 0);
-				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXStreaks, minYStreaks, maxXStreaks, maxYStreaks, -offset, 0);
+				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, offset, 0);
+				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, -offset, 0);
 				
-				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXWest, minYWest, maxXWest, maxYWest, offset, 0);
-				drawBox(tess, xMid, yMin, zMid, xMid, yMax, zMax, midXWest, minYWest, maxXWest, maxYWest, -offset, 0);
+				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUWestB, minVWest, maxUWest, maxVWest, offset, 0);
+				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUWestB, minVWest, maxUWest, maxVWest, -offset, 0);
 
-				if (!connectedPosX && !connectedNegX)
+				if (!connectedPosX & !connectedNegX)
 				{
-					tess.addVertexWithUV(posSideZOffset, yMax, zMid, minXSide, minYSide);
-					tess.addVertexWithUV(posSideZOffset, yMin, zMid, minXSide, maxYSide);
-					tess.addVertexWithUV(negSideZOffset, yMin, zMid, maxXSide, maxYSide);
-					tess.addVertexWithUV(negSideZOffset, yMax, zMid, maxXSide, minYSide);
+					tess.addVertexWithUV(maxEdgeZ, yMax, zMid - offset, minUEdge, minVEdge);
+					tess.addVertexWithUV(maxEdgeZ, yMin, zMid - offset, minUEdge, maxVEdge);
+					tess.addVertexWithUV(minEdgeZ, yMin, zMid - offset, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(minEdgeZ, yMax, zMid - offset, maxUEdge, minVEdge);
 				}
 
 				if (renderTop)
 				{
-					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMid, minXSide, midYSide);
-					tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMax, minXSide, maxYSide);
-					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMax, maxXSide, maxYSide);
-					tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMid, maxXSide, midYSide);
+					tess.addVertexWithUV(minEdgeZ, yMax + vertSideZOffset, zMid - offset, minUEdge, midVEdgeB);
+					tess.addVertexWithUV(minEdgeZ, yMax + vertSideZOffset, zMax, minUEdge, maxVEdge);
+					tess.addVertexWithUV(maxEdgeZ, yMax + vertSideZOffset, zMax, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(maxEdgeZ, yMax + vertSideZOffset, zMid - offset, maxUEdge, midVEdgeB);
 				}
 
 				if (renderBottom)
 				{
-					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMid, minXSide, midYSide);
-					tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMax, minXSide, maxYSide);
-					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMax, maxXSide, maxYSide);
-					tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMid, maxXSide, midYSide);
+					tess.addVertexWithUV(maxEdgeZ, yMin - vertSideZOffset, zMid - offset, maxUEdge, midVEdgeB);
+					tess.addVertexWithUV(maxEdgeZ, yMin - vertSideZOffset, zMax, maxUEdge, maxVEdge);
+					tess.addVertexWithUV(minEdgeZ, yMin - vertSideZOffset, zMax, minUEdge, maxVEdge);
+					tess.addVertexWithUV(minEdgeZ, yMin - vertSideZOffset, zMid - offset, minUEdge, midVEdgeB);
 				}
 			}
 		}
 		else
 		{
 			tess.setColorOpaque_F(red, green, blue);
-			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXGlass, minYGlass, maxXGlass, maxYGlass, offset, 0);
-			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXGlass, minYGlass, maxXGlass, maxYGlass, -offset, 0);
+			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUGlass, minVGlass, maxUGlass, maxVGlass, offset, 0);
+			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUGlass, minVGlass, maxUGlass, maxVGlass, -offset, 0);
 
 			tess.setColorOpaque_F(1, 1, 1);
-			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, offset, 0);
-			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXStreaks, minYStreaks, maxXStreaks, maxYStreaks, -offset, 0);
+			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, offset, 0);
+			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, -offset, 0);
 			
-			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXWest, minYWest, maxXWest, maxYWest, offset, 0);
-			drawBox(tess, xMid, yMin, zMin, xMid, yMax, zMax, minXWest, minYWest, maxXWest, maxYWest, -offset, 0);
+			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUWest, minVWest, maxUWest, maxVWest, offset, 0);
+			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUWest, minVWest, maxUWest, maxVWest, -offset, 0);
 
-			if (!connectedPosZ && !connectedNegZ)
+			if (!connectedPosZ & !connectedNegZ)
 			{
-				drawBox(tess, negSideZOffset, yMin, zMin, posSideZOffset, yMax, zMin, minXSide, minYSide, maxXSide, maxYSide, 0, 0);
+				drawPlane(tess, minEdgeZ, yMin, zMin, maxEdgeZ, yMax, zMin, minUEdge, minVEdge, maxUEdge, maxVEdge, true);
 				
-				drawBox(tess, negSideZOffset, yMin, zMax, posSideZOffset, yMax, zMax, minXSide, minYSide, maxXSide, maxYSide, 0, 0, true);
+				drawPlane(tess, minEdgeZ, yMin, zMax, maxEdgeZ, yMax, zMax, minUEdge, minVEdge, maxUEdge, maxVEdge, false);
 			}
 
 			if (renderTop)
 			{
-				tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMax, maxXSide, maxYSide);
-				tess.addVertexWithUV(posSideZOffset, yMax + vertSideZOffset, zMin, maxXSide, minYSide);
-				tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMin, minXSide, minYSide);
-				tess.addVertexWithUV(negSideZOffset, yMax + vertSideZOffset, zMax, minXSide, maxYSide);
+				tess.addVertexWithUV(maxEdgeZ, yMax + vertSideZOffset, zMax, maxUEdge, maxVEdge);
+				tess.addVertexWithUV(maxEdgeZ, yMax + vertSideZOffset, zMin, maxUEdge, minVEdge);
+				tess.addVertexWithUV(minEdgeZ, yMax + vertSideZOffset, zMin, minUEdge, minVEdge);
+				tess.addVertexWithUV(minEdgeZ, yMax + vertSideZOffset, zMax, minUEdge, maxVEdge);
 			}
 			// TODO: fix slightly awkward rendering when pane on top/bottom doesn't connect on both sides
 			if (renderBottom)
 			{
-				tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMax, maxXSide, maxYSide);
-				tess.addVertexWithUV(posSideZOffset, yMin - vertSideZOffset, zMin, maxXSide, minYSide);
-				tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMin, minXSide, minYSide);
-				tess.addVertexWithUV(negSideZOffset, yMin - vertSideZOffset, zMax, minXSide, maxYSide);
+				tess.addVertexWithUV(minEdgeZ, yMin - vertSideZOffset, zMax, minUEdge, maxVEdge);
+				tess.addVertexWithUV(minEdgeZ, yMin - vertSideZOffset, zMin, minUEdge, minVEdge);
+				tess.addVertexWithUV(maxEdgeZ, yMin - vertSideZOffset, zMin, maxUEdge, minVEdge);
+				tess.addVertexWithUV(maxEdgeZ, yMin - vertSideZOffset, zMax, maxUEdge, maxVEdge);
 			}
 		}
 
 		return true;
 	}
 
-	private void drawBox(Tessellator t, double xMin, double yMin, double zMin,
-													double xMax, double yMax, double zMax,
+	private void drawPlane(Tessellator t, double xMin, double yMin, double zMin,
+											double xMax, double yMax, double zMax,
 													double uMin, double vMin,
 													double uMax, double vMax,
 													double xOff, double zOff)
 	{
-		drawBox(t, xMin, yMin, zMin, xMax, yMax, zMax, uMin, vMin, uMax, uMax, xOff, zOff, xOff < 0 || zOff < 0);
+		drawPlane(t, xMin, yMin, zMin, xMax, yMax, zMax, uMin, vMin, uMax, vMax, xOff, zOff, (xOff > 0) | zOff < 0);
 	}
 	
-	private void drawBox(Tessellator t, double xMin, double yMin, double zMin,
-													double xMax, double yMax, double zMax,
+	private void drawPlane(Tessellator t, double xMin, double yMin, double zMin,
+											double xMax, double yMax, double zMax,
 													double uMin, double vMin,
 													double uMax, double vMax,
 													double xOff, double zOff,
 													boolean backwards)
 	{
+		drawPlane(t, xMin + xOff, yMin, zMin + zOff, xMax + xOff, yMax, zMax + zOff, uMin, vMin, uMax, vMax, backwards);
+	}
+	
+	private void drawPlane(Tessellator t, double xMin, double yMin, double zMin,
+											double xMax, double yMax, double zMax,
+													double uMin, double vMin,
+													double uMax, double vMax,
+													boolean backwards)
+	{
 		if (!backwards)
 		{
-			t.addVertexWithUV(xMin + xOff, yMax, zMin + zOff, uMin, vMin);
-			t.addVertexWithUV(xMin + xOff, yMin, zMin + zOff, uMin, vMax);
-			t.addVertexWithUV(xMax + xOff, yMin, zMax + zOff, uMax, vMax);
-			t.addVertexWithUV(xMax + xOff, yMax, zMax + zOff, uMax, vMin);
+			t.addVertexWithUV(xMin, yMax, zMin, uMin, vMin);
+			t.addVertexWithUV(xMin, yMin, zMin, uMin, vMax);
+			t.addVertexWithUV(xMax, yMin, zMax, uMax, vMax);
+			t.addVertexWithUV(xMax, yMax, zMax, uMax, vMin);
 		}
 		else
 		{
-			t.addVertexWithUV(xMin + xOff, yMin, zMin + zOff, uMin, vMin);
-			t.addVertexWithUV(xMin + xOff, yMax, zMin + zOff, uMin, vMax);
-			t.addVertexWithUV(xMax + xOff, yMax, zMax + zOff, uMax, vMax);
-			t.addVertexWithUV(xMax + xOff, yMin, zMax + zOff, uMax, vMin);
+			t.addVertexWithUV(xMin, yMin, zMin, uMin, vMax);
+			t.addVertexWithUV(xMin, yMax, zMin, uMin, vMin);
+			t.addVertexWithUV(xMax, yMax, zMax, uMax, vMin);
+			t.addVertexWithUV(xMax, yMin, zMax, uMax, vMax);
 		}
 	}
 

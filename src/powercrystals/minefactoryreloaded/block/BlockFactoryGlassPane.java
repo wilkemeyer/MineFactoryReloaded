@@ -87,9 +87,16 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	public IIcon getIcon(int side, int meta)
 	{
 		meta /= 16;
-		if (meta == 2)
+		switch (meta)
+		{
+		case 2:
 			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 7 - meta, 7);
+		case 1:
+			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 6, 7);
+		case 0:
+		default:
+			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 7, 7);
+		}
 	}
 
 	@Override

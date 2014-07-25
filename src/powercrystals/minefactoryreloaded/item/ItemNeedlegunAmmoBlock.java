@@ -21,6 +21,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	{
 		setMaxDamage(3);
 		setHasSubtypes(false);
+		assert block != null : "Null block";
 		_block = block;
 		_blockMeta = blockMeta;
 	}

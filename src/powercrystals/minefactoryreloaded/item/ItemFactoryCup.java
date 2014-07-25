@@ -24,9 +24,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -102,10 +100,10 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		{
 			return super.getItemStackDisplayName(item);
 		}
-		Fluid liquid = FluidRegistry.getFluid(ret);
+		FluidStack liquid = getFluid(item);
 		if (liquid != null)
 		{
-			ret = liquid.getLocalizedName();
+			ret = liquid.getFluid().getLocalizedName(liquid);
 		}
 		_prefix = true;
 		t = super.getItemStackDisplayName(item);

@@ -408,6 +408,19 @@ public class MineFactoryReloadedCore extends BaseMod
 		
 		machineItem = new BlockFactoryDecoration();
 
+		registerFluids();
+
+		milkLiquid = new BlockFactoryFluid("milk");
+		sludgeLiquid = new BlockFactoryFluid("sludge");
+		sewageLiquid = new BlockFactoryFluid("sewage");
+		essenceLiquid = new BlockFactoryFluid("mobessence");
+		biofuelLiquid = new BlockExplodingFluid("biofuel");
+		meatLiquid = new BlockFactoryFluid("meat");
+		pinkSlimeLiquid = new BlockPinkSlimeFluid("pinkslime");
+		chocolateMilkLiquid = new BlockFactoryFluid("chocolatemilk");
+		mushroomSoupLiquid = new BlockFactoryFluid("mushroomsoup");
+		steamFluid = new BlockFactoryFluid("steam");
+
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		plasticBootsItem = new ItemPlasticBoots();
 
@@ -523,19 +536,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(detCordBlock, ItemBlockDetCord.class);
 
 		registerBlock(fakeLaserBlock, null);
-
-		registerFluids();
-
-		milkLiquid = new BlockFactoryFluid("milk");
-		sludgeLiquid = new BlockFactoryFluid("sludge");
-		sewageLiquid = new BlockFactoryFluid("sewage");
-		essenceLiquid = new BlockFactoryFluid("mobessence");
-		biofuelLiquid = new BlockExplodingFluid("biofuel");
-		meatLiquid = new BlockFactoryFluid("meat");
-		pinkSlimeLiquid = new BlockPinkSlimeFluid("pinkslime");
-		chocolateMilkLiquid = new BlockFactoryFluid("chocolatemilk");
-		mushroomSoupLiquid = new BlockFactoryFluid("mushroomsoup");
-		steamFluid = new BlockFactoryFluid("steam");
 
 		sewageBucketItem = (new ItemFactoryBucket(sewageLiquid)).setUnlocalizedName("mfr.bucket.sewage");
 		sludgeBucketItem = (new ItemFactoryBucket(sludgeLiquid)).setUnlocalizedName("mfr.bucket.sludge");
