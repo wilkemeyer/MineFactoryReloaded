@@ -24,6 +24,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public class ThermalExpansion extends Vanilla
 {
+	private static final String TE = "ThermalExpansion";
 	ItemStack conduitLiquid;
 	ItemStack tankBasic;
 	ItemStack tankHardened;
@@ -45,38 +46,51 @@ public class ThermalExpansion extends Vanilla
 	ItemStack tesseractFrameEmpty;
 	ItemStack cellResonant;
 	ItemStack cellRedstone;
+	ItemStack igniter;
 	
 	@Override
 	protected void gatherItems()
 	{
-		if(!Loader.isModLoaded("ThermalExpansion"))
+		if(!Loader.isModLoaded(TE))
 		{
 			FMLLog.severe(MineFactoryReloadedCore.modId, Level.SEVERE,
 					"ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
 			throw new MissingModsException(Collections.
-					singleton((ArtifactVersion)new DefaultArtifactVersion("ThermalExpansion", "(3.0.0.2,]")));
+					singleton((ArtifactVersion)new DefaultArtifactVersion(TE, "(3.0.0.2,]")));
 		}
-		conduitLiquid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
-		tankBasic = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
-		tankHardened = GameRegistry.findItemStack("ThermalExpansion", "tankHardened", 1);
-		lamp = GameRegistry.findItemStack("ThermalExpansion", "lamp", 1);
-		machineFrame = GameRegistry.findItemStack("ThermalExpansion", "machineFrame", 1);
-		pneumaticServo = GameRegistry.findItemStack("ThermalExpansion", "pneumaticServo", 1);
-		powerCoilElectrum = GameRegistry.findItemStack("ThermalExpansion", "powerCoilElectrum", 1);
-		powerCoilGold = GameRegistry.findItemStack("ThermalExpansion", "powerCoilGold", 1);
-		powerCoilSilver = GameRegistry.findItemStack("ThermalExpansion", "powerCoilSilver", 1);
-		tesseractFrameFull = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameFull", 1);
-		strongBox = GameRegistry.findItemStack("ThermalExpansion", "strongboxReinforced", 1);
-		strongBoxBasic = GameRegistry.findItemStack("ThermalExpansion", "strongboxBasic", 1);
-		multimeter = GameRegistry.findItemStack("ThermalExpansion", "multimeter", 1);
-		invarAxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarAxe", 1);
-		invarSword = GameRegistry.findItemStack("ThermalExpansion", "toolInvarSword", 1);
-		invarPickaxe = GameRegistry.findItemStack("ThermalExpansion", "toolInvarPickaxe", 1);
-		dynamoSteam = GameRegistry.findItemStack("ThermalExpansion", "dynamoSteam", 1);
-		tesseract = new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Tesseract"));
-		tesseractFrameEmpty = GameRegistry.findItemStack("ThermalExpansion", "tesseractFrameEmpty", 1);
-		cellResonant = GameRegistry.findItemStack("ThermalExpansion", "cellResonant", 1);
-		cellRedstone = GameRegistry.findItemStack("ThermalExpansion", "cellReinforced", 1);
+		if(Loader.isModLoaded("ThermalDucts"))
+		{
+			conduitLiquid = GameRegistry.findItemStack("ThermalDucts", "conduitFluidOpaque", 1);
+		}
+		else
+		{
+			conduitLiquid = new ItemStack(MineFactoryReloadedCore.plasticPipeBlock);
+		}
+
+		/* Blocks */
+		tankBasic = GameRegistry.findItemStack(TE, "tankBasic", 1);
+		tankHardened = GameRegistry.findItemStack(TE, "tankHardened", 1);
+		lamp = GameRegistry.findItemStack(TE, "illuminator", 1);
+		machineFrame = new ItemStack(GameRegistry.findBlock(TE, "Frame"), 1, 0);
+		strongBox = GameRegistry.findItemStack(TE, "strongboxReinforced", 1);
+		strongBoxBasic = GameRegistry.findItemStack(TE, "strongboxBasic", 1);
+		dynamoSteam = GameRegistry.findItemStack(TE, "dynamoSteam", 1);
+		tesseract = new ItemStack(GameRegistry.findBlock(TE, "Tesseract"), 1, 0);
+		tesseractFrameEmpty = new ItemStack(GameRegistry.findBlock(TE, "Frame"), 1, 7);
+		tesseractFrameFull = new ItemStack(GameRegistry.findBlock(TE, "Frame"), 1, 8);
+		cellResonant = GameRegistry.findItemStack(TE, "cellResonant", 1);
+		cellRedstone = GameRegistry.findItemStack(TE, "cellReinforced", 1);
+
+		/* Items */
+		pneumaticServo = GameRegistry.findItemStack(TE, "pneumaticServo", 1);
+		powerCoilElectrum = GameRegistry.findItemStack(TE, "powerCoilElectrum", 1);
+		powerCoilGold = GameRegistry.findItemStack(TE, "powerCoilGold", 1);
+		powerCoilSilver = GameRegistry.findItemStack(TE, "powerCoilSilver", 1);
+		multimeter = GameRegistry.findItemStack(TE, "multimeter", 1);
+		igniter = GameRegistry.findItemStack(TE, "igniter", 1);
+		invarAxe = GameRegistry.findItemStack(TE, "toolInvarAxe", 1);
+		invarSword = GameRegistry.findItemStack(TE, "toolInvarSword", 1);
+		invarPickaxe = GameRegistry.findItemStack(TE, "toolInvarPickaxe", 1);
 	}
 	
 	@Override
@@ -90,7 +104,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.flower_pot,
 				'S', Blocks.piston,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineCopper",
+				'O', "ingotCopper",
 				'C', powerCoilGold,
 					} );
 		
@@ -102,7 +116,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.fishing_rod,
 				'S', Items.bucket,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineIron",
+				'O', "ingotIron",
 				'C', powerCoilGold
 					} );
 		
@@ -114,7 +128,7 @@ public class ThermalExpansion extends Vanilla
 				'T', invarAxe,
 				'S', Items.shears,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineGold",
+				'O', "ingotGold",
 				'C', powerCoilGold
 					} );
 		
@@ -126,7 +140,7 @@ public class ThermalExpansion extends Vanilla
 				'T', conduitLiquid,
 				'S', Items.shears,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineTin",
+				'O', "ingotTin",
 				'C', powerCoilGold
 					} );
 		
@@ -138,7 +152,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.glass_bottle,
 				'S', Items.leather,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineNickel",
+				'O', "ingotNickel",
 				'C', powerCoilGold
 					} );
 		
@@ -149,7 +163,7 @@ public class ThermalExpansion extends Vanilla
 				'P', "sheetPlastic",
 				'T', MineFactoryReloadedCore.syringeEmptyItem,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineCopper",
+				'O', "ingotCopper",
 				'C', powerCoilGold
 					} );
 		
@@ -170,7 +184,7 @@ public class ThermalExpansion extends Vanilla
 				'T', "gearInvar",
 				'S', invarPickaxe,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineIron",
+				'O', "ingotIron",
 				'C', powerCoilGold
 					} );
 		
@@ -182,7 +196,7 @@ public class ThermalExpansion extends Vanilla
 				'B', Blocks.iron_bars,
 				'T', Items.bucket,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineCopper",
+				'O', "ingotCopper",
 				'C', powerCoilGold
 					} );
 		
@@ -194,7 +208,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.bucket,
 				'S', Blocks.furnace,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineIron",
+				'O', "ingotIron",
 				'C', powerCoilGold
 					} );
 		
@@ -239,7 +253,7 @@ public class ThermalExpansion extends Vanilla
 				"OCO",
 				'P', "sheetPlastic",
 				'T', invarSword,
-				'S', "thermalexpansion:machineTin",
+				'S', "ingotTin",
 				'F', machineFrame,
 				'O', Items.book,
 				'C', powerCoilGold
@@ -440,7 +454,7 @@ public class ThermalExpansion extends Vanilla
 				"BCB",
 				'G', "sheetPlastic",
 				'B', Blocks.brick_block,
-				'S', Items.flint_and_steel,
+				'S', igniter,
 				'F', machineFrame,
 				'C', powerCoilGold
 					} );
@@ -486,7 +500,7 @@ public class ThermalExpansion extends Vanilla
 				'A', Blocks.anvil,
 				'F', machineFrame,
 				'C', powerCoilGold,
-				'O', "thermalexpansion:machineIron"
+				'O', "ingotIron"
 					} );
 		
 		registerMachine(Machine.BlockSmasher, new Object[] {
@@ -531,7 +545,7 @@ public class ThermalExpansion extends Vanilla
 				'S', Items.shears,
 				'F', machineFrame,
 				'C', powerCoilGold,
-				'O', "thermalexpansion:machineTin"
+				'O', "ingotTin"
 					} );
 		
 		registerMachine(Machine.BlockPlacer, new Object[]
@@ -565,7 +579,7 @@ public class ThermalExpansion extends Vanilla
 				'T', dynamoSteam,
 				'S', Blocks.piston,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineSilver",
+				'O', "ingotSilver",
 				'C', powerCoilSilver
 					} );
 		
@@ -577,7 +591,7 @@ public class ThermalExpansion extends Vanilla
 				'T', tesseract,
 				'E', cellResonant,
 				'F', tesseractFrameEmpty,
-				'O', "thermalexpansion:machineElectrum",
+				'O', "ingotElectrum",
 				'C', powerCoilElectrum
 					} );
 		if (MFRConfig.enableCheapCL.getBoolean(false))
@@ -590,7 +604,7 @@ public class ThermalExpansion extends Vanilla
 					'T', tesseractFrameEmpty,
 					'E', cellRedstone,
 					'F', machineFrame,
-					'O', "thermalexpansion:machineElectrum",
+					'O', "ingotElectrum",
 					'C', powerCoilElectrum
 						} );
 		}
@@ -603,7 +617,7 @@ public class ThermalExpansion extends Vanilla
 				'B', Blocks.iron_bars,
 				'T', tankBasic,
 				'F', machineFrame,
-				'O', "thermalexpansion:machineNickel",
+				'O', "ingotNickel",
 				'C', powerCoilGold
 					} );
 		

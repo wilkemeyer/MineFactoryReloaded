@@ -148,10 +148,11 @@ public class Vanilla
 				{
 				"GGG",
 				"SBS",
-				" M ",
+				"PMP",
 				'G', "sheetPlastic",
 				'B', bucket,
 				'S', shears,
+				'P', plasticPipeBlock,
 				'M', machineBaseItem,
 				} );
 
@@ -314,10 +315,11 @@ public class Vanilla
 				{
 				"GGG",
 				"RBR",
-				"BMB",
+				"PMP",
 				'G', "sheetPlastic",
-				'B', bucket,
 				'R', repeater,
+				'B', bucket,
+				'P', plasticPipeBlock,
 				'M', machineBaseItem,
 				} );
 
@@ -546,9 +548,9 @@ public class Vanilla
 				"CBC",
 				"RMR",
 				'G', "sheetPlastic",
-				'C', chest,
+				'C', plasticPipeBlock,
 				'B', Items.brewing_stand,
-				'R', repeater,
+				'R', comparator,
 				'M', machineBaseItem,
 				} );
 
