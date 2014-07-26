@@ -18,6 +18,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -50,11 +52,20 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 public class BlockFactory extends BlockContainer implements IRedNetConnection, IDismantleable
 {
+	protected boolean providesPower;
+
 	protected BlockFactory(float hardness)
 	{
 		super(Machine.MATERIAL);
 		setHardness(hardness);
 		setStepSound(soundTypeMetal);
+		setCreativeTab(MFRCreativeTab.tab);
+		setHarvestLevel("pickaxe", 0);
+	}
+
+	protected BlockFactory(Material material)
+	{
+		super(material);
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
 	}
@@ -301,13 +312,13 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	@Override
 	public boolean isNormalCube()
 	{
-		return false;
+		return !providesPower;
 	}
 
 	@Override
 	public boolean canProvidePower()
 	{
-		return true;
+		return providesPower;
 	}
 	
 	@Override
@@ -323,8 +334,18 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister ir)
+	{
+		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+	}
+
+	@Override
 	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return RedNetConnectionType.DecorativeSingle;
+		if (providesPower)
+			return RedNetConnectionType.DecorativeSingle;
+		else
+			return RedNetConnectionType.ForcedDecorativeSingle;
 	}
 }

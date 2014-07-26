@@ -1,8 +1,5 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,13 +14,11 @@ public class ItemLogicUpgradeCard extends ItemMulti
 		setNames(_upgradeNames);
 		setHasIcons(false);
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
-		super.addInformation(stack, player, infoList, advancedTooltips);
+		super.addInfo(stack, player, infoList, advancedTooltips);
 		infoList.add("Circuits: " + getCircuitsForLevel(stack.getItemDamage() + 1));
 		infoList.add("Variables: " + getVariablesForLevel(stack.getItemDamage() + 1));
 	}

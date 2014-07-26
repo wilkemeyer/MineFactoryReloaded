@@ -34,6 +34,7 @@ import powercrystals.minefactoryreloaded.api.IMobEggHandler;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.ISafariNetHandler;
 import powercrystals.minefactoryreloaded.api.RandomMob;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
 
 public class ItemSafariNet extends ItemFactory
@@ -47,12 +48,11 @@ public class ItemSafariNet extends ItemFactory
 	{
 		setMaxStackSize(1);
 	}
-	
+
 	@Override
-	@SideOnly(Side.CLIENT)
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
+		super.addInfo(stack, player, infoList, advancedTooltips);
 		if (stack.getTagCompound() == null)
 		{
 			return;
@@ -69,8 +69,9 @@ public class ItemSafariNet extends ItemFactory
 		}
 		else
 		{
-			infoList.add(StatCollector.translateToLocal("entity." + stack.getTagCompound().getString("id") + ".name")); // See Entity.getEntityName()
-			Class c = (Class)EntityList.stringToClassMapping.get(stack.getTagCompound().getString("id"));
+			infoList.add(MFRUtil.localize("entity.", stack.getTagCompound().getString("id")));
+			// See Entity.getEntityName()
+			Class<?> c = (Class<?>)EntityList.stringToClassMapping.get(stack.getTagCompound().getString("id"));
 			if (c == null)
 			{
 				return;

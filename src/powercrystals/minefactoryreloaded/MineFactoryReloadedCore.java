@@ -59,12 +59,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import powercrystals.minefactoryreloaded.block.BlockDecorativeBricks;
-import powercrystals.minefactoryreloaded.block.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.BlockDetCord;
-import powercrystals.minefactoryreloaded.block.BlockFactoryDecoration;
-import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
-import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
@@ -73,8 +68,6 @@ import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
 import powercrystals.minefactoryreloaded.block.BlockRubberSapling;
 import powercrystals.minefactoryreloaded.block.BlockRubberWood;
-import powercrystals.minefactoryreloaded.block.BlockVanillaGlassPane;
-import powercrystals.minefactoryreloaded.block.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
@@ -86,6 +79,14 @@ import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.ItemBlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.ItemBlockVineScaffold;
+import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
+import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
+import powercrystals.minefactoryreloaded.block.decor.BlockVanillaGlassPane;
+import powercrystals.minefactoryreloaded.block.decor.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockPinkSlimeFluid;
@@ -204,6 +205,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Block factoryGlassBlock;
 	public static Block factoryGlassPaneBlock;
 	public static Block factoryRoadBlock;
+	public static Block factoryPlasticBlock;
 	public static Block factoryDecorativeBrickBlock;
 	public static Block factoryDecorativeStoneBlock;
 
@@ -387,6 +389,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		factoryGlassBlock = new BlockFactoryGlass();
 		factoryGlassPaneBlock = new BlockFactoryGlassPane();
 		factoryRoadBlock = new BlockFactoryRoad();
+		factoryPlasticBlock = new BlockFactoryPlastic();
 		factoryDecorativeBrickBlock = new BlockDecorativeBricks();
 		factoryDecorativeStoneBlock = new BlockDecorativeStone();
 		rubberWoodBlock = new BlockRubberWood();
@@ -527,6 +530,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(factoryGlassBlock, ItemBlockFactory.class, new Object[] {BlockFactoryGlass._names});
 		registerBlock(factoryGlassPaneBlock, ItemBlockFactory.class, new Object[] {BlockFactoryGlass._names});
 		registerBlock(factoryRoadBlock, ItemBlockFactoryRoad.class);
+		registerBlock(factoryPlasticBlock, ItemBlockFactory.class);
 		registerBlock(factoryDecorativeBrickBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeBricks._names});
 		registerBlock(factoryDecorativeStoneBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeStone._names});
 
@@ -613,6 +617,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		OreDictionary.registerOre("itemRawRubber", MineFactoryReloadedCore.rawRubberItem);
 		OreDictionary.registerOre("woodRubber", MineFactoryReloadedCore.rubberWoodBlock);
 		OreDictionary.registerOre("leavesRubber", MineFactoryReloadedCore.rubberLeavesBlock);
+		OreDictionary.registerOre("blockPlastic", MineFactoryReloadedCore.factoryPlasticBlock);
 		OreDictionary.registerOre("sheetPlastic", MineFactoryReloadedCore.plasticSheetItem);
 		OreDictionary.registerOre("dustPlastic", MineFactoryReloadedCore.rawPlasticItem);
 		OreDictionary.registerOre("ingotMeat", MineFactoryReloadedCore.meatIngotCookedItem);

@@ -4,20 +4,17 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
 import powercrystals.minefactoryreloaded.api.INeedleAmmo;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public abstract class ItemNeedlegunAmmo extends ItemFactory implements INeedleAmmo
 {
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
-		super.addInformation(stack, player, infoList, advancedTooltips);
-		infoList.add((stack.getMaxDamage() - stack.getItemDamage() + 1) + 
-				" " + StatCollector.translateToLocal("tip.info.mfr.needlegun.ammo"));
+		super.addInfo(stack, player, infoList, advancedTooltips);
+		infoList.add(String.format(MFRUtil.localize("tip.info.mfr.needlegun.ammo", true),
+				(stack.getMaxDamage() - stack.getItemDamage() + 1)));
 	}
 }

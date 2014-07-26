@@ -1,6 +1,8 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.decor;
 
-import net.minecraft.block.Block;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -8,15 +10,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockDecorativeBricks extends Block implements IRedNetDecorative
+import powercrystals.minefactoryreloaded.block.BlockFactory;
+
+public class BlockDecorativeBricks extends BlockFactory
 {
-	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone",
-		"snow", "ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
+	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
+		"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
 		"meat.raw", "meat.cooked", "brick_large" };
 	private IIcon[] _icons = new IIcon[_names.length];
 
@@ -27,13 +27,7 @@ public class BlockDecorativeBricks extends Block implements IRedNetDecorative
 		setResistance(10.0F);
 		setStepSound(Blocks.stone.stepSound);
 		setBlockName("mfr.decorativebrick");
-		setCreativeTab(MFRCreativeTab.tab);
-	}
-
-	@Override
-	public int damageDropped(int meta)
-	{
-		return meta;
+		providesPower = false;
 	}
 
 	@Override

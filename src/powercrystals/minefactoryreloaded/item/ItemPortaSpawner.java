@@ -60,11 +60,10 @@ public class ItemPortaSpawner extends ItemFactory
 		return 0;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
+		super.addInfo(stack, player, infoList, advancedTooltips);
 		String id = getEntityId(stack);
 		if (id != null)
 			infoList.add(MFRUtil.localize("tile.mobSpawner") + ": " +

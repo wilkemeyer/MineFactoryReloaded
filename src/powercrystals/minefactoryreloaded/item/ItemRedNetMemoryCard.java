@@ -8,22 +8,22 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemRedNetMemoryCard extends ItemFactory
 {
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
-		if(stack.getTagCompound() != null)
+		super.addInfo(stack, player, infoList, advancedTooltips);
+		if (stack.getTagCompound() != null)
 		{
 			infoList.add("Programmed, " + stack.getTagCompound().getTagList("circuits", 10).tagCount() + " circuits");
-			infoList.add("Place in crafting grid to wipe");
 			// TODO: localize ^
+			infoList.add(MFRUtil.localize("tip.info.mfr.memorycard.wipe", true));
 		}
 	}
 	

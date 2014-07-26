@@ -9,10 +9,13 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public class ItemBlockFactory extends ItemBlock
 {
@@ -35,6 +38,11 @@ public class ItemBlockFactory extends ItemBlock
 		_names = names;
 		setHasSubtypes(true);
 	}
+	
+	protected String name(ItemStack stack)
+	{
+		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
+	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -52,8 +60,18 @@ public class ItemBlockFactory extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		String str = _names[Math.min(stack.getItemDamage(), _names.length - 1)];
-		return getName(getUnlocalizedName(), str);
+		return getName(getUnlocalizedName(), name(stack));
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
+	{
+		String str = getName("tip.info" + getUnlocalizedName().substring(4), name(stack));
+		str = MFRUtil.localize(str, true, null);
+		if (str != null)
+			info.add(str);
 	}
 
 	public void getSubItems(Item itemId, List<ItemStack> subTypes)

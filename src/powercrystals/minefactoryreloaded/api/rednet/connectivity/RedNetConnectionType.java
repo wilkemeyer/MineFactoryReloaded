@@ -6,47 +6,53 @@ import java.util.Map;
 /**
  * Defines how RedNet cable connects to a block
  * <p>
- * None:				RedNet will never connect to this block (if this is all you want: use IRedNetNoConnection)
+ * None:                 RedNet will never connect to this block (if this is all you want: use IRedNetNoConnection)
  * <p>
- * CableSingle:			Connections will use the cable renderer with a single band, best used for whole blocks
+ * CableSingle:          Connections will use the cable renderer with a single band, best used for whole blocks
  * <br>
- * PlateSingle:			Connections will use the plate renderer with a single band, used for conveyers and rails
+ * PlateSingle:          Connections will use the plate renderer with a single band, used for conveyers and rails
  * <p>
- * CableAll:			Connections permit access to all 16 bands
+ * CableAll:             Connections permit access to all 16 bands
  * <br>
- * PlateAll:			Connections permit access to all 16 bands
+ * PlateAll:             Connections permit access to all 16 bands
  * <p><p>
  * Forced connection modes are best used for decoration blocks: RedNet will not connect normally,
  * but will if the user forces it. Typically, IRedNetDecorative is desired for this instead
  * <p>
- * ForcedCableSingle:	Connections permit access to a single band, only when the cable is in forced connection mode
+ * ForcedCableSingle:    Connections permit access to a single band, only when the cable is in forced connection mode
  * <br>
- * ForcedPlateSingle:	Connections permit access to a single band, only when the cable is in forced connection mode
+ * ForcedPlateSingle:    Connections permit access to a single band, only when the cable is in forced connection mode
  * <p>
- * ForcedCableAll:		Connections permit access to all 16 bands, only when the cable is in forced connection mode
+ * ForcedCableAll:       Connections permit access to all 16 bands, only when the cable is in forced connection mode
  * <br>
- * ForcedPlateAll:		Connections permit access to all 16 bands, only when the cable is in forced connection mode
+ * ForcedPlateAll:       Connections permit access to all 16 bands, only when the cable is in forced connection mode
  * <p><p>
  * The decorative nodes are for when you want rednet to decide how to connect to your block,
  * but also need to receive full updates from the network.
  * <p>
- * DecorativeSingle:	Connections permit access to a single band, using standard connection logic
+ * DecorativeSingle:        Connections permit access to a single band, using standard connection logic
  * <br>
- * DecorativeAll:		Connections permit access to all 16 bands, using standard connection logic
+ * DecorativeAll:           Connections permit access to all 16 bands, using standard connection logic
+ * <br>
+ * ForcedDecorativeSingle:  Connections permit access to a single band, only when the cable is in forced connection mode
+ * <br>
+ * ForcedDecorativeAll:     Connections permit access to all 16 bands, only when the cable is in forced connection mode
  */
 public enum RedNetConnectionType
 {
-	None,				//  0; 0000000
-	CableSingle,		// 11; 0001011
-	PlateSingle,		// 13; 0001101
-	CableAll,			// 19; 0010011
-	PlateAll,			// 21; 0010101
-	ForcedCableSingle,	// 43; 0101011
-	ForcedPlateSingle,	// 45; 0101101
-	ForcedCableAll,		// 51; 0110011
-	ForcedPlateAll,		// 53; 0110101
-	DecorativeSingle,   // NA; 0001001
-	DecorativeAll;      // NA; 0010001
+	None,                   //  0; 0000000
+	CableSingle,            // 11; 0001011
+	PlateSingle,            // 13; 0001101
+	CableAll,               // 19; 0010011
+	PlateAll,               // 21; 0010101
+	ForcedCableSingle,      // 43; 0101011
+	ForcedPlateSingle,      // 45; 0101101
+	ForcedCableAll,         // 51; 0110011
+	ForcedPlateAll,         // 53; 0110101
+	DecorativeSingle,       // NA; 0001001
+	DecorativeAll,          // NA; 0010001
+	ForcedDecorativeSingle, // NA; 0101001
+	ForcedDecorativeAll;    // NA; 0110001
 	
 	public final boolean isConnected = this.ordinal() != 0; // 0 bit (mask: 1)
 	public final boolean isSingleSubnet = this.name().endsWith("Single"); // 3 bit (mask: 8)
@@ -54,7 +60,7 @@ public enum RedNetConnectionType
 	public final boolean isPlate = this.name().contains("Plate"); // 2 bit (mask: 4)
 	public final boolean isCable = this.name().contains("Cable"); // 1 bit (mask: 2)
 	public final boolean isConnectionForced = this.name().startsWith("Forced"); // 5 bit (mask: 32)
-	public final boolean isDecorative = this.name().startsWith("Decorative");
+	public final boolean isDecorative = this.name().contains("Decorative");
 	public final short flags = toFlags(isConnected, isCable, isPlate,
 			isSingleSubnet, isAllSubnets, isConnectionForced);
 	

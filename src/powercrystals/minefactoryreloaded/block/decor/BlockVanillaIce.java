@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.decor;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 

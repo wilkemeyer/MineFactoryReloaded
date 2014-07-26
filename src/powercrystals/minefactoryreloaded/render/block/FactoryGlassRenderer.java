@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.BlockFactoryGlass;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler

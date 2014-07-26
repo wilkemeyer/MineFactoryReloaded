@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.decor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,10 +15,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
-import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.block.BlockFactory;
 
-public class BlockDecorativeStone extends Block implements IRedNetDecorative
+public class BlockDecorativeStone extends BlockFactory
 {
 	public static final String[] _names = new String [] { "black.smooth", "white.smooth", "black.cobble",
 		"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
@@ -32,13 +31,7 @@ public class BlockDecorativeStone extends Block implements IRedNetDecorative
 		setResistance(10.0F);
 		setStepSound(Blocks.stone.stepSound);
 		setBlockName("mfr.decorativestone");
-		setCreativeTab(MFRCreativeTab.tab);
-	}
-
-	@Override
-	public int damageDropped(int meta)
-	{
-		return meta;
+		providesPower = false;
 	}
 
 	@SideOnly(Side.CLIENT)

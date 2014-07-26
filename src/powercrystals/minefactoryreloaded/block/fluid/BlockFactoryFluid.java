@@ -31,9 +31,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 
-public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetNoConnection
+public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDecorative
 { // TODO: convert to BlockFluidFinite
 	private static DamageSource steam = new DamageSource("steam").
 			setDamageBypassesArmor().setFireDamage().setDifficultyScaled();

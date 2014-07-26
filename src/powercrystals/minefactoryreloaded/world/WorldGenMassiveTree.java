@@ -326,7 +326,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 					
 					this.placeBlockLine(var5, var6, log, 1);
 					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2], log, 12 | 1);
-					worldObj.getBlock(var5[0], var5[1], var5[2]).
+					worldObj.getBlock(var5[0], var5[1] - 1, var5[2]).
 							onPlantGrow(worldObj, var5[0], var5[1], var5[2], var1, var2, var4);
 				}
 			}

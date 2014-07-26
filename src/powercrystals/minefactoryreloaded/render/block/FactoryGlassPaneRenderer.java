@@ -11,7 +11,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.BlockFactoryGlassPane;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler

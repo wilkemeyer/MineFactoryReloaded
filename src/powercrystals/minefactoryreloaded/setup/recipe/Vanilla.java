@@ -934,6 +934,10 @@ public class Vanilla
 
 		addSmallStorageRecipe(stack(plasticSheetItem, 4), "dustPlastic");
 
+		addSmallStorageRecipe(stack(factoryPlasticBlock, 1), "sheetPlastic");
+		addSmallReverseStorageRecipe(stack(plasticSheetItem, 4), stack2(factoryPlasticBlock));
+		addSmallReverseStorageRecipe(stack(plasticSheetItem, 4), "blockPlastic");
+
 		addRecipe(ShapedRecipe(stack(factoryHammerItem, 1), new Object[]
 				{
 			"PPP",

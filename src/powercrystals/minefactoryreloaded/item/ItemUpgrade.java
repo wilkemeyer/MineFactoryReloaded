@@ -2,15 +2,14 @@ package powercrystals.minefactoryreloaded.item;
 
 import cofh.api.item.IAugmentItem;
 import com.google.common.collect.ImmutableSet;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public class ItemUpgrade extends ItemMulti implements IAugmentItem
 {
@@ -22,15 +21,12 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem
 	{
 		setNames(_upgradeNames);
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
+	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
-		super.addInformation(stack, player, infoList, advancedTooltips);
-		infoList.add(StatCollector.translateToLocal("tip.info.mfr.upgrade.radius") + 
-				" " + getAugmentLevel(stack, "radius"));
+		super.addInfo(stack, player, infoList, advancedTooltips);
+		infoList.add(String.format(MFRUtil.localize("tip.info.mfr.upgrade.radius", true), getAugmentLevel(stack, "radius")));
 	}
 	
 	@Override

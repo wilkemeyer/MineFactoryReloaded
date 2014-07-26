@@ -104,20 +104,22 @@ tile.mfr.road.light.on.name = Road Light
 tile.mfr.road.light.inverted.off.name = Road Light (Inverted)
 tile.mfr.road.light.inverted.on.name = Road Light (Inverted)
 
-tile.mfr.decorativebrick.glowstone.name = Glowstone Bricks
+tile.mfr.plastic.name = Block of Plastic
+
 tile.mfr.decorativebrick.ice.name = Ice Bricks
+tile.mfr.decorativebrick.glowstone.name = Glowstone Bricks
 tile.mfr.decorativebrick.lapis.name = Lapis Bricks
 tile.mfr.decorativebrick.obsidian.name = Obsidian Bricks
 tile.mfr.decorativebrick.pavedstone.name = Paved Stone Bricks
 tile.mfr.decorativebrick.snow.name = Snow Bricks
-tile.mfr.decorativebrick.glowstone_large.name = Large Glowstone Bricks
 tile.mfr.decorativebrick.ice_large.name = Large Ice Bricks
+tile.mfr.decorativebrick.glowstone_large.name = Large Glowstone Bricks
 tile.mfr.decorativebrick.lapis_large.name = Large Lapis Bricks
 tile.mfr.decorativebrick.obsidian_large.name = Large Obsidian Bricks
+tile.mfr.decorativebrick.pavedstone_large.name = Large Paved Stone Bricks
 tile.mfr.decorativebrick.snow_large.name = Large Snow Bricks
 tile.mfr.decorativebrick.meat.raw.name = Raw Meat Block
 tile.mfr.decorativebrick.meat.cooked.name = Cooked Meat Block
-tile.mfr.decorativebrick.pavedstone_large.name = Large Paved Stone Bricks
 tile.mfr.decorativebrick.brick_large.name = Large Bricks
 
 tile.mfr.decorativestone.black.smooth.name = Smooth Blackstone
@@ -422,28 +424,39 @@ chat.info.mfr.bag.stacksize = You can only open one bag at a time
 
 chat.info.mfr.chunkloader.noticket = You have too many chunk loaders and this one cannot function.
 
+# Tooltips: these can be added to any item by a lang file, but they cannot be removed
+# this is a limitation of the localization system.
+# Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
+# displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
+
+tip.info.mfr.rubberwood.sapling.massive = Warning: Pakratt's world ship.
+
+tip.info.mfr.prc = If you're lost, read the (in-game) manual
+
+tip.info.mfr.xpextractor = Requires an empty container to fill
+
+tip.info.mfr.mobcounter = Emits an analog redstone signal\nproportional to the count of\nmobs that are within range.
+
+tip.info.mfr.laserdrill = Placed over a hole to bedrock or the void
+tip.info.mfr.laserdrillprecharger = Placed one block away from a valid laser target
+
+# These tooltips are not the entire tooltip, but part of a custom format or entry
+
 tip.info.mfr.cannotplace = Cannot place for %s more seconds.
 
 tip.info.mfr.safarinet.mode = Sneak-click to change mode
 tip.info.mfr.safarinet.jailer = Released creatures don't despawn normally
 tip.info.mfr.safarinet.mystery = It is a mystery
 
-tip.info.mfr.prc = If you're lost, read the (in-game) manual
-
-tip.info.mfr.needlegun.ammo = rounds
-
-tip.info.mfr.upgrade.radius = Radius increase:
-
-tip.info.mfr.xpextractor = Requires an empty container to fill
+tip.info.mfr.memorycard.wipe = Place in crafting grid to wipe
 
 tip.info.mfr.generator.produces = Produces RF only.
 
-tip.info.mfr.dsu.contains = Contains
+tip.info.mfr.dsu.contains = Contains %s
 
-tip.info.mfr.mobcounter = Emits an analog redstone signal\nproportional to the count of\nmobs that are within range.
+tip.info.mfr.needlegun.ammo = %s rounds
 
-tip.info.mfr.laserdrill = Placed over a hole to bedrock or the void
-tip.info.mfr.laserdrillprecharger = Placed one block away from a valid laser target
+tip.info.mfr.upgrade.radius = Radius increase: %s
 
 death.attack.mfr.slaughterhouse = %1$s was processed into Liquid Meat
 death.attack.mfr.slaughterhouse.player = %1$s was doomed to be processed into Liquid Meat by %2$s

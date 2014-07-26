@@ -28,6 +28,7 @@ import net.minecraftforge.common.config.Property;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoBrewer;
@@ -113,10 +114,10 @@ public class Machine
 				int storedQuantity = c.getInteger("storedQuantity");
 				if (storedItem != null & storedQuantity > 0)
 				{
-					info.add(StatCollector.translateToLocal("tip.info.mfr.dsu.contains") +
-							" " + storedQuantity + " " + storedItem.getDisplayName() +
+					info.add(String.format(MFRUtil.localize("tip.info.mfr.dsu.contains", true), 
+							storedQuantity + " " + storedItem.getDisplayName() +
 							(adv ? " (" + Item.itemRegistry.getIDForObject(storedItem.getItem()) + ":" +
-							storedItem.getItemDamageForDisplay() + ")" : ""));
+							storedItem.getItemDamageForDisplay() + ")" : "")));
 				}
 			}
 			super.addInformation(stack, player, info, adv);

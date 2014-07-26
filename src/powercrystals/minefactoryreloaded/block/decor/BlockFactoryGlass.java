@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.block;
+package powercrystals.minefactoryreloaded.block.decor;
 
 import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;

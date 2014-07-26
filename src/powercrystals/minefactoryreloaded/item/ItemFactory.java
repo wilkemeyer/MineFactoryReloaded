@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -7,10 +11,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFactory extends Item
 {
@@ -51,6 +54,10 @@ public class ItemFactory extends Item
 	
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{
+		String str = "tip.info" + getUnlocalizedName(stack).substring(4);
+		str = MFRUtil.localize(str, true, null);
+		if (str != null)
+			infoList.add(str);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

@@ -1,17 +1,11 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.List;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -21,14 +15,6 @@ public class ItemXpExtractor extends ItemFactory
 	private IIcon _icon1;
 	private IIcon _icon2;
 	private IIcon _icon3;
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
-	{
-		infoList.add(StatCollector.translateToLocal("tip.info.mfr.xpextractor"));
-	}
 	
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
