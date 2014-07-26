@@ -41,6 +41,7 @@ public class ThermalExpansion extends Vanilla
 	ItemStack invarAxe;
 	ItemStack invarSword;
 	ItemStack invarPickaxe;
+	ItemStack invarShovel;
 	ItemStack dynamoSteam;
 	ItemStack tesseract;
 	ItemStack tesseractFrameEmpty;
@@ -91,6 +92,7 @@ public class ThermalExpansion extends Vanilla
 		invarAxe = GameRegistry.findItemStack(TE, "toolInvarAxe", 1);
 		invarSword = GameRegistry.findItemStack(TE, "toolInvarSword", 1);
 		invarPickaxe = GameRegistry.findItemStack(TE, "toolInvarPickaxe", 1);
+		invarShovel = GameRegistry.findItemStack(TE, "toolInvarShovel", 1);
 	}
 	
 	@Override
@@ -178,12 +180,13 @@ public class ThermalExpansion extends Vanilla
 		
 		registerMachine(Machine.BlockBreaker, new Object[] {
 				"PTP",
-				"SFS",
+				"SFA",
 				"OCO",
 				'P', "sheetPlastic",
 				'T', "gearInvar",
 				'S', invarPickaxe,
 				'F', machineFrame,
+				'A', invarShovel,
 				'O', "ingotIron",
 				'C', powerCoilGold
 					} );
@@ -249,13 +252,13 @@ public class ThermalExpansion extends Vanilla
 		
 		registerMachine(Machine.Grinder, new Object[] {
 				"PTP",
-				"SFS",
-				"OCO",
+				"OFO",
+				"SCS",
 				'P', "sheetPlastic",
 				'T', invarSword,
-				'S', "ingotTin",
-				'F', machineFrame,
 				'O', Items.book,
+				'F', machineFrame,
+				'S', "ingotTin",
 				'C', powerCoilGold
 					} );
 		
@@ -378,13 +381,13 @@ public class ThermalExpansion extends Vanilla
 		
 		registerMachine(Machine.Unifier, new Object[] {
 				"PTP",
-				"SFS",
-				"OCO",
+				"OFO",
+				"SCS",
 				'P', "sheetPlastic",
 				'T', multimeter,
-				'S', "ingotSilver",
-				'F', machineFrame,
 				'O', Items.comparator,
+				'F', machineFrame,
+				'S', "ingotSilver",
 				'C', Items.book
 					} );
 		

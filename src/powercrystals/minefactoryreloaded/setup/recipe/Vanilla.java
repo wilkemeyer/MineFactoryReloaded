@@ -426,7 +426,7 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'U', sugar,
 				'E', fermented_spider_eye,
-				'S', slime_ball,
+				'S', "slimeball",
 				'M', machineBaseItem,
 				} );
 
@@ -937,7 +937,6 @@ public class Vanilla
 		addSmallStorageRecipe(stack(plasticSheetItem, 4), "dustPlastic");
 
 		addSmallStorageRecipe(stack(factoryPlasticBlock, 1), "sheetPlastic");
-		addSmallReverseStorageRecipe(stack(plasticSheetItem, 4), stack2(factoryPlasticBlock));
 		addSmallReverseStorageRecipe(stack(plasticSheetItem, 4), "blockPlastic");
 
 		addRecipe(ShapedRecipe(stack(factoryHammerItem, 1), new Object[]
@@ -1106,9 +1105,14 @@ public class Vanilla
 
 		for (ItemStack s : OreDictionary.getOres("itemRubber"))
 			addSmelting(stack(rawPlasticItem), s, 0.3F);
-		
+		for (ItemStack s : OreDictionary.getOres("blockPlastic"))
+			addSmelting(stack(rawPlasticItem, 4), s);
+		for (ItemStack s : OreDictionary.getOres("sheetPlastic"))
+			addSmelting(stack(rawPlasticItem), s);
+
 		addSmelting(stack(rawPlasticItem, 2), plasticBagItem);
 		addSmelting(stack(rawPlasticItem, 4), strawItem);
+		addSmelting(stack(rawPlasticItem, 2), rulerItem);
 
 		addSmelting(stack(meatIngotCookedItem), meatIngotRawItem, 0.5F);
 		addSmelting(stack(meatNuggetCookedItem), meatNuggetRawItem, 0.3F);
@@ -1349,6 +1353,13 @@ public class Vanilla
 			'P', "sheetPlastic",
 			'T', tnt,
 			'I', fireworks
+				}));
+
+		addRecipe(ShapelessRecipe(stack(rocketItem, 2, 0), new Object[]
+				{
+			stack(rocketItem, 1, 1),
+			stack(logicCardItem, 1, 0),
+			stack(rocketItem, 1, 1)
 				}));
 
 		addRecipe(ShapedRecipe(stack(needlegunAmmoStandardItem), new Object[]
