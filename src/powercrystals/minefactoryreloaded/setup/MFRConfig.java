@@ -12,41 +12,41 @@ public class MFRConfig
 	// client config
 	public static Property spyglassRange;
 	public static Property brightRednetBand;
-	
+
 	// common config
 	public static Property dropFilledContainers;
-	
+
 	public static Property machineBlock0Id;
 	public static Property machineBlock1Id;
 	public static Property machineBlock2Id;
-	
+
 	public static Property conveyorBlockId;
-	
+
 	public static Property factoryGlassBlockId;
 	public static Property factoryGlassPaneBlockId;
 	public static Property factoryRoadBlockId;
 	public static Property factoryDecorativeBrickBlockId;
 	public static Property factoryDecorativeStoneBlockId;
-	
+
 	public static Property rubberWoodBlockId;
 	public static Property rubberLeavesBlockId;
 	public static Property rubberSaplingBlockId;
-	
+
 	public static Property railPickupCargoBlockId;
 	public static Property railDropoffCargoBlockId;
 	public static Property railPickupPassengerBlockId;
 	public static Property railDropoffPassengerBlockId;
-	
+
 	public static Property rednetCableBlockId;
 	public static Property rednetLogicBlockId;
 	public static Property rednetPanelBlockId;
-	
+
 	public static Property fakeLaserBlockId;
-	
+
 	public static Property vineScaffoldBlockId;
-	
+
 	public static Property detCordBlockId;
-	
+
 	public static Property milkStillBlockId;
 	public static Property sludgeStillBlockId;
 	public static Property sewageStillBlockId;
@@ -56,7 +56,7 @@ public class MFRConfig
 	public static Property pinkslimeStillBlockId;
 	public static Property chocolateMilkStillBlockId;
 	public static Property mushroomSoupStillBlockId;
-	
+
 	public static Property hammerItemId;
 	public static Property milkItemId; //TODO: UNUSED
 	public static Property sludgeItemId; //TODO: UNUSED
@@ -121,9 +121,9 @@ public class MFRConfig
 	public static Property fishingRodItemId;
 	public static Property bagItemId;
 	public static Property plasticBootsItemId;
-	
+
 	public static Property zoolologistEntityId;
-	
+
 	public static Property colorblindMode;
 	public static Property treeSearchMaxVertical;
 	public static Property treeSearchMaxHorizontal;
@@ -141,11 +141,11 @@ public class MFRConfig
 	public static Property laserdrillCost;
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
-	
+
 	public static Property vanillaOverrideGlassPane;
 	public static Property vanillaOverrideIce;
 	public static Property vanillaOverrideMilkBucket;
-	
+
 	public static Property enableCheapDSU;
 	public static Property craftSingleDSU;
 	public static Property enableMossyCobbleRecipe;
@@ -162,16 +162,16 @@ public class MFRConfig
 	public static Property enableChunkLoaderRequiresOwner;
 	public static Property enableSmoothSlabRecipe;
 	public static Property enableCheapCL;
-	
+
 	public static Property redNetDebug;
 	public static Property redNetConnectionBlacklist;
-	
+
 	public static Property worldGenDimensionBlacklist;
-	
+
 	public static Property rubberTreeWorldGen;
 	public static Property rubberTreeBiomeWhitelist;
 	public static Property rubberTreeBiomeBlacklist;
-	
+
 	public static Property mfrLakeWorldGen;
 	public static Property mfrLakeSewageRarity;
 	public static Property mfrLakeSewageBiomeList;
@@ -179,24 +179,28 @@ public class MFRConfig
 	public static Property mfrLakeSludgeRarity;
 	public static Property mfrLakeSludgeBiomeList;
 	public static Property mfrLakeSludgeBiomeListToggle;
-	
+
+	public static Property mfrLakeSewageRetrogen;
+	public static Property mfrLakeSludgeRetrogen;
+	public static Property rubberTreeRetrogen;
+
 	public static Property unifierBlacklist;
 	public static Property spawnerBlacklist;
-	
+
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
-	
+
 	// recipes config
 	public static Property vanillaRecipes;
 	public static Property thermalExpansionRecipes;
 	public static Property gregTechRecipes;
-	
+
 	public static String CATEGORY_ITEM = "item";
-	
+
 	public static void loadClientConfig(File configFile)
 	{
 		Configuration c = new Configuration(configFile);
-		
+
 		spyglassRange = c.get(CATEGORY_GENERAL, "SpyglassRange", 200);
 		spyglassRange.comment = "The maximum number of blocks the spyglass and ruler can look to find something. This calculation is performed only on the client side.";
 		brightRednetBand = c.get(CATEGORY_GENERAL, "BrightRedNetColors", false);
@@ -204,26 +208,26 @@ public class MFRConfig
 		colorblindMode = c.get(CATEGORY_GENERAL, "EnableColorblindMode", false);
 		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
 		// TODO: expand this to as many textures as possible (cofh core config option?)
-		
+
 		c.save();
 	}
-	
+
 	//private static Configuration config;
-	
+
 	public static void loadCommonConfig(File configFile)
 	{
 		Configuration c = new Configuration(configFile);
 		c.load();
 		//config = c;
-		
+
 		String category = "Entity", subCategory = "";
 		zoolologistEntityId = c.get(category, "ID.Zoologist", 330).setRequiresMcRestart(true);
 		enableSpawnerCarts = c.get(category, "EnableSpawnerCarts", true);
 		enableSpawnerCarts.comment = "If true, using a portaspawner on an empty minecart will make it into a spawner cart";
-		
+
 		playSounds = c.get(CATEGORY_GENERAL, "PlaySounds", true);
 		playSounds.comment = "Set to false to disable the harvester's sound when a block is harvested.";
-		
+
 		//{ Searching
 		treeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + ".SearchDistance", "Tree.MaxHorizontal", 512);
 		treeSearchMaxHorizontal.comment = "When searching for parts of a tree, how far out to the sides (radius) to search";
@@ -240,7 +244,7 @@ public class MFRConfig
 		fruitTreeSearchMaxVertical = c.get(CATEGORY_GENERAL + ".SearchDistance", "FruitTree.MaxVertical", 20);
 		fruitTreeSearchMaxVertical.comment = "When searching for parts of a fruit tree, how far up to search";
 		//}
-		
+
 		//{ RedNet
 		category = CATEGORY_GENERAL + ".RedNet";
 		redNetDebug = c.get(category, "Debug", false);
@@ -248,12 +252,17 @@ public class MFRConfig
 		redNetConnectionBlacklist = c.get(category, "ConnectionBlackList", new String[] {}).setRequiresMcRestart(true);
 		redNetConnectionBlacklist.comment = "A list of block IDs to prevent RedNet cables from connecting to. (e.g., minecraft:torch)";
 		//}
-		
+
 		//{ Worldgen
 		category = CATEGORY_GENERAL + ".WorldGen";
 		worldGenDimensionBlacklist = c.get(category, "Dimension.Blacklist", new int[] {}).setRequiresMcRestart(true);
 		worldGenDimensionBlacklist.comment = "A list of dimension IDs to disable MFR worldgen in.";
-		
+
+		subCategory = category + ".Retrogen";
+		mfrLakeSewageRetrogen = c.get(subCategory, "SewageLakes", false).setRequiresMcRestart(true);
+		mfrLakeSludgeRetrogen = c.get(subCategory, "SludgeLakes", false).setRequiresMcRestart(true);
+		rubberTreeRetrogen = c.get(subCategory, "RubberTrees", false).setRequiresMcRestart(true);
+
 		subCategory = category + ".RubberTrees";
 		rubberTreeWorldGen = c.get(subCategory, "Enable", true).setRequiresMcRestart(true);
 		rubberTreeWorldGen.comment = "Whether or not to generate MFR rubber trees during map generation";
@@ -263,18 +272,18 @@ public class MFRConfig
 		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
 		enableMassiveTree = c.get(subCategory, "SacredRubberSapling", true).setRequiresMcRestart(true);
 		enableMassiveTree.comment = "If true, enable adding enchanted Sacred Rubber Saplings to jungle temple loot.";
-		
+
 		subCategory = category + ".Lakes";
 		mfrLakeWorldGen = c.get(subCategory, "Enable", true).setRequiresMcRestart(true);
 		mfrLakeWorldGen.comment = "Whether or not to generate MFR lakes during map generation. By default, MFR will not attempt lake worldgen in dimensions where the player cannot respawn.";
-		
+
 		mfrLakeSludgeRarity = c.get(subCategory + ".Sludge", "Rarity", 32).setRequiresMcRestart(true);
 		mfrLakeSludgeRarity.comment = "Higher numbers make sludge lakes rarer. A value of one will be approximately one per chunk. 0 will disable.";
 		mfrLakeSludgeBiomeList = c.get(subCategory + ".Sludge", "BiomeList", new String[] {}).setRequiresMcRestart(true);
 		mfrLakeSludgeBiomeList.comment = "A list of biomes to allow/disallow Sludge lakes to spawn in. Does nothing if lake worldgen is disabled.";
 		mfrLakeSludgeBiomeListToggle = c.get(subCategory + ".Sludge", "BiomeList.Mode", false).setRequiresMcRestart(true);
 		mfrLakeSludgeBiomeListToggle.comment = "If false, the biome list is a blacklist. If true, the biome list is a whitelist.";
-		
+
 		mfrLakeSewageRarity = c.get(subCategory + ".Sewage", "Rarity", 32).setRequiresMcRestart(true);
 		mfrLakeSewageRarity.comment = "Higher numbers make Sewage lakes rarer. A value of one will be approximately one per chunk. 0 will disable.";
 		mfrLakeSewageBiomeList = c.get(subCategory + ".Sewage", "BiomeList", new String[] {}).setRequiresMcRestart(true);
@@ -282,7 +291,7 @@ public class MFRConfig
 		mfrLakeSewageBiomeListToggle = c.get(subCategory + ".Sewage", "BiomeList.Mode", false).setRequiresMcRestart(true);
 		mfrLakeSewageBiomeListToggle.comment = "If false, the biome list is a blacklist. If true, the biome list is a whitelist.";
 		//}
-		
+
 		// Alternate recipe sets TODO: auto-register for config handling
 		vanillaRecipes = c.get("RecipeSets", "Vanilla", true).setRequiresMcRestart(true);
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
@@ -299,22 +308,22 @@ public class MFRConfig
 		vanillaOverrideMilkBucket = c.get(category, "MilkBucket", true).setRequiresMcRestart(true);
 		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
 		//}
-		
+
 		//{ misc. item changes
 		meatSaturation = c.get(CATEGORY_ITEM, "Meat.IncreasedSaturation", false).setRequiresMcRestart(true);
 		meatSaturation.comment = "If true, meat will be worth steak saturation instead of cookie saturation.";
 		fishingDropRate = c.get(CATEGORY_ITEM, "FishDropRate", 5);
 		fishingDropRate.comment = "The rate at which fish are dropped from the fishing rod. The drop rate is 1 / this number. Must be greater than 0.";
-		
+
 		enableSPAMRExploding = c.get(CATEGORY_ITEM, "SPAMR.Exploding", true);
 		enableSPAMRExploding.comment = "If true, SPAMRs will explode when they run out of fuel.";
 		enableFuelExploding = c.get(CATEGORY_ITEM, "Biofuel.Exploding", true);
 		enableFuelExploding.comment = "If true, biofuel will explode when in the nether.";
-		
+
 		enableLiquidSyringe = c.get(CATEGORY_ITEM, "LiquidSyringes", true).setRequiresMcRestart(true);
 		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
 		//}
-		
+
 		//{ Alterations to recipes
 		category = CATEGORY_ITEM + ".Recipe";
 		enableCheapDSU = c.get(category, "CheaperDSU",  false).setRequiresMcRestart(true);
@@ -336,7 +345,7 @@ public class MFRConfig
 		enableCheapCL = c.get(category, "CheaperChunkLoader", false).setRequiresMcRestart(true);
 		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
 		//}
-		
+
 		//{ Additional machine configs
 		conveyorCaptureNonItems = c.get("Machine.Conveyor", "CaptureNonItems", true).setRequiresMcRestart(true);
 		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
@@ -344,7 +353,7 @@ public class MFRConfig
 		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
 		conveyorNeverCapturesTCGolems = c.get("Machine.Conveyor", "NeverCaptureTCGolems", false).setRequiresMcRestart(true);
 		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture ThaumCraft golems regardless of other settings.";
-		
+
 		enableChunkLimitBypassing = c.get("Machine." + Machine.ChunkLoader.getName(), "IgnoreChunkLimit", false);
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
 		enableChunkLoaderRequiresOwner = c.get("Machine." + Machine.ChunkLoader.getName(), "RequiresOwnerOnline", false);
@@ -364,16 +373,16 @@ public class MFRConfig
 		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
 		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
 		//}
-		
+
 		for(Machine machine : Machine.values())
 		{
 			machine.load(c);
 		}
-		
+
 		// TODO: make this config per-player
 		dropFilledContainers = c.get(CATEGORY_GENERAL, "Tanks.FillWithoutEmptySlots", true);
 		dropFilledContainers.comment = "If true, when you have no empty slots in your inventory, you will continue filling buckets from tanks and drop them on the ground.";
-		
+
 		c.save();
 	}
 }

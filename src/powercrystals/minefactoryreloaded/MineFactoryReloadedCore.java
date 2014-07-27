@@ -7,6 +7,7 @@ import cofh.core.CoFHProps;
 import cofh.mod.BaseMod;
 import cofh.updater.UpdateManager;
 import cofh.util.RegistryUtils;
+import cofh.world.WorldHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -701,7 +702,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		VillagerRegistry.instance().registerVillageTradeHandler(MFRConfig.zoolologistEntityId.getInt(),
 				new VillageTradeHandler());
 
-		GameRegistry.registerWorldGenerator(new MineFactoryReloadedWorldGen(), 0);
+		WorldHandler.instance.registerFeature(new MineFactoryReloadedWorldGen());
 
 		UpdateManager.registerUpdater(new UpdateManager(this));
 	}
