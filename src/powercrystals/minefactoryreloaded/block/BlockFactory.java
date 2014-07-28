@@ -77,7 +77,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		if (!player.capabilities.isCreativeMode)
 		{
 			dropBlockAsItem(world, x, y, z, meta, 0);
-			world.setBlock(x, y, z, Blocks.air, 0, 4);
+			world.setBlock(x, y, z, Blocks.air, 0, 7);
 		}
 	}
 

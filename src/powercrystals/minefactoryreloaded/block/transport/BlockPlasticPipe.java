@@ -33,6 +33,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 	{
 		super(0.8F);
 		setBlockName("mfr.cable.plastic");
+		providesPower = true;
 	}
 
 	@Override

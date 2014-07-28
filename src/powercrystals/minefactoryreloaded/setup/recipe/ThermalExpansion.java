@@ -54,10 +54,9 @@ public class ThermalExpansion extends Vanilla
 	{
 		if(!Loader.isModLoaded(TE))
 		{
-			FMLLog.severe(MineFactoryReloadedCore.modId, Level.SEVERE,
-					"ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
+			MineFactoryReloadedCore.log().fatal("ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
 			throw new MissingModsException(Collections.
-					singleton((ArtifactVersion)new DefaultArtifactVersion(TE, "(3.0.0.2,]")));
+					singleton((ArtifactVersion)new DefaultArtifactVersion(TE)));
 		}
 		if(Loader.isModLoaded("ThermalDucts"))
 		{
@@ -94,10 +93,15 @@ public class ThermalExpansion extends Vanilla
 		invarPickaxe = GameRegistry.findItemStack(TE, "toolInvarPickaxe", 1);
 		invarShovel = GameRegistry.findItemStack(TE, "toolInvarShovel", 1);
 	}
-	
+
 	@Override
 	protected void registerMachines()
 	{
+		String prefix = "ingot";
+		if (false) {
+			prefix = "thermalexpansion:machine";
+		}
+
 		registerMachine(Machine.Planter, new Object[] {
 				"PTP",
 				"SFS",
@@ -106,7 +110,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.flower_pot,
 				'S', Blocks.piston,
 				'F', machineFrame,
-				'O', "ingotCopper",
+				'O', prefix + "Copper",
 				'C', powerCoilGold,
 					} );
 		
@@ -118,7 +122,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.fishing_rod,
 				'S', Items.bucket,
 				'F', machineFrame,
-				'O', "ingotIron",
+				'O', prefix + "Iron",
 				'C', powerCoilGold
 					} );
 		
@@ -130,7 +134,7 @@ public class ThermalExpansion extends Vanilla
 				'T', invarAxe,
 				'S', Items.shears,
 				'F', machineFrame,
-				'O', "ingotGold",
+				'O', prefix + "Gold",
 				'C', powerCoilGold
 					} );
 		
@@ -142,7 +146,7 @@ public class ThermalExpansion extends Vanilla
 				'T', conduitLiquid,
 				'S', Items.shears,
 				'F', machineFrame,
-				'O', "ingotTin",
+				'O', prefix + "Tin",
 				'C', powerCoilGold
 					} );
 		
@@ -154,7 +158,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.glass_bottle,
 				'S', Items.leather,
 				'F', machineFrame,
-				'O', "ingotNickel",
+				'O', prefix + "Nickel",
 				'C', powerCoilGold
 					} );
 		
@@ -165,7 +169,7 @@ public class ThermalExpansion extends Vanilla
 				'P', "sheetPlastic",
 				'T', MineFactoryReloadedCore.syringeEmptyItem,
 				'F', machineFrame,
-				'O', "ingotCopper",
+				'O', prefix + "Copper",
 				'C', powerCoilGold
 					} );
 		
@@ -187,7 +191,7 @@ public class ThermalExpansion extends Vanilla
 				'S', invarPickaxe,
 				'F', machineFrame,
 				'A', invarShovel,
-				'O', "ingotIron",
+				'O', prefix + "Iron",
 				'C', powerCoilGold
 					} );
 		
@@ -199,7 +203,7 @@ public class ThermalExpansion extends Vanilla
 				'B', Blocks.iron_bars,
 				'T', Items.bucket,
 				'F', machineFrame,
-				'O', "ingotCopper",
+				'O', prefix + "Copper",
 				'C', powerCoilGold
 					} );
 		
@@ -211,7 +215,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Items.bucket,
 				'S', Blocks.furnace,
 				'F', machineFrame,
-				'O', "ingotIron",
+				'O', prefix + "Iron",
 				'C', powerCoilGold
 					} );
 		
@@ -258,7 +262,7 @@ public class ThermalExpansion extends Vanilla
 				'T', invarSword,
 				'O', Items.book,
 				'F', machineFrame,
-				'S', "ingotTin",
+				'S', prefix + "Tin",
 				'C', powerCoilGold
 					} );
 		
@@ -387,7 +391,7 @@ public class ThermalExpansion extends Vanilla
 				'T', multimeter,
 				'O', Items.comparator,
 				'F', machineFrame,
-				'S', "ingotSilver",
+				'S', prefix + "Silver",
 				'C', Items.book
 					} );
 		
@@ -503,7 +507,7 @@ public class ThermalExpansion extends Vanilla
 				'A', Blocks.anvil,
 				'F', machineFrame,
 				'C', powerCoilGold,
-				'O', "ingotIron"
+				'O', prefix + "Iron"
 					} );
 		
 		registerMachine(Machine.BlockSmasher, new Object[] {
@@ -548,7 +552,7 @@ public class ThermalExpansion extends Vanilla
 				'S', Items.shears,
 				'F', machineFrame,
 				'C', powerCoilGold,
-				'O', "ingotTin"
+				'O', prefix + "Tin"
 					} );
 		
 		registerMachine(Machine.BlockPlacer, new Object[]
@@ -582,7 +586,7 @@ public class ThermalExpansion extends Vanilla
 				'T', dynamoSteam,
 				'S', Blocks.piston,
 				'F', machineFrame,
-				'O', "ingotSilver",
+				'O', prefix + "Silver",
 				'C', powerCoilSilver
 					} );
 		
@@ -594,7 +598,7 @@ public class ThermalExpansion extends Vanilla
 				'T', tesseract,
 				'E', cellResonant,
 				'F', tesseractFrameEmpty,
-				'O', "ingotElectrum",
+				'O', prefix + "Electrum",
 				'C', powerCoilElectrum
 					} );
 		if (MFRConfig.enableCheapCL.getBoolean(false))
@@ -607,7 +611,7 @@ public class ThermalExpansion extends Vanilla
 					'T', tesseractFrameEmpty,
 					'E', cellRedstone,
 					'F', machineFrame,
-					'O', "ingotElectrum",
+					'O', prefix + "Electrum",
 					'C', powerCoilElectrum
 						} );
 		}
@@ -620,7 +624,7 @@ public class ThermalExpansion extends Vanilla
 				'B', Blocks.iron_bars,
 				'T', tankBasic,
 				'F', machineFrame,
-				'O', "ingotNickel",
+				'O', prefix + "Nickel",
 				'C', powerCoilGold
 					} );
 		

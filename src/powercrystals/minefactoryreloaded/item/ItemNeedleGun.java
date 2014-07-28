@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cofh.util.ItemHelper;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,9 +53,9 @@ public class ItemNeedleGun extends ItemFactoryGun
 			for (int i = 0, e = inv.length; i < e; ++i)
 			{
 				ItemStack item = inv[i];
-				if (ammo.getItem().equals(item.getItem()))
+				if (item != null && ammo.getItem().equals(item.getItem()))
 				{
-					if (!creative && --inv[i].stackSize <= 0) inv[i] = null;
+					if (!creative) inv[i] = ItemHelper.consumeItem(item);
 					ammo.setItemDamage(0);
 					ammo.writeToNBT(t);
 					reloaded = true;

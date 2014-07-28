@@ -137,6 +137,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 	{
 		super(0.8F);
 		setBlockName("mfr.cable.redstone");
+		providesPower = true;
 	}
 
 	@Override

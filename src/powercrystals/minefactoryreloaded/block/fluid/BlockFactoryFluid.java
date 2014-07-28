@@ -10,7 +10,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -37,6 +39,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 { // TODO: convert to BlockFluidFinite
 	private static DamageSource steam = new DamageSource("steam").
 			setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
+	public static final Material material = new MaterialLiquid(MapColor.waterColor);
 
 	@SideOnly(Side.CLIENT)
 	protected IIcon _iconFlowing;
@@ -55,7 +58,12 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 	public BlockFactoryFluid(String liquidName)
 	{
-		super(ensureFluid(liquidName), Material.water, liquidName);
+		this(liquidName, Material.water);
+	}
+
+	public BlockFactoryFluid(String liquidName, Material material)
+	{
+		super(ensureFluid(liquidName), material, liquidName);
 		setBlockName("mfr.liquid." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);

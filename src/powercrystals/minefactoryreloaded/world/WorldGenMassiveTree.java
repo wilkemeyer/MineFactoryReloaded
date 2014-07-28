@@ -75,6 +75,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	private void setup() {
 		leafBases = MathHelper.ceiling_float_int(heightLimit * heightAttenuation);
 		density = Math.max(1, (int)(1.382D + Math.pow(branchDensity * heightLimit / 13.0D, 2.0D)));
+		chunkMap = new TLongObjectHashMap<Chunk>((int) (scaleWidth * heightLimit));
 	}
 
 	private float layerSize(int par1)
@@ -327,7 +328,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 					this.placeBlockLine(var5, var6, log, 1);
 					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2], log, 12 | 1);
 					worldObj.getBlock(var5[0], var5[1] - 1, var5[2]).
-							onPlantGrow(worldObj, var5[0], var5[1], var5[2], var1, var2, var4);
+							onPlantGrow(worldObj, var5[0], var5[1] - 1, var5[2], var1, var2, var4);
 				}
 			}
 		}
@@ -570,7 +571,6 @@ public class WorldGenMassiveTree extends WorldGenerator
 		else
 		{
 			this.setup();
-			//chunkMap = new TLongObjectHashMap<Chunk>((int) (scaleWidth * heightLimit));
 			//time = System.nanoTime() - time;
 			//logger.info("Verified spawn position of massive rubber tree in: " + time + "ns");
 			//long time2 = time = System.nanoTime();

@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded;
 //this import brought to you by the department of redundancies department, the department that brought you this import
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
+import org.apache.logging.log4j.Logger;
+
 import cofh.core.CoFHProps;
 import cofh.mod.BaseMod;
 import cofh.updater.UpdateManager;
@@ -320,6 +322,11 @@ public class MineFactoryReloadedCore extends BaseMod
 		return instance;
 	}
 
+	public static Logger log()
+	{
+		return instance.getLogger();
+	}
+
 	private static int itemOffset;
 	public static int getItemOffset()
 	{
@@ -423,7 +430,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		pinkSlimeLiquid = new BlockPinkSlimeFluid("pinkslime");
 		chocolateMilkLiquid = new BlockFactoryFluid("chocolatemilk");
 		mushroomSoupLiquid = new BlockFactoryFluid("mushroomsoup");
-		steamFluid = new BlockFactoryFluid("steam");
+		steamFluid = new BlockFactoryFluid("steam", BlockFactoryFluid.material);
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		plasticBootsItem = new ItemPlasticBoots();
@@ -565,7 +572,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		Blocks.fire.setFireInfo(rubberWoodBlock, 30, 15);
 		Blocks.fire.setFireInfo(rubberLeavesBlock, 80, 25);
 		Blocks.fire.setFireInfo(rubberSaplingBlock, 40, 20);
-		Blocks.fire.setFireInfo(detCordBlock, 10, 20);
+		Blocks.fire.setFireInfo(detCordBlock, 100, 20);
 		Blocks.fire.setFireInfo(biofuelLiquid, 300, 30);
 
 		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))

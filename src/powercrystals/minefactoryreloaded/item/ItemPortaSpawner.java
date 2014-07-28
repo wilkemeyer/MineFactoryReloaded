@@ -31,8 +31,6 @@ public class ItemPortaSpawner extends ItemFactory
 		{
 			if (tag.hasKey(spawnerTag))
 				return tag.getCompoundTag(spawnerTag);
-			if (tag.hasKey("EntityId"))
-				return tag;
 		}
 		return null;
 	}
