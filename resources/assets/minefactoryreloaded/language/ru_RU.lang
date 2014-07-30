@@ -21,7 +21,7 @@ tile.mfr.machine.liquidrouter.name = Маршрутизатор жидкости
 tile.mfr.machine.deepstorageunit.name = Глубокое хранилище
 tile.mfr.machine.liquicrafter.name = Создатель жидкости
 tile.mfr.machine.lavafabricator.name = Производитель лавы
-tile.mfr.machine.oilfabricator.name = Нефтепереработчик
+tile.mfr.machine.steamboiler.name = Паровой бойлер
 tile.mfr.machine.autojukebox.name = Авто-проигрыватель
 tile.mfr.machine.unifier.name = Унификатор
 tile.mfr.machine.autospawner.name = Авто-спаунер
@@ -104,21 +104,22 @@ tile.mfr.road.light.on.name = Светящаяся дорожка
 tile.mfr.road.light.inverted.off.name = Светящаяся дорожка (Перевёрнутая)
 tile.mfr.road.light.inverted.on.name = Светящаяся дорожка (Перевёрнутая)
 
-tile.mfr.decorativebrick.glowstone.name = Светящиеся кирпичи
+tile.mfr.plastic.name = Блок пластика
+
 tile.mfr.decorativebrick.ice.name = Ледяные кирпичи
+tile.mfr.decorativebrick.glowstone.name = Светящиеся кирпичи
 tile.mfr.decorativebrick.lapis.name = Лазуритовые кирпичи
 tile.mfr.decorativebrick.obsidian.name = Обсидиановые кирпичи
 tile.mfr.decorativebrick.pavedstone.name = Асфальтовые кирпичи
 tile.mfr.decorativebrick.snow.name = Снежные кирпичи
-tile.mfr.decorativebrick.glowstone_large.name = Широкие светящиеся кирпичи
 tile.mfr.decorativebrick.ice_large.name = Широкие ледяные кирпичи
+tile.mfr.decorativebrick.glowstone_large.name = Широкие светящиеся кирпичи
 tile.mfr.decorativebrick.lapis_large.name = Широкие лазуритовые кирпичи
 tile.mfr.decorativebrick.obsidian_large.name = Широкие обсидиановые кирпичи
+tile.mfr.decorativebrick.pavedstone_large.name = Большие мощённые каменные кирпичи
 tile.mfr.decorativebrick.snow_large.name = Широкие снежные кирпичи
-tile.mfr.machineblock.prc.name = Корпус программируемого RedNet контроллера
 tile.mfr.decorativebrick.meat.raw.name = Упаковка сырого мяса
 tile.mfr.decorativebrick.meat.cooked.name = Упаковка приготовленного мяса
-tile.mfr.decorativebrick.pavedstone_large.name = Большие мощённые каменные кирпичи
 tile.mfr.decorativebrick.brick_large.name = Большие кирпичи
 
 tile.mfr.decorativestone.black.smooth.name = Гладкий чёрный камень
@@ -140,7 +141,11 @@ tile.mfr.vinescaffold.name = Лиановые строительные леса
 
 tile.mfr.detcord.name = DetCord
 
+tile.mfr.farmland.name = Плодородная почва
+
 tile.mfr.rubberwood.sapling.name = Саженец гевеи
+tile.mfr.rubberwood.sapling.massive.name = Священный саженец гевеи
+tile.mfr.rubberwood.sapling.mega.name = Большой саженец гевеи
 tile.mfr.rubberwood.sapling.massive.name = Священный саженец гевеи
 tile.mfr.rubberwood.log.name = Древесина гевеи
 tile.mfr.rubberwood.leaves.name = Листва гевеи
@@ -155,8 +160,13 @@ tile.mfr.cable.redstone.name = RedNet кабель
 tile.mfr.cable.redstone.glass.name = RedNet кабель
 tile.mfr.cable.redstone.energy.name = RedNet энергетический кабель
 tile.mfr.cable.redstone.energyglass.name = RedNet энергетический кабель
+tile.mfr.cable.plastic.name = Пластиковая труба
+
 tile.mfr.rednet.logic.name = Программируемый RedNet контроллер
 tile.mfr.rednet.panel.historian.name = RedNet гистограф
+
+tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.prc.name = Корпус программируемого RedNet контроллера
 
 fluid.mfr.liquid.milk.still.name = Молоко
 fluid.mfr.liquid.sludge.still.name = Шлам
@@ -167,6 +177,7 @@ fluid.mfr.liquid.meat.still.namee = Фарш
 fluid.mfr.liquid.pinkslime.still.name = Розовая слизь
 fluid.mfr.liquid.chocolatemilk.still.name = Молочный шоколад
 fluid.mfr.liquid.mushroomsoup.still.name = Грибной суп
+fluid.mfr.liquid.steam.still.name = Пар
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Розовый слизень
 
@@ -192,6 +203,7 @@ item.mfr.armor.chest.plastic.name = Пластиковая кираса
 item.mfr.armor.legs.plastic.name  = Пластиковые поножи
 item.mfr.armor.boots.plastic.name = Пластиковые ботинки
 
+item.mfr.machineblock.name = Фабричный блок механизма
 item.mfr.hammer.name = Точная кувалда
 item.mfr.fertilizer.name = Промышленные удобрения
 item.mfr.plastic.sheet.name = Пластиковые листы
@@ -211,15 +223,18 @@ item.mfr.safarinet.reusable.name = Сафари сеть (Многоразова
 item.mfr.safarinet.singleuse.name = Сафари сеть (Одноразовая)
 item.mfr.safarinet.jailer.name = Тюремная сафари сеть
 item.mfr.safarinet.launcher.name = Метатель сети
-item.mfr.machineblock.name = Фабричномашинный блок
 item.mfr.sugarcharcoal.name = Сахарный уголь
 item.mfr.milkbottle.name = Бутылка молока
 item.mfr.spyglass.name = Подзорная труба
 item.mfr.xpextractor.name = Экстрактор опыта
 item.mfr.portaspawner.name = Портоспаунер
 item.mfr.straw.name = Соломка
+
 item.mfr.rednet.meter.name = RedNet измеритель
-item.mfr.rednet.memorycard.name =Карта памяти PRC 
+item.mfr.rednet.meter.info.name = RedNet мультиметр
+item.mfr.rednet.meter.debug.name = Предмет отладки
+item.mfr.rednet.memorycard.name = Карта памяти PRC
+
 item.mfr.ruler.name = Линейка
 item.mfr.meat.ingot.raw.name = Сырой мясной брикет
 item.mfr.meat.ingot.cooked.name = Приготовленный мясной брикет
@@ -299,9 +314,9 @@ chat.info.mfr.safarinet.capture = Режим изменён на захват
 chat.info.mfr.safarinet.release = Режим изменён на освобождение
 
 chat.info.mfr.spyglass.nosight = Ничто не видно
-chat.info.mfr.spyglass.hitentity = Найдено %s at %.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitblock = Найдено %s [%s:%d] at %.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitunknown = Найден НЕИЗВЕСТНЫЙ (ошибочный мод?) at %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitentity = Найдено %s на %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitblock = Найдено %s [%s:%d] на %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitunknown = Найден НЕИЗВЕСТНЫЙ (ошибочный мод?) на %.1f, %.1f, %.1f
 
 chat.info.mfr.ruler.nosight = Ничто не видно
 chat.info.mfr.ruler.hitentity = Ударена сущность - измерение провалилось
@@ -328,36 +343,50 @@ chat.info.mfr.rednet.connection.forced = Установить сторону н�
 chat.info.mfr.rednet.connection.forcedstrong = Установить сторону на режим сильной связи
 chat.info.mfr.rednet.connection.cableonly = Установить сторону на режим подключения "только провода"
 
+chat.info.mfr.fluid.connection.disabled = Установить сторону на режим отключенного подключения
+chat.info.mfr.fluid.connection.output = Установить сторону на режим выводного соединения
+chat.info.mfr.fluid.connection.extract = Установить сторону на режим извлекающего соединения
+
+chat.info.mfr.fluid.install.torch = Установлен красный факел, контроль красным камнем инвертирован
+chat.info.mfr.fluid.install.block = Установлен красный блок, контроль красным камнем отключен
+
 chat.info.mfr.bag.stacksize = Вы можете открыть только один пакет за раз
 
 chat.info.mfr.chunkloader.noticket = У Вас слишком много загрузчиков чанков и этот не может функционировать.
 
-tip.info.mfr.cannotplace = Не может быть размещён в течении %s секунд.
+# Tooltips: these can be added to any item by a lang file, but they cannot be removed
+# this is a limitation of the localization system.
+# Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
+# displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
 
-tip.info.mfr.holdShift1 = Удерживайте
-tip.info.mfr.holdShift2 = shift
-tip.info.mfr.holdShift3 = для большей информации
-
-tip.info.mfr.safarinet.mode = Приседание-клик, чтобы изменить режим
-tip.info.mfr.safarinet.jailer = Выпущенные существа не исчезают
-tip.info.mfr.safarinet.mystery = Это тайна
+tip.info.mfr.rubberwood.sapling.massive = Внимание: Pakratt's world ship.
 
 tip.info.mfr.prc = Если вы потерялись, прочитайте руководство (в игре)
 
-tip.info.mfr.needlegun.ammo = патронов
-
-tip.info.mfr.upgrade.radius = Увеличение радиуса:
-
 tip.info.mfr.xpextractor = Требуется пустой контейнер для заполнения
-
-tip.info.mfr.generator.produces = Вырабатывает МДж и РФ.
-
-tip.info.mfr.dsu.contains = Содержит
 
 tip.info.mfr.mobcounter = Излучает аналоговый сигнал красн. камня,\nпропорциональный количеству\nмобов, которые находятся в пределах действия.
 
 tip.info.mfr.laserdrill = Размещается над дырой к коренной породе или пустоте
 tip.info.mfr.laserdrillprecharger = Размещается в одном блоке от действительной цели лазера
+
+# These tooltips are not the entire tooltip, but part of a custom format or entry
+
+tip.info.mfr.cannotplace = Не может быть размещён в течении %s секунд.
+
+tip.info.mfr.safarinet.mode = Клик присев, чтобы изменить режим
+tip.info.mfr.safarinet.jailer = Выпущенные существа не исчезают
+tip.info.mfr.safarinet.mystery = Это тайна
+
+tip.info.mfr.memorycard.wipe = Положите в сетку создания, чтобы стереть
+
+tip.info.mfr.generator.produces = Вырабатывает только РФ.
+
+tip.info.mfr.dsu.contains = Содержит %s
+
+tip.info.mfr.needlegun.ammo = Патронов: %s
+
+tip.info.mfr.upgrade.radius = Увеличение радиуса: %s
 
 death.attack.mfr.slaughterhouse = %1$s был переработан в фарш
 death.attack.mfr.slaughterhouse.player = %1$s был обречён быть переработанным в фарш игроком %2$s
