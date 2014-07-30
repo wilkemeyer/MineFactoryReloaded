@@ -319,7 +319,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 		{
 			yVelocity = 0.17D * mult;
 		}
-		else if (entity.posY - y < 0.1 & entity.posY - y > 0)
+		else if ((entity.posY - y < 0.1) & entity.posY - y > -0.1)
 		{
 			entity.posY = y + 0.1;
 		}
@@ -390,7 +390,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 		if((md & 0x0C) == 0)
 		{
 			return AxisAlignedBB.getBoundingBox(x + shrink, y, z + shrink,
-					x + 1 - shrink, y + 0.1F, z + 1 - shrink);
+					x + 1 - shrink, y + 0.01F, z + 1 - shrink);
 		}
 		else
 		{

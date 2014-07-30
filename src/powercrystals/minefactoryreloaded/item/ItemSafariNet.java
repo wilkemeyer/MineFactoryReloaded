@@ -404,7 +404,7 @@ public class ItemSafariNet extends ItemFactory
 	
 	public static boolean isEmpty(ItemStack s)
 	{
-		return s == null || (s.getItemDamage() == 0 && (s.getTagCompound() == null || (!s.getTagCompound().hasKey("id") && !s.getTagCompound().getBoolean("hide"))));
+		return !isSafariNet(s) || (s.getItemDamage() == 0 && (s.getTagCompound() == null || (!s.getTagCompound().hasKey("id") && !s.getTagCompound().getBoolean("hide"))));
 	}
 	
 	public static boolean isSingleUse(ItemStack s)

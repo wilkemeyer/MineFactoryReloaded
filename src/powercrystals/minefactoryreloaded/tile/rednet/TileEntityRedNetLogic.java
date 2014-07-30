@@ -44,7 +44,6 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 	private int _variableCount = 16;
 
-	@SideOnly(Side.CLIENT)
 	private IRedNetLogicCircuit[] _prevCircuits = new IRedNetLogicCircuit[_circuitCount];
 
 	private IRedNetLogicCircuit[] _circuits = new IRedNetLogicCircuit[_circuitCount];

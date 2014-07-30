@@ -78,7 +78,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	protected boolean activateMachine()
 	{
 		ItemStack item = getStackInSlot(0);
-		if (item == null || !isItemValidForSlot(0, item))
+		if (item == null || !canInsertItem(0, item, 6))
 		{
 			setIdleTicks(getIdleTicksMax());
 			setWorkDone(0);

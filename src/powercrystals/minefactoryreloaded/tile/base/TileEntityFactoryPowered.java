@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.api.energy.IEnergyHandler;
-import cofh.api.core.IEnergyInfo;
 import cofh.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,7 +22,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
  * progress bar correctly.
  */
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-												implements IEnergyHandler, IEnergyInfo
+												implements IEnergyHandler
 {	
 	public static final int energyPerAE = 2;
 	public static final int energyPerEU = 4;
@@ -219,7 +218,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int storeEnergy(int energy) { return storeEnergy(energy, true); }
 
 	// TE methods
-
+/*
 	@Override
 	public int getInfoEnergyPerTick()
 	{
@@ -242,7 +241,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int getInfoMaxEnergyStored()
 	{
 		return getEnergyStoredMax();
-	}
+	}//*/
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)

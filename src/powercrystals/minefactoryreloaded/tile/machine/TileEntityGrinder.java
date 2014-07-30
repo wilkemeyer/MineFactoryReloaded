@@ -1,12 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.util.fluid.FluidTankAdv;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
@@ -36,14 +33,7 @@ import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
 
 public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	public static final int DAMAGE = 500000; 
-	private static Field recentlyHit;
-	
-	static
-	{
-		String[] q = ObfuscationReflectionHelper.remapFieldNames("net.minecraft.entity.EntityLivingBase", "field_70718_bc", "recentlyHit");
-		recentlyHit = ReflectionHelper.findField(EntityLivingBase.class, q);
-	}
+	public static final int DAMAGE = Integer.MAX_VALUE;
 	
 	protected Random _rand;
 	protected GrindingWorldServer _grindingWorld;
@@ -193,13 +183,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	
 	protected void setRecentlyHit(EntityLivingBase entity, int t)
 	{
-		try
-		{
-			recentlyHit.set(entity, t);
-		}
-		catch(Throwable e)
-		{
-		}
+		entity.recentlyHit = t;
 	}
 	
 	protected void damageEntity(EntityLivingBase entity)
