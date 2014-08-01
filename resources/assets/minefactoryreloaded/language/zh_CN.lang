@@ -1,5 +1,3 @@
-#zh_CN
-
 tile.mfr.machine.planter.name = 播种机
 tile.mfr.machine.fisher.name = 钓鱼机
 tile.mfr.machine.harvester.name = 收割机
@@ -106,21 +104,22 @@ tile.mfr.road.light.on.name = 铺路灯
 tile.mfr.road.light.inverted.off.name = 铺路灯(反相)
 tile.mfr.road.light.inverted.on.name = 铺路灯(反相)
 
-tile.mfr.decorativebrick.glowstone.name = 荧光砖块
+tile.mfr.plastic.name = 塑料块
+
 tile.mfr.decorativebrick.ice.name = 冰砖块
+tile.mfr.decorativebrick.glowstone.name = 荧光砖块
 tile.mfr.decorativebrick.lapis.name = 青金石砖块
 tile.mfr.decorativebrick.obsidian.name = 黑曜石砖块
 tile.mfr.decorativebrick.pavedstone.name = 铺路石砖块
 tile.mfr.decorativebrick.snow.name = 雪砖块
-tile.mfr.decorativebrick.glowstone_large.name = 大型荧光砖块
 tile.mfr.decorativebrick.ice_large.name = 大型冰砖块
+tile.mfr.decorativebrick.glowstone_large.name = 大型荧光砖块
 tile.mfr.decorativebrick.lapis_large.name = 大型青金石砖块
 tile.mfr.decorativebrick.obsidian_large.name = 大型黑曜石砖块
+tile.mfr.decorativebrick.pavedstone_large.name = 大型铺路石砖
 tile.mfr.decorativebrick.snow_large.name = 大型雪砖块
-tile.mfr.machineblock.prc.name = 可编程红石网络控制器外壳
 tile.mfr.decorativebrick.meat.raw.name = 生肉块
 tile.mfr.decorativebrick.meat.cooked.name = 烤肉块
-tile.mfr.decorativebrick.pavedstone_large.name = 大型铺路石砖
 tile.mfr.decorativebrick.brick_large.name = 大型砖块
 
 tile.mfr.decorativestone.black.smooth.name = 光滑黑岩
@@ -136,7 +135,6 @@ tile.mfr.decorativestone.white.brick.large.name = 大型白岩砖块
 tile.mfr.decorativestone.white.gravel.name = 白岩砂砾
 tile.mfr.decorativestone.white.paved.name = 铺路白岩
 
-
 tile.ice.unmelting.name = 不融冰
 
 tile.mfr.vinescaffold.name = 藤蔓脚手架
@@ -144,6 +142,7 @@ tile.mfr.vinescaffold.name = 藤蔓脚手架
 tile.mfr.detcord.name = DetCord
 
 tile.mfr.farmland.name = 沃土
+
 tile.mfr.rubberwood.sapling.name = 橡胶树树苗
 tile.mfr.rubberwood.sapling.sacred.name = 神圣橡胶树树苗
 tile.mfr.rubberwood.sapling.mega.name = 宏伟橡胶树树苗
@@ -161,18 +160,18 @@ tile.mfr.cable.redstone.name = 红石线缆
 tile.mfr.cable.redstone.glass.name = 红石线缆
 tile.mfr.cable.redstone.energy.name = 红石能量线缆
 tile.mfr.cable.redstone.energyglass.name = 红石能量线缆
+tile.mfr.cable.plastic.name = 塑料管道
+
 tile.mfr.rednet.logic.name = 可编程红石控制器
 tile.mfr.rednet.panel.historian.name = 波形记录器
 
-fluid.mfr.liquid.milk.flowing.name = 牛奶
+tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.prc.name = 可编程红石网络控制器外壳
+
 fluid.mfr.liquid.milk.still.name = 牛奶
-
 fluid.mfr.liquid.sludge.still.name = 污泥
-
 fluid.mfr.liquid.sewage.still.name = 污水
-
 fluid.mfr.liquid.mobessence.still.name = 精华液
-
 fluid.mfr.liquid.biofuel.still.name = 生物燃油
 fluid.mfr.liquid.meat.still.name = 肉汤
 fluid.mfr.liquid.pinkslime.still.name = 粉色粘液
@@ -211,28 +210,31 @@ item.mfr.plastic.sheet.name = 塑料片
 item.mfr.plastic.raw.name = 生塑料
 item.mfr.rubber.bar.name = 橡胶杆
 item.mfr.rubber.raw.name = 生橡胶
-item.mfr.syringe.cure.name = 去僵尸化注射器
+item.mfr.syringe.cure.name = 僵尸疫苗注射器
 item.mfr.syringe.empty.name = 空注射器
 item.mfr.syringe.empty.prefix.name =
 item.mfr.syringe.empty.suffix.name = 注射器
 item.mfr.syringe.growth.name = 生长激素注射器
 item.mfr.syringe.health.name = 治愈药水注射器
-item.mfr.syringe.slime.name = 史莱姆巨大化激素注射器
+item.mfr.syringe.slime.name = 史莱姆增殖素注射器
 item.mfr.syringe.zombie.name = 僵尸病毒注射器
 item.mfr.record.blank.name = 空唱片
 item.mfr.safarinet.reusable.name = 大师球
 item.mfr.safarinet.singleuse.name = 一次性大师球
 item.mfr.safarinet.jailer.name = 狱卒的大师球
 item.mfr.safarinet.launcher.name = 大师球发射器
-
 item.mfr.sugarcharcoal.name = 竹炭
-item.mfr.milkbottle.name = 奶瓶
+item.mfr.milkbottle.name = 牛奶瓶
 item.mfr.spyglass.name = 单筒望远镜
 item.mfr.xpextractor.name = XP提取器
 item.mfr.portaspawner.name = 刷怪笼-大师球
 item.mfr.straw.name = 吸管
+
 item.mfr.rednet.meter.name = 红石网络读数表
+item.mfr.rednet.meter.info.name = 红石网络万用表
+item.mfr.rednet.meter.debug.name = 调试器
 item.mfr.rednet.memorycard.name = PRC内存卡
+
 item.mfr.ruler.name = 尺子
 item.mfr.meat.ingot.raw.name = 生肉锭
 item.mfr.meat.ingot.cooked.name = 烤肉锭
@@ -242,7 +244,6 @@ item.mfr.pinkslimeball.name = 粉色粘液球
 item.mfr.rocket.name = 自推进反物质火箭
 item.mfr.rocket.smart.name = 追踪型自导航反物质火箭
 item.mfr.rocketlauncher.name = 自推进反物质火箭发射筒
-
 item.mfr.fishingrod.name = 炸鱼竿
 item.mfr.plastic.bag.name = 塑料包
 
@@ -354,7 +355,6 @@ circuit.mfr.oneshot = 单次脉冲器
 circuit.mfr.or.2 = 或门(2-输入)
 circuit.mfr.or.3 = 或门(3-输入)
 circuit.mfr.or.4 = 或门(4-输入)
-
 circuit.mfr.passthrough = 通过器
 circuit.mfr.passthrough.gated = 通过器(门控)
 circuit.mfr.passthrough.roundrobin = 通过器(环形)
@@ -379,6 +379,7 @@ circuit.mfr.xor.4 = 异或(4-输入)
 
 container.mfr.radius = 半径:
 container.mfr.power = 能量图:
+
 chat.info.mfr.safarinet.capture=切换为捕获模式
 chat.info.mfr.safarinet.release=切换为释放模式
 
@@ -404,37 +405,64 @@ chat.info.mfr.rednet.memorycard.uploaded=PRC程序已经从插入PRC的内存卡
 chat.info.mfr.rednet.memorycard.downloaded=PRC程序已经下载到插入PRC的内存卡中
 chat.info.mfr.rednet.memorycard.error=PRC元件不足以运行该程序
 
+chat.info.mfr.rednet.tile.standard = 设置线缆为标准连接模式
+chat.info.mfr.rednet.tile.cableonly = 设置线缆为均与线缆连接模式
+
 chat.info.mfr.rednet.connection.standard=设置线缆为标准连接模式
 chat.info.mfr.rednet.connection.forced=设置线缆为强制连接模式
 chat.info.mfr.rednet.connection.forcedstrong=设置线缆为强连接模式
 chat.info.mfr.rednet.connection.cableonly=设置线缆为均与线缆连接模式
-death.attack.mfr.slaughterhouse=%1$s被加工成了肉汤。
-tip.info.mfr.cannotplace = 无法放置%s 秒.
 
-tip.info.mfr.safarinet.mode = 潜行点击改变模式
-tip.info.mfr.safarinet.jailer = 释放出来的生物不会正常消失
-tip.info.mfr.safarinet.mystery = 这是个秘密
+chat.info.mfr.fluid.connection.disabled = 设置为禁用连接模式
+chat.info.mfr.fluid.connection.output = 设置为输出连接模式
+chat.info.mfr.fluid.connection.extract = 设置为提取连接模式
+
+chat.info.mfr.fluid.install.torch = 安装红石火把,红石信号控制反相
+chat.info.mfr.fluid.install.block = 安装红石块,红石信号控制禁用
+
+chat.info.mfr.bag.stacksize = 你每次只能打开一个背包
+
+chat.info.mfr.chunkloader.noticket = 你的区块加载器太多了因此它不能正常工作.
+
+# Tooltips: these can be added to any item by a lang file, but they cannot be removed
+# this is a limitation of the localization system.
+# Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
+# displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
+
+tip.info.mfr.rubberwood.sapling.massive = Warning: Pakratt's world ship.
 
 tip.info.mfr.prc = 如果你不知所措,请阅读(游戏内) 手册
 
-tip.info.mfr.needlegun.ammo = 圈
-
-tip.info.mfr.upgrade.radius = 半径增加:
-
 tip.info.mfr.xpextractor = 需要一个空箱
-
-tip.info.mfr.generator.produces = 只产生RF.
-
-tip.info.mfr.dsu.contains = 包含
 
 tip.info.mfr.mobcounter = 发生一个模拟红石信号\n部分计数\n范围内产生的怪物.
 
 tip.info.mfr.laserdrill = 放置于基岩或者虚空之上
-tip.info.mfr.laserdrillprecharger = 放置于有些激光目标一个远的地方
-death.attack.mfr.grinder=%1$s被磨碎成了渣渣。
-death.attack.mfr.grinder.player=%2$s确信%1$s已经被磨碎成了渣渣。
-death.attack.mfr.laser=%1$s被激光分解了.
-death.attack.mfr.laser.player=%2$s确信%1$s已经被激光分解掉了.
-death.attack.mfr.slaughterhouse.player=%1$s被%2$s加工成了肉汤。 
-death.attack.mfr.slaughterhouse.1=%1$s被加工成了肉酱。
-death.attack.mfr.slaughterhouse.1.player=%1$s被%2$s加工成了肉酱。
+tip.info.mfr.laserdrillprecharger = 放置于有些激光目标一格远的地方
+
+# These tooltips are not the entire tooltip, but part of a custom format or entry
+
+tip.info.mfr.cannotplace = 无法放置%s 秒.
+
+tip.info.mfr.safarinet.mode = 潜行点击改变模式
+tip.info.mfr.safarinet.jailer = 释放出来的生物不会被刷新而消失(despawn)
+tip.info.mfr.safarinet.mystery = 这是个秘密
+
+tip.info.mfr.memorycard.wipe = 放入合成栏消除
+
+tip.info.mfr.generator.produces = 只产生RF.
+
+tip.info.mfr.dsu.contains = 包含 %s
+
+tip.info.mfr.needlegun.ammo = %s 圈
+
+tip.info.mfr.upgrade.radius = 半径增加: %s
+
+death.attack.mfr.slaughterhouse = %1$s被加工成了肉汤。
+death.attack.mfr.slaughterhouse.player = %1$s被%2$s加工成了肉汤。 
+death.attack.mfr.slaughterhouse.1 = %1$s被加工成了肉酱。
+death.attack.mfr.slaughterhouse.1.player = %1$s被%2$s加工成了肉酱。
+death.attack.mfr.grinder = %1$s被磨碎成了渣渣。
+death.attack.mfr.grinder.player = %2$s确信%1$s已经被磨碎成了渣渣。
+death.attack.mfr.laser = %1$s被激光分解了.
+death.attack.mfr.laser.player = %2$s确信%1$s已经被激光分解掉了.
