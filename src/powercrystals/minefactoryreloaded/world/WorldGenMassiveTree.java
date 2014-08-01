@@ -56,6 +56,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	 */
 	private int leafDistanceLimit = 4;
 
+	private int leafNodesLength;
 	/** Contains a list of a points at which to generate groups of leaves. */
 	private int[][] leafNodes;
 	
@@ -162,8 +163,8 @@ public class WorldGenMassiveTree extends WorldGenerator
 			--var6;
 		}
 
-		leafNodes = new int[var4][4];
-		System.arraycopy(var2, 0, leafNodes, 0, var4);
+		leafNodes = var2;
+		leafNodesLength = var4;
 	}
 
 	private void genLeafLayer(int x, int y, int z, final int size)
@@ -217,7 +218,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	{
 		int[][] leafNodes = this.leafNodes;
 
-		for (int i = 0, e = leafNodes.length; i < e; ++i)
+		for (int i = 0, e = leafNodesLength; i < e; ++i)
 		{
 			int[] n = leafNodes[i];
 			int x = n[0], yO = n[1], z = n[2];
@@ -349,9 +350,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 	void generateLeafNodeBases()
 	{
 		int[] start = new int[] {basePos[0], basePos[1], basePos[2]};
+		int[][] leafNodes = this.leafNodes;
 
 		int heightLimit = (int) (this.heightLimit * 0.2f);
-		for (int i = 0, e = leafNodes.length; i < e; ++i)
+		for (int i = 0, e = leafNodesLength; i < e; ++i)
 		{
 			int[] end = leafNodes[i];
 			start[1] = end[3];
@@ -609,14 +611,14 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return;
 		//++blocksAdded;
 		long pos = (((long)(x & ~15)) << 32) | (z & ~15);
-		Chunk chunk = chunkMap.get(pos);
-		if (chunk == null)
+			
+		Chunk chunk;// = chunkMap.get(pos);
+		//if (chunk == null)
 		{
 			chunk = world.getChunkFromBlockCoords(x, z);
 			chunkMap.put(pos, chunk);
 		}
 
-        chunk.isModified = true;
 		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 		ExtendedBlockStorage subChunk = storage[y >> 4];
 		if (subChunk == null)
