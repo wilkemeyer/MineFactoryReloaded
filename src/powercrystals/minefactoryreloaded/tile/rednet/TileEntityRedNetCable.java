@@ -184,8 +184,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	@Override
 	public void updateInternalTypes(IGridController grid)
 	{
-		boolean lastNode = isRSNode;
 		if (grid != RedstoneNetwork.HANDLER) return;
+		boolean lastNode = isRSNode;
 		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
 		for (ForgeDirection d : dirs)
 			updateNearbyNode(d);
@@ -200,25 +200,25 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			_network.addConduit(this);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	public void updateNearbyNode(ForgeDirection from)
 	{
 		updateNearbyNode(getSideColor(from), from);
 	}
-	
+
 	public void updateNearbyNode(int subnet, ForgeDirection from)
 	{
 		BlockPosition bp = new BlockPosition(xCoord, yCoord, zCoord, from);
 		bp.step(from);
 		updateNearbyNode(bp, subnet);
 	}
-	
+
 	private void updateNearbyNode(BlockPosition bp, int subnet)
 	{
 		if (_network == null)
 			return;
 		RedNetConnectionType connectionType = getConnectionState(bp.orientation);
-		
+
 		if (!connectionType.isDecorative & connectionType.isConnected && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
 		{
 			if (connectionType.isAllSubnets)
@@ -236,7 +236,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	public int getWeakPower(ForgeDirection to)
 	{
 		if (_network == null)
@@ -249,9 +249,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		BlockPosition nodebp = new BlockPosition(xCoord, yCoord, zCoord, to);
 		nodebp.step(to);
-		
+
 		int subnet = getSideColor(to), power;
-		
+
 		RedstoneNetwork.log("Asked for weak power at " + xCoord + "," + yCoord + "," + zCoord + ";" + to);
 		if (_network.isPowerProvider(subnet, nodebp))
 		{
@@ -265,7 +265,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		return power;
 	}
-	
+
 	public int getStrongPower(ForgeDirection to)
 	{
 		if (_network == null)
@@ -299,7 +299,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return power;
 		}
 	}
-	
+
 	@Override
 	public boolean onPartHit(EntityPlayer player, int side, int subHit)
 	{
@@ -311,20 +311,20 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	{
 		return subHit < 2 | ((subHit >= (2 + 6 * 3)) & subHit < (2 + 6 * 5));
 	}
-	
+
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
 	{
 		addTraceableCuboids(list, forTrace, false);
 	}
-	
+
 	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw)
 	{
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
-		
+
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
-		
+
 		ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
 		for (int i = sides.length; i --> 0; )
 		{
@@ -403,12 +403,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			box.drawSide[i] = box.sideLength[i] > 0;
 		return box;
 	}
-	
+
 	public boolean canInterface(TileEntityRedNetCable with)
 	{
 		return !isNotValid();
 	}
-	
+
 	public String getRedNetInfo(ForgeDirection side, EntityPlayer player) {
 		// TODO: localize
 		String o;
@@ -446,17 +446,17 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return;
 		}
 	}
-	
+
 	public int getSideColorValue(ForgeDirection side)
 	{
 		return (MFRUtil.COLORS[getSideColor(side) & 15] << 8) | 0xFF;
 	}
-	
+
 	public byte getMode(int side)
 	{
 		return _cableMode[side];
 	}
-	
+
 	public void setMode(int side, byte mode)
 	{
 		boolean mustUpdate = (mode != _cableMode[side]);
@@ -466,20 +466,20 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			getConnectionState(ForgeDirection.getOrientation(side));
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public RedNetConnectionType getCachedConnectionState(ForgeDirection side)
 	{
 		return _connectionState[side.ordinal()];
 	}
-	
+
 	public RedNetConnectionType getConnectionState(ForgeDirection side)
 	{
 		RedNetConnectionType type = getConnectionState(side, true);
 		_connectionState[side.ordinal()] = type;
 		return type;
 	}
-	
+
 	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative)
 	{
 		byte _mode = _cableMode[side.ordinal()];
@@ -487,7 +487,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			_mode = 1;
 		if (_cableMode[6] == 1)
 			_mode = 3;
-		
+
 		int x, y, z;
 		{
 			BlockPosition bp = new BlockPosition(this);
@@ -495,10 +495,10 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			bp.moveForwards(1);
 			x = bp.x; y = bp.y; z = bp.z;
 		}
-		
+
 		Block b = worldObj.getBlock(x, y, z);
 		boolean node = false;
-		
+
 		// air - never connect
 		if (b.isAir(worldObj, x, y, z))
 		{
@@ -517,7 +517,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		{
 			return RedNetConnectionType.None;
 		}
-		
+
 		short nodeFlags = -1;
 		if (b instanceof IRedNetConnection) // API node - let them figure it out
 		{
@@ -535,7 +535,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		{
 			return RedNetConnectionType.None;
 		}
-		
+
 		/**
 		 * The else/if chain is broken here and no values are directly
 		 * returned from the function below here for support of API nodes
@@ -583,7 +583,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
@@ -592,7 +592,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		tag.setByte("v", (byte)3);
 		tag.setByteArray("cableMode", _cableMode);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
@@ -621,7 +621,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			break;
 		}
 	}
-	
+
 	public void setSideColor(ForgeDirection side, int color)
 	{
 		if(side == ForgeDirection.UNKNOWN)
@@ -631,7 +631,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		_sideColors[side.ordinal()] = color;
 		//updateNetwork();
 	}
-	
+
 	public int getSideColor(ForgeDirection side)
 	{
 		if(side == ForgeDirection.UNKNOWN)
@@ -651,7 +651,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
     {
         return false;
     }
-	
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -666,7 +666,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{

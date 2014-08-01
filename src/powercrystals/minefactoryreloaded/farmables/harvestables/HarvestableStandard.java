@@ -57,7 +57,7 @@ public class HarvestableStandard implements IFactoryHarvestable
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
-		return _block.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 	
 	@Override

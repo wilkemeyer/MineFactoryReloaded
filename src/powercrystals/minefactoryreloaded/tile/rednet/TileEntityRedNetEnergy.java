@@ -110,7 +110,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		super.firstTick(grid);
 		if (worldObj == null || worldObj.isRemote) return;
 		if (grid != RedstoneEnergyNetwork.HANDLER) return;
-		reCache();
 		if (_grid == null) {
 			incorporateTiles();
 			if (_grid != null)
@@ -123,6 +122,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			setGrid(new RedstoneEnergyNetwork(this));
 			markDirty();
 		}
+		reCache();
 		Packets.sendToAllPlayersWatching(this);
 	}
 
@@ -173,9 +173,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			;
 		}
 		if (!deadCache) {
-			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
-			if (lastMode != sideMode[side])
+			if (lastMode != sideMode[side]) {
+				RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
 		}
 	}
 
@@ -476,7 +477,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 		if (_grid != null)
 			_grid.addConduit(this);
-		markDirty();
 		Packets.sendToAllPlayersWatching(this);
 	}
 

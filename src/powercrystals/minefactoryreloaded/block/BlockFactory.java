@@ -175,7 +175,10 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityBase)
 		{
-			((TileEntityBase)te).onNeighborBlockChange();
+			if (blockId != this)
+				((TileEntityBase)te).onNeighborBlockChange();
+			else
+				((TileEntityBase)te).onMatchedNeighborBlockChange();
 		}
 	}
 	

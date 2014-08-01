@@ -188,7 +188,15 @@ public class IMCHandler
 				 */
 				else if ("registerRedNetLogicCircuit".equals(k))
 				{
-					MFRRegistry.registerRedNetLogicCircuit((IRedNetLogicCircuit) getValue(m));
+					if (m.isStringMessage())
+					{
+						MFRRegistry.registerRedNetLogicCircuit((IRedNetLogicCircuit)
+								Class.forName(m.getStringValue()).newInstance());
+					}
+					else
+					{
+						MFRRegistry.registerRedNetLogicCircuit((IRedNetLogicCircuit) getValue(m));
+					}
 				}
 				/*
 				 * Rubber tree biome whitelisting
@@ -461,7 +469,8 @@ public class IMCHandler
 			}
 			catch (Throwable _)
 			{
-				bigWarning(_log, Level.ERROR, "Bad IMC message (%s) from %s", m.key, m.getSender(), _);
+				bigWarning(_log, Level.ERROR, "Bad IMC message (%s) from %s", m.key, m.getSender());
+				_log.catching(_);
 			}
 		}
 	}

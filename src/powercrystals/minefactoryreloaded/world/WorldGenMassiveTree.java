@@ -605,10 +605,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 	@Override
 	public void setBlockAndNotifyAdequately(World world, int x, int y, int z, Block block, int meta)
 	{
-		if (y < 0 || y > 255)
+		if ((y < 0) | y > 255)
 			return;
 		//++blocksAdded;
-		long pos = ((long)(x & ~15) << 32) | (z & ~15);
+		long pos = (((long)(x & ~15)) << 32) | (z & ~15);
 		Chunk chunk = chunkMap.get(pos);
 		if (chunk == null)
 		{
@@ -616,6 +616,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			chunkMap.put(pos, chunk);
 		}
 
+        chunk.isModified = true;
 		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 		ExtendedBlockStorage subChunk = storage[y >> 4];
 		if (subChunk == null)

@@ -38,6 +38,8 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 
 	public void onNeighborBlockChange() {}
 
+	public void onMatchedNeighborBlockChange() {}
+
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {}
 
 	private static final long HASH_A = 0x1387D;

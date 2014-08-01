@@ -19,49 +19,56 @@ import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 public class GridTickHandler<G extends IGrid, N extends INode> implements IGridController
 {
+	public static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> energy =
+			new GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy>("Energy");
+	public static final GridTickHandler<RedstoneNetwork, TileEntityRedNetCable> redstone =
+			new GridTickHandler<RedstoneNetwork, TileEntityRedNetCable>("Redstone");
+	public static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> fluid =
+			new GridTickHandler<FluidNetwork, TileEntityPlasticPipe>("Fluid");
+
 	private LinkedHashSet<G> tickingGridsToRegenerate = new LinkedHashSet<G>();
 	private LinkedHashSet<G> tickingGridsToAdd = new LinkedHashSet<G>();
 	private LinkedHashSet<G> tickingGrids = new LinkedHashSet<G>();
 	private LinkedHashSet<G> tickingGridsToRemove = new LinkedHashSet<G>();
-	
+
 	private LinkedHashSet<N> conduit = new LinkedHashSet<N>();
 	private LinkedHashSet<N> conduitToAdd = new LinkedHashSet<N>();
 	private LinkedHashSet<N> conduitToUpd = new LinkedHashSet<N>();
-	
-	public static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> energy =
-			new GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy>();
-	public static final GridTickHandler<RedstoneNetwork, TileEntityRedNetCable> redstone =
-			new GridTickHandler<RedstoneNetwork, TileEntityRedNetCable>();
-	public static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> fluid =
-			new GridTickHandler<FluidNetwork, TileEntityPlasticPipe>();
-	
+
+	private final String label;
+
+	public GridTickHandler(String name) {
+		name.hashCode();
+		label = "GridTickHandler[" + name + "]";
+	}
+
 	public void addGrid(G grid)
 	{
 		tickingGridsToAdd.add(grid);
 		tickingGridsToRemove.remove(grid);
 	}
-	
+
 	public void removeGrid(G grid)
 	{
 		tickingGridsToRemove.add(grid);
 		tickingGridsToAdd.remove(grid);
 	}
-	
+
 	public void regenerateGrid(G grid)
 	{
 		tickingGridsToRegenerate.add(grid);
 	}
-	
+
 	public boolean isGridTicking(G grid)
 	{
 		return tickingGrids.contains(grid);
 	}
-	
+
 	public void addConduitForTick(N node)
 	{
 		conduitToAdd.add(node);
 	}
-	
+
 	public void addConduitForUpdate(N node)
 	{
 		conduitToUpd.add(node);
@@ -170,5 +177,10 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			}
 		}
 		//}
+	}
+
+	@Override
+	public String toString() {
+		return label + "@" + hashCode();
 	}
 }

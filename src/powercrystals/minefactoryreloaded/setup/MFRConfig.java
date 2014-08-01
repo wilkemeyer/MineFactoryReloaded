@@ -258,10 +258,11 @@ public class MFRConfig
 		worldGenDimensionBlacklist = c.get(category, "Dimension.Blacklist", new int[] {}).setRequiresMcRestart(true);
 		worldGenDimensionBlacklist.comment = "A list of dimension IDs to disable MFR worldgen in.";
 
-		subCategory = category + ".Retrogen";
+		subCategory = category + ".RetroGen";
+		c.getCategory(subCategory).setComment("Enable or disable specific retrogen items. Only has an effect if retroactive geneneration is enabled in CoFHCore.");
 		mfrLakeSewageRetrogen = c.get(subCategory, "SewageLakes", false).setRequiresMcRestart(true);
 		mfrLakeSludgeRetrogen = c.get(subCategory, "SludgeLakes", false).setRequiresMcRestart(true);
-		rubberTreeRetrogen = c.get(subCategory, "RubberTrees", false).setRequiresMcRestart(true);
+		rubberTreeRetrogen = c.get(subCategory, "RubberTrees", true).setRequiresMcRestart(true);
 
 		subCategory = category + ".RubberTrees";
 		rubberTreeWorldGen = c.get(subCategory, "Enable", true).setRequiresMcRestart(true);

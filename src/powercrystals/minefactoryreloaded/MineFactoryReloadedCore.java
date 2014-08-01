@@ -327,12 +327,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		return instance.getLogger();
 	}
 
-	private static int itemOffset;
-	public static int getItemOffset()
-	{
-		return itemOffset;
-	}
-
 	public static void registerFluids()
 	{
 		registerFluid("milk",          1050,           EnumRarity.common);
