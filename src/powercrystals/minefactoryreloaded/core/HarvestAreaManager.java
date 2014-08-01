@@ -52,9 +52,9 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		_areaDown = harvestAreaDown;
 		_upgradeModifier = upgradeModifier;
 		
-		_originX = ((TileEntity)owner).xCoord;
-		_originY = ((TileEntity)owner).yCoord;
-		_originZ = ((TileEntity)owner).zCoord;
+		_originX = owner.xCoord;
+		_originY = owner.yCoord;
+		_originZ = owner.zCoord;
 		_originOrientation = owner.getDirectionFacing();
 		hasDirtyUpgrade = false;
 		_usesBlocks = usesBlocks;

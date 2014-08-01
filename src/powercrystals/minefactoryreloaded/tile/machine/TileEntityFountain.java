@@ -35,7 +35,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	public TileEntityFountain()
 	{
 		super(Machine.Fountain);
-		createHAM(this, 0, 0, 0, 1.0f, false);
+		createHAM(this, 0, 0, 0, false);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
 		_areaManager.setUpgradeVertical(true);
 		_reverse = false;

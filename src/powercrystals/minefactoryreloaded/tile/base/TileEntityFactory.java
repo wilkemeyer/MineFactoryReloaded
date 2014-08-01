@@ -39,6 +39,14 @@ public abstract class TileEntityFactory extends TileEntityBase
 				{ 0, 1, 5, 4, 2, 3 }, // 4 W
 				{ 0, 1, 4, 5, 3, 2 }, // 5 E
 			};
+	protected static class FactoryAreaManager extends HarvestAreaManager<TileEntityFactory>
+	{
+		public FactoryAreaManager(TileEntityFactory owner, int harvestRadius,
+				int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
+		{
+			super(owner, harvestRadius, harvestAreaUp, harvestAreaDown, upgradeModifier, usesBlocks);
+		}
+	}
 	
 	private ForgeDirection _forwardDirection;
 	private boolean _canRotate = false;
@@ -99,11 +107,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		createHAM(owner, harvestRadius, 0, 0, 1.0f, true);
 	}
-
-	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown)
-	{
-		createHAM(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, true);
-	}
 	
 	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
 			boolean usesBlocks)
@@ -114,7 +117,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
 			float upgradeModifier, boolean usesBlocks)
 	{
-		owner._areaManager = new HarvestAreaManager<TileEntityFactory>(owner, harvestRadius, harvestAreaUp, harvestAreaDown,
+		owner._areaManager = new FactoryAreaManager(owner, harvestRadius, harvestAreaUp, harvestAreaDown,
 				upgradeModifier, usesBlocks);
 	}
 	
