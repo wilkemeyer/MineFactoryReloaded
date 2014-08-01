@@ -24,11 +24,11 @@ public class WorldGenRubberTree extends WorldGenerator
 	@Override
 	public boolean generate(World world, Random rand, int x, int retries, int z)
 	{
-		for(int c = 0; c < retries; c++)
+		for (int c = 0; c < retries; c++)
 		{
-			int y = world.getActualHeight();
+			int y = world.getChunkFromBlockCoords(x, z).getTopFilledSegment() + 16;
 
-			l:{ 
+			l: { 
 				Block block;
 				do {
 					if (--y <= 0)
@@ -59,7 +59,7 @@ public class WorldGenRubberTree extends WorldGenerator
 				worldHeight = world.getHeight();
 		Block block;
 
-		if(y >= 1 && y + treeHeight + 1 <= worldHeight)
+		if (y >= 1 && y + treeHeight + 1 <= worldHeight)
 		{
 			int xOffset;
 			int yOffset;
@@ -73,16 +73,15 @@ public class WorldGenRubberTree extends WorldGenerator
 			{
 				for (yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset)
 				{
-					byte radius = 1;
-
-					if (yOffset <= y + 1)
-					{
-						radius = 0;
-					}
+					byte radius;
 
 					if (yOffset >= y + 1 + treeHeight - 2)
 					{
 						radius = 2;
+					}
+					else
+					{
+						radius = 0;
 					}
 
 					if (yOffset >= 0 & yOffset < worldHeight)
@@ -96,6 +95,23 @@ public class WorldGenRubberTree extends WorldGenerator
 									block.canBeReplacedByLeaves(world, x, yOffset, z)))
 							{
 								return false;
+							}
+
+							if (yOffset >= y + 1)
+							{
+								radius = 1;
+								for (xOffset = x - radius; xOffset <= x + radius; ++xOffset)
+								{
+									for (zOffset = z - radius; zOffset <= z + radius; ++zOffset)
+									{
+										block = world.getBlock(xOffset, yOffset, zOffset);
+
+										if (block.getMaterial().isLiquid())
+										{
+											return false;
+										}
+									}
+								}
 							}
 						}
 						else for (xOffset = x - radius; xOffset <= x + radius; ++xOffset)

@@ -5,6 +5,7 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 
 import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IBlockInfo;
+import cofh.util.ItemHelper;
 import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -68,6 +69,8 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 						dropBlockAsItem(world, x, y, z, new ItemStack(Blocks.redstone_block));
 				}
 				if (!world.isRemote) {
+					if (!player.capabilities.isCreativeMode)
+						player.setCurrentItemOrArmor(0, ItemHelper.consumeItem(s));
 					cable.setUpgrade(1);
 					onNeighborBlockChange(world, x, y, z, this);
 					player.addChatMessage(new ChatComponentTranslation(
@@ -84,6 +87,8 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 						dropBlockAsItem(world, x, y, z, new ItemStack(Blocks.redstone_torch));
 				}
 				if (!world.isRemote) {
+					if (!player.capabilities.isCreativeMode)
+						player.setCurrentItemOrArmor(0, ItemHelper.consumeItem(s));
 					cable.setUpgrade(2);
 					onNeighborBlockChange(world, x, y, z, this);
 					player.addChatMessage(new ChatComponentTranslation(

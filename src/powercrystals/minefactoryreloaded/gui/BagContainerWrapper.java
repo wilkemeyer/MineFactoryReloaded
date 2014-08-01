@@ -29,7 +29,10 @@ public class BagContainerWrapper implements IInventory
 	public void markDirty()
 	{
 		for (int i = _stacks.length; i --> 0; )
-			_inventory.setTag("slot" + i, _stacks[i] == null ? null : _stacks[i].writeToNBT(new NBTTagCompound()));
+			if (_stacks[i] == null)
+				_inventory.removeTag("slot" + i);
+			else
+				_inventory.setTag("slot" + i, _stacks[i].writeToNBT(new NBTTagCompound()));
 		_stack.setTagInfo("inventory", _inventory);
 	}
 	
