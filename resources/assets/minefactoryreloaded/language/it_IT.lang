@@ -149,7 +149,7 @@ tile.mfr.rubberwood.sapling.mega.name = Mega arboscello della gomma
 tile.mfr.rubberwood.sapling.massive.name = Arboscello della gomma sacro
 tile.mfr.rubberwood.log.name = Legno della gomma
 tile.mfr.rubberwood.leaves.name = Foglie della gomma
-tile.mfr.rubberwood.leaves.dry.name = Dry Rubber Leaves
+tile.mfr.rubberwood.leaves.dry.name = Foglie della gomma secche
 
 tile.mfr.rail.cargo.dropoff.name = Binario dropoff per merci
 tile.mfr.rail.cargo.pickup.name = Binario pickup per merci
