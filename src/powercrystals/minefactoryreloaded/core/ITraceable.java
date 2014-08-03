@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.core;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-import codechicken.lib.raytracer.IndexedCuboid6;
+import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 
 import java.util.List;
 

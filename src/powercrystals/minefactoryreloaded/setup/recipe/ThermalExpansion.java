@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.setup.recipe;
 
 import static cofh.util.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
-import cpw.mods.fml.common.FMLLog;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.MissingModsException;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -10,7 +10,6 @@ import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 
 import java.util.Collections;
-import java.util.logging.Level;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -98,7 +97,7 @@ public class ThermalExpansion extends Vanilla
 	protected void registerMachines()
 	{
 		String prefix = "ingot";
-		if (false) {
+		if (true) {
 			prefix = "thermalexpansion:machine";
 		}
 

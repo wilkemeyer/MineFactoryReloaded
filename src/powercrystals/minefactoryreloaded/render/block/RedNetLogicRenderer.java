@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.render.block;
 
-import codechicken.lib.lighting.LightModel;
-import codechicken.lib.render.CCModel;
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.uv.IconTransformation;
-import codechicken.lib.vec.Rotation;
-import codechicken.lib.vec.Scale;
-import codechicken.lib.vec.Translation;
-import codechicken.lib.vec.Vector3;
+import cofh.repack.codechicken.lib.lighting.LightModel;
+import cofh.repack.codechicken.lib.render.CCModel;
+import cofh.repack.codechicken.lib.render.CCRenderState;
+import cofh.repack.codechicken.lib.render.uv.IconTransformation;
+import cofh.repack.codechicken.lib.vec.Rotation;
+import cofh.repack.codechicken.lib.vec.Scale;
+import cofh.repack.codechicken.lib.vec.Translation;
+import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 import java.util.Map;

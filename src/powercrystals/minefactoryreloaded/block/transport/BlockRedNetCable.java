@@ -2,16 +2,12 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
-import codechicken.lib.raytracer.IndexedCuboid6;
-import codechicken.lib.raytracer.RayTracer;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Vector3;
 import cofh.api.block.IBlockInfo;
+import cofh.repack.codechicken.lib.raytracer.RayTracer;
+import cofh.repack.codechicken.lib.vec.Cuboid6;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -24,7 +20,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -263,15 +258,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 			}
 		}
 		return false;
-	}
-
-	public MovingObjectPosition collisionRayTrace(IBlockAccess world, int x, int y, int z, Vec3 start, Vec3 end)
-	{
-		List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileEntityRedNetCable)
-			((TileEntityRedNetCable)te).addTraceableCuboids(cuboids, true);
-		return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
 	}
 
 	@Override

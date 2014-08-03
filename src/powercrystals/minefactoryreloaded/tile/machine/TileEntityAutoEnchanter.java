@@ -57,7 +57,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@Override
 	public int getWorkMax()
 	{
-		if(getStackInSlot(0) != null && getStackInSlot(0).getItem().equals(Items.glass_bottle))
+		if(_inventory[0] != null && _inventory[0].getItem().equals(Items.glass_bottle))
 		{
 			return 250;
 		}
@@ -67,7 +67,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@SuppressWarnings("unchecked")
 	private double getEnchantmentMultiplier()
 	{
-		ItemStack s = getStackInSlot(0);
+		ItemStack s = _inventory[0];
 		if(s == null)
 		{
 			return 1;
@@ -111,8 +111,8 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		{
 			return false;
 		}
-		ItemStack input = getStackInSlot(0);
-		ItemStack output = getStackInSlot(1);
+		ItemStack input = _inventory[0];
+		ItemStack output = _inventory[1];
 		if(input == null)
 		{
 			setWorkDone(0);
@@ -137,13 +137,13 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 				output = null;
 			}
 		}
-		if((input.getItem().getItemEnchantability() == 0 &&
+		if ((input.getItem().getItemEnchantability() == 0 &&
 				!input.getItem().equals(Items.glass_bottle)) ||
 				input.getItem().equals(Items.enchanted_book))
 		{
 			if (output == null)
 			{
-				setInventorySlotContents(0, null);
+				_inventory[0] = null;
 				setInventorySlotContents(1, input);
 			}
 			else if (input.isItemEqual(output) && ItemStack.areItemStackTagsEqual(input, output))
@@ -170,22 +170,22 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			setWorkDone(0);
 			return true;
 		}
-		else if(getWorkDone() >= getWorkMax())
+		else if (getWorkDone() >= getWorkMax())
 		{
-			if(input.getItem().equals(Items.glass_bottle))
+			if (input.getItem().equals(Items.glass_bottle))
 			{
 				if (output == null)
 				{
 					output = new ItemStack(Items.experience_bottle, 0, 0);
 				}
-				if (!output.equals(Items.experience_bottle))
+				if (!output.getItem().equals(Items.experience_bottle))
 				{
 					setWorkDone(0);
 					return false;
 				}
 				if (--input.stackSize <= 0)
 				{
-					setInventorySlotContents(0, null);
+					_inventory[0] = null;
 				}
 				output.stackSize++;
 				setInventorySlotContents(1, output);
@@ -196,7 +196,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 				output = AutoEnchantmentHelper.addRandomEnchantment(this._rand, input, _targetLevel);
 				if (input.stackSize <= 0)
 				{
-					setInventorySlotContents(0, null);
+					_inventory[0] = null;
 				}
 				setInventorySlotContents(1, output);
 				setWorkDone(0);
@@ -207,7 +207,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			}
 			return true;
 		}
-		else if(drain(_tanks[0], 4, false) == 4)
+		else if (drain(_tanks[0], 4, false) == 4)
 		{
 			drain(_tanks[0], 4, true);
 			setWorkDone(getWorkDone() + 1);
@@ -242,7 +242,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	{
 		if(slot == 0)
 		{
-			ItemStack contents = this.getStackInSlot(0);
+			ItemStack contents = _inventory[0];
 			// TODO: limit input to glass bottles and items with an enchantability > 0
 			return contents == null || (contents.stackSize < getInventoryStackLimit() &&
 					input.isItemEqual(contents) && ItemStack.areItemStackTagsEqual(input, contents));

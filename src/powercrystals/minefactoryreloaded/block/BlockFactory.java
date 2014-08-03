@@ -1,12 +1,12 @@
 package powercrystals.minefactoryreloaded.block;
 
-import codechicken.lib.raytracer.IndexedCuboid6;
-import codechicken.lib.raytracer.RayTracer;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
 import cofh.api.block.IDismantleable;
 import cofh.render.hitbox.ICustomHitBox;
 import cofh.render.hitbox.RenderHitbox;
+import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import cofh.repack.codechicken.lib.raytracer.RayTracer;
+import cofh.repack.codechicken.lib.vec.BlockCoord;
+import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -246,8 +246,15 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 
 	protected ThreadLocal<Boolean> draw = new ThreadLocal<Boolean>();
 
+
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
+	{
+		MovingObjectPosition r = collisionRayTrace((IBlockAccess)world, x, y, z, start, end);
+		return r != null ? r : super.collisionRayTrace(world, x, y, z, start, end);
+	}
+
+	public MovingObjectPosition collisionRayTrace(IBlockAccess world, int x, int y, int z, Vec3 start, Vec3 end)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof ITraceable)
@@ -256,7 +263,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 			((ITraceable)te).addTraceableCuboids(cuboids, true, draw.get() == Boolean.TRUE);
 			return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
 		}
-		return super.collisionRayTrace(world, x, y, z, start, end);
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -77,6 +77,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			return;
 		}
 
+		markChunkDirty();
+
 		int energyRequired = Math.min(getEnergyStoredMax() - getEnergyStored(),
 				getActivationEnergy() + energyFudge);
 

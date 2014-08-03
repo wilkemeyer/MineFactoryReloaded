@@ -491,6 +491,7 @@ public class TileEntityConveyor extends TileEntityBase
 			updateConveyorActive();
 		}
 		setReversed(_gateReversed | (_rednetReversed = value < 0));
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
 	public void updateConveyorActive()

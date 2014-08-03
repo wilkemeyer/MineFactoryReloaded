@@ -376,10 +376,11 @@ public class Vanilla
 				{
 				"GGG",
 				"OTO",
-				"OBO",
+				"NBN",
 				'G', "sheetPlastic",
-				'T', bucket,
-				'O', nether_brick,
+				'T', Items.cauldron,
+				'O', obsidian,
+				'N', nether_brick_stairs,
 				'B', SludgeBoiler,
 				'M', machineBaseItem,
 				} );

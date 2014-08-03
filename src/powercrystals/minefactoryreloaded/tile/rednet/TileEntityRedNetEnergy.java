@@ -4,11 +4,11 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerEU;
 import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork.TRANSFER_RATE;
 
-import codechicken.lib.raytracer.IndexedCuboid6;
-import codechicken.lib.vec.Vector3;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
+import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -112,17 +112,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (grid != RedstoneEnergyNetwork.HANDLER) return;
 		if (_grid == null) {
 			incorporateTiles();
-			if (_grid != null)
-			{
-				markDirty();
+			if (_grid == null) {
+				setGrid(new RedstoneEnergyNetwork(this));
 			}
 		}
-		if (_grid == null)
-		{
-			setGrid(new RedstoneEnergyNetwork(this));
-			markDirty();
-		}
 		reCache();
+		markDirty();
 		Packets.sendToAllPlayersWatching(this);
 	}
 
@@ -488,6 +483,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					sideMode[ForgeDirection.OPPOSITES[side]] ^= 1;
 					RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 					Packets.sendToAllPlayersWatching(this);
+					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+					markDirty();
 				}
 				return true;
 			}
