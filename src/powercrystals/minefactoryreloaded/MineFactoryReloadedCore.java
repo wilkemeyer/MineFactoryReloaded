@@ -27,8 +27,10 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,9 +49,13 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
@@ -105,6 +111,7 @@ import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
+import powercrystals.minefactoryreloaded.gui.BagContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
 import powercrystals.minefactoryreloaded.item.ItemFactory;
@@ -699,6 +706,49 @@ public class MineFactoryReloadedCore extends BaseMod
 			ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 3), 1, 1, 1));
 		}
 		//}
+		
+		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.sapling, 2), 1, 16, 7) {
+			@Override
+			protected ItemStack[] generateChestContent(Random random, IInventory newInventory)
+			{
+				ItemStack item = theItemId.copy();
+				item.setItemDamage(random.nextInt(6));
+				return ChestGenHooks.generateStacks(random, item, theMinimumChanceToGenerateItem, theMaximumChanceToGenerateItem);
+			}
+		};
+		
+		//{ Fishing
+		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(rubberSaplingBlock, 1, 0), 5));
+		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(plasticSheetItem, 1, 0), 10));
+		FishingHooks.addTreasure(new WeightedRandomFishable(VillageTradeHandler.getHiddenNetStack(), 1));
+		FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(plasticBagItem, 1, 0), 1) {
+			Random rand = new Random();
+			List<WeightedRandomChestContent> loot = Arrays.asList(
+					new WeightedRandomChestContent(new ItemStack(safariNetSingleItem, 1), 1, 1, 35),
+					new WeightedRandomChestContent(new ItemStack(Blocks.sand, 4), 1, 16, 20),
+					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 16), 1, 16, 16),
+					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 23), 1, 23, 16),
+					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 6), 1, 6, 16),
+					new WeightedRandomChestContent(new ItemStack(Items.paper), 1, 16, 14),
+					new WeightedRandomChestContent(new ItemStack(spyglassItem, 1), 1, 1, 7),
+					saplings,
+					new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5),
+					new WeightedRandomChestContent(new ItemStack(Items.reeds, 3), 1, 3, 1),
+					new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds, 1), 1, 1, 1),
+					new WeightedRandomChestContent(new ItemStack(Items.melon_seeds, 1), 1, 1, 1)
+					);
+			@Override
+			public ItemStack func_150708_a(Random p_150708_1_)
+			{
+				ItemStack a = field_150711_b.copy();
+				a.setTagInfo("loot", new NBTTagByte((byte) 1));
+				BagContainerWrapper w = new BagContainerWrapper(a);
+				w.setInventorySlotContents(rand.nextInt(w.getSizeInventory()),
+						((WeightedRandomChestContent)WeightedRandom.getRandomItem(rand, loot)).theItemId);
+				return w.getStack();
+			}
+		});
+		//}
 
 		//{ DimensionalDoors chestgen compat
 		// reference weights[iron: 160; coal: 120; gold: 80; golden apple: 10]
@@ -742,15 +792,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.reeds), 1, 16, 7));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds), 1, 16, 7));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.snowball), 1, 16, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Blocks.sapling), 1, 16, 7) {
-			@Override
-			protected ItemStack[] generateChestContent(Random random, IInventory newInventory)
-			{
-				ItemStack item = theItemId.copy();
-				item.setItemDamage(random.nextInt(6));
-				return ChestGenHooks.generateStacks(random, item, theMinimumChanceToGenerateItem, theMaximumChanceToGenerateItem);
-			}
-		});
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(saplings);
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(portaSpawnerItem), 1, 1, 1));
 		//}
