@@ -12,6 +12,7 @@ import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.energy.tile.IEnergyTile;
@@ -436,14 +437,25 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			if (sinkCache != null) {
 				IEnergySink sink = sinkCache[bSide];
 				if (sink == null) return 0;
-				int e = (int)Math.min(sink.getMaxSafeInput() * (long)energyPerEU, energy);
-				e = Math.min((int)(sink.demandedEnergyUnits() * energyPerEU), e);
+				int e = (int)Math.min(getPowerFromTier(sink.getSinkTier()) * energyPerEU, energy);
+				e = Math.min((int)(sink.getDemandedEnergy() * energyPerEU), e);
 				if (e > 0) {
-					e -= (int)Math.ceil(sink.injectEnergyUnits(side, e / (float)energyPerEU) * energyPerEU);
+					float v = e / (float)energyPerEU;
+					e -= (int)Math.ceil(sink.injectEnergy(side, v, getPowerFromTier(getTierFromPower(v))) * energyPerEU);
 					return e;
 				}
 			}
 			return 0;
+		}
+		private double getPowerFromTier(int t) {
+			if (EnergyNet.instance != null)
+				return EnergyNet.instance.getPowerFromTier(t);
+			return t * 32;
+		}
+		private int getTierFromPower(double t) {
+			if (EnergyNet.instance != null)
+				return EnergyNet.instance.getTierFromPower(t);
+			return 1;
 		}
 		@Override
 		public String toString()
