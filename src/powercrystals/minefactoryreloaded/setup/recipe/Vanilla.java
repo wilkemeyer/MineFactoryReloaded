@@ -3,14 +3,13 @@ package powercrystals.minefactoryreloaded.setup.recipe;
 import static cofh.util.ItemHelper.*;
 import static net.minecraft.init.Blocks.*;
 import static net.minecraft.init.Items.*;
-import static net.minecraftforge.oredict.OreDictionary.registerOre;
+import static net.minecraftforge.oredict.OreDictionary.*;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.*;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -35,6 +34,7 @@ public class Vanilla
 	private static boolean _registeredGuns;
 	private static boolean _registeredRedNet;
 	private static boolean _registeredRedNetManual;
+	private static boolean _registeredOreDict;
 
 	protected static String[] DYES = { "Black", "Red", "Green", "Brown",
 		"Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime",
@@ -62,8 +62,35 @@ public class Vanilla
 		registerRedNetManual();
 	}
 
-	public void registerOredictEntries()
+	public static void registerOredict()
 	{
+		if (_registeredOreDict) return;
+		_registeredOreDict = true;
+
+		registerOre("itemRubber",        rubberBarItem);
+		registerOre("itemRawRubber",     rawRubberItem);
+		registerOre("woodRubber",        rubberWoodBlock);
+		registerOre("leavesRubber",      rubberLeavesBlock);
+		registerOre("blockPlastic",      factoryPlasticBlock);
+		registerOre("sheetPlastic",      plasticSheetItem);
+		registerOre("dustPlastic",       rawPlasticItem);
+		registerOre("ingotMeat",         meatIngotCookedItem);
+		registerOre("ingotMeatRaw",      meatIngotRawItem);
+		registerOre("nuggetMeat",        meatNuggetCookedItem);
+		registerOre("nuggetMeatRaw",     meatNuggetRawItem);
+		registerOre("blockMeat",         stack(factoryDecorativeBrickBlock, 1, 13));
+		registerOre("blockMeatRaw",      stack(factoryDecorativeBrickBlock, 1, 12));
+		registerOre("itemCharcoalSugar", sugarCharcoalItem);
+		registerOre("cableRedNet",       stack(rednetCableBlock, 1, 0));
+		registerOre("cableRedNet",       stack(rednetCableBlock, 1, 1));
+		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 2));
+		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 3));
+		registerOre("slimeball",         pinkSlimeballItem);
+		registerOre("dyeBrown",          fertilizerItem);
+		registerOre("fertilizerOrganic", fertilizerItem);
+		registerOre("wireExplosive",     detCordBlock);
+		registerOre("listAllmilk",       milkBottleItem);
+
 		{ // GLASS:
 			String pane = "paneGlass", glass = "blockGlass";
 			ItemStack glassStack = stack2(factoryGlassBlock, 1);
@@ -83,10 +110,17 @@ public class Vanilla
 			}
 		}
 
-		registerOre("stone", stack(factoryDecorativeStoneBlock, 8, 0));
-		registerOre("stone", stack(factoryDecorativeStoneBlock, 8, 1));
+		registerOre("stone",       stack(factoryDecorativeStoneBlock, 1, 0));
+		registerOre("stone",       stack(factoryDecorativeStoneBlock, 1, 1));
 		registerOre("cobblestone", stack(factoryDecorativeStoneBlock, 1, 2));
 		registerOre("cobblestone", stack(factoryDecorativeStoneBlock, 1, 3));
+
+		// vanilla items
+		registerOre("listAllmilk", milk_bucket);
+	}
+
+	public void registerOredictEntries()
+	{
 	}
 
 	protected void gatherItems()
@@ -1104,11 +1138,11 @@ public class Vanilla
 		if (_registeredSmelting) return;
 		_registeredSmelting = true;
 
-		for (ItemStack s : OreDictionary.getOres("itemRubber"))
+		for (ItemStack s : getOres("itemRubber"))
 			addSmelting(stack(rawPlasticItem), s, 0.3F);
-		for (ItemStack s : OreDictionary.getOres("blockPlastic"))
+		for (ItemStack s : getOres("blockPlastic"))
 			addSmelting(stack(rawPlasticItem, 4), s);
-		for (ItemStack s : OreDictionary.getOres("sheetPlastic"))
+		for (ItemStack s : getOres("sheetPlastic"))
 			addSmelting(stack(rawPlasticItem), s);
 
 		addSmelting(stack(rawPlasticItem, 2), plasticBagItem);
@@ -1217,7 +1251,7 @@ public class Vanilla
 			'S', "stickWood",
 				} ));
 
-		for (ItemStack torchStone : OreDictionary.getOres("torchStone"))
+		for (ItemStack torchStone : getOres("torchStone"))
 		{
 			if (torchStone == null)
 				continue;

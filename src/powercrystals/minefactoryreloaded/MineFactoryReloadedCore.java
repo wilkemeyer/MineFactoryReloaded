@@ -3,8 +3,6 @@ package powercrystals.minefactoryreloaded;
 //this import brought to you by the department of redundancies department, the department that brought you this import
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
-import org.apache.logging.log4j.Logger;
-
 import cofh.core.CoFHProps;
 import cofh.mod.BaseMod;
 import cofh.updater.UpdateManager;
@@ -60,7 +58,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.logging.log4j.Logger;
 
 import powercrystals.minefactoryreloaded.block.BlockDetCord;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
@@ -563,9 +562,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerBlock(mushroomSoupLiquid, mushroomSoupLiquid.getUnlocalizedName());
 		GameRegistry.registerBlock(steamFluid, steamFluid.getUnlocalizedName());
 
-		Blocks.fire.setFireInfo(rubberWoodBlock, 30, 15);
+		Blocks.fire.setFireInfo(rubberWoodBlock, 50, 15);
 		Blocks.fire.setFireInfo(rubberLeavesBlock, 80, 25);
-		Blocks.fire.setFireInfo(rubberSaplingBlock, 40, 20);
+		Blocks.fire.setFireInfo(rubberSaplingBlock, 30, 20);
 		Blocks.fire.setFireInfo(detCordBlock, 100, 20);
 		Blocks.fire.setFireInfo(biofuelLiquid, 300, 30);
 
@@ -614,40 +613,11 @@ public class MineFactoryReloadedCore extends BaseMod
 		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityRocket.class, "Rocket", 3, instance, 160, 1, true);
 		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, instance, 80, 3, true);
-
-		OreDictionary.registerOre("itemRubber", MineFactoryReloadedCore.rubberBarItem);
-		OreDictionary.registerOre("itemRawRubber", MineFactoryReloadedCore.rawRubberItem);
-		OreDictionary.registerOre("woodRubber", MineFactoryReloadedCore.rubberWoodBlock);
-		OreDictionary.registerOre("leavesRubber", MineFactoryReloadedCore.rubberLeavesBlock);
-		OreDictionary.registerOre("blockPlastic", MineFactoryReloadedCore.factoryPlasticBlock);
-		OreDictionary.registerOre("sheetPlastic", MineFactoryReloadedCore.plasticSheetItem);
-		OreDictionary.registerOre("dustPlastic", MineFactoryReloadedCore.rawPlasticItem);
-		OreDictionary.registerOre("ingotMeat", MineFactoryReloadedCore.meatIngotCookedItem);
-		OreDictionary.registerOre("ingotMeatRaw", MineFactoryReloadedCore.meatIngotRawItem);
-		OreDictionary.registerOre("nuggetMeat", MineFactoryReloadedCore.meatNuggetCookedItem);
-		OreDictionary.registerOre("nuggetMeatRaw", MineFactoryReloadedCore.meatNuggetRawItem);
-		OreDictionary.registerOre("blockMeat",
-				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 13));
-		OreDictionary.registerOre("blockMeatRaw",
-				new ItemStack(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 1, 12));
-		OreDictionary.registerOre("itemCharcoalSugar", MineFactoryReloadedCore.sugarCharcoalItem);
-		OreDictionary.registerOre("cableRedNet", new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 0));
-		OreDictionary.registerOre("cableRedNet", new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 1));
-		OreDictionary.registerOre("cableRedNetEnergy",
-				new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 2));
-		OreDictionary.registerOre("cableRedNetEnergy",
-				new ItemStack(MineFactoryReloadedCore.rednetCableBlock, 1, 3));
-		OreDictionary.registerOre("slimeball", MineFactoryReloadedCore.pinkSlimeballItem);
-		OreDictionary.registerOre("dyeBrown", MineFactoryReloadedCore.fertilizerItem);
-		OreDictionary.registerOre("fertilizerOrganic", MineFactoryReloadedCore.fertilizerItem);
-		OreDictionary.registerOre("wireExplosive", MineFactoryReloadedCore.detCordBlock);
-		OreDictionary.registerOre("listAllmilk", MineFactoryReloadedCore.milkBottleItem);
+		
+		Vanilla.registerOredict();
 
 		for (Vanilla e : recipeSets)
 			e.registerOredictEntries();
-
-		// vanilla items
-		OreDictionary.registerOre("listAllmilk", Items.milk_bucket);
 
 		Items.wooden_door.setMaxStackSize(8);
 		Items.iron_door.setMaxStackSize(8);

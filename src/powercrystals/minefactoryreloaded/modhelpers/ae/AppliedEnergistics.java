@@ -22,13 +22,8 @@ public class AppliedEnergistics
 			return;
 		}
 		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
-				"powercrystals.minefactoryreloaded.tile.base.TileEntityFactory" );
-		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
-				"powercrystals.minefactoryreloaded.tile.conveyor.TileEntityConveyor" );
-		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
-				"powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic" );
-		FMLInterModComms.sendMessage( "appliedenergistics2", "whitelist-spatial",
-				"powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable" );
+				"powercrystals.minefactoryreloaded.tile.base.TileEntityBase" );
+
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-redstone",
 				new ItemStack( MineFactoryReloadedCore.rednetCableBlock, 1, 0 ) );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-redstone",
@@ -37,6 +32,8 @@ public class AppliedEnergistics
 				new ItemStack( MineFactoryReloadedCore.rednetCableBlock, 1, 2 ) );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-rf-power",
 				new ItemStack( MineFactoryReloadedCore.rednetCableBlock, 1, 3 ) );
+		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-fluid",
+				new ItemStack( MineFactoryReloadedCore.plasticPipeBlock, 1, 0 ) );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-fluid",
 				Machine.LiquidRouter.getItemStack() );
 		for (int i = 17; i --> 0; )
