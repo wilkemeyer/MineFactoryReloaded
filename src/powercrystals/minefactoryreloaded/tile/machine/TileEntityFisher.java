@@ -43,6 +43,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	@Override
 	public void setWorldObj(World world)
 	{
+		super.setWorldObj(world);
 		if (_rand == null) {
 			_rand = new Random(world.getSeed() ^ world.rand.nextLong());
 			_next = _rand.nextFloat();
@@ -87,15 +88,19 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 				{
 					++extraBlocks;
 				}
-				if (bp.x != xCoord || bp.z != zCoord)
+				if ((bp.x != xCoord) | bp.z != zCoord)
 				{
 					if (isValidBlock(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z)))
 					{
 						++extraBlocks;
 					}
 				}
+				else if (isValidBlock(bp.x, bp.y - 2, bp.z))
+				{
+					++extraBlocks;
+				}
 			}
-			_workNeeded = workBase - extraBlocks * 52;
+			_workNeeded = workBase - extraBlocks * 50;
 			_isJammed = false;
 		}
 

@@ -7,11 +7,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.FishingHooks;
 
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
@@ -85,17 +86,19 @@ public class EntityFishingRod extends EntityThrowable
 				for (float z = (float)(posZ - f); z < posZ + f; ++z)
 				{
 					Block block = worldObj.getBlock((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
-					if (block.equals(Blocks.water) || block.equals(Blocks.flowing_water))
+					if (block.isAssociatedBlock(Blocks.water) || block.isAssociatedBlock(Blocks.flowing_water))
 						if (rand.nextInt(rate) == 0)
 						{
 							EntityItem e = new EntityItem(worldObj, x, y, z);
 							e.motionX = rand.nextGaussian() / 2;
 							e.motionZ = rand.nextGaussian() / 2;
 							e.motionY = 0.4 + (rand.nextDouble() - 0.4) / 2;
-							if (rand.nextInt(30) == 0)
-								e.setEntityItemStack(new ItemStack(Items.cooked_fished));
-							else // TODO: use fishing API when i write it for forge
-								e.setEntityItemStack(new ItemStack(Items.fish));
+							ItemStack stack = FishingHooks.getRandomFishable(rand, 1), s;
+							if (rand.nextInt(30) == 0 && (s = FurnaceRecipes.smelting().getSmeltingResult(stack)) != null)
+							{
+								stack = s;
+							}
+							e.setEntityItemStack(stack);
 							worldObj.spawnEntityInWorld(e);
 						}
 				}

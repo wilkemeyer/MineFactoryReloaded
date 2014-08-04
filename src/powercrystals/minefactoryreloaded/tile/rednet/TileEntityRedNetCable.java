@@ -123,6 +123,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	{
 		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
 	}
+	
+	@Override
+	public void onMatchedNeighborBlockChange()
+	{
+		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
+	}
 
 	@Override
 	public void firstTick(IGridController grid)
@@ -198,6 +204,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		if (lastNode != isRSNode)
 			_network.addConduit(this);
+		markChunkDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -303,6 +310,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	@Override
 	public boolean onPartHit(EntityPlayer player, int side, int subHit)
 	{
+		markChunkDirty();
 		return false;
 	}
 
