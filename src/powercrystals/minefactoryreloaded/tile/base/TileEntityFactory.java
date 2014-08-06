@@ -4,7 +4,7 @@ import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.asm.relauncher.Strippable;
-import cofh.util.position.IRotateableTile;
+import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

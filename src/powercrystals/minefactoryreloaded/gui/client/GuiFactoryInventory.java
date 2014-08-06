@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cofh.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankAdv;
 
 import java.util.ArrayList;
 import java.util.List;

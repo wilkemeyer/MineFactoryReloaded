@@ -4,10 +4,10 @@ package powercrystals.minefactoryreloaded;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
 import cofh.core.CoFHProps;
+import cofh.core.world.WorldHandler;
+import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
-import cofh.updater.UpdateManager;
-import cofh.util.RegistryUtils;
-import cofh.world.WorldHandler;
+import cofh.mod.updater.UpdateManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;

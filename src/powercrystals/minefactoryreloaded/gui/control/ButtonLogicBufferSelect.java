@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
-import cofh.gui.element.ElementButtonOption;
+import cofh.lib.gui.element.ElementButtonOption;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
 

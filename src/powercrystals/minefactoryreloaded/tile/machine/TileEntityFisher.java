@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
+import cofh.lib.util.position.Area;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

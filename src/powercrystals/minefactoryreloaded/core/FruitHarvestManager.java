@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
+import cofh.lib.util.position.Area;
+import cofh.lib.util.position.BlockPosition;
 
 import java.util.List;
 import java.util.Map;

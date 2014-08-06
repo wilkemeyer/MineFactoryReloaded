@@ -211,7 +211,7 @@ public class ContainerFactoryInventory extends Container
 
 		if (stack.stackSize > 0)
 		{
-			slotIndex = reverse ? slotStart : slotRange - 1;
+			slotIndex = !reverse ? slotStart : slotRange - 1;
 
 			while (stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
 			{

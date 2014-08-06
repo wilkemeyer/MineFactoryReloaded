@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
-import cofh.util.position.BlockPosition;
-import cofh.util.position.IRotateableTile;
+import cofh.lib.util.position.BlockPosition;
+import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

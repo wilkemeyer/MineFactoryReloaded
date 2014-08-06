@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.util.CoreUtils;
-import cofh.util.fluid.FluidTankAdv;
+import cofh.core.util.CoreUtils;
+import cofh.core.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

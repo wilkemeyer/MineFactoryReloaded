@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
-import cofh.util.position.IRotateableTile;
+import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

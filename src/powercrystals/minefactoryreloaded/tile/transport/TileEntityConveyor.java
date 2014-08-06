@@ -2,14 +2,12 @@ package powercrystals.minefactoryreloaded.tile.transport;
 
 import static net.minecraftforge.common.util.ForgeDirection.*;
 
-import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
-
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.asm.relauncher.Strippable;
-import cofh.util.CoreUtils;
-import cofh.util.position.IRotateableTile;
+import cofh.core.util.CoreUtils;
+import cofh.lib.util.position.IRotateableTile;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -22,6 +20,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public class TileEntityConveyor extends TileEntityBase

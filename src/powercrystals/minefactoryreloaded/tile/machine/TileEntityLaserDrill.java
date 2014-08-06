@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.util.WeightedRandomItemStack;
+import cofh.lib.util.WeightedRandomItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -1,10 +1,11 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
-import cofh.gui.element.ElementListBox;
-import cofh.gui.element.listbox.IListBoxElement;
+import cofh.lib.gui.element.ElementListBox;
+import cofh.lib.gui.element.listbox.IListBoxElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.StatCollector;
+
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 
 public class ListBoxElementCircuit implements IListBoxElement

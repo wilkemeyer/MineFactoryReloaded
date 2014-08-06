@@ -1,12 +1,12 @@
 package powercrystals.minefactoryreloaded.core;
 
+import cofh.lib.util.position.Area;
+import cofh.lib.util.position.BlockPosition;
+
 import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 
 public interface IHarvestManager
 {

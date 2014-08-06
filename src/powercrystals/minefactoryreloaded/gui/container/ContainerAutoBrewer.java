@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.gui.slot.SlotAcceptInsertable;
-import cofh.gui.slot.SlotPotion;
-import cofh.gui.slot.SlotPotionIngredient;
-import cofh.gui.slot.SlotRemoveOnly;
+import cofh.lib.gui.slot.SlotAcceptInsertable;
+import cofh.lib.gui.slot.SlotPotion;
+import cofh.lib.gui.slot.SlotPotionIngredient;
+import cofh.lib.gui.slot.SlotRemoveOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -91,7 +91,7 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered
 
 		l: if (stack.stackSize > 0)
 		{
-			slotIndex = reverse ? slotStart : slotRange - 1;
+			slotIndex = !reverse ? slotStart : slotRange - 1;
 
 			while (stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
 			{

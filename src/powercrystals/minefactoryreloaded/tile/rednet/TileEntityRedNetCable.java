@@ -3,11 +3,11 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import static powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType.None;
 import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
 
-import cofh.render.hitbox.CustomHitBox;
-import cofh.render.hitbox.ICustomHitBox;
+import cofh.core.render.hitbox.CustomHitBox;
+import cofh.core.render.hitbox.ICustomHitBox;
+import cofh.lib.util.position.BlockPosition;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
-import cofh.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

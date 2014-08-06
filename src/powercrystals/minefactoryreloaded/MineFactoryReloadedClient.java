@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
-import cofh.render.RenderFluidOverlayItem;
-import cofh.util.position.BlockPosition;
+import cofh.lib.render.RenderFluidOverlayItem;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.eventhandler.EventPriority;

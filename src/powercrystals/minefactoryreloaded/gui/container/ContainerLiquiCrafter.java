@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.gui.slot.SlotRemoveOnly;
-import cofh.gui.slot.SlotViewOnly;
+import cofh.lib.gui.slot.SlotRemoveOnly;
+import cofh.lib.gui.slot.SlotViewOnly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

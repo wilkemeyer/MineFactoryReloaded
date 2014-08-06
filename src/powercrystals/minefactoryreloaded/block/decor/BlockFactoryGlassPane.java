@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import cofh.util.position.BlockPosition;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

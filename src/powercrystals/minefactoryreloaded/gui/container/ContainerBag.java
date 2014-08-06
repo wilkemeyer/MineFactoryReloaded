@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 
-import cofh.gui.slot.SlotAcceptValid;
-import cofh.gui.slot.SlotViewOnly;
+import cofh.lib.gui.slot.SlotAcceptValid;
+import cofh.lib.gui.slot.SlotViewOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -111,38 +111,33 @@ public class ContainerBag extends Container
 		super.onContainerClosed(player);
 	}
 
-	
 	@Override
 	protected boolean mergeItemStack(ItemStack stack, int slotStart, int slotRange, boolean reverse)
 	{
 		boolean successful = false;
-		int slotIndex = slotStart;
-		int maxStack = Math.min(stack.getMaxStackSize(), _ncw.getInventoryStackLimit());
-		
-		if(reverse)
-		{
-			slotIndex = slotRange - 1;
-		}
-		
+		int slotIndex = !reverse ? slotStart : slotRange - 1;
+		int iterOrder = !reverse ? 1 : -1;
+
 		Slot slot;
 		ItemStack existingStack;
-		
-		if(stack.isStackable())
+
+		if (stack.isStackable())
 		{
-			while(stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
+			while (stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
 			{
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				existingStack = slot.getStack();
-				
-				if(slot.isItemValid(stack) && existingStack != null &&
+
+				if (slot.isItemValid(stack) && existingStack != null &&
 						existingStack.getItem().equals(stack.getItem()) &&
 						(!stack.getHasSubtypes() ||
 								stack.getItemDamage() == existingStack.getItemDamage()) &&
 								ItemStack.areItemStackTagsEqual(stack, existingStack))
 				{
 					int existingSize = existingStack.stackSize + stack.stackSize;
-					
-					if(existingSize <= maxStack)
+					int maxStack = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
+
+					if (existingSize <= maxStack)
 					{
 						stack.stackSize = 0;
 						existingStack.stackSize = existingSize;
@@ -157,57 +152,36 @@ public class ContainerBag extends Container
 						successful = true;
 					}
 				}
-				
-				if(reverse)
-				{
-					--slotIndex;
-				}
-				else
-				{
-					++slotIndex;
-				}
+
+				slotIndex += iterOrder;
 			}
 		}
-		
-		if(stack.stackSize > 0)
+
+		if (stack.stackSize > 0)
 		{
-			if(reverse)
-			{
-				slotIndex = slotRange - 1;
-			}
-			else
-			{
-				slotIndex = slotStart;
-			}
-			
-			while(!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart)
+			slotIndex = !reverse ? slotStart : slotRange - 1;
+
+			while (stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
 			{
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				existingStack = slot.getStack();
-				
-				if(slot.isItemValid(stack) && existingStack == null)
+
+				if (slot.isItemValid(stack) && existingStack == null)
 				{
-					slot.putStack(stack.copy());
+					int maxStack = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
+					existingStack = stack.splitStack(Math.min(stack.stackSize, maxStack));
+					slot.putStack(existingStack);
 					slot.onSlotChanged();
-					stack.stackSize = 0;
 					successful = true;
-					break;
 				}
-				
-				if(reverse)
-				{
-					--slotIndex;
-				}
-				else
-				{
-					++slotIndex;
-				}
+
+				slotIndex += iterOrder;
 			}
 		}
-		
+
 		return successful;
 	}
-	
+
 	@Override
     public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
     {

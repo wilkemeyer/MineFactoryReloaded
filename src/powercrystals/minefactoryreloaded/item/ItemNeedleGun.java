@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cofh.util.ItemHelper;
+import cofh.lib.util.helpers.ItemHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

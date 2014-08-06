@@ -4,9 +4,9 @@ import buildcraft.api.transport.IPipeTile;
 
 import cofh.api.transport.IItemDuct;
 import cofh.asm.relauncher.Strippable;
-import cofh.inventory.IInventoryManager;
-import cofh.inventory.InventoryManager;
-import cofh.util.position.BlockPosition;
+import cofh.lib.inventory.IInventoryManager;
+import cofh.lib.inventory.InventoryManager;
+import cofh.lib.util.position.BlockPosition;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;

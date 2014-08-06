@@ -1,10 +1,11 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cofh.gui.slot.SlotRemoveOnly;
+import cofh.lib.gui.slot.SlotRemoveOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 

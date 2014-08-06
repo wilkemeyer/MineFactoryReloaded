@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.api.block.IDismantleable;
-import cofh.render.hitbox.ICustomHitBox;
-import cofh.render.hitbox.RenderHitbox;
+import cofh.core.render.hitbox.ICustomHitBox;
+import cofh.core.render.hitbox.RenderHitbox;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.repack.codechicken.lib.vec.BlockCoord;

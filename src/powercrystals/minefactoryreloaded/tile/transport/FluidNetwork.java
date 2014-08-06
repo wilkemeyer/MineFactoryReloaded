@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
-import cofh.util.FluidHelper;
-import cofh.util.fluid.FluidTankAdv;
-import cofh.util.position.BlockPosition;
+import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.helpers.FluidHelper;
+import cofh.lib.util.position.BlockPosition;
 
 import java.util.LinkedHashSet;
 

@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.api.energy.IEnergyHandler;
-import cofh.util.CoreUtils;
+import cofh.core.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

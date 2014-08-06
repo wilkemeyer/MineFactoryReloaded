@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
-import cofh.util.WeightedRandomItemStack;
+import cofh.lib.util.WeightedRandomItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;

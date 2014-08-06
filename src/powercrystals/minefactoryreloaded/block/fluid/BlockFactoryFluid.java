@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.block.fluid;
 
-import cofh.fluid.BlockFluidCoFHBase;
-import cofh.util.RegistryUtils;
-import cofh.util.WeightedRandomItemStack;
+import cofh.core.fluid.BlockFluidCoFHBase;
+import cofh.lib.util.RegistryUtils;
+import cofh.lib.util.WeightedRandomItemStack;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

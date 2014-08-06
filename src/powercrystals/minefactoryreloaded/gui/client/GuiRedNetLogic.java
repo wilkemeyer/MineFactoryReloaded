@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cofh.gui.GuiBase;
-import cofh.gui.element.ElementButtonManaged;
-import cofh.gui.element.ElementListBox;
-import cofh.gui.element.ElementSlider;
-import cofh.gui.element.listbox.IListBoxElement;
-import cofh.gui.element.listbox.SliderHorizontal;
-import cofh.gui.element.listbox.SliderVertical;
-import cofh.util.position.BlockPosition;
+import cofh.lib.gui.GuiBase;
+import cofh.lib.gui.element.ElementButtonManaged;
+import cofh.lib.gui.element.ElementListBox;
+import cofh.lib.gui.element.ElementSlider;
+import cofh.lib.gui.element.listbox.IListBoxElement;
+import cofh.lib.gui.element.listbox.SliderHorizontal;
+import cofh.lib.gui.element.listbox.SliderVertical;
+import cofh.lib.util.position.BlockPosition;
 
 import java.util.Collections;
 import java.util.Comparator;

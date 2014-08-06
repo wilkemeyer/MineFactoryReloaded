@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.setup.recipe;
 
-import static cofh.util.ItemHelper.*;
+import static cofh.lib.util.helpers.ItemHelper.*;
 import static net.minecraft.init.Blocks.*;
 import static net.minecraft.init.Items.*;
 import static net.minecraftforge.oredict.OreDictionary.*;

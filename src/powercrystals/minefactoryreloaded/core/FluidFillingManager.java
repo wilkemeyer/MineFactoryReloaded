@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.core;
 
+import cofh.lib.util.position.Area;
+import cofh.lib.util.position.BlockPosition;
+
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -7,8 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
 import powercrystals.minefactoryreloaded.core.BlockPool.BlockNode;
 
 public class FluidFillingManager implements IHarvestManager

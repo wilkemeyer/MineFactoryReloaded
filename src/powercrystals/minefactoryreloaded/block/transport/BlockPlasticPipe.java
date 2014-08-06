@@ -5,8 +5,8 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 
 import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IBlockInfo;
-import cofh.util.ItemHelper;
-import cofh.util.position.BlockPosition;
+import cofh.lib.util.helpers.ItemHelper;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

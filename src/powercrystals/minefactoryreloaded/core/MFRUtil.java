@@ -6,7 +6,7 @@ import static org.lwjgl.input.Keyboard.*;
 import buildcraft.api.tools.IToolWrench;
 
 import cofh.api.item.IToolHammer;
-import cofh.util.StringHelper;
+import cofh.lib.util.helpers.StringHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

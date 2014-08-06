@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.core;
 
 import cofh.api.item.IAugmentItem;
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
-import cofh.util.position.IRotateableTile;
+import cofh.lib.util.position.Area;
+import cofh.lib.util.position.BlockPosition;
+import cofh.lib.util.position.IRotateableTile;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import static net.minecraftforge.fluids.FluidRegistry.WATER;
 
-import cofh.util.FluidHelper;
-import cofh.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.helpers.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

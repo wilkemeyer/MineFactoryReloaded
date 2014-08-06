@@ -1,9 +1,7 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
-import powercrystals.minefactoryreloaded.core.UtilInventory;
-
-import cofh.inventory.IInventoryManager;
-import cofh.inventory.InventoryManager;
+import cofh.lib.inventory.IInventoryManager;
+import cofh.lib.inventory.InventoryManager;
 
 import java.util.Map.Entry;
 
@@ -12,6 +10,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 
 public class BlockRailCargoPickup extends BlockFactoryRail

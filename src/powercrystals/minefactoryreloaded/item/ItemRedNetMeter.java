@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.item;
 import cofh.api.block.IBlockDebug;
 import cofh.api.block.IBlockInfo;
 import cofh.api.tileentity.ITileInfo;
-import cofh.util.ServerHelper;
+import cofh.lib.util.helpers.ServerHelper;
 
 import java.util.ArrayList;
 

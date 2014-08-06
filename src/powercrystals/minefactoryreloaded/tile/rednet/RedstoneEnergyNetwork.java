@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import cofh.api.energy.EnergyStorage;
-import cofh.util.position.BlockPosition;
+import cofh.lib.util.position.BlockPosition;
 
 import java.util.LinkedHashSet;
 

@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import static powercrystals.minefactoryreloaded.item.ItemSafariNet.*;
 
-import cofh.util.position.BlockPosition;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.setup;
 
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
-import cofh.util.RegistryUtils;
+import cofh.lib.util.RegistryUtils;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 

@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import cofh.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

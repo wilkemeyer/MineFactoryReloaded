@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.setup.recipe;
 
-import static cofh.util.ItemHelper.*;
+import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 
 import cpw.mods.fml.common.Loader;

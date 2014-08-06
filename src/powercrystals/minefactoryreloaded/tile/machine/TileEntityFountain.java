@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.api.item.IAugmentItem;
-import cofh.util.fluid.FluidTankAdv;
-import cofh.util.position.Area;
-import cofh.util.position.BlockPosition;
+import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.position.Area;
+import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

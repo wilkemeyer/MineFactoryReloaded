@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.api.item.IAugmentItem;
-import cofh.util.FluidHelper;
-import cofh.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.helpers.FluidHelper;
 
 import java.util.ArrayList;
 import java.util.List;

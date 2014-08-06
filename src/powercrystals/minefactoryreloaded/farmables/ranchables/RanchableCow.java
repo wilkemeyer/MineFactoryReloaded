@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.farmables.ranchables;
 
-import cofh.inventory.IInventoryManager;
-import cofh.inventory.InventoryManager;
+import cofh.lib.inventory.IInventoryManager;
+import cofh.lib.inventory.InventoryManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
 

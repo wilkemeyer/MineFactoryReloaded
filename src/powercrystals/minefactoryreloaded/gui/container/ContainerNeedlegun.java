@@ -1,16 +1,17 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 
-import cofh.gui.slot.SlotViewOnly;
+import cofh.lib.gui.slot.SlotViewOnly;
 
-import powercrystals.minefactoryreloaded.core.UtilInventory;
-import powercrystals.minefactoryreloaded.gui.NeedlegunContainerWrapper;
-import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptNeedlegunAmmo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import powercrystals.minefactoryreloaded.core.UtilInventory;
+import powercrystals.minefactoryreloaded.gui.NeedlegunContainerWrapper;
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptNeedlegunAmmo;
 
 public class ContainerNeedlegun extends Container
 {

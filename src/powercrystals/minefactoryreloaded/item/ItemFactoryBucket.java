@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cofh.render.IFluidOverlayItem;
-import cofh.util.RegistryUtils;
+import cofh.lib.render.IFluidOverlayItem;
+import cofh.lib.util.RegistryUtils;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
