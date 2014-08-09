@@ -38,23 +38,23 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		brickId = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
 		brickMeta = rand.nextInt(16);
 		if (brickMeta > 0) ++brickMeta; // 1 is glowstone small bricks
-		if (brickMeta > 5) ++brickMeta; // 6 is glowstone large bricks
-		if (brickMeta == 11) // 11 is PRC housing
+		if (brickMeta > 6) ++brickMeta; // 7 is glowstone large bricks
+		if (brickMeta > 11) // 12 & 13 are meat
+			brickMeta += 2;
+		if (brickMeta == 15) // 15 is unused
 		{
 			brickId = Blocks.brick_block; // because large red bricks are also an option
 			brickMeta = 0; // no need for weird meta, and makes lights correct size
 		}
-		else if (brickMeta > 11) // 12 & 13 are meat
-			brickMeta += 2;
 		
 		if (brickMeta > 15) // covers the 4 skipped blocks in factoryDecorativeBrickBlock
 		{
 			brickId = MineFactoryReloadedCore.factoryDecorativeStoneBlock;
 			brickMeta -= 12; // shift into proper range (16 - 12 = 4: first stone brick block)
-			lightMeta = brickMeta < 6 ? 6 : 1;
+			lightMeta = brickMeta < 6 ? 7 : 1;
 		}
 		else
-			lightMeta = brickMeta < 6 ? 1 : 6;
+			lightMeta = brickMeta < 6 ? 1 : 7;
 		
 		paneId = Blocks.glass_pane;
 		paneMeta = 0;
@@ -65,7 +65,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			paneMeta = rand.nextInt(16);
 		}
 		
-		benchMeta = rand.nextInt(10) == 0 ? 11 : 0;
+		benchMeta = rand.nextInt(10) == 0 ? 12 : 0;
 	}
 
     @Override // write to NBT
@@ -168,7 +168,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		placeBlockAtCurrentPosition(world, paneId, paneMeta, 6, 3, 0, sbb);
 		placeBlockAtCurrentPosition(world, mfrLogId,logMeta, 7, 3, 0, sbb);
 		//}
-		//{ Window near door
+		//{ Side window near door
 		placeBlockAtCurrentPosition(world, mfrLogId,logMeta, 0, 2, 1, sbb);
 		placeBlockAtCurrentPosition(world, paneId, paneMeta, 0, 2, 2, sbb);
 		placeBlockAtCurrentPosition(world, paneId, paneMeta, 0, 2, 3, sbb);
@@ -217,7 +217,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		placeBlockAtCurrentPosition(world, Blocks.wooden_pressure_plate, 0, 4, 2, 3, sbb);
 		//}
 		//}
-		k = benchMeta; // workbench or PRC
+		k = benchMeta; // workbench or meat
 		placeBlockAtCurrentPosition(world, k == 0 ? Blocks.crafting_table : mfrBrickId, k, 7, 1, 1, sbb);
 		
 		k = lightMeta; // overhead lights (match large/small bricks)
