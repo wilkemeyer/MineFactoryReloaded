@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
@@ -51,6 +52,10 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 				return false;
 			
 			int subHit = part.subHit;
+			if (subHit < 0) {
+				MineFactoryReloadedCore.instance().getLogger().error("subHit was " + subHit, new Throwable());
+				return false;
+			}
 			int oldSide = side;
 			side = _subSideMappings[subHit];
 			

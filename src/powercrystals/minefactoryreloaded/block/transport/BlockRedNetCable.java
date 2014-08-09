@@ -24,6 +24,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
@@ -149,6 +150,10 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 				return false;
 			
 			int subHit = part.subHit;
+			if (subHit < 0) {
+				MineFactoryReloadedCore.instance().getLogger().error("subHit was " + subHit, new Throwable());
+				return false;
+			}
 			side = _subSideMappings[subHit];
 
 			ItemStack s = player.inventory.getCurrentItem();
