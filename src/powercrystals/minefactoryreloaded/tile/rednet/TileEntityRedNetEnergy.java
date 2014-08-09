@@ -37,14 +37,15 @@ import powercrystals.minefactoryreloaded.net.Packets;
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements 
 									IEnergyHandler//, IEnergyInfo
 {
-	private static boolean IC2Classes = false;
+	private static boolean IC2Classes = false, IC2Net = false;
 
 	static {
 		try {
-			Class.forName("ic2.api.energy.tile.IEnergyTile");
 			Class.forName("ic2.api.energy.tile.IEnergySource");
 			Class.forName("ic2.api.energy.tile.IEnergySink");
 			IC2Classes = true;
+			Class.forName("ic2.api.energy.EnergyNet");
+			IC2Net = true;
 		} catch(Throwable _) {}
 	}
 
@@ -448,11 +449,19 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return 0;
 		}
 		private double getPowerFromTier(int t) {
+			if (IC2Net) return getPower(t);
+			return t * 32;
+		}
+		private double getPower(int t) {
 			if (EnergyNet.instance != null)
 				return EnergyNet.instance.getPowerFromTier(t);
 			return t * 32;
 		}
 		private int getTierFromPower(double t) {
+			if (IC2Net) return getTier(t);
+			return 1;
+		}
+		private int getTier(double t) {
 			if (EnergyNet.instance != null)
 				return EnergyNet.instance.getTierFromPower(t);
 			return 1;

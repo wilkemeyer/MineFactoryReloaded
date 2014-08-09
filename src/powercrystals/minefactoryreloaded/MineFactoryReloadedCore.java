@@ -738,13 +738,13 @@ public class MineFactoryReloadedCore extends BaseMod
 					new WeightedRandomChestContent(new ItemStack(Items.melon_seeds, 1), 1, 1, 1)
 					);
 			@Override
-			public ItemStack func_150708_a(Random p_150708_1_)
+			public ItemStack func_150708_a(Random r)
 			{
 				ItemStack a = field_150711_b.copy();
 				a.setTagInfo("loot", new NBTTagByte((byte) 1));
 				BagContainerWrapper w = new BagContainerWrapper(a);
 				w.setInventorySlotContents(rand.nextInt(w.getSizeInventory()),
-						((WeightedRandomChestContent)WeightedRandom.getRandomItem(rand, loot)).theItemId);
+						((WeightedRandomChestContent)WeightedRandom.getRandomItem(r, loot)).theItemId);
 				return w.getStack();
 			}
 		});
