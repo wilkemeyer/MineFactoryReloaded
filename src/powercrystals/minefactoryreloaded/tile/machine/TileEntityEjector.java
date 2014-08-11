@@ -254,6 +254,12 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	public void setIsNBTMatch(boolean matchNBT) { _matchNBT = matchNBT; }
 	
 	public void setIsIDMatch(boolean idMatch) { _ignoreDamage = idMatch; }
+	
+	@Override
+	public ConnectionType canConnectInventory(ForgeDirection from)
+	{
+		return from == getDirectionFacing() ? ConnectionType.FORCE : ConnectionType.DENY;
+	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")

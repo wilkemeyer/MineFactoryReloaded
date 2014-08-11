@@ -5,6 +5,7 @@ import static net.minecraftforge.common.util.ForgeDirection.*;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.api.inventory.IInventoryConnection;
 import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
 import cofh.lib.util.position.IRotateableTile;
@@ -25,7 +26,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public class TileEntityConveyor extends TileEntityBase
-			implements IRotateableTile, ISidedInventory, IPipeConnection
+			implements IRotateableTile, ISidedInventory, IPipeConnection, IInventoryConnection
 {
 	private int _dye = -1;
 	
@@ -567,6 +568,12 @@ public class TileEntityConveyor extends TileEntityBase
 		}
 		
 		return slopeComponent * 4 + directionComponent;
+	}
+	
+	@Override
+	public ConnectionType canConnectInventory(ForgeDirection from)
+	{
+		return ConnectionType.FORCE;
 	}
 
 	@Override

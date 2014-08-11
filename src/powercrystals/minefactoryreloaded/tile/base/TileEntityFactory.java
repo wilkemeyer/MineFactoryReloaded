@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.api.inventory.IInventoryConnection;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
@@ -27,7 +28,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public abstract class TileEntityFactory extends TileEntityBase
 									 implements IRotateableTile, IPipeConnection,
-												IHarvestAreaContainer
+												IHarvestAreaContainer, IInventoryConnection
 {
 	// first index is rotation, second is side
 	private static final int[][] _textureSelection = new int[][]
@@ -357,18 +358,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		return 0;
 	}
-
-	@Override
-	@Strippable("buildcraft.api.transport.IPipeConnection")
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
-		if (type == PipeType.FLUID)
-			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
-		if (type == PipeType.ITEM) 
-			return manageSolids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
-		if (type == PipeType.STRUCTURE)
-			return ConnectOverride.CONNECT;
-		return ConnectOverride.DISCONNECT;
-	}
 	
 	// hoisted IMachine methods
 	
@@ -390,6 +379,24 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public boolean manageSolids()
 	{
 		return _manageSolids;
+	}
+	
+	@Override
+	public ConnectionType canConnectInventory(ForgeDirection from)
+	{
+		return manageSolids() ? ConnectionType.FORCE : ConnectionType.DENY;
+	}
+
+	@Override
+	@Strippable("buildcraft.api.transport.IPipeConnection")
+	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+		if (type == PipeType.FLUID)
+			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
+		if (type == PipeType.ITEM) 
+			return canConnectInventory(with).canConnect ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
+		if (type == PipeType.STRUCTURE)
+			return ConnectOverride.CONNECT;
+		return ConnectOverride.DISCONNECT;
 	}
 
     @Override
