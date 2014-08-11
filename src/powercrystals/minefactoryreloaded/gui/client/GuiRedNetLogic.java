@@ -89,6 +89,11 @@ public class GuiRedNetLogic extends GuiBase
 			@Override
 			protected void onSelectionChanged(int newIndex, IListBoxElement newElement)
 			{
+			}
+
+			@Override
+			protected void onElementClicked(IListBoxElement newElement)
+			{
 				Packets.sendToServer(Packets.LogicSetCircuit, _logic,
 						_selectedCircuit, newElement.getValue().getClass().getName());
 			}
