@@ -26,15 +26,15 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 	private int benchMeta;
 	private int lightMeta;
 	private boolean hasMadeChest;
-	
+
 	public ComponentZoologistHouse() {}
-	
+
 	public ComponentZoologistHouse(Start startPiece, int componentType, Random rand, StructureBoundingBox sbb, int coordBaseMode)
 	{
 		super(startPiece, componentType);
 		this.coordBaseMode = coordBaseMode;
 		boundingBox = sbb;
-		
+
 		brickId = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
 		brickMeta = rand.nextInt(16);
 		if (brickMeta > 0) ++brickMeta; // 1 is glowstone small bricks
@@ -46,7 +46,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			brickId = Blocks.brick_block; // because large red bricks are also an option
 			brickMeta = 0; // no need for weird meta, and makes lights correct size
 		}
-		
+
 		if (brickMeta > 15) // covers the 4 skipped blocks in factoryDecorativeBrickBlock
 		{
 			brickId = MineFactoryReloadedCore.factoryDecorativeStoneBlock;
@@ -55,7 +55,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		}
 		else
 			lightMeta = brickMeta < 6 ? 1 : 7;
-		
+
 		paneId = Blocks.glass_pane;
 		paneMeta = 0;
 		// getBiomeSpecificBlock
@@ -64,28 +64,28 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			paneId = MineFactoryReloadedCore.factoryGlassPaneBlock;
 			paneMeta = rand.nextInt(16);
 		}
-		
+
 		benchMeta = rand.nextInt(10) == 0 ? 12 : 0;
 	}
 
-    @Override // write to NBT
+	@Override // write to NBT
 	protected void func_143012_a(NBTTagCompound tag)
-    {
-    	super.func_143012_a(tag);
-        tag.setBoolean("Chest", this.hasMadeChest);
-    	tag.setIntArray("blocks", new int[]{brickMeta, paneMeta, lightMeta, benchMeta});
-    	tag.setString("brick", Block.blockRegistry.getNameForObject(brickId));
-    	tag.setString("pane", Block.blockRegistry.getNameForObject(paneId));
-    }
+	{
+		super.func_143012_a(tag);
+		tag.setBoolean("Chest", this.hasMadeChest);
+		tag.setIntArray("blocks", new int[]{brickMeta, paneMeta, lightMeta, benchMeta});
+		tag.setString("brick", Block.blockRegistry.getNameForObject(brickId));
+		tag.setString("pane", Block.blockRegistry.getNameForObject(paneId));
+	}
 
-    @Override // read from NBT
+	@Override // read from NBT
 	protected void func_143011_b(NBTTagCompound tag)
-    {
-    	super.func_143011_b(tag);
-        this.hasMadeChest = tag.getBoolean("Chest");
-    	int[] blocks = tag.getIntArray("blocks");
-    	if (blocks == null || blocks.length != 4)
-    		return;
+	{
+		super.func_143011_b(tag);
+		this.hasMadeChest = tag.getBoolean("Chest");
+		int[] blocks = tag.getIntArray("blocks");
+		if (blocks == null || blocks.length != 4)
+			return;
 
 		brickMeta = blocks[0];
 		paneMeta = blocks[1];
@@ -93,8 +93,8 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		benchMeta = blocks[3];
 		brickId = Block.getBlockFromName(tag.getString("brick"));
 		paneId = Block.getBlockFromName(tag.getString("pane"));
-    }
-	
+	}
+
 	@SuppressWarnings("rawtypes")
 	public static ComponentZoologistHouse buildComponent(PieceWeight villagePiece,
 			Start startPiece, List pieces, Random random, int p1, int p2,
@@ -105,25 +105,25 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		return (!canVillageGoDeeper(sbb)) || (StructureComponent.findIntersecting(pieces, sbb) != null)
 				? null : new ComponentZoologistHouse(startPiece, p5, random, sbb, p4);
 	}
-	
+
 	@Override
 	public boolean addComponentParts(World world, Random random, StructureBoundingBox sbb)
 	{
 		if (field_143015_k < 0)
 		{
 			field_143015_k = getAverageGroundLevel(world, sbb);
-			
+
 			if (field_143015_k < 0)
 			{
 				return true;
 			}
-			
+
 			boundingBox.offset(0, field_143015_k - boundingBox.maxY + 9 - 1, 0);
 		}
 		Block mfrBrickId = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
 		Block mfrLogId = MineFactoryReloadedCore.rubberWoodBlock;
 		int logMeta = 12;
-		
+
 		fillWithBlocks(world, sbb, 1, 1, 1, 7, 5, 4, Blocks.air, Blocks.air, false);
 		fillWithMetadataBlocks(world, sbb, 0, 0, 0, 8, 0, 5, brickId, brickMeta, brickId, brickMeta, false);
 		fillWithMetadataBlocks(world, sbb, 0, 5, 0, 8, 5, 5, brickId, brickMeta, brickId, brickMeta, false);
@@ -133,7 +133,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		int j = getMetadataWithOffset(Blocks.oak_stairs, 2);
 		int k;
 		int l;
-		
+
 		for (k = -1; k <= 2; ++k)
 		{
 			for (l = 0; l <= 8; ++l)
@@ -142,7 +142,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 				placeBlockAtCurrentPosition(world, Blocks.oak_stairs, j, l, 6 + k, 5 - k, sbb);
 			}
 		}
-		
+
 		fillWithMetadataBlocks(world, sbb, 0, 1, 0, 0, 1, 5, brickId, brickMeta, brickId, brickMeta, false);
 		fillWithMetadataBlocks(world, sbb, 1, 1, 5, 8, 1, 5, brickId, brickMeta, brickId, brickMeta, false);
 		fillWithMetadataBlocks(world, sbb, 8, 1, 0, 8, 1, 4, brickId, brickMeta, brickId, brickMeta, false);
@@ -219,7 +219,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		//}
 		k = benchMeta; // workbench or meat
 		placeBlockAtCurrentPosition(world, k == 0 ? Blocks.crafting_table : mfrBrickId, k, 7, 1, 1, sbb);
-		
+
 		k = lightMeta; // overhead lights (match large/small bricks)
 		fillWithMetadataBlocks(world, sbb, 1, 5, 2, 7, 5, 3, mfrBrickId, k, mfrBrickId, k, false);
 		//{ Door
@@ -227,14 +227,14 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		placeBlockAtCurrentPosition(world, Blocks.air, 0, 1, 2, 0, sbb);
 		placeDoorAtCurrentPosition(world, sbb, random, 1, 1, 0, getMetadataWithOffset(Blocks.wooden_door, 1));
 		//}
-		
+
 		if (getBlockAtCurrentPosition(world, 1, 0, -1, sbb).equals(Blocks.air) &&
 				!getBlockAtCurrentPosition(world, 1, -1, -1, sbb).equals(Blocks.air))
 		{
 			placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
 					getMetadataWithOffset(Blocks.stone_stairs, 3), 1, 0, -1, sbb);
 		}
-		
+
 		for (l = 0; l < 6; ++l)
 		{
 			for (int i1 = 0; i1 < 9; ++i1)
@@ -245,23 +245,23 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			}
 		}
 		if (!this.hasMadeChest)
-        {
-            i = this.getYWithOffset(1);
-            j = this.getXWithOffset(1, 4);
-            k = this.getZWithOffset(1, 4);
+		{
+			i = this.getYWithOffset(1);
+			j = this.getXWithOffset(1, 4);
+			k = this.getZWithOffset(1, 4);
 
-            if (sbb.isVecInside(j, i, k))
-            {
-                this.hasMadeChest = true;
-                generateStructureChestContents(world, sbb, random, 1, 1, 4,
-                		ChestGenHooks.getItems(CHEST_GEN, random), ChestGenHooks.getCount(CHEST_GEN, random));
-            }
-        }
-		
+			if (sbb.isVecInside(j, i, k))
+			{
+				this.hasMadeChest = true;
+				generateStructureChestContents(world, sbb, random, 1, 1, 4,
+						ChestGenHooks.getItems(CHEST_GEN, random), ChestGenHooks.getCount(CHEST_GEN, random));
+			}
+		}
+
 		spawnVillagers(world, sbb, 2, 1, 2, 1);
 		return true;
 	}
-	
+
 	@Override
 	protected int getVillagerType(int par1)
 	{

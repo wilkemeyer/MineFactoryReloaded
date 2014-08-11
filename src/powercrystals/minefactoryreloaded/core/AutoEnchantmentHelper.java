@@ -45,7 +45,6 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 
 		boolean isBook = output.getItem().equals(Items.book);
 
-
 		if (isBook)
 		{
 			output.func_150996_a(Items.enchanted_book);
@@ -164,7 +163,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 	public static Map<Integer, EnchantmentData> mapEnchantmentData(int targetEnchantability, ItemStack stack)
 	{
 		HashMap<Integer, EnchantmentData> enchantmentMap = null;
-		boolean isBook = stack.equals(Items.book);
+		boolean isBook = stack.getItem().equals(Items.book);
 
 		for(int var7 = 0; var7 < Enchantment.enchantmentsList.length; ++var7)
 		{

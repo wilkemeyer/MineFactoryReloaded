@@ -268,6 +268,7 @@ public class Vanilla
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.dirt, 1, 1));
 		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.dirt));
 		MFRRegistry.registerSludgeDrop(10, new ItemStack(Blocks.gravel));
+		MFRRegistry.registerSludgeDrop(5, new ItemStack(Blocks.sand, 1, 1));
 		MFRRegistry.registerSludgeDrop(5, new ItemStack(Blocks.soul_sand));
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Blocks.mycelium));
 		MFRRegistry.registerSludgeDrop(2, new ItemStack(Blocks.dirt, 1, 2));
@@ -418,8 +419,6 @@ public class Vanilla
 	public void postLoad(FMLPostInitializationEvent event)
 	{
 		
-		MFRRegistry.registerLaserOre(80, new ItemStack(Blocks.glowstone));
-		MFRRegistry.addLaserPreferredOre(yellow, new ItemStack(Blocks.glowstone));
 		registerOreDictLaserOre(175, "Coal",               black, false);
 		registerOreDictLaserOre(150, "Iron",               brown, false);
 		registerOreDictLaserOre(100, "Redstone",             red, false);
@@ -428,6 +427,7 @@ public class Vanilla
 		registerOreDictLaserOre( 85, "Tin",               silver, false);
 		registerOreDictLaserOre( 85, "oreCheese",         yellow, null);
 		registerOreDictLaserOre( 85, "Force",             yellow,  true);
+		registerOreDictLaserOre( 80, "glowstone",         yellow, null);
 		registerOreDictLaserOre( 80, "Lapis",               blue,  true);
 		registerOreDictLaserOre( 70, "Gold",              yellow, false);
 		registerOreDictLaserOre( 70, "oreQuartz",          white, null);

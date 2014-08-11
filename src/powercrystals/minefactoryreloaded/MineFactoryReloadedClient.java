@@ -6,6 +6,7 @@ import cofh.lib.render.RenderFluidOverlayItem;
 import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
@@ -201,6 +202,7 @@ public class MineFactoryReloadedClient
 				new ResourceLocation(villagerFolder + "zoologist.png"));
 
 		MinecraftForge.EVENT_BUS.register(instance);
+		FMLCommonHandler.instance().bus().register(instance);
 		gl14 = GLContext.getCapabilities().OpenGL14;
 	}
 
