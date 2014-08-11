@@ -15,7 +15,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -32,9 +31,9 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	private static FluidStack _ethanol;
 	private int _roundingCompensation;
 	private boolean ignoreChange = false;
-	
+
 	private Map<String, ItemStack> _preferredOutputs = new HashMap<String, ItemStack>();
-	
+
 	public TileEntityUnifier()
 	{
 		super(Machine.Unifier);
@@ -47,69 +46,69 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		_biofuel = FluidRegistry.getFluidStack("biofuel", 1);
 		_ethanol = FluidRegistry.getFluidStack("bioethanol", 1);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiUnifier(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerUnifier getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerUnifier(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public boolean canUpdate()
 	{
 		return false;
 	}
-	
+
 	private void unifyInventory()
 	{
-		if(worldObj != null && !worldObj.isRemote)
+		if (worldObj != null && !worldObj.isRemote)
 		{
 			ItemStack output = null;
-			if(_inventory[0] != null)
+			if (_inventory[0] != null)
 			{
 				List<String> names = OreDictionaryArbiter.getAllOreNames(_inventory[0]);
 				// tracker does *not* also check the wildcard meta,
 				// avoiding issues with saplings and logs, etc.
-				
-				if(names == null || names.size() != 1 || MFRRegistry.getUnifierBlacklist().containsKey(names.get(0)))
+
+				if (names == null || names.size() != 1 || MFRRegistry.getUnifierBlacklist().containsKey(names.get(0)))
 				{
 					output = _inventory[0].copy();
 				}
-				else if(_preferredOutputs.containsKey(names.get(0)))
+				else if (_preferredOutputs.containsKey(names.get(0)))
 				{
 					output = _preferredOutputs.get(names.get(0)).copy();
 					output.stackSize = _inventory[0].stackSize;
 				}
 				else
 				{
-					output = OreDictionary.getOres(names.get(0)).get(0).copy();
+					output = OreDictionaryArbiter.getOres(names.get(0)).get(0).copy();
 					output.stackSize = _inventory[0].stackSize;
 				}
-				
+
 				if (output != null && _inventory[0].getItem().equals(output.getItem()))
 					output = _inventory[0].copy();
-				
+
 				moveItemStack(output);
 			}
 		}
 	}
-	
+
 	private void moveItemStack(ItemStack source)
 	{
 		if(source == null)
 		{
 			return;
 		}
-		
+
 		int amt = source.stackSize;
-		
+
 		if(_inventory[1] == null)
 		{
 			amt = Math.min(Math.min(getInventoryStackLimit(), source.getMaxStackSize()),
@@ -128,7 +127,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			amt = Math.min(source.stackSize,
 					_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
 		}
-		
+
 		if(_inventory[1] == null)
 		{
 			_inventory[1] = source.copy();
@@ -140,13 +139,13 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			_inventory[1].stackSize += amt;
 			_inventory[0].stackSize -= amt;
 		}
-		
+
 		if(_inventory[0].stackSize == 0)
 		{
 			_inventory[0] = null;
 		}
 	}
-	
+
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
@@ -160,7 +159,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		markDirty();
 		ignoreChange = false;
 	}
-	
+
 	protected void updatePreferredOutput()
 	{
 		_preferredOutputs.clear();
@@ -180,7 +179,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
@@ -190,66 +189,66 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 			unifyInventory();
 		}
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 11;
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return slot < 2;
 	}
-	
+
 	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 2;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
 		return slot == 0;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
 		return slot == 1;
 	}
-	
+
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		if(resource == null || resource.amount == 0) return 0;
-		
+
 		FluidStack converted = unifierTransformLiquid(resource, doFill);
-		
+
 		if(converted == null || converted.amount == 0) return 0;
-		
+
 		int filled = _tanks[0].fill(converted, doFill);
-		
+
 		if(filled == converted.amount)
 		{
 			return resource.amount;
@@ -260,7 +259,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 					(resource.amount & _roundingCompensation);
 		}
 	}
-	
+
 	private FluidStack unifierTransformLiquid(FluidStack resource, boolean doFill)
 	{
 		if(_ethanol != null & _biofuel != null)
@@ -272,19 +271,19 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		}
 		return null;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{

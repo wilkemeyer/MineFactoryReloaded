@@ -23,7 +23,7 @@ public class GuiAutoAnvil extends GuiFactoryPowered
 	public void initGui()
 	{
 		super.initGui();
-		_repairToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 34, (this.height - this.ySize) / 2 + 47, 85, 20, "Repair Only: Off");
+		_repairToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 34, (this.height - this.ySize) / 2 + 46, 85, 20, "Repair Only: Off");
 		_repairToggle.displayString = _anvil.getRepairOnly() ? "Repair Only: On" : "Repair Only: Off";
 		buttonList.add(_repairToggle);
 	}

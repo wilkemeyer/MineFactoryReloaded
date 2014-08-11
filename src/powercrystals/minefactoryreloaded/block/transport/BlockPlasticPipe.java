@@ -77,7 +77,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 					if (!player.capabilities.isCreativeMode)
 						player.setCurrentItemOrArmor(0, ItemHelper.consumeItem(s));
 					cable.setUpgrade(1);
-					onNeighborBlockChange(world, x, y, z, this);
+					onNeighborBlockChange(world, x, y, z, Blocks.air);
 					player.addChatMessage(new ChatComponentTranslation(
 							"chat.info.mfr.fluid.install.torch"));
 				}
@@ -95,7 +95,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 					if (!player.capabilities.isCreativeMode)
 						player.setCurrentItemOrArmor(0, ItemHelper.consumeItem(s));
 					cable.setUpgrade(2);
-					onNeighborBlockChange(world, x, y, z, this);
+					onNeighborBlockChange(world, x, y, z, Blocks.air);
 					player.addChatMessage(new ChatComponentTranslation(
 							"chat.info.mfr.fluid.install.block"));
 				}
