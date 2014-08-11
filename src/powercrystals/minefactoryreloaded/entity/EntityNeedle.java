@@ -54,7 +54,7 @@ public class EntityNeedle extends Entity implements IProjectile
 		this.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
 		this.motionZ = (MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
 		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, 2.25F, spread);
+		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, 3.25F, spread);
 		this.distance = 0; 
 	}
 	

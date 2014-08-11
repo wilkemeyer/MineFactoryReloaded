@@ -72,7 +72,7 @@ public class MFRGUIHandler implements IGuiHandler
 			if(player.getCurrentEquippedItem() != null &&
 					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.needlegunItem))
 			{
-				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
+				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory), player.getCurrentEquippedItem());
 			}
 		}
 		else if(ID == 2)

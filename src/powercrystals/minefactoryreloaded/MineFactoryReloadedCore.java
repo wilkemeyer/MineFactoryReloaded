@@ -620,7 +620,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityRocket.class, "Rocket", 3, instance, 160, 1, true);
 		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, instance, 80, 3, true);
-		
+
 		Vanilla.registerOredict();
 
 		for (Vanilla e : recipeSets)
