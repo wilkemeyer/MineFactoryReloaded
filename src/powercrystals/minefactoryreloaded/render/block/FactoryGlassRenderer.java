@@ -276,7 +276,9 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			tessellator.addVertexWithUV(xMin, yMax, zMax, minXGlass, maxYGlass);
 			tessellator.addVertexWithUV(xMax, yMax, zMax, maxXGlass, maxYGlass);
 			tessellator.addVertexWithUV(xMax, yMax, zMin, maxXGlass, minYGlass);
+			tessellator.draw();
 
+			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_F(1, 1, 1);
 			tessellator.addVertexWithUV(xMin, yMax, zMin, minXStreaks, minYStreaks);
 			tessellator.addVertexWithUV(xMin, yMax, zMax, minXStreaks, maxYStreaks);
@@ -296,7 +298,9 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			tessellator.addVertexWithUV(xMin, yMin, zMin, minXGlass, minYGlass);
 			tessellator.addVertexWithUV(xMax, yMin, zMin, maxXGlass, minYGlass);
 			tessellator.addVertexWithUV(xMax, yMin, zMax, maxXGlass, maxYGlass);
+			tessellator.draw();
 
+			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_F(1, 1, 1);
 			tessellator.addVertexWithUV(xMin, yMin, zMax, minXStreaks, maxYStreaks);
 			tessellator.addVertexWithUV(xMin, yMin, zMin, minXStreaks, minYStreaks);
@@ -316,7 +320,9 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			tessellator.addVertexWithUV(xMax, yMin, zMin, maxXGlass, maxYGlass);
 			tessellator.addVertexWithUV(xMin, yMin, zMin, minXGlass, maxYGlass);
 			tessellator.addVertexWithUV(xMin, yMax, zMin, minXGlass, minYGlass);
+			tessellator.draw();
 
+			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_F(1, 1, 1);
 			tessellator.addVertexWithUV(xMax, yMax, zMin, maxXStreaks, minYStreaks);
 			tessellator.addVertexWithUV(xMax, yMin, zMin, maxXStreaks, maxYStreaks);
@@ -336,7 +342,9 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			tessellator.addVertexWithUV(xMin, yMin, zMax, minXGlass, maxYGlass);
 			tessellator.addVertexWithUV(xMax, yMin, zMax, maxXGlass, maxYGlass);
 			tessellator.addVertexWithUV(xMax, yMax, zMax, maxXGlass, minYGlass);
+			tessellator.draw();
 
+			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_F(1, 1, 1);
 			tessellator.addVertexWithUV(xMin, yMax, zMax, minXStreaks, minYStreaks);
 			tessellator.addVertexWithUV(xMin, yMin, zMax, minXStreaks, maxYStreaks);
@@ -356,7 +364,9 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			tessellator.addVertexWithUV(xMin, yMax, zMax, maxXGlass, minYGlass);
 			tessellator.addVertexWithUV(xMin, yMax, zMin, minXGlass, minYGlass);
 			tessellator.addVertexWithUV(xMin, yMin, zMin, minXGlass, maxYGlass);
+			tessellator.draw();
 
+			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_F(1, 1, 1);
 			tessellator.addVertexWithUV(xMin, yMin, zMax, maxXStreaks, maxYStreaks);
 			tessellator.addVertexWithUV(xMin, yMax, zMax, maxXStreaks, minYStreaks);
@@ -376,7 +386,9 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 			tessellator.addVertexWithUV(xMax, yMax, zMin, minXGlass, minYGlass);
 			tessellator.addVertexWithUV(xMax, yMax, zMax, maxXGlass, minYGlass);
 			tessellator.addVertexWithUV(xMax, yMin, zMax, maxXGlass, maxYGlass);
+			tessellator.draw();
 
+			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_F(1, 1, 1);
 			tessellator.addVertexWithUV(xMax, yMin, zMin, minXStreaks, maxYStreaks);
 			tessellator.addVertexWithUV(xMax, yMax, zMin, minXStreaks, minYStreaks);

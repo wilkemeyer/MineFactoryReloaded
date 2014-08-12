@@ -94,13 +94,13 @@ public class IconOverlay implements IIcon {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getMinU() {
-		return overlayIcon.getInterpolatedU((selectedSegmentX / xSegments) * 16f);
+		return overlayIcon.getInterpolatedU(((selectedSegmentX + 0.001f) / xSegments) * 16f);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getMaxU() {
-		return overlayIcon.getInterpolatedU(((selectedSegmentX + 1) / xSegments) * 16f);
+		return overlayIcon.getInterpolatedU(((selectedSegmentX + 0.999f) / xSegments) * 16f);
 	}
 
 	@Override
@@ -114,13 +114,13 @@ public class IconOverlay implements IIcon {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getMinV() {
-		return overlayIcon.getInterpolatedV((selectedSegmentY / ySegments) * 16f);
+		return overlayIcon.getInterpolatedV(((selectedSegmentY + 0.001f) / ySegments) * 16f);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getMaxV() {
-		return overlayIcon.getInterpolatedV(((selectedSegmentY + 1) / ySegments) * 16f);
+		return overlayIcon.getInterpolatedV(((selectedSegmentY + 0.999f) / ySegments) * 16f);
 	}
 	
 	@Override

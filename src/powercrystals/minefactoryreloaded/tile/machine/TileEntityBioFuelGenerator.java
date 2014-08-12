@@ -8,7 +8,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityLiquidGenerator;
 public class TileEntityBioFuelGenerator extends TileEntityLiquidGenerator
 {
 	public static final int liquidConsumedPerTick = 1;
-	public static final int ticksBetweenConsumption = 5;
+	public static final int ticksBetweenConsumption = 7;
 	
 	public TileEntityBioFuelGenerator()
 	{
