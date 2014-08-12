@@ -52,7 +52,7 @@ public class Buildcraft implements ITriggerProvider
 	}
 	
 	@Mod.EventHandler
-	@Strippable("buildcraft.api.gates.ITriggerProvider")
+	@Strippable({"buildcraft.api.gates.ITriggerProvider","buildcraft.api.gates.ITrigger"})
 	private void postInit(FMLPostInitializationEvent evt)
 	{
 		try
