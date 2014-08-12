@@ -219,7 +219,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 				}
 				
 				List<ItemStack> preferredOres = MFRRegistry.getLaserPreferredOres(s.getItemDamage());
-				int realBoost = boost / Math.min(1, preferredOres.size() / 2) + 1;
+				int realBoost = boost / Math.max(1, preferredOres.size() / 2) + 1;
 				
 				for(ItemStack preferredOre : preferredOres)
 				{
