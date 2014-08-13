@@ -245,9 +245,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 				tess.setColorOpaque_F(red, green, blue);
 				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUGlass, minVGlass, midUGlassA, maxVGlass, 0, offset);
 				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUGlass, minVGlass, midUGlassA, maxVGlass, 0, -offset);
-				tess.draw();
 
-				tess.startDrawingQuads();
 				tess.setColorOpaque_F(1, 1, 1);
 				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, 0, offset);
 				drawPlane(tess, xMin, yMin, zMid, xMid + offset, yMax, zMid, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, 0, -offset);
@@ -284,9 +282,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 				tess.setColorOpaque_F(red, green, blue);
 				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUGlassB, minVGlass, maxUGlass, maxVGlass, 0, offset);
 				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUGlassB, minVGlass, maxUGlass, maxVGlass, 0, -offset);
-				tess.draw();
 
-				tess.startDrawingQuads();
 				tess.setColorOpaque_F(1, 1, 1);
 				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, 0, offset);
 				drawPlane(tess, xMid - offset, yMin, zMid, xMax, yMax, zMid, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, 0, -offset);
@@ -324,9 +320,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 			tess.setColorOpaque_F(red, green, blue);
 			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUGlass, minVGlass, maxUGlass, maxVGlass, 0, offset);
 			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUGlass, minVGlass, maxUGlass, maxVGlass, 0, -offset);
-			tess.draw();
 
-			tess.startDrawingQuads();
 			tess.setColorOpaque_F(1, 1, 1);
 			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, 0, offset);
 			drawPlane(tess, xMin, yMin, zMid, xMax, yMax, zMid, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, 0, -offset);
@@ -365,9 +359,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 				tess.setColorOpaque_F(red, green, blue);
 				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUGlass, minVGlass, midUGlassA, maxVGlass, offset, 0);
 				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUGlass, minVGlass, midUGlassA, maxVGlass, -offset, 0);
-				tess.draw();
 
-				tess.startDrawingQuads();
 				tess.setColorOpaque_F(1, 1, 1);
 				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, offset, 0);
 				drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMid + offset, minUStreaks, minVStreaks, midUStreaksA, maxVStreaks, -offset, 0);
@@ -404,9 +396,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 				tess.setColorOpaque_F(red, green, blue);
 				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUGlassB, minVGlass, maxUGlass, maxVGlass, offset, 0);
 				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUGlassB, minVGlass, maxUGlass, maxVGlass, -offset, 0);
-				tess.draw();
 
-				tess.startDrawingQuads();
 				tess.setColorOpaque_F(1, 1, 1);
 				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, offset, 0);
 				drawPlane(tess, xMid, yMin, zMid - offset, xMid, yMax, zMax, midUStreaksB, minVStreaks, maxUStreaks, maxVStreaks, -offset, 0);
@@ -444,9 +434,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler
 			tess.setColorOpaque_F(red, green, blue);
 			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUGlass, minVGlass, maxUGlass, maxVGlass, offset, 0);
 			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUGlass, minVGlass, maxUGlass, maxVGlass, -offset, 0);
-			tess.draw();
 
-			tess.startDrawingQuads();
 			tess.setColorOpaque_F(1, 1, 1);
 			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, offset, 0);
 			drawPlane(tess, xMid, yMin, zMin, xMid, yMax, zMax, minUStreaks, minVStreaks, maxUStreaks, maxVStreaks, -offset, 0);
