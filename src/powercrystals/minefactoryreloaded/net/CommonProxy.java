@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.TextureStitchEvent.Post;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -88,7 +89,14 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 			ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 			for (int i = storage.length; i --> 0;)
 				if (storage[i] != null)
-					Arrays.fill(storage[i].getSkylightArray().data, (byte)0);
+				{
+					//{ spigot compat: force data array to exist
+					NibbleArray a = storage[i].getSkylightArray();
+					a.set(0, 0, 0, 0);
+					a.set(0, 0, 0, 15);
+					//}
+					Arrays.fill(a.data, (byte)0);
+				}
 			chunk.resetRelightChecks();
 			chunk.isModified = true;
 			World world = chunk.worldObj;
