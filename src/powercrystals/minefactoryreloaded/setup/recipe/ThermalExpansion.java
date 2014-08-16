@@ -481,7 +481,7 @@ public class ThermalExpansion extends Vanilla
 				"DHD",
 				'G', "sheetPlastic",
 				'D', "gemDiamond",
-				'H', "glassHardened",
+				'H', "blockGlassHardened",
 				'F', lamp,
 				'C', powerCoilGold
 					} );
@@ -493,7 +493,7 @@ public class ThermalExpansion extends Vanilla
 				'G', "sheetPlastic",
 				'D', "gemDiamond",
 				'S', MineFactoryReloadedCore.pinkSlimeballItem,
-				'H', "glassHardened",
+				'H', "blockGlassHardened",
 				'F', lamp,
 				'C', powerCoilElectrum
 					} );
