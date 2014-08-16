@@ -62,11 +62,11 @@ public class FactoryRegistry
 	 * { Plantables
 	 * registerPlantable_Standard		| An NBTTag with the seed (Item, String identifier), and
 	 * 									  crop (Block, String identifier) attributes set, optionally
-	 * 									  also having the meta (Integer, placed metadata value) attribute set.
+	 * 									  also having the meta (Integer, accepted metadata value of the seed item) attribute set.
 	 * 									  No special checks for location, just sustainability.
 	 * registerPlantable_Crop			| An NBTTag with the seed (Item, String identifier), and
 	 * 									  crop (Block, String identifier) attributes set, optionally
-	 * 									  also having the meta (Integer, placed metadata value) attribute set.
+	 * 									  also having the meta (Integer, accepted metadata value of the seed item) attribute set.
 	 * 									  Will automatically hoe dirt and grass into farmland when planting.
 	 * registerPlantable_Sapling		| An NBTTag with the sapling (Block, String identifier), and optionally
 	 * 									  the seed (Item, String identifier) attributes set.
