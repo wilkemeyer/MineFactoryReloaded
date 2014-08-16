@@ -52,6 +52,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	
 	RedstoneNetwork _network;
 	boolean isRSNode = false;
+	private boolean dirty;
 	
 	private static THashSet<Block> _connectionBlackList;
 	
@@ -193,6 +194,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		if (grid != RedstoneNetwork.HANDLER) return;
 		boolean lastNode = isRSNode;
 		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		dirty = false;
 		for (ForgeDirection d : dirs)
 			updateNearbyNode(d);
 		isRSNode = false;
@@ -205,7 +207,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		if (lastNode != isRSNode)
 			_network.addConduit(this);
 		markChunkDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		if (dirty)
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void updateNearbyNode(ForgeDirection from)
@@ -241,7 +244,6 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		{
 			_network.removeNode(bp);
 		}
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public int getWeakPower(ForgeDirection to)
@@ -484,6 +486,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	public RedNetConnectionType getConnectionState(ForgeDirection side)
 	{
 		RedNetConnectionType type = getConnectionState(side, true);
+		dirty |= _connectionState[side.ordinal()] != type;
 		_connectionState[side.ordinal()] = type;
 		return type;
 	}

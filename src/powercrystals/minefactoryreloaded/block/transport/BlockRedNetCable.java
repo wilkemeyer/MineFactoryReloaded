@@ -388,6 +388,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		if (te instanceof TileEntityRedNetCable)
 		{
 			((TileEntityRedNetCable)te).updateNearbyNode(subnet, from);
+			onNeighborBlockChange(world, x, y, z, this);
 		}
 	}
 
