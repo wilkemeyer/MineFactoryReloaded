@@ -465,11 +465,11 @@ public class IMCHandler
 				 * Unknown IMC message
 				 */
 				else
-					bigWarning(_log, Level.WARN, "Unknown IMC message (%s) from %s", k, m.getSender());
+					bigWarning(_log, Level.WARN, "Unknown IMC message (%s)\nfrom %s", k, m.getSender());
 			}
 			catch (Throwable _)
 			{
-				bigWarning(_log, Level.ERROR, "Bad IMC message (%s) from %s", m.key, m.getSender());
+				bigWarning(_log, Level.ERROR, "Bad IMC message (%s)\nfrom %s", m.key, m.getSender());
 				_log.catching(_);
 			}
 		}
@@ -483,15 +483,15 @@ public class IMCHandler
 	private static void bigWarning(Logger log, Level Level, String format, Object... data)
 	{
 		String o = String.format(format, data);
-        log.log(Level, "****************************************");
-        log.log(Level, "****************************************");
-        for (String line : o.split(".{1,36}"))
+		String err = "************************";
+		err += err;
+        log.log(Level, err);
+        log.log(Level, err);
+        for (String str : o.split("\n", 0))
         {
-        	while (line.length() < 36)
-        		line += " ";
-        	log.log(Level, "* %s *");
+        	log.log(Level, str);
         }
-        log.log(Level, "****************************************");
-        log.log(Level, "****************************************");
+        log.log(Level, err);
+        log.log(Level, err);
 	}
 }

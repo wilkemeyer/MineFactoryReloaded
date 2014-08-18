@@ -251,7 +251,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
 	{
 		MovingObjectPosition r = collisionRayTrace((IBlockAccess)world, x, y, z, start, end);
-		return r != null ? r : super.collisionRayTrace(world, x, y, z, start, end);
+		return r;
 	}
 
 	public MovingObjectPosition collisionRayTrace(IBlockAccess world, int x, int y, int z, Vec3 start, Vec3 end)
@@ -262,6 +262,10 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
 			((ITraceable)te).addTraceableCuboids(cuboids, true, draw.get() == Boolean.TRUE);
 			return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
+		}
+		else if (world instanceof World)
+		{
+			return super.collisionRayTrace((World)world, x, y, z, start, end);
 		}
 		return null;
 	}
