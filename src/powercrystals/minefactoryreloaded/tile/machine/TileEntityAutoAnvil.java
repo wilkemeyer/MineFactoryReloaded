@@ -174,7 +174,6 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		setWorkDone(0);
 	}
 
-	@SideOnly(Side.CLIENT)
 	public ItemStack getRepairOutput()
 	{
 		return _output;
