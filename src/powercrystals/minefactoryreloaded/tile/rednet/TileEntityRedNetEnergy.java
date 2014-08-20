@@ -4,9 +4,12 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerEU;
 import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork.TRANSFER_RATE;
 
+import appeng.api.implementations.tiles.ICrankable;
+
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
+import cofh.asm.relauncher.Strippable;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -34,8 +37,9 @@ import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
+@Strippable("appeng.api.implementations.tiles.ICrankable")
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements 
-									IEnergyHandler//, IEnergyInfo
+									IEnergyHandler, ICrankable//, IEnergyInfo
 {
 	private static boolean IC2Classes = false, IC2Net = false;
 
@@ -289,6 +293,26 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if ((sideMode[from.ordinal()] & 1) != 0 & _grid != null)
 			return _grid.storage.getMaxEnergyStored();
 		return 0;
+	}
+	
+	// ICrankable
+
+	@Override
+	public boolean canTurn()
+	{
+		return _grid.storage.getEnergyStored() < _grid.storage.getMaxEnergyStored();
+	}
+
+	@Override
+	public void applyTurn()
+	{
+		_grid.storage.receiveEnergy(90, false);
+	}
+
+	@Override
+	public boolean canCrankAttach(ForgeDirection directionToCrank)
+	{
+		return true;
 	}
 
 	// internal

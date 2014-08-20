@@ -1,6 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import appeng.api.implementations.tiles.ICrankable;
+
 import cofh.api.energy.IEnergyHandler;
+import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,8 +24,9 @@ import powercrystals.minefactoryreloaded.setup.Machine;
  * Idle ticks cause an artificial delay before activateMachine() is called again. Max should be the highest value the _machine will use, to draw the
  * progress bar correctly.
  */
+@Strippable("appeng.api.implementations.tiles.ICrankable")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-												implements IEnergyHandler
+												implements IEnergyHandler, ICrankable
 {	
 	public static final int energyPerAE = 2;
 	public static final int energyPerEU = 4;
@@ -272,5 +276,25 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int getMaxEnergyStored(ForgeDirection from)
 	{
 		return getEnergyStoredMax();
+	}
+	
+	// AE methods
+
+	@Override
+	public boolean canTurn()
+	{
+		return getEnergyStored() < getEnergyStoredMax();
+	}
+
+	@Override
+	public void applyTurn()
+	{
+		storeEnergy(90, true);
+	}
+
+	@Override
+	public boolean canCrankAttach(ForgeDirection directionToCrank)
+	{
+		return true;
 	}
 }
