@@ -82,23 +82,25 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		return _spawnExact ? MFRConfig.autospawnerCostExact.getInt() : MFRConfig.autospawnerCostStandard.getInt();
 	}
 
-	protected int getSpawnCost(Entity e)
+	protected int getSpawnCost(Entity e, String id)
 	{
+		int r = MFRRegistry.getBaseSpawnCost(id);
+
 		if (e instanceof EntityLiving)
 		{
 			EntityLiving el = (EntityLiving)e;
-
-			int r = Math.abs(el.experienceValue) + 1;
-			r += r / 3;
+			int t = Math.abs(el.experienceValue) + 1;
+			r += t + t / 3;
 
 			ItemStack[] aitemstack = el.getLastActiveItems();
 			for (int j = 0; j < aitemstack.length; ++j)
 				if (aitemstack[j] != null && el.equipmentDropChances[j] <= 1.0F)
 					r += 1 + 4;
 
-			return (int)((Math.max(r - 1, 0) + 1) * 66.66666667f * getSpawnCost()) / 10;
+			r = Math.max(r, 4);
 		}
-		return getSpawnCost();
+
+		return (int)((Math.max(r - 1, 0) + 1) * 66.66666667f * getSpawnCost()) / 10;
 	}
 
 	@Override
@@ -107,10 +109,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		ItemStack item = getStackInSlot(0);
 		if (item == null || !canInsertItem(0, item, 6))
 		{
-			_spawn = null;
-			_spawnCost = 0;
-			setIdleTicks(getIdleTicksMax());
 			setWorkDone(0);
+			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 		NBTTagCompound itemTag = item.getTagCompound();
@@ -178,7 +178,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 					handler.onMobExactSpawn(spawnedLiving);
 			}
 
-			_spawnCost = getSpawnCost(_spawn);
+			_spawnCost = getSpawnCost(_spawn, entityID);
 		}
 
 		if (getWorkDone() < getWorkMax())
@@ -237,11 +237,20 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	{
 		if (!internalChange && !UtilInventory.stacksEqual(_lastSpawnStack, _inventory[0]))
 		{
-			_spawn = null;
 			setWorkDone(0);
 			setIdleTicks(getIdleTicksMax());
 		}
 		_lastSpawnStack = _inventory[0];
+	}
+	
+	@Override
+	public void setWorkDone(int w)
+	{
+		if (w == 0) {
+			_spawn = null;
+			_spawnCost = 0;
+		}
+		super.setWorkDone(w);
 	}
 
 	@SideOnly(Side.CLIENT)

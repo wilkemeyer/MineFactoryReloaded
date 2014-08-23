@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 import cofh.lib.util.WeightedRandomItemStack;
 
 import java.util.ArrayList;
@@ -71,8 +73,8 @@ public abstract class MFRRegistry
 	private static Map<Class<? extends EntityLivingBase>, IMobSpawnHandler> _spawnHandlers =
 			new HashMap<Class<? extends EntityLivingBase>, IMobSpawnHandler>();
 	private static List<String> _autoSpawnerBlacklist = new ArrayList<String>();
-	private static List<Class<? extends EntityLivingBase>> _autoSpawnerClassBlacklist =
-			new ArrayList<Class<? extends EntityLivingBase>>();
+	private static List<Class<?>> _autoSpawnerClassBlacklist = new ArrayList<Class<?>>();
+	private static TObjectIntHashMap<String> _autoSpawnerCostMap = new TObjectIntHashMap<String>(10, 0.5f, 0);
 	
 	private static List<Class<?>> _slaughterhouseBlacklist = new ArrayList<Class<?>>();
 	
@@ -285,7 +287,7 @@ public abstract class MFRRegistry
 		_autoSpawnerClassBlacklist.add(entityClass);
 	}
 
-	public static List<Class<? extends EntityLivingBase>> getAutoSpawnerClassBlacklist()
+	public static List<Class<?>> getAutoSpawnerClassBlacklist()
 	{
 		return _autoSpawnerClassBlacklist;
 	}
@@ -308,6 +310,16 @@ public abstract class MFRRegistry
 	public static Map<Class<? extends EntityLivingBase>, IMobSpawnHandler> getSpawnHandlers()
 	{
 		return _spawnHandlers;
+	}
+	
+	public static void setBaseSpawnCost(String id, int cost)
+	{
+		_autoSpawnerCostMap.put(id, cost);
+	}
+	
+	public static int getBaseSpawnCost(String id)
+	{
+		return _autoSpawnerCostMap.get(id);
 	}
 
 	public static void registerUnifierBlacklist(String string)
