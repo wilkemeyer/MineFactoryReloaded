@@ -10,6 +10,11 @@ import powercrystals.minefactoryreloaded.api.FertilizerType;
 
 public class FertilizableStandard extends FertilizableBase
 {
+	public FertilizableStandard(Block block, FertilizerType type)
+	{
+		super(block, type);
+	}
+
 	public FertilizableStandard(IGrowable block, FertilizerType type)
 	{
 		super((Block)block, type);

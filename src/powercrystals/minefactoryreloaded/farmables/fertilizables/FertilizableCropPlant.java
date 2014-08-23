@@ -12,6 +12,12 @@ public class FertilizableCropPlant extends FertilizableStandard
 {
 	protected final int targetMeta;
 	
+	public FertilizableCropPlant(Block block, FertilizerType type, int targetMeta)
+	{
+		super(block, type);
+		this.targetMeta = targetMeta;
+	}
+	
 	public FertilizableCropPlant(IGrowable block, FertilizerType type, int targetMeta)
 	{
 		super(block, type);

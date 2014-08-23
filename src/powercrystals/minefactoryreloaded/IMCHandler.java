@@ -437,7 +437,7 @@ public class IMCHandler
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("type"))
 						MFRRegistry.registerFertilizable(new FertilizableCocoa(
-								(IGrowable)Block.getBlockFromName(item.getString("plant")),
+								Block.getBlockFromName(item.getString("plant")),
 								FertilizerType.values()[item.getInteger("type")]));
 					else
 						MFRRegistry.registerFertilizable(new FertilizableCocoa(

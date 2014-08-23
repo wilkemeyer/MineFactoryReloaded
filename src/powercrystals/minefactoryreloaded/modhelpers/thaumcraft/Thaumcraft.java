@@ -12,7 +12,6 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.IGrowable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -110,7 +109,7 @@ public class Thaumcraft
 			MFRRegistry.registerFruitLogBlock(tcLog);
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
 			
-			MFRRegistry.registerFertilizable(new FertilizableCocoa((IGrowable)tcPod, FertilizerType.GrowMagicalCrop));
+			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
 			
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
