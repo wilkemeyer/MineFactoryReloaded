@@ -57,6 +57,7 @@ import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -841,6 +842,10 @@ public class MineFactoryReloadedCore extends BaseMod
 		for (String biome : list)
 		{
 			MFRRegistry.getRubberTreeBiomes().remove(biome);
+		}
+		for (Property prop : MFRConfig.spawnerCustomization.values())
+		{
+			MFRRegistry.setBaseSpawnCost(prop.getName(), prop.getInt(0));
 		}
 		_log.info("Load Complete.");
 	}

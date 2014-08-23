@@ -4,6 +4,7 @@ import static net.minecraftforge.common.config.Configuration.*;
 
 import java.io.File;
 
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -15,112 +16,6 @@ public class MFRConfig
 
 	// common config
 	public static Property dropFilledContainers;
-
-	public static Property machineBlock0Id;
-	public static Property machineBlock1Id;
-	public static Property machineBlock2Id;
-
-	public static Property conveyorBlockId;
-
-	public static Property factoryGlassBlockId;
-	public static Property factoryGlassPaneBlockId;
-	public static Property factoryRoadBlockId;
-	public static Property factoryDecorativeBrickBlockId;
-	public static Property factoryDecorativeStoneBlockId;
-
-	public static Property rubberWoodBlockId;
-	public static Property rubberLeavesBlockId;
-	public static Property rubberSaplingBlockId;
-
-	public static Property railPickupCargoBlockId;
-	public static Property railDropoffCargoBlockId;
-	public static Property railPickupPassengerBlockId;
-	public static Property railDropoffPassengerBlockId;
-
-	public static Property rednetCableBlockId;
-	public static Property rednetLogicBlockId;
-	public static Property rednetPanelBlockId;
-
-	public static Property fakeLaserBlockId;
-
-	public static Property vineScaffoldBlockId;
-
-	public static Property detCordBlockId;
-
-	public static Property milkStillBlockId;
-	public static Property sludgeStillBlockId;
-	public static Property sewageStillBlockId;
-	public static Property essenceStillBlockId;
-	public static Property biofuelStillBlockId;
-	public static Property meatStillBlockId;
-	public static Property pinkslimeStillBlockId;
-	public static Property chocolateMilkStillBlockId;
-	public static Property mushroomSoupStillBlockId;
-
-	public static Property hammerItemId;
-	public static Property milkItemId; //TODO: UNUSED
-	public static Property sludgeItemId; //TODO: UNUSED
-	public static Property sewageItemId; //TODO: UNUSED
-	public static Property mobEssenceItemId; //TODO: UNUSED
-	public static Property fertilizerItemId;
-	public static Property plasticSheetItemId;
-	public static Property rawPlasticItemId;
-	public static Property rubberBarItemId;
-	public static Property sewageBucketItemId;
-	public static Property sludgeBucketItemId;
-	public static Property mobEssenceBucketItemId;
-	public static Property syringeEmptyItemId;
-	public static Property syringeHealthItemId;
-	public static Property syringeGrowthItemId;
-	public static Property rawRubberItemId;
-	public static Property machineBaseItemId;
-	public static Property safariNetItemId;
-	public static Property ceramicDyeItemId;
-	public static Property blankRecordId;
-	public static Property syringeZombieId;
-	public static Property safariNetSingleItemId;
-	public static Property bioFuelItemId; //TODO: UNUSED
-	public static Property bioFuelBucketItemId;
-	public static Property upgradeItemId;
-	public static Property safariNetLauncherItemId;
-	public static Property sugarCharcoalItemId;
-	public static Property milkBottleItemId;
-	public static Property spyglassItemId;
-	public static Property portaSpawnerItemId;
-	public static Property strawItemId;
-	public static Property xpExtractorItemId;
-	public static Property syringeSlimeItemId;
-	public static Property syringeCureItemId;
-	public static Property logicCardItemId;
-	public static Property rednetMeterItemId;
-	public static Property rednetMemoryCardItemId;
-	public static Property rulerItemId;
-	public static Property meatIngotRawItemId;
-	public static Property meatIngotCookedItemId;
-	public static Property meatNuggetRawItemId;
-	public static Property meatNuggetCookedItemId;
-	public static Property meatBucketItemId;
-	public static Property pinkSlimeBucketItemId;
-	public static Property pinkSlimeballItemId;
-	public static Property safariNetJailerItemId;
-	public static Property laserFocusItemId;
-	public static Property chocolateMilkBucketItemId;
-	public static Property mushroomSoupBucketItemId;
-	public static Property needlegunItemId;
-	public static Property needlegunAmmoEmptyItemId;
-	public static Property needlegunAmmoStandardItemId;
-	public static Property needlegunAmmoLavaItemId;
-	public static Property needlegunAmmoSludgeItemId;
-	public static Property needlegunAmmoSewageItemId;
-	public static Property needlegunAmmoFireItemId;
-	public static Property needlegunAmmoAnvilItemId;
-	public static Property plasticCupItemId;
-	public static Property rocketLauncherItemId;
-	public static Property rocketItemId;
-	public static Property plasticCellItemId;
-	public static Property fishingRodItemId;
-	public static Property bagItemId;
-	public static Property plasticBootsItemId;
 
 	public static Property zoolologistEntityId;
 
@@ -186,6 +81,8 @@ public class MFRConfig
 
 	public static Property unifierBlacklist;
 	public static Property spawnerBlacklist;
+	
+	public static ConfigCategory spawnerCustomization;
 
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
@@ -193,7 +90,6 @@ public class MFRConfig
 	// recipes config
 	public static Property vanillaRecipes;
 	public static Property thermalExpansionRecipes;
-	public static Property gregTechRecipes;
 
 	public static String CATEGORY_ITEM = "item";
 
@@ -348,29 +244,41 @@ public class MFRConfig
 		//}
 
 		//{ Additional machine configs
-		conveyorCaptureNonItems = c.get("Machine.Conveyor", "CaptureNonItems", true).setRequiresMcRestart(true);
+		category = "Machine.Conveyor";
+		conveyorCaptureNonItems = c.get(category, "CaptureNonItems", true).setRequiresMcRestart(true);
 		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
-		conveyorNeverCapturesPlayers = c.get("Machine.Conveyor", "NeverCapturePlayers", false).setRequiresMcRestart(true);
+		conveyorNeverCapturesPlayers = c.get(category, "NeverCapturePlayers", false).setRequiresMcRestart(true);
 		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
-		conveyorNeverCapturesTCGolems = c.get("Machine.Conveyor", "NeverCaptureTCGolems", false).setRequiresMcRestart(true);
+		conveyorNeverCapturesTCGolems = c.get(category, "NeverCaptureTCGolems", false).setRequiresMcRestart(true);
 		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture ThaumCraft golems regardless of other settings.";
 
-		enableChunkLimitBypassing = c.get("Machine." + Machine.ChunkLoader.getName(), "IgnoreChunkLimit", false);
+		category = "Machine." + Machine.ChunkLoader.getName();
+		enableChunkLimitBypassing = c.get(category, "IgnoreChunkLimit", false);
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
-		enableChunkLoaderRequiresOwner = c.get("Machine." + Machine.ChunkLoader.getName(), "RequiresOwnerOnline", false);
+		enableChunkLoaderRequiresOwner = c.get(category, "RequiresOwnerOnline", false);
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
-		autospawnerCostExact = c.get("Machine." + Machine.AutoSpawner.getName(), "Cost.Exact", 5).setRequiresMcRestart(true);
+		
+		category = "Machine." + Machine.AutoSpawner.getName();
+		spawnerBlacklist = c.get(category, "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
+		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, Forestry.butterflyGE) to blacklist from the AutoSpawner.";
+		category += ".Cost";
+		autospawnerCostExact = c.get(category, "Exact", 5).setRequiresMcRestart(true);
 		autospawnerCostExact.comment = "The multiplier for work required to generate a mob in exact mode.";
-		autospawnerCostStandard = c.get("Machine." + Machine.AutoSpawner.getName(), "Cost.Standard", 1).setRequiresMcRestart(true);
+		autospawnerCostStandard = c.get(category, "Standard", 1).setRequiresMcRestart(true);
 		autospawnerCostStandard.comment = "The multiplier for work required to generate a mob in standard (non-exact) mode.";
+		spawnerCustomization = c.getCategory(category + ".Custom").setRequiresMcRestart(true);
+		spawnerCustomization.setComment("Custom base XP costs for entities. format: I:<entityid> = #. e.g.:\n"
+									+ "I:VillagerGolem = 25\nI:Slime = 50");
+		
 		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
+		
 		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);
 		unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
-		spawnerBlacklist = c.get("Machine." + Machine.AutoSpawner.getName(), "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
-		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, butterflyGE) to blacklist from the AutoSpawner.";
+		
 		breederShutdownThreshold = c.get("Machine." + Machine.Breeder.getName(), "ShutdownThreshold", 50).setRequiresMcRestart(true);
 		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
+		
 		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
 		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
 		//}
