@@ -1,13 +1,16 @@
 package powercrystals.minefactoryreloaded.core;
 
+import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.position.BlockPosition;
 
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -159,6 +162,29 @@ public abstract class MFRLiquidMover
 			return true;
 		}
 		return false;
+	}
+	
+	public static int fillTankWithXP(FluidTankAdv tank, EntityXPOrb orb)
+	{
+		int maxAmount = tank.getSpace(), maxXP = (int) (maxAmount / 66.66666667f);
+		if (maxAmount <= 0)
+		{
+			return 0;
+		}
+		int found = Math.min(orb.xpValue, maxXP);
+		orb.xpValue -= found;
+		if (orb.xpValue <= 0)
+		{
+			orb.setDead();
+			found = Math.max(found, 0);
+		}
+		if (found > 0)
+		{
+			found = (int)(found * 66.66666667f);
+			tank.fill(FluidRegistry.getFluidStack("mobessence", found), true);
+			return found;
+		}
+		return 0;
 	}
 	
 	public static void pumpLiquid(IFluidTank iFluidTank, TileEntityFactory from)

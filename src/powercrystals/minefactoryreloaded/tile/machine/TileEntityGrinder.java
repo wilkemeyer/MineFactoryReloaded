@@ -9,6 +9,7 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
@@ -24,6 +25,7 @@ import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -168,7 +170,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				fillTank(_tanks[0], "mobessence", 1);
+				//fillTank(_tanks[0], "mobessence", 1);
 				setIdleTicks(20);
 			}
 			else
@@ -190,6 +192,11 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	{
 		setRecentlyHit(entity, 100);
 		entity.attackEntityFrom(_damageSource, DAMAGE);
+	}
+	
+	public void acceptXPOrb(EntityXPOrb orb)
+	{
+		MFRLiquidMover.fillTankWithXP(_tanks[0], orb);
 	}
 	
 	@Override

@@ -9,6 +9,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityChicken;
@@ -240,6 +241,7 @@ public class Vanilla
 		MFRRegistry.registerGrinderBlacklist(EntityDragon.class);
 		MFRRegistry.registerGrinderBlacklist(EntityWither.class);
 		MFRRegistry.registerGrinderBlacklist(EntityVillager.class);
+		MFRRegistry.registerGrinderBlacklist(IBossDisplayData.class);
 		
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityChicken.class, new MobDrop[]
 				{

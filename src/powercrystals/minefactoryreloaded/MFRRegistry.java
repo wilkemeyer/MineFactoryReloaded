@@ -60,8 +60,7 @@ public abstract class MFRRegistry
 	
 	private static Map<Class<? extends EntityLivingBase>, IFactoryGrindable> _grindables =
 			new HashMap<Class<? extends EntityLivingBase>, IFactoryGrindable>();
-	private static List<Class<? extends EntityLivingBase>> _grindableBlacklist =
-			new ArrayList<Class<? extends EntityLivingBase>>();
+	private static List<Class<?>> _grindableBlacklist = new ArrayList<Class<?>>();
 	
 	private static List<Class<? extends EntityLivingBase>> _safariNetBlacklist =
 			new ArrayList<Class<? extends EntityLivingBase>>();
@@ -75,8 +74,7 @@ public abstract class MFRRegistry
 	private static List<Class<? extends EntityLivingBase>> _autoSpawnerClassBlacklist =
 			new ArrayList<Class<? extends EntityLivingBase>>();
 	
-	private static List<Class<? extends EntityLivingBase>> _slaughterhouseBlacklist =
-			new ArrayList<Class<? extends EntityLivingBase>>();
+	private static List<Class<?>> _slaughterhouseBlacklist = new ArrayList<Class<?>>();
 	
 	private static List<Class<? extends Entity>> _conveyerBlacklist =
 			new ArrayList<Class<? extends Entity>>();
@@ -146,19 +144,19 @@ public abstract class MFRRegistry
 		return _grindables;
 	}
 
-	public static void registerGrinderBlacklist(Class<? extends EntityLivingBase> ungrindable)
+	public static void registerGrinderBlacklist(Class<?> ungrindable)
 	{
 		_grindableBlacklist.add(ungrindable);
 		if (MFRRegistry._safariNetBlacklist.contains(ungrindable))
 			_slaughterhouseBlacklist.add(ungrindable);
 	}
 
-	public static List<Class<? extends EntityLivingBase>> getGrinderBlacklist()
+	public static List<Class<?>> getGrinderBlacklist()
 	{
 		return _grindableBlacklist;
 	}
 
-	public static List<Class<? extends EntityLivingBase>> getSlaughterhouseBlacklist()
+	public static List<Class<?>> getSlaughterhouseBlacklist()
 	{
 		return _slaughterhouseBlacklist;
 	}

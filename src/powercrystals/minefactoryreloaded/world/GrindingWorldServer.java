@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldServer;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityGrinder;
 
 import skyboy.core.world.WorldServerProxy;
 
@@ -42,15 +44,31 @@ public class GrindingWorldServer extends WorldServerProxy
 	@Override
 	public boolean spawnEntityInWorld(Entity entity)
 	{
-		if(grinder != null && entity instanceof EntityItem)
+		if (grinder != null)
 		{
-			if(grinder.manageSolids())
+			if (grinder.manageSolids())
 			{
-				ItemStack drop = ((EntityItem)entity).getEntityItem();
-				if(drop != null) grinder.doDrop(drop);
+				if (entity instanceof EntityItem)
+				{
+					ItemStack drop = ((EntityItem)entity).getEntityItem();
+					if (drop != null) grinder.doDrop(drop);
+					entity.setDead();
+					return true;
+				}
+				else if (entity instanceof EntityXPOrb)
+				{
+					EntityXPOrb orb = (EntityXPOrb)entity;
+					if (grinder instanceof TileEntityGrinder)
+					{
+						((TileEntityGrinder)grinder).acceptXPOrb(orb);
+						entity.setDead();
+						return true; // consume any orbs not made into essence
+					}
+				}
 			}
 		}
-		else if(allowSpawns)
+
+		if (allowSpawns)
 		{
 			entity.worldObj = this.proxiedWorld;
 			return super.spawnEntityInWorld(entity);

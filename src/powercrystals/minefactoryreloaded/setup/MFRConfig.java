@@ -359,10 +359,10 @@ public class MFRConfig
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
 		enableChunkLoaderRequiresOwner = c.get("Machine." + Machine.ChunkLoader.getName(), "RequiresOwnerOnline", false);
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
-		autospawnerCostExact = c.get("Machine." + Machine.AutoSpawner.getName(), "Work.Exact", 50).setRequiresMcRestart(true);
-		autospawnerCostExact.comment = "The work required to generate a mob in exact mode.";
-		autospawnerCostStandard = c.get("Machine." + Machine.AutoSpawner.getName(), "Work.Standard", 15).setRequiresMcRestart(true);
-		autospawnerCostStandard.comment = "The work required to generate a mob in standard (non-exact) mode.";
+		autospawnerCostExact = c.get("Machine." + Machine.AutoSpawner.getName(), "Cost.Exact", 5).setRequiresMcRestart(true);
+		autospawnerCostExact.comment = "The multiplier for work required to generate a mob in exact mode.";
+		autospawnerCostStandard = c.get("Machine." + Machine.AutoSpawner.getName(), "Cost.Standard", 1).setRequiresMcRestart(true);
+		autospawnerCostStandard.comment = "The multiplier for work required to generate a mob in standard (non-exact) mode.";
 		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
 		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);

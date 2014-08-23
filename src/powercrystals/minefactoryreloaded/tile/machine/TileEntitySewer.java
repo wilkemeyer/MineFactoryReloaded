@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSewer;
 import powercrystals.minefactoryreloaded.gui.container.ContainerSewer;
@@ -128,23 +129,8 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 				if (e != null & e instanceof EntityXPOrb && !e.isDead)
 				{
 					EntityXPOrb orb = (EntityXPOrb)o;
-					int found = Math.min(orb.xpValue, maxAmount);
-					orb.xpValue -= found;
-					if (orb.xpValue <= 0)
-					{
-						orb.setDead();
-						found = Math.max(found, 0);
-					}
-					if (found > 0)
-					{
-						found = (int)(found * 66.66666667f);
-						maxAmount -= found;
-						_tanks[1].fill(FluidRegistry.getFluidStack("mobessence", found), true);
-						if (maxAmount <= 0)
-						{
-							break;
-						}
-					}
+					if (MFRLiquidMover.fillTankWithXP(_tanks[1], orb) == 0)
+						break;
 				}
 			}
 		}
