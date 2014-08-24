@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
-import cofh.core.util.oredict.OreDictionaryArbiter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import powercrystals.minefactoryreloaded.core.OreDictionaryArbiter;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUnifier;

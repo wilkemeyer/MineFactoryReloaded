@@ -15,6 +15,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -847,7 +848,15 @@ public class MineFactoryReloadedCore extends BaseMod
 		{
 			MFRRegistry.setBaseSpawnCost(prop.getName(), prop.getInt(0));
 		}
+		
+		powercrystals.minefactoryreloaded.core.OreDictionaryArbiter.initialize();
 		_log.info("Load Complete.");
+	}
+
+	@EventHandler
+	public void remap(FMLModIdMappingEvent evt)
+	{
+		powercrystals.minefactoryreloaded.core.OreDictionaryArbiter.bake();
 	}
 
 	@SubscribeEvent
