@@ -21,6 +21,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -209,6 +210,11 @@ public class MFRUtil
 		}
 
 		return null;
+	}
+	
+	public static final TileEntity getTile(World world, int x, int y, int z)
+	{
+		return world.getChunkFromBlockCoords(x, z).getTileEntityUnsafe(x & 15, y, z & 15);
 	}
 
 	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z)

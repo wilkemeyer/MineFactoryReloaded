@@ -122,6 +122,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		tess.draw();
 	}
 
+	private ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
@@ -136,55 +138,60 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 		tess.setColorOpaque_F(1,1,1);
 		tess.setBrightness(brightness);
 
-		Translation tlate = new Translation(new Vector3(x, y, z));
+		tess.addTranslation(x, y, z);
 
-		base.render(tlate, uvt);
+		base.render(uvt);
 		if (_cable instanceof TileEntityRedNetEnergy) {
-			cage.render(tlate, uvt);
+			cage.render(uvt);
 			_cond = (TileEntityRedNetEnergy)_cable;
 		}
 
-		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS) {
+		ForgeDirection[] dirs = this.dirs;
+
+		for (int i = dirs.length; i --> 0; ) {
+			ForgeDirection f = dirs[i];
 			int side = f.ordinal();
 			RedNetConnectionType state = _cable.getCachedConnectionState(f);
 			switch (state.flags & 31) {
 			case 11: // isCable, isSingleSubnet
 				tess.setBrightness(bandBrightness);
 				band[side].setColour(_cable.getSideColorValue(f));
-				band[side].render(tlate, uvt);
+				band[side].render(uvt);
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
 			case 19: // isCable, isAllSubnets
 				if (state.isSingleSubnet) {
-					iface[side].render(tlate, uvt);
-					grip[side].render(tlate, uvt);
+					iface[side].render(uvt);
+					grip[side].render(uvt);
 				} else
-					cable[side].render(tlate, uvt);
+					cable[side].render(uvt);
 				break;
 			case 13: // isPlate, isSingleSubnet
 				tess.setBrightness(bandBrightness);
 				band[side].setColour(_cable.getSideColorValue(f));
-				band[side].render(tlate, uvt);
+				band[side].render(uvt);
 				platef[side].setColour(_cable.getSideColorValue(f));
-				platef[side].render(tlate, uvt);
+				platef[side].render(uvt);
 				tess.setColorOpaque_F(1,1,1);
 				tess.setBrightness(brightness);
 			case 21: // isPlate, isAllSubnets
-				iface[side].render(tlate, uvt);
-				plate[side].render(tlate, uvt);
+				iface[side].render(uvt);
+				plate[side].render(uvt);
 				if (state.isAllSubnets) {
 					platef[side].setColour(-1);
-					platef[side].render(tlate, uvt);
+					platef[side].render(uvt);
 				}
 			default:
 				break;
 			}
 			if (_cond != null && _cond.isInterfacing(f)) {
-				wire[side].render(tlate, uvt);
+				wire[side].render(uvt);
 				if (_cond.interfaceMode(f) != 4)
-					caps[side].render(tlate, uvt);
+					caps[side].render(uvt);
 			}
 		}
+
+		tess.addTranslation(-x, -y, -z);
 
 		return true;
 	}

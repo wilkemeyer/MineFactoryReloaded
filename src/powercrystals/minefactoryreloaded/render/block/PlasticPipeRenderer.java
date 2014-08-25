@@ -94,6 +94,8 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 		tess.draw();
 	}
 
+	private ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
@@ -107,33 +109,38 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 		tess.setColorOpaque_F(1,1,1);
 		tess.setBrightness(brightness);
 
-		Translation tlate = new Translation(new Vector3(x, y, z));
+		tess.addTranslation(x, y, z);
 
-		base.render(tlate, uvt);
+		base.render(uvt);
+		ForgeDirection[] dirs = this.dirs;
 
-		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS)
+		for (int i = dirs.length; i --> 0; ) {
+			ForgeDirection f = dirs[i];
 			if (_cable.isInterfacing(f))
 			{
 				int side = f.ordinal();
 				switch (_cable.interfaceMode(f)) {
 				case 2: // cable
-					cable[side].render(tlate, uvt);
+					cable[side].render(uvt);
 					break;
 				case 1: // IFluidHandler
-					iface[side].render(tlate, uvt);
+					iface[side].render(uvt);
 					int state = _cable.getMode(side);
 					if ((state & 2) == 2)
 						if (_cable.isPowered())
-							gripI[side].render(tlate, uvt);
+							gripI[side].render(uvt);
 						else
-							gripP[side].render(tlate, uvt);
+							gripP[side].render(uvt);
 					else
-						gripO[side].render(tlate, uvt);
+						gripO[side].render(uvt);
 					break;
 				default:
 					break;
 				}
 			}
+		}
+
+		tess.addTranslation(-x, -y, -z);
 
 		return true;
 	}

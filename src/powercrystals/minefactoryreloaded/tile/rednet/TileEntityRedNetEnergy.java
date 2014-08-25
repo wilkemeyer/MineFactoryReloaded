@@ -190,17 +190,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	private void incorporateTiles() {
-		if (_grid != null) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				if (worldObj.blockExists(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-					TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
-							yCoord + dir.offsetY, zCoord + dir.offsetZ);
-					if (tile instanceof TileEntityRedNetEnergy)
-						_grid.addConduit((TileEntityRedNetEnergy)tile);
-				}
-			}
-		} else for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+		if (_grid == null) for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			if (worldObj.blockExists(xCoord + dir.offsetX,
 					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
@@ -499,8 +489,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	void setGrid(RedstoneEnergyNetwork newGrid) {
 		_grid = newGrid;
-		if (_grid != null && !_grid.isRegenerating())
-			incorporateTiles();
 	}
 
 	@Override

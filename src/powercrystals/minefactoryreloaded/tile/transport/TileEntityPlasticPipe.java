@@ -204,17 +204,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	private void incorporateTiles() {
-		if (_grid != null) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
-				if (BlockPosition.blockExists(this, dir)) {
-					TileEntityPlasticPipe pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
-					if (pipe != null)
-						if (pipe.canInterface(this))
-							_grid.addConduit(pipe);
-				}
-			}
-		} else {
+		if (_grid == null) {
 			boolean hasGrid = false;
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
@@ -388,13 +378,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	// internal
 
 	public boolean isInterfacing(ForgeDirection to) {
-		int bSide = to.getOpposite().ordinal();
+		int bSide = to.ordinal() ^ 1;
 		int mode = sideMode[bSide] >> 2;
 		return ((sideMode[bSide] & 1) != 0) & (sideMode[6] == 1 ? mode == 2 : mode != 0);
 	}
 
 	public int interfaceMode(ForgeDirection to) {
-		int bSide = to.getOpposite().ordinal();
+		int bSide = to.ordinal() ^ 1;
 		int mode = sideMode[bSide] >> 2;
 		return (sideMode[bSide] & 1) != 0 ? mode : 0;
 	}
@@ -488,8 +478,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		if (fluidForGrid == null)
 			fluidForGrid = newGrid.storage.drain(0, false);
 		_grid = newGrid;
-		if (readFromNBT && _grid != null && !_grid.isRegenerating())
-			incorporateTiles();
 	}
 
 	@Override

@@ -46,6 +46,7 @@ import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.ITraceable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
@@ -68,6 +69,11 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		super(material);
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
+	}
+	
+	protected static final TileEntity getTile(World world, int x, int y, int z)
+	{
+		return MFRUtil.getTile(world, x, y, z);
 	}
 
 	@Override
@@ -172,7 +178,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 			return;
 		}
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityBase)
 		{
 			if (blockId != this)
@@ -185,7 +191,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	@Override
 	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world instanceof World ? getTile((World)world, x, y, z) : world.getTileEntity(x, y, z);
 		
 		if (te instanceof TileEntityBase)
 		{
@@ -196,7 +202,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof IEntityCollidable)
 		{
 			float shrinkAmount = 0.125F;
@@ -215,7 +221,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		if (world.isRemote)
 			return;
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof IEntityCollidable)
 			((IEntityCollidable)te).onEntityCollided(entity);
 
@@ -226,7 +232,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
@@ -279,7 +285,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 			return;
 		EntityPlayer player = event.player;
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof ITraceable) {
 			MovingObjectPosition part = RayTracer.retraceBlock(world, player, x, y, z);
 			if (part == null)

@@ -153,17 +153,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	private void incorporateTiles() {
-		if (_network != null) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				if (worldObj.blockExists(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-					TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
-							yCoord + dir.offsetY, zCoord + dir.offsetZ);
-					if (tile instanceof TileEntityRedNetCable)
-						_network.addConduit((TileEntityRedNetCable)tile);
-				}
-			}
-		} else for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+		if (_network == null) for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			if (worldObj.blockExists(xCoord + dir.offsetX,
 					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
 				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
@@ -179,8 +169,6 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	public void setNetwork(RedstoneNetwork network)
 	{
 		_network = network;
-		if (_network != null && !_network.isRegenerating())
-			incorporateTiles();
 	}
 
 	public RedstoneNetwork getNetwork()
