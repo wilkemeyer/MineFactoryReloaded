@@ -290,6 +290,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 							for (Integer addedEnchId : addedEnchantments.keySet())
 							{
 								Enchantment enchantment = Enchantment.enchantmentsList[addedEnchId];
+								if (enchantment == null)
+									continue;
 								int existingEnchLevel = existingEnchantments.containsKey(addedEnchId) ? existingEnchantments.get(addedEnchId) : 0;
 								int addedEnchLevel = addedEnchantments.get(addedEnchId);
 								int newEnchLevel;
