@@ -155,10 +155,10 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te != null)
 		{
-			dropContents(te, null);
+			dropContents(te, null); // TODO: rewrite drop logic
 
 			if (te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory)te).onBlockBroken();
@@ -175,7 +175,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
 				damageDropped(metadata));
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te != null)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
@@ -197,12 +197,12 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z),
 				world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
 		list.add(machine);
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityFactory)
 		{
 			dropContents(te, list);
 
-			if(te instanceof TileEntityFactoryInventory)
+			if (te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory)te).onDisassembled();
 
 			NBTTagCompound tag = new NBTTagCompound();
@@ -214,20 +214,18 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 				tag.setTag("display", name);
 			}
 			machine.setTagCompound(tag);
-
-			world.setBlockToAir(x, y, z);
-			if (!returnBlock)
-				for (ItemStack stack : list)
-					dropStack(world, x, y, z, stack);
-			return list;
 		}
+		world.setBlockToAir(x, y, z);
+		if (!returnBlock)
+			for (ItemStack stack : list)
+				dropStack(world, x, y, z, stack);
 		return list;
 	}
 
 	@Override
 	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
 	{
-		return world.getTileEntity(x, y, z) instanceof TileEntityFactory;
+		return getTile(world, x, y, z) instanceof TileEntityFactory;
 	}
 
 	@Override
@@ -294,7 +292,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		{
 			return false;
 		}
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
@@ -316,7 +314,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityFactoryInventory)
 			return ((TileEntityFactoryInventory)te).getComparatorOutput(side);
 		return 0;
@@ -327,7 +325,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	{
 		if (super.activated(world, x, y, z, entityplayer, side))
 			return true;
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te == null)
 		{
 			return false;
@@ -394,7 +392,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	@Override
 	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityFactory)
 		{
 			((TileEntityFactory)te).onRedNetChanged(side, inputValue);

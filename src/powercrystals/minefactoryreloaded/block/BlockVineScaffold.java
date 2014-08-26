@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockVineScaffold extends Block implements IRedNetDecorative
 {
@@ -38,6 +39,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative
 		setHardness(0.1F);
 		setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
 		setTickRandomly(true);
+		setCreativeTab(MFRCreativeTab.tab);
 	}
 
 	@Override
