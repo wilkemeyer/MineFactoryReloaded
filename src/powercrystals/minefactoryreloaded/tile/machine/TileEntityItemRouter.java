@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -139,13 +140,11 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	private int weightedRandomSide(int[] routeWeights)
 	{
 		int random = worldObj.rand.nextInt(totalWeight(routeWeights));
-		for(int i = 0; i < routeWeights.length; i++)
+		for (int i = 0; i < routeWeights.length; i++)
 		{
 			random -= routeWeights[i];
-			if(random < 0)
-			{
+			if (random < 0)
 				return i;
-			}
 		}
 		
 		return -1;
@@ -155,19 +154,16 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	{
 		int total = 0;
 		
-		for(int weight : routeWeights)
-		{
+		for (int weight : routeWeights)
 			total += weight;
-		}
 		return total;
 	}
 	
 	private boolean hasRoutes(int[] routeWeights)
 	{
-		for(int weight : routeWeights)
-		{
-			if(weight > 0) return true;
-		}
+		for (int weight : routeWeights)
+			if (weight > 0) return true;
+
 		return false;
 	}
 	
@@ -175,19 +171,20 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	protected int[] getRoutesForItem(ItemStack stack)
 	{
 		int[] routeWeights = new int[_outputDirections.length];
-		
-		for(int i = 0; i < _outputDirections.length; i++)
+	
+		Item item = stack.getItem();
+
+		for (int i = 0; i < _outputDirections.length; i++)
 		{
 			int sideStart = _invOffsets[_outputDirections[i].ordinal()];
 			routeWeights[i] = 0;
-			
-			for(int j = sideStart; j < sideStart + 9; j++)
+			for (int j = sideStart; j < sideStart + 9; j++)
 			{
-				if(_inventory[j] != null)
+				if (_inventory[j] != null)
 				{
-					if (_inventory[j].getItem().equals(stack.getItem()) &&
-							(_inventory[j].getItemDamage() == stack.getItemDamage()) ||
-							stack.getItem().isDamageable())
+					if (_inventory[j].getItem().equals(item) &&
+							(stack.isItemStackDamageable() ||
+									_inventory[j].getItemDamage() == stack.getItemDamage()))
 					{
 						routeWeights[i] += _inventory[j].stackSize;
 					}
@@ -199,10 +196,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	
 	private void recalculateDefaultRoutes()
 	{
-		for(int i = 0; i < _outputDirections.length; i++)
-		{
+		for (int i = 0; i < _outputDirections.length; i++)
 			_defaultRoutes[i] = isSideEmpty(_outputDirections[i]) ? 1 : 0;
-		}
 	}
 	
 	public boolean hasRouteForItem(ItemStack stack)
@@ -324,6 +319,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	{
 		super.readFromNBT(nbttagcompound);
 		_rejectUnmapped = nbttagcompound.getBoolean("rejectUnmapped");
+		recalculateDefaultRoutes();
 	}
 	
 	@Override
