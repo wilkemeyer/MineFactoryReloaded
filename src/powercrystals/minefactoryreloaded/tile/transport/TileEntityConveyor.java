@@ -436,7 +436,7 @@ public class TileEntityConveyor extends TileEntityBase
     @Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
-    	return true;
+    	return _conveyorActive;
     }
     
     //ISidedInventory
@@ -455,6 +455,8 @@ public class TileEntityConveyor extends TileEntityBase
     @Override
 	public boolean canInsertItem(int slot, ItemStack stack, int side)
     {
+    	if (!_conveyorActive)
+    		return false;
     	int blockmeta;
     	switch (ForgeDirection.getOrientation(side))
     	{
