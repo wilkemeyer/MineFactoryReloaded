@@ -97,7 +97,8 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 		}
 
 		ItemStack stack = _inventory[4];
-		NBTTagList list = stack.getEnchantmentTagList(); 
+		boolean isBook = stack.getItem().equals(Items.enchanted_book);
+		NBTTagList list = isBook ? Items.enchanted_book.func_92110_g(stack) : stack.getEnchantmentTagList(); 
 		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null)
 		{
 			_inventory[2] = stack;
@@ -113,7 +114,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 				decrStackSize(1, 1);
 
 				NBTTagCompound enchTag;
-				if (stack.getItem().equals(Items.enchanted_book))
+				if (isBook)
 				{
 					enchTag = list.getCompoundTagAt(0);
 					list.removeTag(0);
