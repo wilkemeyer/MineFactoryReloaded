@@ -10,6 +10,7 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cofh.asm.relauncher.Strippable;
+import cofh.lib.util.position.BlockPosition;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -57,6 +58,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private IEnergyHandler[] handlerCache = null;
 	private IC2Cache ic2Cache = null;
 	private boolean deadCache = false;
+	private boolean readFromNBT = false;
 
 	boolean isNode = false;
 	int energyForGrid = 0;
@@ -102,8 +104,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void reCache() {
 		if (deadCache) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				onNeighborTileChange(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
 			// This method is only ever called from the same thread as the tick handler
 			// so this method can be safely called *here* without worrying about threading
@@ -122,16 +123,62 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				setGrid(new RedstoneEnergyNetwork(this));
 			}
 		}
+		readFromNBT = true;
 		reCache();
 		markDirty();
 		Packets.sendToAllPlayersWatching(this);
 	}
 
+	private void incorporateTiles() {
+		if (_grid == null) {
+			boolean hasGrid = false;
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
+				if (BlockPosition.blockExists(this, dir)) {
+					TileEntityRedNetEnergy pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
+					if (pipe != null) {
+						if (pipe._grid != null && pipe.canInterface(this)) {
+							if (hasGrid) {
+								pipe._grid.mergeGrid(_grid);
+							} else {
+								pipe._grid.addConduit(this);
+								hasGrid = _grid != null;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public boolean canInterface(TileEntityRedNetEnergy with, ForgeDirection dir) {
+		if ((_cableMode[dir.ordinal()] & 1) == 0) return false;
+		return canInterface(with);
+	}
+
 	@Override
 	public void onNeighborTileChange(int x, int y, int z) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote | deadCache)
 			return;
 		TileEntity tile = worldObj.getTileEntity(x, y, z);
+
+		if (x < xCoord)
+			addCache(tile, 5);
+		else if (x > xCoord)
+			addCache(tile, 4);
+		else if (z < zCoord)
+			addCache(tile, 3);
+		else if (z > zCoord)
+			addCache(tile, 2);
+		else if (y < yCoord)
+			addCache(tile, 1);
+		else if (y > yCoord)
+			addCache(tile, 0);
+	}
+	
+	private void addCache(TileEntity tile) {
+		if (tile == null) return;
+		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
 
 		if (x < xCoord)
 			addCache(tile, 5);
@@ -187,22 +234,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return false;
 		if (ic2Cache == null) ic2Cache = new IC2Cache();
 		return ic2Cache.add(tile, side);
-	}
-
-	private void incorporateTiles() {
-		if (_grid == null) for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			if (worldObj.blockExists(xCoord + dir.offsetX,
-					yCoord + dir.offsetY, zCoord + dir.offsetZ)) {
-				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
-				if (tile instanceof TileEntityRedNetEnergy &&
-						((TileEntityRedNetEnergy)tile)._grid != null &&
-						((TileEntityRedNetEnergy)tile).canInterface(this)) {
-					((TileEntityRedNetEnergy)tile)._grid.addConduit(this);
-					break;
-				}
-			}
-		}
 	}
 
 	@Override
@@ -326,6 +357,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (sideMode.length != 7)
 			sideMode = new byte[]{1,1, 1,1,1,1, 0};
 		energyForGrid = nbt.getInteger("Energy");
+		readFromNBT = true;
 	}
 
 	@Override

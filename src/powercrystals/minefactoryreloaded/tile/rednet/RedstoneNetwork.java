@@ -135,9 +135,11 @@ public class RedstoneNetwork implements IGrid
 		conduitSet = new LinkedHashSet<TileEntityRedNetCable>(Math.min(oldSet.size() / 6, 5));
 
 		LinkedHashSet<TileEntityRedNetCable> toCheck = new LinkedHashSet<TileEntityRedNetCable>();
+		LinkedHashSet<TileEntityRedNetCable> checked = new LinkedHashSet<TileEntityRedNetCable>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
+		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.iterator().next();
 			addConduit(main);
@@ -147,9 +149,11 @@ public class RedstoneNetwork implements IGrid
 				bp.step(dir[i]);
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
-					if (te instanceof TileEntityRedNetCable)
-						if (main.canInterface((TileEntityRedNetCable)te) && !conduitSet.contains(te))
+					if (te instanceof TileEntityRedNetCable) {
+						if (main.canInterface((TileEntityRedNetCable)te, dir[i^1]) && !checked.contains(te))
 							toCheck.add((TileEntityRedNetCable)te);
+						checked.add((TileEntityRedNetCable)te);
+					}
 				}
 			}
 			toCheck.remove(main);
@@ -215,9 +219,8 @@ public class RedstoneNetwork implements IGrid
 	}
 
 	public boolean canMergeGrid(RedstoneNetwork otherGrid) {
-		LinkedHashSet<TileEntityRedNetCable> toCheck = otherGrid.conduitSet;
-		return !toCheck.isEmpty() && !conduitSet.isEmpty() &&
-				toCheck.iterator().next().canInterface(conduitSet.iterator().next());
+		if (otherGrid == null) return false;
+		return true;
 	}
 
 	public void mergeGrid(RedstoneNetwork grid) {

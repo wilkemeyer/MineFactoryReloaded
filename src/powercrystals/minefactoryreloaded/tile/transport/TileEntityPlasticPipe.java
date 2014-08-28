@@ -127,16 +127,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		if (grid != FluidNetwork.HANDLER) return;
 		if (_grid == null) {
 			incorporateTiles();
-			if (_grid != null) {
-				markDirty();
+			if (_grid == null) {
+				setGrid(new FluidNetwork(this));
 			}
 		}
 		readFromNBT = true;
-		if (_grid == null) {
-			setGrid(new FluidNetwork(this));
-			markDirty();
-		}
 		reCache();
+		markDirty();
 		Packets.sendToAllPlayersWatching(this);
 	}
 
