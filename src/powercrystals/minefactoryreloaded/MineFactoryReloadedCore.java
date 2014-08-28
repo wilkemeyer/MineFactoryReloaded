@@ -684,7 +684,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		WorldHandler.instance.registerFeature(new MineFactoryReloadedWorldGen());
 
-		UpdateManager.registerUpdater(new UpdateManager(this));
+		UpdateManager.registerUpdater(new UpdateManager(this, null, CoFHProps.DOWNLOAD_URL));
 	}
 
 	private void registerBlock(Block block, Class<? extends ItemBlock> item, Object... args)
