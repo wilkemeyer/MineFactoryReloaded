@@ -398,17 +398,4 @@ public abstract class TileEntityFactory extends TileEntityBase
 			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
 	}
-
-    @Override
-	@SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
-        return -1D;
-    }
-
-    @Override
-	public boolean shouldRenderInPass(int pass)
-    {
-        return pass == 0 && getMaxRenderDistanceSquared() != -1D;
-    }
 }

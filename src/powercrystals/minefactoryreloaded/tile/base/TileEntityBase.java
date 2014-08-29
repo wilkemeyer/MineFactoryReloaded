@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,6 +44,19 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	public void onMatchedNeighborBlockChange() {}
 
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {}
+
+    @Override
+	@SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared()
+    {
+        return -1D;
+    }
+
+    @Override
+	public boolean shouldRenderInPass(int pass)
+    {
+        return pass == 0 && getMaxRenderDistanceSquared() != -1D;
+    }
 
 	private static final long HASH_A = 0x1387D;
 	private static final long HASH_C = 0x3A8F05C5;
