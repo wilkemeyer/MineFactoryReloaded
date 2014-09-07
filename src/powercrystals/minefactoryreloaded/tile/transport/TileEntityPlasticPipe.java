@@ -449,7 +449,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		}
 	}
 
-	int transfer(ForgeDirection side, FluidStack fluid) {
+	int transfer(ForgeDirection side, FluidStack fluid, Fluid f) {
 		if (deadCache) return 0;
 		int bSide = side.ordinal();
 		int m = sideMode[bSide];
@@ -458,7 +458,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			case 1: // IFluidHandler
 				if (handlerCache != null) {
 					IFluidHandler handlerTile = handlerCache[bSide];
-					if (handlerTile != null && handlerTile.canFill(side, null))
+					if (handlerTile != null && handlerTile.canFill(side, f))
 						return handlerTile.fill(side, fluid, true);
 				}
 				break;

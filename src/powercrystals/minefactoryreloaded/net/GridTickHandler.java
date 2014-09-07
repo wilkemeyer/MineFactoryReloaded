@@ -151,7 +151,6 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 				grid.doGridUpdate();
 		//}
 		
-		
 		//{ Initial update tick for conduits added to the world
 		if (!conduitToAdd.isEmpty())
 		synchronized(conduitToAdd)

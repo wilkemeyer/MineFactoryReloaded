@@ -72,7 +72,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	@Override
 	public boolean activateMachine()
 	{
-		if (_isJammed || worldObj.getWorldTime() % 137 == 0)
+		if (_isJammed || worldObj.getTotalWorldTime() % 137 == 0)
 		{
 			Area fishingHole = _areaManager.getHarvestArea();
 			int extraBlocks = 0;
@@ -145,12 +145,23 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		_workNeeded = tag.getInteger("workNeeded");
-		_isJammed = tag.getBoolean("jam");
+		if (tag.hasKey("workNeeded"))
+			_workNeeded = tag.getInteger("workNeeded");
+		if (tag.hasKey("jam"))
+			_isJammed = tag.getBoolean("jam");
 		if (tag.hasKey("seed"))
 			_rand = new Random(tag.getLong("seed"));
 		if (tag.hasKey("next"))
 			_next = tag.getFloat("next");
+	}
+
+	private static Field _Random_seed = null;
+	static {
+		try {
+			Field f = Random.class.getDeclaredField("seed");
+			f.setAccessible(true);
+			_Random_seed = f;
+		} catch (Throwable _) {}
 	}
 
 	@Override
@@ -160,11 +171,8 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 		tag.setInteger("workNeeded", _workNeeded);
 		tag.setBoolean("jam", _isJammed);
 		tag.setFloat("next", _next);
-		try {
-			Field f = Random.class.getDeclaredField("seed");
-			f.setAccessible(true);
-			tag.setLong("seed", ((AtomicLong)f.get(_rand)).get());
-		} catch (Throwable _) {}
+		if (_Random_seed != null)
+			try { tag.setLong("seed", ((AtomicLong)_Random_seed.get(_rand)).get()); } catch (Throwable e) {};
 	}
 
 	@Override

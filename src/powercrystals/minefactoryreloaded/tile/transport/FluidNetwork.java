@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.core.IGrid;
@@ -191,6 +192,7 @@ public class FluidNetwork implements IGrid
 		int size = nodeSet.size();
 		int toDistribute = storage.getFluidAmount() / size;
 		int sideDistribute = toDistribute / 6;
+		Fluid fluid = storage.getFluid().getFluid();
 		
 		distribution = toDistribute;
 		distributionSide = sideDistribute;
@@ -200,7 +202,7 @@ public class FluidNetwork implements IGrid
 			if (cond != master) {
 				int e = 0;
 				for (int i = 6; i --> 0; )
-					e += cond.transfer(directions[i], stack);
+					e += cond.transfer(directions[i], stack, fluid);
 				if (e > 0) storage.drain(e, true);
 			}
 		
@@ -211,7 +213,7 @@ public class FluidNetwork implements IGrid
 		if (sideDistribute > 0) {
 			int e = 0;
 			for (int i = 6; i --> 0; ) 
-				e += master.transfer(directions[i], stack);
+				e += master.transfer(directions[i], stack, fluid);
 			if (e > 0) storage.drain(e, true);
 		}
 	}

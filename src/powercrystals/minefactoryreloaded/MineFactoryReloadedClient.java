@@ -288,7 +288,7 @@ public class MineFactoryReloadedClient
 			GL11.glPushMatrix();
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glTranslatef(center.getX(), center.getY(), 0);
-			GL11.glRotatef((mc.theWorld.getWorldTime() * 4) % 360 + partialTicks, 0, 0, 1);
+			GL11.glRotatef(((mc.theWorld.getTotalWorldTime() & 511) * 4) % 360 + partialTicks, 0, 0, 1);
 
 			float distance = MineFactoryReloadedClient.instance.getLockTimeRemaining();
 

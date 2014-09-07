@@ -31,7 +31,7 @@ public class ItemXpExtractor extends ItemFactory
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		if(player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket))
+		if (player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket))
 		{
 			player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 		}
@@ -42,13 +42,17 @@ public class ItemXpExtractor extends ItemFactory
 	@Override
 	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
 	{
-		if(player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket))
+		if (world.isRemote)
+			return stack;
+		if (player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket))
 		{
-			player.experienceLevel--;
-			player.inventory.consumeInventoryItem(Items.bucket);
-			if(!player.inventory.addItemStackToInventory(new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem)))
+			if (player.inventory.consumeInventoryItem(Items.bucket))
 			{
-				player.dropItem(MineFactoryReloadedCore.mobEssenceBucketItem, 1);
+				player.addExperienceLevel(-1);
+				if (!player.inventory.addItemStackToInventory(new ItemStack(MineFactoryReloadedCore.mobEssenceBucketItem)))
+				{
+					player.dropItem(MineFactoryReloadedCore.mobEssenceBucketItem, 1);
+				}
 			}
 		}
 		return stack;
