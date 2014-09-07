@@ -36,7 +36,7 @@ tile.mfr.machine.laserdrill.name = Trivella laser
 tile.mfr.machine.laserdrillprecharger.name = Pre-caricatrice per trivella laser
 tile.mfr.machine.autoanvil.name = Auto-incudine
 tile.mfr.machine.blocksmasher.name = Distruggitrice di blocchi
-tile.mfr.machine.rednote.name = RossoBlocco sonoro
+tile.mfr.machine.rednote.name = RedBlocco sonoro
 tile.mfr.machine.autobrewer.name = Auto-distillatrice
 tile.mfr.machine.fruitpicker.name = Raccoglitrice di frutta
 tile.mfr.machine.blockplacer.name = Piazzatrice di blocchi
@@ -122,14 +122,14 @@ tile.mfr.decorativebrick.meat.raw.name = Blocco di carne cruda
 tile.mfr.decorativebrick.meat.cooked.name = Blocco di carne cotta
 tile.mfr.decorativebrick.brick_large.name = Mattoni conci
 
-tile.mfr.decorativestone.black.smooth.name = Pietranera
-tile.mfr.decorativestone.black.cobble.name = Pietrisconero
+tile.mfr.decorativestone.black.smooth.name = Roccianera
+tile.mfr.decorativestone.black.cobble.name = Pietramenero
 tile.mfr.decorativestone.black.brick.small.name = Mattoni di pietranera
 tile.mfr.decorativestone.black.brick.large.name = Pietranera concia
 tile.mfr.decorativestone.black.gravel.name = Ghiaia di pietranera
 tile.mfr.decorativestone.black.paved.name = Pietranera lastricata
-tile.mfr.decorativestone.white.smooth.name = Pietrabianca
-tile.mfr.decorativestone.white.cobble.name = Pietriscobianco
+tile.mfr.decorativestone.white.smooth.name = Rocciabianca
+tile.mfr.decorativestone.white.cobble.name = Pietramebianco
 tile.mfr.decorativestone.white.brick.small.name = Mattoni di pietrabianca
 tile.mfr.decorativestone.white.brick.large.name = Pietrabianca concia
 tile.mfr.decorativestone.white.gravel.name = Ghiaia di pietrabianca
@@ -158,8 +158,8 @@ tile.mfr.rail.passenger.pickup.name = Binario pickup per passeggeri
 
 tile.mfr.cable.redstone.name = Cavo RedNet
 tile.mfr.cable.redstone.glass.name = Cavo RedNet
-tile.mfr.cable.redstone.energy.name = Cavo RedNet per energia
-tile.mfr.cable.redstone.energyglass.name = Cavo RedNet per energia
+tile.mfr.cable.redstone.energy.name = Cavo RedNet per corrente
+tile.mfr.cable.redstone.energyglass.name = Cavo RedNet per corrente
 tile.mfr.cable.plastic.name = Tubo di plastica
 
 tile.mfr.rednet.logic.name = Regolatrice programmabile RedNet
@@ -170,24 +170,24 @@ tile.mfr.machineblock.prc.name = Custodia per regolatrice programmabile RedNet
 
 fluid.mfr.liquid.milk.still.name = Latte
 fluid.mfr.liquid.sludge.still.name = Melma
-fluid.mfr.liquid.sewage.still.name = Liquami
+fluid.mfr.liquid.sewage.still.name = Escrementi
 fluid.mfr.liquid.mobessence.still.name = Essenza
 fluid.mfr.liquid.biofuel.still.name = Combustibile biologico
 fluid.mfr.liquid.meat.still.name = Carne
-fluid.mfr.liquid.pinkslime.still.name = Mucoso rosa
+fluid.mfr.liquid.pinkslime.still.name = Gelatina rosa
 fluid.mfr.liquid.chocolatemilk.still.name = Latte al cioccolato
 fluid.mfr.liquid.mushroomsoup.still.name = Zuppa di funghi
 fluid.mfr.liquid.steam.still.name = Vapore
 
-entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Mucoso rosae
+entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Gelatina rosa
 
 item.mfr.bucket.milk.name = Secchio di latte
 item.mfr.bucket.sewage.name = Secchio di melma
-item.mfr.bucket.sludge.name = Secchio di liquami
+item.mfr.bucket.sludge.name = Secchio di escrementi
 item.mfr.bucket.essence.name = Secchio di essenza di mob
 item.mfr.bucket.biofuel.name = Secchio di combustibile biologico
 item.mfr.bucket.meat.name = Secchio di carne
-item.mfr.bucket.pinkslime.name = Secchio di mucoso rosa
+item.mfr.bucket.pinkslime.name = Secchio di gelatina rosa
 item.mfr.bucket.chocolatemilk.name = Secchio di latte al cioccolato
 item.mfr.bucket.mushroomsoup.name = Secchio di zuppa di funghi
 
@@ -216,7 +216,7 @@ item.mfr.syringe.empty.prefix.name = Siringa di
 item.mfr.syringe.empty.suffix.name =
 item.mfr.syringe.growth.name = Siringa della crescita
 item.mfr.syringe.health.name = Siringa della salute
-item.mfr.syringe.slime.name = Siringa della grandezza di mucoso
+item.mfr.syringe.slime.name = Siringa della grandezza di gelatina
 item.mfr.syringe.zombie.name = Siringa zombi
 item.mfr.record.blank.name = Disco vuoto
 item.mfr.safarinet.reusable.name = Rete safari (riutilizzabile)
@@ -240,7 +240,7 @@ item.mfr.meat.ingot.raw.name = Lingotto di carne cruda
 item.mfr.meat.ingot.cooked.name = Lingotto di carne cotta
 item.mfr.meat.nugget.raw.name = Pepita di "carne" cruda
 item.mfr.meat.nugget.cooked.name = Pepita di "carne" cotta
-item.mfr.pinkslimeball.name = Palla di muco rosa
+item.mfr.pinkslimeball.name = Palla di gelatina rosa
 item.mfr.rocket.name = Razzo autopropulsore anti-materiale
 item.mfr.rocket.smart.name = Razzo autopropulsore anti-materiale a rilevamento
 item.mfr.rocketlauncher.name = Lanciatore RAPAM
@@ -281,7 +281,7 @@ item.mfr.laserfocus.green.name = Focus per laser (grigio)
 item.mfr.laserfocus.red.name = Focus per laser (rosso)
 item.mfr.laserfocus.black.name = Focus per laser (nero)
 
-item.mfr.upgrade.radius.cobble.name = Potenziamento (pietrisco)
+item.mfr.upgrade.radius.cobble.name = Potenziamento (pietrame)
 item.mfr.upgrade.radius.lapis.name = Potenziamento (lapis)
 item.mfr.upgrade.radius.iron.name = Potenziamento (ferro)
 item.mfr.upgrade.radius.tin.name = Potenziamento (stagno)
@@ -302,7 +302,7 @@ item.mfr.needlegun.name = Sparachiodi
 item.mfr.needlegun.ammo.empty.name = Caricatore per sparachiodi
 item.mfr.needlegun.ammo.standard.name = Caricatore per sparachiodi (aghi)
 item.mfr.needlegun.ammo.lava.name = Caricatore per sparachiodi (lava)
-item.mfr.needlegun.ammo.sludge.name =Caricatore per sparachiodi (liquami)
+item.mfr.needlegun.ammo.sludge.name =Caricatore per sparachiodi (escrementi)
 item.mfr.needlegun.ammo.sewage.name = Caricatore per sparachiodi (melma)
 item.mfr.needlegun.ammo.fire.name = Caricatore per sparachiodi (fuoco)
 item.mfr.needlegun.ammo.anvil.name = Caricatore per sparachiodi (incudine)
@@ -437,7 +437,7 @@ tip.info.mfr.xpextractor = Richiede un contenitore vuoto da riempire
 
 tip.info.mfr.mobcounter = Emette un segnale di petrarossa\ndirettamente proporzionale\nal numero di mob nei dintorni.
 
-tip.info.mfr.laserdrill = Petti sopra un buco che arriva alla bedrock o nel void
+tip.info.mfr.laserdrill = Mettilo sopra un buco che arriva fino alla roccia del sottostrato o nel Vuoto
 tip.info.mfr.laserdrillprecharger = Mettilo un blocco da un laser
 
 # These tooltips are not the entire tooltip, but part of a custom format or entry
@@ -461,8 +461,8 @@ tip.info.mfr.upgrade.radius = Raggio aumentato: %s
 death.attack.mfr.slaughterhouse = %1$s è stato lavorato in carne solida
 death.attack.mfr.slaughterhouse.player = %1$s è stato obbligato a essere lavorato in carne solida da %2$s
 death.attack.mfr.slaughterhouse.1 = %1$s è stato trasformato in sugo di carne
-death.attack.mfr.slaughterhouse.1.player = %1$s è stato obbligato a essere trasformato in sugo di carne da %2$s
-death.attack.mfr.grinder = %1$s è stato tritato in pezzetti
-death.attack.mfr.grinder.player = %2$s si è assicurato che %1$s fosse tritato in pezzetti
+death.attack.mfr.slaughterhouse.1.player = %1$s è stato obbligato ad essere trasformato in sugo di carne da %2$s
+death.attack.mfr.grinder = %1$s è stato tritato in pezzettini
+death.attack.mfr.grinder.player = %2$s si è assicurato che %1$s fosse tritato in pezzettini
 death.attack.mfr.laser = %1$s è stato disintegrato
-death.attack.mfr.laser.player = %2$s si è assicurato ch %1$s fosse disintegrato
+death.attack.mfr.laser.player = %2$s si è assicurato che %1$s fosse disintegrato
