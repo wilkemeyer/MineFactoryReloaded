@@ -63,19 +63,14 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			_connectionBlackList = new THashSet<Block>(256);
 			for (String s : MFRConfig.redNetConnectionBlacklist.getStringList())
 			{
-				try
-				{
-					if (!StringUtils.isNullOrEmpty(s))
-						_connectionBlackList.add(Block.getBlockFromName(s));
-				}
-				catch(NumberFormatException x)
-				{
+				if (!StringUtils.isNullOrEmpty(s))
+					_connectionBlackList.add(Block.getBlockFromName(s));
+				else
 					System.out.println("Empty or invalid rednet blacklist entry found. Not adding to rednet blacklist.");
-				}
 			}
-			List<Integer> wl = Arrays.asList(23, 25, 27, 28, 29, 33, 46, 50, 55, 64, 69, 70, 71,
-					72, 75, 76, 77, 93, 94, 96, 107, 123, 124, 131, 143, 147, 148, 149, 150,
-					151, 152, 154, 157, 158);
+			List<Integer> wl = Arrays.asList(23, 25, 27, 28, 29, 33, 46, 50, 55, 64, 69, 70, 71, 72, 75,
+					76, 77, 93, 94, 96, 107, 123, 124, 131, 137, 143, 147, 148, 149, 150, 151, 152, 154,
+					157, 158);
 			int i = 1 + 175; // as of 1.7.10
 			while (i --> 0)
 				if (!wl.contains(i))
@@ -466,8 +461,14 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	public void setMode(int side, byte mode)
 	{
-		boolean mustUpdate = (mode != (_cableMode[side] >> 1));
-		_cableMode[side] = (byte) ((_cableMode[side] & 1) | (mode << 1));
+		boolean mustUpdate;
+		if (side != 6) {
+			mustUpdate = (mode != (_cableMode[side] >> 1));
+			_cableMode[side] = (byte) ((_cableMode[side] & 1) | (mode << 1));
+		} else {
+			mustUpdate = mode != _cableMode[side];
+			_cableMode[side] = mode;
+		}
 		if (mustUpdate)
 		{
 			onNeighborBlockChange();
@@ -600,7 +601,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	{
 		super.writeToNBT(tag);
 		tag.setIntArray("sideSubnets", _sideColors);
-		tag.setByte("v", (byte)4);
+		tag.setByte("v", (byte)5);
 		tag.setByteArray("cableMode", _cableMode);
 	}
 
@@ -618,19 +619,20 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		if (_cableMode.length < 6) _cableMode = new byte[] {0,0,0, 0,0,0, 0};
 		switch (tag.getByte("v"))
 		{
-		case 3:
-			for (int i = 6; i --> 0; )
-				_cableMode[i] = (byte) ((_cableMode[i] << 1) | 1);
-			break;
-		case 2:
-			_cableMode[6] = (byte)(_cableMode[6] == 3 ? 1 : 0);
-			break;
 		case 0:
 			if (_mode == 2)
 				_mode = 3;
 		case 1:
 			_cableMode = new byte[] {_mode,_mode,_mode,
-					_mode,_mode,_mode, (byte)(_mode == 3 ? 1 : 0)};
+					_mode,_mode,_mode, _mode};
+		case 2:
+			_cableMode[6] = (byte) (_cableMode[6] == 3 ? 1 : 0);
+		case 3:
+			for (int i = 6; i --> 0; )
+				_cableMode[i] = (byte) ((_cableMode[i] << 1) | 1);
+			break;
+		case 4:
+			_cableMode[6] = (byte) (_cableMode[6] > 0 ? 1 : 0);
 			break;
 		default:
 			break;
