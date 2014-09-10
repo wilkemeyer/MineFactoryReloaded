@@ -8,7 +8,6 @@ import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
 import cofh.lib.util.position.BlockPosition;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -271,7 +270,7 @@ public abstract class UtilInventory
 		// (3) Having failed to put it in a chest or a pipe, drop it in the air if airdropdirection is a valid direction.
 		bp.orientation = airdropdirection;
 		bp.moveForwards(1);
-		if (Arrays.asList(ForgeDirection.VALID_DIRECTIONS).contains(airdropdirection) && world.isAirBlock(bp.x, bp.y, bp.z))
+		if (MFRUtil.VALID_DIRECTIONS.contains(airdropdirection) && isAirDrop(world, bp.x, bp.y, bp.z))
 		{
 			bp.moveBackwards(1);
 			dropStackInAir(stack, bp, world, airdropdirection);
@@ -279,6 +278,15 @@ public abstract class UtilInventory
 		}
 		// (4) Is the stack still here? :( Better give it back.
 		return stack;
+	}
+	
+	public static boolean isAirDrop(World world, int x, int y, int z)
+	{
+		Block block = world.getBlock(x, y, z);
+		if (block.isAir(world, x, y, z))
+			return true;
+		block.setBlockBoundsBasedOnState(world, x, y, z);
+		return block.getCollisionBoundingBoxFromPool(world, x, y, z) == null;
 	}
 	
 	private static ItemStack handleIPipeTile(World world, BlockPosition bp, ForgeDirection[] dropdirections, ItemStack stack)
