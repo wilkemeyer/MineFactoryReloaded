@@ -845,6 +845,7 @@ public class Vanilla
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 11), stack2(snow), stack(stonebrick));
 		// 12 & 13 are special blocks
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 14), stack(brick_block, 1, 0), stack(stonebrick));
+		// 15 is special
 
 		addSmallStorageRecipe(stack(factoryDecorativeBrickBlock, 4, 0), stack(factoryDecorativeBrickBlock, 1, 6));
 		addSmallStorageRecipe(stack(factoryDecorativeBrickBlock, 4, 1), stack(factoryDecorativeBrickBlock, 1, 7));
@@ -1185,12 +1186,12 @@ public class Vanilla
 
 		addSurroundRecipe(stack(blankRecordItem, 1), stack2(paper), "dustPlastic");
 
-		if(MFRConfig.vanillaOverrideIce.getBoolean(true))
+		if (MFRConfig.vanillaOverrideIce.getBoolean(true))
 		{
 			addRecipe(ShapelessRecipe(stack(ice, 1, 1), stack(ice, 1, 0), "dustPlastic"));
 		}
 
-		if(MFRConfig.enableMossyCobbleRecipe.getBoolean(true))
+		if (MFRConfig.enableMossyCobbleRecipe.getBoolean(true))
 		{
 			addShapelessRecipe(stack(mossy_cobblestone), new Object[]
 					{
@@ -1206,7 +1207,7 @@ public class Vanilla
 					} );
 		}
 
-		if(MFRConfig.enableSmoothSlabRecipe.getBoolean(true))
+		if (MFRConfig.enableSmoothSlabRecipe.getBoolean(true))
 		{
 			addRecipe(stack(double_stone_slab, 1, 8), new Object[]
 					{
@@ -1234,6 +1235,8 @@ public class Vanilla
 		addRecipe(ShapelessRecipe(stack(fertileSoil), stack(dirt, 1, 2), stack(fertilizerItem), "listAllmilk"));
 
 		addShapelessRecipe(stack(chocolateMilkBucketItem), milk_bucket, bucket, stack(dye, 1, 3));
+		
+		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
 		addRecipe(ShapedRecipe(stack(torch, 4), new Object[]
 				{

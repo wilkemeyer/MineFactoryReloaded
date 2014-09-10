@@ -218,6 +218,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Block factoryRoadBlock;
 	public static Block factoryPlasticBlock;
 	public static Block factoryDecorativeBrickBlock;
+	public static Item factoryDecorativeBrickItem;
 	public static Block factoryDecorativeStoneBlock;
 
 	public static Block rubberWoodBlock;
@@ -542,6 +543,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(factoryRoadBlock, ItemBlockFactoryRoad.class);
 		registerBlock(factoryPlasticBlock, ItemBlockFactory.class);
 		registerBlock(factoryDecorativeBrickBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeBricks._names});
+		factoryDecorativeBrickItem = Item.getItemFromBlock(factoryDecorativeBrickBlock);
 		registerBlock(factoryDecorativeStoneBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeStone._names});
 
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);

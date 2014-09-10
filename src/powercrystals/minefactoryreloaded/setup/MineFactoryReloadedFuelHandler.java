@@ -29,6 +29,11 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		{
 			return 400;
 		}
+		else if(item.equals(MineFactoryReloadedCore.factoryDecorativeBrickItem))
+		{
+			if (fuel.getItemDamage() == 15)
+				return 4000;
+		}
 		else if(item.equals(MineFactoryReloadedCore.rawRubberItem))
 		{
 			return 30;
