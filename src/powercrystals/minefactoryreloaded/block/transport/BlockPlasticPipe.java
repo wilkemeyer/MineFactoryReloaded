@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.block.transport;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdPPipe;
 import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable._subSideMappings;
 
-import codechicken.lib.raytracer.RayTracer;
+import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IBlockInfo;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.position.BlockPosition;

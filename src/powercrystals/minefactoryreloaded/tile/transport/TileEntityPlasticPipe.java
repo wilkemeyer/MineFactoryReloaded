@@ -419,8 +419,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 				nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
 		} else if (fluidForGrid != null)
 			nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
-		else
-			fluidForGrid = null;
 	}
 
 	void extract(ForgeDirection side, IFluidTank tank) {
