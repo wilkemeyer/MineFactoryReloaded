@@ -27,14 +27,14 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -209,7 +209,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static int renderIdRedNet = 1009;
 	public static int renderIdPPipe = 1009;
 
-	public static Map<Integer, Block> machineBlocks = new HashMap<Integer, Block>();
+	public static TIntObjectMap<Block> machineBlocks = new TIntObjectHashMap<Block>();
 
 	public static Block conveyorBlock;
 
@@ -515,9 +515,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(machineItem, ItemBlockFactory.class, new Object[] {BlockFactoryDecoration._names});
 		machineBaseItem = Item.getItemFromBlock(machineItem);
 
-		for (Entry<Integer, Block> machine : machineBlocks.entrySet())
+		for (Block machine : machineBlocks.valueCollection())
 		{
-			registerBlock(machine.getValue(), ItemBlockFactoryMachine.class);
+			registerBlock(machine, ItemBlockFactoryMachine.class);
 		}
 		
 		registerBlock(plasticPipeBlock, ItemBlockFactory.class);

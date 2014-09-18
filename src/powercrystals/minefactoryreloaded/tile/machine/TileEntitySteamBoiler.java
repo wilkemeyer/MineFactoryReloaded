@@ -86,7 +86,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	@SideOnly(Side.CLIENT)
 	public void setTemp(int temp)
 	{
-		_temp = (temp / 100f);
+		_temp = (temp / 10f);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -132,7 +132,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 				return; // we're not burning anything and not changing the temp
 			}
 
-			if (_temp == maxTemp ? _totalBurningTime < 0 : _totalBurningTime > 0 ? true : _temp != 0)
+			if (_temp == maxTemp ? _totalBurningTime < 0 : (_totalBurningTime > 0 ? true : _temp != 0))
 			{
 				float diff = (float)Math.sqrt(Math.abs(_totalBurningTime)) / 103f;
 				diff = Math.copySign(diff, _totalBurningTime) / 1.26f;

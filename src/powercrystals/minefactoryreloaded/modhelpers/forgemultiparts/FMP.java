@@ -40,7 +40,7 @@ public class FMP
 			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.factoryGlassBlock));
 			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.rubberLeavesBlock));
 			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.factoryRoadBlock));
-			for (Block block : MineFactoryReloadedCore.machineBlocks.values())
+			for (Block block : MineFactoryReloadedCore.machineBlocks.valueCollection())
 				addSubtypes((ItemBlockFactory)Item.getItemFromBlock(block));
 			if (MFRConfig.vanillaOverrideIce.getBoolean(true))
 				sendComm(new ItemStack(Blocks.ice, 1, 1));

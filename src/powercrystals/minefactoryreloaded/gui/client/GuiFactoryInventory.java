@@ -2,11 +2,13 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import cofh.core.util.fluid.FluidTankAdv;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
@@ -29,6 +31,10 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class GuiFactoryInventory extends GuiContainer
 {
+	protected static DecimalFormat decimal_format = new DecimalFormat(); {
+		decimal_format.setMaximumFractionDigits(1);
+		decimal_format.setMinimumFractionDigits(1);
+	}
 	protected ResourceLocation background;
 	protected TileEntityFactoryInventory _tileEntity;
 	protected int _barSizeMax = 60;
@@ -157,6 +163,8 @@ public class GuiFactoryInventory extends GuiContainer
 		
 		int vertOffset = 0;
 		
+		bindTexture(fluid);
+		
 		while (level > 0)
 		{
 			int texHeight = 0;
@@ -171,10 +179,7 @@ public class GuiFactoryInventory extends GuiContainer
 				texHeight = level;
 				level = 0;
 			}
-
-
-			bindTexture(fluid);
-					
+			
 			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
@@ -212,6 +217,18 @@ public class GuiFactoryInventory extends GuiContainer
 		lines.add(name);
 		String m = String.valueOf(max);
 		String v = String.valueOf(value);
+		while (v.length() < m.length())
+			v = " " + v;
+		lines.add(v + " / " + m + " " + unit);
+		drawTooltip(lines, x, y);
+	}
+	
+	protected void drawBarTooltip(String name, String unit, float value, float max, int x, int y)
+	{
+		List<String> lines = new ArrayList<String>(2);
+		lines.add(name);
+		String m = decimal_format.format(max);
+		String v = decimal_format.format(value);
 		while (v.length() < m.length())
 			v = " " + v;
 		lines.add(v + " / " + m + " " + unit);
@@ -298,4 +315,16 @@ public class GuiFactoryInventory extends GuiContainer
 		this.zLevel = 0.0F;
 		itemRender.zLevel = 0.0F;
 	}
+
+    @Override
+	public void drawTexturedModelRectFromIcon(int x, int y, IIcon icon, int w, int h)
+    {
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(x + 0, y + h, this.zLevel, icon.getMinU(), icon.getInterpolatedV(h));
+        tessellator.addVertexWithUV(x + w, y + h, this.zLevel, icon.getInterpolatedU(w), icon.getInterpolatedV(h));
+        tessellator.addVertexWithUV(x + w, y + 0, this.zLevel, icon.getInterpolatedU(w), icon.getMinV());
+        tessellator.addVertexWithUV(x + 0, y + 0, this.zLevel, icon.getMinU(), icon.getMinV());
+        tessellator.draw();
+    }
 }

@@ -30,7 +30,7 @@ public class ContainerSteamBoiler extends ContainerFactoryInventory
 		{
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 0, ((TileEntitySteamBoiler)_te).getWorkDone() & 65535);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 1, ((TileEntitySteamBoiler)_te).getWorkDone() >> 16);
-			int temp = (int)(((TileEntitySteamBoiler)_te).getTemp() * 100);
+			int temp = (int)(((TileEntitySteamBoiler)_te).getTemp() * 10);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 2, temp);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 3, ((TileEntitySteamBoiler)_te).getWorkMax() & 65535);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 4, ((TileEntitySteamBoiler)_te).getWorkMax() >> 16);

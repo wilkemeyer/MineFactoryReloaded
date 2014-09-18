@@ -36,6 +36,8 @@ public class AppliedEnergistics
 				new ItemStack( MineFactoryReloadedCore.plasticPipeBlock, 1, 0 ) );
 		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-fluid",
 				Machine.LiquidRouter.getItemStack() );
+		FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-item",
+				Machine.ItemRouter.getItemStack() );
 		for (int i = 17; i --> 0; )
 			FMLInterModComms.sendMessage( "appliedenergistics2", "add-p2p-attunement-item",
 					new ItemStack( MineFactoryReloadedCore.conveyorBlock, 1, i ) );
