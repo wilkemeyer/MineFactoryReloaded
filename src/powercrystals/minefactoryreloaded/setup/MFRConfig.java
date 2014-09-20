@@ -44,6 +44,7 @@ public class MFRConfig
 	public static Property enableCheapDSU;
 	public static Property craftSingleDSU;
 	public static Property enableMossyCobbleRecipe;
+	public static Property enableSmoothSlabRecipe;
 	public static Property enablePortaSpawner;
 	public static Property enableSyringes;
 	public static Property enableLiquidSyringe;
@@ -53,10 +54,11 @@ public class MFRConfig
 	public static Property enableFuelExploding;
 	public static Property enableSpawnerCarts;
 	public static Property enableMassiveTree;
+
 	public static Property enableChunkLimitBypassing;
 	public static Property enableChunkLoaderRequiresOwner;
-	public static Property enableSmoothSlabRecipe;
 	public static Property enableCheapCL;
+	public static Property enableConfigurableCLEnergy;
 
 	public static Property redNetDebug;
 	public static Property redNetConnectionBlacklist;
@@ -257,6 +259,8 @@ public class MFRConfig
 		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
 		enableChunkLoaderRequiresOwner = c.get(category, "RequiresOwnerOnline", false);
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
+		enableConfigurableCLEnergy = c.get(category, "EnableConfigurableActivationEnergy", false).setRequiresMcRestart(true);
+		enableConfigurableCLEnergy.comment = "If true, the Chunk Loader will use the activation energy config in this section. WARNING: this makes it much more expensive at lower values. (non-configurable is exponential)";
 		
 		category = "Machine." + Machine.AutoSpawner.getName();
 		spawnerBlacklist = c.get(category, "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);

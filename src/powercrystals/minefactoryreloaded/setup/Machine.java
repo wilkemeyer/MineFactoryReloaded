@@ -160,7 +160,8 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, Short.MAX_VALUE, Integer.MAX_VALUE, false);
+	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, 10,
+			Integer.MAX_VALUE, MFRConfig.enableConfigurableCLEnergy.getBoolean(false));
 	public static Machine Fountain = new Machine(2, 11, "Fountain", TileEntityFountain.class, 80, 16000);
 	public static Machine MobRouter = new Machine(2, 12, "MobRouter", TileEntityMobRouter.class, 2560, 16000);
 	
@@ -178,7 +179,7 @@ public class Machine
 	
 	private int _activationEnergy;
 	private int _energyStoredMax;
-	private boolean _configurable;
+	private boolean _useDaRF;
 	
 	private Property _isRecipeEnabled;
 	
@@ -221,7 +222,7 @@ public class Machine
 		
 		_activationEnergy = activationEnergy;
 		_energyStoredMax = energyStoredMax;
-		_configurable = configurable;
+		_useDaRF = configurable;
 		
 		_machineMappings.put(_machineIndex, this);
 		_machines.add(this);
@@ -349,11 +350,16 @@ public class Machine
 	public void load(Configuration c)
 	{
 		_isRecipeEnabled = c.get("Machine." + _name, "Recipe.Enabled", true).setRequiresMcRestart(true);
-		if (_configurable && _activationEnergy > 0)
+		if (_activationEnergy > 0)
 		{
-			_activationEnergy = c.get("Machine." + _name, "ActivationCostDaRF", getActivationEnergyDaRF(),
-					"The energy cost for this machine to complete one work cycle, in units of 10 RF " +
-					"(i.e., 2 DaRF = 20 RF)").setRequiresMcRestart(true).getInt() * 10;
+			if (_useDaRF)
+				_activationEnergy = c.get("Machine." + _name, "ActivationCostDaRF", getActivationEnergyDaRF(),
+						"The energy cost for this machine to complete one work cycle, in units of 10 RF " +
+						"(i.e., 2 DaRF = 20 RF)").setRequiresMcRestart(true).getInt() * 10;
+			else
+				_activationEnergy = c.get("Machine." + _name, "ActivationCostRF", getActivationEnergy(),
+						"The energy cost for this machine to complete one work cycle, in units of **1** RF").
+						setRequiresMcRestart(true).getInt();
 		}
 		
 		MineFactoryReloadedCore.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);

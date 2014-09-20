@@ -862,16 +862,6 @@ public class MineFactoryReloadedCore extends BaseMod
 	}
 
 	@SubscribeEvent
-	public void onBonemeal(BonemealEvent e)
-	{
-		if (!e.world.isRemote && e.world.getBlock(e.x, e.y, e.z).equals(rubberSaplingBlock))
-		{
-			MineFactoryReloadedCore.rubberSaplingBlock.func_149879_c(e.world, e.x, e.y, e.z, e.world.rand);
-			e.setResult(Result.ALLOW);
-		}
-	}
-
-	@SubscribeEvent
 	public void onMinecartInteract(MinecartInteractEvent e)
 	{
 		if (e.player.worldObj.isRemote)

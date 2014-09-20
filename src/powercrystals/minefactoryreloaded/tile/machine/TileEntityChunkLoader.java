@@ -4,9 +4,9 @@ import cofh.core.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiChunkLoader;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -32,7 +33,7 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityChunkLoader extends TileEntityFactoryPowered implements ITankContainerBucketable
+public class TileEntityChunkLoader extends TileEntityFactoryPowered implements ITankContainerBucketable, IFactoryLaserTarget
 {
 	private static void bypassLimit(Ticket tick)
 	{
@@ -44,7 +45,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		} catch(Throwable _) {}
 	}
 	
-	protected static Map<String, Integer> fluidConsumptionRate = new HashMap<String, Integer>();
+	protected static TObjectIntHashMap<String> fluidConsumptionRate = new TObjectIntHashMap<String>();
 	static {
 		fluidConsumptionRate.put("mobessence", 10);
 		fluidConsumptionRate.put("liquidessence", 20);
@@ -53,6 +54,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	
 	protected short _radius;
 	protected boolean activated, unableToRequestTicket;
+	public boolean useAltPower;
 	protected Ticket _ticket;
 	protected int consumptionTicks;
 	protected int emptyTicks, prevEmpty;
@@ -62,6 +64,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		super(Machine.ChunkLoader);
 		_radius = 0;
+		useAltPower = MFRConfig.enableConfigurableCLEnergy.getBoolean(false);
 	}
 	
 	@Override
@@ -102,7 +105,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	
 	public void setRadius(short r)
 	{
-		int maxR = 49;
+		int maxR = 38;
 		if (_ticket != null)
 			maxR = Math.min((int)Math.sqrt(_ticket.getChunkListDepth() / Math.PI), maxR);
 		if (r < 0 | r > maxR | r == _radius)
@@ -126,8 +129,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			FluidStack s = _tanks[0].getFluid();
 			if (drain(_tanks[0], 1, true) == 1)
 			{
-				Integer i = fluidConsumptionRate.get(getFluidName(s));
-				consumptionTicks = i == null ? 0 : i.intValue();
+				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 				emptyTicks = Math.max(-65535, emptyTicks - 2);
 			}
 		}
@@ -266,7 +268,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		if (isInvalid())
 			return;
-		int r = _radius + 1, c;
+		int r = _radius + 1, c, r2 = _radius * _radius;
 		if (_ticket == null)
 		{
 			// {int t = _radius * _radius; c = (int)(t * (float)Math.PI);}
@@ -274,7 +276,6 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			// and it is inaccurate for calculating the area of the loaded
 			// circle of square chunks, so simulate the number of loaded chunks
 			c = 0;
-			int r2 = _radius * _radius;
 			for (int xO = -_radius; xO <= _radius; ++xO)
 			{
 				int xS = xO * xO;
@@ -285,10 +286,26 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		}
 		else
 			c = _ticket.getChunkList().size();
-		double a = (r*r*32-17+r*r*r);
-		for (int i = r / 10; i --> 0; )
-			a *= r / 6d;
-		setActivationEnergy((int)(a*10) + (int)(StrictMath.cbrt(emptyTicks) * c));
+		int energy;
+		if (useAltPower)
+		{
+			int a = (r2+1) * c * 16 * _machine.getActivationEnergy();
+			a &= ~a >> 31;
+			energy = a;
+			c *= 16;
+		}
+		else
+		{
+			double a = (r*r*32-17+r*r*r);
+			for (int i = r / 10; i --> 0; )
+				a *= r / 6d;
+			energy = (int)(a * 10);
+		}
+		energy += (int)(StrictMath.cbrt(emptyTicks) * c);
+		energy &= ~energy >> 31;
+		if (energy == 0)
+			energy = 1;
+		setActivationEnergy(energy);
 	}
 
 	public boolean receiveTicket(Ticket ticket)
@@ -426,17 +443,17 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		return 40;
 	}
-	
+
 	public short getRadius()
 	{
 		return _radius;
 	}
-	
+
 	public boolean getUnableToWork()
 	{
 		return unableToRequestTicket;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void setEmpty(int r)
 	{
@@ -448,6 +465,18 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		return (short)emptyTicks;
 	}
-	
+
 	@Override public void setIsActive(boolean a) {}
+
+	@Override
+	public boolean canFormBeamWith(ForgeDirection from)
+	{
+		return true;
+	}
+
+	@Override
+	public int addEnergy(ForgeDirection from, int energy, boolean simulate)
+	{
+		return storeEnergy(energy, !simulate);
+	}
 }

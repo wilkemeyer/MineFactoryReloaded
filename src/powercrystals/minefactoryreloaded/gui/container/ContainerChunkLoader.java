@@ -25,7 +25,8 @@ public class ContainerChunkLoader extends ContainerFactoryPowered
 		for(int i = 0; i < crafters.size(); i++)
 		{
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, radius);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, empty);
+			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, empty);;
+			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 102, _cl.useAltPower ? 1 : 0);
 		}
 	}
 
@@ -34,8 +35,9 @@ public class ContainerChunkLoader extends ContainerFactoryPowered
 	{
 		super.updateProgressBar(var, value);
 
-		if(var == 100) _cl.setRadius((short)value);
-		if(var == 101) _cl.setEmpty(value & 65535);
+		if (var == 100) _cl.setRadius((short)value);
+		else if (var == 101) _cl.setEmpty(value & 65535);
+		else if (var == 102) _cl.useAltPower = value == 1;
 	}
 
 	@Override public void addSlots() {}

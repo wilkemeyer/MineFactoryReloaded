@@ -17,11 +17,11 @@ tile.mfr.machine.enchantmentrouter.name = Wizard's Router
 
 tile.mfr.machine.laserdrill.name = Magic Beam Emitter
 tile.mfr.machine.laserdrillprecharger.name = Magic Beam Charger
-tile.mfr.machine.autoanvil.name = Auto-Slab O' Fixin
+tile.mfr.machine.autoanvil.name = Magic-Slab O' Fixin
 tile.mfr.machine.blocksmasher.name = Rock Smasher
 tile.mfr.machine.rednote.name = RedNoise Block
-tile.mfr.machine.autobrewer.name = Auto-Still
-tile.mfr.machine.fruitpicker.name = Auto-Picker o' Scurvey's Cure
+tile.mfr.machine.autobrewer.name = Magic-Still
+tile.mfr.machine.fruitpicker.name = Magic-Picker o' Scurvey's Cure
 tile.mfr.machine.mobcounter.name = Magic creature counterinatorrr
 tile.mfr.machine.mobrouter.name = Creature Mover
 
@@ -75,8 +75,9 @@ tile.mfr.decorativebrick.obsidian_large.name = Large Bricks o' Tears
 tile.mfr.decorativebrick.pavedstone_large.name = Large Bricks o' Paved Stone
 tile.mfr.decorativebrick.snow_large.name = Large Bricks o' Slush
 tile.mfr.decorativebrick.meat.raw.name = Block o' Fresh Meat
-tile.mfr.decorativebrick.meat.cooked.name = Block 'o Cooked Meat
+tile.mfr.decorativebrick.meat.cooked.name = Block o' Cooked Meat
 tile.mfr.decorativebrick.brick_large.name = Large Clay Bricks
+tile.mfr.decorativebrick.sugar_charcoal.name = Burnt Block o' Sugarrr
 
 tile.mfr.decorativestone.black.smooth.name = Smooth Blackstone
 tile.mfr.decorativestone.black.cobble.name = Flagstone Blackstone
