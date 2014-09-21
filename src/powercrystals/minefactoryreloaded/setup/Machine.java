@@ -79,9 +79,9 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityWeather;
 public class Machine
 {
 	public static final Material MATERIAL = new MachineMaterial(MapColor.ironColor);
-	private static List<Machine> _machines = new LinkedList<Machine>();
-	private static TIntObjectHashMap<Machine> _machineMappings = new TIntObjectHashMap<Machine>();
-	private static TIntArrayList _highestMetas = new TIntArrayList();
+	protected static List<Machine> _machines = new LinkedList<Machine>();
+	protected static TIntObjectHashMap<Machine> _machineMappings = new TIntObjectHashMap<Machine>();
+	protected static TIntArrayList _highestMetas = new TIntArrayList();
 	
 	public static Machine Planter = new Machine(0, 0, "Planter", TileEntityPlanter.class, 160, 8000);
 	public static Machine Fisher = new Machine(0, 1, "Fisher", TileEntityFisher.class, 20, 16000);
@@ -160,43 +160,50 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, 10,
-			Integer.MAX_VALUE, MFRConfig.enableConfigurableCLEnergy.getBoolean(false));
+	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, 10, Integer.MAX_VALUE, false) {
+		@Override
+		public void load(Configuration c)
+		{
+			if (!MFRConfig.enableConfigurableCLEnergy.getBoolean(false))
+				_activationEnergy = 0;
+			super.load(c);
+		}
+	};
 	public static Machine Fountain = new Machine(2, 11, "Fountain", TileEntityFountain.class, 80, 16000);
 	public static Machine MobRouter = new Machine(2, 12, "MobRouter", TileEntityMobRouter.class, 2560, 16000);
 	
-	private final int _blockIndex;
-	private final int _meta;
-	private final int _machineIndex;
+	protected final int _blockIndex;
+	protected final int _meta;
+	protected final int _machineIndex;
 	
-	private IIcon[] _iconsActive = new IIcon[6];
-	private IIcon[] _iconsIdle = new IIcon[6];
+	protected IIcon[] _iconsActive = new IIcon[6];
+	protected IIcon[] _iconsIdle = new IIcon[6];
 	
-	private final String _name;
-	private final String _internalName;
-	private final String _tileEntityName;
-	private Class<? extends TileEntityFactory> _tileEntityClass;
+	protected final String _name;
+	protected final String _internalName;
+	protected final String _tileEntityName;
+	protected Class<? extends TileEntityFactory> _tileEntityClass;
 	
-	private int _activationEnergy;
-	private int _energyStoredMax;
-	private boolean _useDaRF;
+	protected int _activationEnergy;
+	protected int _energyStoredMax;
+	protected boolean _useDaRF;
 	
-	private Property _isRecipeEnabled;
+	protected Property _isRecipeEnabled;
 	
-	private Machine(int blockIndex, int meta, String name,
+	protected Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass)
 	{
 		this(blockIndex, meta, name, tileEntityClass, 0, 0);
 	}
 	
-	private Machine(int blockIndex, int meta, String name,
+	protected Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass,
 			int activationEnergy, int energyStoredMax)
 	{
 		this(blockIndex, meta, name, tileEntityClass, activationEnergy, energyStoredMax, true);
 	}
 	
-	private Machine(int blockIndex, int meta, String name,
+	protected Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass,
 			int activationEnergy, int energyStoredMax, boolean configurable)
 	{
@@ -387,7 +394,7 @@ public class Machine
 		_iconsIdle[5]   = ir.registerIcon(loadIcon( right, false));
 	}
 	
-	private String loadIcon(Side side, boolean active)
+	protected String loadIcon(Side side, boolean active)
 	{
 		final String base = "minefactoryreloaded:machines/";
 		final String a = side.getMain(active);
@@ -411,7 +418,7 @@ public class Machine
 			return base + "tile.mfr.machine.0." + side.alt;
 	}
 	
-	static enum Side
+	protected static enum Side
 	{
 		bottom(null),
 		top(null),
@@ -430,8 +437,8 @@ public class Machine
 				alt = name;
 		}
 		
-		private String active = "active.";
-		private String idle = "idle.";
+		protected String active = "active.";
+		protected String idle = "idle.";
 		public final String name;
 		public final String alt;
 		public boolean hasAlt;

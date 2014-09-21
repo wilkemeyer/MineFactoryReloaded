@@ -13,6 +13,7 @@ public class MFRConfig
 	// client config
 	public static Property spyglassRange;
 	public static Property brightRednetBand;
+	public static boolean TESRCables;
 
 	// common config
 	public static Property dropFilledContainers;
@@ -103,6 +104,9 @@ public class MFRConfig
 		spyglassRange.comment = "The maximum number of blocks the spyglass and ruler can look to find something. This calculation is performed only on the client side.";
 		brightRednetBand = c.get(CATEGORY_GENERAL, "BrightRedNetColors", false);
 		brightRednetBand.comment = "If true, RedNet color bands will always be bright.";
+		TESRCables = !c.get(CATEGORY_GENERAL, "DisableRedNetFramerateStabilization", false,
+				"Set to true to disable RedNet cables switching to TESRs when they detect " +
+				"that they are updating too rapidly.").getBoolean(false);
 		colorblindMode = c.get(CATEGORY_GENERAL, "EnableColorblindMode", false);
 		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
 		// TODO: expand this to as many textures as possible (cofh core config option?)

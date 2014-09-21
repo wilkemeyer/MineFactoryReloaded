@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -45,6 +46,13 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+	}
+
     @Override
 	@SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared()
@@ -53,6 +61,7 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
     }
 
     @Override
+	@SideOnly(Side.CLIENT)
 	public boolean shouldRenderInPass(int pass)
     {
         return pass == 0 && getMaxRenderDistanceSquared() != -1D;

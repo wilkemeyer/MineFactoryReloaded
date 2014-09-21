@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.render.block;
 
+import cofh.lib.render.RenderHelper;
 import cofh.repack.codechicken.lib.lighting.LightModel;
 import cofh.repack.codechicken.lib.render.CCModel;
 import cofh.repack.codechicken.lib.render.CCRenderState;
@@ -13,10 +14,15 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -27,7 +33,7 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
+public class RedNetCableRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler {
 	protected static CCModel base;
 	protected static CCModel cage;
 	protected static CCModel[] cable = new CCModel[6];
@@ -125,20 +131,70 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 	private ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
 
 	@Override
+	public void renderTileEntityAt(TileEntity tile, double rx, double ry, double rz, float partialTick)
+	{
+		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
+
+		if (renderengine != null)
+		{
+			renderengine.bindTexture(RenderHelper.MC_BLOCK_SHEET);
+		}
+
+		GL11.glPushMatrix();
+		GL11.glTranslated(rx, ry, rz);
+		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+
+		if (Minecraft.isAmbientOcclusionEnabled())
+		{
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+		}
+		else
+		{
+			GL11.glShadeModel(GL11.GL_FLAT);
+		}
+
+		World world = tile.getWorldObj();
+		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
+		int brightness = world.getBlock(x, y, z).getMixedBrightnessForBlock(world, x, y, z);
+
+		Tessellator.instance.startDrawingQuads();
+		renderCable(world, 0, 0, 0, brightness, (TileEntityRedNetCable)tile);
+		Tessellator.instance.draw();
+
+		GL11.glPopMatrix();
+		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+	}
+
+	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block, int modelId, RenderBlocks renderer) {
-		CCRenderState.reset();
-		CCRenderState.useNormals = true;
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getTileEntity(x, y, z);
-		TileEntityRedNetEnergy _cond = null;
+
+		if (MFRConfig.TESRCables && _cable.onRender())
+			return false;
+
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
+
+		return renderCable(world, x, y, z, brightness, _cable);
+	}
+
+	private boolean renderCable(IBlockAccess world, int x, int y, int z, int brightness,
+			TileEntityRedNetCable _cable)
+	{
+		CCRenderState.reset();
+		CCRenderState.useNormals = false;
+		TileEntityRedNetEnergy _cond = null;
 		int bandBrightness = brightBand ? 0xd00070 : brightness;
 
 		Tessellator tess = Tessellator.instance;
 		tess.setColorOpaque_F(1,1,1);
 		tess.setBrightness(brightness);
 
-		tess.addTranslation(x, y, z);
+		if ((x | y | z) != 0)
+			tess.addTranslation(x, y, z);
 
 		base.render(uvt);
 		if (_cable instanceof TileEntityRedNetEnergy) {
@@ -154,11 +210,11 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			RedNetConnectionType state = _cable.getCachedConnectionState(f);
 			switch (state.flags & 31) {
 			case 11: // isCable, isSingleSubnet
-				tess.setBrightness(bandBrightness);
-				band[side].setColour(_cable.getSideColorValue(f));
-				band[side].render(uvt);
-				tess.setColorOpaque_F(1,1,1);
-				tess.setBrightness(brightness);
+			tess.setBrightness(bandBrightness);
+			band[side].setColour(_cable.getSideColorValue(f));
+			band[side].render(uvt);
+			tess.setColorOpaque_F(1,1,1);
+			tess.setBrightness(brightness);
 			case 19: // isCable, isAllSubnets
 				if (state.isSingleSubnet) {
 					iface[side].render(uvt);
@@ -191,7 +247,8 @@ public class RedNetCableRenderer implements ISimpleBlockRenderingHandler {
 			}
 		}
 
-		tess.addTranslation(-x, -y, -z);
+		if ((x | y | z) != 0)
+			tess.addTranslation(-x, -y, -z);
 
 		return true;
 	}

@@ -78,6 +78,8 @@ import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRender
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
@@ -130,13 +132,13 @@ public class MineFactoryReloadedClient
 				new FactoryGlassRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdDetCord,
 				new DetCordRenderer());
-		RenderingRegistry.registerBlockHandler(renderIdRedNet,
-				new RedNetCableRenderer());
+		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
+		RenderingRegistry.registerBlockHandler(renderIdRedNet, cableRenderer);
 		RenderingRegistry.registerBlockHandler(renderIdPPipe,
 				new PlasticPipeRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdRedNetLogic,
 				new RedNetLogicRenderer());
-		
+
 		// TODO: convert card renderer and remove this
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class,
 				new powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer());
@@ -183,6 +185,9 @@ public class MineFactoryReloadedClient
 		RedNetHistorianRenderer panelRenderer = new RedNetHistorianRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, panelRenderer);
 		RenderingRegistry.registerBlockHandler(panelRenderer);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrill.class, new LaserDrillRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrillPrecharger.class,

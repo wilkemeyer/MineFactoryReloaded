@@ -8,6 +8,7 @@ import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.lib.util.position.BlockPosition;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,18 +45,27 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 public class TileEntityRedNetCable extends TileEntityBase implements INode, ITraceable, ICustomHitBox
 {
+	private static boolean isClient = FMLCommonHandler.instance().getSide() == Side.CLIENT;
 	protected int[] _sideColors = new int [6];
 	protected byte[] _cableMode = {1,1,1, 1,1,1, 0};
 	protected RedNetConnectionType[] _connectionState = {None,None,None, None,None,None};
 	protected IRedNetLogicPoint[] _sideUpgrade = {null,null,null, null,null,null};
-	
+
 	RedstoneNetwork _network;
+
+	@SideOnly(Side.CLIENT)
+	private byte __updatePos;
+	@SideOnly(Side.CLIENT)
+	private long[] __lastUpdates;
+	@SideOnly(Side.CLIENT)
+	private boolean __useTESR;
+
 	boolean isRSNode = false;
 	private boolean dirty;
 	private boolean readFromNBT;
-	
+
 	private static THashSet<Block> _connectionBlackList;
-	
+
 	public TileEntityRedNetCable()
 	{
 		if (_connectionBlackList == null)
@@ -76,8 +86,10 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				if (!wl.contains(i))
 					_connectionBlackList.add(Block.getBlockById(i));
 		}
+		if (isClient)
+			__lastUpdates = new long[10];
 	}
-	
+
 	@Override
 	public void validate()
 	{
@@ -101,25 +113,25 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			_network = null;
 		}
 	}
-	
+
 	@Override
 	public boolean isNotValid()
 	{
 		return tileEntityInvalid;
 	}
-	
+
 	@Override
 	public boolean canUpdate()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange()
 	{
 		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
 	}
-	
+
 	@Override
 	public void onMatchedNeighborBlockChange()
 	{
@@ -164,7 +176,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			}
 		}
 	}
-	
+
 	public void setNetwork(RedstoneNetwork network)
 	{
 		_network = network;
@@ -398,7 +410,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		for (int i = box.sideLength.length; i --> 0; )
 			box.drawSide[i] = box.sideLength[i] > 0;
-		return box;
+			return box;
 	}
 
 	public boolean canInterface(TileEntityRedNetCable with, ForgeDirection dir) {
@@ -494,7 +506,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		int _mode = _cableMode[side.ordinal()];
 		if ((_mode & 1) == 0)
 			return RedNetConnectionType.None;
-		_mode >>>= 1;
+		{ // eclipse freaks out with bit shifts.
+			_mode >>>= 1;
+		}
 		if (!decorative)
 			_mode = 1;
 		if (_cableMode[6] == 1)
@@ -571,7 +585,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		// standard connection logic, then figure out if we shouldn't connect
 		// modes 1, 2, and 3 will skip this. _connectionBlackList is a HashMap
 		else if (!node && (_connectionBlackList.contains(b) ||
-					b instanceof IRedNetDecorative))
+				b instanceof IRedNetDecorative))
 		{
 			ret = RedNetConnectionType.None;
 		}
@@ -662,14 +676,36 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	public boolean isSolidOnSide(int side)
 	{
 		int m = _cableMode[side], i = m >> 1;
-		return ((m & 1) == 1) & i != 3 & i != 1;
+				return ((m & 1) == 1) & i != 3 & i != 1;
 	}
 
-    @Override
+	@Override
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared()
+	{
+		return 65536D;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean shouldRenderInPass(int pass)
-    {
-        return false;
-    }
+	{
+		return pass == 0 ? __useTESR : false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean onRender()
+	{
+		long[] a = __lastUpdates;
+		int i = a.length, e = i, p = __updatePos;
+		a[p] = worldObj.getTotalWorldTime();
+		__updatePos = (byte)((p + 1) % e);
+		long gap = 0;
+		while (i --> 1)
+			gap += a[(i + p + 1) % e] - a[(i + p) % e];
+		__useTESR = gap <= (30 * e);
+		return __useTESR;
+	}
 
 	@Override
 	public Packet getDescriptionPacket()
