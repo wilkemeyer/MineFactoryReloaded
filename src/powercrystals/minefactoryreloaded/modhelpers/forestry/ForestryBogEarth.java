@@ -7,21 +7,27 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
+import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
+import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSoil;
 
-public class ForestryBogEarth extends PlantableSoil implements IFactoryFertilizable, IFactoryHarvestable
+public class ForestryBogEarth extends PlantableSoil implements IFactoryFertilizable, IFactoryHarvestable, IFactoryFruit
 {
+	private ReplacementBlock repl;
+
 	public ForestryBogEarth(Block block)
 	{
 		super(block);
 		_plantedBlock.setMeta(true);
+		repl = new ReplacementBlock(Blocks.dirt);
 	}
 
 	@Override
@@ -64,6 +70,12 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	}
 
 	@Override
+	public boolean canBePicked(World world, int x, int y, int z)
+	{
+		return world.getBlockMetadata(x, y, z) == 13;
+	}
+
+	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> settings, int x, int y, int z)
 	{
 		return world.getBlockMetadata(x, y, z) == 13;
@@ -82,12 +94,34 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	}
 
 	@Override
+	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	{
+		return repl;
+	}
+
+	@Override
+	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	{
+		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+	}
+
+	@Override
 	public void preHarvest(World world, int x, int y, int z)
 	{
 	}
 
 	@Override
 	public void postHarvest(World world, int x, int y, int z)
+	{
+	}
+
+	@Override
+	public void prePick(World world, int x, int y, int z)
+	{
+	}
+
+	@Override
+	public void postPick(World world, int x, int y, int z)
 	{
 	}
 }
