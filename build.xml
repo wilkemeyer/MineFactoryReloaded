@@ -81,6 +81,7 @@
 				<available file="${lib.dir}/Buildcraft.jar" type="file"/>
 				<available file="${lib.dir}/industrialcraft-2-api.jar" type="file"/>
 				<available file="${lib.dir}/AppEng.jar" type="file"/>
+				<available file="${lib.dir}/Forestry.jar" type="file"/>
 			</and>
 		</condition>
 	</target>
@@ -157,10 +158,22 @@
 		
 		<echo message="Downloading AppEng API..." />
 		<get src="http://ae2.ae-mod.info/builds/appliedenergistics2-deobf-rv0-beta-4.jar" dest="${download.dir}/AppEng.jar"/>
-		<!--
+
 		<echo message="Downloading Forestry API... "/>
-		<get src="http://forestry.sengir.net/files/forestry/releases/2.3.0.1/forestry-api-2.3.0.1.zip" dest="${download.dir}/ForestryAPI.zip"/>
-		-->
+		<get src="https://github.com/ForestryMC/ForestryAPI/archive/master.zip" dest="${download.dir}/ForestryAPI.zip"/>
+		<!-- Begin hack -->
+		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<mkdir dir="${compile.dir}"/>
+		<javac srcdir="${download.dir}/ForestryAPI-master" destdir="${compile.dir}"
+			target="1.6" source="1.6"
+			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
+			<include name="forestry/api/**/*.java"/>
+		</javac>
+		<jar destfile="${download.dir}/Forestry.jar" compress="true" level="9" basedir="${compile.dir}"/>
+		<delete dir="${compile.dir}" failonerror="false"/>
+		<delete dir="${download.dir}/ForestryAPI-master"/>
+		<!-- End hack -->
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="have.libs">
@@ -180,11 +193,10 @@
 		<copy file="${download.dir}/industrialcraft-2-api.jar" todir="${lib.dir}"/>
 		
 		<echo message="Extracting AppEng API... " />
-		<copy file="${download.dir}/AppEng.jar" todir="${lib.dir}"/><!--
+		<copy file="${download.dir}/AppEng.jar" todir="${lib.dir}"/>
 		
 		<echo message="Extracting Forestry API... "/>
-		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}"/>
-		<move file="${download.dir}/forestry" todir="${sources.dir}"/>-->
+		<copy file="${download.dir}/Forestry.jar" todir="${lib.dir}"/>
 	</target>
 	
 	<macrodef name="move-transformers"><sequential>
