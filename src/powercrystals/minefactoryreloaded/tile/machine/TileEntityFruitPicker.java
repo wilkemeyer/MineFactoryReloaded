@@ -89,13 +89,13 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 
 		IFactoryFruit harvestable = MFRRegistry.getFruits().get(harvestedBlock);
 
-		harvestable.prePick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand,
 				targetCoords.x, targetCoords.y, targetCoords.z);
 
 		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj,
 				targetCoords.x, targetCoords.y, targetCoords.z);
+
+		harvestable.prePick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 
 		if (replacement == null)
 		{
