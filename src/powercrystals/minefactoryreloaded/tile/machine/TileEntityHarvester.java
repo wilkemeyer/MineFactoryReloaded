@@ -168,7 +168,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		{
 			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, Blocks.air, 0, 2))
 				return false;
-			if(_settings.get("playSounds"))
+			if (_settings.get("playSounds"))
 			{
 				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x,
 						targetCoords.y, targetCoords.z,

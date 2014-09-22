@@ -20,10 +20,10 @@ public class HarvestableVanillaLeaves extends HarvestableTreeLeaves {
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
 	{
-		if (harvesterSettings.get("silkTouch") == Boolean.TRUE)
-			return super.getDrops(world, rand, harvesterSettings, x, y, z);
+		if (settings.get("silkTouch") == Boolean.TRUE)
+			return super.getDrops(world, rand, settings, x, y, z);
 		
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 		int meta = world.getBlockMetadata(x, y, z);

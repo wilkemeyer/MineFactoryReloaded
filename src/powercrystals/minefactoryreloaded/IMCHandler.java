@@ -37,6 +37,7 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSta
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCropPlant;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableGourd;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableMushroom;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableShrub;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
@@ -331,6 +332,8 @@ public class IMCHandler
 					MFRRegistry.registerHarvestable(new HarvestableStemPlant(
 							Block.getBlockFromName(item.getString("stem")),
 							Block.getBlockFromName(item.getString("fruit"))));
+					MFRRegistry.registerHarvestable(new HarvestableGourd(
+							Block.getBlockFromName(item.getString("fruit"))));
 				}
 				/**
 				 * }
@@ -441,7 +444,7 @@ public class IMCHandler
 								FertilizerType.values()[item.getInteger("type")]));
 					else
 						MFRRegistry.registerFertilizable(new FertilizableCocoa(
-								(IGrowable)Block.getBlockFromName(item.getString("plant"))));
+								Block.getBlockFromName(item.getString("plant"))));
 				}
 				/*
 				 * FertilizableStandard

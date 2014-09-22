@@ -1,23 +1,17 @@
 package powercrystals.minefactoryreloaded.farmables.harvestables;
 
-import java.util.Map;
-
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.api.HarvestType;
-
 public class HarvestableCropPlant extends HarvestableStandard
 {
 	private int _targetMeta;
-	
-	public HarvestableCropPlant(Block block, int targetMeta)
+
+	public HarvestableCropPlant(net.minecraft.block.Block block, int targetMeta)
 	{
-		super(block, HarvestType.Normal);
+		super(block, powercrystals.minefactoryreloaded.api.HarvestType.Normal);
 		_targetMeta = targetMeta;
 	}
-	
+
 	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> settings, int x, int y, int z)
 	{
 		return world.getBlockMetadata(x, y, z) >= _targetMeta;
 	}

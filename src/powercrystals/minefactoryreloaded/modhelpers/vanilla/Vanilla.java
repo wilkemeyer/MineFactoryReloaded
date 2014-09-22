@@ -122,6 +122,7 @@ import powercrystals.minefactoryreloaded.farmables.grindables.GrindableStandard;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableZombiePigman;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCropPlant;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableGourd;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableMushroom;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableNetherWart;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableShrub;
@@ -186,14 +187,14 @@ public class Vanilla
 		MFRRegistry.registerHarvestable(new HarvestableMushroom(Blocks.red_mushroom));
 		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Blocks.pumpkin_stem, Blocks.pumpkin));
 		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Blocks.melon_stem, Blocks.melon_block));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.pumpkin));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.melon_block));
+		MFRRegistry.registerHarvestable(new HarvestableGourd(Blocks.pumpkin));
+		MFRRegistry.registerHarvestable(new HarvestableGourd(Blocks.melon_block));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.wheat, 7));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.carrots, 7));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.potatoes, 7));
-		MFRRegistry.registerHarvestable(new HarvestableVine());
+		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.vine));
 		MFRRegistry.registerHarvestable(new HarvestableNetherWart());
-		MFRRegistry.registerHarvestable(new HarvestableCocoa());
+		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.cocoa));
 		MFRRegistry.registerHarvestable(new HarvestableWood(MineFactoryReloadedCore.rubberWoodBlock));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(MineFactoryReloadedCore.rubberLeavesBlock));
 		
@@ -206,7 +207,7 @@ public class Vanilla
 		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable)Blocks.pumpkin_stem));
 		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable)Blocks.melon_stem));
 		MFRRegistry.registerFertilizable(new FertilizableNetherWart());
-		MFRRegistry.registerFertilizable(new FertilizableCocoa((IGrowable)Blocks.cocoa));
+		MFRRegistry.registerFertilizable(new FertilizableCocoa(Blocks.cocoa));
 		MFRRegistry.registerFertilizable(new FertilizableGrass());
 		MFRRegistry.registerFertilizable(new FertilizableStandard(MineFactoryReloadedCore.rubberSaplingBlock));
 		MFRRegistry.registerFertilizable(new FertilizableIGrowable(MineFactoryReloadedCore.fertileSoil));
@@ -321,7 +322,6 @@ public class Vanilla
 		MFRRegistry.registerLiquidDrinkHandler("lava", new DrinkHandlerLava());
 		MFRRegistry.registerLiquidDrinkHandler("milk", new DrinkHandlerMilk());
 		MFRRegistry.registerLiquidDrinkHandler("biofuel", new DrinkHandlerBiofuel());
-		MFRRegistry.registerLiquidDrinkHandler("bioethanol", new DrinkHandlerBiofuel());
 		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
 		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
 		MFRRegistry.registerLiquidDrinkHandler("mobessence", new DrinkHandlerMobEssence());
@@ -420,11 +420,11 @@ public class Vanilla
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
-		
 		registerOreDictLaserOre(175, "Coal",               black, false);
 		registerOreDictLaserOre(150, "Iron",               brown, false);
 		registerOreDictLaserOre(100, "Redstone",             red, false);
 		registerOreDictLaserOre(100, "Nikolite",       lightBlue, false);
+		registerOreDictLaserOre(100, "oreSalt",            white, "oreNetherSalt", "foodSalt");
 		registerOreDictLaserOre( 90, "Copper",            orange, false);
 		registerOreDictLaserOre( 85, "Tin",               silver, false);
 		registerOreDictLaserOre( 85, "oreCheese",         yellow, null);

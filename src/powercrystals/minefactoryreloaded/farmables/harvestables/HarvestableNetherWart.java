@@ -21,25 +21,25 @@ public class HarvestableNetherWart implements IFactoryHarvestable
 	{
 		return Blocks.nether_wart;
 	}
-	
+
 	@Override
 	public HarvestType getHarvestType()
 	{
 		return HarvestType.Normal;
 	}
-	
+
 	@Override
 	public boolean breakBlock()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
 		return world.getBlockMetadata(x, y, z) >= 3;
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
 	{
@@ -55,15 +55,15 @@ public class HarvestableNetherWart implements IFactoryHarvestable
 		}
 		return drops;
 	}
-	
+
 	@Override
 	public void preHarvest(World world, int x, int y, int z)
 	{
 	}
-	
+
 	@Override
 	public void postHarvest(World world, int x, int y, int z)
 	{
 	}
-	
+
 }

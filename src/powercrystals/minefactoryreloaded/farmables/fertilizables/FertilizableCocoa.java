@@ -4,14 +4,13 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.IGrowable;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 
 public class FertilizableCocoa extends FertilizableCropPlant
 {
-	public FertilizableCocoa(IGrowable block)
+	public FertilizableCocoa(Block block)
 	{
 		super(block, FertilizerType.GrowPlant, 8);
 	}

@@ -120,20 +120,13 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
-	public void dropBlockAsItemWithChance(World par1World, int x, int y, int z, int meta, float chance, int fortune)
+	public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune)
 	{
 		if (updating.get() != null)
 			return;
-		if (!par1World.isRemote)
-		{
-			ArrayList<ItemStack> items = getDrops(par1World, x, y, z, meta, fortune);
-			//chance = ForgeEventFactory.fireBlockHarvesting(items, par1World, this, x, y, z, meta, fortune, chance, false, harvesters.get());
-
-			for (ItemStack item : items)
-				if (par1World.rand.nextFloat() <= chance)
-					this.dropBlockAsItem(par1World, x, y, z, item);
-		}
+		super.dropBlockAsItemWithChance(world, x, y, z, meta, chance, fortune);
 	}
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
 	{
