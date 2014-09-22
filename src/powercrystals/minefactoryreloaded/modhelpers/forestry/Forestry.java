@@ -111,6 +111,16 @@ public class Forestry
 			MFRRegistry.registerFruit(leaf);
 		} else
 			MineFactoryReloadedCore.log().error("Forestry leaves null!");
+
+		block = findBlock(name, "pods");
+		item = findItem(name, "grafterProven");
+		if (block != null) {
+			ForestryPod pod = new ForestryPod(block, item);
+			MFRRegistry.registerFertilizable(pod);
+			MFRRegistry.registerHarvestable(pod);
+			MFRRegistry.registerFruit(pod);
+		} else
+			MineFactoryReloadedCore.log().error("Forestry pods null!");
 	}
 
 	@EventHandler

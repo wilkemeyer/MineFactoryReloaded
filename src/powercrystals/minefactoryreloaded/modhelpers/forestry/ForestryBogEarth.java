@@ -45,7 +45,7 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	@Override
 	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		return fertilizerType == FertilizerType.GrowPlant && world.getBlockMetadata(x, y, z) == 1;
+		return fertilizerType == FertilizerType.GrowPlant && (world.getBlockMetadata(x, y, z) & 3) == 1;
 	}
 
 	@Override

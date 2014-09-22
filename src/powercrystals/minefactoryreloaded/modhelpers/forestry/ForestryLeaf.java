@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -29,17 +30,14 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 {
 	private ITreeRoot root;
 	private ReplacementBlock repl;
+	protected Item _item;
 
 	public ForestryLeaf(Block block)
 	{
 		super(block);
 		root = (ITreeRoot)AlleleManager.alleleRegistry.getSpeciesRoot("rootTrees");
-		repl = new ReplacementBlock((Block)null) {
-			@Override
-			public boolean replaceBlock(World world, int x, int y, int z, ItemStack stack) {
-				return true;
-			}
-		};
+		repl = new EmptyReplacement();
+		_item = Item.getItemFromBlock(block);
 	}
 
 	@Override
@@ -60,13 +58,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		if (fertilizerType != FertilizerType.GrowPlant)
 			return false;
 
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof IFruitBearer)
-		{
-			IFruitBearer fruit = (IFruitBearer)te;
-			return fruit.getRipeness() < 0.99f;
-		}
-		return false;
+		return !canBePicked(world, x, y, z);
 	}
 
 	@Override
@@ -100,22 +92,32 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		if (tree == null)
 			return null;
 
+		ArrayList<ItemStack> prod = new ArrayList<ItemStack>();
+
 		float modifier = 1f;
 		if (settings.get("silkTouch") == Boolean.TRUE)
+		{/*
+			ItemStack item = new ItemStack(_item);
+			NBTTagCompound tag = new NBTTagCompound();
+			tree.writeToNBT(tag);
+			item.setTagCompound(tag);
+			prod.add(item);//*/
 			modifier = 100f;
+		}
+		//else
+		{
+			boolean hasMate = tree.getMate() != null;
+			for (ITree s : tree.getSaplings(world, x, y, z, modifier))
+				if (s != null) {
+					if ((hasMate && !s.isGeneticEqual(tree)) || rand.nextInt(32) == 0)
+						if (rand.nextBoolean())
+							prod.add(root.getMemberStack(s, EnumGermlingType.POLLEN.ordinal()));
 
-		ArrayList<ItemStack> prod = new ArrayList<ItemStack>();
-		boolean hasMate = tree.getMate() != null;
-		for (ITree s : tree.getSaplings(world, x, y, z, modifier))
-			if (s != null) {
-				if ((hasMate && !s.isGeneticEqual(tree)) || rand.nextInt(32) == 0)
-					if (rand.nextBoolean())
-						prod.add(root.getMemberStack(s, EnumGermlingType.POLLEN.ordinal()));
+					prod.add(root.getMemberStack(s, EnumGermlingType.SAPLING.ordinal()));
+				}
 
-				prod.add(root.getMemberStack(s, EnumGermlingType.SAPLING.ordinal()));
-			}
-
-		getFruits(world, x, y, z, tree, prod);
+			getFruits(world, x, y, z, tree, prod);
+		}
 
 		return prod;
 	}
