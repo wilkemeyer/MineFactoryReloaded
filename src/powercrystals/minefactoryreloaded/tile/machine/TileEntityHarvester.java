@@ -41,29 +41,29 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 {
 	private Map<String, Boolean> _settings;
 	private Map<String, Boolean> _immutableSettings;
-	
+
 	private Random _rand;
-	
+
 	private IHarvestManager _treeManager;
 	private BlockPosition _lastTree;
-	
+
 	public TileEntityHarvester()
 	{
 		super(Machine.Harvester);
 		createHAM(this, 1);
 		setManageSolids(true);
-		
+
 		_settings = new HashMap<String, Boolean>();
 		_settings.put("silkTouch", false);
 		_settings.put("harvestSmallMushrooms", false);
 		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
 		_settings.put("isHarvestingTree", false);
 		_immutableSettings = java.util.Collections.unmodifiableMap(_settings);
-		
+
 		_rand = new Random();
 		setCanRotate(true);
 	}
-	
+
 	@Override
 	public void onChunkUnload()
 	{
@@ -72,7 +72,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			_treeManager.free();
 		_lastTree = null;
 	}
-	
+
 	@Override
 	public void validate()
 	{
@@ -93,98 +93,97 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			}
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiHarvester(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerHarvester getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerHarvester(this, inventoryPlayer);
 	}
-	
+
 	public Map<String, Boolean> getSettings()
 	{
 		return _settings;
 	}
-	
+
 	public Map<String, Boolean> getImmutableSettings()
 	{
 		return _immutableSettings;
 	}
-	
+
 	@Override
 	protected boolean shouldPumpLiquid()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 5;
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[0]);
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
 		BlockPosition targetCoords = getNextHarvest();
-		
+
 		if (targetCoords == null)
 		{
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
-		
+
 		Block harvestedBlock = worldObj.getBlock(targetCoords.x, targetCoords.y, targetCoords.z);
 		int harvestedBlockMetadata = worldObj.getBlockMetadata(targetCoords.x,
 															targetCoords.y, targetCoords.z);
-		
+
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().
 											get(harvestedBlock);
-		
+
 		harvestable.preHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, _immutableSettings,
 													targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		if (harvestable.breakBlock())
 		{
 			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, Blocks.air, 0, 2))
 				return false;
-			if (_settings.get("playSounds"))
+			if (_settings.get("playSounds") == Boolean.TRUE)
 			{
-				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x,
-						targetCoords.y, targetCoords.z,
+				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x, targetCoords.y, targetCoords.z,
 						Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
 			}
 		}
-		
+
 		doDrop(drops);
-		
+
 		harvestable.postHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		_tanks[0].fill(FluidRegistry.getFluidStack("sludge", 10), true);
-		
+
 		return true;
 	}
-	
+
 	private BlockPosition getNextHarvest()
 	{
 		if (!_treeManager.getIsDone())
@@ -195,21 +194,21 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		{
 			return null;
 		}
-		
+
 		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
-		
+
 		if(!MFRRegistry.getHarvestables().containsKey(search))
 		{
 			_lastTree = null;
 			return null;
 		}
-		
+
 		_settings.put("isHarvestingTree", false);
-		
+
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(search);
 		if(harvestable.canBeHarvested(worldObj, _immutableSettings, bp.x, bp.y, bp.z))
 		{
-			HarvestType type = harvestable.getHarvestType(); 
+			HarvestType type = harvestable.getHarvestType();
 			switch (type)
 			{
 			case Gourd:
@@ -228,7 +227,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		}
 		return null;
 	}
-	
+
 	private BlockPosition getNextAdjacent(int x, int y, int z, IFactoryHarvestable harvestable)
 	{
 		for (SideOffset side : SideOffset.SIDES)
@@ -239,12 +238,12 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		}
 		return null;
 	}
-	
+
 	private BlockPosition getNextVertical(int x, int y, int z, int startOffset, IFactoryHarvestable harvestable)
 	{
 		int highestBlockOffset = -1;
 		int maxBlockOffset = MFRConfig.verticalHarvestSearchMaxVertical.getInt();
-		
+
 		Block plant = harvestable.getPlant();
 		for (int currentYoffset = startOffset; currentYoffset < maxBlockOffset; ++currentYoffset)
 		{
@@ -252,21 +251,21 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			if (!block.equals(plant) ||
 					!harvestable.canBeHarvested(worldObj, _immutableSettings, x, y + currentYoffset, z))
 				break;
-			
+
 			highestBlockOffset = currentYoffset;
 		}
-		
+
 		if (highestBlockOffset >= 0)
 			return new BlockPosition(x, y + highestBlockOffset, z);
-		
+
 		return null;
 	}
-	
+
 	private BlockPosition getNextTreeSegment(BlockPosition pos, boolean treeFlipped)
 	{
 		Block block;
 		_settings.put("isHarvestingTree", true);
-		
+
 		if (!pos.equals(_lastTree) || _treeManager.getIsDone())
 		{
 			int lowerBound = 0;
@@ -276,16 +275,16 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 				lowerBound = upperBound;
 				upperBound = 0;
 			}
-			
+
 			_lastTree = new BlockPosition(pos);
-			
+
 			Area a = new Area(_lastTree, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
-			
+
 			_treeManager.reset(worldObj, a,
 					treeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree,
 							_immutableSettings);
 		}
-		
+
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		while (!_treeManager.getIsDone())
 		{
@@ -296,7 +295,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 				return null;
 			}
 			block = worldObj.getBlock(bp.x, bp.y, bp.z);
-			
+
 			if (harvestables.containsKey(block))
 			{
 				IFactoryHarvestable obj = harvestables.get(block);
@@ -309,37 +308,37 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
@@ -352,7 +351,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		tag.setTag("harvesterSettings", list);
 		_treeManager.writeToNBT(tag);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
@@ -364,7 +363,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			{
 				if ("playSounds".equals(s))
 					continue;
-				byte b = list.getByte(s); 
+				byte b = list.getByte(s);
 				if (b == 1)
 				{
 					_settings.put(s, true);
@@ -377,19 +376,19 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		if (!_treeManager.getIsDone())
 			_lastTree = _treeManager.getOrigin();
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
@@ -407,19 +406,19 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getUpgradeSlot()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return slot == 0 && isUsableAugment(itemstack);
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{

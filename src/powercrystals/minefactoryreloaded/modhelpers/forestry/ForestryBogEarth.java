@@ -21,6 +21,7 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	public ForestryBogEarth(Block block)
 	{
 		super(block);
+		_plantedBlock.setMeta(true);
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerBiofuel;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
+import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 
 @Mod(modid = "MineFactoryReloaded|CompatForestry", name = "MFR Compat: Forestry", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Forestry")
@@ -88,6 +89,28 @@ public class Forestry
 			MFRRegistry.registerHarvestable(bog);
 		} else
 			MineFactoryReloadedCore.log().error("Forestry bog earth null!");
+
+		for (int i = 1; true; ++i) {
+			block = findBlock(name, "log" + i);
+			if (block == null) {
+				if (i > 1)
+					MineFactoryReloadedCore.log().info("Forestry logs null at " + i + ".");
+				else
+					MineFactoryReloadedCore.log().error("Forestry logs null!");
+				break;
+			}
+			MFRRegistry.registerHarvestable(new HarvestableWood(block));
+			MFRRegistry.registerFruitLogBlock(block);
+		}
+
+		block = findBlock(name, "leaves");
+		if (block != null) {
+			ForestryLeaf leaf = new ForestryLeaf(block);
+			MFRRegistry.registerFertilizable(leaf);
+			MFRRegistry.registerHarvestable(leaf);
+			MFRRegistry.registerFruit(leaf);
+		} else
+			MineFactoryReloadedCore.log().error("Forestry leaves null!");
 	}
 
 	@EventHandler
