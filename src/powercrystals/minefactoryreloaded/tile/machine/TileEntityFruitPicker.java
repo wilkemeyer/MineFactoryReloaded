@@ -30,9 +30,9 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 public class TileEntityFruitPicker extends TileEntityFactoryPowered
 {
 	private IHarvestManager _treeManager;
-	
+
 	private Random _rand;
-	
+
 	public TileEntityFruitPicker()
 	{
 		super(Machine.FruitPicker);
@@ -41,7 +41,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		setManageSolids(true);
 		setCanRotate(true);
 	}
-	
+
 	@Override
 	public void validate()
 	{
@@ -59,25 +59,25 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public ContainerFruitPicker getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFruitPicker(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiFruitPicker(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	protected boolean activateMachine()
 	{
 		BlockPosition targetCoords = getNextTree();
-		
+
 		if (targetCoords == null)
 		{
 			setIdleTicks(getIdleTicksMax());
@@ -86,17 +86,17 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 
 		Block harvestedBlock = worldObj.getBlock(targetCoords.x, targetCoords.y, targetCoords.z);
 		int harvestedBlockMetadata = worldObj.getBlockMetadata(targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		IFactoryFruit harvestable = MFRRegistry.getFruits().get(harvestedBlock);
-		
+
 		harvestable.prePick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand,
 				targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj,
 				targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		if (replacement == null)
 		{
 			if (!worldObj.setBlockToAir(targetCoords.x, targetCoords.y, targetCoords.z))
@@ -112,14 +112,14 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 			if (!replacement.replaceBlock(worldObj, targetCoords.x, targetCoords.y, targetCoords.z, null))
 				return false;
 		}
-		
+
 		doDrop(drops);
-		
+
 		harvestable.postPick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-		
+
 		return true;
 	}
-	
+
 	private BlockPosition getNextTree()
 	{
 		BlockPosition bp = _areaManager.getNextBlock();
@@ -127,23 +127,23 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		{
 			return null;
 		}
-		
+
 		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
-		
+
 		if (!MFRRegistry.getFruitLogBlocks().contains(search))
-			return null;
-		
+			return MFRRegistry.getFruits().containsKey(search) ? bp : null;
+
 		BlockPosition temp = getNextTreeSegment(bp);
 		if (temp != null)
 			_areaManager.rewindBlock();
 
 		return temp;
 	}
-	
+
 	private BlockPosition getNextTreeSegment(BlockPosition pos)
 	{
 		Block block;
-		
+
 		if (_treeManager.getIsDone() || !_treeManager.getOrigin().equals(pos))
 		{
 			int lowerBound = 0;
@@ -153,8 +153,8 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 
 			_treeManager.reset(worldObj, a, HarvestMode.FruitTree, null);
 		}
-		
-		Map<Block, IFactoryFruit> fruits = MFRRegistry.getFruits(); 
+
+		Map<Block, IFactoryFruit> fruits = MFRRegistry.getFruits();
 		while (!_treeManager.getIsDone())
 		{
 			BlockPosition bp = _treeManager.getNextBlock();
@@ -168,43 +168,43 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		}
 		return null;
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 5;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return slot == 0 && isUsableAugment(itemstack);
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[0]);
 	}
-	
+
 	@Override
 	public int getUpgradeSlot()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public ForgeDirection getDropDirection()
 	{
