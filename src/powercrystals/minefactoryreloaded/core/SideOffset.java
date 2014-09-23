@@ -1,9 +1,8 @@
 package powercrystals.minefactoryreloaded.core;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.HashMap;
-import java.util.Map;
+import gnu.trove.impl.unmodifiable.TUnmodifiableIntObjectMap;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 public enum SideOffset
 {
@@ -107,16 +106,16 @@ public enum SideOffset
 	public static SideOffset[] ADJACENT_INVERTED = {DOWN, NORTH, SOUTH, WEST, EAST, UP};
 
 	public static SideOffset[] SIDES = {NORTH, SOUTH, WEST, EAST};
-    
-    public static final Map<Integer, SideOffset> lookup;
+
+    public static final TIntObjectMap<SideOffset> lookup;
     static
     {
-    	HashMap<Integer, SideOffset> a = new HashMap<Integer, SideOffset>();
+    	TIntObjectHashMap<SideOffset> a = new TIntObjectHashMap<SideOffset>();
     	for (int i = 0x40; i --> 0;)
     		a.put(i, UNKNOWN);
     	for (SideOffset v : SideOffset.values())
     		a.put(v.flag, v);
-    	lookup = ImmutableMap.copyOf(a);
+    	lookup = new TUnmodifiableIntObjectMap<SideOffset>(a);//ImmutableMap.copyOf(a);
     }
 
 	public final int offsetX;

@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -70,7 +71,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
 	}
-	
+
 	protected static final TileEntity getTile(World world, int x, int y, int z)
 	{
 		return MFRUtil.getTile(world, x, y, z);
@@ -82,7 +83,9 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode)
 		{
-			dropBlockAsItem(world, x, y, z, meta, 0);
+			harvesters.set(player);
+			dropBlockAsItem(world, x, y, z, meta, EnchantmentHelper.getFortuneModifier(player));
+			harvesters.set(null);
 			world.setBlock(x, y, z, Blocks.air, 0, 7);
 		}
 	}
@@ -102,9 +105,9 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 		activationOffsets(xOffset, yOffset, zOffset);
 		return activated(world, x, y, z, player, side);
 	}
-	
+
 	protected void activationOffsets(float xOffset, float yOffset, float zOffset) {}
-	
+
 	protected boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
@@ -187,12 +190,12 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 				((TileEntityBase)te).onMatchedNeighborBlockChange();
 		}
 	}
-	
+
 	@Override
 	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
 		TileEntity te = world instanceof World ? getTile((World)world, x, y, z) : world.getTileEntity(x, y, z);
-		
+
 		if (te instanceof TileEntityBase)
 		{
 			((TileEntityBase)te).onNeighborTileChange(tileX, tileY, tileZ);
@@ -340,7 +343,7 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	{
 		return providesPower;
 	}
-	
+
 	@Override
 	public int damageDropped(int meta)
 	{

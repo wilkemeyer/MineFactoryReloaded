@@ -565,7 +565,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		/**
 		 * The else/if chain is broken here and no values are directly
 		 * returned from the function below here for support of API nodes
-		 * that want to use the standard connection logic. 
+		 * that want to use the standard connection logic.
 		 */
 		RedNetConnectionType ret;
 
@@ -575,7 +575,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			if (b.isSideSolid(worldObj, x, y, z, side.getOpposite()))
 				ret = RedNetConnectionType.ForcedCableSingle;
 			else
-				ret = RedNetConnectionType.ForcedPlateSingle; 
+				ret = RedNetConnectionType.ForcedPlateSingle;
 		}
 		// mode 1 forces plate mode for weak power
 		else if (_mode == 1)
@@ -648,6 +648,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		case 4:
 			_cableMode[6] = (byte) (_cableMode[6] > 0 ? 1 : 0);
 			break;
+		case 5:
 		default:
 			break;
 		}
