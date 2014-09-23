@@ -121,6 +121,7 @@ tile.mfr.decorativebrick.snow_large.name = 大型雪砖块
 tile.mfr.decorativebrick.meat.raw.name = 生肉块
 tile.mfr.decorativebrick.meat.cooked.name = 烤肉块
 tile.mfr.decorativebrick.brick_large.name = 大型砖块
+tile.mfr.decorativebrick.sugar_charcoal.name = 糖炭块
 
 tile.mfr.decorativestone.black.smooth.name = 光滑黑岩
 tile.mfr.decorativestone.black.cobble.name = 黑岩圆石
