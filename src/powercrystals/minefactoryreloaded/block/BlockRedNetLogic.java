@@ -43,6 +43,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
+		super.onBlockPlacedBy(world, x, y, z, entity, stack);
 		if(entity == null)
 		{
 			return;
@@ -252,7 +253,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 			for (int i = 0; i < ((TileEntityRedNetLogic)te).getBufferLength(13); i++)
 			{
 				value = ((TileEntityRedNetLogic)te).getVariableValue(i);
-				
+
 				if (value != 0)
 				{
 					info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.varprefix")
@@ -260,7 +261,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 					++foundNonZero;
 				}
 			}
-			
+
 			if (foundNonZero == 0)
 			{
 				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.allzero"));

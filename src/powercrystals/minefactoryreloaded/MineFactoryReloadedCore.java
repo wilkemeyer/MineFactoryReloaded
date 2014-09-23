@@ -93,7 +93,6 @@ import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
-import powercrystals.minefactoryreloaded.block.decor.BlockVanillaGlassPane;
 import powercrystals.minefactoryreloaded.block.decor.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
@@ -415,9 +414,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		vineScaffoldBlock = new BlockVineScaffold();
 		detCordBlock = new BlockDetCord();
 		plasticPipeBlock = new BlockPlasticPipe();
-		
+
 		fertileSoil = new BlockFertileSoil();
-		
+
 		machineItem = new BlockFactoryDecoration();
 
 		registerFluids();
@@ -517,7 +516,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		{
 			registerBlock(machine, ItemBlockFactoryMachine.class);
 		}
-		
+
 		registerBlock(plasticPipeBlock, ItemBlockFactory.class);
 
 		registerBlock(rednetCableBlock, ItemBlockFactory.class, new Object[] {BlockRedNetCable._names});
@@ -577,11 +576,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		Blocks.fire.setFireInfo(detCordBlock, 100, 20);
 		Blocks.fire.setFireInfo(biofuelLiquid, 300, 30);
 
-		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
-		{
-			Blocks.glass_pane = new BlockVanillaGlassPane();
-			RegistryUtils.overwriteEntry(Block.blockRegistry, "minecraft:glass_pane", Blocks.glass_pane);
-		}
 		if (MFRConfig.vanillaOverrideIce.getBoolean(true))
 		{
 			Item ice = Item.getItemFromBlock(Blocks.ice);
@@ -708,7 +702,7 @@ public class MineFactoryReloadedCore extends BaseMod
 			ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 3), 1, 1, 1));
 		}
 		//}
-		
+
 		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.sapling, 2), 1, 16, 7) {
 			@Override
 			protected ItemStack[] generateChestContent(Random random, IInventory newInventory)
@@ -718,7 +712,7 @@ public class MineFactoryReloadedCore extends BaseMod
 				return ChestGenHooks.generateStacks(random, item, theMinimumChanceToGenerateItem, theMaximumChanceToGenerateItem);
 			}
 		};
-		
+
 		//{ Fishing
 		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(rubberSaplingBlock, 1, 0), 5));
 		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(plasticSheetItem, 1, 0), 10));
@@ -758,7 +752,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock), 1, 8, 70));
 		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(pinkSlimeballItem), 1, 1, 5));
 		// tempting as a sacred sapling is, chests are too common with too few possible items
-		// maybe as a custom dungeon for integration 
+		// maybe as a custom dungeon for integration
 		///}
 
 		//{ Villager house loot chest
@@ -848,7 +842,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		{
 			MFRRegistry.setBaseSpawnCost(prop.getName(), prop.getInt(0));
 		}
-		
+
 		powercrystals.minefactoryreloaded.core.OreDictionaryArbiter.initialize();
 		_log.info("Load Complete.");
 	}
@@ -885,7 +879,7 @@ public class MineFactoryReloadedCore extends BaseMod
 						EntityMinecartMobSpawner ent = new EntityMinecartMobSpawner(e.minecart.worldObj);
 						ent.readFromNBT(tag);
 						ent.worldObj.spawnEntityInWorld(ent);
-						ent.worldObj.playAuxSFXAtEntity(null, 2004, // particles 
+						ent.worldObj.playAuxSFXAtEntity(null, 2004, // particles
 								(int)ent.posX, (int)ent.posY, (int)ent.posZ, 0);
 					}
 				}

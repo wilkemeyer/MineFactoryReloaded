@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -38,13 +37,14 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
-public class BlockConveyor extends BlockContainer implements IRedNetInputNode
+public class BlockConveyor extends BlockFactory implements IRedNetInputNode
 {
 	public static final String[] _names = {"white", "orange", "magenta", "lightblue", "yellow", "lime",
 		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default"};
@@ -154,7 +154,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 						double d0 = x + (xOff + 0.5D) / particles;
 						double d1 = y + (yOff + 0.5D) / particles;
 						double d2 = z + (zOff + 0.5D) / particles;
-						effectRenderer.addEffect((new EntityDiggingFX(world, d0, d1, d2, 
+						effectRenderer.addEffect((new EntityDiggingFX(world, d0, d1, d2,
 								d0 - x - 0.5D, d1 - y - 0.5D, d2 - z - 0.5D,
 								this, getDamageValue(world, x, y, z))).
 								applyColourMultiplier(x, y, z));
@@ -241,6 +241,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
+		super.onBlockPlacedBy(world, x, y, z, entity, stack);
 		if(entity == null)
 		{
 			return;
@@ -472,27 +473,7 @@ public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 	}
 
 	@Override
-	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
-	{
-		if (world.isRemote)
-		{
-			return false;
-		}
-		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof IRotateableTile)
-		{
-			IRotateableTile tile = ((IRotateableTile)te);
-			if (tile.canRotate(axis))
-			{
-				tile.rotate(axis);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
+	protected boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
 	{
 		ItemStack item = player.getHeldItem();
 
@@ -575,20 +556,6 @@ public class BlockConveyor extends BlockContainer implements IRedNetInputNode
 				ret.add(new ItemStack(Items.glowstone_dust, 1));
 		}
 		return ret;
-	}
-
-	@Override
-	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
-	{
-	}
-
-	@Override
-	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
-	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
-		if (!player.capabilities.isCreativeMode)
-		{
-			world.func_147480_a(x, y, z, true);
-		}
 	}
 
 	@Override

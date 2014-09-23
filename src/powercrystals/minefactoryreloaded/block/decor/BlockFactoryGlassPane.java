@@ -142,7 +142,8 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		Block block = world.getBlock(x, y, z);
 		return block.func_149730_j() ||
 				block instanceof BlockPane ||
-				block.getMaterial() == Material.glass;
+				block.getMaterial() == Material.glass ||
+				world.isSideSolid(x, y, z, dir.getOpposite(), false);
 	}
 
 	@Override

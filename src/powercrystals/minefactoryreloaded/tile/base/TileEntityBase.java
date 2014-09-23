@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -13,13 +14,26 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 {
+	protected String _invName;
+
+	public void setBlockName(String name)
+	{
+		if (name != null && name.length() == 0)name = null;
+		this._invName = name;
+	}
+
+	public String getBlockName()
+	{
+		return _invName;
+	}
+
 	@Override
 	public void invalidate()
 	{
 		super.invalidate();
 		this.onChunkUnload();
 	}
-	
+
 	protected final IChatComponent text(String str)
 	{
 		return new ChatComponentText(str);
@@ -37,7 +51,7 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 			worldObj.func_147453_f(this.xCoord, this.yCoord, this.zCoord, this.getBlockType());
 		}
 	}
-	
+
 	public void onNeighborTileChange(int x, int y, int z) {}
 
 	public void onNeighborBlockChange() {}
@@ -66,6 +80,37 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
     {
         return pass == 0 && getMaxRenderDistanceSquared() != -1D;
     }
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		if (tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z"))
+		{
+			super.readFromNBT(tag);
+		}
+
+		if (tag.hasKey("display"))
+		{
+			NBTTagCompound display = tag.getCompoundTag("display");
+			if (display.hasKey("Name"))
+			{
+				this.setBlockName(display.getString("Name"));
+			}
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+
+		if (_invName != null)
+		{
+			NBTTagCompound display = new NBTTagCompound();
+			display.setString("Name", _invName);
+			tag.setTag("display", display);
+		}
+	}
 
 	private static final long HASH_A = 0x1387D;
 	private static final long HASH_C = 0x3A8F05C5;

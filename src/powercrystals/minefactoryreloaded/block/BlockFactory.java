@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import cofh.api.block.IDismantleable;
 import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.render.hitbox.RenderHitbox;
+import cofh.lib.util.position.IRotateableTile;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.repack.codechicken.lib.vec.BlockCoord;
@@ -17,14 +18,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IChatComponent;
@@ -52,7 +55,7 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class BlockFactory extends BlockContainer implements IRedNetConnection, IDismantleable
+public class BlockFactory extends Block implements IRedNetConnection, IDismantleable, ITileEntityProvider
 {
 	protected boolean providesPower;
 
@@ -93,6 +96,39 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
 	{
+	}
+
+	@Override
+	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
+	{
+		if (world.isRemote)
+		{
+			return false;
+		}
+		TileEntity te = getTile(world, x, y, z);
+		if (te instanceof IRotateableTile)
+		{
+			IRotateableTile tile = ((IRotateableTile)te);
+			if (tile.canRotate(axis))
+			{
+				tile.rotate(axis);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+	{
+		TileEntity te = getTile(world, x, y, z);
+		if (te instanceof TileEntityBase)
+		{
+			if (stack.hasDisplayName())
+			{
+				((TileEntityBase)te).setBlockName(stack.getDisplayName());
+			}
+		}
 	}
 
 	@Override
@@ -156,6 +192,29 @@ public class BlockFactory extends BlockContainer implements IRedNetConnection, I
             for (ItemStack item : list)
                     dropBlockAsItem(world, x, y, z, item);
 		return list;
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata,
+			int fortune)
+	{
+		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+
+		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
+				damageDropped(metadata));
+
+		TileEntity te = getTile(world, x, y, z);
+		if (te instanceof TileEntityBase && ((TileEntityBase)te).getBlockName() != null)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			NBTTagCompound name = new NBTTagCompound();
+			name.setString("Name", ((TileEntityBase)te).getBlockName());
+			tag.setTag("display", name);
+			machine.setTagCompound(tag);
+		}
+
+		drops.add(machine);
+		return drops;
 	}
 
 	public void getBlockInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,

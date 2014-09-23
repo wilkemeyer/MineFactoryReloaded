@@ -26,6 +26,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.setup.Machine;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
@@ -125,7 +126,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 			}
 		}
 	}
-	
+
 	private void dropStack(World world, int x, int y, int z, ItemStack itemstack)
 	{
 		do
@@ -179,6 +180,12 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		if (te != null)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
+			if (te instanceof TileEntityBase && ((TileEntityBase)te).getBlockName() != null)
+			{
+				NBTTagCompound name = new NBTTagCompound();
+				name.setString("Name", ((TileEntityBase)te).getBlockName());
+				tag.setTag("display", name);
+			}
 			if (te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory)te).writeItemNBT(tag);
 			if (!tag.hasNoTags())
@@ -207,10 +214,10 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 
 			NBTTagCompound tag = new NBTTagCompound();
 			te.writeToNBT(tag);
-			if (te instanceof IInventory && ((IInventory)te).hasCustomInventoryName())
+			if (te instanceof TileEntityBase && ((TileEntityBase)te).getBlockName() != null)
 			{
 				NBTTagCompound name = new NBTTagCompound();
-				name.setString("Name", ((IInventory)te).getInventoryName());
+				name.setString("Name", ((TileEntityBase)te).getBlockName());
 				tag.setTag("display", name);
 			}
 			machine.setTagCompound(tag);
@@ -229,9 +236,9 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity,
-			ItemStack stack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
+		super.onBlockPlacedBy(world, x, y, z, entity, stack);
 		if (entity == null)
 		{
 			return;
@@ -264,14 +271,6 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 
 		if (te instanceof TileEntityFactory)
 		{
-			if (te instanceof TileEntityFactoryInventory)
-			{
-				if (stack.hasDisplayName())
-				{
-					((TileEntityFactoryInventory)te).setInvName(stack.getDisplayName());
-				}
-			}
-
 			if (entity instanceof ICommandSender && entity.addedToChunk)
 				((TileEntityFactory)te).setOwner(((ICommandSender)entity).getCommandSenderName());
 			else
@@ -283,26 +282,6 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getNewTileEntity();
-	}
-
-	@Override
-	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
-	{
-		if (world.isRemote)
-		{
-			return false;
-		}
-		TileEntity te = getTile(world, x, y, z);
-		if (te instanceof IRotateableTile)
-		{
-			IRotateableTile tile = ((IRotateableTile)te);
-			if (tile.canRotate(axis))
-			{
-				tile.rotate(axis);
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override

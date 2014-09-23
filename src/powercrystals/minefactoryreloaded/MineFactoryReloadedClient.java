@@ -29,7 +29,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -149,11 +148,6 @@ public class MineFactoryReloadedClient
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(factoryGlassPaneBlock),
 				new FactoryGlassPaneItemRenderer());
-		if (MFRConfig.vanillaOverrideGlassPane.getBoolean(true))
-		{
-			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(Blocks.glass_pane),
-					new FactoryGlassPaneItemRenderer());
-		}
 
 		MinecraftForgeClient.registerItemRenderer(logicCardItem,
 				new RedNetCardItemRenderer());

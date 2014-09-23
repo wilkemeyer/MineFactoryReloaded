@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.setup;
 
-import static net.minecraftforge.common.config.Configuration.*;
+import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
 
 import java.io.File;
 
@@ -38,7 +38,6 @@ public class MFRConfig
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
 
-	public static Property vanillaOverrideGlassPane;
 	public static Property vanillaOverrideIce;
 	public static Property vanillaOverrideMilkBucket;
 
@@ -84,7 +83,7 @@ public class MFRConfig
 
 	public static Property unifierBlacklist;
 	public static Property spawnerBlacklist;
-	
+
 	public static ConfigCategory spawnerCustomization;
 
 	public static Property passengerRailSearchMaxHorizontal;
@@ -204,8 +203,6 @@ public class MFRConfig
 
 		//{ Item/block behavior overriding
 		category = CATEGORY_ITEM + ".VanillaOverride";
-		vanillaOverrideGlassPane = c.get(category, "GlassPanes", true).setRequiresMcRestart(true);
-		vanillaOverrideGlassPane.comment = "If true, allows vanilla glass panes to connect to MFR stained glass panes.";
 		vanillaOverrideIce = c.get(category, "Ice", true).setRequiresMcRestart(true);
 		vanillaOverrideIce.comment = "If true, enables MFR unmelting ice as well as vanilla ice.";
 		vanillaOverrideMilkBucket = c.get(category, "MilkBucket", true).setRequiresMcRestart(true);
@@ -265,7 +262,7 @@ public class MFRConfig
 		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
 		enableConfigurableCLEnergy = c.get(category, "EnableConfigurableActivationEnergy", false).setRequiresMcRestart(true);
 		enableConfigurableCLEnergy.comment = "If true, the Chunk Loader will use the activation energy config in this section. WARNING: this makes it much more expensive at lower values. (non-configurable is exponential)";
-		
+
 		category = "Machine." + Machine.AutoSpawner.getName();
 		spawnerBlacklist = c.get(category, "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
 		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, Forestry.butterflyGE) to blacklist from the AutoSpawner.";
@@ -277,16 +274,16 @@ public class MFRConfig
 		spawnerCustomization = c.getCategory(category + ".Custom").setRequiresMcRestart(true);
 		spawnerCustomization.setComment("Custom base XP costs for entities. format: I:<entityid> = #. e.g.:\n"
 									+ "I:VillagerGolem = 25\nI:Slime = 50");
-		
+
 		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
-		
+
 		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);
 		unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
-		
+
 		breederShutdownThreshold = c.get("Machine." + Machine.Breeder.getName(), "ShutdownThreshold", 50).setRequiresMcRestart(true);
 		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
-		
+
 		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
 		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
 		//}

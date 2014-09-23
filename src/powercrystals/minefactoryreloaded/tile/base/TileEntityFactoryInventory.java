@@ -39,9 +39,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected ItemStack[] _inventory;
 
-	protected String _invName;
-	protected boolean _hasInvName = false;
-
 	protected boolean internalChange = false;
 
 	protected TileEntityFactoryInventory(Machine machine)
@@ -55,20 +52,14 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public String getInventoryName()
 	{
-		return _hasInvName ? _invName : StatCollector.
+		return _invName != null ? _invName : StatCollector.
 				translateToLocal(_machine.getInternalName() + ".name");
 	}
 
 	@Override
 	public boolean hasCustomInventoryName()
 	{
-		return _hasInvName;
-	}
-
-	public void setInvName(String name)
-	{
-		this._invName = name;
-		this._hasInvName = name != null && name.length() > 0;
+		return _invName != null;
 	}
 
 	public void onDisassembled()
@@ -477,15 +468,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			}
 		}
 
-		if (tag.hasKey("display"))
-		{
-			NBTTagCompound display = tag.getCompoundTag("display");
-			if (display.hasKey("Name"))
-			{
-				this.setInvName(display.getString("Name"));
-			}
-		}
-
 		if (tag.hasKey("DropItems"))
 		{
 			List<ItemStack> drops = new ArrayList<ItemStack>();
@@ -545,13 +527,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			}
 			if (tanks.tagCount() > 0)
 				tag.setTag("Tanks", tanks);
-		}
-
-		if (hasCustomInventoryName())
-		{
-			NBTTagCompound display = new NBTTagCompound();
-			display.setString("Name", getInventoryName());
-			tag.setTag("display", display);
 		}
 
 		if (failedDrops != null)

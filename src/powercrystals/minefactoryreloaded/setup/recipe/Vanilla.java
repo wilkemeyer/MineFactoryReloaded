@@ -1277,6 +1277,7 @@ public class Vanilla
 					'C', "itemCharcoalSugar",
 					'S', "stoneRod",
 					} ));
+			break;
 		}
 	}
 
@@ -1454,10 +1455,16 @@ public class Vanilla
 			'P', "sheetPlastic",
 				} ));
 
-		{
-			ItemStack pipe = stack(plasticPipeBlock);
-			addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), pipe, pipe, pipe, pipe, pipe, "dustRedstone", "dustRedstone"));
-		}
+		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), new Object[]
+				{
+			"dustRedstone",
+			"dustRedstone",
+			stack(plasticPipeBlock),
+			stack(plasticPipeBlock),
+			stack(plasticPipeBlock),
+			stack(plasticPipeBlock),
+			stack(plasticPipeBlock),
+				}));
 
 		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 1, 2), new Object[]
 				{
