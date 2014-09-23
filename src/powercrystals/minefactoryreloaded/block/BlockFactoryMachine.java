@@ -168,35 +168,6 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata,
-			int fortune)
-	{
-		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-
-		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
-				damageDropped(metadata));
-
-		TileEntity te = getTile(world, x, y, z);
-		if (te != null)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			if (te instanceof TileEntityBase && ((TileEntityBase)te).getBlockName() != null)
-			{
-				NBTTagCompound name = new NBTTagCompound();
-				name.setString("Name", ((TileEntityBase)te).getBlockName());
-				tag.setTag("display", name);
-			}
-			if (te instanceof TileEntityFactoryInventory)
-				((TileEntityFactoryInventory)te).writeItemNBT(tag);
-			if (!tag.hasNoTags())
-				machine.setTagCompound(tag);
-
-			drops.add(machine);
-		}
-		return drops;
-	}
-
-	@Override
 	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
 			boolean returnBlock)
 	{
@@ -205,7 +176,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 				world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
 		list.add(machine);
 		TileEntity te = getTile(world, x, y, z);
-		if (te instanceof TileEntityFactory)
+		if (te instanceof TileEntityBase)
 		{
 			dropContents(te, list);
 
@@ -213,13 +184,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 				((TileEntityFactoryInventory)te).onDisassembled();
 
 			NBTTagCompound tag = new NBTTagCompound();
-			te.writeToNBT(tag);
-			if (te instanceof TileEntityBase && ((TileEntityBase)te).getBlockName() != null)
-			{
-				NBTTagCompound name = new NBTTagCompound();
-				name.setString("Name", ((TileEntityBase)te).getBlockName());
-				tag.setTag("display", name);
-			}
+			((TileEntityBase)te).writeItemNBT(tag);
 			machine.setTagCompound(tag);
 		}
 		world.setBlockToAir(x, y, z);

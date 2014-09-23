@@ -38,17 +38,17 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	protected boolean _whitelist = false;
 	protected boolean _matchNBT = true;
 	protected boolean _ignoreDamage = true;
-	
+
 	protected boolean _hasItems = false;
 	protected ForgeDirection[] _pullDirections;
-	
+
 	public TileEntityEjector()
 	{
 		super(Machine.Ejector);
 		setManageSolids(true);
 		setCanRotate(true);
 	}
-	
+
 	@Override
 	protected void onRotate()
 	{
@@ -57,7 +57,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		list.remove(getDirectionFacing());
 		_pullDirections = list.toArray(new ForgeDirection[5]);
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -80,33 +80,33 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 					{
 						continue;
 					}
-	
+
 					IInventoryManager inventory = InventoryManager.create(chest.getValue(),
 							chest.getKey().getOpposite());
 					Map<Integer, ItemStack> contents = inventory.getContents();
-	
+
 					set: for (Entry<Integer, ItemStack> stack : contents.entrySet())
 					{
 						ItemStack itemstack = stack.getValue();
 						if (itemstack == null || !inventory.canRemoveItem(itemstack, stack.getKey()))
 							continue;
-	
+
 						boolean hasMatch = false;
-	
+
 						for (int i = getSizeItemList(); i --> 0; )
 							if (itemMatches(_inventory[i], itemstack))
 							{
 								hasMatch = true;
 								break;
 							}
-	
+
 						if (_whitelist != hasMatch) continue set;
-	
+
 						ItemStack stackToDrop = itemstack.copy();
 						stackToDrop.stackSize = 1;
 						ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
 								facing, facing);
-	
+
 						// remaining == null if dropped successfully.
 						if (remaining == null)
 						{
@@ -141,29 +141,29 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		}
 		_lastRedstoneState = redstoneState;
 	}
-	
+
 	protected boolean itemMatches(ItemStack itemA, ItemStack itemB)
 	{
 		if (itemA == null | itemB == null)
 			return false;
-		
+
 		if (!itemA.getItem().equals(itemB.getItem()))
 			return false;
-		
+
 		if (!_ignoreDamage)
 			if (!itemA.isItemEqual(itemB))
 				return false;
-		
+
 		if (_matchNBT)
 		{
 			if(itemA.getTagCompound() == null && itemB.getTagCompound() == null) return true;
 			if(itemA.getTagCompound() == null || itemB.getTagCompound() == null) return false;
 			return itemA.getTagCompound().equals(itemB.getTagCompound());
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public void onFactoryInventoryChanged()
 	{
@@ -185,44 +185,44 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	{
 		return getSizeItemList();
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiEjector(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerEjector(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
@@ -232,29 +232,35 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		_matchNBT = !tag.hasKey("matchNBT") || tag.getBoolean("matchNBT");
 		_ignoreDamage = tag.getBoolean("ignoreDamage");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		tag.setBoolean("redstone", _lastRedstoneState);
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
 		tag.setBoolean("whitelist", _whitelist);
 		tag.setBoolean("matchNBT", _matchNBT);
 		tag.setBoolean("ignoreDamage", _ignoreDamage);
 	}
-	
+
 	public boolean getIsWhitelist() { return _whitelist; }
-	
+
 	public boolean getIsNBTMatch() { return _matchNBT; }
-	
+
 	public boolean getIsIDMatch() { return _ignoreDamage; }
-	
+
 	public void setIsWhitelist(boolean whitelist) { _whitelist = whitelist; }
-	
+
 	public void setIsNBTMatch(boolean matchNBT) { _matchNBT = matchNBT; }
-	
+
 	public void setIsIDMatch(boolean idMatch) { _ignoreDamage = idMatch; }
-	
+
 	@Override
 	public ConnectionType canConnectInventory(ForgeDirection from)
 	{

@@ -204,13 +204,12 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 				damageDropped(metadata));
 
 		TileEntity te = getTile(world, x, y, z);
-		if (te instanceof TileEntityBase && ((TileEntityBase)te).getBlockName() != null)
+		if (te instanceof TileEntityBase)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
-			NBTTagCompound name = new NBTTagCompound();
-			name.setString("Name", ((TileEntityBase)te).getBlockName());
-			tag.setTag("display", name);
-			machine.setTagCompound(tag);
+			((TileEntityBase)te).writeItemNBT(tag);
+			if (!tag.hasNoTags())
+				machine.setTagCompound(tag);
 		}
 
 		drops.add(machine);

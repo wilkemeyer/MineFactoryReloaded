@@ -15,19 +15,19 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 /*
  * There are three pieces of information tracked - energy, work, and idle ticks.
- * 
+ *
  * Energy is stored and used when the _machine activates. The energy stored must be >= energyActivation for the activateMachine() method to be called.
  * If activateMachine() returns true, energy will be drained.
- * 
+ *
  * Work is built up and then when at 100% something happens. This is tracked/used entirely by the derived class. If not used (f.ex. harvester), return max 1.
- * 
+ *
  * Idle ticks cause an artificial delay before activateMachine() is called again. Max should be the highest value the _machine will use, to draw the
  * progress bar correctly.
  */
 @Strippable("appeng.api.implementations.tiles.ICrankable")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
 												implements IEnergyHandler, ICrankable
-{	
+{
 	public static final int energyPerAE = 2;
 	public static final int energyPerEU = 4;
 	public static final int energyPerMJ = 10;
@@ -190,10 +190,17 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		super.writeToNBT(tag);
 
-		if (_energyStored > 0)
-			tag.setInteger("energyStored", _energyStored);
 		if (_workDone > 0)
 			tag.setInteger("workDone", _workDone);
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
+
+		if (_energyStored > 0)
+			tag.setInteger("energyStored", _energyStored);
 	}
 
 	@Override
@@ -277,7 +284,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	{
 		return getEnergyStoredMax();
 	}
-	
+
 	// AE methods
 
 	@Override

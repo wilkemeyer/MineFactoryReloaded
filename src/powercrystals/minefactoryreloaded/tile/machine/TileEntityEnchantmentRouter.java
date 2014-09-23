@@ -19,18 +19,18 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 {
 	protected boolean _matchLevels = false;
-	
+
 	public TileEntityEnchantmentRouter()
 	{
 		super(Machine.EnchantmentRouter);
 	}
-	
+
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected int[] getRoutesForItem(ItemStack stack)
 	{
 		int[] routeWeights = new int[_outputDirections.length];
-		
+
 		Map stackEnchants = EnchantmentHelper.getEnchantments(stack);
 		// return false if the item is unenchanted
 		if (stackEnchants == null || stackEnchants.isEmpty())
@@ -41,12 +41,12 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 			}
 			return routeWeights;
 		}
-		
+
 		for (int i = 0; i < _outputDirections.length; i++)
 		{
 			int sideStart = _invOffsets[_outputDirections[i].ordinal()];
 			routeWeights[i] = 0;
-			
+
 			for (int j = sideStart; j < sideStart + 9; j++)
 			{
 				if (_inventory[j] == null)
@@ -77,41 +77,41 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 		}
 		return routeWeights;
 	}
-	
+
 	public boolean getMatchLevels()
 	{
 		return _matchLevels;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiEnchantmentRouter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerEnchantmentRouter getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerEnchantmentRouter(this, inventoryPlayer);
 	}
-	
+
 	public void setMatchLevels(boolean newMatchLevelsSetting)
 	{
 		_matchLevels = newMatchLevelsSetting;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
 		_matchLevels = nbttagcompound.getBoolean("matchLevels");
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeItemNBT(nbttagcompound);
 		nbttagcompound.setBoolean("matchLevels", _matchLevels);
 	}
 }

@@ -56,7 +56,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		if (repairOnly)
 		{
 			if (slot == 0) return stack.getItem().isRepairable();
-			if (slot == 1 && _inventory[0] != null && stack.getItem().isRepairable()) 
+			if (slot == 1 && _inventory[0] != null && stack.getItem().isRepairable())
 				return _inventory[0].getItem().equals(stack);
 			return false;
 		}
@@ -432,9 +432,9 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
+		super.writeItemNBT(tag);
 		tag.setBoolean("repairOnly", repairOnly);
 	}
 

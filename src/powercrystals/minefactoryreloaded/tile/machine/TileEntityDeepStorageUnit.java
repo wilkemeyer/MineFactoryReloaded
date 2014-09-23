@@ -46,17 +46,6 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
-		if (getQuantityAdjusted() > 0)
-		{
-			writeToNBT(tag);
-		}
-		else
-			super.writeItemNBT(tag);
-	}
-
-	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return slot < 2;
@@ -260,7 +249,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound nbttagcompound)
 	{
 		int storedAdd = 0;
 		ItemStack o = _inventory[2];
@@ -269,7 +258,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			storedAdd = o.stackSize;
 			_inventory[2] = null;
 		}
-		super.writeToNBT(nbttagcompound);
+		super.writeItemNBT(nbttagcompound);
 		_inventory[2] = o;
 
 		if (_storedItem != null)

@@ -342,13 +342,20 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+
+		_treeManager.writeToNBT(tag);
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
 		NBTTagCompound list = new NBTTagCompound();
 		for(Entry<String, Boolean> setting : _settings.entrySet())
 		{
-			list.setByte(setting.getKey(), (byte)(setting.getValue() ? 1 : 0));
+			list.setBoolean(setting.getKey(), setting.getValue() == Boolean.TRUE);
 		}
 		tag.setTag("harvesterSettings", list);
-		_treeManager.writeToNBT(tag);
 	}
 
 	@Override
@@ -362,11 +369,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			{
 				if ("playSounds".equals(s))
 					continue;
-				byte b = list.getByte(s);
-				if (b == 1)
-				{
-					_settings.put(s, true);
-				}
+				boolean b = list.getBoolean(s);
+				_settings.put(s, b);
 			}
 		}
 		if (_treeManager != null)

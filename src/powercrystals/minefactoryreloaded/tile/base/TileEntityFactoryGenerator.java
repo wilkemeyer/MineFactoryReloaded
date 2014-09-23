@@ -175,22 +175,29 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeToNBT(tag);
 		if (_ticksSinceLastConsumption > 0)
-			nbttagcompound.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
-		if (_buffer > 0)
-			nbttagcompound.setInteger("buffer", _buffer);
+			tag.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
+		super.writeItemNBT(tag);
 
-		_ticksSinceLastConsumption = nbttagcompound.getInteger("ticksSinceLastConsumption");
-		_buffer = nbttagcompound.getInteger("buffer");
+		if (_buffer > 0)
+			tag.setInteger("energyStored", _buffer);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+
+		_ticksSinceLastConsumption = tag.getInteger("ticksSinceLastConsumption");
+		_buffer = tag.getInteger(tag.hasKey("energyStored") ? "energyStored" : "buffer");
 	}
 
 	// TE methods

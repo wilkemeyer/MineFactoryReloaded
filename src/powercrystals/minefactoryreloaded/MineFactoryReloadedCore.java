@@ -97,6 +97,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockPinkSlimeFluid;
+import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
 import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
@@ -163,6 +164,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
+import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
@@ -247,6 +249,8 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static BlockFactoryFluid chocolateMilkLiquid;
 	public static BlockFactoryFluid mushroomSoupLiquid;
 	public static BlockFactoryFluid steamFluid;
+
+	public static Block plasticTank;
 
 	public static Block fakeLaserBlock;
 
@@ -419,6 +423,8 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		machineItem = new BlockFactoryDecoration();
 
+		plasticTank = new BlockTank();
+
 		registerFluids();
 
 		milkLiquid = new BlockFactoryFluid("milk");
@@ -559,6 +565,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		chocolateMilkBucketItem = (new ItemFactoryBucket(chocolateMilkLiquid)).setUnlocalizedName("mfr.bucket.chocolatemilk");
 		mushroomSoupBucketItem = (new ItemFactoryBucket(mushroomSoupLiquid)).setUnlocalizedName("mfr.bucket.mushroomsoup");
 
+		registerBlock(plasticTank, ItemBlockFactory.class);
+
 		GameRegistry.registerBlock(milkLiquid, milkLiquid.getUnlocalizedName());
 		GameRegistry.registerBlock(sludgeLiquid, sludgeLiquid.getUnlocalizedName());
 		GameRegistry.registerBlock(sewageLiquid, sewageLiquid.getUnlocalizedName());
@@ -610,6 +618,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		GameRegistry.registerTileEntity(TileEntityRedNetHistorian.class, "factoryRednetHistorian");
 		GameRegistry.registerTileEntity(TileEntityRedNetEnergy.class, "factoryRedstoneCableEnergy");
 		GameRegistry.registerTileEntity(TileEntityPlasticPipe.class, "factoryPlasticPipe");
+		GameRegistry.registerTileEntity(TileEntityTank.class, "factoryTank");
 
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "SafariNet", 0, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);

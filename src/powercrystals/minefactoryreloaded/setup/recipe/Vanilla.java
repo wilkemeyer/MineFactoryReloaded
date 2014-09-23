@@ -682,6 +682,17 @@ public class Vanilla
 				'P', "dyeOrange",
 				'C', Chronotyper,
 				} );
+
+
+
+		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[]
+				{
+			"PPP",
+			"P P",
+			"PMP",
+			'P', "sheetPlastic",
+			'M', machineBaseItem,
+				}));
 	}
 
 	protected void registerMachine(Machine machine, Object... recipe)

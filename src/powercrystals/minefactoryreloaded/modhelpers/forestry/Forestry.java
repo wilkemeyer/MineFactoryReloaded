@@ -87,6 +87,7 @@ public class Forestry
 			MFRRegistry.registerPlantable(bog);
 			MFRRegistry.registerFertilizable(bog);
 			MFRRegistry.registerHarvestable(bog);
+			MFRRegistry.registerFruit(bog);
 		} else
 			MineFactoryReloadedCore.log().error("Forestry bog earth null!");
 

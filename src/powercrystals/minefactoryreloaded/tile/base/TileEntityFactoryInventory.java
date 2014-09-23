@@ -111,16 +111,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		onDisassembled();
 	}
 
-	public void writeItemNBT(NBTTagCompound tag)
-	{
-		if (hasCustomInventoryName())
-		{
-			NBTTagCompound name = new NBTTagCompound();
-			name.setString("Name", getInventoryName());
-			tag.setTag("display", name);
-		}
-	}
-
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		IFluidTank[] tanks = getTanks();
 		if (tanks.length == 0)
@@ -509,6 +499,25 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				tag.setTag("Items", items);
 		}
 
+		if (failedDrops != null)
+		{
+			NBTTagList dropItems = new NBTTagList();
+			for (ItemStack item : failedDrops)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				item.writeToNBT(nbttagcompound1);
+				dropItems.appendTag(nbttagcompound1);
+			}
+			if (dropItems.tagCount() > 0)
+				tag.setTag("DropItems", dropItems);
+		}
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
+
 		IFluidTank[] _tanks = getTanks();
 		if (_tanks.length > 0)
 		{
@@ -527,19 +536,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			}
 			if (tanks.tagCount() > 0)
 				tag.setTag("Tanks", tanks);
-		}
-
-		if (failedDrops != null)
-		{
-			NBTTagList dropItems = new NBTTagList();
-			for (ItemStack item : failedDrops)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				item.writeToNBT(nbttagcompound1);
-				dropItems.appendTag(nbttagcompound1);
-			}
-			if (dropItems.tagCount() > 0)
-				tag.setTag("DropItems", dropItems);
 		}
 	}
 

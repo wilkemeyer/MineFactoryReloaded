@@ -242,7 +242,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		}
 		_lastSpawnStack = _inventory[0];
 	}
-	
+
 	@Override
 	public void setWorkDone(int w)
 	{
@@ -317,9 +317,9 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeItemNBT(nbttagcompound);
 		nbttagcompound.setBoolean("spawnExact", _spawnExact);
 	}
 

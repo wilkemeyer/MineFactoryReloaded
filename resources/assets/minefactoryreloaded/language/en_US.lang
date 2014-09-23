@@ -169,6 +169,8 @@ tile.mfr.rednet.panel.historian.name = RedNet Historian
 tile.mfr.machineblock = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Programmable RedNet Controller Housing
 
+tile.mfr.tank.name = Plastic Tank
+
 fluid.mfr.liquid.milk.still.name = Milk
 fluid.mfr.liquid.sludge.still.name = Sludge
 fluid.mfr.liquid.sewage.still.name = Sewage
@@ -185,7 +187,7 @@ entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Pink Slime
 item.mfr.bucket.milk.name = Milk Bucket
 item.mfr.bucket.sewage.name = Sewage Bucket
 item.mfr.bucket.sludge.name = Sludge Bucket
-item.mfr.bucket.essence.name = Mob Essence Bucket
+item.mfr.bucket.essence.name = Essence Bucket
 item.mfr.bucket.biofuel.name = BioFuel Bucket
 item.mfr.bucket.meat.name = Meat Bucket
 item.mfr.bucket.pinkslime.name = Pink Slime Bucket

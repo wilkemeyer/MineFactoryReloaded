@@ -325,9 +325,9 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeItemNBT(nbttagcompound);
 		nbttagcompound.setBoolean("rejectUnmapped", _rejectUnmapped);
 	}
 }

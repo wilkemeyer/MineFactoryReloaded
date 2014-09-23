@@ -29,31 +29,31 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 {
 	private Random _rand;
 	private int _targetLevel;
-	
-	
+
+
 	public TileEntityAutoEnchanter()
 	{
 		super(Machine.AutoEnchanter);
 		_rand = new Random();
-		
+
 		_targetLevel = 30;
 		setManageSolids(true);
 		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiAutoEnchanter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerAutoEnchanter getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerAutoEnchanter(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
@@ -63,7 +63,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		}
 		return (_targetLevel + (int)(Math.pow((_targetLevel) / 7.5, 4) * 10 * getEnchantmentMultiplier()));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private double getEnchantmentMultiplier()
 	{
@@ -72,27 +72,27 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		{
 			return 1;
 		}
-		
+
 		Map<Integer, EnchantmentData> enchantments = AutoEnchantmentHelper.getEnchantments(s);
 		if(enchantments == null || enchantments.size() == 0)
 		{
 			return 1;
 		}
-		
+
 		return Math.pow(enchantments.size() + 1.0, 2);
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 1;
 	}
-	
+
 	public int getTargetLevel()
 	{
 		return _targetLevel;
 	}
-	
+
 	public void setTargetLevel(int targetLevel)
 	{
 		_targetLevel = targetLevel;
@@ -103,7 +103,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			activateMachine();
 		}
 	}
-	
+
 	@Override
 	protected boolean activateMachine()
 	{
@@ -218,25 +218,25 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			return false;
 		}
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 2;
 	}
-	
+
 	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 2;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack input, int sideordinal)
 	{
@@ -249,52 +249,52 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
 		if(slot == 1) return true;
 		return false;
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeItemNBT(nbttagcompound);
 		nbttagcompound.setInteger("targetLevel", _targetLevel);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
 		_targetLevel = nbttagcompound.getInteger("targetLevel");
 	}
-	
+
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return fill(resource, doFill);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{

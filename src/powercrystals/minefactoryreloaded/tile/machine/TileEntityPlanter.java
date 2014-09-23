@@ -22,7 +22,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 public class TileEntityPlanter extends TileEntityFactoryPowered
 {
 	protected boolean keepLastItem = false;
-	public TileEntityPlanter() 
+	public TileEntityPlanter()
 	{
 		super(Machine.Planter);
 		createHAM(this, 1);
@@ -30,26 +30,26 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		_areaManager.setOriginOffset(0, 1, 0);
 		setManageSolids(true);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiPlanter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerUpgradable getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerPlanter(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[9]);
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
@@ -59,13 +59,13 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
-		
+
 		ItemStack match = _inventory[getPlanterSlotIdFromBp(bp)];
-		
+
 		for (int stackIndex = 10; stackIndex <= 25; stackIndex++)
-		{		
+		{
 			ItemStack availableStack = getStackInSlot(stackIndex);
-			
+
 			// skip planting attempt if there's no stack in that slot,
 			// or if there's a template item that's not matched
 			if (availableStack == null ||
@@ -75,13 +75,13 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			{
 				continue;
 			}
-			
+
 			if (keepLastItem && availableStack.stackSize < 2)
 			{
 				continue;
 			}
 			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(availableStack.getItem());
-			
+
 			if (!plantable.canBePlanted(availableStack, false) ||
 					!plantable.canBePlantedHere(worldObj, bp.x, bp.y, bp.z, availableStack))
 				continue;
@@ -94,25 +94,25 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			decrStackSize(stackIndex, 1);
 			return true;
 		}
-		
+
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
+		super.writeItemNBT(tag);
 		tag.setBoolean("keepLastItem", keepLastItem);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
 		keepLastItem = tag.getBoolean("keepLastItem");
 	}
-	 
+
 	protected boolean stacksEqual(ItemStack a, ItemStack b)
 	{
 		if (a == null | b == null ||
@@ -133,7 +133,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		tagA.removeTag("RepairCost"); tagB.removeTag("RepairCost");
 		return tagA.equals(tagB);
 	}
-	
+
 	//assumes a 3x3 grid in inventory slots 0-8
 	//slot 0 is northwest, slot 2 is northeast, etc
 	protected int getPlanterSlotIdFromBp(BlockPosition bp)
@@ -143,59 +143,59 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		int zAdjusted = Math.round( 1.49F * (bp.z - this.zCoord) / radius);
 		return 4 + xAdjusted + 3 * zAdjusted;
 	}
-	
+
 	public boolean getConsumeAll()
 	{
 		return keepLastItem;
 	}
-	
+
 	public void setConsumeAll(boolean b)
 	{
 		keepLastItem = b;
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 26;
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 5;
 	}
-	
+
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 9;
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return slot > 8;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 17;
 	}
-	
+
 	@Override
 	protected int getUpgradeSlot()
 	{
 		return 9;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
@@ -213,7 +213,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{

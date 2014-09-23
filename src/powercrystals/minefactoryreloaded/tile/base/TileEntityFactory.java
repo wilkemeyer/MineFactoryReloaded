@@ -332,21 +332,27 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
-		int rotation = nbttagcompound.getInteger("rotation");
+		super.readFromNBT(tag);
+		int rotation = tag.getInteger("rotation");
 		rotateDirectlyTo(rotation);
-		_owner = nbttagcompound.getString("owner");
+		_owner = tag.getString("owner");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setInteger("rotation", getDirectionFacing().ordinal());
+		super.writeToNBT(tag);
+		tag.setInteger("rotation", getDirectionFacing().ordinal());
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
 		if (_owner != null)
-			nbttagcompound.setString("owner", _owner);
+			tag.setString("owner", _owner);
 	}
 
 	public void onRedNetChanged(ForgeDirection side, int value)

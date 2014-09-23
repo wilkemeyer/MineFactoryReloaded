@@ -32,31 +32,31 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	private static final int _burnTimeMax = 8000;
 	private static final int _bioFuelPerTick = 1;
 	private static final int _burnTimeDecreasePerTick = 1;
-	
+
 	// start at 0 for 0 slots; increase by 5, then an additional 10 each time (upward-sloping curve)
 	private static final int[] _outputValues = { 0, 5, 25, 70, 150, 275, 455, 700, 1020, 1425 };
-	
+
 	public TileEntityBioReactor()
 	{
 		super(Machine.BioReactor);
 		setManageSolids(true);
 	}
-	
+
 	public int getBurnTime()
 	{
 		return _burnTime;
 	}
-	
+
 	public void setBurnTime(int burnTime)
 	{
 		_burnTime = burnTime;
 	}
-	
+
 	public int getBurnTimeMax()
 	{
 		return _burnTimeMax;
 	}
-	
+
 	public int getOutputValue()
 	{
 		int occupiedSlots = 0;
@@ -67,20 +67,20 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				occupiedSlots++;
 			}
 		}
-		
+
 		return _outputValues[occupiedSlots];
 	}
-	
+
 	public int getOutputValueMax()
 	{
 		return _outputValues[9];
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		if (!worldObj.isRemote)
 		{
 			Map<Item, IFactoryPlantable> plantables = MFRRegistry.getPlantables();
@@ -95,7 +95,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 					int targetSlot = findMatchingSlot(_inventory[i]);
 					if (targetSlot < 0)
 						continue;
-					
+
 					if (_inventory[targetSlot] == null)
 					{
 						_inventory[targetSlot] = _inventory[i];
@@ -109,10 +109,10 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 					}
 				}
 			}
-			
+
 			if (CoreUtils.isRedstonePowered(this))
 				return;
-			
+
 			int newBurn = getOutputValue();
 			if (_burnTimeMax - _burnTime >= newBurn)
 			{
@@ -121,7 +121,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 					if (_inventory[i] != null)
 						decrStackSize(i, 1);
 			}
-			
+
 			if (_burnTime > 0 && _tanks[0].getFluidAmount() <= _tanks[0].getCapacity() - _bioFuelPerTick)
 			{
 				_burnTime -= _burnTimeDecreasePerTick;
@@ -129,7 +129,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 			}
 		}
 	}
-	
+
 	private int findMatchingSlot(ItemStack s)
 	{
 		int emptySlot = -1;
@@ -147,38 +147,38 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 		}
 		return emptySlot;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiBioReactor(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerBioReactor getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerBioReactor(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	protected boolean shouldPumpLiquid()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 18;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 9;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
@@ -190,44 +190,44 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 			}
 		return false;
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeItemNBT(nbttagcompound);
 		nbttagcompound.setInteger("burnTime", _burnTime);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{

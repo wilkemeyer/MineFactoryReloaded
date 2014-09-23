@@ -8,6 +8,7 @@ public class FruitCocoa extends FactoryFruitStandard
 	public FruitCocoa(Block block) {
 		super(block);
 	}
+
 	@Override
 	public boolean canBePicked(World world, int x, int y, int z)
 	{

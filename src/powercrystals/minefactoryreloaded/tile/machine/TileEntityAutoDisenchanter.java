@@ -98,7 +98,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 
 		ItemStack stack = _inventory[4];
 		boolean isBook = stack.getItem().equals(Items.enchanted_book);
-		NBTTagList list = isBook ? Items.enchanted_book.func_92110_g(stack) : stack.getEnchantmentTagList(); 
+		NBTTagList list = isBook ? Items.enchanted_book.func_92110_g(stack) : stack.getEnchantmentTagList();
 		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null)
 		{
 			_inventory[2] = stack;
@@ -190,9 +190,9 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
+		super.writeItemNBT(tag);
 		tag.setBoolean("repeatDisenchant", _repeatDisenchant);
 	}
 

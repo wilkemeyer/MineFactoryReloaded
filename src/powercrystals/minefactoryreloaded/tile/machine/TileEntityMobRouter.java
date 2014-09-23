@@ -24,21 +24,21 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 {
 	protected int _matchMode;
 	protected boolean _blacklist;
-	
+
 	public TileEntityMobRouter()
 	{
 		super(Machine.MobRouter);
 		createEntityHAM(this);
 		setCanRotate(true);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiMobRouter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerMobRouter getContainer(InventoryPlayer inventoryPlayer)
 	{
@@ -57,7 +57,7 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 		}
 		else
 			matchClass = EntityLivingBase.class;
-		
+
 		List<? extends EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
 				_areaManager.getHarvestArea().toAxisAlignedBB());
 		List<Class<? extends EntityLivingBase>> blacklist = MFRRegistry.getSafariNetBlacklist();
@@ -71,7 +71,7 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 			if (matchClass != EntityLivingBase.class)
 				matchClass = matchClass.getSuperclass();
 		}
-		
+
 		for (EntityLivingBase entity : entities)
 		{
 			Class<?> entityClass = entity.getClass();
@@ -94,29 +94,29 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 				BlockPosition bp = BlockPosition.fromRotateableTile(this);
 				bp.moveBackwards(1);
 				entity.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
-				
+
 				return true;
 			}
 		}
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	public boolean getWhiteList()
 	{
 		return !_blacklist;
 	}
-	
+
 	public void setWhiteList(boolean whitelist)
 	{
 		_blacklist = !whitelist;
 	}
-	
+
 	public int getMatchMode()
 	{
 		return _matchMode;
 	}
-	
+
 	public void setMatchMode(int matchMode)
 	{
 		if (matchMode < 0)
@@ -136,21 +136,21 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 200;
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
+		super.writeItemNBT(tag);
 		tag.setInteger("mode", _matchMode);
 		tag.setBoolean("blacklist", _blacklist);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{

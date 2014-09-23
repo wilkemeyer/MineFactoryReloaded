@@ -35,47 +35,47 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 {
 	private static final int _energyPerWork = Machine.LaserDrillPrecharger.getActivationEnergy() * 4;
 	private static final int _energyStoredMax = 1000000;
-	
+
 	private int _energyStored;
-	
+
 	private int _workStoredMax = MFRConfig.laserdrillCost.getInt();
 	private float _workStored;
-	
+
 	private int _bedrockLevel;
-	
+
 	private Random _rand;
-	
+
 	public static boolean canReplaceBlock(Block block, World world, int x, int y, int z)
 	{
 		return block == null || block.getBlockHardness(world, x, y, z) == 0 || block.isAir(world, x, y, z);
 	}
-	
+
 	public TileEntityLaserDrill()
 	{
 		super(Machine.LaserDrill);
 		_rand = new Random();
 		setManageSolids(true);
 	}
-	
+
 	@Override
 	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerLaserDrill(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiLaserDrill(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public boolean canFormBeamWith(ForgeDirection from)
 	{
 		return from.ordinal() > 1 && from.ordinal() < 6;
 	}
-	
+
 	@Override
 	public int addEnergy(ForgeDirection from, int energy, boolean simulate)
 	{
@@ -86,7 +86,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			_energyStored += energyToAdd;
 		return energy - energyToAdd;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -94,19 +94,19 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		{
 			return;
 		}
-		
+
 		super.updateEntity();
-		
+
 		if (hasDrops())
 			return;
-		
+
 		if(shouldCheckDrill())
 		{
 			updateDrill();
 		}
-		
+
 		Block lowerId = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
-		
+
 		if (_bedrockLevel < 0)
 		{
 			if (lowerId.equals(MineFactoryReloadedCore.fakeLaserBlock))
@@ -115,62 +115,62 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			}
 			return;
 		}
-		
+
 		if (!lowerId.equals(MineFactoryReloadedCore.fakeLaserBlock) &&
 				canReplaceBlock(lowerId, worldObj, xCoord, yCoord - 1, zCoord))
 		{
 			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MineFactoryReloadedCore.fakeLaserBlock);
 		}
-		
+
 		int energyToDraw = Math.min(_energyPerWork, _energyStored);
 		float energyPerWorkHere = (float)(_energyPerWork * (1 - 0.2 * Math.min(yCoord - _bedrockLevel, 128.0) / 128.0));
-		
+
 		float workDone = energyToDraw / energyPerWorkHere;
 		_workStored += workDone;
 		_energyStored -= workDone * energyPerWorkHere;
-		
+
 		while(_workStored >= _workStoredMax)
 		{
 			_workStored -= _workStoredMax;
 			doDrop(getRandomDrop());
 		}
 	}
-	
+
 	public int getWorkDone()
 	{
 		return (int)_workStored;
 	}
-	
+
 	public void setWorkDone(int work)
 	{
 		_workStored = work;
 	}
-	
+
 	public int getWorkMax()
 	{
 		return _workStoredMax;
 	}
-	
+
 	public int getEnergyStored()
 	{
 		return _energyStored;
 	}
-	
+
 	public void setEnergyStored(int energy)
 	{
 		_energyStored = energy;
 	}
-	
+
 	public int getEnergyMax()
 	{
 		return _energyStoredMax;
 	}
-	
+
 	private boolean shouldCheckDrill()
 	{
 		return worldObj.getTotalWorldTime() % 32 == 0;
 	}
-	
+
 	private void updateDrill()
 	{
 		int y = Integer.MAX_VALUE;
@@ -183,7 +183,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 						canReplaceBlock(block, worldObj, xCoord, y, zCoord))
 					if (worldObj.func_147480_a(xCoord, y, zCoord, true))
 						continue;
-				
+
 				if (block.isAssociatedBlock(Blocks.bedrock))
 				{
 					_bedrockLevel = y;
@@ -197,15 +197,15 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 
 			}
 		}
-		
+
 		_bedrockLevel = 0;
 	}
-	
+
 	private ItemStack getRandomDrop()
 	{
 		List<WeightedRandomItemStack> drops = new LinkedList<WeightedRandomItemStack>();
 		int boost = WeightedRandom.getTotalWeight(MFRRegistry.getLaserOres()) / 30;
-		
+
 		for(WeightedRandom.Item i : MFRRegistry.getLaserOres())
 		{
 			WeightedRandomItemStack oldStack = (WeightedRandomItemStack)i;
@@ -217,10 +217,10 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 				{
 					continue;
 				}
-				
+
 				List<ItemStack> preferredOres = MFRRegistry.getLaserPreferredOres(s.getItemDamage());
 				int realBoost = boost / Math.max(1, preferredOres.size() / 2) + 1;
-				
+
 				for(ItemStack preferredOre : preferredOres)
 				{
 					if(UtilInventory.stacksEqual(newStack.getStack(), preferredOre))
@@ -230,24 +230,24 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 				}
 			}
 		}
-		
+
 		return ((WeightedRandomItemStack)WeightedRandom.getRandomItem(_rand, drops)).getStack();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return INFINITE_EXTENT_AABB;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{
 		return 65536;
 	}
-	
+
 	public boolean shouldDrawBeam()
 	{
 		if(shouldCheckDrill())
@@ -256,60 +256,60 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		}
 		return _bedrockLevel >= 0;
 	}
-	
+
 	public int getBeamHeight()
 	{
 		return yCoord - _bedrockLevel;
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
-		
+		super.writeItemNBT(tag);
+
 		tag.setInteger("energyStored", _energyStored);
 		tag.setFloat("workDone", _workStored);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		
+
 		_energyStored = Math.min(tag.getInteger("energyStored"), _energyStoredMax);
 		_workStored = Math.min(tag.getFloat("workDone"), getWorkMax());
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 6;
 	}
-	
+
 	@Override
 	public int getInventoryStackLimit()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer)
 	{
 		return entityplayer.getDistanceSq(xCoord, yCoord, zCoord) <= 64;
 	}
-	
+
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{

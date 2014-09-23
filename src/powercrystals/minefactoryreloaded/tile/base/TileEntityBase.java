@@ -104,6 +104,11 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	{
 		super.writeToNBT(tag);
 
+		writeItemNBT(tag);
+	}
+
+	public void writeItemNBT(NBTTagCompound tag)
+	{
 		if (_invName != null)
 		{
 			NBTTagCompound display = new NBTTagCompound();

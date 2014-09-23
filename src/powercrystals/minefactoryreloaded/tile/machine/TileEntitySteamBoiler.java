@@ -48,53 +48,53 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		_tanks[0].setLock(FluidRegistry.getFluid("steam"));
 		_tanks[1].setLock(FluidRegistry.getFluid("water"));
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiSteamBoiler(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerSteamBoiler getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerSteamBoiler(this, inventoryPlayer);
 	}
-	
+
 	public float getTemp()
 	{
 		return _temp;
 	}
-	
+
 	public int getWorkMax()
 	{
 		return _ticksUntilConsumption;
 	}
-	
+
 	public int getWorkDone()
 	{
 		return _ticksSinceLastConsumption;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public int getFuelConsumptionPerTick()
 	{
 		return 1 + (Math.abs(Math.max(_totalBurningTime, -180)) + 1063) / 1064;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void setTemp(int temp)
 	{
 		_temp = (temp / 10f);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void setWorkDone(int a)
 	{
 		_ticksSinceLastConsumption = a;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void setWorkMax(int a)
 	{
@@ -124,7 +124,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 				_totalBurningTime = Math.max(_totalBurningTime - 16, -(10649 * 2));
 				_ticksUntilConsumption = 0;
 			}
-			
+
 			if (_temp == 0 && _inventory[3] == null)
 			{
 				if ((worldObj.getTotalWorldTime() & 0x6F) == 0 && !CoreUtils.isRedstonePowered(this))
@@ -151,7 +151,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 			if (consumeFuel())
 				_ticksSinceLastConsumption = 0;
-			
+
 			mergeFuel();
 		}
 	}
@@ -242,13 +242,13 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	{
 		return true;
 	}
-	
+
 	@Override
 	protected boolean shouldPumpTank(IFluidTank tank)
 	{
 		return tank == _tanks[0];
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{

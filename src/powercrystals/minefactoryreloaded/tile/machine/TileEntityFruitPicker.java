@@ -131,7 +131,10 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
 
 		if (!MFRRegistry.getFruitLogBlocks().contains(search))
-			return MFRRegistry.getFruits().containsKey(search) ? bp : null;
+		{
+			IFactoryFruit f = MFRRegistry.getFruits().get(search);
+			return f != null && f.canBePicked(worldObj, bp.x, bp.y, bp.z) ? bp : null;
+		}
 
 		BlockPosition temp = getNextTreeSegment(bp);
 		if (temp != null)
