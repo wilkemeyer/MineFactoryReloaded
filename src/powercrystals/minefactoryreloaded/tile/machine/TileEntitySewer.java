@@ -32,10 +32,10 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntitySewer extends TileEntityFactoryInventory implements ITankContainerBucketable
 {
+	private boolean _jammed;
 	private int _tick;
 	private long _nextSewerCheckTick;
-	private boolean _jammed;
-	
+
 	public TileEntitySewer()
 	{
 		super(Machine.Sewer);
@@ -43,32 +43,32 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
 		_tanks[0].setLock(FluidRegistry.getFluid("sewage"));
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiSewer(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerSewer getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerSewer(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	protected boolean shouldPumpLiquid()
 	{
 		return true;
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[0]);
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -78,7 +78,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			return;
 		}
 		_tick++;
-		
+
 		if (_nextSewerCheckTick <= worldObj.getTotalWorldTime())
 		{
 			Area a = new Area(BlockPosition.fromRotateableTile(this), _areaManager.getRadius(), 0, 0);
@@ -93,10 +93,10 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 					break;
 				}
 			}
-			
+
 			_nextSewerCheckTick = worldObj.getTotalWorldTime() + 800 + worldObj.rand.nextInt(800);
 		}
-		
+
 		if (_tick >= 31 && !_jammed)
 		{
 			_tick = 0;
@@ -135,38 +135,38 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			}
 		}
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME),
 				new FluidTankAdv(BUCKET_VOLUME * 4) };
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
@@ -182,19 +182,19 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		return true;
 	}
-	
+
 	@Override
 	public int getUpgradeSlot()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return slot == 0 && isUsableAugment(itemstack);
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{

@@ -176,10 +176,9 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		}
 
 		doDrop(drops);
+		_tanks[0].fill(FluidRegistry.getFluidStack("sludge", 10), true);
 
 		harvestable.postHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-
-		_tanks[0].fill(FluidRegistry.getFluidStack("sludge", 10), true);
 
 		return true;
 	}

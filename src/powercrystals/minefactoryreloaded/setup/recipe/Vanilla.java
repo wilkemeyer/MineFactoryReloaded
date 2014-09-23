@@ -38,7 +38,7 @@ public class Vanilla
 
 	protected static String[] DYES = { "Black", "Red", "Green", "Brown",
 		"Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime",
-		"Yellow", "LightBlue", "Magenta", "Orange", "White" }; // order copied from forge 
+		"Yellow", "LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 
 	public final void registerRecipes()
 	{
@@ -443,13 +443,13 @@ public class Vanilla
 		registerMachine(AutoSpawner, new Object[]
 				{
 				"GGG",
-				"ECE",
-				"NMS",
+				"NCS",
+				"EME",
 				'G', "sheetPlastic",
-				'E', "gemEmerald",
 				'C', magma_cream,
 				'N', Items.nether_wart,
 				'S', sugar,
+				'E', "gemEmerald",
 				'M', machineBaseItem,
 				} );
 
@@ -709,7 +709,7 @@ public class Vanilla
 			return;
 		}
 		_registeredMachineUpgrades = true;
-		
+
 		String[] materials = {"gemLapis", "ingotTin", "ingotIron", "ingotCopper", "ingotBronze",
 				"ingotSilver", "ingotGold", "gemQuartz", "gemDiamond", "ingotPlatinum", "gemEmerald",
 				"cobblestone"};
@@ -1235,7 +1235,7 @@ public class Vanilla
 		addRecipe(ShapelessRecipe(stack(fertileSoil), stack(dirt, 1, 2), stack(fertilizerItem), "listAllmilk"));
 
 		addShapelessRecipe(stack(chocolateMilkBucketItem), milk_bucket, bucket, stack(dye, 1, 3));
-		
+
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
 		addRecipe(ShapedRecipe(stack(torch, 4), new Object[]
@@ -1453,7 +1453,7 @@ public class Vanilla
 			'R', "dustRedstone",
 			'P', "sheetPlastic",
 				} ));
-		
+
 		{
 			ItemStack pipe = stack(plasticPipeBlock);
 			addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), pipe, pipe, pipe, pipe, pipe, "dustRedstone", "dustRedstone"));

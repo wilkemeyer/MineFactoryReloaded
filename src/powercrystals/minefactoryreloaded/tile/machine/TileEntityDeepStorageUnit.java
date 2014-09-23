@@ -19,32 +19,32 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implements IDeepStorageUnit
 {
+	private boolean _ignoreChanges = true;
+	private boolean _shouldTick = true;
+
+	private int _storedQuantity;
+	private ItemStack _storedItem = null;
+
 	public TileEntityDeepStorageUnit()
 	{
 		super(Machine.DeepStorageUnit);
 		setManageSolids(true);
 	}
-	
-	private int _storedQuantity;
-	private ItemStack _storedItem = null;
-	
-	private boolean _ignoreChanges = true;
-	private boolean _shouldTick = true;
-	
+
 	@Override
 	public void validate()
 	{
 		super.validate();
 		_ignoreChanges = false;
 	}
-	
+
 	@Override
 	public void invalidate()
 	{
 		super.invalidate();
 		_ignoreChanges = true;
 	}
-	
+
 	@Override
 	public void writeItemNBT(NBTTagCompound tag)
 	{
@@ -55,55 +55,55 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		else
 			super.writeItemNBT(tag);
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return slot < 2;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiDeepStorageUnit(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerDeepStorageUnit getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerDeepStorageUnit(this, inventoryPlayer);
 	}
-	
+
 	public int getQuantity()
 	{
 		return _storedQuantity;
 	}
-	
+
 	public int getQuantityAdjusted()
 	{
 		int quantity = _storedQuantity;
-		
+
 		for(int i = 0; i < getSizeInventory(); i++)
 		{
 			if(_inventory[i] != null && _storedQuantity == 0)
 			{
-				quantity += _inventory[i].stackSize;				
+				quantity += _inventory[i].stackSize;
 			}
 			else if(_inventory[i] != null && UtilInventory.stacksEqual(_storedItem, _inventory[i]))
 			{
 				quantity += _inventory[i].stackSize;
 			}
 		}
-		
+
 		return quantity;
 	}
-	
+
 	public void setQuantity(int quantity)
 	{
 		_storedQuantity = quantity;
 	}
-	
+
 	public void clearSlots()
 	{
 		for(int i = 0; i < getSizeInventory(); i++)
@@ -111,44 +111,44 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			_inventory[i] = null;
 		}
 	}
-	
+
 	@Override
 	public ForgeDirection getDropDirection()
 	{
 		return ForgeDirection.UP;
 	}
-	
+
 	@Override
 	public boolean hasWorldObj()
 	{
 		return _shouldTick & worldObj != null;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 		_shouldTick = false;
-		
+
 		if(worldObj.isRemote)
 			return;
-		
+
 		onFactoryInventoryChanged();
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		if (_ignoreChanges | worldObj == null || worldObj.isRemote)
 			return;
-		
+
 		if((_inventory[2] == null) & _storedItem != null & _storedQuantity == 0)
 		{
 			_storedItem = null;
 		}
 		checkInput(0);
 		checkInput(1);
-		
+
 		if((_inventory[2] == null) & _storedItem != null)
 		{
 			_inventory[2] = _storedItem.copy();
@@ -165,7 +165,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			_storedQuantity -= amount;
 		}
 	}
-	
+
 	private void checkInput(int slot)
 	{
 		if(_inventory[slot] != null)
@@ -197,37 +197,44 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			}
 		}
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 3;
 	}
-	
+
 	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
-	
+
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
 		return player.getDistanceSq(xCoord, yCoord, zCoord) <= 64D;
 	}
-	
+
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return getSizeInventory();
 	}
-	
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack)
+	{
+		_inventory[i] = itemstack;
+		markDirty();
+	}
+
 	/*
 	 * Should only allow matching items to be inserted in the "in" slots. Nothing goes in the "out" slot.
 	 */
@@ -239,13 +246,19 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		if (stored == null) stored = _inventory[2];
 		return stored == null || UtilInventory.stacksEqual(stored, stack);
 	}
-	
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
+	{
+		return canInsertItem(slot, itemstack, -1);
+	}
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
@@ -258,7 +271,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		}
 		super.writeToNBT(nbttagcompound);
 		_inventory[2] = o;
-		
+
 		if (_storedItem != null)
 		{
 			nbttagcompound.setTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
@@ -267,29 +280,29 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		else
 			nbttagcompound.setInteger("storedQuantity", 0);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		_ignoreChanges = true;
 		super.readFromNBT(nbttagcompound);
-		
+
 		_storedQuantity = nbttagcompound.getInteger("storedQuantity");
 		_storedItem = null;
-		
+
 		if (nbttagcompound.hasKey("storedStack"))
 		{
 			_storedItem = ItemStack.
 					loadItemStackFromNBT((NBTTagCompound)nbttagcompound.getTag("storedStack"));
 		}
-		
+
 		if (_storedItem == null & _storedQuantity > 0)
 		{
 			_storedQuantity = 0;
 		}
 		_ignoreChanges = false;
 	}
-	
+
 	@Override
 	public ItemStack getStoredItemType()
 	{
@@ -302,7 +315,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void setStoredItemCount(int amount)
 	{
@@ -328,7 +341,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		_storedQuantity = amount;
 		markDirty();
 	}
-	
+
 	@Override
 	public void setStoredItemType(ItemStack type, int amount)
 	{
@@ -341,7 +354,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		_storedItem.stackSize = 1;
 		markDirty();
 	}
-	
+
 	@Override
 	public int getMaxStoredCount()
 	{

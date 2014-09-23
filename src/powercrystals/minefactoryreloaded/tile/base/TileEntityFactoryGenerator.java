@@ -3,27 +3,29 @@ package powercrystals.minefactoryreloaded.tile.base;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 import cofh.core.util.CoreUtils;
+import cofh.lib.util.helpers.EnergyHelper;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public abstract class TileEntityGenerator extends TileEntityFactoryInventory
+public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInventory
 										implements IEnergyConnection
 {
+	private boolean deadCache;
+	private IEnergyHandler[] handlerCache;
+
 	private int _ticksBetweenConsumption;
 	private int _outputPulseSize;
-	
+
 	private int _ticksSinceLastConsumption = 0;
 	private int _bufferMax;
 	private int _buffer;
 
-	private IEnergyHandler[] handlerCache;
-	private boolean deadCache;
-	
-	protected TileEntityGenerator(Machine machine, int ticksBetweenConsumption)
+	protected TileEntityFactoryGenerator(Machine machine, int ticksBetweenConsumption)
 	{
 		super(machine);
 		assert machine.getActivationEnergy() > 0 : "Generators cannot produce 0 energy.";
@@ -48,19 +50,18 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 		{
 			if (deadCache) reCache();
 			setIsActive(_buffer > _outputPulseSize * 2);
-			
+
 			boolean skipConsumption = ++_ticksSinceLastConsumption < _ticksBetweenConsumption;
-			
+
 			if (CoreUtils.isRedstonePowered(this))
 				return;
-			
+
 			int pulse = Math.min(_buffer, _outputPulseSize);
-			_buffer -= pulse;
-			_buffer += transmitEnergy(pulse);
-			
+			_buffer -= pulse - transmitEnergy(pulse);
+
 			if (skipConsumption || !canConsumeFuel(_bufferMax - _buffer))
 				return;
-			
+
 			if (consumeFuel())
 			{
 				_buffer += produceEnergy();
@@ -68,13 +69,18 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 			}
 		}
 	}
-	
+
 	protected abstract boolean canConsumeFuel(int space);
 	protected abstract boolean consumeFuel();
 	protected abstract int produceEnergy();
-	
+
 	protected final int transmitEnergy(int energy)
 	{
+		if (_inventory[0] != null)
+			energy -= EnergyHelper.insertEnergyIntoContainer(_inventory[0], energy, false);
+		if (energy <= 0)
+			return 0;
+
 		if (handlerCache != null)
 			for (int i = handlerCache.length; i --> 0; )
 			{
@@ -91,22 +97,40 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 
 		return energy;
 	}
-	
+
 	public int getBuffer()
 	{
 		return _buffer;
 	}
-	
+
 	public void setBuffer(int buffer)
 	{
 		_buffer = buffer;
 	}
-	
+
 	public int getBufferMax()
 	{
 		return _bufferMax;
 	}
-	
+
+	@Override
+	public int getSizeInventory()
+	{
+		return 1;
+	}
+
+	@Override
+	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
+	{
+		return EnergyHelper.isEnergyContainerItem(itemstack);
+	}
+
+	@Override
+	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	{
+		return _inventory[0] != null && EnergyHelper.insertEnergyIntoContainer(_inventory[0], 2, true) < 2;
+	}
+
 	private void reCache() {
 		if (deadCache) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -149,7 +173,7 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 			}
 		}
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
@@ -159,12 +183,12 @@ public abstract class TileEntityGenerator extends TileEntityFactoryInventory
 		if (_buffer > 0)
 			nbttagcompound.setInteger("buffer", _buffer);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
-		
+
 		_ticksSinceLastConsumption = nbttagcompound.getInteger("ticksSinceLastConsumption");
 		_buffer = nbttagcompound.getInteger("buffer");
 	}

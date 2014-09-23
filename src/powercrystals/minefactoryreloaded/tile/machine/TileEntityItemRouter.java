@@ -22,6 +22,16 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntityItemRouter extends TileEntityFactoryInventory implements IEntityCollidable
 {
+	private boolean _routing = false;
+
+	private boolean _rejectUnmapped;
+
+	protected static final int[] _invOffsets = new int[] { 0, 0, 9, 18, 36, 27 };
+	protected static final ForgeDirection[] _outputDirections = new ForgeDirection[]
+			{ ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
+
+	private int[] _defaultRoutes = new int[_outputDirections.length];
+
 	public TileEntityItemRouter()
 	{
 		this(Machine.ItemRouter);
@@ -33,24 +43,16 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		setManageSolids(true);
 	}
 
-	protected static final int[] _invOffsets = new int[] { 0, 0, 9, 18, 36, 27 };
-	protected static final ForgeDirection[] _outputDirections = new ForgeDirection[]
-			{ ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
-	private int[] _defaultRoutes = new int[_outputDirections.length];
-	private boolean _routing = false;
-	
-	private boolean _rejectUnmapped;
-	
 	public boolean getRejectUnmapped()
 	{
 		return _rejectUnmapped;
 	}
-	
+
 	public void setRejectUnmapped(boolean rejectUnmapped)
 	{
 		_rejectUnmapped = rejectUnmapped;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -79,7 +81,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 				((EntityItem)entity).setEntityItemStack(s);
 		}
 	}
-	
+
 	public ItemStack routeItem(ItemStack stack)
 	{
 		int[] filteredRoutes = getRoutesForItem(stack);
@@ -98,7 +100,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		_routing = false;
 		return stack;
 	}
-	
+
 	private ItemStack weightedRouteItem(ItemStack stack, int[] routes)
 	{
 		ItemStack remainingOverall = stack.copy();
@@ -120,7 +122,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 					{
 						remainingOverall.stackSize -= (stackForThisRoute.stackSize - remainingFromThisRoute.stackSize);
 					}
-					
+
 					if(remainingOverall.stackSize <= 0)
 					{
 						break;
@@ -128,7 +130,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 				}
 			}
 		}
-		
+
 		if(0 < remainingOverall.stackSize && remainingOverall.stackSize < totalWeight(routes))
 		{
 			int outdir = weightedRandomSide(routes);
@@ -136,7 +138,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		}
 		return remainingOverall;
 	}
-	
+
 	private int weightedRandomSide(int[] routeWeights)
 	{
 		int random = worldObj.rand.nextInt(totalWeight(routeWeights));
@@ -146,19 +148,19 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 			if (random < 0)
 				return i;
 		}
-		
+
 		return -1;
 	}
-	
+
 	private int totalWeight(int[] routeWeights)
 	{
 		int total = 0;
-		
+
 		for (int weight : routeWeights)
 			total += weight;
 		return total;
 	}
-	
+
 	private boolean hasRoutes(int[] routeWeights)
 	{
 		for (int weight : routeWeights)
@@ -166,12 +168,12 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 
 		return false;
 	}
-	
-	
+
+
 	protected int[] getRoutesForItem(ItemStack stack)
 	{
 		int[] routeWeights = new int[_outputDirections.length];
-	
+
 		Item item = stack.getItem();
 
 		for (int i = 0; i < _outputDirections.length; i++)
@@ -193,27 +195,27 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		}
 		return routeWeights;
 	}
-	
+
 	private void recalculateDefaultRoutes()
 	{
 		for (int i = 0; i < _outputDirections.length; i++)
 			_defaultRoutes[i] = isSideEmpty(_outputDirections[i]) ? 1 : 0;
 	}
-	
+
 	public boolean hasRouteForItem(ItemStack stack)
 	{
 		return hasRoutes(getRoutesForItem(stack));
 	}
-	
+
 	private boolean isSideEmpty(ForgeDirection side)
 	{
 		if(side == ForgeDirection.UNKNOWN || side == ForgeDirection.UP)
 		{
 			return false;
 		}
-		
+
 		int sideStart = _invOffsets[side.ordinal()];
-		
+
 		for(int i = sideStart; i < sideStart + 9; i++)
 		{
 			if(_inventory[i] != null)
@@ -221,53 +223,53 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 48;
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return slot >= 45;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiItemRouter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerItemRouter(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
-	
+
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 45;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 3;
 	}
-	
+
 	@Override
 	public void setInventorySlotContents(int i, ItemStack stack)
 	{
@@ -289,31 +291,31 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		}
 		super.setInventorySlotContents(i, stack);
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
 		return !_routing;
 	}
-	
+
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
 		return !_routing;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		recalculateDefaultRoutes();
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
@@ -321,7 +323,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		_rejectUnmapped = nbttagcompound.getBoolean("rejectUnmapped");
 		recalculateDefaultRoutes();
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{

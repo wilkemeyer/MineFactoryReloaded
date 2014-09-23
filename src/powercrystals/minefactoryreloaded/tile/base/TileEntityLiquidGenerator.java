@@ -13,10 +13,10 @@ import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquidGenerator;
-import powercrystals.minefactoryreloaded.gui.container.ContainerLiquidGenerator;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryGenerator;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public abstract class TileEntityLiquidGenerator extends TileEntityGenerator implements ITankContainerBucketable
+public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerator implements ITankContainerBucketable
 {
 	private int _liquidConsumedPerTick;
 	private int _powerProducedPerConsumption;
@@ -48,13 +48,13 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 		drain(ForgeDirection.UNKNOWN, _liquidConsumedPerTick, true);
 		return true;
 	}
-	
+
 	@Override
 	protected boolean canConsumeFuel(int space)
 	{
 		return space >= _powerProducedPerConsumption;
 	}
-	
+
 	@Override
 	protected int produceEnergy()
 	{
@@ -87,21 +87,15 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 	}
 
 	@Override
-	public ContainerLiquidGenerator getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerFactoryGenerator getContainer(InventoryPlayer inventoryPlayer)
 	{
-		return new ContainerLiquidGenerator(this, inventoryPlayer);
+		return new ContainerFactoryGenerator(this, inventoryPlayer);
 	}
 
 	@Override
 	public String getGuiBackground()
 	{
 		return "fluidgenerator.png";
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return 0;
 	}
 
 	@Override
@@ -119,13 +113,13 @@ public abstract class TileEntityLiquidGenerator extends TileEntityGenerator impl
 					return _tank.fill(resource, doFill);
 		return 0;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{

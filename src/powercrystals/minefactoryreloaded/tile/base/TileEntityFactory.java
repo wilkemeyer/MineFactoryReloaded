@@ -48,30 +48,30 @@ public abstract class TileEntityFactory extends TileEntityBase
 			super(owner, harvestRadius, harvestAreaUp, harvestAreaDown, upgradeModifier, usesBlocks);
 		}
 	}
-	
+
 	private ForgeDirection _forwardDirection;
 	private boolean _canRotate = false;
-	
+
 	private boolean _manageFluids = false;
 	private boolean _manageSolids = false;
-	
+
 	private boolean _isActive = false, _prevActive;
-	private long _lastActive = -100;
 	protected byte _activeSyncTimeout = 101;
-	
+	private long _lastActive = -100;
+
 	protected int _rednetState;
-	
+
 	protected HarvestAreaManager<TileEntityFactory> _areaManager;
 	protected Machine _machine;
-	
+
 	protected String _owner = "";
-	
+
 	protected TileEntityFactory(Machine machine)
 	{
 		this._machine = machine;
 		_forwardDirection = ForgeDirection.NORTH;
 	}
-	
+
 	@Override
 	public void validate()
 	{
@@ -82,7 +82,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
 	}
-	
+
 	@Override
 	public void onChunkUnload()
 	{
@@ -108,67 +108,67 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		createHAM(owner, harvestRadius, 0, 0, 1.0f, true);
 	}
-	
+
 	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
 			boolean usesBlocks)
 	{
 		createHAM(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, usesBlocks);
 	}
-	
+
 	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
 			float upgradeModifier, boolean usesBlocks)
 	{
 		owner._areaManager = new FactoryAreaManager(owner, harvestRadius, harvestAreaUp, harvestAreaDown,
 				upgradeModifier, usesBlocks);
 	}
-	
+
 	@Override
 	public boolean hasHAM()
 	{
 		return getHAM() != null;
 	}
-	
+
 	@Override
 	public HarvestAreaManager<TileEntityFactory> getHAM()
 	{
 		return _areaManager;
 	}
-	
+
 	public World getWorld()
 	{
 		return worldObj;
 	}
-	
+
 	@Override
 	public ForgeDirection getDirectionFacing()
 	{
 		return _forwardDirection;
 	}
-	
+
 	@Override
 	public boolean canRotate()
 	{
 		return _canRotate;
 	}
-	
+
 	@Override
 	public boolean canRotate(ForgeDirection axis)
 	{
 		return _canRotate;
 	}
-	
+
 	protected void setCanRotate(boolean canRotate)
 	{
 		_canRotate = canRotate;
 	}
-	
+
 	@Override
 	public void rotate(ForgeDirection axis)
 	{
 		if (canRotate())
 			rotate(false);
 	}
-	
+
 	public void rotate(boolean reverse)
 	{
 		if (worldObj != null && !worldObj.isRemote)
@@ -195,7 +195,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
-	
+
 	@Override
 	public void rotateDirectlyTo(int rotation)
 	{
@@ -207,31 +207,31 @@ public abstract class TileEntityFactory extends TileEntityBase
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
-	
+
 	protected void onRotate() {};
-	
+
 	public int getRotatedSide(int side)
 	{
 		return _textureSelection[_forwardDirection.ordinal()][side];
 	}
-	
+
 	public ForgeDirection getDropDirection()
 	{
 		if (canRotate())
 			return getDirectionFacing().getOpposite();
 		return ForgeDirection.UP;
 	}
-	
+
 	public ForgeDirection[] getDropDirections()
 	{
 		return ForgeDirection.VALID_DIRECTIONS;
 	}
-	
+
 	public boolean isActive()
 	{
 		return _isActive;
 	}
-	
+
 	public void setIsActive(boolean isActive)
 	{
 		if (_isActive != isActive & worldObj != null &&
@@ -243,7 +243,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		}
 		_isActive = isActive;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -255,7 +255,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
-	
+
 	public void setOwner(String owner)
 	{
 		if (owner == null)
@@ -263,25 +263,25 @@ public abstract class TileEntityFactory extends TileEntityBase
 		if (_owner == null || _owner.isEmpty())
 			_owner = owner;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return null;
 	}
-	
+
 	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return null;
 	}
-	
+
 	public String getGuiBackground()
 	{
 		if (_machine == null)
 			return null;
 		return _machine.getName().toLowerCase() + ".png";
 	}
-	
+
 	@Override
 	public void markDirty()
 	{
@@ -291,7 +291,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		}
 		super.markDirty();
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -305,7 +305,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
@@ -330,7 +330,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 			break;
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
@@ -339,7 +339,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		rotateDirectlyTo(rotation);
 		_owner = nbttagcompound.getString("owner");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
@@ -348,39 +348,39 @@ public abstract class TileEntityFactory extends TileEntityBase
 		if (_owner != null)
 			nbttagcompound.setString("owner", _owner);
 	}
-	
+
 	public void onRedNetChanged(ForgeDirection side, int value)
 	{
 		_rednetState = value;
 	}
-	
+
 	public int getRedNetOutput(ForgeDirection side)
 	{
 		return 0;
 	}
-	
+
 	// hoisted IMachine methods
-	
+
 	public void setManageFluids(boolean manageFluids)
 	{
 		_manageFluids = manageFluids;
 	}
-	
+
 	public boolean manageFluids()
 	{
 		return _manageFluids;
 	}
-	
+
 	public void setManageSolids(boolean manageSolids)
 	{
 		_manageSolids = manageSolids;
 	}
-	
+
 	public boolean manageSolids()
 	{
 		return _manageSolids;
 	}
-	
+
 	@Override
 	public ConnectionType canConnectInventory(ForgeDirection from)
 	{
@@ -392,7 +392,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
 		if (type == PipeType.FLUID)
 			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
-		if (type == PipeType.ITEM) 
+		if (type == PipeType.ITEM)
 			return canConnectInventory(with).canConnect ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;

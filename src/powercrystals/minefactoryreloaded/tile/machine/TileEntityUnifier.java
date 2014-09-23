@@ -27,10 +27,10 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntityUnifier extends TileEntityFactoryInventory implements ITankContainerBucketable
 {
+	private boolean ignoreChange = false;
 	private static FluidStack _biofuel;
 	private static FluidStack _ethanol;
 	private int _roundingCompensation;
-	private boolean ignoreChange = false;
 
 	private Map<String, ItemStack> _preferredOutputs = new HashMap<String, ItemStack>();
 
