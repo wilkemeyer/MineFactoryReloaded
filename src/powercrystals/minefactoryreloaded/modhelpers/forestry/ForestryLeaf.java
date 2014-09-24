@@ -55,9 +55,6 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	@Override
 	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
-		if (fertilizerType != FertilizerType.GrowPlant)
-			return false;
-
 		return !canBePicked(world, x, y, z);
 	}
 
