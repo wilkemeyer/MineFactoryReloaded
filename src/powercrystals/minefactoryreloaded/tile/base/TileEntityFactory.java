@@ -6,6 +6,7 @@ import buildcraft.api.transport.IPipeTile.PipeType;
 import cofh.api.inventory.IInventoryConnection;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.util.position.IRotateableTile;
+import com.google.common.base.Strings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -351,7 +352,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);
-		if (_owner != null)
+		if (!Strings.isNullOrEmpty(_owner))
 			tag.setString("owner", _owner);
 	}
 

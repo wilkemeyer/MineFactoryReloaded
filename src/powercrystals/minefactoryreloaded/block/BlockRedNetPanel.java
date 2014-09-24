@@ -59,15 +59,8 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 		{
 			return;
 		}
-		TileEntity te = world.getTileEntity(x, y, z);
-		if(stack.getTagCompound() != null)
-		{
-			stack.getTagCompound().setInteger("x", x);
-			stack.getTagCompound().setInteger("y", y);
-			stack.getTagCompound().setInteger("z", z);
-			te.readFromNBT(stack.getTagCompound());
-		}
 
+		TileEntity te = getTile(world, x, y, z);
 		if(te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
@@ -95,7 +88,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 	{
 		ItemStack s = player.inventory.getCurrentItem();
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if (MFRUtil.isHoldingUsableTool(player, x, y, z) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			((TileEntityFactory)te).rotate(ForgeDirection.getOrientation(side));

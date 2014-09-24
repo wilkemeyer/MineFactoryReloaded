@@ -1,21 +1,53 @@
 package powercrystals.minefactoryreloaded.net;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.IDelayedValidate;
+
 public class ConnectionHandler
 {
 	public static HashMap<String, Boolean> onlinePlayerMap = new HashMap<String, Boolean>();
+
+	private static LinkedHashSet<IDelayedValidate> nodes = new LinkedHashSet<IDelayedValidate>();
+	private static LinkedHashSet<IDelayedValidate> nodesToAdd = new LinkedHashSet<IDelayedValidate>();
+
+	public static void update(IDelayedValidate node)
+	{
+		nodesToAdd.add(node);
+	}
+
+	@SubscribeEvent
+	public void tick(ServerTickEvent evt)
+	{
+		// TODO: this needs split up into groups per-world when worlds are threaded
+		l: if (evt.phase != Phase.START)
+		{
+			if (nodesToAdd.isEmpty())
+				break l;
+			synchronized(nodesToAdd)
+			{
+				nodes.addAll(nodesToAdd);
+				nodesToAdd.clear();
+			}
+			for(IDelayedValidate n : nodes)
+				if (!n.isNotValid())
+					n.firstTick();
+			nodes.clear();
+		}
+	}
 
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent player)
@@ -28,7 +60,7 @@ public class ConnectionHandler
 			Ticket ticket = i.next();
 			if (ticket.getPlayerName().equals(name) && CommonProxy.loadTicket(ticket, false))
 				i.remove();
-		}		
+		}
 	}
 
 	@SubscribeEvent

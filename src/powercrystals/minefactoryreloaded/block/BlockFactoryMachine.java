@@ -168,12 +168,11 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
-			boolean returnBlock)
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
 	{
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
-		ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z),
-				world.rand, 0), 1, damageDropped(world.getBlockMetadata(x, y, z)));
+		ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z), world.rand, 0),
+				1, damageDropped(world.getBlockMetadata(x, y, z)));
 		list.add(machine);
 		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityBase)
@@ -185,7 +184,8 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 
 			NBTTagCompound tag = new NBTTagCompound();
 			((TileEntityBase)te).writeItemNBT(tag);
-			machine.setTagCompound(tag);
+			if (!tag.hasNoTags())
+				machine.setTagCompound(tag);
 		}
 		world.setBlockToAir(x, y, z);
 		if (!returnBlock)
@@ -208,14 +208,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		{
 			return;
 		}
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (stack.getTagCompound() != null)
-		{
-			stack.getTagCompound().setInteger("x", x);
-			stack.getTagCompound().setInteger("y", y);
-			stack.getTagCompound().setInteger("z", z);
-			te.readFromNBT(stack.getTagCompound());
-		}
+		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof IRotateableTile)
 			if (((IRotateableTile)te).canRotate())
 				switch (MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3)

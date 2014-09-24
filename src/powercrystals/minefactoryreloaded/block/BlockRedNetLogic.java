@@ -48,7 +48,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		{
 			return;
 		}
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if(te instanceof TileEntityRedNetLogic)
 		{
 			int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
@@ -70,14 +70,6 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 			{
 				world.setBlockMetadataWithNotify(x, y, z, 2, 3);
 			}//*/
-
-			if(stack.hasTagCompound())
-			{
-				stack.getTagCompound().setInteger("x", x);
-				stack.getTagCompound().setInteger("y", y);
-				stack.getTagCompound().setInteger("z", z);
-				te.readFromNBT(stack.getTagCompound());
-			}
 		}
 	}
 
@@ -94,7 +86,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		{
 			return false;
 		}
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, x, y, z);
 		if(te instanceof TileEntityRedNetLogic)
 		{
 			if (((TileEntityRedNetLogic)te).crafters > 0)

@@ -122,12 +122,10 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
 		TileEntity te = getTile(world, x, y, z);
-		if (te instanceof TileEntityBase)
+
+		if (te instanceof TileEntityBase && stack.getTagCompound() != null)
 		{
-			if (stack.hasDisplayName())
-			{
-				((TileEntityBase)te).setBlockName(stack.getDisplayName());
-			}
+			te.readFromNBT(stack.getTagCompound());
 		}
 	}
 
