@@ -9,7 +9,6 @@ import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -88,21 +87,10 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		if (world.getBlock(x, y, z).getMaterial() == Material.glass && isBlockFullCube(world, x, y, z))
+		Block block = world.getBlock(x, y, z);
+		if (block.getMaterial() == Material.glass && block.getRenderType() == 0)
 			return false;
 		return super.shouldSideBeRendered(world, x, y, z, side);
-	}
-
-	public boolean isBlockFullCube(IBlockAccess world, int x, int y, int z)
-	{
-		Block block = world.getBlock(x, y, z);
-		if (block == null)
-			return false;
-		block.setBlockBoundsBasedOnState(world, x, y, z);
-		return AxisAlignedBB.getBoundingBox(block.getBlockBoundsMinX(),
-				block.getBlockBoundsMinY(), block.getBlockBoundsMinZ(),
-				block.getBlockBoundsMaxX(), block.getBlockBoundsMaxY(),
-				block.getBlockBoundsMaxZ()).getAverageEdgeLength() >= 1.0D;
 	}
 
 	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
