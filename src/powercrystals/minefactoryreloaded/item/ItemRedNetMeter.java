@@ -31,7 +31,7 @@ public class ItemRedNetMeter extends ItemMulti
 	{
 		setNames(null, "info", "debug");
 	}
-	
+
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity)
 	{
@@ -43,18 +43,27 @@ public class ItemRedNetMeter extends ItemMulti
 		player.addChatMessage(new ChatComponentText("ID: " + EntityList.getEntityString(entity)));
 		return true;
 	}
-	
+
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world,
-			int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
+			int x, int y, int z, int hitSide, float hitX, float hitY, float hitZ)
 	{
-		switch (itemstack.getItemDamage())
+		boolean r = doItemThing(stack, player, world, x, y, z, hitSide, hitX, hitY, hitZ);
+		if (r) // HACK: forge is fucking stupid with this method
+			ServerHelper.sendItemUsePacket(stack, player, world, x, y, z, hitSide, hitX, hitY, hitZ);
+		return r;
+	}
+
+	public boolean doItemThing(ItemStack stack, EntityPlayer player, World world,
+			int x, int y, int z, int hitSide, float hitX, float hitY, float hitZ)
+	{
+		switch (stack.getItemDamage())
 		{
 		case 2:
 			Block block = world.getBlock(x, y, z);
 			ArrayList<IChatComponent> info = new ArrayList<IChatComponent>();
 			if (player.isSneaking() && block instanceof IBlockDebug) {
-				((IBlockDebug) (block)).debugBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player);
+				((IBlockDebug) (block)).debugBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player);
 				return true;
 			} else if (block instanceof IBlockInfo) {
 				if (ServerHelper.isClientWorld(world)) {
@@ -62,7 +71,7 @@ public class ItemRedNetMeter extends ItemMulti
 				} else {
 					info.add(new ChatComponentText("-Server-"));
 				}
-				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info, true);
+				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player, info, true);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
@@ -87,7 +96,7 @@ public class ItemRedNetMeter extends ItemMulti
 			block = world.getBlock(x, y, z);
 			info = new ArrayList<IChatComponent>();
 			if (block instanceof IBlockInfo) {
-				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info, false);
+				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player, info, false);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
@@ -117,7 +126,7 @@ public class ItemRedNetMeter extends ItemMulti
 						.appendText(": " + world.getBlockMetadata(x, y, z)));
 			}
 			else if (block instanceof IRedNetInfo) {
-				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[side], player, info);
+				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player, info);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
