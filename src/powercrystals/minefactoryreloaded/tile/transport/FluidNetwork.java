@@ -25,12 +25,13 @@ public class FluidNetwork implements IGrid
 	private LinkedHashSet<TileEntityPlasticPipe> nodeSet = new LinkedHashSet<TileEntityPlasticPipe>();
 	private LinkedHashSet<TileEntityPlasticPipe> conduitSet;
 	private TileEntityPlasticPipe master;
+	private int overflowSelector;
 	private boolean regenerating = false;
 	FluidTankAdv storage = new FluidTankAdv(320);
-	
+
 	public int distribution;
 	public int distributionSide;
-	
+
 	protected FluidNetwork() {
 		storage.setCapacity(0);
 	}
@@ -46,10 +47,10 @@ public class FluidNetwork implements IGrid
 	public int getNodeShare(TileEntityPlasticPipe cond) {
 		int size = nodeSet.size();
 		if (size == 1)
-			return storage.getCapacity();
+			return storage.getFluidAmount();
 		int amt = 0;
-		if (master == cond) amt = storage.getCapacity() % size;
-		return amt + storage.getCapacity() / size;
+		if (master == cond) amt = storage.getFluidAmount() % size;
+		return amt + storage.getFluidAmount() / size;
 	}
 
 	public void addConduit(TileEntityPlasticPipe cond) {
@@ -80,7 +81,7 @@ public class FluidNetwork implements IGrid
 		}
 		rebalanceGrid();
 	}
-	
+
 	public void regenerate() {
 		regenerating = true;
 		HANDLER.regenerateGrid(this);
@@ -100,7 +101,7 @@ public class FluidNetwork implements IGrid
 		nodeSet.clear();
 		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>(Math.min(oldSet.size() / 6, 5));
 		rebalanceGrid();
-		
+
 		LinkedHashSet<TileEntityPlasticPipe> toCheck = new LinkedHashSet<TileEntityPlasticPipe>();
 		LinkedHashSet<TileEntityPlasticPipe> checked = new LinkedHashSet<TileEntityPlasticPipe>();
 		BlockPosition bp = new BlockPosition(0,0,0);
@@ -138,7 +139,7 @@ public class FluidNetwork implements IGrid
 			HANDLER.addGrid(this);
 		regenerating = false;
 	}
-	
+
 	public void destroyGrid() {
 		master = null;
 		regenerating = true;
@@ -171,7 +172,7 @@ public class FluidNetwork implements IGrid
 		if (tank.getSpace() <= 0)
 			return;
 		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
-		
+
 		for (TileEntityPlasticPipe cond : nodeSet)
 			for (int i = 6; i --> 0; )
 				cond.extract(directions[i], tank);
@@ -193,26 +194,39 @@ public class FluidNetwork implements IGrid
 		int toDistribute = storage.getFluidAmount() / size;
 		int sideDistribute = toDistribute / 6;
 		Fluid fluid = storage.getFluid().getFluid();
-		
+
 		distribution = toDistribute;
 		distributionSide = sideDistribute;
-		FluidStack stack = storage.drain(sideDistribute, false); 
-		
+		FluidStack stack = storage.drain(sideDistribute, false);
+
+		TileEntityPlasticPipe master = this.master;
+		int overflow = overflowSelector, selector = 0;
+		if (size > 1)
+			overflowSelector = (overflow + 1) % size;
+
 		if (sideDistribute > 0) for (TileEntityPlasticPipe cond : nodeSet)
-			if (cond != master) {
+			if (selector++ != overflow) {
 				int e = 0;
 				for (int i = 6; i --> 0; )
 					e += cond.transfer(directions[i], stack, fluid);
 				if (e > 0) storage.drain(e, true);
+			} else {
+				master = cond;
 			}
-		
+
 		toDistribute += storage.getFluidAmount() % size;
 		sideDistribute = toDistribute / 6;
 		stack.amount = sideDistribute;
-		
+
 		if (sideDistribute > 0) {
 			int e = 0;
-			for (int i = 6; i --> 0; ) 
+			for (int i = 6; i --> 0; )
+				e += master.transfer(directions[i], stack, fluid);
+			if (e > 0) storage.drain(e, true);
+		} else if (toDistribute > 0) {
+			stack.amount = toDistribute;
+			int e = 0;
+			for (int i = 6; i --> 0 && e < toDistribute; )
 				e += master.transfer(directions[i], stack, fluid);
 			if (e > 0) storage.drain(e, true);
 		}
@@ -233,12 +247,12 @@ public class FluidNetwork implements IGrid
 		grid.destroyGrid();
 		if (!regenerating & r)
 			regenerate();
-		
+
 		regenerating = true;
 		for (TileEntityPlasticPipe cond : grid.conduitSet)
 			addConduit(cond);
 		regenerating = r;
-		
+
 		grid.conduitSet.clear();
 		grid.nodeSet.clear();
 	}
@@ -297,7 +311,7 @@ public class FluidNetwork implements IGrid
 	public int getNodeCount() {
 		return nodeSet.size();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "FluidNetwork@" + Integer.toString(hashCode()) + "; master:" + master +
