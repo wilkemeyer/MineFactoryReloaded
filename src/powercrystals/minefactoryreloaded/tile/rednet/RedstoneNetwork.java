@@ -62,7 +62,7 @@ public class RedstoneNetwork implements IGrid
 	{
 		_world = world;
 		log = MFRConfig.redNetDebug.getBoolean(false);
-		
+
 		for (int i = 0; i < 16; i++)
 		{
 			_singleNodes[i] = new LinkedHashSet<BlockPosition>();
@@ -357,7 +357,7 @@ public class RedstoneNetwork implements IGrid
 			updatePowerLevels(subnet);
 		}
 	}
-	
+
 	public void removeNode(BlockPosition node)
 	{
 		boolean omniNode = _omniNodes.contains(node);
@@ -375,7 +375,7 @@ public class RedstoneNetwork implements IGrid
 				RedstoneNetwork.log("Network with ID %d:%d removing node %s", hashCode(), subnet, node.toString());
 				_singleNodes[subnet].remove(node);
 			}
-			
+
 			if (node.equals(_powerProviders[subnet]))
 			{
 				RedstoneNetwork.log("Network with ID %d:%d removing power provider node, recalculating", hashCode(), subnet);
@@ -405,7 +405,7 @@ public class RedstoneNetwork implements IGrid
 	public void mergeNetwork(RedstoneNetwork network)
 	{
 		//...
-		
+
 		updatePowerLevels();
 	}
 

@@ -295,7 +295,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			RedstoneNetwork.log("\t- power provider for network " + _network.hashCode() + ", power 0");
 			return 0;
 		}
-		else if (_network.isWeakNode(nodebp))
+		boolean checkWeak = nodebp.getBlock(worldObj).
+				shouldCheckWeakPower(worldObj, nodebp.x, nodebp.y, nodebp.z, to.getOpposite().ordinal());
+		if (checkWeak && _network.isWeakNode(nodebp))
 		{
 			RedstoneNetwork.log("\t- weak node for network " + _network.hashCode() + ", power 0");
 			return 0;
