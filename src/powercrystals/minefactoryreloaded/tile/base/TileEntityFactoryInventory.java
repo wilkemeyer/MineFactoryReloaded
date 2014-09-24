@@ -27,7 +27,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory
 {
 	protected final static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] {};
-	protected final static FluidTankInfo[] emptyFluidTankInfo = new FluidTankInfo[] {};
+	protected final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
 	protected final static int BUCKET_VOLUME = FluidContainerRegistry.BUCKET_VOLUME;
 
 	protected List<ItemStack> failedDrops = null;

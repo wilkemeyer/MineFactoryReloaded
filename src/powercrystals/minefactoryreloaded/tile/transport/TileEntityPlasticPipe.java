@@ -44,7 +44,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	private IFluidHandler[] handlerCache = null;
 	private byte upgradeItem = 0;
 	private boolean deadCache = true;
-	
+
 	private boolean readFromNBT = false;
 
 	private boolean isPowered = false;
@@ -52,7 +52,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	FluidStack fluidForGrid = null;
 
 	FluidNetwork _grid;
-	
+
 	public TileEntityPlasticPipe() {
 	}
 
@@ -87,12 +87,12 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			_grid = null;
 		}
 	}
-	
+
 	@Override
 	public boolean canUpdate() {
 		return false;
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange() {
 		boolean last = isPowered;
@@ -156,7 +156,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		else if (y > yCoord)
 			addCache(tile, 0);
 	}
-	
+
 	private void addCache(TileEntity tile) {
 		if (tile == null) return;
 		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
@@ -250,7 +250,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			te._grid.mergeGrid(_grid);
 		}
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
 		if (deadCache)
@@ -264,7 +264,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
@@ -287,11 +287,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	public void setUpgrade(int i) {
 		upgradeItem = (byte)i;
 	}
-	
+
 	public int getUpgrade() {
 		return upgradeItem;
 	}
@@ -300,11 +300,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public void setModes(byte[] modes) {
 		sideMode = modes;
 	}
-	
+
 	public byte getMode(int side) {
 		return (byte) (sideMode[ForgeDirection.OPPOSITES[side]] & 3);
 	}
-	
+
 	public void setMode(int side, byte mode) {
 		side = ForgeDirection.OPPOSITES[side];
 		mode &= 3;
@@ -316,7 +316,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
 		}
 	}
-	
+
 	// IFluidHandler
 
 	@Override
@@ -368,7 +368,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
 		if (_grid == null)
-			return null;
+			return FluidHelper.NULL_TANK_INFO;
 		return new FluidTankInfo[] {_grid.storage.getInfo()};
 	}
 
@@ -385,7 +385,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		int mode = sideMode[bSide] >> 2;
 		return (sideMode[bSide] & 1) != 0 ? mode : 0;
 	}
-	
+
 	public boolean isPowered() {
 		return isPowered;
 	}
