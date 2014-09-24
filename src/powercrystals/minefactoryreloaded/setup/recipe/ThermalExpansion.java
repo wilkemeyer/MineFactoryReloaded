@@ -638,7 +638,7 @@ public class ThermalExpansion extends Vanilla
 				'C', Machine.Chronotyper.getItemStack(),
 					} );
 
-
+		/*
 		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[]
 				{
 			"PPP",
@@ -646,7 +646,7 @@ public class ThermalExpansion extends Vanilla
 			"PMP",
 			'P', "sheetPlastic",
 			'M', machineBaseItem,
-				}));
+				}));//*/
 	}
 
 	@Override
