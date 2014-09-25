@@ -36,11 +36,15 @@ public class BlockFactoryRoad extends Block
 	@Override
 	public void onEntityWalking(World world, int x, int y, int z, Entity e)
 	{
-		double boost = 1.5;
+		final double boost = 1.5 * slipperiness;
 
-		double a = Math.atan2(e.motionX, e.motionZ);
-		e.motionX += Math.sin(a) * boost * slipperiness;
-		e.motionZ += Math.cos(a) * boost * slipperiness;
+		if (e.motionX > 0 || e.motionZ > 0)
+		{
+			double b = Math.atan2(e.posX - e.prevPosX, e.posZ - e.prevPosZ);
+			double a = (Math.atan2(e.motionX, e.motionZ) * 3 + b * 2) / 5d;
+			e.motionX += Math.sin(a) * boost;
+			e.motionZ += Math.cos(a) * boost;
+		}
 	}
 
 	@Override
