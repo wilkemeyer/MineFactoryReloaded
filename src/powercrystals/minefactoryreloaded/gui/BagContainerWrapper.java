@@ -12,7 +12,8 @@ public class BagContainerWrapper implements IInventory
 	private ItemStack _stack;
 	private NBTTagCompound _inventory;
 	private ItemStack[] _stacks = new ItemStack[getSizeInventory()];
-	
+	private boolean dirty = false;
+
 	public BagContainerWrapper(ItemStack stack)
 	{
 		_stack = stack;
@@ -34,11 +35,21 @@ public class BagContainerWrapper implements IInventory
 			else
 				_inventory.setTag("slot" + i, _stacks[i].writeToNBT(new NBTTagCompound()));
 		_stack.setTagInfo("inventory", _inventory);
+		dirty = true;
 	}
-	
+
+	public boolean getDirty()
+	{
+		boolean r = dirty;
+		dirty = false;
+		return r;
+	}
+
 	public ItemStack getStack()
 	{
+		boolean d = dirty;
 		markDirty();
+		dirty = d;
 		return _stack;
 	}
 
@@ -118,5 +129,6 @@ public class BagContainerWrapper implements IInventory
 	@Override
 	public void closeInventory()
 	{
+		markDirty();
 	}
 }

@@ -17,7 +17,7 @@ public class ContainerBag extends Container
 {
 	private BagContainerWrapper _ncw;
 	private int _nsi;
-	
+
 	public ContainerBag(BagContainerWrapper ncw, InventoryPlayer inv)
 	{
 		_ncw = ncw;
@@ -28,12 +28,12 @@ public class ContainerBag extends Container
 
 		bindPlayerInventory(inv);
 	}
-	
+
 	public String getName()
 	{
 		return _ncw.getInventoryName();
 	}
-	
+
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
 	{
 		for (int i = 0; i < 3; i++)
@@ -43,7 +43,7 @@ public class ContainerBag extends Container
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 51 + i * 18));
 			}
 		}
-		
+
 		for (int i = 0; i < 9; i++)
 		{
 			if (i == _nsi)
@@ -52,25 +52,30 @@ public class ContainerBag extends Container
 				addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 51 + 58));
 		}
 	}
-	
+
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer)
+	public boolean canInteractWith(EntityPlayer player)
 	{
-		return true;
+		boolean r = UtilInventory.stacksEqual(player.inventory.mainInventory[_nsi], _ncw.getStack(), false);
+		if (r)
+			player.inventory.mainInventory[_nsi] = _ncw.getStack();
+		if (_ncw.getDirty() && !r)
+			player.inventory.setItemStack((ItemStack)null);
+		return r;
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
 		ItemStack stack = null;
 		Slot slotObject = (Slot) inventorySlots.get(slot);
 		int machInvSize = _ncw.getSizeInventory();
-		
+
 		if(slotObject != null && slotObject.getHasStack())
 		{
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
-			
+
 			if(slot < machInvSize)
 			{
 				if(!mergeItemStack(stackInSlot, machInvSize, inventorySlots.size(), true))
@@ -82,7 +87,7 @@ public class ContainerBag extends Container
 			{
 				return null;
 			}
-			
+
 			if(stackInSlot.stackSize == 0)
 			{
 				slotObject.putStack(null);
@@ -91,24 +96,16 @@ public class ContainerBag extends Container
 			{
 				slotObject.onSlotChanged();
 			}
-			
+
 			if(stackInSlot.stackSize == stack.stackSize)
 			{
 				return null;
 			}
-			
+
 			slotObject.onPickupFromSlot(player, stackInSlot);
 		}
-		
+
 		return stack;
-	}
-	
-	@Override
-	public void onContainerClosed(EntityPlayer player)
-	{
-		if (UtilInventory.stacksEqual(player.inventory.mainInventory[_nsi], _ncw.getStack(), false))
-			player.inventory.mainInventory[_nsi] = _ncw.getStack();
-		super.onContainerClosed(player);
 	}
 
 	@Override
