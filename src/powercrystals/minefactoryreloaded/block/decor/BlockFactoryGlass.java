@@ -49,6 +49,12 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	}
 
 	@Override
+	public boolean canPlaceTorchOnTop(World world, int x, int y, int z)
+	{
+		return true;
+	}
+
+	@Override
 	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
