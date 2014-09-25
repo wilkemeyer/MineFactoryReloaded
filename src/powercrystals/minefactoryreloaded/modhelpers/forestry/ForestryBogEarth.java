@@ -1,13 +1,12 @@
 package powercrystals.minefactoryreloaded.modhelpers.forestry;
 
-import cofh.lib.util.helpers.FluidHelper;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -22,12 +21,14 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSoil;
 public class ForestryBogEarth extends PlantableSoil implements IFactoryFertilizable, IFactoryHarvestable, IFactoryFruit
 {
 	private ReplacementBlock repl;
+	private Item dirt;
 
 	public ForestryBogEarth(Block block)
 	{
 		super(block);
 		_plantedBlock.setMeta(true);
 		repl = new ReplacementBlock(Blocks.dirt);
+		dirt = Item.getItemFromBlock(Blocks.dirt);
 	}
 
 	@Override
@@ -52,21 +53,6 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
 	{
 		return fertilizerType == FertilizerType.GrowPlant && (world.getBlockMetadata(x, y, z) & 3) == 1;
-	}
-
-	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
-	{
-		if (!world.isAirBlock(x, y, z))
-			if (FluidHelper.lookupFluidForBlock(world.getBlock(x, y, z)) == FluidHelper.WATER_FLUID) {
-				if (FluidHelper.lookupFluidForBlock(world.getBlock(x, y + 1, z)) == FluidHelper.WATER_FLUID)
-					return false;
-				else
-					return world.getBlockMetadata(x, y, z) != 0;
-			} else
-				return false;
-
-		return true;
 	}
 
 	@Override
@@ -102,7 +88,13 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
 	{
-		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		List<ItemStack> list = world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		for (ItemStack a : list)
+			if (a.getItem() == dirt) {
+				list.remove(a);
+				break;
+			}
+		return list;
 	}
 
 	@Override
