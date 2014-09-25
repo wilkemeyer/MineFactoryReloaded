@@ -920,11 +920,13 @@ public class Vanilla
 		addStorageRecipe(stack(meatIngotCookedItem), "nuggetMeat");
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 12), "ingotMeatRaw");
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 13), "ingotMeat");
+		addStorageRecipe(stack(pinkSlimeBlock), stack(pinkSlimeballItem));
 
 		addReverseStorageRecipe(stack(meatIngotRawItem), "blockMeatRaw");
 		addReverseStorageRecipe(stack(meatIngotCookedItem), "blockMeat");
 		addReverseStorageRecipe(stack(meatNuggetRawItem), "ingotMeatRaw");
 		addReverseStorageRecipe(stack(meatNuggetCookedItem), "ingotMeat");
+		addReverseStorageRecipe(stack(pinkSlimeballItem), stack(pinkSlimeBlock));
 	}
 
 	protected void registerSyringes()

@@ -136,6 +136,8 @@ tile.mfr.decorativestone.white.brick.large.name = Large Whitestone Bricks
 tile.mfr.decorativestone.white.gravel.name = Whitestone Gravel
 tile.mfr.decorativestone.white.paved.name = Paved Whitestone
 
+tile.mfr.pinkslime.name = Pink Slime Block
+
 tile.ice.unmelting.name = Ice (Unmelting)
 
 tile.mfr.vinescaffold.name = Vine Scaffolding

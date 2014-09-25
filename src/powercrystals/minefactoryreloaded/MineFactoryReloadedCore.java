@@ -93,6 +93,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
+import powercrystals.minefactoryreloaded.block.decor.BlockPinkSlime;
 import powercrystals.minefactoryreloaded.block.decor.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
@@ -219,6 +220,8 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Block factoryDecorativeBrickBlock;
 	public static Item factoryDecorativeBrickItem;
 	public static Block factoryDecorativeStoneBlock;
+	public static Block pinkSlimeBlock;
+	public static Item pinkSlimeBlockItem;
 
 	public static Block rubberWoodBlock;
 	public static Block rubberLeavesBlock;
@@ -404,6 +407,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		factoryPlasticBlock = new BlockFactoryPlastic();
 		factoryDecorativeBrickBlock = new BlockDecorativeBricks();
 		factoryDecorativeStoneBlock = new BlockDecorativeStone();
+		pinkSlimeBlock = new BlockPinkSlime();
 		rubberWoodBlock = new BlockRubberWood();
 		rubberLeavesBlock = new BlockRubberLeaves();
 		rubberSaplingBlock = new BlockRubberSapling();
@@ -548,6 +552,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		registerBlock(factoryDecorativeBrickBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeBricks._names});
 		factoryDecorativeBrickItem = Item.getItemFromBlock(factoryDecorativeBrickBlock);
 		registerBlock(factoryDecorativeStoneBlock, ItemBlockFactory.class, new Object[] {BlockDecorativeStone._names});
+		registerBlock(pinkSlimeBlock, ItemBlockFactory.class);
+		pinkSlimeBlockItem = Item.getItemFromBlock(pinkSlimeBlock);
 
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);
 		registerBlock(fertileSoil, ItemBlockFactory.class);
