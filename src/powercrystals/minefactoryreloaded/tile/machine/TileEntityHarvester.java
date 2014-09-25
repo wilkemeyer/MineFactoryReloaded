@@ -6,6 +6,7 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -144,33 +146,40 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	@Override
 	public boolean activateMachine()
 	{
-		BlockPosition targetCoords = getNextHarvest();
+		BlockPosition target = getNextHarvest();
 
-		if (targetCoords == null)
+		if (target == null)
 		{
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 
-		Block harvestedBlock = worldObj.getBlock(targetCoords.x, targetCoords.y, targetCoords.z);
-		int harvestedBlockMetadata = worldObj.getBlockMetadata(targetCoords.x,
-															targetCoords.y, targetCoords.z);
+		Block harvestedBlock = worldObj.getBlock(target.x, target.y, target.z);
+		int harvestedBlockMetadata = worldObj.getBlockMetadata(target.x,
+															target.y, target.z);
 
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().
 											get(harvestedBlock);
 
 		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, _immutableSettings,
-													targetCoords.x, targetCoords.y, targetCoords.z);
+													target.x, target.y, target.z);
 
-		harvestable.preHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
+		harvestable.preHarvest(worldObj, target.x, target.y, target.z);
+
+		if (drops instanceof ArrayList)
+		{
+			ForgeEventFactory.fireBlockHarvesting((ArrayList<ItemStack>)drops, worldObj, harvestedBlock,
+					target.x, target.y, target.z, harvestedBlockMetadata, 0,
+					1f, _settings.get("silkTouch") == Boolean.TRUE, null);
+		}
 
 		if (harvestable.breakBlock())
 		{
-			if (!worldObj.setBlock(targetCoords.x, targetCoords.y, targetCoords.z, Blocks.air, 0, 2))
+			if (!worldObj.setBlock(target.x, target.y, target.z, Blocks.air, 0, 2))
 				return false;
 			if (_settings.get("playSounds") == Boolean.TRUE)
 			{
-				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x, targetCoords.y, targetCoords.z,
+				worldObj.playAuxSFXAtEntity(null, 2001, target.x, target.y, target.z,
 						Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
 			}
 		}
@@ -178,7 +187,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		doDrop(drops);
 		_tanks[0].fill(FluidRegistry.getFluidStack("sludge", 10), true);
 
-		harvestable.postHarvest(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
+		harvestable.postHarvest(worldObj, target.x, target.y, target.z);
 
 		return true;
 	}
@@ -353,7 +362,10 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		NBTTagCompound list = new NBTTagCompound();
 		for(Entry<String, Boolean> setting : _settings.entrySet())
 		{
-			list.setBoolean(setting.getKey(), setting.getValue() == Boolean.TRUE);
+			String key = setting.getKey();
+			if ("playSounds" == key || "isHarvestingTree" == key)
+				continue;
+			list.setBoolean(key, setting.getValue() == Boolean.TRUE);
 		}
 		tag.setTag("harvesterSettings", list);
 	}
@@ -370,7 +382,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 				if ("playSounds".equals(s))
 					continue;
 				boolean b = list.getBoolean(s);
-				_settings.put(s, b);
+				_settings.put(s.intern(), b);
 			}
 		}
 		if (_treeManager != null)
