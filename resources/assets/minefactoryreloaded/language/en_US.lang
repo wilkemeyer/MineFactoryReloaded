@@ -208,13 +208,6 @@ item.mfr.plastic.armor.chest.name = Plastic Breastplate
 item.mfr.plastic.armor.legs.name  = Plastic Leggings
 item.mfr.plastic.armor.boots.name = Plastic Boots
 
-item.mfr.machineblock.name = Factory Machine Block
-item.mfr.hammer.name = Precision Sledgehammer
-item.mfr.fertilizer.name = Industrial Fertilizer
-item.mfr.plastic.sheet.name = Plastic Sheets
-item.mfr.plastic.raw.name = Raw Plastic
-item.mfr.rubber.bar.name = Rubber Bar
-item.mfr.rubber.raw.name = Raw Rubber
 item.mfr.syringe.cure.name = De-Zombification Syringe
 item.mfr.syringe.empty.name = Empty Syringe
 item.mfr.syringe.empty.prefix.name =
@@ -223,14 +216,26 @@ item.mfr.syringe.growth.name = Growth Syringe
 item.mfr.syringe.health.name = Health Syringe
 item.mfr.syringe.slime.name = Slime Embiggening Syringe
 item.mfr.syringe.zombie.name = Zombie Syringe
+
+item.mfr.machineblock.name = Factory Machine Block
+item.mfr.hammer.name = Precision Sledgehammer
+item.mfr.plastic.sheet.name = Plastic Sheets
+item.mfr.plastic.raw.name = Raw Plastic
+item.mfr.plastic.bag.name = Plastic Bag
+item.mfr.rubber.bar.name = Rubber Bar
+item.mfr.rubber.raw.name = Raw Rubber
 item.mfr.record.blank.name = Blank Record
+
 item.mfr.safarinet.reusable.name = Safari Net (Reusable)
 item.mfr.safarinet.singleuse.name = Safari Net (Single-Use)
 item.mfr.safarinet.jailer.name = Jailer's Safari Net
 item.mfr.safarinet.launcher.name = Safari Net Launcher
+
 item.mfr.sugarcharcoal.name = Sugar Charcoal
+item.mfr.fertilizer.name = Industrial Fertilizer
 item.mfr.milkbottle.name = Milk Bottle
 item.mfr.spyglass.name = Spyglass
+item.mfr.ruler.name = Ruler
 item.mfr.xpextractor.name = XP Extractor
 item.mfr.portaspawner.name = PortaSpawner
 item.mfr.straw.name = Straw
@@ -240,17 +245,18 @@ item.mfr.rednet.meter.info.name = RedNet Multimeter
 item.mfr.rednet.meter.debug.name = Debugger
 item.mfr.rednet.memorycard.name = PRC Memory Card
 
-item.mfr.ruler.name = Ruler
 item.mfr.meat.ingot.raw.name = Raw Meat Ingot
 item.mfr.meat.ingot.cooked.name = Cooked Meat Ingot
 item.mfr.meat.nugget.raw.name = Raw "Meat" Nugget
 item.mfr.meat.nugget.cooked.name = Cooked "Meat" Nugget
+
 item.mfr.pinkslime.ball.name = Pink Slimeball
+item.mfr.pinkslime.gem.name = Pink Slime Crystal
+
 item.mfr.rocket.name = Self-Propelled Anti Material Rocket
 item.mfr.rocket.smart.name = Tracking Self-Propelled Anti Material Rocket
 item.mfr.rocketlauncher.name = SPAMR Launcher
 item.mfr.fishingrod.name = Fishing Rod
-item.mfr.plastic.bag.name = Plastic Bag
 
 item.mfr.ceramicdye.white.name = Ceramic Dye (White)
 item.mfr.ceramicdye.orange.name = Ceramic Dye (Orange)
