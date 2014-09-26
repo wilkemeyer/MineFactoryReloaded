@@ -232,6 +232,45 @@ public class MFRUtil
 		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
 	}
 
+	public static void notifyNearbyBlocksExcept(World world, int x, int y, int z, Block block)
+	{
+		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block)
+		{
+			world.notifyBlockOfNeighborChange(x, y, z, block);
+			for (int j = 0; j < 6; ++j)
+			{
+				ForgeDirection d2 = dirs[j];
+				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
+				if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
+					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+			}
+		}
+	}
+
+	public static void wideNotifyNearbyBlocksExcept(World world, int X, int Y, int Z, Block block)
+	{
+		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		for (int i = 0; i < 6; ++i)
+		{
+			ForgeDirection d = dirs[i];
+			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
+			if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block)
+			{
+				world.notifyBlockOfNeighborChange(x, y, z, block);
+				for (int j = 0; j < 6; ++j)
+				{
+					if ((j^1) == i)
+						continue;
+					ForgeDirection d2 = dirs[j];
+					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
+					if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
+						world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+				}
+			}
+		}
+	}
+
 	public static NBTTagCompound writeModifierToNBT(String name, AttributeModifier modifier)
 	{
 		NBTTagCompound tag = new NBTTagCompound();

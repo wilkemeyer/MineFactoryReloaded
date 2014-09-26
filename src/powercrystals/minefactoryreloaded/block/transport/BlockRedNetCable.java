@@ -281,22 +281,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 	public void breakBlock(World world, int X, int Y, int Z, Block id, int meta)
 	{
 		super.breakBlock(world, X, Y, Z, id, meta);
-		for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
-		{
-			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
-			if (world.blockExists(x, y, z) && !world.getBlock(x, y, z).equals(this))
-			{
-				world.notifyBlockOfNeighborChange(x, y, z, this);
-				for (ForgeDirection d2 : ForgeDirection.VALID_DIRECTIONS)
-				{
-					if (d2.getOpposite() == d)
-						continue;
-					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-					if (world.blockExists(x2, y2, z2) && !world.getBlock(x2, y2, z2).equals(this))
-						world.notifyBlockOfNeighborChange(x2, y2, z2, this);
-				}
-			}
-		}
+		MFRUtil.wideNotifyNearbyBlocksExcept(world, X, Y, Z, id);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOutputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedstoneAlike;
 import powercrystals.minefactoryreloaded.core.IGrid;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
@@ -283,14 +284,14 @@ public class RedstoneNetwork implements IGrid
 	public void addOrUpdateNode(BlockPosition node)
 	{
 		Block block = _world.getBlock(node.x, node.y, node.z);
-		if (block.equals(rednetCableBlock))
+		if (block == rednetCableBlock)
 		{
 			return;
 		}
 
 		if (!_omniNodes.contains(node))
 		{
-			RedstoneNetwork.log("Network with ID %d adding omni node %s", hashCode(), node.toString());
+			RedstoneNetwork.log("Network with ID %d adding omni node %s", hashCode(), node);
 			_omniNodes.add(node);
 			notifyOmniNode(node);
 		}
@@ -303,7 +304,7 @@ public class RedstoneNetwork implements IGrid
 			int power = powers[subnet];
 			if (Math.abs(power) > Math.abs(_powerLevelOutput[subnet]))
 			{
-				RedstoneNetwork.log("Network with ID %d:%d has omni node %s as new power provider", hashCode(), subnet, node.toString());
+				RedstoneNetwork.log("Network with ID %d:%d has omni node %s as new power provider", hashCode(), subnet, node);
 				_powerLevelOutput[subnet] = power;
 				_powerProviders[subnet] = node;
 				_mustUpdate = true;
@@ -319,7 +320,7 @@ public class RedstoneNetwork implements IGrid
 	public void addOrUpdateNode(BlockPosition node, int subnet, boolean allowWeak)
 	{
 		Block block = _world.getBlock(node.x, node.y, node.z);
-		if (block.equals(rednetCableBlock))
+		if (block == rednetCableBlock)
 		{
 			return;
 		}
@@ -327,7 +328,7 @@ public class RedstoneNetwork implements IGrid
 		if (!_singleNodes[subnet].contains(node))
 		{
 			removeNode(node);
-			RedstoneNetwork.log("Network with ID %d:%d adding node %s", hashCode(), subnet, node.toString());
+			RedstoneNetwork.log("Network with ID %d:%d adding node %s", hashCode(), subnet, node);
 
 			_singleNodes[subnet].add(node);
 			notifySingleNode(node, subnet);
@@ -343,10 +344,10 @@ public class RedstoneNetwork implements IGrid
 		}
 
 		int power = getSingleNodePowerLevel(node, subnet);
-		RedstoneNetwork.log("Network with ID %d:%d calculated power for node %s as %d", hashCode(), subnet, node.toString(), power);
+		RedstoneNetwork.log("Network with ID %d:%d calculated power for node %s as %d", hashCode(), subnet, node, power);
 		if (Math.abs(power) > Math.abs(_powerLevelOutput[subnet]))
 		{
-			RedstoneNetwork.log("Network with ID %d:%d has node %s as new power provider", hashCode(), subnet, node.toString());
+			RedstoneNetwork.log("Network with ID %d:%d has node %s as new power provider", hashCode(), subnet, node);
 			_powerLevelOutput[subnet] = power;
 			_powerProviders[subnet] = node;
 			_mustUpdate = true;
@@ -373,7 +374,7 @@ public class RedstoneNetwork implements IGrid
 			if (_singleNodes[subnet].contains(node))
 			{
 				notify = true;
-				RedstoneNetwork.log("Network with ID %d:%d removing node %s", hashCode(), subnet, node.toString());
+				RedstoneNetwork.log("Network with ID %d:%d removing node %s", hashCode(), subnet, node);
 				_singleNodes[subnet].remove(node);
 			}
 
@@ -387,7 +388,7 @@ public class RedstoneNetwork implements IGrid
 		if (notify)
 		{
 			Block block = _world.getBlock(node.x, node.y, node.z);
-			if (block.equals(rednetCableBlock))
+			if (block == rednetCableBlock)
 			{
 				return;
 			}
@@ -398,8 +399,7 @@ public class RedstoneNetwork implements IGrid
 				else
 					((IRedNetInputNode)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
 			}
-			_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
-			_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
+			MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, rednetCableBlock);
 		}
 	}
 
@@ -456,8 +456,9 @@ public class RedstoneNetwork implements IGrid
 		}
 
 		RedstoneNetwork.log("Network with ID %d:%d recalculated power levels as: output: %d with powering node %s", hashCode(), subnet, _powerLevelOutput[subnet], _powerProviders[subnet]);
-		_mustUpdate = _powerLevelOutput[subnet] != lastPower;
-		_updateSubnets[subnet] = _mustUpdate;
+		boolean u = _powerLevelOutput[subnet] != lastPower;
+		_updateSubnets[subnet] = u;
+		_mustUpdate |= u;
 	}
 
 	private void notifyNodes(int subnet)
@@ -474,12 +475,12 @@ public class RedstoneNetwork implements IGrid
 		RedstoneNetwork.log("Network with ID %d:%d notifying %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
 		for (BlockPosition bp : _singleNodes[subnet])
 		{
-			RedstoneNetwork.log("Network with ID %d:%d notifying node %s of power state change to %d", hashCode(), subnet, bp.toString(), _powerLevelOutput[subnet]);
+			RedstoneNetwork.log("Network with ID %d:%d notifying node %s of power state change to %d", hashCode(), subnet, bp, _powerLevelOutput[subnet]);
 			notifySingleNode(bp, subnet);
 		}
 		for (BlockPosition bp : _omniNodes)
 		{
-			RedstoneNetwork.log("Network with ID %d:%d notifying omni node %s of power state change to %d", hashCode(), subnet, bp.toString(), _powerLevelOutput[subnet]);
+			RedstoneNetwork.log("Network with ID %d:%d notifying omni node %s of power state change to %d", hashCode(), subnet, bp, _powerLevelOutput[subnet]);
 			notifyOmniNode(bp);
 		}
 		_ignoreUpdates = false;
@@ -495,7 +496,7 @@ public class RedstoneNetwork implements IGrid
 		if (isNodeLoaded(node))
 		{
 			Block block = _world.getBlock(node.x, node.y, node.z);
-			if (block.equals(rednetCableBlock))
+			if (block == rednetCableBlock)
 			{
 				return;
 			}
@@ -505,8 +506,7 @@ public class RedstoneNetwork implements IGrid
 			}
 			else
 			{
-				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
-				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
+				MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, rednetCableBlock);
 			}
 		}
 	}

@@ -260,16 +260,16 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		int subnet = getSideColor(to), power;
 
-		RedstoneNetwork.log("Asked for weak power at " + xCoord + "," + yCoord + "," + zCoord + ";" + to);
+		RedstoneNetwork.log("Asked for weak power at %s,%s,%s;%s", xCoord, yCoord, zCoord, to);
 		if (_network.isPowerProvider(subnet, nodebp))
 		{
-			RedstoneNetwork.log("\t- power provider for network " + _network.hashCode() + ", power 0");
+			RedstoneNetwork.log("\t- power provider for network %s, power 0", _network.hashCode());
 			return 0;
 		}
 		else
 		{
 			power = Math.min(Math.max(_network.getPowerLevelOutput(subnet), 0), 15);
-			RedstoneNetwork.log("\t- got " + power + " from network " + _network.hashCode() + ":" + subnet);
+			RedstoneNetwork.log("\t- got %s from network %s:%s", power, _network.hashCode(), subnet);
 		}
 		return power;
 	}
@@ -289,23 +289,23 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		int subnet = getSideColor(nodebp.orientation);
 
-		RedstoneNetwork.log("Asked for strong power at " + xCoord + "," + yCoord + "," + zCoord + ";" + to);
+		RedstoneNetwork.log("Asked for strong power at %s,%s,%s;%s", xCoord, yCoord, zCoord, to);
 		if (_network.isPowerProvider(subnet, nodebp))
 		{
-			RedstoneNetwork.log("\t- power provider for network " + _network.hashCode() + ", power 0");
+			RedstoneNetwork.log("\t- power provider for network %s, power 0", _network.hashCode());
 			return 0;
 		}
 		boolean checkWeak = nodebp.getBlock(worldObj).
 				shouldCheckWeakPower(worldObj, nodebp.x, nodebp.y, nodebp.z, to.getOpposite().ordinal());
 		if (checkWeak && _network.isWeakNode(nodebp))
 		{
-			RedstoneNetwork.log("\t- weak node for network " + _network.hashCode() + ", power 0");
+			RedstoneNetwork.log("\t- weak node for network %s, power 0", _network.hashCode());
 			return 0;
 		}
 		else
 		{
 			int power = Math.min(Math.max(_network.getPowerLevelOutput(subnet), 0), 15);
-			RedstoneNetwork.log("\t- got " + power + " from network " + _network.hashCode() + ":" + subnet);
+			RedstoneNetwork.log("\t- got %s from network %s:%s", power, _network.hashCode(), subnet);
 			return power;
 		}
 	}
@@ -516,13 +516,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		if (_cableMode[6] == 1)
 			_mode = 3;
 
-		int x, y, z;
-		{
-			BlockPosition bp = new BlockPosition(this);
-			bp.orientation = side;
-			bp.moveForwards(1);
-			x = bp.x; y = bp.y; z = bp.z;
-		}
+		int x = xCoord + side.offsetX;
+		int y = yCoord + side.offsetY;
+		int z = zCoord + side.offsetZ;
 
 		Block b = worldObj.getBlock(x, y, z);
 		boolean node = false;
