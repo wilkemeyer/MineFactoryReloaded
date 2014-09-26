@@ -98,33 +98,33 @@ tile.mfr.road.light.on.name = 도로 조명
 tile.mfr.road.light.inverted.off.name = 도로 조명 (반전)
 tile.mfr.road.light.inverted.on.name = 도로 조명 (반전)
 
-tile.mfr.decorativebrick.glowstone.name = 발광석재 벽돌
-tile.mfr.decorativebrick.ice.name = 얼음 벽돌
-tile.mfr.decorativebrick.lapis.name = 청금석재 벽돌
-tile.mfr.decorativebrick.obsidian.name = 혹요석재 벽돌
-tile.mfr.decorativebrick.pavedstone.name = 포장된 벽돌
-tile.mfr.decorativebrick.snow.name = 눈 벽돌
-tile.mfr.decorativebrick.glowstone_large.name = 큰 발광석재 벽돌
-tile.mfr.decorativebrick.ice_large.name = 큰 얼음 벽돌
-tile.mfr.decorativebrick.lapis_large.name = 큰 청금석재 벽돌
-tile.mfr.decorativebrick.obsidian_large.name = 큰 흑요석재 벽돌
-tile.mfr.decorativebrick.snow_large.name = 큰 눈 벽돌
+tile.mfr.decorative.brick.glowstone.name = 발광석재 벽돌
+tile.mfr.decorative.brick.ice.name = 얼음 벽돌
+tile.mfr.decorative.brick.lapis.name = 청금석재 벽돌
+tile.mfr.decorative.brick.obsidian.name = 혹요석재 벽돌
+tile.mfr.decorative.brick.pavedstone.name = 포장된 벽돌
+tile.mfr.decorative.brick.snow.name = 눈 벽돌
+tile.mfr.decorative.brick.glowstone_large.name = 큰 발광석재 벽돌
+tile.mfr.decorative.brick.ice_large.name = 큰 얼음 벽돌
+tile.mfr.decorative.brick.lapis_large.name = 큰 청금석재 벽돌
+tile.mfr.decorative.brick.obsidian_large.name = 큰 흑요석재 벽돌
+tile.mfr.decorative.brick.snow_large.name = 큰 눈 벽돌
 tile.mfr.machineblock.prc.name = 프로그램 가능한 레드넷 제어기 틀
-tile.mfr.decorativebrick.meat.raw.name = 익히지 않은 고기 블록
-tile.mfr.decorativebrick.meat.cooked.name = 익힌 고기 블록
+tile.mfr.decorative.brick.meat.raw.name = 익히지 않은 고기 블록
+tile.mfr.decorative.brick.meat.cooked.name = 익힌 고기 블록
 
-tile.mfr.decorativestone.black.smooth.name = 부드러운 검은돌
-tile.mfr.decorativestone.black.cobble.name = 검은 조약돌
-tile.mfr.decorativestone.black.brick.small.name = 작은 검은 석재 벽돌
-tile.mfr.decorativestone.black.brick.large.name = 큰 검은 석재 벽돌
-tile.mfr.decorativestone.black.gravel.name = 검은 자갈
-tile.mfr.decorativestone.black.paved.name = 포장된 검은돌
-tile.mfr.decorativestone.white.smooth.name = 부드러운 하얀돌
-tile.mfr.decorativestone.white.cobble.name = 하얀 조약돌
-tile.mfr.decorativestone.white.brick.small.name = 작은 하얀 석재 벽돌
-tile.mfr.decorativestone.white.brick.large.name = 큰 하얀 석재 벽돌
-tile.mfr.decorativestone.white.gravel.name = 하얀 자갈
-tile.mfr.decorativestone.white.paved.name = 포장된 하얀돌
+tile.mfr.decorative.stone.black.smooth.name = 부드러운 검은돌
+tile.mfr.decorative.stone.black.cobble.name = 검은 조약돌
+tile.mfr.decorative.stone.black.brick.small.name = 작은 검은 석재 벽돌
+tile.mfr.decorative.stone.black.brick.large.name = 큰 검은 석재 벽돌
+tile.mfr.decorative.stone.black.gravel.name = 검은 자갈
+tile.mfr.decorative.stone.black.paved.name = 포장된 검은돌
+tile.mfr.decorative.stone.white.smooth.name = 부드러운 하얀돌
+tile.mfr.decorative.stone.white.cobble.name = 하얀 조약돌
+tile.mfr.decorative.stone.white.brick.small.name = 작은 하얀 석재 벽돌
+tile.mfr.decorative.stone.white.brick.large.name = 큰 하얀 석재 벽돌
+tile.mfr.decorative.stone.white.gravel.name = 하얀 자갈
+tile.mfr.decorative.stone.white.paved.name = 포장된 하얀돌
 
 tile.ice.unmelting.name = 얼음 (녹지 않음)
 
@@ -143,15 +143,15 @@ tile.mfr.cable.redstone.name = 레드넷 케이블
 tile.mfr.rednet.logic.name = 프로그램 가능한 레드넷 제어기(PRC)
 tile.mfr.rednet.panel.historian.name = 레드넷 파형 기록기
 
-fluid.mfr.liquid.milk.still.name = 우유
-fluid.mfr.liquid.sludge.still.name = 찌꺼기
-fluid.mfr.liquid.sewage.still.name = 하수
-fluid.mfr.liquid.mobessence.still.name = 에센스
-fluid.mfr.liquid.biofuel.still.name = 바이오 연료
-fluid.mfr.liquid.meat.still.name = 고기
-fluid.mfr.liquid.pinkslime.still.name = 분홍 슬라임
-fluid.mfr.liquid.chocolatemilk.still.name = 초콜릿 우유
-fluid.mfr.liquid.mushroomsoup.still.name = 버섯 수프
+fluid.mfr.milk.still.name = 우유
+fluid.mfr.sludge.still.name = 찌꺼기
+fluid.mfr.sewage.still.name = 하수
+fluid.mfr.mobessence.still.name = 에센스
+fluid.mfr.biofuel.still.name = 바이오 연료
+fluid.mfr.meat.still.name = 고기
+fluid.mfr.pinkslime.still.name = 분홍 슬라임
+fluid.mfr.chocolatemilk.still.name = 초콜릿 우유
+fluid.mfr.mushroomsoup.still.name = 버섯 수프
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = 분홍 슬라임
 
@@ -165,9 +165,9 @@ item.mfr.bucket.pinkslime.name = 분홍 슬라임 양동이
 item.mfr.bucket.chocolatemilk.name = 초콜릿 우유 양동이
 item.mfr.bucket.mushroomsoup.name = 버섯 수프 양동이
 
-item.mfr.bucket.plasticcup.name = 플라스틱 컵
-item.mfr.bucket.plasticcup.prefix.name =
-item.mfr.bucket.plasticcup.suffix.name = 컵
+item.mfr.plastic.cup.name = 플라스틱 컵
+item.mfr.plastic.cup.prefix.name =
+item.mfr.plastic.cup.suffix.name = 컵
 
 item.mfr.hammer.name = 정밀한 대형 망치
 item.mfr.fertilizer.name = 산업 비료
@@ -200,7 +200,7 @@ item.mfr.meat.ingot.raw.name = 익히지 않은 고깃덩어리
 item.mfr.meat.ingot.cooked.name = 익힌 고깃덩어리
 item.mfr.meat.nugget.raw.name = 익히지 않은 "고기" 조각
 item.mfr.meat.nugget.cooked.name = 익힌 "고기" 조각
-item.mfr.pinkslimeball.name = 분홍 슬라임 볼
+item.mfr.pinkslime.ball.name = 분홍 슬라임 볼
 
 item.mfr.ceramicdye.white.name = 세라믹 염료 (흰색)
 item.mfr.ceramicdye.orange.name = 세라믹 염료 (주황색)

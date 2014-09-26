@@ -64,7 +64,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	public BlockFactoryFluid(String liquidName, Material material)
 	{
 		super(ensureFluid(liquidName), material, liquidName);
-		setBlockName("mfr.liquid." + liquidName + ".still");
+		setBlockName("mfr." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
 		setDisplaceFluids(true);
@@ -120,7 +120,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
-		int light = super.getLightValue(world, x, y, z); 
+		int light = super.getLightValue(world, x, y, z);
 		if (maxScaledLight != 0)
 			light = Math.max(light, 2);
 		return light;

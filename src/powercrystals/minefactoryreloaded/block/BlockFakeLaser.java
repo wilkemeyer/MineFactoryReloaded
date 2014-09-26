@@ -30,6 +30,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
 		setBlockBounds(0F, 0F, 0F, 0F, 0F, 0F);
+		setBlockName("mfr.laserair");
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 		if (world.isRemote)
 			return;
 		long t = entity.getEntityData().getLong("mfr:laserTime"), t2 = world.getTotalWorldTime();
-		t = t2 - t; 
+		t = t2 - t;
 		int d = t/20 >= 5 ? 1 : entity.getEntityData().getInteger("mfr:laserDamage") | 1;
 		if (t > 10 && entity.attackEntityFrom(laserDamage, d))
 		{

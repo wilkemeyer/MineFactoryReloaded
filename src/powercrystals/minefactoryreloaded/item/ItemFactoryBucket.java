@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.item;
 
 import cofh.lib.render.IFluidOverlayItem;
 import cofh.lib.util.RegistryUtils;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,6 +16,7 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem
@@ -39,7 +39,7 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem
 	{
 		super.setUnlocalizedName(name);
 		if (_register)
-			GameRegistry.registerItem(this, getUnlocalizedName());
+			MFRRegistry.registerItem(this, getUnlocalizedName());
 		return this;
 	}
 

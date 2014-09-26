@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,6 +13,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class ItemFactoryArmor extends ItemArmor
@@ -55,12 +55,12 @@ public class ItemFactoryArmor extends ItemArmor
 				return true;
 		return super.getIsRepairable(armor, stack);
 	}
-	
+
 	@Override
 	public Item setUnlocalizedName(String name)
 	{
 		super.setUnlocalizedName(name);
-		GameRegistry.registerItem(this, getUnlocalizedName());
+		MFRRegistry.registerItem(this, getUnlocalizedName());
 		return this;
 	}
 

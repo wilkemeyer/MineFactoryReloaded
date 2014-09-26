@@ -16,9 +16,9 @@ public class BlockPinkSlime extends BlockBreakable
 
 	public BlockPinkSlime()
 	{
-		super("minefactoryreloaded:tile.mfr.pinkslime", Material.clay, false); // FIXME: this doesn't take a string in 1.8
+		super("minefactoryreloaded:tile.mfr.pinkslime.block", Material.clay, false); // FIXME: this doesn't take a string in 1.8
 		setCreativeTab(MFRCreativeTab.tab);
-		setBlockName("mfr.pinkslime");
+		setBlockName("mfr.pinkslime.block");
 		setBlockTextureName("minefactoryreloaded:" + getUnlocalizedName());
 		slipperiness = 0.8f;
 		setHardness(0.5f);

@@ -30,7 +30,7 @@ public class BlockDecorativeStone extends BlockFactory
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(Blocks.stone.stepSound);
-		setBlockName("mfr.decorativestone");
+		setBlockName("mfr.decorative.stone");
 		providesPower = false;
 	}
 

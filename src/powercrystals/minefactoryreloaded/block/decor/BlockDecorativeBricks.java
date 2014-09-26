@@ -26,7 +26,7 @@ public class BlockDecorativeBricks extends BlockFactory
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(Blocks.stone.stepSound);
-		setBlockName("mfr.decorativebrick");
+		setBlockName("mfr.decorative.brick");
 		providesPower = false;
 	}
 

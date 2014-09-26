@@ -106,37 +106,37 @@ tile.mfr.road.light.inverted.on.name = Road Light (Inverted)
 
 tile.mfr.plastic.name = Block of Plastic
 
-tile.mfr.decorativebrick.ice.name = Ice Bricks
-tile.mfr.decorativebrick.glowstone.name = Glowstone Bricks
-tile.mfr.decorativebrick.lapis.name = Lapis Bricks
-tile.mfr.decorativebrick.obsidian.name = Obsidian Bricks
-tile.mfr.decorativebrick.pavedstone.name = Paved Stone Bricks
-tile.mfr.decorativebrick.snow.name = Snow Bricks
-tile.mfr.decorativebrick.ice_large.name = Large Ice Bricks
-tile.mfr.decorativebrick.glowstone_large.name = Large Glowstone Bricks
-tile.mfr.decorativebrick.lapis_large.name = Large Lapis Bricks
-tile.mfr.decorativebrick.obsidian_large.name = Large Obsidian Bricks
-tile.mfr.decorativebrick.pavedstone_large.name = Large Paved Stone Bricks
-tile.mfr.decorativebrick.snow_large.name = Large Snow Bricks
-tile.mfr.decorativebrick.meat.raw.name = Raw Meat Block
-tile.mfr.decorativebrick.meat.cooked.name = Cooked Meat Block
-tile.mfr.decorativebrick.brick_large.name = Large Bricks
-tile.mfr.decorativebrick.sugar_charcoal.name = Sugar Charcoal Block
+tile.mfr.decorative.brick.ice.name = Ice Bricks
+tile.mfr.decorative.brick.glowstone.name = Glowstone Bricks
+tile.mfr.decorative.brick.lapis.name = Lapis Bricks
+tile.mfr.decorative.brick.obsidian.name = Obsidian Bricks
+tile.mfr.decorative.brick.pavedstone.name = Paved Stone Bricks
+tile.mfr.decorative.brick.snow.name = Snow Bricks
+tile.mfr.decorative.brick.ice_large.name = Large Ice Bricks
+tile.mfr.decorative.brick.glowstone_large.name = Large Glowstone Bricks
+tile.mfr.decorative.brick.lapis_large.name = Large Lapis Bricks
+tile.mfr.decorative.brick.obsidian_large.name = Large Obsidian Bricks
+tile.mfr.decorative.brick.pavedstone_large.name = Large Paved Stone Bricks
+tile.mfr.decorative.brick.snow_large.name = Large Snow Bricks
+tile.mfr.decorative.brick.meat.raw.name = Raw Meat Block
+tile.mfr.decorative.brick.meat.cooked.name = Cooked Meat Block
+tile.mfr.decorative.brick.brick_large.name = Large Bricks
+tile.mfr.decorative.brick.sugar_charcoal.name = Sugar Charcoal Block
 
-tile.mfr.decorativestone.black.smooth.name = Smooth Blackstone
-tile.mfr.decorativestone.black.cobble.name = Cobble Blackstone
-tile.mfr.decorativestone.black.brick.small.name = Small Blackstone Bricks
-tile.mfr.decorativestone.black.brick.large.name = Large Blackstone Bricks
-tile.mfr.decorativestone.black.gravel.name = Blackstone Gravel
-tile.mfr.decorativestone.black.paved.name = Paved Blackstone
-tile.mfr.decorativestone.white.smooth.name = Smooth Whitestone
-tile.mfr.decorativestone.white.cobble.name = Cobble Whitestone
-tile.mfr.decorativestone.white.brick.small.name = Small Whitestone Bricks
-tile.mfr.decorativestone.white.brick.large.name = Large Whitestone Bricks
-tile.mfr.decorativestone.white.gravel.name = Whitestone Gravel
-tile.mfr.decorativestone.white.paved.name = Paved Whitestone
+tile.mfr.decorative.stone.black.smooth.name = Smooth Blackstone
+tile.mfr.decorative.stone.black.cobble.name = Cobble Blackstone
+tile.mfr.decorative.stone.black.brick.small.name = Small Blackstone Bricks
+tile.mfr.decorative.stone.black.brick.large.name = Large Blackstone Bricks
+tile.mfr.decorative.stone.black.gravel.name = Blackstone Gravel
+tile.mfr.decorative.stone.black.paved.name = Paved Blackstone
+tile.mfr.decorative.stone.white.smooth.name = Smooth Whitestone
+tile.mfr.decorative.stone.white.cobble.name = Cobble Whitestone
+tile.mfr.decorative.stone.white.brick.small.name = Small Whitestone Bricks
+tile.mfr.decorative.stone.white.brick.large.name = Large Whitestone Bricks
+tile.mfr.decorative.stone.white.gravel.name = Whitestone Gravel
+tile.mfr.decorative.stone.white.paved.name = Paved Whitestone
 
-tile.mfr.pinkslime.name = Pink Slime Block
+tile.mfr.pinkslime.block.name = Pink Slime Block
 
 tile.ice.unmelting.name = Ice (Unmelting)
 
@@ -173,16 +173,16 @@ tile.mfr.machineblock.prc.name = Programmable RedNet Controller Housing
 
 tile.mfr.tank.name = Plastic Tank
 
-fluid.mfr.liquid.milk.still.name = Milk
-fluid.mfr.liquid.sludge.still.name = Sludge
-fluid.mfr.liquid.sewage.still.name = Sewage
-fluid.mfr.liquid.mobessence.still.name = Essence
-fluid.mfr.liquid.biofuel.still.name = BioFuel
-fluid.mfr.liquid.meat.still.name = Meat
-fluid.mfr.liquid.pinkslime.still.name = Pink Slime
-fluid.mfr.liquid.chocolatemilk.still.name = Chocolate Milk
-fluid.mfr.liquid.mushroomsoup.still.name = Mushroom Soup
-fluid.mfr.liquid.steam.still.name = Steam
+fluid.mfr.milk.still.name = Milk
+fluid.mfr.sludge.still.name = Sludge
+fluid.mfr.sewage.still.name = Sewage
+fluid.mfr.mobessence.still.name = Essence
+fluid.mfr.biofuel.still.name = BioFuel
+fluid.mfr.meat.still.name = Meat
+fluid.mfr.pinkslime.still.name = Pink Slime
+fluid.mfr.chocolatemilk.still.name = Chocolate Milk
+fluid.mfr.mushroomsoup.still.name = Mushroom Soup
+fluid.mfr.steam.still.name = Steam
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Pink Slime
 
@@ -196,17 +196,17 @@ item.mfr.bucket.pinkslime.name = Pink Slime Bucket
 item.mfr.bucket.chocolatemilk.name = Chocolate Milk Bucket
 item.mfr.bucket.mushroomsoup.name = Mushroom Soup Bucket
 
-item.mfr.bucket.plasticcup.name = Plastic Cup
-item.mfr.bucket.plasticcup.prefix.name =
-item.mfr.bucket.plasticcup.suffix.name = Cup
-item.mfr.bucket.plasticcell.name = Plastic Cell
-item.mfr.bucket.plasticcell.prefix.name =
-item.mfr.bucket.plasticcell.suffix.name = Cell
+item.mfr.plastic.cup.name = Plastic Cup
+item.mfr.plastic.cup.prefix.name =
+item.mfr.plastic.cup.suffix.name = Cup
+item.mfr.plastic.cell.name = Plastic Cell
+item.mfr.plastic.cell.prefix.name =
+item.mfr.plastic.cell.suffix.name = Cell
 
-item.mfr.armor.helm.plastic.name  = Plastic Helmet
-item.mfr.armor.chest.plastic.name = Plastic Breastplate
-item.mfr.armor.legs.plastic.name  = Plastic Leggings
-item.mfr.armor.boots.plastic.name = Plastic Boots
+item.mfr.plastic.armor.helm.name  = Plastic Helmet
+item.mfr.plastic.armor.chest.name = Plastic Breastplate
+item.mfr.plastic.armor.legs.name  = Plastic Leggings
+item.mfr.plastic.armor.boots.name = Plastic Boots
 
 item.mfr.machineblock.name = Factory Machine Block
 item.mfr.hammer.name = Precision Sledgehammer
@@ -245,7 +245,7 @@ item.mfr.meat.ingot.raw.name = Raw Meat Ingot
 item.mfr.meat.ingot.cooked.name = Cooked Meat Ingot
 item.mfr.meat.nugget.raw.name = Raw "Meat" Nugget
 item.mfr.meat.nugget.cooked.name = Cooked "Meat" Nugget
-item.mfr.pinkslimeball.name = Pink Slimeball
+item.mfr.pinkslime.ball.name = Pink Slimeball
 item.mfr.rocket.name = Self-Propelled Anti Material Rocket
 item.mfr.rocket.smart.name = Tracking Self-Propelled Anti Material Rocket
 item.mfr.rocketlauncher.name = SPAMR Launcher
