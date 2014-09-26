@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemNeedleGun extends ItemFactoryGun
 {
@@ -64,7 +65,7 @@ public class ItemNeedleGun extends ItemFactoryGun
 			}
 
 			if (!(world.isRemote | creative))
-				player.dropItem(MineFactoryReloadedCore.needlegunAmmoEmptyItem, 1);
+				player.dropItem(MFRThings.needlegunAmmoEmptyItem, 1);
 		}
 		stack.getTagCompound().setTag("ammo", t);
 		return reloaded;

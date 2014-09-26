@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
+import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock;
+
 import cofh.lib.util.position.BlockPosition;
 
 import java.util.Arrays;
@@ -15,7 +17,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOutputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedstoneAlike;
@@ -282,7 +283,7 @@ public class RedstoneNetwork implements IGrid
 	public void addOrUpdateNode(BlockPosition node)
 	{
 		Block block = _world.getBlock(node.x, node.y, node.z);
-		if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
+		if (block.equals(rednetCableBlock))
 		{
 			return;
 		}
@@ -318,7 +319,7 @@ public class RedstoneNetwork implements IGrid
 	public void addOrUpdateNode(BlockPosition node, int subnet, boolean allowWeak)
 	{
 		Block block = _world.getBlock(node.x, node.y, node.z);
-		if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
+		if (block.equals(rednetCableBlock))
 		{
 			return;
 		}
@@ -386,7 +387,7 @@ public class RedstoneNetwork implements IGrid
 		if (notify)
 		{
 			Block block = _world.getBlock(node.x, node.y, node.z);
-			if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
+			if (block.equals(rednetCableBlock))
 			{
 				return;
 			}
@@ -397,8 +398,8 @@ public class RedstoneNetwork implements IGrid
 				else
 					((IRedNetInputNode)block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
 			}
-			_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
-			_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
+			_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
+			_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
 		}
 	}
 
@@ -494,7 +495,7 @@ public class RedstoneNetwork implements IGrid
 		if (isNodeLoaded(node))
 		{
 			Block block = _world.getBlock(node.x, node.y, node.z);
-			if (block.equals(MineFactoryReloadedCore.rednetCableBlock))
+			if (block.equals(rednetCableBlock))
 			{
 				return;
 			}
@@ -504,8 +505,8 @@ public class RedstoneNetwork implements IGrid
 			}
 			else
 			{
-				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
-				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, MineFactoryReloadedCore.rednetCableBlock);
+				_world.notifyBlockOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
+				_world.notifyBlocksOfNeighborChange(node.x, node.y, node.z, rednetCableBlock);
 			}
 		}
 	}

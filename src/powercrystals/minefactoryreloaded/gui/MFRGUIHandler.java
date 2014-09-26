@@ -6,13 +6,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.client.GUIBag;
 import powercrystals.minefactoryreloaded.gui.client.GuiNeedlegun;
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
 import powercrystals.minefactoryreloaded.gui.container.ContainerBag;
 import powercrystals.minefactoryreloaded.gui.container.ContainerNeedlegun;
 import powercrystals.minefactoryreloaded.gui.container.ContainerRedNetLogic;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
@@ -36,7 +36,7 @@ public class MFRGUIHandler implements IGuiHandler
 		else if(ID == 1)
 		{
 			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.needlegunItem))
+					player.getCurrentEquippedItem().getItem().equals(MFRThings.needlegunItem))
 			{
 				return new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
@@ -44,16 +44,16 @@ public class MFRGUIHandler implements IGuiHandler
 		else if(ID == 2)
 		{
 			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.plasticBagItem))
+					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
 			{
 				return new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) 
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		if(ID == 0)
 		{
@@ -70,7 +70,7 @@ public class MFRGUIHandler implements IGuiHandler
 		else if(ID == 1)
 		{
 			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.needlegunItem))
+					player.getCurrentEquippedItem().getItem().equals(MFRThings.needlegunItem))
 			{
 				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory), player.getCurrentEquippedItem());
 			}
@@ -78,7 +78,7 @@ public class MFRGUIHandler implements IGuiHandler
 		else if(ID == 2)
 		{
 			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MineFactoryReloadedCore.plasticBagItem))
+					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
 			{
 				return new GUIBag(new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
 			}

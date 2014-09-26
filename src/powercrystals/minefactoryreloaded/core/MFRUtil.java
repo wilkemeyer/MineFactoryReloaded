@@ -29,8 +29,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IMFRHammer;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class MFRUtil
 {
@@ -54,7 +54,7 @@ public class MFRUtil
 		return Keyboard.isKeyDown(KEY_LSHIFT) || Keyboard.isKeyDown(KEY_RSHIFT);
 	}
 
-	//                                                                
+	//
 	public static final int[] COLORS_DYE = { 0x1e1e1e, 0xb62222, 0x47691D, 0x804020, 0x404080, 0x803880,
 		0x54a69b, 0xa3a3a3, 0x505050, 0xd881a4, 0x49c14a, 0xd8b920, 0x8da7f6, 0xc730a5, 0xe36600, 0xf0f0f0 };
 	public static final int[] COLORS; static {
@@ -77,7 +77,7 @@ public class MFRUtil
 	{
 		return localize("info.cofh.energy", true);
 	}
-	
+
 	public static String getFluidName(FluidStack fluid)
 	{
 		return StringHelper.getFluidName(fluid);
@@ -151,7 +151,7 @@ public class MFRUtil
 			bcWrenchUsed(currentItem, player, x, y, z);
 		}
 	}
-	
+
 	private static boolean bcWrenchExists = false;
 	static {
 		try {
@@ -211,7 +211,7 @@ public class MFRUtil
 
 		return null;
 	}
-	
+
 	public static final TileEntity getTile(World world, int x, int y, int z)
 	{
 		return world.getChunkFromBlockCoords(x, z).getTileEntityUnsafe(x & 15, y, z & 15);
@@ -220,7 +220,7 @@ public class MFRUtil
 	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z)
 	{
 		ArrayList<ForgeDirection> nonConveyors = new ArrayList<ForgeDirection>();
-		Block id = MineFactoryReloadedCore.conveyorBlock;
+		Block id = MFRThings.conveyorBlock;
 
 		for (int i = 0, e = ForgeDirection.VALID_DIRECTIONS.length; i < e; ++i)
 		{

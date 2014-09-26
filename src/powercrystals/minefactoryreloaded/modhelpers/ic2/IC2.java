@@ -26,6 +26,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 @Mod(modid = "MineFactoryReloaded|CompatIC2", name = "MFR Compat: IC2", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:IC2")
 public class IC2
@@ -86,11 +87,11 @@ public class IC2
 					"LLL",
 					"L L",
 					"LLL",
-					Character.valueOf('L'), new ItemStack(MineFactoryReloadedCore.rubberLeavesBlock)
+					Character.valueOf('L'), new ItemStack(MFRThings.rubberLeavesBlock)
 					} );
 
 			Method m = null;
-			ItemStack item = new ItemStack(MineFactoryReloadedCore.rubberSaplingBlock);
+			ItemStack item = new ItemStack(MFRThings.rubberSaplingBlock);
 			rubber.stackSize = 1;
 			try
 			{

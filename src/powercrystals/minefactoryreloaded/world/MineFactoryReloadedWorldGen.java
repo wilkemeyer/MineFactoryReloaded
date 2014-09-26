@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.world;
 
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.api.world.IFeatureGenerator;
 import com.google.common.primitives.Ints;
@@ -37,7 +37,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				setLeafAttenuation(0.35f).setSloped(false).setMinTrunkSize(4).
 				generate(world, random, x, y, z);
 	}
-	
+
 	private final String name = "MFR:WorldGen";
 
 	@Override
@@ -139,7 +139,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 		_sewageLakeRarity = MFRConfig.mfrLakeSewageRarity.getInt();
 		_sewageBiomeList = Arrays.asList(MFRConfig.mfrLakeSewageBiomeList.getStringList());
 		_sewageLakeMode = MFRConfig.mfrLakeSewageBiomeListToggle.getBoolean(false);
-		
+
 		_regenSewage = MFRConfig.mfrLakeSewageRetrogen.getBoolean(false);
 		_regenSludge = MFRConfig.mfrLakeSludgeRetrogen.getBoolean(false);
 		_regenTrees = MFRConfig.rubberTreeRetrogen.getBoolean(false);

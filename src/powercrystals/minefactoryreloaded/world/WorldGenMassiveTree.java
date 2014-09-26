@@ -16,6 +16,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class WorldGenMassiveTree extends WorldGenerator
 {
@@ -36,7 +37,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	private int height;
 	private int leafBases;
 	private int density;
-	
+
 	/** Setup variables */
 	private float heightAttenuation = 0.45f;
 	private float branchSlope = 0.45f;
@@ -59,9 +60,9 @@ public class WorldGenMassiveTree extends WorldGenerator
 	private int leafNodesLength;
 	/** Contains a list of a points at which to generate groups of leaves. */
 	private int[][] leafNodes;
-	
-	public Block leaves = MineFactoryReloadedCore.rubberLeavesBlock;
-	public Block log = MineFactoryReloadedCore.rubberWoodBlock;
+
+	public Block leaves = MFRThings.rubberLeavesBlock;
+	public Block log = MFRThings.rubberWoodBlock;
 
 	public WorldGenMassiveTree(boolean par1)
 	{
@@ -308,9 +309,9 @@ public class WorldGenMassiveTree extends WorldGenerator
 
 		int[] var5 = new int[] {var1, var2, var4};
 		int[] var6 = new int[] {var1, var3, var4};
-		
+
 		double lim = 400f / trunkSize;
-		
+
 		for (int i = -trunkSize; i <= trunkSize; i++ )
 		{
 			var5[0] = var1 + i;
@@ -322,10 +323,10 @@ public class WorldGenMassiveTree extends WorldGenerator
 				{
 					var5[2] = var4 + j;
 					var6[2] = var4 + j;
-					
+
 					if (slopeTrunk)
 						var6[1] = var2 + sinc2(lim * i, lim * j, height) - (rand.nextInt(3) - 1);
-					
+
 					this.placeBlockLine(var5, var6, log, 1);
 					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2], log, 12 | 1);
 					worldObj.getBlock(var5[0], var5[1] - 1, var5[2]).
@@ -407,7 +408,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			float var11 = (float)var3[var7] / (float)var3[var5];
 			int var14 = 0;
 			int var15 = var3[var5] + var8;
-			
+
 			int[] var13 = var3;
 
 			for (; var14 != var15; var14 += var8)
@@ -442,56 +443,56 @@ public class WorldGenMassiveTree extends WorldGenerator
 		if (newHeight < minHeight)
 			return false;
 		heightLimit = newHeight;
-		
+
 		Block block = worldObj.getBlock(basePos[0], basePos[1] - 1, basePos[2]);
 
 		if (!block.canSustainPlant(worldObj, basePos[0], basePos[1] - 1, basePos[2],
-				ForgeDirection.UP, MineFactoryReloadedCore.rubberSaplingBlock))
+				ForgeDirection.UP, MFRThings.rubberSaplingBlock))
 			return false;
 		else
 		{
 			int[] var5 = new int[] {basePos[0], basePos[1], basePos[2]};
 			int[] var6 = new int[] {basePos[0], basePos[1] + heightLimit - 1, basePos[2]};
-			
+
 			newHeight = this.checkBlockLine(var5, var6);
-			
+
 			if (newHeight == -1) newHeight = heightLimit;
 			if (newHeight < minHeight)
 				return false;
-			
+
 			heightLimit = Math.min(newHeight, heightLimitLimit);
 			height = (int)(heightLimit * heightAttenuation);
 			if (height >= heightLimit)
 				height = heightLimit - 1;
 			height += rand.nextInt(heightLimit - height);
-			
+
 			if (safeGrowth)
 			{
 				int var1 = basePos[0];
 				int var2 = basePos[1];
 				int var3 = basePos[1] + height;
 				int var4 = basePos[2];
-	
+
 				var5 = new int[] {var1, var2, var4};
 				var6 = new int[] {var1, var3, var4};
-				
+
 				double lim = 400f / trunkSize;
-				
+
 				for (int i = -trunkSize; i <= trunkSize; i++ )
 				{
 					var5[0] = var1 + i;
 					var6[0] = var1 + i;
-	
+
 					for (int j = -trunkSize; j <= trunkSize; j++ )
 					{
 						if ((j*j + i*i) * 4 < trunkSize * trunkSize * 5)
 						{
 							var5[2] = var4 + j;
 							var6[2] = var4 + j;
-							
+
 							if (slopeTrunk)
 								var6[1] = var2 + sinc2(lim * i, lim * j, height);
-							
+
 							int t = checkBlockLine(var5, var6);
 							if (t != -1)
 								return false;
@@ -499,7 +500,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 					}
 				}
 			}
-			
+
 			return true;
 		}
 	}
@@ -512,7 +513,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 	{
 		setTreeScale((float)par1, (float)par3, (float)par5);
 	}
-	
+
 	public WorldGenMassiveTree setTreeScale(float height, float width, float leaves)
 	{
 		heightLimitLimit = (int)(height * 12.0D);
@@ -528,25 +529,25 @@ public class WorldGenMassiveTree extends WorldGenerator
 		branchDensity = leaves;
 		return this;
 	}
-	
+
 	public WorldGenMassiveTree setMinTrunkSize(int radius)
 	{
 		trunkSize = Math.max(radius, trunkSize);
 		return this;
 	}
-	
+
 	public WorldGenMassiveTree setLeafAttenuation(float a)
 	{
 		heightAttenuation = a;
 		return this;
 	}
-	
+
 	public WorldGenMassiveTree setSloped(boolean s)
 	{
 		slopeTrunk = s;
 		return this;
 	}
-	
+
 	public WorldGenMassiveTree setSafe(boolean s)
 	{
 		safeGrowth = s;
@@ -599,7 +600,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return true;
 		}
 	}
-	
+
 	//private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger("Tree logger");
 	//private int blocksAdded = 0;
 	private TLongObjectHashMap<Chunk> chunkMap;
@@ -611,7 +612,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 			return;
 		//++blocksAdded;
 		long pos = (((long)(x & ~15)) << 32) | (z & ~15);
-			
+
 		Chunk chunk;// = chunkMap.get(pos);
 		//if (chunk == null)
 		{

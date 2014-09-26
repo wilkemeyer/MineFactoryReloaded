@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded;
 
 //this import brought to you by the department of redundancies department, the department that brought you this import
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
@@ -28,9 +29,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -40,7 +38,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.ai.EntityMinecartMobSpawner;
@@ -114,11 +111,11 @@ import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
+import powercrystals.minefactoryreloaded.farmables.MFRFarmables;
 import powercrystals.minefactoryreloaded.gui.BagContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
 import powercrystals.minefactoryreloaded.item.ItemFactory;
-import powercrystals.minefactoryreloaded.item.ItemFactoryArmor;
 import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
 import powercrystals.minefactoryreloaded.item.ItemFactoryBucket;
 import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
@@ -211,122 +208,6 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static int renderIdDetCord = 1008;
 	public static int renderIdRedNet = 1009;
 	public static int renderIdPPipe = 1009;
-
-	public static TIntObjectMap<Block> machineBlocks = new TIntObjectHashMap<Block>();
-
-	public static Block conveyorBlock;
-
-	public static Block factoryGlassBlock;
-	public static Block factoryGlassPaneBlock;
-	public static Block factoryRoadBlock;
-	public static Block factoryPlasticBlock;
-	public static Block factoryDecorativeBrickBlock;
-	public static Item factoryDecorativeBrickItem;
-	public static Block factoryDecorativeStoneBlock;
-	public static Block pinkSlimeBlock;
-	public static Item pinkSlimeBlockItem;
-
-	public static Block rubberWoodBlock;
-	public static Block rubberLeavesBlock;
-	public static BlockSapling rubberSaplingBlock;
-
-	public static Item rubberWoodItem;
-	public static Item rubberLeavesItem;
-	public static Item rubberSaplingItem;
-
-	public static Block railPickupCargoBlock;
-	public static Block railDropoffCargoBlock;
-	public static Block railPickupPassengerBlock;
-	public static Block railDropoffPassengerBlock;
-
-	public static BlockRedNetCable rednetCableBlock;
-	public static BlockPlasticPipe plasticPipeBlock;
-
-	public static BlockRedNetLogic rednetLogicBlock;
-	public static BlockRedNetPanel rednetPanelBlock;
-
-	public static BlockFactoryFluid milkLiquid;
-	public static BlockFactoryFluid sludgeLiquid;
-	public static BlockFactoryFluid sewageLiquid;
-	public static BlockFactoryFluid essenceLiquid;
-	public static BlockFactoryFluid biofuelLiquid;
-	public static BlockFactoryFluid meatLiquid;
-	public static BlockFactoryFluid pinkSlimeLiquid;
-	public static BlockFactoryFluid chocolateMilkLiquid;
-	public static BlockFactoryFluid mushroomSoupLiquid;
-	public static BlockFactoryFluid steamFluid;
-
-	public static Block plasticTank;
-
-	public static Block fakeLaserBlock;
-
-	public static Block vineScaffoldBlock;
-
-	public static Block detCordBlock;
-
-	public static Block fertileSoil;
-
-	public static Block machineItem;
-	public static Item machineBaseItem;
-
-	public static Item factoryHammerItem;
-	public static Item fertilizerItem;
-	public static Item plasticSheetItem;
-	public static Item rubberBarItem;
-	public static Item rawPlasticItem;
-	public static Item sewageBucketItem;
-	public static Item sludgeBucketItem;
-	public static Item mobEssenceBucketItem;
-	public static Item syringeEmptyItem;
-	public static Item syringeHealthItem;
-	public static Item syringeGrowthItem;
-	public static Item rawRubberItem;
-	public static Item safariNetItem;
-	public static Item ceramicDyeItem;
-	public static Item blankRecordItem;
-	public static Item syringeZombieItem;
-	public static Item safariNetSingleItem;
-	public static Item bioFuelBucketItem;
-	public static Item upgradeItem;
-	public static Item safariNetLauncherItem;
-	public static Item sugarCharcoalItem;
-	public static Item milkBottleItem;
-	public static Item spyglassItem;
-	public static Item portaSpawnerItem;
-	public static Item strawItem;
-	public static Item xpExtractorItem;
-	public static Item syringeSlimeItem;
-	public static Item syringeCureItem;
-	public static Item logicCardItem;
-	public static Item rednetMeterItem;
-	public static Item rednetMemoryCardItem;
-	public static Item rulerItem;
-	public static Item meatIngotRawItem;
-	public static Item meatIngotCookedItem;
-	public static Item meatNuggetRawItem;
-	public static Item meatNuggetCookedItem;
-	public static Item meatBucketItem;
-	public static Item pinkSlimeBucketItem;
-	public static Item pinkSlimeItem;
-	public static Item safariNetJailerItem;
-	public static Item laserFocusItem;
-	public static Item chocolateMilkBucketItem;
-	public static Item mushroomSoupBucketItem;
-	public static Item needlegunItem;
-	public static Item needlegunAmmoEmptyItem;
-	public static Item needlegunAmmoStandardItem;
-	public static Item needlegunAmmoLavaItem;
-	public static Item needlegunAmmoSludgeItem;
-	public static Item needlegunAmmoSewageItem;
-	public static Item needlegunAmmoFireItem;
-	public static Item needlegunAmmoAnvilItem;
-	public static Item rocketLauncherItem;
-	public static Item rocketItem;
-	public static ItemFactoryCup plasticCupItem;
-	public static Item plasticCellItem;
-	public static Item fishingRodItem;
-	public static Item plasticBagItem;
-	public static ItemFactoryArmor plasticBootsItem;
 
 	public static final String CHEST_GEN = "mfr:villageZoolologist";
 
@@ -710,6 +591,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		MinecraftForge.EVENT_BUS.register(plasticPipeBlock);
 
 		proxy.init();
+		MFRFarmables.load();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MFRGUIHandler());
 

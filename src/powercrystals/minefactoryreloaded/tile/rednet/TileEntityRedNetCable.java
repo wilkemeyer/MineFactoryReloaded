@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 
 import static powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType.None;
 import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock;
 
 import cofh.core.render.hitbox.CustomHitBox;
 import cofh.core.render.hitbox.ICustomHitBox;
@@ -28,7 +29,6 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicPoint;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
@@ -200,7 +200,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		for (int i = _connectionState.length; i --> 0; ) {
 			ForgeDirection d = dirs[i];
 			int x = xCoord + d.offsetX, y = yCoord + d.offsetY, z = zCoord + d.offsetZ;
-			if (!worldObj.getBlock(x, y, z).equals(MineFactoryReloadedCore.rednetCableBlock))
+			if (!worldObj.getBlock(x, y, z).equals(rednetCableBlock))
 				isRSNode |= _connectionState[i].isConnected;
 		}
 		if (lastNode != isRSNode)
@@ -533,7 +533,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return RedNetConnectionType.None;
 		}
 		// cables - always connect
-		else if (b == MineFactoryReloadedCore.rednetCableBlock)
+		else if (b == rednetCableBlock)
 		{
 			if (((TileEntityRedNetCable)worldObj.getTileEntity(x, y, z)).canInterface(this, side.getOpposite()))
 				return RedNetConnectionType.CableAll;

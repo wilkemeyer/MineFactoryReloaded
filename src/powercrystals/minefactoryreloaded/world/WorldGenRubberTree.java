@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class WorldGenRubberTree extends WorldGenerator
 {
@@ -28,7 +28,7 @@ public class WorldGenRubberTree extends WorldGenerator
 		{
 			int y = world.getChunkFromBlockCoords(x, z).getTopFilledSegment() + 16;
 
-			l: { 
+			l: {
 				Block block;
 				do {
 					if (--y <= 0)
@@ -68,7 +68,7 @@ public class WorldGenRubberTree extends WorldGenerator
 			block = world.getBlock(x, y - 1, z);
 
 			if ((block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP,
-					MineFactoryReloadedCore.rubberSaplingBlock)) &&
+					MFRThings.rubberSaplingBlock)) &&
 					y < worldHeight - treeHeight - 1)
 			{
 				for (yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset)
@@ -136,8 +136,8 @@ public class WorldGenRubberTree extends WorldGenerator
 				}
 
 				block = world.getBlock(x, y - 1, z);
-				if (!block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, 
-						MineFactoryReloadedCore.rubberSaplingBlock))
+				if (!block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP,
+						MFRThings.rubberSaplingBlock))
 				{ // this HAPPENS. wtf?
 					return false; // abort, something went weird
 				}
@@ -152,14 +152,14 @@ public class WorldGenRubberTree extends WorldGenerator
 					{
 						int xPos = xOffset - x, t = xPos >> 31;
 						xPos = (xPos + t) ^ t;
-	
+
 						for (zOffset = z - center; zOffset <= z + center; ++zOffset)
 						{
 							int zPos = zOffset - z;
 							zPos = (zPos + (t = zPos >> 31)) ^ t;
-	
+
 							block = world.getBlock(xOffset, yOffset, zOffset);
-	
+
 							if (((xPos != center | zPos != center) ||
 									rand.nextInt(2) != 0 && var12 != 0) &&
 									(block == null || block.isLeaves(world, xOffset, yOffset, zOffset) ||
@@ -167,7 +167,7 @@ public class WorldGenRubberTree extends WorldGenerator
 									block.canBeReplacedByLeaves(world, xOffset, yOffset, zOffset)))
 							{
 								this.setBlockAndNotifyAdequately(world, xOffset, yOffset, zOffset,
-										MineFactoryReloadedCore.rubberLeavesBlock, 0);
+										MFRThings.rubberLeavesBlock, 0);
 							}
 						}
 					}
@@ -182,7 +182,7 @@ public class WorldGenRubberTree extends WorldGenerator
 							block.isReplaceable(world, x, y + yOffset, z)) // replace snow
 					{
 						this.setBlockAndNotifyAdequately(world, x, y + yOffset, z,
-								MineFactoryReloadedCore.rubberWoodBlock, 1);
+								MFRThings.rubberWoodBlock, 1);
 					}
 				}
 

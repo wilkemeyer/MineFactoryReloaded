@@ -21,6 +21,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion", name = "MFR Compat: ThermalExpansion", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ThermalExpansion")
 public class ThermalExpansion implements IRandomMobProvider
@@ -36,20 +37,20 @@ public class ThermalExpansion implements IRandomMobProvider
 		try
 		{
 			MFRRegistry.registerRandomMobProvider(this);
-			
+
 			// Smooth Blackstone -> Cobble
-			sendPulv(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 0),
-					new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 2));
+			sendPulv(new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 0),
+					new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 2));
 			// Smooth Whitestone -> Cobble
-			sendPulv(new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 1),
-					new ItemStack(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, 3));
+			sendPulv(new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 1),
+					new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 3));
 		}
 		catch (Exception x)
 		{
 			x.printStackTrace();
 		}
 	}
-	
+
 	private static void sendPulv(ItemStack input, ItemStack output)
 	{
 		NBTTagCompound toSend = new NBTTagCompound();
@@ -58,7 +59,7 @@ public class ThermalExpansion implements IRandomMobProvider
 		toSend.setTag("primaryOutput", output.writeToNBT(new NBTTagCompound()));
 		sendComm("PulverizerRecipe", toSend);
 	}
-	
+
 	private static void sendComm(String type, NBTTagCompound msg)
 	{
 		FMLInterModComms.sendMessage("ThermalExpansion", type, msg);
@@ -67,18 +68,18 @@ public class ThermalExpansion implements IRandomMobProvider
 	@Override
 	public List<RandomMob> getRandomMobs(World world) {
 		ArrayList<RandomMob> mobs = new ArrayList<RandomMob>();
-		
+
 		EntityCreeper creeper = MFRUtil.prepareMob(EntityCreeper.class, world);
 		creeper.setCustomNameTag("Exploding Zeldo");
 		creeper.setAlwaysRenderNameTag(true);
 		creeper.func_110163_bv();
-		ItemStack armor = new ItemStack(MineFactoryReloadedCore.plasticBootsItem);
+		ItemStack armor = new ItemStack(MFRThings.plasticBootsItem);
 		armor.setStackDisplayName("Zeldo's Ruby Slippers");
 		int i = EntityLiving.getArmorPosition(armor);
 		creeper.setCurrentItemOrArmor(i, armor);
 		creeper.setEquipmentDropChance(i, 2);
 		mobs.add(new RandomMob(creeper, 20));
-		
+
 		return mobs;
 	}
 }

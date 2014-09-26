@@ -25,6 +25,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
@@ -333,7 +334,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		if (te instanceof TileEntityFactory)
 		{
 			((TileEntityFactory)te).onRedNetChanged(side, inputValue);
-			onNeighborBlockChange(world, x, y, z, MineFactoryReloadedCore.rednetCableBlock);
+			onNeighborBlockChange(world, x, y, z, MFRThings.rednetCableBlock);
 		}
 	}
 }

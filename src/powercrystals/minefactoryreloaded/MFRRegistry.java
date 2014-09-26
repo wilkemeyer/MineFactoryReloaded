@@ -66,8 +66,7 @@ public abstract class MFRRegistry
 			new HashMap<Class<? extends EntityLivingBase>, IFactoryGrindable>();
 	private static List<Class<?>> _grindableBlacklist = new ArrayList<Class<?>>();
 
-	private static List<Class<? extends EntityLivingBase>> _safariNetBlacklist =
-			new ArrayList<Class<? extends EntityLivingBase>>();
+	private static List<Class<?>> _safariNetBlacklist = new ArrayList<Class<?>>();
 	private static List<IMobEggHandler> _eggHandlers = new ArrayList<IMobEggHandler>();
 	private static List<ISafariNetHandler> _safariNetHandlers = new ArrayList<ISafariNetHandler>();
 	private static List<IRandomMobProvider> _randomMobProviders = new ArrayList<IRandomMobProvider>();
@@ -205,14 +204,14 @@ public abstract class MFRRegistry
 		return _rubberTreeBiomes;
 	}
 
-	public static void registerSafariNetBlacklist(Class<? extends EntityLivingBase> entityClass)
+	public static void registerSafariNetBlacklist(Class<?> entityClass)
 	{
 		_safariNetBlacklist.add(entityClass);
 		if (MFRRegistry._grindableBlacklist.contains(entityClass))
 			_slaughterhouseBlacklist.add(entityClass);
 	}
 
-	public static List<Class<? extends EntityLivingBase>> getSafariNetBlacklist()
+	public static List<Class<?>> getSafariNetBlacklist()
 	{
 		return _safariNetBlacklist;
 	}

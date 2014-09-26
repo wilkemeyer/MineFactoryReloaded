@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.net.Packets;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemRocketLauncher extends ItemFactoryGun
 {
@@ -28,7 +28,7 @@ public class ItemRocketLauncher extends ItemFactoryGun
 	protected boolean fire(ItemStack stack, World world, EntityPlayer player)
 	{
 		int slot = -1;
-		Item rocket = MineFactoryReloadedCore.rocketItem;
+		Item rocket = MFRThings.rocketItem;
 		ItemStack[] mainInventory = player.inventory.mainInventory;
 		for (int j = 0, e = mainInventory.length; j < e; ++j)
 			if (mainInventory[j] != null && mainInventory[j].getItem() == rocket)

@@ -16,15 +16,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerItem
 {
 	private boolean _prefix = false;
     @SideOnly(Side.CLIENT)
     protected IIcon fillIcon;
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister par1IconRegister)
@@ -74,7 +74,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		ret += t.isEmpty() ? " Syringe" : " " + t;
 		return ret;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass) {
@@ -125,7 +125,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	@Override
 	public ItemStack getEmptySyringe(ItemStack syringe)
 	{
-		return new ItemStack(MineFactoryReloadedCore.syringeEmptyItem);
+		return new ItemStack(MFRThings.syringeEmptyItem);
 	}
 
 	@Override

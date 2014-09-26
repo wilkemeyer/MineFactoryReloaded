@@ -32,8 +32,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDecorative
 { // TODO: convert to BlockFluidFinite
@@ -86,31 +86,31 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			data.setLong("mfr:fluidTimer" + fluidName, world.getTotalWorldTime() + 40);
 
 			EntityLivingBase ent = (EntityLivingBase)entity;
-			if (this == MineFactoryReloadedCore.milkLiquid)
+			if (this == MFRThings.milkLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 6 * 20, 0));
 			}
-			else if (this == MineFactoryReloadedCore.sludgeLiquid)
+			else if (this == MFRThings.sludgeLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.wither.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 12 * 20, 0));
 			}
-			else if (this == MineFactoryReloadedCore.sewageLiquid)
+			else if (this == MFRThings.sewageLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));
 				ent.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 12 * 20, 0));
 			}
-			else if (this == MineFactoryReloadedCore.essenceLiquid)
+			else if (this == MFRThings.essenceLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.nightVision.id, 60 * 20, 0));
 			}
-			else if (this == MineFactoryReloadedCore.biofuelLiquid)
+			else if (this == MFRThings.biofuelLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0));
 			}
-			else if (this == MineFactoryReloadedCore.steamFluid)
+			else if (this == MFRThings.steamFluid)
 			{
 				ent.attackEntityFrom(steam, 6);
 			}
@@ -154,21 +154,21 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			}
 			ItemStack drop = null;
 			Block block = Blocks.air;
-			if (this == MineFactoryReloadedCore.milkLiquid)
+			if (this == MFRThings.milkLiquid)
 			{
 				if (rand.nextInt(50) == 0)
 					drop = new ItemStack(Items.dye, rand.nextInt(2), 15);
 			}
-			else if (this == MineFactoryReloadedCore.sludgeLiquid)
+			else if (this == MFRThings.sludgeLiquid)
 			{
 				drop = ((WeightedRandomItemStack)WeightedRandom.
 						getRandomItem(rand, MFRRegistry.getSludgeDrops())).getStack();
 			}
-			else if (this == MineFactoryReloadedCore.sewageLiquid)
+			else if (this == MFRThings.sewageLiquid)
 			{
-				drop = new ItemStack(MineFactoryReloadedCore.fertilizerItem, 1 + rand.nextInt(2));
+				drop = new ItemStack(MFRThings.fertilizerItem, 1 + rand.nextInt(2));
 			}
-			else if (this == MineFactoryReloadedCore.essenceLiquid)
+			else if (this == MFRThings.essenceLiquid)
 			{
 				if (world.setBlockToAir(x, y, z))
 				{
@@ -185,29 +185,29 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 				}
 				break l;
 			}
-			else if (this == MineFactoryReloadedCore.meatLiquid)
+			else if (this == MFRThings.meatLiquid)
 			{
 				if (rand.nextInt(5) != 0)
-					drop = new ItemStack(MineFactoryReloadedCore.meatIngotRawItem, rand.nextInt(2));
+					drop = new ItemStack(MFRThings.meatIngotRawItem, rand.nextInt(2));
 				else
-					drop = new ItemStack(MineFactoryReloadedCore.meatIngotCookedItem, rand.nextInt(2));
+					drop = new ItemStack(MFRThings.meatIngotCookedItem, rand.nextInt(2));
 			}
-			else if (this == MineFactoryReloadedCore.pinkSlimeLiquid)
+			else if (this == MFRThings.pinkSlimeLiquid)
 			{
 				if (rand.nextBoolean())
-					drop = new ItemStack(MineFactoryReloadedCore.pinkSlimeItem, rand.nextInt(3));
+					drop = new ItemStack(MFRThings.pinkSlimeItem, rand.nextInt(3));
 				else
 					if (rand.nextInt(5) != 0)
-						drop = new ItemStack(MineFactoryReloadedCore.meatNuggetRawItem, rand.nextInt(2));
+						drop = new ItemStack(MFRThings.meatNuggetRawItem, rand.nextInt(2));
 					else
-						drop = new ItemStack(MineFactoryReloadedCore.meatNuggetCookedItem, rand.nextInt(2));
+						drop = new ItemStack(MFRThings.meatNuggetCookedItem, rand.nextInt(2));
 			}
-			else if (this == MineFactoryReloadedCore.chocolateMilkLiquid)
+			else if (this == MFRThings.chocolateMilkLiquid)
 			{
 				if (rand.nextBoolean())
 					drop = new ItemStack(Items.dye, rand.nextInt(2), 3);
 			}
-			else if (this == MineFactoryReloadedCore.mushroomSoupLiquid)
+			else if (this == MFRThings.mushroomSoupLiquid)
 			{
 				if (rand.nextInt(5) == 0)
 					block = (rand.nextBoolean() ? Blocks.brown_mushroom : Blocks.red_mushroom);

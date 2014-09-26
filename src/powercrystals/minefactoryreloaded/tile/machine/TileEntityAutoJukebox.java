@@ -9,10 +9,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemRecord;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoJukebox;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -21,31 +21,31 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	private boolean _lastRedstoneState;
 	private boolean _canCopy;
 	private boolean _canPlay;
-	
+
 	public TileEntityAutoJukebox()
 	{
 		super(Machine.AutoJukebox);
 		setManageSolids(true);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiAutoJukebox(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerAutoJukebox getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerAutoJukebox(this, inventoryPlayer);
 	}
-	
+
 	public void setCanCopy(boolean canCopy)
 	{
 		_canCopy = canCopy;
 	}
-	
+
 	public boolean getCanCopy()
 	{
 		if(worldObj.isRemote)
@@ -53,18 +53,18 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 			return _canCopy;
 		}
 		else if(_inventory[0] != null && _inventory[0].getItem() instanceof ItemRecord && _inventory[1] != null &&
-				_inventory[1].getItem().equals(MineFactoryReloadedCore.blankRecordItem))
+				_inventory[1].getItem().equals(MFRThings.blankRecordItem))
 		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	public void setCanPlay(boolean canPlay)
 	{
 		_canPlay = canPlay;
 	}
-	
+
 	public boolean getCanPlay()
 	{
 		if(worldObj.isRemote)
@@ -77,7 +77,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 		}
 		return false;
 	}
-	
+
 	public void copyRecord()
 	{
 		if(!worldObj.isRemote && getCanCopy())
@@ -85,53 +85,53 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 			_inventory[1] = _inventory[0].copy();
 		}
 	}
-	
+
 	public void playRecord()
 	{
 		if(_inventory[0] != null && _inventory[0].getItem() instanceof ItemRecord)
 			worldObj.playAuxSFX(1005, xCoord, yCoord, zCoord, Item.getIdFromItem(_inventory[0].getItem()));
 		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
 	}
-	
+
 	public void stopRecord()
 	{
 		worldObj.playAuxSFX(1005, xCoord, yCoord, zCoord, 0);
 		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
 	}
-	
+
 	@Override
 	public void onBlockBroken()
 	{
 		stopRecord();
 		super.onBlockBroken();
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 2;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		if(worldObj.isRemote)
 		{
 			return;
 		}
-		
+
 		boolean redstoneState = CoreUtils.isRedstonePowered(this);
 		if(redstoneState && !_lastRedstoneState)
 		{
 			stopRecord();
 			playRecord();
 		}
-		
+
 		_lastRedstoneState = redstoneState;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemCeramicDye extends ItemLaserFocus
 {
@@ -20,7 +20,7 @@ public class ItemCeramicDye extends ItemLaserFocus
 			if (Blocks.glass.equals(block))
 			{
 				if (world.setBlock(x, y, z,
-						MineFactoryReloadedCore.factoryGlassBlock, stack.getItemDamage(), 3))
+						MFRThings.factoryGlassBlock, stack.getItemDamage(), 3))
 				{
 					if (!player.capabilities.isCreativeMode)
 						stack.stackSize--;
@@ -30,7 +30,7 @@ public class ItemCeramicDye extends ItemLaserFocus
 			if (Blocks.glass_pane.equals(block))
 			{
 				if (world.setBlock(x, y, z,
-						MineFactoryReloadedCore.factoryGlassPaneBlock, stack.getItemDamage(), 3))
+						MFRThings.factoryGlassPaneBlock, stack.getItemDamage(), 3))
 				{
 					if (!player.capabilities.isCreativeMode)
 						stack.stackSize--;

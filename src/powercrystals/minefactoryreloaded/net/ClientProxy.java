@@ -12,8 +12,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ClientProxy extends CommonProxy
 {
@@ -24,29 +24,29 @@ public class ClientProxy extends CommonProxy
 		FMLCommonHandler.instance().bus().register(this);
 		MineFactoryReloadedClient.init();
 	}
-	
+
 	@Override
 	public void movePlayerToCoordinates(EntityLivingBase e, double x, double y, double z)
 	{
 		e.setPositionAndUpdate(x, y, z);
 	}
-	
+
 	@Override
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void onPostTextureStitch(TextureStitchEvent.Post e)
 	{
-		setIcons("milk", MineFactoryReloadedCore.milkLiquid);
-		setIcons("sludge", MineFactoryReloadedCore.sludgeLiquid);
-		setIcons("sewage", MineFactoryReloadedCore.sewageLiquid);
-		setIcons("mobessence", MineFactoryReloadedCore.essenceLiquid);
-		setIcons("biofuel", MineFactoryReloadedCore.biofuelLiquid);
-		setIcons("meat", MineFactoryReloadedCore.meatLiquid);
-		setIcons("pinkslime", MineFactoryReloadedCore.pinkSlimeLiquid);
-		setIcons("chocolatemilk", MineFactoryReloadedCore.chocolateMilkLiquid);
-		setIcons("mushroomsoup", MineFactoryReloadedCore.mushroomSoupLiquid);
-		setIcons("steam", MineFactoryReloadedCore.steamFluid);
+		setIcons("milk", MFRThings.milkLiquid);
+		setIcons("sludge", MFRThings.sludgeLiquid);
+		setIcons("sewage", MFRThings.sewageLiquid);
+		setIcons("mobessence", MFRThings.essenceLiquid);
+		setIcons("biofuel", MFRThings.biofuelLiquid);
+		setIcons("meat", MFRThings.meatLiquid);
+		setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
+		setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
+		setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
+		setIcons("steam", MFRThings.steamFluid);
 	}
-	
+
 	private void setIcons(String name, BlockFactoryFluid block)
 	{
 		Fluid fluid = FluidRegistry.getFluid(name);
@@ -65,7 +65,7 @@ public class ClientProxy extends CommonProxy
 	{
 		MineFactoryReloadedClient.prcPages.clear();
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent player)
 	{

@@ -4,7 +4,7 @@ import static cofh.lib.util.helpers.ItemHelper.*;
 import static net.minecraft.init.Blocks.*;
 import static net.minecraft.init.Items.*;
 import static net.minecraftforge.oredict.OreDictionary.*;
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.*;
 
 import net.minecraft.init.Items;

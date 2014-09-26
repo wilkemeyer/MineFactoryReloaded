@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.lib.render.RenderFluidOverlayItem;
 import cofh.lib.util.position.BlockPosition;
@@ -194,7 +195,7 @@ public class MineFactoryReloadedClient
 		RenderingRegistry.registerEntityRenderingHandler(EntityNeedle.class, new EntityNeedleRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new EntityRocketRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
-				new RenderSnowball(MineFactoryReloadedCore.fishingRodItem));
+				new RenderSnowball(fishingRodItem));
 
 		// Handlers
 		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoolologistEntityId.getInt(),
@@ -332,7 +333,7 @@ public class MineFactoryReloadedClient
 			Item item = itemstack.getItem();
 			int par2 = 3 - e.slot;
 			//if (item.isValidArmor(itemstack, e.slot, e.entity))
-			if (item == MineFactoryReloadedCore.plasticCupItem)
+			if (item == plasticCupItem)
 			{
 				Minecraft.getMinecraft().renderEngine.
 				bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.entity, par2, null)));
@@ -367,7 +368,7 @@ public class MineFactoryReloadedClient
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if(player.inventory.getCurrentItem() == null ||
-				!player.inventory.getCurrentItem().getItem().equals(MineFactoryReloadedCore.factoryHammerItem))
+				!player.inventory.getCurrentItem().getItem().equals(factoryHammerItem))
 		{
 			return;
 		}

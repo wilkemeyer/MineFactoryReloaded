@@ -6,17 +6,14 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 import net.minecraft.block.IGrowable;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -26,91 +23,13 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.api.INeedleAmmo;
 import powercrystals.minefactoryreloaded.api.MobDrop;
-import powercrystals.minefactoryreloaded.circuits.Fanout;
-import powercrystals.minefactoryreloaded.circuits.Noop;
-import powercrystals.minefactoryreloaded.circuits.Passthrough;
-import powercrystals.minefactoryreloaded.circuits.PassthroughGated;
-import powercrystals.minefactoryreloaded.circuits.PassthroughRoundRobin;
-import powercrystals.minefactoryreloaded.circuits.analog.AdderAnalog;
-import powercrystals.minefactoryreloaded.circuits.analog.DecomposeIntToDecimal;
-import powercrystals.minefactoryreloaded.circuits.analog.Max2;
-import powercrystals.minefactoryreloaded.circuits.analog.Max3;
-import powercrystals.minefactoryreloaded.circuits.analog.Max4;
-import powercrystals.minefactoryreloaded.circuits.analog.Min2;
-import powercrystals.minefactoryreloaded.circuits.analog.Min3;
-import powercrystals.minefactoryreloaded.circuits.analog.Min4;
-import powercrystals.minefactoryreloaded.circuits.analog.Multiplier;
-import powercrystals.minefactoryreloaded.circuits.analog.Negator;
-import powercrystals.minefactoryreloaded.circuits.analog.RandomizerAnalog;
-import powercrystals.minefactoryreloaded.circuits.analog.Scaler;
-import powercrystals.minefactoryreloaded.circuits.analog.SchmittTrigger;
-import powercrystals.minefactoryreloaded.circuits.analog.Subtractor;
-import powercrystals.minefactoryreloaded.circuits.digital.AdderDigitalFull;
-import powercrystals.minefactoryreloaded.circuits.digital.AdderDigitalHalf;
-import powercrystals.minefactoryreloaded.circuits.digital.Counter;
-import powercrystals.minefactoryreloaded.circuits.digital.DeMux16Analog;
-import powercrystals.minefactoryreloaded.circuits.digital.DeMux4;
-import powercrystals.minefactoryreloaded.circuits.digital.Inverter;
-import powercrystals.minefactoryreloaded.circuits.digital.Mux4;
-import powercrystals.minefactoryreloaded.circuits.digital.RandomizerDigital;
-import powercrystals.minefactoryreloaded.circuits.digital.SevenSegmentEncoder;
-import powercrystals.minefactoryreloaded.circuits.latch.FlipFlopJK;
-import powercrystals.minefactoryreloaded.circuits.latch.FlipFlopT;
-import powercrystals.minefactoryreloaded.circuits.latch.LatchDGated;
-import powercrystals.minefactoryreloaded.circuits.latch.LatchSR;
-import powercrystals.minefactoryreloaded.circuits.latch.LatchSRGated;
-import powercrystals.minefactoryreloaded.circuits.logic.And2;
-import powercrystals.minefactoryreloaded.circuits.logic.And3;
-import powercrystals.minefactoryreloaded.circuits.logic.And4;
-import powercrystals.minefactoryreloaded.circuits.logic.Nand2;
-import powercrystals.minefactoryreloaded.circuits.logic.Nand3;
-import powercrystals.minefactoryreloaded.circuits.logic.Nand4;
-import powercrystals.minefactoryreloaded.circuits.logic.Nor2;
-import powercrystals.minefactoryreloaded.circuits.logic.Nor3;
-import powercrystals.minefactoryreloaded.circuits.logic.Nor4;
-import powercrystals.minefactoryreloaded.circuits.logic.Or2;
-import powercrystals.minefactoryreloaded.circuits.logic.Or3;
-import powercrystals.minefactoryreloaded.circuits.logic.Or4;
-import powercrystals.minefactoryreloaded.circuits.logic.Xnor2;
-import powercrystals.minefactoryreloaded.circuits.logic.Xnor3;
-import powercrystals.minefactoryreloaded.circuits.logic.Xnor4;
-import powercrystals.minefactoryreloaded.circuits.logic.Xor2;
-import powercrystals.minefactoryreloaded.circuits.logic.Xor3;
-import powercrystals.minefactoryreloaded.circuits.logic.Xor4;
-import powercrystals.minefactoryreloaded.circuits.logicboolean.Equal;
-import powercrystals.minefactoryreloaded.circuits.logicboolean.Greater;
-import powercrystals.minefactoryreloaded.circuits.logicboolean.GreaterOrEqual;
-import powercrystals.minefactoryreloaded.circuits.logicboolean.Less;
-import powercrystals.minefactoryreloaded.circuits.logicboolean.LessOrEqual;
-import powercrystals.minefactoryreloaded.circuits.logicboolean.NotEqual;
-import powercrystals.minefactoryreloaded.circuits.timing.Delay;
-import powercrystals.minefactoryreloaded.circuits.timing.Multipulse;
-import powercrystals.minefactoryreloaded.circuits.timing.OneShot;
-import powercrystals.minefactoryreloaded.circuits.timing.PulseLengthener;
-import powercrystals.minefactoryreloaded.circuits.wave.SawtoothFalling;
-import powercrystals.minefactoryreloaded.circuits.wave.SawtoothRising;
-import powercrystals.minefactoryreloaded.circuits.wave.Sine;
-import powercrystals.minefactoryreloaded.circuits.wave.Square;
-import powercrystals.minefactoryreloaded.circuits.wave.Triangle;
-import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerBiofuel;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerChocolateMilk;
 import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerLava;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerMeat;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerMilk;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerMobEssence;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerMushroomSoup;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerPinkSlime;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerSewage;
-import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerSludge;
 import powercrystals.minefactoryreloaded.farmables.drinkhandlers.DrinkHandlerWater;
 import powercrystals.minefactoryreloaded.farmables.egghandlers.VanillaEggHandler;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCocoa;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCropPlant;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableGrass;
-import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableIGrowable;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableNetherWart;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
@@ -135,18 +54,12 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCocoa;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableNetherWart;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSoil;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableChicken;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableCow;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableMooshroom;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableSheep;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableSquid;
-import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityAgeableHandler;
-import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityLivingBaseHandler;
-import powercrystals.minefactoryreloaded.farmables.safarinethandlers.EntityLivingHandler;
-import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SheepHandler;
-import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SlimeHandler;
 import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableEnderman;
 import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableHorse;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -167,9 +80,7 @@ public class Vanilla
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.potato, Blocks.potatoes));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
 		MFRRegistry.registerPlantable(new PlantableCocoa(Items.dye, Blocks.cocoa, 3));
-		MFRRegistry.registerPlantable(new PlantableSapling(MineFactoryReloadedCore.rubberSaplingBlock));
-		MFRRegistry.registerPlantable(new PlantableSoil(MineFactoryReloadedCore.fertileSoil));
-		
+
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.log));
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.log2));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(Blocks.leaves));
@@ -195,9 +106,7 @@ public class Vanilla
 		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.vine));
 		MFRRegistry.registerHarvestable(new HarvestableNetherWart());
 		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.cocoa));
-		MFRRegistry.registerHarvestable(new HarvestableWood(MineFactoryReloadedCore.rubberWoodBlock));
-		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(MineFactoryReloadedCore.rubberLeavesBlock));
-		
+
 		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.sapling));
 		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.wheat, 7));
 		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.carrots, 7));
@@ -209,10 +118,7 @@ public class Vanilla
 		MFRRegistry.registerFertilizable(new FertilizableNetherWart());
 		MFRRegistry.registerFertilizable(new FertilizableCocoa(Blocks.cocoa));
 		MFRRegistry.registerFertilizable(new FertilizableGrass());
-		MFRRegistry.registerFertilizable(new FertilizableStandard(MineFactoryReloadedCore.rubberSaplingBlock));
-		MFRRegistry.registerFertilizable(new FertilizableIGrowable(MineFactoryReloadedCore.fertileSoil));
-		
-		MFRRegistry.registerFertilizer(new FertilizerStandard(MineFactoryReloadedCore.fertilizerItem, 0));
+
 		if(MFRConfig.enableBonemealFertilizing.getBoolean(false))
 		{
 			MFRRegistry.registerFertilizer(new FertilizerStandard(Items.dye, 15));
@@ -221,29 +127,17 @@ public class Vanilla
 		{
 			MFRRegistry.registerFertilizer(new FertilizerStandard(Items.dye, 15, FertilizerType.Grass));
 		}
-		
+
 		MFRRegistry.registerRanchable(new RanchableCow());
 		MFRRegistry.registerRanchable(new RanchableMooshroom());
 		MFRRegistry.registerRanchable(new RanchableSheep());
 		MFRRegistry.registerRanchable(new RanchableSquid());
 		MFRRegistry.registerRanchable(new RanchableChicken());
-		
-		if (MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false))
-		{
-			MFRRegistry.registerConveyerBlacklist(EntityPlayer.class);
-		} // TODO: move mfr stuff out of this class
-		
-		if (!MFRConfig.conveyorCaptureNonItems.getBoolean(true))
-		{
-			MFRRegistry.registerConveyerBlacklist(Entity.class);
-		}
 
-		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
 		MFRRegistry.registerGrinderBlacklist(EntityDragon.class);
 		MFRRegistry.registerGrinderBlacklist(EntityWither.class);
 		MFRRegistry.registerGrinderBlacklist(EntityVillager.class);
-		MFRRegistry.registerGrinderBlacklist(IBossDisplayData.class);
-		
+
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityChicken.class, new MobDrop[]
 				{
 			new MobDrop(30, null),
@@ -258,14 +152,13 @@ public class Vanilla
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
 		MFRRegistry.registerGrindable(new GrindableEnderman());
 		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Items.slime_ball), 1));
-		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeItem), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Items.magma_cream), 1) {
 			@Override
 			protected boolean shouldDrop(EntitySlime slime) {
 				return slime.getSlimeSize() <= dropSize;
 			}
 		});
-		
+
 		MFRRegistry.registerSludgeDrop(50, new ItemStack(Blocks.sand));
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.clay));
 		MFRRegistry.registerSludgeDrop(30, new ItemStack(Blocks.dirt, 1, 1));
@@ -276,15 +169,9 @@ public class Vanilla
 		MFRRegistry.registerSludgeDrop(3, new ItemStack(Blocks.mycelium));
 		MFRRegistry.registerSludgeDrop(2, new ItemStack(Blocks.dirt, 1, 2));
 		MFRRegistry.registerSludgeDrop(1, new ItemStack(Blocks.netherrack));
-		
-		MFRRegistry.registerSafariNetHandler(new EntityLivingBaseHandler());
-		MFRRegistry.registerSafariNetHandler(new EntityLivingHandler());
-		MFRRegistry.registerSafariNetHandler(new EntityAgeableHandler());
-		MFRRegistry.registerSafariNetHandler(new SheepHandler());
-		MFRRegistry.registerSafariNetHandler(new SlimeHandler());
-		
+
 		MFRRegistry.registerMobEggHandler(new VanillaEggHandler());
-		
+
 		MFRRegistry.registerRubberTreeBiome("Swampland");
 		MFRRegistry.registerRubberTreeBiome("Swampland M");
 		MFRRegistry.registerRubberTreeBiome("Forest");
@@ -311,112 +198,22 @@ public class Vanilla
 		MFRRegistry.registerRubberTreeBiome("JungleHills M");
 		MFRRegistry.registerRubberTreeBiome("JungleEdge");
 		MFRRegistry.registerRubberTreeBiome("JungleEdge M");
-		
-		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
+
 		MFRRegistry.registerSafariNetBlacklist(EntityDragon.class);
 		MFRRegistry.registerSafariNetBlacklist(EntityWither.class);
-		
+
 		MFRRegistry.registerRandomMobProvider(new VanillaMobProvider());
-		
+
 		MFRRegistry.registerLiquidDrinkHandler("water", new DrinkHandlerWater());
 		MFRRegistry.registerLiquidDrinkHandler("lava", new DrinkHandlerLava());
-		MFRRegistry.registerLiquidDrinkHandler("milk", new DrinkHandlerMilk());
-		MFRRegistry.registerLiquidDrinkHandler("biofuel", new DrinkHandlerBiofuel());
-		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
-		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
-		MFRRegistry.registerLiquidDrinkHandler("mobessence", new DrinkHandlerMobEssence());
-		MFRRegistry.registerLiquidDrinkHandler("meat", new DrinkHandlerMeat());
-		MFRRegistry.registerLiquidDrinkHandler("pinkslime", new DrinkHandlerPinkSlime());
-		MFRRegistry.registerLiquidDrinkHandler("chocolatemilk", new DrinkHandlerChocolateMilk());
-		MFRRegistry.registerLiquidDrinkHandler("mushroomsoup", new DrinkHandlerMushroomSoup());
-		
-		MFRRegistry.registerRedNetLogicCircuit(new AdderAnalog());
-		MFRRegistry.registerRedNetLogicCircuit(new AdderDigitalFull());
-		MFRRegistry.registerRedNetLogicCircuit(new AdderDigitalHalf());
-		MFRRegistry.registerRedNetLogicCircuit(new And2());
-		MFRRegistry.registerRedNetLogicCircuit(new And3());
-		MFRRegistry.registerRedNetLogicCircuit(new And4());
-		MFRRegistry.registerRedNetLogicCircuit(new Counter());
-		MFRRegistry.registerRedNetLogicCircuit(new DecomposeIntToDecimal());
-		MFRRegistry.registerRedNetLogicCircuit(new Delay());
-		MFRRegistry.registerRedNetLogicCircuit(new DeMux16Analog());
-		MFRRegistry.registerRedNetLogicCircuit(new DeMux4());
-		MFRRegistry.registerRedNetLogicCircuit(new Equal());
-		MFRRegistry.registerRedNetLogicCircuit(new Fanout());
-		MFRRegistry.registerRedNetLogicCircuit(new FlipFlopJK());
-		MFRRegistry.registerRedNetLogicCircuit(new FlipFlopT());
-		MFRRegistry.registerRedNetLogicCircuit(new Greater());
-		MFRRegistry.registerRedNetLogicCircuit(new GreaterOrEqual());
-		MFRRegistry.registerRedNetLogicCircuit(new Inverter());
-		MFRRegistry.registerRedNetLogicCircuit(new LatchDGated());
-		MFRRegistry.registerRedNetLogicCircuit(new LatchSR());
-		MFRRegistry.registerRedNetLogicCircuit(new LatchSRGated());
-		MFRRegistry.registerRedNetLogicCircuit(new Less());
-		MFRRegistry.registerRedNetLogicCircuit(new LessOrEqual());
-		MFRRegistry.registerRedNetLogicCircuit(new Max2());
-		MFRRegistry.registerRedNetLogicCircuit(new Max3());
-		MFRRegistry.registerRedNetLogicCircuit(new Max4());
-		MFRRegistry.registerRedNetLogicCircuit(new Min2());
-		MFRRegistry.registerRedNetLogicCircuit(new Min3());
-		MFRRegistry.registerRedNetLogicCircuit(new Min4());
-		MFRRegistry.registerRedNetLogicCircuit(new Multiplier());
-		MFRRegistry.registerRedNetLogicCircuit(new Multipulse());
-		MFRRegistry.registerRedNetLogicCircuit(new Mux4());
-		MFRRegistry.registerRedNetLogicCircuit(new Nand2());
-		MFRRegistry.registerRedNetLogicCircuit(new Nand3());
-		MFRRegistry.registerRedNetLogicCircuit(new Nand4());
-		MFRRegistry.registerRedNetLogicCircuit(new Negator());
-		MFRRegistry.registerRedNetLogicCircuit(new Noop());
-		MFRRegistry.registerRedNetLogicCircuit(new Nor2());
-		MFRRegistry.registerRedNetLogicCircuit(new Nor3());
-		MFRRegistry.registerRedNetLogicCircuit(new Nor4());
-		MFRRegistry.registerRedNetLogicCircuit(new NotEqual());
-		MFRRegistry.registerRedNetLogicCircuit(new OneShot());
-		MFRRegistry.registerRedNetLogicCircuit(new Or2());
-		MFRRegistry.registerRedNetLogicCircuit(new Or3());
-		MFRRegistry.registerRedNetLogicCircuit(new Or4());
-		MFRRegistry.registerRedNetLogicCircuit(new Passthrough());
-		MFRRegistry.registerRedNetLogicCircuit(new PassthroughGated());
-		MFRRegistry.registerRedNetLogicCircuit(new PassthroughRoundRobin());
-		MFRRegistry.registerRedNetLogicCircuit(new PulseLengthener());
-		MFRRegistry.registerRedNetLogicCircuit(new RandomizerAnalog());
-		MFRRegistry.registerRedNetLogicCircuit(new RandomizerDigital());
-		MFRRegistry.registerRedNetLogicCircuit(new SevenSegmentEncoder());
-		MFRRegistry.registerRedNetLogicCircuit(new SawtoothFalling());
-		MFRRegistry.registerRedNetLogicCircuit(new SawtoothRising());
-		MFRRegistry.registerRedNetLogicCircuit(new Scaler());
-		MFRRegistry.registerRedNetLogicCircuit(new SchmittTrigger());
-		MFRRegistry.registerRedNetLogicCircuit(new Sine());
-		MFRRegistry.registerRedNetLogicCircuit(new Square());
-		MFRRegistry.registerRedNetLogicCircuit(new Subtractor());
-		MFRRegistry.registerRedNetLogicCircuit(new Triangle());
-		MFRRegistry.registerRedNetLogicCircuit(new Xnor2());
-		MFRRegistry.registerRedNetLogicCircuit(new Xnor3());
-		MFRRegistry.registerRedNetLogicCircuit(new Xnor4());
-		MFRRegistry.registerRedNetLogicCircuit(new Xor2());
-		MFRRegistry.registerRedNetLogicCircuit(new Xor3());
-		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
-		
+
 		MFRRegistry.registerFruitLogBlock(Blocks.log);
 		MFRRegistry.registerFruit(new FruitCocoa(Blocks.cocoa));
-		
+
 		MFRRegistry.registerSpawnHandler(new SpawnableHorse());
 		MFRRegistry.registerSpawnHandler(new SpawnableEnderman());
-		
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoStandardItem,
-				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoStandardItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoLavaItem,
-				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoLavaItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSludgeItem,
-				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSludgeItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoSewageItem,
-				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoSewageItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoFireItem,
-				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoFireItem);
-		MFRRegistry.registerNeedleAmmoType(MineFactoryReloadedCore.needlegunAmmoAnvilItem,
-				(INeedleAmmo)MineFactoryReloadedCore.needlegunAmmoAnvilItem);
 	}
-	
+
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
@@ -484,7 +281,7 @@ public class Vanilla
 		registerOreDictLaserOre( 10, "oreCobalt",           blue, null);
 		registerOreDictLaserOre( 10, "Yellorite",         yellow, false);
 		registerOreDictLaserOre(  5, "Iridium",            white, false);
-		
+
 		// rarity/usefulness unknown
 		registerOreDictLaserOre( 20, "oreTetrahedrite", orange, null);
 		registerOreDictLaserOre( 20, "oreCadmium", lightBlue, null);
@@ -520,25 +317,25 @@ public class Vanilla
 		registerOreDictLaserOre( 20, "oreBitumen", pink, null);
 		registerOreDictLaserOre( 20, "orePhosphorite", pink, null);
 	}
-	
+
 	private void registerOreDictLaserOre(int weight, String suffix, int focus, boolean isGem)
 	{
 		registerOreDictLaserOre(weight, "ore" + suffix, focus,
 				"oreNether" + suffix, focus, (isGem ? "gem" : "dust") + suffix);
 	}
-	
+
 	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName)
 	{
 		registerOreDictLaserOre(weight, name, focus, netherName, focus, null);
 	}
-	
+
 	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName,
 			String dustName)
 	{
 		registerOreDictLaserOre(weight, name, focus, netherName, focus, dustName);
 	}
-	
-	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName, 
+
+	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName,
 			int netherFocus, String dustName)
 	{
 		for (ItemStack ore : OreDictionary.getOres(name))

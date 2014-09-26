@@ -24,8 +24,9 @@ import net.minecraft.tileentity.TileEntity;
 import org.apache.logging.log4j.Level;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@Mod(modid = "MineFactoryReloaded|CompatBuildCraft", 
+@Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
 name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version,
 dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
 @Strippable("buildcraft.api.gates.ITriggerProvider")
@@ -40,17 +41,17 @@ public class Buildcraft implements ITriggerProvider
 	{
 		if (!Loader.isModLoaded("BuildCraft|Core"))
 			return;
-		
-		for (Object[] q : new Object[][]{ {16, name(MineFactoryReloadedCore.factoryDecorativeBrickBlock)},
-									{12, name(MineFactoryReloadedCore.factoryDecorativeStoneBlock)}})
+
+		for (Object[] q : new Object[][]{ {16, name(MFRThings.factoryDecorativeBrickBlock)},
+									{12, name(MFRThings.factoryDecorativeStoneBlock)}})
 			for(int i = (Integer)q[0]; i --> 0; )
 				FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", q[1] + "@" + i);
-		String block = Block.blockRegistry.getNameForObject(MineFactoryReloadedCore.factoryRoadBlock);
+		String block = Block.blockRegistry.getNameForObject(MFRThings.factoryRoadBlock);
 		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", block + "@0");
 		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", block + "@1");
 		FMLInterModComms.sendMessage("BuildCraft|Core", "add-facade", block + "@4");
 	}
-	
+
 	@Mod.EventHandler
 	@Strippable({"buildcraft.api.gates.ITriggerProvider","buildcraft.api.gates.ITrigger"})
 	private void postInit(FMLPostInitializationEvent evt)
@@ -58,11 +59,11 @@ public class Buildcraft implements ITriggerProvider
 		try
 		{
 			IronEngineFuel.addFuel("biofuel", 4, 15000);
-			
+
 			isBackstuffed = new TriggerIsBackstuffed();
 			isRunning = new TriggerIsRunning();
 			isReversed = new TriggerIsReversed();
-			
+
 			ActionManager.registerTriggerProvider(this);
 			ActionManager.registerTrigger(isBackstuffed);
 			ActionManager.registerTrigger(isRunning);

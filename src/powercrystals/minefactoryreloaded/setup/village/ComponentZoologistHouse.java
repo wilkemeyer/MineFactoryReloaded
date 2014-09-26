@@ -16,8 +16,8 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.PieceWeight;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import net.minecraftforge.common.ChestGenHooks;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ComponentZoologistHouse extends StructureVillagePieces.Village
 {
@@ -35,7 +35,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		this.coordBaseMode = coordBaseMode;
 		boundingBox = sbb;
 
-		brickId = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
+		brickId = MFRThings.factoryDecorativeBrickBlock;
 		brickMeta = rand.nextInt(16);
 		if (brickMeta > 0) ++brickMeta; // 1 is glowstone small bricks
 		if (brickMeta > 6) ++brickMeta; // 7 is glowstone large bricks
@@ -49,7 +49,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 
 		if (brickMeta > 15) // covers the 4 skipped blocks in factoryDecorativeBrickBlock
 		{
-			brickId = MineFactoryReloadedCore.factoryDecorativeStoneBlock;
+			brickId = MFRThings.factoryDecorativeStoneBlock;
 			brickMeta -= 12; // shift into proper range (16 - 12 = 4: first stone brick block)
 			lightMeta = brickMeta < 6 ? 7 : 1;
 		}
@@ -61,7 +61,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		// getBiomeSpecificBlock
 		if (func_151558_b(paneId, paneMeta) == paneId)
 		{
-			paneId = MineFactoryReloadedCore.factoryGlassPaneBlock;
+			paneId = MFRThings.factoryGlassPaneBlock;
 			paneMeta = rand.nextInt(16);
 		}
 
@@ -120,8 +120,8 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 
 			boundingBox.offset(0, field_143015_k - boundingBox.maxY + 9 - 1, 0);
 		}
-		Block mfrBrickId = MineFactoryReloadedCore.factoryDecorativeBrickBlock;
-		Block mfrLogId = MineFactoryReloadedCore.rubberWoodBlock;
+		Block mfrBrickId = MFRThings.factoryDecorativeBrickBlock;
+		Block mfrLogId = MFRThings.rubberWoodBlock;
 		int logMeta = 12;
 
 		fillWithBlocks(world, sbb, 1, 1, 1, 7, 5, 4, Blocks.air, Blocks.air, false);

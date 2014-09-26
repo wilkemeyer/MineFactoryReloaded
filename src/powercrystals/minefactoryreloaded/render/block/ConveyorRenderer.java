@@ -12,6 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 {
@@ -19,7 +20,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 	public void renderInventoryBlock(Block block, int meta, int modelID, RenderBlocks renderer)
 	{
 		Tessellator tessellator = Tessellator.instance;
-		MineFactoryReloadedCore.conveyorBlock.canRenderInPass(0);
+		MFRThings.conveyorBlock.canRenderInPass(0);
 		int color = block.getRenderColor(meta);
 		float red = (color >> 16 & 255) / 255.0F;
 		float green = (color >> 8 & 255) / 255.0F;
@@ -37,7 +38,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		IIcon iconBase, iconOverlay;
 
 		iconBase = block.getIcon(0, meta);
-		MineFactoryReloadedCore.conveyorBlock.canRenderInPass(1);
+		MFRThings.conveyorBlock.canRenderInPass(1);
 		iconOverlay = block.getIcon(0, 0);
 
 		double minXBase = iconBase.getMinU();
@@ -53,7 +54,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		double xMin = 0, xMax = 1;
 		double yMin = 0, yMax = 1;
 		double zMid = 0.5;
-		
+
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 
 		tessellator.startDrawingQuads();
@@ -72,14 +73,14 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 	}
-	
+
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
 		if (renderer.hasOverrideBlockTexture())
 		{
 			Tessellator tessellator = Tessellator.instance;
-			
+
 			calculateVerts(world, x, y, z);
 			tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
 			draw(tessellator, renderer.overrideBlockTexture);
@@ -88,23 +89,23 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		renderConveyorWorld(world, x, y, z, block);
 		return true;
 	}
-	
+
 	@Override
 	public boolean shouldRender3DInInventory(int modelId)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderId()
 	{
 		return MineFactoryReloadedCore.renderIdConveyor;
 	}
-	
+
 	private float vert1x, vert2x, vert3x, vert4x;
 	private float vert1z, vert2z, vert3z, vert4z;
 	private float vert1y, vert2y, vert3y, vert4y;
-	
+
 	private void renderConveyorWorld(IBlockAccess world, int x, int y, int z, Block block)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -122,21 +123,21 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 			green = anaglyphGreen;
 			blue = anaglyphBlue;
 		}
-		
+
 		calculateVerts(world, x, y, z);
-		
+
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 		tessellator.setColorOpaque_F(red, green, blue);
 		draw(tessellator, block.getIcon(world, x, y, z, 0));
 	}
-	
+
 	private void draw(Tessellator tessellator, IIcon texture)
 	{
 		double uStart = texture.getInterpolatedU(0);
 		double uEnd = texture.getInterpolatedU(16);
 		double vStart = texture.getInterpolatedV(0);
 		double vEnd = texture.getInterpolatedV(16);
-		
+
 		tessellator.addVertexWithUV(vert1x, vert1y, vert1z, uEnd, vStart);
 		tessellator.addVertexWithUV(vert2x, vert2y, vert2z, uEnd, vEnd);
 		tessellator.addVertexWithUV(vert3x, vert3y, vert3z, uStart, vEnd);
@@ -147,24 +148,24 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(vert2x, vert2y, vert2z, uEnd, vEnd);
 		tessellator.addVertexWithUV(vert1x, vert1y, vert1z, uEnd, vStart);
 	}
-	
+
 	private void calculateVerts(IBlockAccess iblockaccess, int blockX, int blockY, int blockZ)
 	{
 		int conveyorMetadata = iblockaccess.getBlockMetadata(blockX, blockY, blockZ);
-		
+
 		float renderHeight = 0.00625F;
-		
+
 		vert1x = vert2x = blockX + 1;
 		vert3x = vert4x = blockX + 0;
-		
+
 		vert1z = vert4z = blockZ + 0;
 		vert2z = vert3z = blockZ + 1;
-		
+
 		vert1y = blockY + renderHeight;
 		vert2y = blockY + renderHeight;
 		vert3y = blockY + renderHeight;
 		vert4y = blockY + renderHeight;
-		
+
 		if(conveyorMetadata == 0 || conveyorMetadata == 4 || conveyorMetadata == 8)
 		{
 			vert1x = vert4x = blockX + 0;

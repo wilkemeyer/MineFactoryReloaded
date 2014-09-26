@@ -21,12 +21,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSewer;
 import powercrystals.minefactoryreloaded.gui.container.ContainerSewer;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -85,7 +85,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			_jammed = false;
 			for (BlockPosition bp : a.getPositionsBottomFirst())
 			{
-				if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(MineFactoryReloadedCore.machineBlocks.get(0)) &&
+				if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(MFRThings.machineBlocks.get(0)) &&
 						worldObj.getBlockMetadata(bp.x, bp.y, bp.z) == Machine.Sewer.getMeta() &&
 						!(bp.x == xCoord && bp.y == yCoord && bp.z == zCoord))
 				{

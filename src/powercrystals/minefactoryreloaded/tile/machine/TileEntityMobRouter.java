@@ -60,7 +60,7 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 
 		List<? extends EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
 				_areaManager.getHarvestArea().toAxisAlignedBB());
-		List<Class<? extends EntityLivingBase>> blacklist = MFRRegistry.getSafariNetBlacklist();
+		List<Class<?>> blacklist = MFRRegistry.getSafariNetBlacklist();
 
 		switch (_matchMode)
 		{

@@ -22,9 +22,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
@@ -108,7 +108,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@Override
 	public Item getItemDropped(int par1, Random par2Random, int par3)
 	{
-		return Item.getItemFromBlock(MineFactoryReloadedCore.rubberSaplingBlock);
+		return Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
 	}
 
 	@Override

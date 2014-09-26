@@ -23,9 +23,9 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockFertileSoil extends Block implements IGrowable
 {
@@ -64,7 +64,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void setBlockBoundsForItemRender()
 	{
@@ -171,7 +171,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 
 				world.setBlock(x, y, z, Blocks.farmland);
 				if (world.rand.nextFloat() >= 0.25)
-					dropBlockAsItem(world, x, y, z, new ItemStack(MineFactoryReloadedCore.fertilizerItem));
+					dropBlockAsItem(world, x, y, z, new ItemStack(MFRThings.fertilizerItem));
 			}
 		}
 	}
@@ -203,7 +203,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 
 		ret.add(new ItemStack(Blocks.dirt));
 		if (world.rand.nextFloat() >= 0.5)
-			ret.add(new ItemStack(MineFactoryReloadedCore.fertilizerItem));
+			ret.add(new ItemStack(MFRThings.fertilizerItem));
 
 		return ret;
 	}
@@ -235,6 +235,6 @@ public class BlockFertileSoil extends Block implements IGrowable
 	@Override
 	public void func_149853_b(World world, Random rand, int x, int y, int z)
 	{ // fertilize
-		alterMetadata(world, x, y, z, 1 + (int)(rand.nextFloat() * 1.5f)); 
+		alterMetadata(world, x, y, z, 1 + (int)(rand.nextFloat() * 1.5f));
 	}
 }

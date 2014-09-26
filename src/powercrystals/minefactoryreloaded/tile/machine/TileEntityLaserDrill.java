@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -28,6 +27,7 @@ import powercrystals.minefactoryreloaded.gui.client.GuiLaserDrill;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerLaserDrill;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -109,17 +109,17 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 
 		if (_bedrockLevel < 0)
 		{
-			if (lowerId.equals(MineFactoryReloadedCore.fakeLaserBlock))
+			if (lowerId.equals(MFRThings.fakeLaserBlock))
 			{
 				worldObj.setBlockToAir(xCoord, yCoord - 1, zCoord);
 			}
 			return;
 		}
 
-		if (!lowerId.equals(MineFactoryReloadedCore.fakeLaserBlock) &&
+		if (!lowerId.equals(MFRThings.fakeLaserBlock) &&
 				canReplaceBlock(lowerId, worldObj, xCoord, yCoord - 1, zCoord))
 		{
-			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MineFactoryReloadedCore.fakeLaserBlock);
+			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MFRThings.fakeLaserBlock);
 		}
 
 		int energyToDraw = Math.min(_energyPerWork, _energyStored);
@@ -177,7 +177,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		for(y = yCoord; y --> 0; )
 		{
 			Block block = worldObj.getBlock(xCoord, y, zCoord);
-			if (!block.equals(MineFactoryReloadedCore.fakeLaserBlock))
+			if (!block.equals(MFRThings.fakeLaserBlock))
 			{
 				if (!block.isAir(worldObj, xCoord, y, zCoord) &&
 						canReplaceBlock(block, worldObj, xCoord, y, zCoord))
@@ -213,7 +213,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			drops.add(newStack);
 			for(ItemStack s : _inventory)
 			{
-				if(s == null || !s.getItem().equals(MineFactoryReloadedCore.laserFocusItem) || MFRRegistry.getLaserPreferredOres(s.getItemDamage()) == null)
+				if(s == null || !s.getItem().equals(MFRThings.laserFocusItem) || MFRRegistry.getLaserPreferredOres(s.getItemDamage()) == null)
 				{
 					continue;
 				}

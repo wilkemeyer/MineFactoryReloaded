@@ -16,9 +16,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 {
@@ -61,7 +61,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 
 		drops.add(new ItemStack(this, 1, 0));
 		if((metadata & 3) == 1)
-			drops.add(new ItemStack(MineFactoryReloadedCore.rawRubberItem,
+			drops.add(new ItemStack(MFRThings.rawRubberItem,
 					fortune <= 0 ? 1 : 1 + world.rand.nextInt(fortune)));
 
 		return drops;

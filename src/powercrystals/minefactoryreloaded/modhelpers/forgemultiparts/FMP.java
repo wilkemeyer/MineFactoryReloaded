@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.forgemultiparts;
 
-import org.apache.logging.log4j.Level;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -18,9 +16,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import org.apache.logging.log4j.Level;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 @Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock",
 name = "MFR Compat: ForgeMicroblock",
@@ -35,16 +36,16 @@ public class FMP
 			return;
 		try
 		{
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.factoryDecorativeBrickBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.factoryDecorativeStoneBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.factoryGlassBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.rubberLeavesBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MineFactoryReloadedCore.factoryRoadBlock));
-			for (Block block : MineFactoryReloadedCore.machineBlocks.valueCollection())
+			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryDecorativeBrickBlock));
+			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryDecorativeStoneBlock));
+			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryGlassBlock));
+			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.rubberLeavesBlock));
+			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryRoadBlock));
+			for (Block block : MFRThings.machineBlocks.valueCollection())
 				addSubtypes((ItemBlockFactory)Item.getItemFromBlock(block));
 			if (MFRConfig.vanillaOverrideIce.getBoolean(true))
 				sendComm(new ItemStack(Blocks.ice, 1, 1));
-			sendComm(new ItemStack(MineFactoryReloadedCore.rubberWoodBlock, 1, 0));
+			sendComm(new ItemStack(MFRThings.rubberWoodBlock, 1, 0));
 		}
 		catch (Throwable _)
 		{
@@ -53,7 +54,7 @@ public class FMP
 			_.printStackTrace();
 		}
 	}
-	
+
 	private void addSubtypes(ItemBlockFactory item)
 	{
 		List<ItemStack> items = new LinkedList<ItemStack>();
@@ -61,7 +62,7 @@ public class FMP
 		for (int i = items.size(); i --> 0; )
 			sendComm(items.get(i));
 	}
-	
+
 	private void sendComm(ItemStack data)
 	{
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", data);

@@ -7,7 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class EntityPinkSlime extends EntitySlime
 {
@@ -16,19 +17,19 @@ public class EntityPinkSlime extends EntitySlime
 		super(world);
 		setSlimeSize(1);
 	}
-	
+
 	@Override
 	protected int getJumpDelay()
 	{
 		return this.rand.nextInt(10) + 5;
 	}
-	
+
 	@Override
 	protected Item getDropItem()
 	{
-		return this.getSlimeSize() == 1 ? MineFactoryReloadedCore.pinkSlimeItem : Item.getItemById(0);
+		return this.getSlimeSize() == 1 ? MFRThings.pinkSlimeItem : Item.getItemById(0);
 	}
-	
+
 	@Override
 	public void setSlimeSize(int size)
 	{
@@ -36,10 +37,10 @@ public class EntityPinkSlime extends EntitySlime
 		{
 			worldObj.newExplosion(this, posX, posY, posZ, 0.1F, false, true);
 			this.attackEntityFrom(DamageSource.generic, 50);
-			
+
 			if(!worldObj.isRemote)
 			{
-				ItemStack meats = new ItemStack(MineFactoryReloadedCore.meatNuggetRawItem, worldObj.rand.nextInt(12) + size);
+				ItemStack meats = new ItemStack(MFRThings.meatNuggetRawItem, worldObj.rand.nextInt(12) + size);
 				EntityItem e = new EntityItem(worldObj, posX, posY, posZ, meats);
 				e.motionX = rand.nextDouble() - 0.5D;
 				e.motionY = rand.nextDouble() - 0.5D;
@@ -52,19 +53,19 @@ public class EntityPinkSlime extends EntitySlime
 			super.setSlimeSize(size);
 		}
 	}
-	
+
 	@Override
 	protected String getSlimeParticle()
 	{
 		return "";
 	}
-	
+
 	@Override
 	protected EntityPinkSlime createInstance()
 	{
 		return new EntityPinkSlime(this.worldObj);
 	}
-	
+
 	@Override
     public void onStruckByLightning(EntityLightningBolt par1EntityLightningBolt)
     {

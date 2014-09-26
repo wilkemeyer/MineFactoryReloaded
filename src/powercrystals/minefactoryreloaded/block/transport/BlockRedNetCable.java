@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
+import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdRedNet;
 
 import cofh.api.block.IBlockInfo;
 import cofh.repack.codechicken.lib.raytracer.RayTracer;
@@ -39,7 +39,7 @@ public class BlockRedNetCable extends BlockFactory
 implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 {
 	public static final String[] _names = {null, "glass", "energy", "energyglass"};
-	
+
 	private static float _wireSize   =  4.0F / 16.0F;
 	private static float _cageSize   =  6.0F / 16.0F;
 	private static float _gripWidth  =  8.0F / 16.0F;
@@ -111,7 +111,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		subSelection[i++] = new Cuboid6(_wireStart, _wireStart, _wireEnd, _wireEnd, _wireEnd, 1 - _plateDepth);
 		subSelection[i++] = new Cuboid6(_plateDepth, _wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd);
 		subSelection[i++] = new Cuboid6(_wireEnd, _wireStart, _wireStart, 1 - _plateDepth, _wireEnd, _wireEnd);
-		
+
 		// ** 6[4] ** wire cage minus band connection hitbox
 		subSelection[i++] = new Cuboid6(_cageStart, _bandDepthEnd, _cageStart, _cageEnd, _cageStart, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - _bandDepthEnd, _cageEnd);
@@ -119,7 +119,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd, 1 - _bandDepthEnd);
 		subSelection[i++] = new Cuboid6(_bandDepthEnd, _cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - _bandDepthEnd, _cageEnd, _cageEnd);
-		
+
 		// ** 6[5] ** wire cage connection hitbox
 		subSelection[i++] = new Cuboid6(_cageStart, _plateDepth, _cageStart, _cageEnd, _cageStart, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - _plateDepth, _cageEnd);
@@ -148,7 +148,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			if (part == null)
 				return false;
-			
+
 			int subHit = part.subHit;
 			if (subHit < 0) {
 				MineFactoryReloadedCore.instance().getLogger().error("subHit was " + subHit, new Throwable());
@@ -157,7 +157,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 			side = _subSideMappings[subHit];
 
 			ItemStack s = player.inventory.getCurrentItem();
-			
+
 			if (cable.onPartHit(player, side, subHit))
 			{
 				;
@@ -284,16 +284,16 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
 		{
 			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
-			if (world.blockExists(x, y, z) && !world.getBlock(x, y, z).equals(rednetCableBlock))
+			if (world.blockExists(x, y, z) && !world.getBlock(x, y, z).equals(this))
 			{
-				world.notifyBlockOfNeighborChange(x, y, z, rednetCableBlock);
+				world.notifyBlockOfNeighborChange(x, y, z, this);
 				for (ForgeDirection d2 : ForgeDirection.VALID_DIRECTIONS)
 				{
 					if (d2.getOpposite() == d)
 						continue;
 					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-					if (world.blockExists(x2, y2, z2) && !world.getBlock(x2, y2, z2).equals(rednetCableBlock))
-						world.notifyBlockOfNeighborChange(x2, y2, z2, rednetCableBlock);
+					if (world.blockExists(x2, y2, z2) && !world.getBlock(x2, y2, z2).equals(this))
+						world.notifyBlockOfNeighborChange(x2, y2, z2, this);
 				}
 			}
 		}
@@ -340,7 +340,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
 			return ((TileEntityRedNetCable)te).isSolidOnSide(side.ordinal());
-		
+
 		return false;
 	}
 
@@ -403,13 +403,13 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			if (part == null)
 				return;
-			
+
 			int subHit = part.subHit;
 			side = ForgeDirection.getOrientation(_subSideMappings[subHit]);
 			((TileEntityRedNetCable)tile).getTileInfo(info, side, player, debug);
 		}
 	}
-	
+
 	@Override
 	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,
 			EntityPlayer player, List<IChatComponent> info) {
@@ -420,7 +420,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			if (part == null)
 				return;
-			
+
 			int subHit = part.subHit;
 			side = ForgeDirection.getOrientation(_subSideMappings[subHit]);
 			info.add(new ChatComponentText(((TileEntityRedNetCable)tile).getRedNetInfo(side, player)));
@@ -431,7 +431,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 			for (int i = 0; i < 16; i++)
 			{
 				value = _network.getPowerLevelOutput(i);
-				
+
 				if (value != 0)
 				{
 					// TODO: localize color names v
@@ -440,7 +440,7 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 					++foundNonZero;
 				}
 			}
-			
+
 			if (foundNonZero == 0)
 			{
 				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.cable.allzero"));

@@ -12,10 +12,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -26,47 +26,47 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 		super(Machine.MeatPacker);
 		setManageSolids(true);
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	protected boolean activateMachine()
 	{
 		if (drain(_tanks[0], 2, false) == 2)
 		{
 			setWorkDone(getWorkDone() + 1);
-			
+
 			if (getWorkDone() >= getWorkMax())
 			{
 				ItemStack item;
 				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
 				{
-					item = new ItemStack(MineFactoryReloadedCore.meatIngotRawItem);
+					item = new ItemStack(MFRThings.meatIngotRawItem);
 				}
 				else
 				{
-					item = new ItemStack(MineFactoryReloadedCore.meatNuggetRawItem);
+					item = new ItemStack(MFRThings.meatNuggetRawItem);
 				}
-				
+
 				doDrop(item);
-				
+
 				setWorkDone(0);
 			}
 			drain(_tanks[0], 2, true);
@@ -74,25 +74,25 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 50;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
@@ -110,19 +110,19 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 			return _tanks[0].fill(resource, doFill);
 		}
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{

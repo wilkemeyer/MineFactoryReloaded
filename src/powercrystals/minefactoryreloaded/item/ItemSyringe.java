@@ -4,8 +4,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.ISyringe;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public abstract class ItemSyringe extends ItemFactory implements ISyringe
 {
@@ -13,13 +13,13 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 	{
 		setMaxStackSize(1);
 	}
-	
+
 	@Override
 	public boolean isFull3D()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean itemInteractionForEntity(ItemStack s, EntityPlayer player, EntityLivingBase e)
 	{
@@ -27,11 +27,11 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 		{
 			if (inject(e.worldObj, e, s))
 			{
-				s.func_150996_a(MineFactoryReloadedCore.syringeEmptyItem);
+				s.func_150996_a(MFRThings.syringeEmptyItem);
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -44,6 +44,6 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 	@Override
 	public ItemStack getEmptySyringe(ItemStack syringe)
 	{
-		return new ItemStack(MineFactoryReloadedCore.syringeEmptyItem);
+		return new ItemStack(MFRThings.syringeEmptyItem);
 	}
 }

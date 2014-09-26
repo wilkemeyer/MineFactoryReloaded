@@ -17,13 +17,13 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.net.Packets;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 public class TileEntityRedNetLogic extends TileEntityBase implements IRotateableTile
@@ -60,7 +60,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 	private int[] _upgradeLevel = new int[6];
 
-	public int crafters = 0; 
+	public int crafters = 0;
 
 	public TileEntityRedNetLogic()
 	{
@@ -205,7 +205,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		{
 			if (_upgradeLevel[i] > 0)
 			{
-				ItemStack card = new ItemStack(MineFactoryReloadedCore.logicCardItem, 1, _upgradeLevel[i] - 1);
+				ItemStack card = new ItemStack(MFRThings.logicCardItem, 1, _upgradeLevel[i] - 1);
 				if (!player.inventory.addItemStackToInventory(card))
 				{
 					player.entityDropItem(card, 0.0F);
@@ -249,7 +249,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 			String circuitName = packet.getString("name");
 
 			initCircuit(circuitIndex, circuitName);
-			
+
 			int len = packet.getByte("input");
 			int[] inputs = packet.getIntArray("inputs");
 			PinMapping[] pins = _pinMappingInputs[circuitIndex];
@@ -275,7 +275,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		data.setInteger("i", circuit);
 
 		data.setString("name", _circuits[circuit].getClass().getName());
-		
+
 		byte len = _circuits[circuit].getInputCount();
 		data.setByte("input", len);
 		int[] l = new int[len * 2];
@@ -286,7 +286,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 			l[p] = pins[i].buffer; ++p;
 		}
 		data.setIntArray("inputs", l);
-		
+
 		len = _circuits[circuit].getOutputCount();
 		data.setByte("output", len);
 		l = new int[len * 2];
@@ -322,7 +322,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 
 		for (int circuitNum = 0, e = _circuits.length; circuitNum < e; ++circuitNum)
-		{	
+		{
 			if (_updatable[circuitNum])
 			{
 				IRedNetLogicCircuit circuit = _circuits[circuitNum];
@@ -385,7 +385,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	public void onInputsChanged(ForgeDirection side, int[] values)
-	{ 
+	{
 		if (side != ForgeDirection.UNKNOWN)
 		{
 			_buffers[side.ordinal()] = values;

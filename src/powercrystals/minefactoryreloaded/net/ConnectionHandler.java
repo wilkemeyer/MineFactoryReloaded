@@ -14,8 +14,8 @@ import java.util.LinkedHashSet;
 import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.IDelayedValidate;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ConnectionHandler
 {
@@ -71,7 +71,7 @@ public class ConnectionHandler
 
 	@SubscribeEvent
 	public void onItemPickUp(ItemPickupEvent evt) {
-		if (evt.pickedUp.getEntityItem().getItem() == MineFactoryReloadedCore.rubberWoodItem) {
+		if (evt.pickedUp.getEntityItem().getItem() == MFRThings.rubberWoodItem) {
 			evt.player.triggerAchievement(AchievementList.mineWood);
 		}
 	}

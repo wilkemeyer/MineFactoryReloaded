@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
+import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -45,7 +47,7 @@ public class Thaumcraft
 		{
 			return;
 		}
-		
+
 		try
 		{
 			final Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
@@ -60,28 +62,28 @@ public class Thaumcraft
 					forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
 			Class<? extends EntityLivingBase> pech = (Class<? extends EntityLivingBase>) Class.
 					forName("thaumcraft.common.entities.monster.EntityPech");
-			
+
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);
-			
+
 			MFRRegistry.registerSpawnHandler(new SpawnablePech(pech));
-			
+
 			MFRRegistry.registerGrinderBlacklist(golem);
 			MFRRegistry.registerGrinderBlacklist(trunk);
-			
+
 			if (MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false))
 			{
 				MFRRegistry.registerConveyerBlacklist(golem);
 				MFRRegistry.registerConveyerBlacklist(trunk);
 			}
-			
+
 			MFRRegistry.registerHarvestable(new HarvestableWood(tcLog));
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres, HarvestType.Normal));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves,
 					Item.getItemFromBlock(tcSapling)));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling));
 			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod));
-			
+
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling));
 			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean, tcPod) {
 				@Override
@@ -97,7 +99,7 @@ public class Thaumcraft
 							isGoodLog(world, x, y, z+1) ||
 							isGoodLog(world, x, y, z-1);
 				}
-				
+
 				@Override
 				protected boolean isGoodLog(World world, int x, int y, int z)
 				{
@@ -105,13 +107,13 @@ public class Thaumcraft
 					return id == tcLog || id.equals(Blocks.log);
 				}
 			});
-			
+
 			MFRRegistry.registerFruitLogBlock(tcLog);
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
-			
+
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
-			
+
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
 			aspects = (LinkedHashMap<String, ? extends Object>)Aspect.
 					getDeclaredField("aspects").get(null);
@@ -123,7 +125,7 @@ public class Thaumcraft
 					String.class, AspectList, NBTBase[].class);
 			addAspect = AspectList.getDeclaredMethod("add", Aspect, int.class);
 			newAspectList = AspectList.getDeclaredConstructor(ItemStack.class, int.class);
-			
+
 			doAspects();
 		}
 		catch(Throwable x)
@@ -131,14 +133,14 @@ public class Thaumcraft
 			x.printStackTrace();
 		}
 	}
-	
+
 	private static LinkedHashMap<String, ? extends Object> aspects = null;
 	private static Method registerItem = null;
 	private static Method registerEntity = null;
 	private static Class<?> AspectList = null;
 	private static Constructor<?> newAspectList = null;
 	private static Method addAspect = null;
-	
+
 	private static void parseAspects(ItemStack item, String toadd, boolean craftedAspects) throws Throwable
 	{
 		Object aspectList;
@@ -161,7 +163,7 @@ public class Thaumcraft
 		}
 		registerItem.invoke(null, item.getItem(), item.getItemDamage(), aspectList);
 	}
-	
+
 	private static void parseAspects(String entity, String toadd) throws Throwable
 	{
 		String[] list = toadd.split(",");
@@ -175,42 +177,42 @@ public class Thaumcraft
 		}
 		registerEntity.invoke(null, entity, aspectList, null);
 	}
-	
+
 	private static void parseAspects(Item item, String toadd) throws Throwable
 	{
 		parseAspects(item, OreDictionary.WILDCARD_VALUE, toadd, true);
 	}
-	
+
 	private static void parseAspects(Item item, int meta, String toadd, boolean craftedAspects) throws Throwable
 	{
 		parseAspects(new ItemStack(item, 1, meta), toadd, craftedAspects);
 	}
-	
+
 	private static void parseAspects(Block item, int meta, String toadd) throws Throwable
 	{
 		parseAspects(new ItemStack(item, 1, meta), toadd, true);
 	}
-	
+
 	private static void parseAspects(Block item, String toadd) throws Throwable
 	{
 		parseAspects(item, OreDictionary.WILDCARD_VALUE, toadd);
 	}
-	
+
 	private static void parseAspects(Block item, int meta, String toadd, boolean craftedAspects) throws Throwable
 	{
 		parseAspects(new ItemStack(item, 1, meta), toadd, craftedAspects);
 	}
-	
+
 	private static void parseAspects(Block item, String toadd, boolean craftedAspects) throws Throwable
 	{
 		parseAspects(item, OreDictionary.WILDCARD_VALUE, toadd, craftedAspects);
 	}
-	
+
 	private static void parseAspects(Machine item, String toadd) throws Throwable
 	{
 		parseAspects(new ItemStack(item.getBlock(), 1, item.getMeta()), toadd, true);
 	}
-	
+
 	private static void doAspects() throws Throwable
 	{
 		parseAspects(Machine.AutoAnvil, "3 Permutatio, 5 Fabrico, 10 Metallum, 5 Machina");
@@ -254,112 +256,112 @@ public class Thaumcraft
 		parseAspects(Machine.WeatherCollector, " 4 vacuos, 5 Machina, 5 metallum, 4 Tempestas");
 
 		parseAspects("mfrEntityPinkSlime", "1 Aqua, 2 Limus, 1 Corpus, 1 Bestia");
-		parseAspects(MineFactoryReloadedCore.bioFuelBucketItem, "2 Herba, 1 Potentia, 1 Aqua, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.biofuelLiquid, "4 Herba, 2 Potentia, 2 Aqua");
-		parseAspects(MineFactoryReloadedCore.blankRecordItem, "4 Sensus, 4 Aer, 4 Lucrum, 4 vacuos");
-		parseAspects(MineFactoryReloadedCore.ceramicDyeItem, "1 Terra, 1 Aqua, 1 Sensus");
-		parseAspects(MineFactoryReloadedCore.chocolateMilkBucketItem, "2 Fames, 1 Motus, 1 Potentia, 2 Aqua, 8 Metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.chocolateMilkLiquid, "4 Fames, 2 Motus, 2 Potentia, 4 Aqua");
-		parseAspects(MineFactoryReloadedCore.conveyorBlock, "3 Motus, 1 iter, 1 Machina");
-		parseAspects(MineFactoryReloadedCore.essenceLiquid, "4 praecantatio, 2 cognitio, 2 Aqua");
-		parseAspects(MineFactoryReloadedCore.factoryGlassBlock, "1 Vitreus, 1 Sensus");
-		parseAspects(MineFactoryReloadedCore.factoryHammerItem, "1 Instrumentum, 2 Fabrico, 2 ignis, 3 Ordo");
-		parseAspects(MineFactoryReloadedCore.fertilizerItem, "1 Granum, 1 Herba, 1 Messis, 1 sensus");
-		parseAspects(MineFactoryReloadedCore.laserFocusItem, "1 Ordo, 1 Vitreus, 4 Lucrum");
-		parseAspects(MineFactoryReloadedCore.machineBaseItem, "2 Fabrico, 2 Machina, 1 Saxum");
-		parseAspects(MineFactoryReloadedCore.meatBucketItem, "3 Corpus, 1 bestia, 1 Aqua, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.meatIngotCookedItem, "3 Corpus, 2 fames, 1 Ignis");
-		parseAspects(MineFactoryReloadedCore.meatIngotRawItem, "3 Corpus, 2 fames, 1 bestia");
-		parseAspects(MineFactoryReloadedCore.meatLiquid, "6 Corpus, 2 Aqua, 2 bestia");
-		parseAspects(MineFactoryReloadedCore.meatNuggetCookedItem, "1 fames");
-		parseAspects(MineFactoryReloadedCore.meatNuggetRawItem, "1 Corpus");
-		parseAspects(MineFactoryReloadedCore.milkBottleItem, "1 Fames, 1 Sano, 1 Victus, 1 Vitreus");
-		parseAspects(MineFactoryReloadedCore.milkLiquid, "4 Fames, 4 Sano, 4 Aqua, 2 Victus");
-		parseAspects(MineFactoryReloadedCore.mobEssenceBucketItem, "2 praecantatio, 1 cognitio, 1 Aqua, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.mushroomSoupBucketItem, "2 fames, 2 Herba, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.mushroomSoupLiquid, "4 fames, 4 Herba, 1 Aqua");
-		parseAspects(MineFactoryReloadedCore.pinkSlimeItem, "1 Limus, 1 Corpus");
-		parseAspects(MineFactoryReloadedCore.pinkSlimeBucketItem, "2 Limus, 2 Corpus, 1 Aqua, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.pinkSlimeLiquid, "4 Limus, 4 Corpus, 2 Aqua");
-		parseAspects(MineFactoryReloadedCore.plasticSheetItem, "1 Fabrico, 1 ignis, 2 Ordo");
-		parseAspects(MineFactoryReloadedCore.portaSpawnerItem, "8 Alienis, 4 bestia, 4 exanimis, 4 iter, 8 praecantatio, 8 Permutatio");
-		parseAspects(MineFactoryReloadedCore.rawPlasticItem, "1 Fabrico, 1 ignis, 1 Ordo, 1 Perditio");
-		parseAspects(MineFactoryReloadedCore.rawRubberItem, "1 Limus, 2 Arbor");
-		parseAspects(MineFactoryReloadedCore.rednetCableBlock, "1 cognitio, 1 Machina", true);
-		parseAspects(MineFactoryReloadedCore.rednetLogicBlock, "15 cognitio, 5 Machina", true);
-		parseAspects(MineFactoryReloadedCore.rednetMemoryCardItem, "3 cognitio, 1 Machina");
-		parseAspects(MineFactoryReloadedCore.rednetMeterItem, "1 Instrumentum, 1 Sensus, 1 Machina");
-		parseAspects(MineFactoryReloadedCore.rednetPanelBlock, "2 Sensus, 2 cognitio, 2 Machina");
-		parseAspects(MineFactoryReloadedCore.rubberBarItem, "1 Motus, 1 Arbor, 1 ignis");
-		parseAspects(MineFactoryReloadedCore.rubberLeavesBlock, "1 Herba");
-		parseAspects(MineFactoryReloadedCore.rubberSaplingBlock, "1 Arbor, 1 Herba, 1 Granum");
-		parseAspects(MineFactoryReloadedCore.rubberWoodBlock, "3 Arbor, 1 Limus");
-		parseAspects(MineFactoryReloadedCore.rulerItem, "1 Instrumentum, 1 Sensus");
-		parseAspects(MineFactoryReloadedCore.safariNetItem, "4 Spiritus, 8 Alienis, 8 iter, 4 praecantatio, 8 Vinculum, 4 Fabrico");
-		parseAspects(MineFactoryReloadedCore.safariNetJailerItem, "10 Vinculum, 1 praecantatio, 4 spiritus, 2 metallum, 1 Fabrico");
-		parseAspects(MineFactoryReloadedCore.safariNetLauncherItem, "2 Volatus, 2 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.safariNetSingleItem, "4 Vinculum, 4 spiritus, 2 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.sewageBucketItem, "2 Venenum, 1 bestia, 1 Aqua, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.sewageLiquid, "4 Venenum, 2 bestia, 2 Aqua");
-		parseAspects(MineFactoryReloadedCore.sludgeBucketItem, "2 Venenum, 1 Terra, 1 Aqua, 1 Vitium, 8 metallum, 1 vacuos");
-		parseAspects(MineFactoryReloadedCore.sludgeLiquid, "4 Venenum, 2 Terra, 2 Aqua, 1 Vitium");
-		parseAspects(MineFactoryReloadedCore.spyglassItem, "2 Victus, 6 Sensus");
-		parseAspects(MineFactoryReloadedCore.strawItem, "1 vacuos, 4 Aqua, 4 fames, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.sugarCharcoalItem, "2 Potentia, 2 ignis");
-		parseAspects(MineFactoryReloadedCore.syringeCureItem, "2 Sano, 1 Exanimis, 1 Humanus, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.syringeEmptyItem, "1 vacuos, 1 Sano, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.syringeGrowthItem, "1 tempus, 2 Sano, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.syringeHealthItem, "2 Sano, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.syringeSlimeItem, "1 Sano, 1 Limus, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.syringeZombieItem, "1 tempus, 1 Sano, 1 Exanimis, 1 Instrumentum");
-		parseAspects(MineFactoryReloadedCore.vineScaffoldBlock, "1 Herba, 1 Fabrico");
-		parseAspects(MineFactoryReloadedCore.xpExtractorItem, "1 praecantatio, 1 Permutatio, 1 vacuos, 1 Instrumentum, 1 Meto");
+		parseAspects(bioFuelBucketItem, "2 Herba, 1 Potentia, 1 Aqua, 8 metallum, 1 vacuos");
+		parseAspects(biofuelLiquid, "4 Herba, 2 Potentia, 2 Aqua");
+		parseAspects(blankRecordItem, "4 Sensus, 4 Aer, 4 Lucrum, 4 vacuos");
+		parseAspects(ceramicDyeItem, "1 Terra, 1 Aqua, 1 Sensus");
+		parseAspects(chocolateMilkBucketItem, "2 Fames, 1 Motus, 1 Potentia, 2 Aqua, 8 Metallum, 1 vacuos");
+		parseAspects(chocolateMilkLiquid, "4 Fames, 2 Motus, 2 Potentia, 4 Aqua");
+		parseAspects(conveyorBlock, "3 Motus, 1 iter, 1 Machina");
+		parseAspects(essenceLiquid, "4 praecantatio, 2 cognitio, 2 Aqua");
+		parseAspects(factoryGlassBlock, "1 Vitreus, 1 Sensus");
+		parseAspects(factoryHammerItem, "1 Instrumentum, 2 Fabrico, 2 ignis, 3 Ordo");
+		parseAspects(fertilizerItem, "1 Granum, 1 Herba, 1 Messis, 1 sensus");
+		parseAspects(laserFocusItem, "1 Ordo, 1 Vitreus, 4 Lucrum");
+		parseAspects(machineBaseItem, "2 Fabrico, 2 Machina, 1 Saxum");
+		parseAspects(meatBucketItem, "3 Corpus, 1 bestia, 1 Aqua, 8 metallum, 1 vacuos");
+		parseAspects(meatIngotCookedItem, "3 Corpus, 2 fames, 1 Ignis");
+		parseAspects(meatIngotRawItem, "3 Corpus, 2 fames, 1 bestia");
+		parseAspects(meatLiquid, "6 Corpus, 2 Aqua, 2 bestia");
+		parseAspects(meatNuggetCookedItem, "1 fames");
+		parseAspects(meatNuggetRawItem, "1 Corpus");
+		parseAspects(milkBottleItem, "1 Fames, 1 Sano, 1 Victus, 1 Vitreus");
+		parseAspects(milkLiquid, "4 Fames, 4 Sano, 4 Aqua, 2 Victus");
+		parseAspects(mobEssenceBucketItem, "2 praecantatio, 1 cognitio, 1 Aqua, 8 metallum, 1 vacuos");
+		parseAspects(mushroomSoupBucketItem, "2 fames, 2 Herba, 8 metallum, 1 vacuos");
+		parseAspects(mushroomSoupLiquid, "4 fames, 4 Herba, 1 Aqua");
+		parseAspects(pinkSlimeItem, "1 Limus, 1 Corpus");
+		parseAspects(pinkSlimeBucketItem, "2 Limus, 2 Corpus, 1 Aqua, 8 metallum, 1 vacuos");
+		parseAspects(pinkSlimeLiquid, "4 Limus, 4 Corpus, 2 Aqua");
+		parseAspects(plasticSheetItem, "1 Fabrico, 1 ignis, 2 Ordo");
+		parseAspects(portaSpawnerItem, "8 Alienis, 4 bestia, 4 exanimis, 4 iter, 8 praecantatio, 8 Permutatio");
+		parseAspects(rawPlasticItem, "1 Fabrico, 1 ignis, 1 Ordo, 1 Perditio");
+		parseAspects(rawRubberItem, "1 Limus, 2 Arbor");
+		parseAspects(rednetCableBlock, "1 cognitio, 1 Machina", true);
+		parseAspects(rednetLogicBlock, "15 cognitio, 5 Machina", true);
+		parseAspects(rednetMemoryCardItem, "3 cognitio, 1 Machina");
+		parseAspects(rednetMeterItem, "1 Instrumentum, 1 Sensus, 1 Machina");
+		parseAspects(rednetPanelBlock, "2 Sensus, 2 cognitio, 2 Machina");
+		parseAspects(rubberBarItem, "1 Motus, 1 Arbor, 1 ignis");
+		parseAspects(rubberLeavesBlock, "1 Herba");
+		parseAspects(rubberSaplingBlock, "1 Arbor, 1 Herba, 1 Granum");
+		parseAspects(rubberWoodBlock, "3 Arbor, 1 Limus");
+		parseAspects(rulerItem, "1 Instrumentum, 1 Sensus");
+		parseAspects(safariNetItem, "4 Spiritus, 8 Alienis, 8 iter, 4 praecantatio, 8 Vinculum, 4 Fabrico");
+		parseAspects(safariNetJailerItem, "10 Vinculum, 1 praecantatio, 4 spiritus, 2 metallum, 1 Fabrico");
+		parseAspects(safariNetLauncherItem, "2 Volatus, 2 Instrumentum");
+		parseAspects(safariNetSingleItem, "4 Vinculum, 4 spiritus, 2 Instrumentum");
+		parseAspects(sewageBucketItem, "2 Venenum, 1 bestia, 1 Aqua, 8 metallum, 1 vacuos");
+		parseAspects(sewageLiquid, "4 Venenum, 2 bestia, 2 Aqua");
+		parseAspects(sludgeBucketItem, "2 Venenum, 1 Terra, 1 Aqua, 1 Vitium, 8 metallum, 1 vacuos");
+		parseAspects(sludgeLiquid, "4 Venenum, 2 Terra, 2 Aqua, 1 Vitium");
+		parseAspects(spyglassItem, "2 Victus, 6 Sensus");
+		parseAspects(strawItem, "1 vacuos, 4 Aqua, 4 fames, 1 Instrumentum");
+		parseAspects(sugarCharcoalItem, "2 Potentia, 2 ignis");
+		parseAspects(syringeCureItem, "2 Sano, 1 Exanimis, 1 Humanus, 1 Instrumentum");
+		parseAspects(syringeEmptyItem, "1 vacuos, 1 Sano, 1 Instrumentum");
+		parseAspects(syringeGrowthItem, "1 tempus, 2 Sano, 1 Instrumentum");
+		parseAspects(syringeHealthItem, "2 Sano, 1 Instrumentum");
+		parseAspects(syringeSlimeItem, "1 Sano, 1 Limus, 1 Instrumentum");
+		parseAspects(syringeZombieItem, "1 tempus, 1 Sano, 1 Exanimis, 1 Instrumentum");
+		parseAspects(vineScaffoldBlock, "1 Herba, 1 Fabrico");
+		parseAspects(xpExtractorItem, "1 praecantatio, 1 Permutatio, 1 vacuos, 1 Instrumentum, 1 Meto");
 		//parseAspects(Tracks, "Tracks Currently Have No Aspects.");
-		
-		Item item = MineFactoryReloadedCore.upgradeItem;
-		
+
+		Item item = upgradeItem;
+
 		parseAspects(item, "2 cognitio");
 		for (int i = 0, n = 10; i <= n; ++i)
 			parseAspects(item, i, "2 cognitio", true);
-		parseAspects(MineFactoryReloadedCore.logicCardItem, 0, "4 Cognitio", true);
-		parseAspects(MineFactoryReloadedCore.logicCardItem, 1, "7 Cognitio", true);
-		parseAspects(MineFactoryReloadedCore.logicCardItem, 2, "10 Cognitio", true);
-		
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  0, "2 gelum, 1 terra"); // ice
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  1, "1 terra, 3 Lux, 2 sensus"); // glowstone
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  2, "2 Terra, 4 sensus"); // lapis
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  3, "1 Terra, 3 ignis, 1 Saxum, 1 tenebrae"); // obsidian
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  4, "2 Terra, 1 Saxum"); // paved stone
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  5, "1 gelum, 1 terra"); // snow
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  6, "1 saxum, 3 Lux, 2 Sensus"); // glowstone_large
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  7, "2 gelum, 1 saxum"); // ice_large
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  8, "2 saxum, 4 sensus"); // lapis_large
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock,  9, "3 ignis, 2 Saxum, 1 tenebrae"); // obsidian large
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 10, "1 gelum, 1 saxum"); // snow_large
-		//parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 11, ""); // PRC housing (below)
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 12, "3 Corpus, 2 fames, 1 bestia", true); // raw meat block
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 13, "3 Corpus, 2 fames, 1 Ignis", true); // cooked meat block
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 0, "2 Saxum, 1 tenebrae");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 1, "2 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 2, "1 perditio, 1 Saxum, 1 tenebrae");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 3, "1 perditio, 1 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 4, "2 Saxum, 1 tenebrae");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 5, "2 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 6, "2 Terra, 1 Saxum, 1 tenebrae");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 7, "2 Terra, 1 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 8, "1 Terra, 1 Saxum, 1 tenebrae");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 9, "1 Terra, 1 Saxum, 1 Victus");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 10, "3 Saxum, 1 tenebrae");
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 11, "3 Saxum, 1 Victus");
-		//parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 12, "2 Saxum, 1 tenebrae");
-		//parseAspects(MineFactoryReloadedCore.factoryDecorativeStoneBlock, 13, "2 Saxum, 1 Victus");
+		parseAspects(logicCardItem, 0, "4 Cognitio", true);
+		parseAspects(logicCardItem, 1, "7 Cognitio", true);
+		parseAspects(logicCardItem, 2, "10 Cognitio", true);
 
-		parseAspects(MineFactoryReloadedCore.factoryDecorativeBrickBlock, 11, "1 cognitio, 3 Machina", true);
-		parseAspects(MineFactoryReloadedCore.factoryRoadBlock, 0, "1 iter, 1 Saxum, 1 sensus");
-		parseAspects(MineFactoryReloadedCore.factoryRoadBlock, 1, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light (off)
-		parseAspects(MineFactoryReloadedCore.factoryRoadBlock, 2, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light (on)
-		parseAspects(MineFactoryReloadedCore.factoryRoadBlock, 3, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light inverted (off)
-		parseAspects(MineFactoryReloadedCore.factoryRoadBlock, 4, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light inverted (on)
-		
+		parseAspects(factoryDecorativeBrickBlock,  0, "2 gelum, 1 terra"); // ice
+		parseAspects(factoryDecorativeBrickBlock,  1, "1 terra, 3 Lux, 2 sensus"); // glowstone
+		parseAspects(factoryDecorativeBrickBlock,  2, "2 Terra, 4 sensus"); // lapis
+		parseAspects(factoryDecorativeBrickBlock,  3, "1 Terra, 3 ignis, 1 Saxum, 1 tenebrae"); // obsidian
+		parseAspects(factoryDecorativeBrickBlock,  4, "2 Terra, 1 Saxum"); // paved stone
+		parseAspects(factoryDecorativeBrickBlock,  5, "1 gelum, 1 terra"); // snow
+		parseAspects(factoryDecorativeBrickBlock,  6, "1 saxum, 3 Lux, 2 Sensus"); // glowstone_large
+		parseAspects(factoryDecorativeBrickBlock,  7, "2 gelum, 1 saxum"); // ice_large
+		parseAspects(factoryDecorativeBrickBlock,  8, "2 saxum, 4 sensus"); // lapis_large
+		parseAspects(factoryDecorativeBrickBlock,  9, "3 ignis, 2 Saxum, 1 tenebrae"); // obsidian large
+		parseAspects(factoryDecorativeBrickBlock, 10, "1 gelum, 1 saxum"); // snow_large
+		//parseAspects(factoryDecorativeBrickBlock, 11, ""); // PRC housing (below)
+		parseAspects(factoryDecorativeBrickBlock, 12, "3 Corpus, 2 fames, 1 bestia", true); // raw meat block
+		parseAspects(factoryDecorativeBrickBlock, 13, "3 Corpus, 2 fames, 1 Ignis", true); // cooked meat block
+		parseAspects(factoryDecorativeStoneBlock, 0, "2 Saxum, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 1, "2 Saxum, 1 Victus");
+		parseAspects(factoryDecorativeStoneBlock, 2, "1 perditio, 1 Saxum, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 3, "1 perditio, 1 Saxum, 1 Victus");
+		parseAspects(factoryDecorativeStoneBlock, 4, "2 Saxum, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 5, "2 Saxum, 1 Victus");
+		parseAspects(factoryDecorativeStoneBlock, 6, "2 Terra, 1 Saxum, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 7, "2 Terra, 1 Saxum, 1 Victus");
+		parseAspects(factoryDecorativeStoneBlock, 8, "1 Terra, 1 Saxum, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 9, "1 Terra, 1 Saxum, 1 Victus");
+		parseAspects(factoryDecorativeStoneBlock, 10, "3 Saxum, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 11, "3 Saxum, 1 Victus");
+		//parseAspects(factoryDecorativeStoneBlock, 12, "2 Saxum, 1 tenebrae");
+		//parseAspects(factoryDecorativeStoneBlock, 13, "2 Saxum, 1 Victus");
+
+		parseAspects(factoryDecorativeBrickBlock, 11, "1 cognitio, 3 Machina", true);
+		parseAspects(factoryRoadBlock, 0, "1 iter, 1 Saxum, 1 sensus");
+		parseAspects(factoryRoadBlock, 1, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light (off)
+		parseAspects(factoryRoadBlock, 2, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light (on)
+		parseAspects(factoryRoadBlock, 3, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light inverted (off)
+		parseAspects(factoryRoadBlock, 4, "1 iter, 1 Saxum, 1 sensus, 3 Lux"); // road light inverted (on)
+
 	}
 }
