@@ -8,7 +8,6 @@ import cofh.core.world.WorldHandler;
 import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -308,7 +307,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static Item meatNuggetCookedItem;
 	public static Item meatBucketItem;
 	public static Item pinkSlimeBucketItem;
-	public static Item pinkSlimeballItem;
+	public static Item pinkSlimeItem;
 	public static Item safariNetJailerItem;
 	public static Item laserFocusItem;
 	public static Item chocolateMilkBucketItem;
@@ -467,7 +466,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		meatIngotCookedItem = (new ItemFactoryFood( 10, meatIngotSaturation)).setUnlocalizedName("mfr.meat.ingot.cooked");
 		meatNuggetRawItem = (new ItemFactoryFood( 1, meatNuggetSaturation)).setUnlocalizedName("mfr.meat.nugget.raw");
 		meatNuggetCookedItem = (new ItemFactoryFood( 4, meatNuggetSaturation)).setUnlocalizedName("mfr.meat.nugget.cooked");
-		pinkSlimeballItem = (new ItemPinkSlime()).setUnlocalizedName("mfr.pinkslime");
+		pinkSlimeItem = (new ItemPinkSlime()).setUnlocalizedName("mfr.pinkslime");
 
 		if (MFRConfig.enableLiquidSyringe.getBoolean(true))
 			syringeEmptyItem = (new ItemSyringeLiquid()).setUnlocalizedName("mfr.syringe.empty");
@@ -577,16 +576,16 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		registerBlock(plasticTank, ItemBlockFactory.class);
 
-		registerBlock(milkLiquid, null);
-		registerBlock(sludgeLiquid, null);
-		registerBlock(sewageLiquid, null);
-		registerBlock(essenceLiquid, null);
-		registerBlock(biofuelLiquid, null);
-		registerBlock(meatLiquid, null);
-		registerBlock(pinkSlimeLiquid, null);
-		registerBlock(chocolateMilkLiquid, null);
-		registerBlock(mushroomSoupLiquid, null);
-		registerBlock(steamFluid, null);
+		registerBlock(milkLiquid, ItemBlock.class);
+		registerBlock(sludgeLiquid, ItemBlock.class);
+		registerBlock(sewageLiquid, ItemBlock.class);
+		registerBlock(essenceLiquid, ItemBlock.class);
+		registerBlock(biofuelLiquid, ItemBlock.class);
+		registerBlock(meatLiquid, ItemBlock.class);
+		registerBlock(pinkSlimeLiquid, ItemBlock.class);
+		registerBlock(chocolateMilkLiquid, ItemBlock.class);
+		registerBlock(mushroomSoupLiquid, ItemBlock.class);
+		registerBlock(steamFluid, ItemBlock.class);
 
 		Blocks.fire.setFireInfo(rubberWoodBlock, 50, 15);
 		Blocks.fire.setFireInfo(rubberLeavesBlock, 80, 25);
@@ -674,11 +673,9 @@ public class MineFactoryReloadedCore extends BaseMod
 	public void missingMappings(FMLMissingMappingsEvent e)
 	{
 		List<MissingMapping> list = e.get();
-			FMLLog.severe("Checking for %s remaps", list.size());
 		if (list.size() > 0) for (MissingMapping mapping : list)
 		{
 			String name = mapping.name;
-			FMLLog.severe("Checking for remap: %s", name);
 			if (name.indexOf(':') >= 0)
 				name = name.substring(name.indexOf(':') + 1);
 			l: switch (mapping.type)
@@ -688,7 +685,7 @@ public class MineFactoryReloadedCore extends BaseMod
 				if (block != null)
 					mapping.remap(block);
 				else if ("tile.null".equals(name))
-					mapping.ignore();
+					mapping.remap(fakeLaserBlock);
 				else
 					mapping.warn();
 				break l;
@@ -701,7 +698,6 @@ public class MineFactoryReloadedCore extends BaseMod
 				break l;
 			default:
 			}
-			FMLLog.severe("Action taken: %s", mapping.getAction().name());
 		}
 	}
 
@@ -812,7 +808,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		// reference weights[iron: 160; coal: 120; gold: 80; golden apple: 10]
 		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(safariNetJailerItem), 1, 1, 15));
 		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock), 1, 8, 70));
-		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(pinkSlimeballItem), 1, 1, 5));
+		ChestGenHooks.getInfo("dimensionalDungeonChest").addItem(new WeightedRandomChestContent(new ItemStack(pinkSlimeItem), 1, 1, 1));
 		// tempting as a sacred sapling is, chests are too common with too few possible items
 		// maybe as a custom dungeon for integration
 		///}

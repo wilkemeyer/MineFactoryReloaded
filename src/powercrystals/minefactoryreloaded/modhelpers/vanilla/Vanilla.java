@@ -258,7 +258,7 @@ public class Vanilla
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
 		MFRRegistry.registerGrindable(new GrindableEnderman());
 		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Items.slime_ball), 1));
-		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem), 1));
+		MFRRegistry.registerGrindable(new GrindableSlime(EntityPinkSlime.class, new ItemStack(MineFactoryReloadedCore.pinkSlimeItem), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Items.magma_cream), 1) {
 			@Override
 			protected boolean shouldDrop(EntitySlime slime) {

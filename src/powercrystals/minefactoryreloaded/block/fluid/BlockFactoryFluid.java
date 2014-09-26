@@ -195,7 +195,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			else if (this == MineFactoryReloadedCore.pinkSlimeLiquid)
 			{
 				if (rand.nextBoolean())
-					drop = new ItemStack(MineFactoryReloadedCore.pinkSlimeballItem, rand.nextInt(3));
+					drop = new ItemStack(MineFactoryReloadedCore.pinkSlimeItem, rand.nextInt(3));
 				else
 					if (rand.nextInt(5) != 0)
 						drop = new ItemStack(MineFactoryReloadedCore.meatNuggetRawItem, rand.nextInt(2));

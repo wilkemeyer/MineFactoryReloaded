@@ -278,7 +278,7 @@ public class Thaumcraft
 		parseAspects(MineFactoryReloadedCore.mobEssenceBucketItem, "2 praecantatio, 1 cognitio, 1 Aqua, 8 metallum, 1 vacuos");
 		parseAspects(MineFactoryReloadedCore.mushroomSoupBucketItem, "2 fames, 2 Herba, 8 metallum, 1 vacuos");
 		parseAspects(MineFactoryReloadedCore.mushroomSoupLiquid, "4 fames, 4 Herba, 1 Aqua");
-		parseAspects(MineFactoryReloadedCore.pinkSlimeballItem, "1 Limus, 1 Corpus");
+		parseAspects(MineFactoryReloadedCore.pinkSlimeItem, "1 Limus, 1 Corpus");
 		parseAspects(MineFactoryReloadedCore.pinkSlimeBucketItem, "2 Limus, 2 Corpus, 1 Aqua, 8 metallum, 1 vacuos");
 		parseAspects(MineFactoryReloadedCore.pinkSlimeLiquid, "4 Limus, 4 Corpus, 2 Aqua");
 		parseAspects(MineFactoryReloadedCore.plasticSheetItem, "1 Fabrico, 1 ignis, 2 Ordo");

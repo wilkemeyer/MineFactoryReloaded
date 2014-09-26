@@ -492,7 +492,7 @@ public class ThermalExpansion extends Vanilla
 				"CDC",
 				'G', "sheetPlastic",
 				'D', "gemDiamond",
-				'S', MineFactoryReloadedCore.pinkSlimeballItem,
+				'S', new ItemStack(MineFactoryReloadedCore.pinkSlimeItem, 1, 1),
 				'H', "blockGlassHardened",
 				'F', lamp,
 				'C', powerCoilElectrum

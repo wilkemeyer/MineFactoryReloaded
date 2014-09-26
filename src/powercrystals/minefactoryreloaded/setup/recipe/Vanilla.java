@@ -85,7 +85,7 @@ public class Vanilla
 		registerOre("cableRedNet",       stack(rednetCableBlock, 1, 1));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 2));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 3));
-		registerOre("slimeball",         pinkSlimeballItem);
+		registerOre("slimeball",         stack(pinkSlimeItem, 1, 0));
 		registerOre("dyeBrown",          fertilizerItem);
 		registerOre("fertilizerOrganic", fertilizerItem);
 		registerOre("wireExplosive",     detCordBlock);
@@ -541,7 +541,7 @@ public class Vanilla
 				'G', "sheetPlastic",
 				'L', glowstone,
 				'D', "gemDiamond",
-				'S', pinkSlimeballItem,
+				'S', stack(pinkSlimeItem, 1, 1),
 				'M', machineBaseItem,
 				} );
 
@@ -920,13 +920,13 @@ public class Vanilla
 		addStorageRecipe(stack(meatIngotCookedItem), "nuggetMeat");
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 12), "ingotMeatRaw");
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 13), "ingotMeat");
-		addStorageRecipe(stack(pinkSlimeBlock), stack(pinkSlimeballItem));
+		addStorageRecipe(stack(pinkSlimeBlock), stack(pinkSlimeItem));
 
 		addReverseStorageRecipe(stack(meatIngotRawItem), "blockMeatRaw");
 		addReverseStorageRecipe(stack(meatIngotCookedItem), "blockMeat");
 		addReverseStorageRecipe(stack(meatNuggetRawItem), "ingotMeatRaw");
 		addReverseStorageRecipe(stack(meatNuggetCookedItem), "ingotMeat");
-		addReverseStorageRecipe(stack(pinkSlimeballItem), stack(pinkSlimeBlock));
+		addReverseStorageRecipe(stack(pinkSlimeItem), stack(pinkSlimeBlock));
 	}
 
 	protected void registerSyringes()
@@ -1151,8 +1151,10 @@ public class Vanilla
 		if (_registeredSmelting) return;
 		_registeredSmelting = true;
 
+		addWeakSmelting(stack(rubberBarItem), stack(rawRubberItem));
+
 		for (ItemStack s : getOres("itemRubber"))
-			addSmelting(stack(rawPlasticItem), s, 0.3F);
+			addSmelting(stack(rawPlasticItem), s, 0.3f);
 		for (ItemStack s : getOres("blockPlastic"))
 			addSmelting(stack(rawPlasticItem, 4), s);
 		for (ItemStack s : getOres("sheetPlastic"))
@@ -1162,14 +1164,14 @@ public class Vanilla
 		addSmelting(stack(rawPlasticItem, 4), strawItem);
 		addSmelting(stack(rawPlasticItem, 2), rulerItem);
 
-		addSmelting(stack(meatIngotCookedItem), meatIngotRawItem, 0.5F);
-		addSmelting(stack(meatNuggetCookedItem), meatNuggetRawItem, 0.3F);
+		addSmelting(stack(meatIngotCookedItem), meatIngotRawItem, 0.5f);
+		addSmelting(stack(meatNuggetCookedItem), meatNuggetRawItem, 0.3f);
 		addWeakSmelting(stack(sugarCharcoalItem), sugar);
 		// cooked meat block -> charcoal
 		addWeakSmelting(stack(coal, 3, 1), stack(factoryDecorativeBrickBlock, 1, 13));
-
 		addWeakSmelting(stack(coal, 1, 1), stack(rubberWoodBlock));
-		addWeakSmelting(stack(rubberBarItem), stack(rawRubberItem));
+
+		addSmelting(stack(pinkSlimeItem, 1, 1), pinkSlimeBlock, 0.5f);
 
 		// decorative bricks: cobble->smooth
 		addWeakSmelting(stack(factoryDecorativeStoneBlock, 1, 0), stack(factoryDecorativeStoneBlock, 1, 2));

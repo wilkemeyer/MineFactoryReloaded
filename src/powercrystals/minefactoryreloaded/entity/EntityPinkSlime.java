@@ -26,7 +26,7 @@ public class EntityPinkSlime extends EntitySlime
 	@Override
 	protected Item getDropItem()
 	{
-		return this.getSlimeSize() == 1 ? MineFactoryReloadedCore.pinkSlimeballItem : Item.getItemById(0);
+		return this.getSlimeSize() == 1 ? MineFactoryReloadedCore.pinkSlimeItem : Item.getItemById(0);
 	}
 	
 	@Override

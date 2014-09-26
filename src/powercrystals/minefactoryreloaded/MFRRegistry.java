@@ -397,6 +397,7 @@ public abstract class MFRRegistry
 		remaps.put("tile.mfr.decorativebrick", "brick");
 		remaps.put("tile.mfr.decorativestone", "stone");
 		remaps.put("item.mfr.bucket.plasticcup", "plastic.cup");
+		remaps.put("item.mfr.armor.boots.plastic", "plastic.boots");
 		remaps.put("item.mfr.pinkslimeball", "pinkslime");
 	}
 
@@ -457,6 +458,8 @@ public abstract class MFRRegistry
 		name = remapName(name);
 
 		GameRegistry.registerBlock(block, item, name, args);
+		if (item != null)
+			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));
 	}
 
 	public static void registerItem(Item item, String name)

@@ -17,6 +17,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -93,15 +94,15 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 
 		float modifier = 1f;
 		if (settings.get("silkTouch") == Boolean.TRUE)
-		{/*
+		{
 			ItemStack item = new ItemStack(_item);
 			NBTTagCompound tag = new NBTTagCompound();
 			tree.writeToNBT(tag);
 			item.setTagCompound(tag);
-			prod.add(item);//*/
+			prod.add(item);
 			modifier = 100f;
 		}
-		//else
+		else
 		{
 			boolean hasMate = tree.getMate() != null;
 			for (ITree s : tree.getSaplings(world, x, y, z, modifier))
