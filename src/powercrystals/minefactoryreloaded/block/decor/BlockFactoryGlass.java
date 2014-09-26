@@ -4,7 +4,6 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -93,10 +92,12 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		Block block = world.getBlock(x, y, z);
-		if (block.getMaterial() == Material.glass && block.getRenderType() == 0)
-			return false;
-		return super.shouldSideBeRendered(world, x, y, z, side);
+		boolean r = super.shouldSideBeRendered(world, x, y, z, side);
+		if (!r) {
+			ForgeDirection f = ForgeDirection.getOrientation(side);
+			return world.getBlockMetadata(x, y, z) != world.getBlockMetadata(x - f.offsetX, y - f.offsetY, z - f.offsetZ);
+		}
+		return r;
 	}
 
 	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)

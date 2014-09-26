@@ -369,7 +369,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		xpExtractorItem = (new ItemXpExtractor()).setUnlocalizedName("mfr.xpextractor").setMaxStackSize(1);
 		strawItem = (new ItemStraw()).setUnlocalizedName("mfr.straw").setMaxStackSize(1);
 		milkBottleItem = (new ItemMilkBottle()).setUnlocalizedName("mfr.milkbottle").setMaxStackSize(16);
-		plasticCupItem = (ItemFactoryCup)new ItemFactoryCup(24, 16).setUnlocalizedName("mfr.bucket.plasticcup");
+		plasticCupItem = (ItemFactoryCup)new ItemFactoryCup(24, 16).setUnlocalizedName("mfr.plastic.cup");
 		/*
 		CarbonContainer.cell = new CarbonContainer(MFRConfig.plasticCellItemId.getInt(), 64, "mfr.bucket.plasticcell", false);
 		CarbonContainer.cell.setFilledItem(CarbonContainer.cell).setEmptyItem(CarbonContainer.cell);
