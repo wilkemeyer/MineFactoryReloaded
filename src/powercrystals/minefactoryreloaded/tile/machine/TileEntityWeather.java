@@ -28,39 +28,39 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	protected int _canSeeSky = 0;
 	protected boolean _canWeather = false, _willSnow = false, _openSky = false;
 	protected BiomeGenBase _biome = null;
-	
+
 	public TileEntityWeather()
 	{
 		super(Machine.WeatherCollector);
 		setManageSolids(true);
 		_tanks[0].setLock(WATER);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 50;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 600;
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
@@ -85,7 +85,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 				setIdleTicks(getIdleTicksMax());
 				return false;
 			}
-			setWorkDone(getWorkDone() + 1);
+			if (!incrementWorkDone()) return false;
 			if (getWorkDone() >= getWorkMax())
 			{
 				if (!_willSnow)
@@ -116,13 +116,13 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	@Override
 	public ForgeDirection getDropDirection()
 	{
 		return ForgeDirection.DOWN;
 	}
-	
+
 	private boolean canSeeSky()
 	{
 		if (--_canSeeSky > 0) return _openSky;
@@ -140,19 +140,19 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 		}
 		return _openSky;
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean shouldPumpLiquid()
 	{
@@ -164,19 +164,19 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	{
 		return true;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{

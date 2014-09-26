@@ -173,6 +173,12 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		_workDone = work;
 	}
 
+	protected boolean incrementWorkDone()
+	{
+		setWorkDone(getWorkDone() + 1);
+		return true;
+	}
+
 	public int getIdleTicks()
 	{
 		return _idleTicks;

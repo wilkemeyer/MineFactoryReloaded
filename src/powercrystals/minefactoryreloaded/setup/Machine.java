@@ -32,6 +32,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoBrewer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanterFluid;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoEnchanter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoSpawner;
@@ -137,7 +138,17 @@ public class Machine
 			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
 		}
 	};
-	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, 320, 16000);
+	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, 320, 16000) {
+		@Override
+		public void load(Configuration c)
+		{
+			if (MFRConfig.disenchanterEssence.getBoolean(false))
+			{
+				_tileEntityClass = TileEntityAutoDisenchanterFluid.class;
+			}
+			super.load(c);
+		}
+	};
 	public static Machine Slaughterhouse = new Machine(1, 13, "Slaughterhouse", TileEntitySlaughterhouse.class, 1000, 16000);
 	public static Machine MeatPacker = new Machine(1, 14, "MeatPacker", TileEntityMeatPacker.class, 20, 16000);
 	public static Machine EnchantmentRouter = new Machine(1, 15, "EnchantmentRouter", TileEntityEnchantmentRouter.class);

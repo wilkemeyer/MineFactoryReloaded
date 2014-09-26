@@ -209,8 +209,8 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		}
 		else if (drain(_tanks[0], 4, false) == 4)
 		{
+			if (!incrementWorkDone()) return false;
 			drain(_tanks[0], 4, true);
-			setWorkDone(getWorkDone() + 1);
 			return true;
 		}
 		else

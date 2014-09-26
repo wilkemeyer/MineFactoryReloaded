@@ -104,7 +104,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 			_isJammed = false;
 		}
 
-		setWorkDone(getWorkDone() + 1);
+		if (!incrementWorkDone()) return false;
 
 		if (getWorkDone() > getWorkMax())
 		{

@@ -273,8 +273,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		machineBlocks.put(1, new BlockFactoryMachine(1));
 		machineBlocks.put(2, new BlockFactoryMachine(2));
 
-		MFRConfig.loadCommonConfig(getCommonConfig());
 		MFRConfig.loadClientConfig(getClientConfig());
+		MFRConfig.loadCommonConfig(getCommonConfig());
 
 		loadLang();
 

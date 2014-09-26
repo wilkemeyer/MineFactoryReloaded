@@ -83,8 +83,8 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	{
 		if (drain(_tanks[0], 10, false) == 10)
 		{
+			if (!incrementWorkDone()) return false;
 			drain(_tanks[0], 10, true);
-			setWorkDone(getWorkDone() + 1);
 			_tick++;
 
 			if (getWorkDone() >= getWorkMax())

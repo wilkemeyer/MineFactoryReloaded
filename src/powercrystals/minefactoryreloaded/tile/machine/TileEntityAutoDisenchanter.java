@@ -168,8 +168,9 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 			}
 			else
 			{
-				setWorkDone(getWorkDone() + 1);
 				markChunkDirty();
+				if (!incrementWorkDone())
+					return false;
 			}
 
 			return true;

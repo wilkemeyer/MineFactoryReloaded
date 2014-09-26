@@ -114,7 +114,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 						_inventory[0].getItem().equals(_inventory[1].getItem()) &&
 						_inventory[0].getItem().isRepairable())
 				{
-					setWorkDone(getWorkDone() + 1);
+					if (!incrementWorkDone()) return false;
 
 					if(getWorkDone() >= getWorkMax())
 					{
@@ -141,7 +141,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			}
 
 			drain(_tanks[0], 4, true);
-			setWorkDone(getWorkDone() + 1);
+			if (!incrementWorkDone()) return false;
 
 			if(getWorkDone() >= getWorkMax())
 			{

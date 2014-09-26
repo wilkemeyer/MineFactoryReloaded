@@ -439,7 +439,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		markDirty();
 
-		if (tag.hasKey("Tanks")) {
+		if (manageFluids() && tag.hasKey("Tanks")) {
 			IFluidTank[] _tanks = getTanks();
 
 			nbttaglist = tag.getTagList("Tanks", 10);

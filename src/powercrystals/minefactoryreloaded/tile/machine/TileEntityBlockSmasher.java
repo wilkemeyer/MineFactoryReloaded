@@ -32,46 +32,46 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 {
 	public static final int MAX_FORTUNE = 3;
 	private int _fortune = 0;
-	
+
 	private ItemStack _lastInput;
 	private List<ItemStack> _lastOutput;
-	
+
 	private SmashingWorld _smashingWorld;
 	private boolean _shouldWork = true;
-	
+
 	public TileEntityBlockSmasher()
 	{
 		super(Machine.BlockSmasher);
 		setManageSolids(true);
 		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
 	}
-	
+
 	@Override
 	public void setWorldObj(World world)
 	{
 		super.setWorldObj(world);
 		_smashingWorld = new SmashingWorld(this.worldObj);
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 2;
 	}
-	
+
 	@Override
 	public ContainerBlockSmasher getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerBlockSmasher(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiBlockSmasher(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	protected boolean activateMachine()
 	{
@@ -107,7 +107,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		{
 			return false;
 		}
-		
+
 		if(getWorkDone() >= getWorkMax())
 		{
 			if (_shouldWork)
@@ -138,12 +138,12 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		}
 		else
 		{
-			setWorkDone(getWorkDone() + 1);
+			if (!incrementWorkDone()) return false;
 			drain(_tanks[0], _fortune, true);
 		}
 		return true;
 	}
-	
+
 	private static ItemStack getEqualStack(ItemStack a, List<ItemStack> b)
 	{
 		if (a != null & b != null && a.stackSize > 0 && b.size() > 0)
@@ -151,7 +151,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 				if (UtilInventory.stacksEqual(a, i)) return i;
 		return a == null && b.size() > 0 ? b.get(0) : null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private List<ItemStack> getOutput(ItemStack input)
 	{
@@ -165,7 +165,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		{
 			return null;
 		}
-		
+
 		@SuppressWarnings("rawtypes")
 		ArrayList drops = _smashingWorld.smashBlock(input, b, block.getMetadata(input.getItemDamage()), _fortune);
 		if (drops != null && drops.size() > 0)
@@ -174,12 +174,12 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		}
 		return null;
 	}
-	
+
 	public int getFortune()
 	{
 		return _fortune;
 	}
-	
+
 	public void setFortune(int fortune)
 	{
 		if (fortune >= 0 && fortune <= MAX_FORTUNE)
@@ -191,63 +191,63 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			_fortune = fortune;
 		}
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 60;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
 		if(slot == 0) return true;
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
 		if(slot == 1) return true;
 		return false;
 	}
-	
+
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return fill(resource, doFill);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
@@ -256,7 +256,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		tag.setBoolean("shouldWork", _shouldWork);
 		if (_lastInput != null)
 			tag.setTag("stack", _lastInput.writeToNBT(new NBTTagCompound()));
-		
+
 		if (_lastOutput != null)
 		{
 			NBTTagList nbttaglist = new NBTTagList();
@@ -269,7 +269,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			tag.setTag("SmashedItems", nbttaglist);
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{

@@ -21,20 +21,23 @@ public class MFRConfig
 	public static Property zoolologistEntityId;
 
 	public static Property colorblindMode;
-	public static Property treeSearchMaxVertical;
-	public static Property treeSearchMaxHorizontal;
-	public static Property verticalHarvestSearchMaxVertical;
 	public static Property enableBonemealFertilizing;
 	public static Property conveyorCaptureNonItems;
 	public static Property conveyorNeverCapturesPlayers;
 	public static Property conveyorNeverCapturesTCGolems;
 	public static Property playSounds;
+
+	public static Property treeSearchMaxVertical;
+	public static Property treeSearchMaxHorizontal;
+	public static Property verticalHarvestSearchMaxVertical;
 	public static Property fruitTreeSearchMaxVertical;
 	public static Property fruitTreeSearchMaxHorizontal;
 	public static Property breederShutdownThreshold;
 	public static Property autospawnerCostStandard;
 	public static Property autospawnerCostExact;
 	public static Property laserdrillCost;
+	public static Property disenchanterEssence;
+
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
 
@@ -286,6 +289,9 @@ public class MFRConfig
 
 		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
 		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
+
+		disenchanterEssence = c.get("Machine." + Machine.AutoDisenchanter.getName(), "EnableEssence", false).setRequiresMcRestart(true);
+		disenchanterEssence.comment = "If true, the disenchanter will use essence to disenchant items. Provided for those who want a more work-intensive enchanting system.";
 		//}
 
 		for(Machine machine : Machine.values())

@@ -51,7 +51,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 	{
 		if (drain(_tanks[0], 2, false) == 2)
 		{
-			setWorkDone(getWorkDone() + 1);
+			if (!incrementWorkDone()) return false;
 
 			if (getWorkDone() >= getWorkMax())
 			{

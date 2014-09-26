@@ -23,7 +23,7 @@ public class GuiAutoDisenchanter extends GuiFactoryPowered
 	public void initGui()
 	{
 		super.initGui();
-		_repeatToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 63, (this.height - this.ySize) / 2 + 35, 70, 20, "Repeat: No");
+		_repeatToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 49, (this.height - this.ySize) / 2 + 35, 68, 20, "Repeat: No");
 		buttonList.add(_repeatToggle);
 	}
 

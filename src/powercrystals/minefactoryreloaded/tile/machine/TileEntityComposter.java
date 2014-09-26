@@ -46,7 +46,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	{
 		if(drain(_tanks[0], 20, false) == 20)
 		{
-			setWorkDone(getWorkDone() + 1);
+			if (!incrementWorkDone()) return false;
 
 			if(getWorkDone() >= getWorkMax())
 			{
