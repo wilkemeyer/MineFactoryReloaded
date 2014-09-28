@@ -201,11 +201,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 									container.isItemStackDamageable() &&
 									container.getItemDamage() <= container.getMaxDamage())
 							{
-								nul = false;
 								if (item.getItem().doesContainerItemLeaveCraftingGrid(item))
 									this.outputs.add(container);
-								else
+								else {
 									_inventory[i] = container;
+									nul = false;
+								}
 							}
 							if (nul)
 								_inventory[i] = null;
