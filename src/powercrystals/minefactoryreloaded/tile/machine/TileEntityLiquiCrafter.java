@@ -2,18 +2,20 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.CoreUtils;
 import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.helpers.ItemHelper;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -34,230 +36,252 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 {
 	private boolean _lastRedstoneState;
 	private boolean _resourcesChangedSinceLastFailedCraft = true;
-	
+
+	protected RemoteInventoryCrafting craft = new RemoteInventoryCrafting();
+	protected IRecipe recipe;
+	protected ArrayList<ItemStack> outputs = new ArrayList<ItemStack>();
+	protected List<ItemResourceTracker> requiredItems = new LinkedList<ItemResourceTracker>();
+
 	public TileEntityLiquiCrafter()
 	{
 		super(Machine.LiquiCrafter);
 		setManageSolids(true);
 	}
-	
+
 	@Override
 	public boolean shouldDropSlotWhenBroken(int slot)
 	{
 		return slot > 9;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiLiquiCrafter(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerLiquiCrafter getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerLiquiCrafter(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
-		boolean redstoneState = CoreUtils.isRedstonePowered(this);
-		if(redstoneState && !_lastRedstoneState)
+		if (worldObj.isRemote)
+			return;
+
 		{
-			if(!worldObj.isRemote &&
-					_resourcesChangedSinceLastFailedCraft &&
+			int s = outputs.size();
+			if (s > 0) {
+				if (_inventory[10] == null) {
+					_inventory[10] = outputs.get(--s);
+					outputs.remove(s);
+				}
+				return;
+			}
+		}
+
+
+		boolean redstoneState = CoreUtils.isRedstonePowered(this);
+		if (redstoneState && !_lastRedstoneState)
+		{
+			if (_resourcesChangedSinceLastFailedCraft && recipe != null &&
 					_inventory[9] != null &&
 					(_inventory[10] == null ||
-					(_inventory[10].stackSize + _inventory[9].stackSize <= _inventory[9].getMaxStackSize() &&
-					_inventory[9].getItem() == _inventory[10].getItem() &&
-					_inventory[9].getItemDamage() == _inventory[10].getItemDamage())))
-			{
+						(_inventory[10].stackSize + _inventory[9].stackSize <= _inventory[9].getMaxStackSize() &&
+							ItemHelper.itemsEqualWithMetadata(_inventory[9], _inventory[10], true))))
 				checkResources();
-			}
 		}
-		
+
 		_lastRedstoneState = redstoneState;
 	}
-	
+
 	private void checkResources()
 	{
-		List<ItemResourceTracker> requiredItems = new LinkedList<ItemResourceTracker>();
-		
-inv:	for(int i = 0; i < 9; i++)
+		List<ItemResourceTracker> requiredItems = this.requiredItems;
+		requiredItems.clear();
+
+		/**
+		 * Tracking
+		 */
+		i: for (int i = 0; i < 9; i++)
 		{
-			if(_inventory[i] != null)
+			if (_inventory[i] != null)
 			{
-				liquid: if(FluidContainerRegistry.isFilledContainer(_inventory[i]))
+				l: if (FluidContainerRegistry.isFilledContainer(_inventory[i]))
 				{
 					FluidStack l = FluidContainerRegistry.getFluidForFilledItem(_inventory[i]);
-					if (l == null)
-						break liquid;
-					for(ItemResourceTracker t : requiredItems)
-					{
-						if(t.isFluid && t.fluid.isFluidEqual(l))
-						{
-							t.required += l.amount;
-							continue inv;
-						}
-					}
-					requiredItems.add(new ItemResourceTracker(l, l.amount));
-					continue inv;
+					if (l == null) break l;
+
+					requiredItems.add(new ItemResourceTracker(i, l, l.amount));
+					continue i;
 				}
 
-				for(ItemResourceTracker t : requiredItems)
-				{
-					if(t.id == _inventory[i].getItem() && t.meta == _inventory[i].getItemDamage())
-					{
-						t.required++;
-						continue inv;
-					}
-				}
-				requiredItems.add(new ItemResourceTracker(_inventory[i].getItem(), _inventory[i].getItemDamage(), _inventory[i].getTagCompound(), 1));
+				requiredItems.add(new ItemResourceTracker(i, _inventory[i], 1));
 			}
 		}
-		
-		for(int i = 11; i < 29; i++)
+
+		/**
+		 * Checking
+		 */
+		for (int i = 11; i < 29; i++)
 		{
 			ItemStack item = _inventory[i];
-			if(item != null)
-			{
-				for(ItemResourceTracker t : requiredItems)
+			if (item != null) {
+				int size = item.stackSize;
+				for (ItemResourceTracker t : requiredItems)
 				{
-					if(t.id == item.getItem() &&
-							(t.meta == item.getItemDamage() || item.getItem().isDamageable()))
+					if (ItemHelper.itemsEqualForCrafting(t.item, item))
 					{
-						if(!item.getItem().hasContainerItem(item))
-						{
-							t.found += item.stackSize;
-						}
-						else
-						{
-							t.found += 1;
-						}
-						break;
+						int f = Math.min(size, t.required - t.found);
+						t.found += f;
+						size -= f;
+						if (size <= 0)
+							break;
 					}
 				}
 			}
 		}
-		for(int i = 0; i < _tanks.length; i++)
+
+		for (int i = 0; i < _tanks.length; i++)
 		{
 			FluidStack l = _tanks[i].getFluid();
-			if(l == null || l.amount == 0)
-			{
+			if (l == null || l.amount == 0)
 				continue;
-			}
-			for(ItemResourceTracker t : requiredItems)
+
+			int amt = l.amount;
+			for (ItemResourceTracker t : requiredItems)
 			{
-				if(t.isFluid && l.isFluidEqual(t.fluid))
+				if (l.isFluidEqual(t.fluid))
 				{
-					t.found += l.amount;
-					break;
+					t.found += Math.min(amt, t.required - t.found);
+					amt -= t.found;
+					if (amt <= 0)
+						break;
 				}
 			}
 		}
-		
-		for(ItemResourceTracker t : requiredItems)
+
+		/**
+		 * Abort if check failed
+		 */
+		for (ItemResourceTracker t : requiredItems)
 		{
-			if(t.found < t.required)
+			FMLLog.severe("Tracker: " + t);
+			if (t.found < t.required)
 			{
 				_resourcesChangedSinceLastFailedCraft = false;
 				return;
 			}
 		}
-		
-		for(int i = 11; i < 29; i++)
+
+		/**
+		 * Consuming
+		 */
+		for (int i = 11; i < 29; i++)
 		{
-			if(_inventory[i] != null)
+			ItemStack item = _inventory[i];
+			if (item != null)
 			{
-				for(ItemResourceTracker t : requiredItems)
+				for (ItemResourceTracker t : requiredItems)
 				{
-					if(t.id == _inventory[i].getItem() && (t.meta == _inventory[i].getItemDamage() || _inventory[i].getItem().isDamageable()))
+					if (ItemHelper.itemsEqualForCrafting(t.item, item))
 					{
 						int use;
-						if(_inventory[i].getItem().hasContainerItem(_inventory[i]))
+						if (item.getItem().hasContainerItem(item))
 						{
 							use = 1;
 							ItemStack container = _inventory[i].getItem().getContainerItem(_inventory[i]);
-							if(container != null && container.isItemStackDamageable() && container.getItemDamage() > container.getMaxDamage())
+							_inventory[i] = null;
+							if (container != null &&
+									container.isItemStackDamageable() &&
+									container.getItemDamage() <= container.getMaxDamage())
 							{
-								_inventory[i] = null;
-							}
-							else
-							{
-								_inventory[i] = container;
+								this.outputs.add(container);
 							}
 						}
 						else
 						{
-							use = Math.min(t.required, _inventory[i].stackSize);
-							_inventory[i].stackSize -= use;
+							use = Math.min(t.required, item.stackSize);
+							item.stackSize -= use;
 						}
 						t.required -= use;
-						
-						if(_inventory[i] != null && _inventory[i].stackSize == 0)
-						{
+
+						if (item.stackSize <= 0)
 							_inventory[i] = null;
-						}
-						
-						if(t.required == 0)
+
+						if (t.required == 0)
 						{
+							craft.setInventorySlotContents(t.slot, ItemHelper.cloneStack(item, use));
 							requiredItems.remove(t);
+							--i;
+							break;
 						}
-						break;
 					}
 				}
 			}
 		}
-		for(int i = 0; i < _tanks.length; i++)
+
+		for (int i = 0; i < _tanks.length; i++)
 		{
 			FluidStack l = _tanks[i].getFluid();
-			if(l == null || l.amount == 0)
-			{
+			if (l == null || l.amount == 0)
 				continue;
-			}
-			for(ItemResourceTracker t : requiredItems)
+
+			for (ItemResourceTracker t : requiredItems)
 			{
-				if(l.isFluidEqual(t.fluid))
+				if (l.isFluidEqual(t.fluid))
 				{
 					int use = Math.min(t.required, l.amount);
 					_tanks[i].drain(use, true);
 					t.required -= use;
-					
-					if(t.required == 0)
+
+					if (t.required == 0)
 					{
+						craft.setInventorySlotContents(t.slot, ItemHelper.cloneStack(_inventory[t.slot]));
 						requiredItems.remove(t);
+						 --i;
+						 break;
 					}
-					break;
 				}
 			}
 		}
-		
-		if(_inventory[10] == null)
+
+		/**
+		 * Crafting
+		 */
+		_inventory[9] = recipe.getCraftingResult(craft);
+		if (_inventory[9] == null)
+			return;
+
+		if (_inventory[10] == null)
 		{
-			_inventory[10] = _inventory[9].copy();
-			_inventory[10].stackSize = _inventory[9].stackSize;
+			_inventory[10] = ItemHelper.cloneStack(_inventory[9]);
 		}
 		else
 		{
-			_inventory[10].stackSize += _inventory[9].stackSize;
+			if (ItemHelper.itemsEqualWithMetadata(_inventory[10], _inventory[9], true))
+				_inventory[10].stackSize += _inventory[9].stackSize;
+			else
+				outputs.add(ItemHelper.cloneStack(_inventory[9]));
 		}
 	}
-	
+
 	private void calculateOutput()
 	{
 		_inventory[9] = findMatchingRecipe();
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 29;
 	}
-	
+
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
@@ -265,7 +289,7 @@ inv:	for(int i = 0; i < 9; i++)
 		if(slot < 9) calculateOutput();
 		onFactoryInventoryChanged();
 	}
-	
+
 	@Override
 	public ItemStack decrStackSize(int slot, int size)
 	{
@@ -274,101 +298,101 @@ inv:	for(int i = 0; i < 9; i++)
 		onFactoryInventoryChanged();
 		return result;
 	}
-	
+
 	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
-	
+
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
 		return player.getDistanceSq(xCoord, yCoord, zCoord) <= 64D;
 	}
-	
+
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 10;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 19;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
-		if(slot > 10) return true;
+		if (slot > 10) return true;
 		return false;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
-		if(slot == 10) return true;
+		if (slot == 10) return true;
 		return false;
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		_resourcesChangedSinceLastFailedCraft = true;
 		super.onFactoryInventoryChanged();
 	}
-	
+
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		FluidTankAdv[] _tanks = new FluidTankAdv[9];
-		for(int i = 0; i < 9; i++)
+		for (int i = 0; i < 9; i++)
 		{
 			_tanks[i] = new FluidTankAdv(BUCKET_VOLUME * 10);
 		}
 		return _tanks;
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		int quantity;
 		int match = findFirstMatchingTank(resource);
-		if(match >= 0)
+		if (match >= 0)
 		{
 			quantity = _tanks[match].fill(resource, doFill);
-			if(quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
+			if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
 			return quantity;
 		}
 		match = findFirstEmptyTank();
-		if(match >= 0)
+		if (match >= 0)
 		{
 			quantity = _tanks[match].fill(resource, doFill);
-			if(quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
+			if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
 			return quantity;
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		int match = findFirstNonEmptyTank();
-		if(match >= 0) return _tanks[match].drain(maxDrain, doDrain);
+		if (match >= 0) return _tanks[match].drain(maxDrain, doDrain);
 		return null;
 	}
 
@@ -376,10 +400,10 @@ inv:	for(int i = 0; i < 9; i++)
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		int match = findFirstMatchingTank(resource);
-		if(match >= 0) return _tanks[match].drain(resource.amount, doDrain);
+		if (match >= 0) return _tanks[match].drain(resource.amount, doDrain);
 		return null;
 	}
-	
+
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
@@ -388,69 +412,81 @@ inv:	for(int i = 0; i < 9; i++)
 			r[i] = _tanks[i].getInfo();
 		return r;
 	}
-	
+
 	private int findFirstEmptyTank()
 	{
-		for(int i = 0; i < 9; i++)
+		for (int i = 0; i < 9; i++)
 		{
-			if(_tanks[i].getFluid() == null || _tanks[i].getFluid().amount == 0)
+			if (_tanks[i].getFluid() == null || _tanks[i].getFluid().amount == 0)
 			{
 				return i;
 			}
 		}
-		
+
 		return -1;
 	}
-	
+
 	private int findFirstNonEmptyTank()
 	{
-		for(int i = 0; i < 9; i++)
+		for (int i = 0; i < 9; i++)
 		{
-			if(_tanks[i].getFluid() != null && _tanks[i].getFluid().amount > 0)
+			if (_tanks[i].getFluid() != null && _tanks[i].getFluid().amount > 0)
 			{
 				return i;
 			}
 		}
-		
+
 		return -1;
 	}
-	
+
 	private int findFirstMatchingTank(FluidStack liquid)
 	{
-		if(liquid == null)
+		if (liquid == null)
 		{
 			return -1;
 		}
-		
-		for(int i = 0; i < 9; i++)
+
+		for (int i = 0; i < 9; i++)
 		{
-			if(liquid.isFluidEqual(_tanks[i].getFluid()))
+			if (liquid.isFluidEqual(_tanks[i].getFluid()))
 			{
 				return i;
 			}
 		}
-		
+
 		return -1;
 	}
-	
+
 	private ItemStack findMatchingRecipe()
 	{
-		InventoryCrafting craft = new RemoteInventoryCrafting();
-		for(int i = 0; i < 9; i++)
+		for (int i = 0; i < 9; i++)
 		{
 			craft.setInventorySlotContents(i, (_inventory[i] == null ? null : _inventory[i].copy()));
 		}
-		
-		return CraftingManager.getInstance().findMatchingRecipe(craft, worldObj);
+
+		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+		for (int i = 0, e = recipes.size(); i < e; ++i)
+        {
+            IRecipe irecipe = recipes.get(i);
+
+            if (irecipe.matches(craft, worldObj))
+            {
+            	recipe = irecipe;
+                return irecipe.getCraftingResult(craft);
+            }
+        }
+
+		recipe = null;
+		return null;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
 		calculateOutput();
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
@@ -468,30 +504,31 @@ inv:	for(int i = 0; i < 9; i++)
 	{
 		return true;
 	}
-	
+
 	private static class ItemResourceTracker
 	{
-		public ItemResourceTracker(Item id, int meta, NBTTagCompound nbtdata, int required)
+		public ItemResourceTracker(int s, ItemStack stack, int amt)
 		{
-			this.id = id;
-			this.meta = meta;
-			this.required = required;
-			this.tag = nbtdata;
-			isFluid = false;
+			slot = s;
+			item = stack;
+			required = amt;
 		}
-		public ItemResourceTracker(FluidStack resource, int required)
+		public ItemResourceTracker(int s, FluidStack resource, int amt)
 		{
-			this.fluid = resource;
-			this.required = required;
-			isFluid = true;
+			slot = s;
+			fluid = resource;
+			required = amt;
 		}
-		public boolean isFluid;
 		public FluidStack fluid;
-		public Item id;
-		public int meta;
-		@SuppressWarnings("unused")
-		public NBTTagCompound tag; // TODO: check NBT data appropriately. via recipe?
+		public ItemStack item;
 		public int required;
 		public int found;
+		public int slot;
+
+		@Override
+		public String toString()
+		{
+			return "Slot: " + slot + "; Fluid: " + fluid + "; Item: " + item + "; Required: " + required + "; Found: " + found;
+		}
 	}
 }
