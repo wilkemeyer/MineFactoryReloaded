@@ -1200,11 +1200,6 @@ public class Vanilla
 
 		addSurroundRecipe(stack(blankRecordItem, 1), stack2(paper), "dustPlastic");
 
-		if (MFRConfig.vanillaOverrideIce.getBoolean(true))
-		{
-			addRecipe(ShapelessRecipe(stack(ice, 1, 1), stack(ice, 1, 0), "dustPlastic"));
-		}
-
 		if (MFRConfig.enableMossyCobbleRecipe.getBoolean(true))
 		{
 			addShapelessRecipe(stack(mossy_cobblestone), new Object[]

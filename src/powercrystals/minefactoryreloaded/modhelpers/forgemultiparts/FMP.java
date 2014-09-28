@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -20,7 +19,6 @@ import org.apache.logging.log4j.Level;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 @Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock",
@@ -43,8 +41,6 @@ public class FMP
 			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryRoadBlock));
 			for (Block block : MFRThings.machineBlocks.valueCollection())
 				addSubtypes((ItemBlockFactory)Item.getItemFromBlock(block));
-			if (MFRConfig.vanillaOverrideIce.getBoolean(true))
-				sendComm(new ItemStack(Blocks.ice, 1, 1));
 			sendComm(new ItemStack(MFRThings.rubberWoodBlock, 1, 0));
 		}
 		catch (Throwable _)

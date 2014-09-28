@@ -31,7 +31,13 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	public void invalidate()
 	{
 		super.invalidate();
-		this.onChunkUnload();
+	}
+
+	@Override
+	public void onChunkUnload()
+	{
+		worldObj = null;
+		_invName = null;
 	}
 
 	protected final IChatComponent text(String str)

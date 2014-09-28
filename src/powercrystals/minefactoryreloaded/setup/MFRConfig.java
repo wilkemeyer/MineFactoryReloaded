@@ -41,7 +41,6 @@ public class MFRConfig
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
 
-	public static Property vanillaOverrideIce;
 	public static Property vanillaOverrideMilkBucket;
 
 	public static Property enableCheapDSU;
@@ -206,8 +205,6 @@ public class MFRConfig
 
 		//{ Item/block behavior overriding
 		category = CATEGORY_ITEM + ".VanillaOverride";
-		vanillaOverrideIce = c.get(category, "Ice", true).setRequiresMcRestart(true);
-		vanillaOverrideIce.comment = "If true, enables MFR unmelting ice as well as vanilla ice.";
 		vanillaOverrideMilkBucket = c.get(category, "MilkBucket", true).setRequiresMcRestart(true);
 		vanillaOverrideMilkBucket.comment = "If true, replaces the vanilla milk bucket so milk can be placed in the world.";
 		//}

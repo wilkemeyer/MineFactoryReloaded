@@ -84,7 +84,6 @@ import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryTree;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
-import powercrystals.minefactoryreloaded.block.ItemBlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.ItemBlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
@@ -93,7 +92,6 @@ import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.decor.BlockPinkSlime;
-import powercrystals.minefactoryreloaded.block.decor.BlockVanillaIce;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockPinkSlimeFluid;
@@ -474,13 +472,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		Blocks.fire.setFireInfo(detCordBlock, 100, 20);
 		Blocks.fire.setFireInfo(biofuelLiquid, 300, 30);
 
-		if (MFRConfig.vanillaOverrideIce.getBoolean(true))
-		{
-			Item ice = Item.getItemFromBlock(Blocks.ice);
-			Blocks.ice = new BlockVanillaIce();
-			RegistryUtils.overwriteEntry(Block.blockRegistry, "minecraft:ice", Blocks.ice);
-			RegistryUtils.overwriteEntry(Item.itemRegistry, "minecraft:ice", new ItemBlockVanillaIce(Blocks.ice, ice));
-		}
 		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true))
 		{
 			final Item milkBucket = Items.milk_bucket;
