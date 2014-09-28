@@ -195,14 +195,20 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 						if (item.getItem().hasContainerItem(item))
 						{
 							use = 1;
-							ItemStack container = _inventory[i].getItem().getContainerItem(_inventory[i]);
-							_inventory[i] = null;
+							ItemStack container = item.getItem().getContainerItem(_inventory[i]);
+							boolean nul = true;
 							if (container != null &&
 									container.isItemStackDamageable() &&
 									container.getItemDamage() <= container.getMaxDamage())
 							{
-								this.outputs.add(container);
+								nul = false;
+								if (item.getItem().doesContainerItemLeaveCraftingGrid(item))
+									this.outputs.add(container);
+								else
+									_inventory[i] = container;
 							}
+							if (nul)
+								_inventory[i] = null;
 						}
 						else
 						{
