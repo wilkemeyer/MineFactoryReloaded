@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.terraingen.TerrainGen;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -45,7 +46,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	@Override
 	public void func_149878_d(World world, int x, int y, int z, Random rand)
 	{
-		if (world.isRemote)
+		if (world.isRemote || !TerrainGen.saplingGrowTree(world, rand, x, y, z))
 			return;
 
 		int meta = damageDropped(world.getBlockMetadata(x, y, z));

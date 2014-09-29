@@ -175,7 +175,7 @@ public class MFRConfig
 		rubberTreeBiomeBlacklist = c.get(subCategory, "Biome.Blacklist", new String[] {}).setRequiresMcRestart(true);
 		rubberTreeBiomeBlacklist.comment = "A list of biomes to disallow rubber trees to spawn in. Overrides any other biomes added.";
 		enableMassiveTree = c.get(subCategory, "SacredRubberSapling", true).setRequiresMcRestart(true);
-		enableMassiveTree.comment = "If true, enable adding enchanted Sacred Rubber Saplings to jungle temple loot.";
+		enableMassiveTree.comment = "If true, enable adding Enchanted Sacred Rubber Saplings to stronghold library loot.";
 
 		subCategory = category + ".Lakes";
 		mfrLakeWorldGen = c.get(subCategory, "Enable", true).setRequiresMcRestart(true);
