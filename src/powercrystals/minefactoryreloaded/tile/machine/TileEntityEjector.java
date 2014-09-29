@@ -17,11 +17,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -69,71 +65,46 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		boolean redstoneState = CoreUtils.isRedstonePowered(this);
 		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems)))
 		{
-			inv:
+			final ForgeDirection facing = getDirectionFacing();
+			Map<ForgeDirection, IInventory> chests = UtilInventory.
+					findChests(worldObj, xCoord, yCoord, zCoord, _pullDirections);
+			inv: for (Entry<ForgeDirection, IInventory> chest : chests.entrySet())
 			{
-				final ForgeDirection facing = getDirectionFacing();
-				Map<ForgeDirection, IInventory> chests = UtilInventory.
-						findChests(worldObj, xCoord, yCoord, zCoord, _pullDirections);
-				for (Entry<ForgeDirection, IInventory> chest : chests.entrySet())
+				if(chest.getKey() == facing)
 				{
-					if(chest.getKey() == facing)
-					{
-						continue;
-					}
-
-					IInventoryManager inventory = InventoryManager.create(chest.getValue(),
-							chest.getKey().getOpposite());
-					Map<Integer, ItemStack> contents = inventory.getContents();
-
-					set: for (Entry<Integer, ItemStack> stack : contents.entrySet())
-					{
-						ItemStack itemstack = stack.getValue();
-						if (itemstack == null || !inventory.canRemoveItem(itemstack, stack.getKey()))
-							continue;
-
-						boolean hasMatch = false;
-
-						for (int i = getSizeItemList(); i --> 0; )
-							if (itemMatches(_inventory[i], itemstack))
-							{
-								hasMatch = true;
-								break;
-							}
-
-						if (_whitelist != hasMatch) continue set;
-
-						ItemStack stackToDrop = itemstack.copy();
-						stackToDrop.stackSize = 1;
-						ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
-								facing, facing);
-
-						// remaining == null if dropped successfully.
-						if (remaining == null)
-						{
-							inventory.removeItem(1, stackToDrop);
-							break inv;
-						}
-					}
+					continue;
 				}
-				TileEntity te = worldObj.getTileEntity(xCoord + facing.offsetX,
-							yCoord + facing.offsetY, zCoord + facing.offsetZ);
-				if (te instanceof IFluidHandler)
+
+				IInventoryManager inventory = InventoryManager.create(chest.getValue(),
+						chest.getKey().getOpposite());
+				Map<Integer, ItemStack> contents = inventory.getContents();
+
+				set: for (Entry<Integer, ItemStack> stack : contents.entrySet())
 				{
-					IFluidHandler tank = (IFluidHandler)te;
-					for (ForgeDirection side : _pullDirections)
+					ItemStack itemstack = stack.getValue();
+					if (itemstack == null || !inventory.canRemoveItem(itemstack, stack.getKey()))
+						continue;
+
+					boolean hasMatch = false;
+
+					for (int i = getSizeItemList(); i --> 0; )
+						if (itemMatches(_inventory[i], itemstack))
+						{
+							hasMatch = true;
+							break;
+						}
+
+					if (_whitelist != hasMatch) continue set;
+
+					ItemStack stackToDrop = itemstack.copy();
+					stackToDrop.stackSize = 1;
+					ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
+							facing, facing);
+
+					// remaining == null if dropped successfully.
+					if (remaining == null)
 					{
-						te = worldObj.getTileEntity(xCoord + side.offsetX,
-								yCoord + side.offsetY, zCoord + side.offsetZ);
-						if (!(te instanceof IFluidHandler))
-							continue;
-						IFluidHandler handler = (IFluidHandler)te;
-						FluidStack drained = handler.drain(side.getOpposite(),
-								FluidContainerRegistry.BUCKET_VOLUME, false);
-						if (drained == null || drained.amount <= 0)
-							continue;
-						if (tank.fill(facing.getOpposite(), drained, false) <= 0)
-							continue;
-						handler.drain(side.getOpposite(), tank.fill(facing.getOpposite(), drained, true), true);
+						inventory.removeItem(1, stackToDrop);
 						break inv;
 					}
 				}
