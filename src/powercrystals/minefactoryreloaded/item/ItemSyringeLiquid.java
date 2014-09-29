@@ -48,6 +48,13 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 			return StatCollector.translateToLocal(name);
 		return null;
 	}
+	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null && tag.hasKey("fluidName"))
+			return 1;
+		return maxStackSize;
+	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack item)
@@ -174,8 +181,6 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 				tag = stack.stackTagCompound = new NBTTagCompound();
 			fluid.amount += fillAmount;
 			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
-			tag.setLong("uniqifier", (System.identityHashCode(resource) << 32) |
-					System.identityHashCode(stack));
 			tag.setString("fluidName", fluid.getFluid().getName());
 		}
 		return fillAmount;
