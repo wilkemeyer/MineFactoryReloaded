@@ -121,6 +121,7 @@ tile.mfr.decorative.brick.snow_large.name = Neve concia
 tile.mfr.decorative.brick.meat.raw.name = Blocco di carne cruda
 tile.mfr.decorative.brick.meat.cooked.name = Blocco di carne cotta
 tile.mfr.decorative.brick.brick_large.name = Mattoni conci
+tile.mfr.decorativebrick.sugar_charcoal.name = Blocco di carbonella di zucchero
 
 tile.mfr.decorative.stone.black.smooth.name = Roccianera
 tile.mfr.decorative.stone.black.cobble.name = Pietramenero
@@ -134,6 +135,8 @@ tile.mfr.decorative.stone.white.brick.small.name = Mattoni di pietrabianca
 tile.mfr.decorative.stone.white.brick.large.name = Pietrabianca concia
 tile.mfr.decorative.stone.white.gravel.name = Ghiaia di pietrabianca
 tile.mfr.decorative.stone.white.paved.name = Pietrabianca lastricata
+
+tile.mfr.pinkslime.name = Blocco di gelatina rosa
 
 tile.ice.unmelting.name = Ghiaccio (inscioglibile)
 
@@ -168,6 +171,8 @@ tile.mfr.rednet.panel.historian.name = Storico RedNet
 tile.mfr.machineblock = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Custodia per regolatrice programmabile RedNet
 
+tile.mfr.tank.name = Cisterna di plastica
+
 fluid.mfr.milk.still.name = Latte
 fluid.mfr.sludge.still.name = Melma
 fluid.mfr.sewage.still.name = Escrementi
@@ -184,7 +189,7 @@ entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Gelatina rosa
 item.mfr.bucket.milk.name = Secchio di latte
 item.mfr.bucket.sewage.name = Secchio di melma
 item.mfr.bucket.sludge.name = Secchio di escrementi
-item.mfr.bucket.essence.name = Secchio di essenza di mob
+item.mfr.bucket.essence.name = Secchio di essenza
 item.mfr.bucket.biofuel.name = Secchio di combustibile biologico
 item.mfr.bucket.meat.name = Secchio di carne
 item.mfr.bucket.pinkslime.name = Secchio di gelatina rosa
@@ -203,13 +208,6 @@ item.mfr.plastic.armor.chest.name = Corazza di plastica
 item.mfr.plastic.armor.legs.name  = Gambiera di plastica
 item.mfr.plastic.armor.boots.name = Stivali di plastica
 
-item.mfr.machineblock.name = Blocco per macchinario
-item.mfr.hammer.name = Martello di precisione
-item.mfr.fertilizer.name = Fertilizzante industriale
-item.mfr.plastic.sheet.name = Fogli di plastica
-item.mfr.plastic.raw.name = Plastica grezza
-item.mfr.rubber.bar.name = Barra di gomma
-item.mfr.rubber.raw.name = Gomma grezza
 item.mfr.syringe.cure.name = Siringa de-zombificante
 item.mfr.syringe.empty.name = Siringa vuota
 item.mfr.syringe.empty.prefix.name = Siringa di
@@ -218,14 +216,26 @@ item.mfr.syringe.growth.name = Siringa della crescita
 item.mfr.syringe.health.name = Siringa della salute
 item.mfr.syringe.slime.name = Siringa della grandezza di gelatina
 item.mfr.syringe.zombie.name = Siringa zombi
+
+item.mfr.machineblock.name = Blocco per macchinario
+item.mfr.hammer.name = Martello di precisione
+item.mfr.fertilizer.name = Fertilizzante industriale
+item.mfr.plastic.sheet.name = Fogli di plastica
+item.mfr.plastic.raw.name = Plastica grezza
+item.mfr.rubber.bar.name = Barra di gomma
+item.mfr.rubber.raw.name = Gomma grezza
 item.mfr.record.blank.name = Disco vuoto
+
 item.mfr.safarinet.reusable.name = Rete safari (riutilizzabile)
 item.mfr.safarinet.singleuse.name = Rete safari (monouso)
 item.mfr.safarinet.jailer.name = Rete safari del carceriere
 item.mfr.safarinet.launcher.name = Lanciatore di reti safar
+
 item.mfr.sugarcharcoal.name = Carbonella di zucchero
+item.mfr.fertilizer.name = Fertilizzante industriale
 item.mfr.milkbottle.name = Bottiglia di latte
 item.mfr.spyglass.name = Cannocchiale
+item.mfr.ruler.name = Righello
 item.mfr.xpextractor.name = Estrattore di XP
 item.mfr.portaspawner.name = Generatore portabile
 item.mfr.straw.name = Cannuccia
@@ -235,17 +245,18 @@ item.mfr.rednet.meter.info.name = Multimetro Multimeter
 item.mfr.rednet.meter.debug.name = Debugger
 item.mfr.rednet.memorycard.name = Sceda di memoria PRC
 
-item.mfr.ruler.name = Righello
 item.mfr.meat.ingot.raw.name = Lingotto di carne cruda
 item.mfr.meat.ingot.cooked.name = Lingotto di carne cotta
 item.mfr.meat.nugget.raw.name = Pepita di "carne" cruda
 item.mfr.meat.nugget.cooked.name = Pepita di "carne" cotta
+
 item.mfr.pinkslime.ball.name = Palla di gelatina rosa
+item.mfr.pinkslime.gem.name = Cristallo di gelatina rosa
+
 item.mfr.rocket.name = Razzo autopropulsore anti-materiale
 item.mfr.rocket.smart.name = Razzo autopropulsore anti-materiale a rilevamento
 item.mfr.rocketlauncher.name = Lanciatore RAPAM
 item.mfr.fishingrod.name = Canna da pesca
-item.mfr.plastic.bag.name = Sacchetto di plastica
 
 item.mfr.ceramicdye.white.name = Ceramica colorata (bianco)
 item.mfr.ceramicdye.orange.name = Ceramica colorata (arancione)
