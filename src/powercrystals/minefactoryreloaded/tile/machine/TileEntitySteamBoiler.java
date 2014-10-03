@@ -21,6 +21,7 @@ import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSteamBoiler;
 import powercrystals.minefactoryreloaded.gui.container.ContainerSteamBoiler;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -272,7 +273,14 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		if (resource != null && resource.getFluid() == FluidRegistry.WATER)
+		{
+			if (MFRConfig.steamBoilerExplodes.getBoolean(false)) {
+				if (_temp > 80 && _tanks[1].getFluidAmount() == 0) {
+					worldObj.createExplosion(null, xCoord + 0.5d, yCoord + 0.5d, zCoord + 0.5d, 3, true);
+				}
+			}
 			return _tanks[1].fill(resource, doFill);
+		}
 		return 0;
 	}
 

@@ -37,6 +37,7 @@ public class MFRConfig
 	public static Property autospawnerCostExact;
 	public static Property laserdrillCost;
 	public static Property disenchanterEssence;
+	public static Property steamBoilerExplodes;
 
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
@@ -289,6 +290,9 @@ public class MFRConfig
 
 		disenchanterEssence = c.get("Machine." + Machine.AutoDisenchanter.getName(), "EnableEssence", false).setRequiresMcRestart(true);
 		disenchanterEssence.comment = "If true, the disenchanter will use essence to disenchant items. Provided for those who want a more work-intensive enchanting system.";
+
+		steamBoilerExplodes = c.get("Machine." + Machine.SteamBoiler.getName(), "Explodes", false);
+		steamBoilerExplodes.comment = "If true, the steam boiler will explode if it's hot and dry when you try to pump water into it.";
 		//}
 
 		for(Machine machine : Machine.values())
