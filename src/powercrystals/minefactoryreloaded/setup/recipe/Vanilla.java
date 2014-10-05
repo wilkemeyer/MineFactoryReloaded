@@ -683,7 +683,7 @@ public class Vanilla
 				'C', Chronotyper,
 				} );
 
-		/*
+
 		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[]
 				{
 			"PPP",
@@ -691,7 +691,7 @@ public class Vanilla
 			"PMP",
 			'P', "sheetPlastic",
 			'M', machineBaseItem,
-				}));//*/
+				}));
 	}
 
 	protected void registerMachine(Machine machine, Object... recipe)

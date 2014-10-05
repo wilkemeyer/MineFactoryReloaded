@@ -4,12 +4,10 @@ import cofh.api.block.IBlockInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
@@ -37,17 +35,6 @@ public class BlockTank extends BlockFactory implements IBlockInfo
 		icons[0] = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.tank.bottom");
 		icons[1] = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.tank.top");
 		icons[2] = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.tank.side");
-	}
-
-	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
-	{
-		TileEntity te = getTile(world, x, y, z);
-		if (te instanceof TileEntityTank)
-		{
-			((TileEntityTank)te).remove();
-		}
-		return super.getDrops(world, x, y, z, metadata, fortune);
 	}
 
 	@Override

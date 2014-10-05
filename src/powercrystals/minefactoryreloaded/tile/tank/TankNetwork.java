@@ -1,8 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
-import static powercrystals.minefactoryreloaded.tile.tank.TileEntityTank.CAPACITY;
-
-import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.position.BlockPosition;
 
@@ -16,25 +13,14 @@ public class TankNetwork
 {
 	private LinkedHashSet<TileEntityTank> nodeSet;
 	private TileEntityTank master;
-	FluidTankAdv storage = new FluidTankAdv(0);
+	FluidTankMulti storage = new FluidTankMulti();
 
-	protected TankNetwork() {
-		storage.setCapacity(0);
+	public TankNetwork() {
 	}
 
-
-	public TankNetwork(TileEntityTank base) { this();
+	public TankNetwork(TileEntityTank base) {
 		nodeSet = new LinkedHashSet<TileEntityTank>();
 		addNode(base);
-	}
-
-	public int getNodeShare(TileEntityTank cond) {
-		int size = nodeSet.size();
-		if (size <= 1)
-			return storage.getCapacity();
-		int amt = 0;
-		if (master == cond) amt = storage.getFluidAmount() % size;
-		return amt + storage.getFluidAmount() / size;
 	}
 
 	public void addNode(TileEntityTank cond) {
@@ -43,18 +29,12 @@ public class TankNetwork
 				return;
 	}
 
-	public void removeNode(TileEntityTank cond, boolean simulate) {
-		nodeSet.remove(cond);
+	public void removeNode(TileEntityTank cond) {
 		if (!nodeSet.isEmpty()) {
-			int share = simulate ? getNodeShare(cond) :
-					(cond.fluidForGrid != null ? cond.fluidForGrid.amount : 0);
-			if (simulate || nodeSet.remove(cond)) {
-				cond.fluidForGrid = storage.drain(share, !simulate);
-				if (!simulate)
-					nodeRemoved(cond);
+			if (nodeSet.remove(cond)) {
+				nodeRemoved(cond);
 			}
 		}
-		rebalanceGrid();
 	}
 
 	public void markSweep() {
@@ -64,7 +44,6 @@ public class TankNetwork
 		TileEntityTank main = nodeSet.iterator().next();
 		LinkedHashSet<TileEntityTank> oldSet = nodeSet;
 		nodeSet = new LinkedHashSet<TileEntityTank>(Math.min(oldSet.size() / 6, 5));
-		rebalanceGrid();
 
 		LinkedHashSet<TileEntityTank> toCheck = new LinkedHashSet<TileEntityTank>();
 		LinkedHashSet<TileEntityTank> checked = new LinkedHashSet<TileEntityTank>();
@@ -101,12 +80,8 @@ public class TankNetwork
 	public void destroyGrid() {
 		master = null;
 		for (TileEntityTank curCond : nodeSet)
-			destroyNode(curCond);
-	}
-
-	public void destroyNode(TileEntityTank cond) {
-		cond.fluidForGrid = storage.drain(getNodeShare(cond), false);
-		cond.grid = null;
+			curCond.grid = null;
+		storage.empty();
 	}
 
 	public boolean canMergeGrid(TankNetwork grid) {
@@ -136,6 +111,7 @@ public class TankNetwork
 				master = nodeSet.iterator().next();
 			}
 		}
+		storage.removeTank(cond._tank);
 		if (cond.interfaceCount() > 1)
 			markSweep(); // TODO: tick handler?
 	}
@@ -150,8 +126,8 @@ public class TankNetwork
 					return false;
 			} else
 				return false;
-		} else if (cond.fluidForGrid != null) {
-			if (!FluidHelper.isFluidEqualOrNull(cond.fluidForGrid, storage.getFluid())) {
+		} else if (cond._tank.getFluid() != null) {
+			if (!FluidHelper.isFluidEqualOrNull(cond._tank.getFluid(), storage.getFluid())) {
 				nodeSet.remove(cond);
 				return false;
 			} else
@@ -159,17 +135,11 @@ public class TankNetwork
 		} else {
 			cond.grid = this;
 		}
-		rebalanceGrid();
 		if (master == null) {
 			master = cond;
 		}
-		storage.fill(cond.fluidForGrid, true);
-		cond.fluidForGrid = storage.drain(0, false);
+		storage.addTank(cond._tank);
 		return true;
-	}
-
-	public void rebalanceGrid() {
-		storage.setCapacity(nodeSet.size() * CAPACITY);
 	}
 
 	public int getSize() {

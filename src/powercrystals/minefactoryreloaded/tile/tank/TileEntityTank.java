@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
+import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.position.BlockPosition;
 
@@ -25,19 +26,19 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 {
 	static int CAPACITY = FluidHelper.BUCKET_VOLUME * 4;
 	TankNetwork grid;
-	FluidStack fluidForGrid;
+	FluidTankAdv _tank;
 	protected byte sides;
 
 	public TileEntityTank()
 	{
 		super(null);
+		setManageFluids(true);
+		_tank = new FluidTankAdv(CAPACITY);
 	}
 
 	@Override
 	public void invalidate()
 	{
-		if (isInvalid())
-			return;
 		super.invalidate();
 		if (worldObj.isRemote)
 			return;
@@ -50,7 +51,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 				tank.part(to.getOpposite());
 		}
 		if (grid != null)
-			grid.removeNode(this, false);
+			grid.removeNode(this);
 	}
 
 	@Override
@@ -60,12 +61,12 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 	@Override
 	public void firstTick()
-	{/*
+	{
 		for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
 			if (to.offsetY != 0 || !BlockPosition.blockExists(this, to))
 				continue;
 			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
-			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.storage.getFluid(), fluidForGrid)) {
+			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.storage.getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
 					tank.grid.addNode(this);
 				if (grid != null)
@@ -74,7 +75,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 					join(to);
 				}
 			}
-		}//*/
+		}
 		if (grid == null)
 			grid = new TankNetwork(this);
 	}
@@ -108,28 +109,19 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		return Integer.bitCount(sides);
 	}
 
-	public void remove()
-	{
-		if (grid != null)
-			grid.removeNode(this, true);
-	}
-
 	@Override
 	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);
-		remove();
-		if (fluidForGrid != null)
-		{
-			tag.setTag("fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
-		}
+		if (_tank.getFluidAmount() != 0)
+			tag.setTag("tank", _tank.writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		fluidForGrid = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
+		_tank.readFromNBT(tag.getCompoundTag("tank"));
 	}
 
 	@Override
@@ -197,7 +189,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		if (grid == null) {
 			info.add(new ChatComponentText("Null Grid!!"));
 			if (debug)
-				info.add(new ChatComponentText("FluidForGrid: " + fluidForGrid));
+				info.add(new ChatComponentText("FluidForGrid: " + _tank.getFluid()));
 			return;
 		}
 		if (grid.storage.getFluidAmount() == 0)
@@ -207,8 +199,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		info.add(new ChatComponentText((grid.storage.getFluidAmount() / (float)grid.storage.getCapacity() * 100f) + "%"));
 		if (debug) {
 			info.add(new ChatComponentText(grid.storage.getFluidAmount() + " / " + grid.storage.getCapacity()));
-			info.add(new ChatComponentText("Size: " + grid.getSize() + " | Share: " + grid.getNodeShare(this)));
-			info.add(new ChatComponentText("FluidForGrid: " + fluidForGrid));
+			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " + _tank.getFluid()));
 		}
 	}
 }

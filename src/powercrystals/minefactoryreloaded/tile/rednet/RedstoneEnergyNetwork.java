@@ -22,12 +22,13 @@ public class RedstoneEnergyNetwork implements IGrid
 	private LinkedHashSet<TileEntityRedNetEnergy> nodeSet = new LinkedHashSet<TileEntityRedNetEnergy>();
 	private LinkedHashSet<TileEntityRedNetEnergy> conduitSet;
 	private TileEntityRedNetEnergy master;
+	private int overflowSelector;
 	private boolean regenerating = false;
 	EnergyStorage storage = new EnergyStorage(480, 80);
-	
+
 	public int distribution;
 	public int distributionSide;
-	
+
 	protected RedstoneEnergyNetwork() {
 		storage.setCapacity(STORAGE);
 		storage.setMaxTransfer(TRANSFER_RATE);
@@ -76,7 +77,7 @@ public class RedstoneEnergyNetwork implements IGrid
 			}
 		}
 	}
-	
+
 	public void regenerate() {
 		regenerating = true;
 		HANDLER.regenerateGrid(this);
@@ -85,7 +86,7 @@ public class RedstoneEnergyNetwork implements IGrid
 	public boolean isRegenerating() {
 		return regenerating;
 	}
-	
+
 	@Override
 	public void markSweep() {
 		destroyGrid();
@@ -96,7 +97,7 @@ public class RedstoneEnergyNetwork implements IGrid
 		nodeSet.clear();
 		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>(Math.min(oldSet.size() / 6, 5));
 		rebalanceGrid();
-		
+
 		LinkedHashSet<TileEntityRedNetEnergy> toCheck = new LinkedHashSet<TileEntityRedNetEnergy>();
 		LinkedHashSet<TileEntityRedNetEnergy> checked = new LinkedHashSet<TileEntityRedNetEnergy>();
 		BlockPosition bp = new BlockPosition(0,0,0);
@@ -134,7 +135,7 @@ public class RedstoneEnergyNetwork implements IGrid
 			HANDLER.addGrid(this);
 		regenerating = false;
 	}
-	
+
 	public void destroyGrid() {
 		master = null;
 		regenerating = true;
@@ -166,7 +167,7 @@ public class RedstoneEnergyNetwork implements IGrid
 		if (tank.getEnergyStored() >= tank.getMaxEnergyStored())
 			return;
 		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
-		
+
 		for (TileEntityRedNetEnergy cond : nodeSet)
 			for (int i = 6; i --> 0; )
 				cond.extract(directions[i], tank);
@@ -187,26 +188,38 @@ public class RedstoneEnergyNetwork implements IGrid
 		int size = nodeSet.size();
 		int toDistribute = storage.getEnergyStored() / size;
 		int sideDistribute = toDistribute / 6;
-		
+
 		distribution = toDistribute;
 		distributionSide = sideDistribute;
-		
+
+		TileEntityRedNetEnergy master = this.master;
+		int overflow = overflowSelector, selector = 0;
+		if (size > 1)
+			overflowSelector = (overflow + 1) % size;
+
 		if (sideDistribute > 0) for (TileEntityRedNetEnergy cond : nodeSet)
-			if (cond != master) {
+			if (selector++ != overflow) {
 				int e = 0;
 				for (int i = 6; i --> 0; )
 					e += cond.transfer(directions[i], sideDistribute);
 				if (e > 0) storage.modifyEnergyStored(-e);
+			} else {
+				master = cond;
 			}
-		
+
 		toDistribute += storage.getEnergyStored() % size;
 		sideDistribute = toDistribute / 6;
-		
+
 		if (sideDistribute > 0) {
 			int e = 0;
-			for (int i = 6; i --> 0; ) 
+			for (int i = 6; i --> 0; )
 				e += master.transfer(directions[i], sideDistribute);
 			if (e > 0) storage.modifyEnergyStored(-e);
+		} else if (toDistribute > 0) {
+			int e = 0;
+			for (int i = 6; i --> 0 && e < toDistribute; )
+				e += master.transfer(directions[i], toDistribute);
+			if (e > 0) storage.extractEnergy(toDistribute, false);
 		}
 	}
 
@@ -221,12 +234,12 @@ public class RedstoneEnergyNetwork implements IGrid
 		grid.destroyGrid();
 		if (!regenerating & r)
 			regenerate();
-		
+
 		regenerating = true;
 		for (TileEntityRedNetEnergy cond : grid.conduitSet)
 			addConduit(cond);
 		regenerating = r;
-		
+
 		grid.conduitSet.clear();
 		grid.nodeSet.clear();
 	}
@@ -278,7 +291,7 @@ public class RedstoneEnergyNetwork implements IGrid
 	public int getNodeCount() {
 		return nodeSet.size();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "RedstoneEnergyNetwork@" + Integer.toString(hashCode()) + "; master:" + master +

@@ -201,7 +201,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				int d = item.getMaxDamage();
 				int k = startingItem.getItemDamageForDisplay();
 				int l = addedItem.getItemDamageForDisplay();
-				int i1 = (d - k) + (d - l) + d * 5 / 100;
+				int i1 = (d - k) + (d - l) + (d / 10);
 				int j1 = Math.max(d - i1, 0);
 
 				this.maximumCost = ((k + l) / 2 - j1) / 100f;
