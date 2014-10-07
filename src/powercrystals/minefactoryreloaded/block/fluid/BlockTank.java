@@ -14,7 +14,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.render.IconOverlay;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
@@ -38,13 +40,67 @@ public class BlockTank extends BlockFactory implements IBlockInfo
 	}
 
 	@Override
+	public int getRenderType()
+	{
+		return MineFactoryReloadedCore.renderIdFluidTank;
+	}
+
+	@Override
+	public int getRenderBlockPass()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile instanceof TileEntityTank) {
+			TileEntityTank tank = (TileEntityTank)tile;
+			FluidStack fluid = tank.getFluid();
+			if (fluid != null)
+				return fluid.getFluid().getLuminosity(fluid);
+		}
+		return 0;
+	}
+
+	@Override
 	public IIcon getIcon(int side, int meta)
 	{
 		if (side <= 1)
 			return icons[side];
-		if (meta == 3)
+		if (meta == 3) {
 			return new IconOverlay(icons[2], 3, 3, 2, 0);
+		}
 		return new IconOverlay(icons[2], 3, 3, 0, 0);
+	}
+
+	@Override
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	{
+		if (side == 3) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if (tile instanceof TileEntityTank) {
+				TileEntityTank tank = (TileEntityTank)tile;
+				FluidStack fluid = tank.getFluid();
+				if (fluid != null)
+					return fluid.getFluid().getIcon(fluid);
+			}
+		}
+		return getIcon(side, 3);
+	}
+
+	@Override
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile instanceof TileEntityTank) {
+			TileEntityTank tank = (TileEntityTank)tile;
+			FluidStack fluid = tank.getFluid();
+			if (fluid != null)
+				return fluid.getFluid().getColor(fluid);
+		}
+		return 0xFFFFFF;
 	}
 
 	@Override

@@ -54,6 +54,7 @@ import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
+import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
 import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
@@ -109,21 +110,24 @@ public class MineFactoryReloadedClient
 		instance = new MineFactoryReloadedClient();
 
 		// IDs
-		MineFactoryReloadedCore.renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdFactoryGlassPane = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdFluidClassic = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdRedNetLogic = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdVineScaffold = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdFactoryGlass = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdDetCord = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdRedNet = RenderingRegistry.getNextAvailableRenderId();
-		MineFactoryReloadedCore.renderIdPPipe = RenderingRegistry.getNextAvailableRenderId();
+		renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
+		renderIdFactoryGlassPane = RenderingRegistry.getNextAvailableRenderId();
+		renderIdFluidTank = RenderingRegistry.getNextAvailableRenderId();
+		renderIdFluidClassic = RenderingRegistry.getNextAvailableRenderId();
+		renderIdRedNetLogic = RenderingRegistry.getNextAvailableRenderId();
+		renderIdVineScaffold = RenderingRegistry.getNextAvailableRenderId();
+		renderIdFactoryGlass = RenderingRegistry.getNextAvailableRenderId();
+		renderIdDetCord = RenderingRegistry.getNextAvailableRenderId();
+		renderIdRedNet = RenderingRegistry.getNextAvailableRenderId();
+		renderIdPPipe = RenderingRegistry.getNextAvailableRenderId();
 
 		// Blocks
 		RenderingRegistry.registerBlockHandler(renderIdConveyor,
 				new ConveyorRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdFactoryGlassPane,
 				new FactoryGlassPaneRenderer());
+		BlockTankRenderer tankRender = new BlockTankRenderer();
+		RenderingRegistry.registerBlockHandler(renderIdFluidTank, tankRender);
 		/*RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
 				new RenderBlockFluidClassic(renderIdFluidClassic));//*/
 		RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
@@ -149,6 +153,8 @@ public class MineFactoryReloadedClient
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(factoryGlassPaneBlock),
 				new FactoryGlassPaneItemRenderer());
+
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(plasticTank), tankRender);
 
 		MinecraftForgeClient.registerItemRenderer(logicCardItem,
 				new RedNetCardItemRenderer());

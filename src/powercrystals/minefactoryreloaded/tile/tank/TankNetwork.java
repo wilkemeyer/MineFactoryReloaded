@@ -61,7 +61,7 @@ public class TankNetwork
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityTank) {
-						if (main.isInterfacing(dir[i^1]) && !checked.contains(te))
+						if (main.isInterfacing(dir[i]) && !checked.contains(te))
 							toCheck.add((TileEntityTank)te);
 						checked.add((TileEntityTank)te);
 					}

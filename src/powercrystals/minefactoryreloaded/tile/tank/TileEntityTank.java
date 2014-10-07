@@ -9,6 +9,9 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -24,7 +27,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
 public class TileEntityTank extends TileEntityFactory implements ITankContainerBucketable, IDelayedValidate
 {
-	static int CAPACITY = FluidHelper.BUCKET_VOLUME * 4;
+	public static int CAPACITY = FluidHelper.BUCKET_VOLUME * 4;
 	TankNetwork grid;
 	FluidTankAdv _tank;
 	protected byte sides;
@@ -110,6 +113,33 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
+	public Packet getDescriptionPacket() {
+		if (grid == null)
+			return null;
+		NBTTagCompound data = new NBTTagCompound();
+		FluidStack fluid = grid.storage.drain(1, false);
+		data.setTag("fluid", fluid == null ? null : fluid.writeToNBT(new NBTTagCompound()));
+		data.setByte("sides", sides);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		return packet;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
+		NBTTagCompound data = pkt.func_148857_g();
+		switch (pkt.func_148853_f())
+		{
+		case 0:
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(data.getCompoundTag("fluid"));
+			_tank.setFluid(fluid);
+			sides = data.getByte("sides");
+			break;
+		}
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
 	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);
@@ -122,6 +152,13 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		super.readFromNBT(tag);
 		_tank.readFromNBT(tag.getCompoundTag("tank"));
+	}
+
+	public FluidStack getFluid()
+	{
+		if (grid == null)
+			return _tank.getFluid();
+		return grid.storage.getFluid();
 	}
 
 	@Override
@@ -144,7 +181,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		if (grid == null)
-			return null;
+			return worldObj.isRemote ? _tank.drain(maxDrain, false) : null;
 		return grid.storage.drain(maxDrain, doDrain);
 	}
 
@@ -200,6 +237,8 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		if (debug) {
 			info.add(new ChatComponentText(grid.storage.getFluidAmount() + " / " + grid.storage.getCapacity()));
 			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " + _tank.getFluid()));
+			info.add(new ChatComponentText("Size: " + grid.storage.length + " | index: " + grid.storage.index +
+					" | reserve: " + grid.storage.tanks.length));
 		}
 	}
 }

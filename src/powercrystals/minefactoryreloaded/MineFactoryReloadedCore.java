@@ -84,6 +84,7 @@ import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryTree;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetPanel;
+import powercrystals.minefactoryreloaded.block.ItemBlockTank;
 import powercrystals.minefactoryreloaded.block.ItemBlockVineScaffold;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
@@ -198,6 +199,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static int renderIdConveyor = 1000;
 	public static int renderIdFactoryGlassPane = 1001;
+	public static int renderIdFluidTank = 1002;
 	public static int renderIdFluidClassic = 1003;
 	public static int renderIdRedNetLogic = 1004;
 	public static int renderIdVineScaffold = 1005;
@@ -409,6 +411,7 @@ public class MineFactoryReloadedCore extends BaseMod
 			registerBlock(machineBlocks.get(i), ItemBlockFactoryMachine.class);
 		}
 
+		registerBlock(plasticTank, ItemBlockTank.class);
 		registerBlock(plasticPipeBlock, ItemBlockFactory.class);
 
 		registerBlock(rednetCableBlock, ItemBlockFactory.class, BlockRedNetCable._names);
@@ -452,8 +455,6 @@ public class MineFactoryReloadedCore extends BaseMod
 		pinkSlimeBucketItem = (new ItemFactoryBucket(pinkSlimeLiquid)).setUnlocalizedName("mfr.bucket.pinkslime");
 		chocolateMilkBucketItem = (new ItemFactoryBucket(chocolateMilkLiquid)).setUnlocalizedName("mfr.bucket.chocolatemilk");
 		mushroomSoupBucketItem = (new ItemFactoryBucket(mushroomSoupLiquid)).setUnlocalizedName("mfr.bucket.mushroomsoup");
-
-		registerBlock(plasticTank, ItemBlockFactory.class);
 
 		registerBlock(milkLiquid, ItemBlock.class);
 		registerBlock(sludgeLiquid, ItemBlock.class);

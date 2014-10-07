@@ -8,15 +8,15 @@ import net.minecraftforge.fluids.IFluidTank;
 
 public class FluidTankMulti implements IFluidTank {
 
-	private FluidTankAdv[] tanks = new FluidTankAdv[2];
-	private int length;
+	FluidTankAdv[] tanks = new FluidTankAdv[2];
+	int length, index;
 	private FluidStack fluid = null;
 
 	public void addTank(FluidTankAdv tank) {
 		if (++length >= tanks.length) {
 			FluidTankAdv[] old = tanks;
 			tanks = new FluidTankAdv[length * 2];
-			System.arraycopy(old, 0, tanks, 0, length);
+			System.arraycopy(old, 0, tanks, 0, length - 1);
 		}
 		tanks[length - 1] = tank;
 		fill(tank.drain(tank.getCapacity(), true), true);
@@ -29,8 +29,15 @@ public class FluidTankMulti implements IFluidTank {
 
 		FluidStack r = drain(tank.drain(tank.getFluidAmount(), false), true);
 
-		if (--length != i)
-			System.arraycopy(tanks, i + 1, tanks, i, length + 1);
+		if (--length != i) {
+			FluidTankAdv[] old = tanks;
+			if (length <= tanks.length / 4) {
+				tanks = new FluidTankAdv[tanks.length / 2];
+				if (i > 0)
+					System.arraycopy(old, 0, tanks, 0, i);
+			}
+			System.arraycopy(old, i + 1, tanks, i, length - i + 1);
+		}
 
 		tanks[length] = null;
 		tank.setFluid(r);
@@ -66,14 +73,17 @@ public class FluidTankMulti implements IFluidTank {
 	public int fill(FluidStack resource, boolean doFill) {
 		int f = 0;
 		if (resource != null && (fluid == null || fluid.isFluidEqual(resource))) {
-			int i = 0;
-			while (i < length && f < resource.amount) {
+			int i = index;
+			while (i < length) {
 				f += tanks[i].fill(resource, doFill);
+				if (f >= resource.amount)
+					break;
 				++i;
 			}
 			if (i == length)
 				 --i;
 			if (doFill) {
+				index = i;
 				if (fluid == null)
 					fluid = new FluidStack(resource, 0);
 				fluid.amount += f;
@@ -86,18 +96,21 @@ public class FluidTankMulti implements IFluidTank {
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		if (fluid != null) {
 			FluidStack r = new FluidStack(fluid, 0);
-			int i = length - 1;
-			while (i >= 0 && maxDrain > 0) {
+			int i = index;
+			while (i >= 0) {
 				FluidStack d = tanks[i].drain(maxDrain, doDrain);
 				if (d != null) {
 					r.amount += d.amount;
 					maxDrain -= d.amount;
 				}
+				if (maxDrain <= 0)
+					break;
 				--i;
 			}
 			if (i == -1)
 				 ++i;
 			if (doDrain) {
+				index = i;
 				fluid.amount -= r.amount;
 				if (fluid.amount <= 0)
 					fluid = null;
