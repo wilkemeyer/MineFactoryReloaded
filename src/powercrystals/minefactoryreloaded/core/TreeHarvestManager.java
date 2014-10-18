@@ -7,8 +7,10 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -60,7 +62,7 @@ public class TreeHarvestManager implements IHarvestManager
 	{
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
-		
+
 		HarvestType type = getType(bn, harvestables);
 		if (type == null || type == HarvestType.TreeFruit)
 			return;
@@ -95,7 +97,7 @@ public class TreeHarvestManager implements IHarvestManager
 		}
 		node.free();
 	}
-	
+
 	private HarvestType getType(BlockNode bp, Map<Block, IFactoryHarvestable> harvestables)
 	{
 		Area area = _area;
@@ -162,10 +164,7 @@ public class TreeHarvestManager implements IHarvestManager
 		BlockNode bn = _blocks.poke();
 		while (bn != null)
 		{
-			NBTTagCompound p = new NBTTagCompound();
-			p.setInteger("x", bn.x);
-			p.setInteger("y", bn.y);
-			p.setInteger("z", bn.z);
+			NBTTagIntArray p = new NBTTagIntArray(new int[]{bn.x, bn.y, bn.z});
 			list.appendTag(p);
 			bn = bn.next;
 		}
@@ -178,7 +177,7 @@ public class TreeHarvestManager implements IHarvestManager
 	{
 		free();
 		_blocks = new BlockPool();
-		
+
 		NBTTagCompound data = tag.getCompoundTag("harvestManager");
 		_isDone = data.getBoolean("done");
 		_harvestMode = HarvestMode.values()[data.getInteger("mode")];
@@ -191,7 +190,14 @@ public class TreeHarvestManager implements IHarvestManager
 		}
 		_area = new Area(new BlockPosition(o[0], o[1], o[2]), area[0], area[1], area[2]);
 		NBTTagList list = (NBTTagList)data.getTag("curPos");
-		for (int i = 0, e = list.tagCount(); i < e; ++i)
+		if (list.func_150303_d() == Constants.NBT.TAG_INT_ARRAY) {
+			for (int i = 0, e = list.tagCount(); i < e; ++i)
+			{
+				int[] p = list.func_150306_c(i);
+				_blocks.push(BlockPool.getNext(p[0], p[1], p[2]));
+			}
+		}
+		else for (int i = 0, e = list.tagCount(); i < e; ++i)
 		{
 			NBTTagCompound p = list.getCompoundTagAt(i);
 			_blocks.push(BlockPool.getNext(p.getInteger("x"), p.getInteger("y"), p.getInteger("z")));

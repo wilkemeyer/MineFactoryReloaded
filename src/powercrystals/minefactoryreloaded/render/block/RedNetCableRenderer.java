@@ -99,6 +99,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IS
 		m.apply(new Translation(0.5, 0.5, 0.5));
 		m.computeNormals();
 		m.computeLighting(LightModel.standardLightModel);
+		m.shrinkUVs(RenderHelper.RENDER_OFFSET);
 	}
 
 	public static void updateUVT(IIcon icon) {

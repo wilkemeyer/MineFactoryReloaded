@@ -8,12 +8,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import ic2.api.item.IC2Items;
-import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.ISemiFluidFuelManager.BurnProperty;
+import ic2.api.recipe.RecipeInputItemStack;
 import ic2.api.recipe.Recipes;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemArmor;
@@ -71,7 +68,9 @@ public class IC2
 			{
 				MFRRegistry.registerHarvestable(new HarvestableIC2RubberWood(Block.getBlockFromItem(rubberWood.getItem()), stickyResin.getItem()));
 				MFRRegistry.registerFruitLogBlock(Block.getBlockFromItem(rubberWood.getItem()));
-				MFRRegistry.registerFruit(new FruitIC2Resin(rubberWood, stickyResin));
+				FruitIC2Resin resin = new FruitIC2Resin(rubberWood, stickyResin);
+				MFRRegistry.registerFruit(resin);
+				MFRRegistry.registerFertilizable(resin);
 			}
 
 			ItemStack fertilizer = IC2Items.getItem("fertilizer");
@@ -80,7 +79,13 @@ public class IC2
 				MFRRegistry.registerFertilizer(new FertilizerStandard(fertilizer.getItem(), fertilizer.getItemDamage()));
 			}
 
-			MFRRegistry.registerHarvestable(new HarvestableIC2Crop(Block.getBlockFromItem(crop.getItem())));
+			if (crop != null)
+			{
+				IC2Crop ic2crop = new IC2Crop(Block.getBlockFromItem(crop.getItem()));
+				MFRRegistry.registerHarvestable(ic2crop);
+				MFRRegistry.registerFertilizable(ic2crop);
+				MFRRegistry.registerFruit(ic2crop);
+			}
 
 			GameRegistry.addShapedRecipe(plantBall, new Object[]
 					{
@@ -90,31 +95,16 @@ public class IC2
 					Character.valueOf('L'), new ItemStack(MFRThings.rubberLeavesBlock)
 					} );
 
-			Method m = null;
 			ItemStack item = new ItemStack(MFRThings.rubberSaplingBlock);
 			rubber.stackSize = 1;
 			try
 			{
-				for (Method t : IMachineRecipeManager.class.getDeclaredMethods())
-					if (t.getName().equals("addRecipe"))
-					{
-						m = t;
-						break;
-					}
-				m.invoke(Recipes.extractor, item, rubber);
+				Recipes.extractor.addRecipe(new RecipeInputItemStack(item), null, rubber);
 			}
 			catch (Throwable _)
 			{
-				try
 				{
-					Class<?> clazz = Class.forName("ic2.api.recipe.RecipeInputItemStack");
-					Constructor<?> c = clazz.getDeclaredConstructor(ItemStack.class);
-					Object o = c.newInstance(item);
-					m.invoke(Recipes.extractor, o, null, new ItemStack[] {rubber});
-				}
-				catch (Throwable e)
-				{
-					e.printStackTrace();
+					_.printStackTrace();
 				}
 			}
 			copyEthanol();

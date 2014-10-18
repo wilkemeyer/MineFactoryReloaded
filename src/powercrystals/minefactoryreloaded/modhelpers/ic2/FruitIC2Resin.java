@@ -9,10 +9,12 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.api.FertilizerType;
+import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
-public class FruitIC2Resin implements IFactoryFruit
+public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 {
 	private Block _rubberWood;
 	private ItemStack _resin;
@@ -35,6 +37,23 @@ public class FruitIC2Resin implements IFactoryFruit
 	public Block getPlant()
 	{
 		return _rubberWood;
+	}
+
+	@Override
+	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	{
+		if (fertilizerType == FertilizerType.Grass)
+			return false;
+		Block blockID = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z) - 6;
+		return blockID.equals(_rubberWood) & (meta >= 2 & (meta <= 5));
+	}
+
+	@Override
+	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	{
+		final int meta = world.getBlockMetadata(x, y, z);
+		return world.setBlockMetadataWithNotify(x, y, z, meta - 6, 2);
 	}
 
 	@Override

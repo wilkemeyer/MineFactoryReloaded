@@ -218,8 +218,8 @@ public class RedstoneEnergyNetwork implements IGrid
 		} else if (toDistribute > 0) {
 			int e = 0;
 			for (int i = 6; i --> 0 && e < toDistribute; )
-				e += master.transfer(directions[i], toDistribute);
-			if (e > 0) storage.extractEnergy(toDistribute, false);
+				e += master.transfer(directions[i], toDistribute - e);
+			if (e > 0) storage.extractEnergy(e, false);
 		}
 	}
 

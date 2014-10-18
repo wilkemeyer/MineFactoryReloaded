@@ -26,6 +26,7 @@ import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
+import powercrystals.minefactoryreloaded.modhelpers.EmptyReplacement;
 
 public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit, IFactoryFertilizable
 {
@@ -37,7 +38,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	{
 		super(block);
 		root = (ITreeRoot)AlleleManager.alleleRegistry.getSpeciesRoot("rootTrees");
-		repl = new EmptyReplacement();
+		repl = EmptyReplacement.INSTANCE;
 		_item = Item.getItemFromBlock(block);
 	}
 

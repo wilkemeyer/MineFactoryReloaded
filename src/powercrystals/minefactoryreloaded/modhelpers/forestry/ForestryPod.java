@@ -19,6 +19,7 @@ import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
+import powercrystals.minefactoryreloaded.modhelpers.EmptyReplacement;
 
 public class ForestryPod extends HarvestableStandard implements IFactoryFruit, IFactoryFertilizable
 {
@@ -28,7 +29,7 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 	public ForestryPod(Block block, Item tool)
 	{
 		super(block, HarvestType.TreeFruit);
-		repl = new EmptyReplacement();
+		repl = EmptyReplacement.INSTANCE;
 		grafter = tool;
 	}
 

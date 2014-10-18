@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.render.block;
 
+import cofh.lib.render.RenderHelper;
 import cofh.repack.codechicken.lib.lighting.LightModel;
 import cofh.repack.codechicken.lib.render.CCModel;
 import cofh.repack.codechicken.lib.render.CCRenderState;
@@ -45,7 +46,7 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 
 			iface[5] = cableModels.get("interface").backfacedCopy();
 			calculateSidedModels(iface, p);
-			
+
 			cable[5] = cableModels.get("cable").backfacedCopy();
 			calculateSidedModels(cable, p);
 
@@ -54,7 +55,7 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 
 			gripI[5] = cableModels.get("gripI").backfacedCopy();
 			calculateSidedModels(gripI, p);
-			
+
 			gripP[5] = cableModels.get("gripP").backfacedCopy();
 			calculateSidedModels(gripP, p);
 		} catch (Throwable _) { _.printStackTrace(); }
@@ -73,7 +74,7 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 		m.computeNormals();
 		m.apply(new Translation(0.5, 0.5, 0.5));
 		m.computeLighting(LightModel.standardLightModel);
-		//m.smoothNormals();
+		m.shrinkUVs(RenderHelper.RENDER_OFFSET);
 	}
 
 	public static void updateUVT(IIcon icon) {

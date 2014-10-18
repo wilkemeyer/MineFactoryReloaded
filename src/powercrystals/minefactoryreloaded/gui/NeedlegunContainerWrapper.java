@@ -8,12 +8,14 @@ import net.minecraft.nbt.NBTTagCompound;
 public class NeedlegunContainerWrapper implements IInventory
 {
 	private ItemStack _stack;
-	
+
 	public NeedlegunContainerWrapper(ItemStack stack)
 	{
 		_stack = stack;
+		if (stack.getTagCompound() == null)
+			stack.setTagCompound(new NBTTagCompound());
 	}
-	
+
 	public ItemStack getStack()
 	{
 		return _stack;

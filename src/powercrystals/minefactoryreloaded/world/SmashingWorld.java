@@ -24,7 +24,7 @@ public class SmashingWorld extends WorldProxy
 	{
 		super(world);
 	}
-	
+
 	@Override
 	public boolean spawnEntityInWorld(Entity par1Entity)
 	{
@@ -83,16 +83,16 @@ public class SmashingWorld extends WorldProxy
 		return 0;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public ArrayList smashBlock(ItemStack input, Block block, int meta, int fortune)
+	public ArrayList<ItemStack> smashBlock(ItemStack input, Block block, int meta, int fortune)
 	{
-		ArrayList drops = null;
+		ArrayList<ItemStack> drops = null;
 		if (block != null)
 		{
 			this.meta = meta;
+			this.block = block;
 			drops = block.getDrops(this, x, y, z, meta, fortune);
 			if (drops.size() == 1)
-				if (UtilInventory.stacksEqual((ItemStack)drops.get(0), input, false))
+				if (UtilInventory.stacksEqual(drops.get(0), input, false))
 					return null;
 		}
 		return drops;

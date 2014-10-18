@@ -226,8 +226,10 @@ public class FluidNetwork implements IGrid
 		} else if (toDistribute > 0) {
 			stack.amount = toDistribute;
 			int e = 0;
-			for (int i = 6; i --> 0 && e < toDistribute; )
+			for (int i = 6; i --> 0 && e < toDistribute; ) {
 				e += master.transfer(directions[i], stack, fluid);
+				stack.amount = toDistribute - e;
+			}
 			if (e > 0) storage.drain(e, true);
 		}
 	}

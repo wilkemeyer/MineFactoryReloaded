@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.render.block;
 
+import cofh.lib.render.RenderHelper;
 import cofh.repack.codechicken.lib.lighting.LightModel;
 import cofh.repack.codechicken.lib.render.CCModel;
 import cofh.repack.codechicken.lib.render.CCRenderState;
@@ -45,6 +46,7 @@ public class RedNetLogicRenderer implements ISimpleBlockRenderingHandler {
 	private static void compute(CCModel m) {
 		m.apply(new Rotation(rotAmt * 2, axis));
 		m.computeNormals();
+		m.shrinkUVs(RenderHelper.RENDER_OFFSET);
 	}
 
 	public static void updateUVT(IIcon icon) {
@@ -70,7 +72,7 @@ public class RedNetLogicRenderer implements ISimpleBlockRenderingHandler {
 		CCRenderState.reset();
 		CCRenderState.useNormals = true;
 		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
-		
+
 		int meta = world.getBlockMetadata(x, y, z);
 
 		Tessellator tess = Tessellator.instance;
