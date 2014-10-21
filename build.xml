@@ -158,7 +158,7 @@
 		<!-- End hack -->
 		
 		<echo message="Downloading AppEng API..." />
-		<get src="http://ae2.ae-mod.info/builds/appliedenergistics2-deobf-rv0-beta-4.jar" dest="${download.dir}/AppEng.jar"/>
+		<get src="http://ae-mod.info/builds/appliedenergistics2-rv1-stable-1-api.jar" dest="${download.dir}/AppEng.jar"/>
 
 		<echo message="Downloading Forestry API... "/>
 		<get src="https://github.com/ForestryMC/ForestryAPI/archive/master.zip" dest="${download.dir}/ForestryAPI.zip"/>
