@@ -19,6 +19,12 @@ public class TileEntityMobCounter extends TileEntityFactory
 	}
 
 	@Override
+	public boolean canUpdate()
+	{
+		return true;
+	}
+
+	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();

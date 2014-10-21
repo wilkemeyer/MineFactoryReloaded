@@ -52,6 +52,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		list.addAll(MFRUtil.VALID_DIRECTIONS);
 		list.remove(getDirectionFacing());
 		_pullDirections = list.toArray(new ForgeDirection[5]);
+		super.onRotate();
 	}
 
 	@Override

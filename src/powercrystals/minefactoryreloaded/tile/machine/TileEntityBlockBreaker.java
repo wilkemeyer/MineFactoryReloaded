@@ -29,9 +29,10 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public void onRotate()
+	protected void onRotate()
 	{
 		bp = BlockPosition.fromRotateableTile(this).moveForwards(1);
+		super.onRotate();
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 			{
 				doDrop(drops);
 				if (MFRConfig.playSounds.getBoolean(true))
-					worldObj.playAuxSFXAtEntity(null, 2001, x, y, z, 
+					worldObj.playAuxSFXAtEntity(null, 2001, x, y, z,
 							Block.getIdFromBlock(block) + (blockMeta << 12));
 			}
 			return true;

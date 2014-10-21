@@ -72,9 +72,9 @@ public class BlockPool
 		//return h ^ (h >>> 7) ^ (h >>> 4);
 	}
 	final static BlockPool pool = new BlockPool(false);
-	volatile BlockNode head;
-	volatile BlockNode tail;
-	private volatile int size;
+	BlockNode head;
+	BlockNode tail;
+	private int size;
 	private transient int mask;
 	private transient Entry[] hashTable;
 	private final boolean _noDupe;

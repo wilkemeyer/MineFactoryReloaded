@@ -41,6 +41,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		super(0.5F);
 		setBlockName("mfr.machine." + index);
 		_mfrMachineBlockIndex = index;
+		providesPower = true;
 	}
 
 	public int getBlockIndex()
@@ -324,6 +325,11 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	@Override
 	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet)
 	{
+		TileEntity te = getTile(world, x, y, z);
+		if (te instanceof TileEntityFactory)
+		{
+			return ((TileEntityFactory)te).getRedNetOutput(side);
+		}
 		return 0;
 	}
 

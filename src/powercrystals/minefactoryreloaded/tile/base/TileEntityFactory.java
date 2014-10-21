@@ -209,7 +209,10 @@ public abstract class TileEntityFactory extends TileEntityBase
 		}
 	}
 
-	protected void onRotate() {};
+	protected void onRotate()
+	{
+		worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+	}
 
 	public int getRotatedSide(int side)
 	{
