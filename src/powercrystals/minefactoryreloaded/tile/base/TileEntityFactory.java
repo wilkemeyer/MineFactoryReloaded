@@ -403,6 +403,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 			return canConnectInventory(with).canConnect ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
-		return ConnectOverride.DISCONNECT;
+		return ConnectOverride.DEFAULT;
 	}
 }
