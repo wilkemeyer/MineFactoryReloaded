@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
-import cpw.mods.fml.common.Loader;
+import cofh.asm.relauncher.Strippable;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -38,12 +38,9 @@ public class IC2
 	}
 
 	@EventHandler
+	@Strippable("mod:IC2")
 	public static void load(FMLInitializationEvent evt)
 	{
-		if(!Loader.isModLoaded("IC2"))
-		{
-			return;
-		}
 		try
 		{
 			ItemStack crop = IC2Items.getItem("crop");
@@ -112,7 +109,7 @@ public class IC2
 		catch (Exception x)
 		{
 			x.printStackTrace();
-		}//*/
+		}
 	}
 
 	private static void copyEthanol()
