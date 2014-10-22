@@ -86,7 +86,7 @@ public class PlantableStandard implements IFactoryPlantable
 			return false;
 
 		Block groundId = world.getBlock(x, y - 1, z);
-		return (_block.canPlaceBlockAt(world, x, y, z) && _block.canBlockStay(world, x, y, z)) ||
+		return (_block.canPlaceBlockAt(world, x, y, z) && _block.canReplace(world, x, y, z, 0, stack)) ||
 				(_block instanceof IPlantable && groundId != null &&
 				groundId.canSustainPlant(world, x, y, z, ForgeDirection.UP, (IPlantable)_block));
 	}

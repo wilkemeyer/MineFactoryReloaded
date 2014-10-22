@@ -211,7 +211,10 @@ public abstract class TileEntityFactory extends TileEntityBase
 
 	protected void onRotate()
 	{
-		worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+		if (worldObj.blockExists(xCoord, yCoord, zCoord))
+		{
+			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+		}
 	}
 
 	public int getRotatedSide(int side)
