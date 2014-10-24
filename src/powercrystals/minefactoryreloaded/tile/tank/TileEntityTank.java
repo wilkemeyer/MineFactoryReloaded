@@ -102,7 +102,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		sides &= ~(1 << from.ordinal());
 	}
 
-	boolean isInterfacing(ForgeDirection to)
+	public boolean isInterfacing(ForgeDirection to)
 	{
 		return 0 != (sides & (1 << to.ordinal()));
 	}

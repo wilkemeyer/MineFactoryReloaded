@@ -67,18 +67,20 @@ public class BlockTank extends BlockFactory implements IBlockInfo
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		if (side <= 1)
-			return icons[side];
-		if (meta == 3) {
-			return new IconOverlay(icons[2], 3, 3, 2, 0);
+		if (side == 0)
+			return icons[0];
+		if ((side % 6) == 1) {
+			return new IconOverlay(icons[1], 2, 2, meta);
 		}
-		return new IconOverlay(icons[2], 3, 3, 0, 0);
+		return new IconOverlay(icons[2], 3, 3, meta);
 	}
 
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		if (side == 3) {
+		int meta = 0;
+		if (side == 6 || side == 7) {
+			meta = 1;
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if (tile instanceof TileEntityTank) {
 				TileEntityTank tank = (TileEntityTank)tile;
@@ -87,7 +89,25 @@ public class BlockTank extends BlockFactory implements IBlockInfo
 					return fluid.getFluid().getIcon(fluid);
 			}
 		}
-		return getIcon(side, 3);
+		if (side > 1 && side < 6) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if (tile instanceof TileEntityTank) {
+				TileEntityTank tank = (TileEntityTank)tile;
+				int side2 = (((side / 2 - 1) ^ 1) + 1) * 2 + ((side & 1) ^ (side / 2 - 1));
+				boolean a = tank.isInterfacing(ForgeDirection.getOrientation(side2));
+				boolean b = tank.isInterfacing(ForgeDirection.getOrientation(side2 ^ 1));
+				if (a) {
+					if (b)
+						meta = 2;
+					else
+						meta = 1;
+				} else if (b)
+					meta = 3;
+				if (meta != 0)
+					meta += 2;
+			}
+		}
+		return getIcon(side, meta);
 	}
 
 	@Override

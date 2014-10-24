@@ -10,13 +10,21 @@ public class IconOverlay implements IIcon {
 	private IIcon overlayIcon;
 	private float xSegments, ySegments;
 	private float selectedSegmentX, selectedSegmentY;
-	
+
 	public IconOverlay(IIcon overlayIcon, int subX, int subY, int selectedX, int selectedY) {
 		this.overlayIcon = overlayIcon;
 		xSegments = subX;
 		ySegments = subY;
 		selectedSegmentX = selectedX;
 		selectedSegmentY = selectedY;
+	}
+
+	public IconOverlay(IIcon overlayIcon, int subX, int subY, int index) {
+		this.overlayIcon = overlayIcon;
+		xSegments = subX;
+		ySegments = subY;
+		selectedSegmentX = index % subX;
+		selectedSegmentY = index / subX;
 	}
 
 	public IconOverlay(IIcon overlayIcon, int subX, int subY, boolean ...sides) {
@@ -71,12 +79,12 @@ public class IconOverlay implements IIcon {
 		selectedSegmentX = value % subX;
 		selectedSegmentY = value / subX;
 	}
-	
+
 	private static int toInt(boolean ...flags) {
 		int ret = 0;
 		for (int i = flags.length; i --> 0;)
 			ret |= (flags[i] ? 1 : 0) << i;
-		return ret; 
+		return ret;
 	}
 
 	/*@Override
@@ -122,7 +130,7 @@ public class IconOverlay implements IIcon {
 	public float getMaxV() {
 		return overlayIcon.getInterpolatedV(((selectedSegmentY + 0.999f) / ySegments) * 16f);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getInterpolatedV(double d0) {

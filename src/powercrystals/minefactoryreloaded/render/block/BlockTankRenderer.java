@@ -71,17 +71,11 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 		float blue = (color & 255) / 255.0F;
 
 		IIcon iconFluid = fluid != null ? fluid.getFluid().getIcon(fluid) :
-			renderer.getBlockIconFromSideAndMetadata(block, 2, 3);
-		double minXFluid = iconFluid.getMinU();
-		double maxXFluid = iconFluid.getMaxU();
-		double minYFluid = iconFluid.getMinV();
-		double maxYFluid = iconFluid.getMaxV();
+			renderer.getBlockIconFromSideAndMetadata(block, 6, 1);
+		IIcon iconFluidTop = fluid != null ? iconFluid : renderer.getBlockIconFromSideAndMetadata(block, 7, 1);
 
         Tessellator tessellator = Tessellator.instance;
 
-		final double xMin = 0, xMax = 1;
-		final double yMin = 0, yMax = 1;
-		final double zMin = 0, zMax = 1;
 		final double offset = 0.003;
 
 		block.setBlockBoundsForItemRender();
@@ -90,61 +84,73 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, -1.0F, 0.0F);
-		renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 0, 0));
+		renderer.renderFaceYNeg(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, 0, 0));
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		tessellator.setColorOpaque_F(red, green, blue);
+		renderer.renderMaxY = 1 - offset;
+		renderer.renderFaceYPos(block, 0, 0, 0, iconFluidTop);
+		renderer.renderMaxY = 1;
 		tessellator.setColorOpaque_F(1, 1, 1);
-		renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 1, 0));
+		renderer.renderFaceYPos(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, 1, 0));
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, 0.0F, -1.0F);
 		tessellator.setColorOpaque_F(red, green, blue);
-		tessellator.addVertexWithUV(xMax, yMax, zMin + offset, maxXFluid, minYFluid);
-		tessellator.addVertexWithUV(xMax, yMin, zMin + offset, maxXFluid, maxYFluid);
-		tessellator.addVertexWithUV(xMin, yMin, zMin + offset, minXFluid, maxYFluid);
-		tessellator.addVertexWithUV(xMin, yMax, zMin + offset, minXFluid, minYFluid);
+		renderer.renderMaxX = 1 - offset;
+		renderer.renderFaceXPos(block, 0, 0, 0, iconFluid);
+		renderer.renderMaxX = 1;
 		tessellator.setColorOpaque_F(1, 1, 1);
-		renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 0));
+		renderer.renderFaceXPos(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, 2, 0));
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, 0.0F, 1.0F);
 		tessellator.setColorOpaque_F(red, green, blue);
-		tessellator.addVertexWithUV(xMin, yMax, zMax - offset, minXFluid, minYFluid);
-		tessellator.addVertexWithUV(xMin, yMin, zMax - offset, minXFluid, maxYFluid);
-		tessellator.addVertexWithUV(xMax, yMin, zMax - offset, maxXFluid, maxYFluid);
-		tessellator.addVertexWithUV(xMax, yMax, zMax - offset, maxXFluid, minYFluid);
+		renderer.renderMinX = offset;
+		renderer.renderFaceXNeg(block, 0, 0, 0, iconFluid);
+		renderer.renderMinX = 0;
 		tessellator.setColorOpaque_F(1, 1, 1);
-		renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 3, 0));
+		renderer.renderFaceXNeg(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, 3, 0));
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
 		tessellator.setColorOpaque_F(red, green, blue);
-		tessellator.addVertexWithUV(xMin + offset, yMin, zMax, maxXFluid, maxYFluid);
-		tessellator.addVertexWithUV(xMin + offset, yMax, zMax, maxXFluid, minYFluid);
-		tessellator.addVertexWithUV(xMin + offset, yMax, zMin, minXFluid, minYFluid);
-		tessellator.addVertexWithUV(xMin + offset, yMin, zMin, minXFluid, maxYFluid);
+		renderer.renderMinZ = offset;
+		renderer.renderFaceZNeg(block, 0, 0, 0, iconFluid);
+		renderer.renderMinZ = 0;
 		tessellator.setColorOpaque_F(1, 1, 1);
-		renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 4, 0));
+		renderer.renderFaceZNeg(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, 4, 0));
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		tessellator.setColorOpaque_F(red, green, blue);
-		tessellator.addVertexWithUV(xMax - offset, yMin, zMin, minXFluid, maxYFluid);
-		tessellator.addVertexWithUV(xMax - offset, yMax, zMin, minXFluid, minYFluid);
-		tessellator.addVertexWithUV(xMax - offset, yMax, zMax, maxXFluid, minYFluid);
-		tessellator.addVertexWithUV(xMax - offset, yMin, zMax, maxXFluid, maxYFluid);
+		renderer.renderMaxZ = 1 - offset;
+		renderer.renderFaceZPos(block, 0, 0, 0, iconFluid);
+		renderer.renderMaxZ = 1;
 		tessellator.setColorOpaque_F(1, 1, 1);
-		renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 5, 0));
+		renderer.renderFaceZPos(block, 0, 0, 0, renderer.getBlockIconFromSideAndMetadata(block, 5, 0));
 		tessellator.draw();
 	}
 
 	@Override public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer){}
+
+	private int max(int a, Block block, IBlockAccess blockAccess, int x, int y, int z)
+	{
+		if (((a >> 4) & 15) == 15)
+			return a;
+		return Math.max(a, block.getMixedBrightnessForBlock(blockAccess, x, y, z));
+	}
+
+	private boolean isBlock(IBlockAccess blockAccess, int x, int y, int z, Block block)
+	{
+		return blockAccess.getBlock(x, y, z) == block;
+	}
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
@@ -161,6 +167,8 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 		}
         Tessellator tessellator = Tessellator.instance;
 		int b = block.getLightValue(blockAccess, x, y, z);
+		b = b << 20 | b << 4;
+		int b2 = Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x, y, z));
 		int worldHeight = blockAccess.getHeight();
 
 		int color = block.colorMultiplier(blockAccess, x, y, z);
@@ -168,15 +176,9 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 		float green = (color >> 8 & 255) / 255.0F;
 		float blue = (color & 255) / 255.0F;
 
-		IIcon iconFluid = block.getIcon(blockAccess, x, y, z, 3);
-		double minXFluid = iconFluid.getMinU();
-		double maxXFluid = iconFluid.getMaxU();
-		double minYFluid = iconFluid.getMinV();
-		double maxYFluid = iconFluid.getMaxV();
+		IIcon iconFluid = block.getIcon(blockAccess, x, y, z, 6);
+		IIcon iconFluidTop = block.getIcon(blockAccess, x, y, z, 7);
 
-		final double xMin = x, xMax = x + 1;
-		final double yMin = y, yMax = y + 1;
-		final double zMin = z, zMax = z + 1;
 		final double offset = 0.003;
 
 		boolean render = renderer.renderAllFaces;
@@ -193,73 +195,128 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 
 		if (renderSide[0])
 		{
-			tessellator.setBrightness(Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x, y - 1, z)));
+			tessellator.setBrightness(max(b, block, blockAccess, x, y - 1, z));
 			tessellator.setColorOpaque_F(1, 1, 1);
-			renderer.renderFaceYNeg(block, x, y, z, block.getIcon(0, 0));
+			renderer.renderFaceYNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 0));
+			render = true;
+		}
+		if (!isBlock(blockAccess, x, y - 1, z, block))
+		{
+			tessellator.setBrightness(b2);
+			tessellator.setColorOpaque_F(1, 1, 1);
+			renderer.renderMaxY = offset;
+			renderer.renderFaceYPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 0));
+			renderer.renderMaxY = 1;
 			render = true;
 		}
 
 		if (renderSide[1])
 		{
-			tessellator.setBrightness(Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x, y + 1, z)));
+			tessellator.setBrightness(max(b, block, blockAccess, x, y + 1, z));
+			tessellator.setColorOpaque_F(red, green, blue);
+			renderer.renderMaxY = 1 - offset;
+			renderer.renderFaceYPos(block, x, y, z, iconFluidTop);
+			renderer.renderMaxY = 1;
+
 			tessellator.setColorOpaque_F(1, 1, 1);
-			renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
+			renderer.renderFaceYPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 1));
+			render = true;
+		}
+		if (!isBlock(blockAccess, x, y + 1, z, block))
+		{
+			tessellator.setBrightness(b2);
+			tessellator.setColorOpaque_F(1, 1, 1);
+			renderer.renderMinY = 1 - offset * 2;
+			renderer.renderFaceYNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 1));
+			renderer.renderMinY = 0;
 			render = true;
 		}
 
 		if (renderSide[2])
 		{
-			tessellator.setBrightness(Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x, y, z - 1)));
+			tessellator.setBrightness(max(b, block, blockAccess, x, y, z - 1));
 			tessellator.setColorOpaque_F(red, green, blue);
-			tessellator.addVertexWithUV(xMax, yMax, zMin + offset, maxXFluid, minYFluid);
-			tessellator.addVertexWithUV(xMax, yMin, zMin + offset, maxXFluid, maxYFluid);
-			tessellator.addVertexWithUV(xMin, yMin, zMin + offset, minXFluid, maxYFluid);
-			tessellator.addVertexWithUV(xMin, yMax, zMin + offset, minXFluid, minYFluid);
+			renderer.renderMinZ = offset;
+			renderer.renderFaceZNeg(block, x, y, z, iconFluid);
+			renderer.renderMinZ = 0;
 
 			tessellator.setColorOpaque_F(1, 1, 1);
-			renderer.renderFaceZNeg(block, x, y, z, block.getIcon(2, 0));
+			renderer.renderFaceZNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 2));
+			render = true;
+		}
+		if (!isBlock(blockAccess, x, y, z - 1, block))
+		{
+			tessellator.setBrightness(b2);
+			tessellator.setColorOpaque_F(1, 1, 1);
+			renderer.renderMaxZ = offset * 2;
+			renderer.renderFaceZPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 2));
+			renderer.renderMaxZ = 1;
 			render = true;
 		}
 
 		if (renderSide[3])
 		{
-			tessellator.setBrightness(Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x, y, z + 1)));
+			tessellator.setBrightness(max(b, block, blockAccess, x, y, z + 1));
 			tessellator.setColorOpaque_F(red, green, blue);
-			tessellator.addVertexWithUV(xMin, yMax, zMax - offset, minXFluid, minYFluid);
-			tessellator.addVertexWithUV(xMin, yMin, zMax - offset, minXFluid, maxYFluid);
-			tessellator.addVertexWithUV(xMax, yMin, zMax - offset, maxXFluid, maxYFluid);
-			tessellator.addVertexWithUV(xMax, yMax, zMax - offset, maxXFluid, minYFluid);
+			renderer.renderMaxZ = 1 - offset;
+			renderer.renderFaceZPos(block, x, y, z, iconFluid);
+			renderer.renderMaxZ = 1;
 
 			tessellator.setColorOpaque_F(1, 1, 1);
-			renderer.renderFaceZPos(block, x, y, z, block.getIcon(3, 0));
+			renderer.renderFaceZPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 3));
+			render = true;
+		}
+		if (!isBlock(blockAccess, x, y, z + 1, block))
+		{
+			tessellator.setBrightness(b2);
+			tessellator.setColorOpaque_F(1, 1, 1);
+			renderer.renderMinZ = 1 - offset * 2;
+			renderer.renderFaceZNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 3));
+			renderer.renderMinZ = 0;
 			render = true;
 		}
 
 		if (renderSide[4])
 		{
-			tessellator.setBrightness(Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x - 1, y, z)));
+			tessellator.setBrightness(max(b, block, blockAccess, x - 1, y, z));
 			tessellator.setColorOpaque_F(red, green, blue);
-			tessellator.addVertexWithUV(xMin + offset, yMin, zMax, maxXFluid, maxYFluid);
-			tessellator.addVertexWithUV(xMin + offset, yMax, zMax, maxXFluid, minYFluid);
-			tessellator.addVertexWithUV(xMin + offset, yMax, zMin, minXFluid, minYFluid);
-			tessellator.addVertexWithUV(xMin + offset, yMin, zMin, minXFluid, maxYFluid);
+			renderer.renderMinX = offset;
+			renderer.renderFaceXNeg(block, x, y, z, iconFluid);
+			renderer.renderMinX = 0;
 
 			tessellator.setColorOpaque_F(1, 1, 1);
-			renderer.renderFaceXNeg(block, x, y, z, block.getIcon(4, 0));
+			renderer.renderFaceXNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 4));
+			render = true;
+		}
+		if (!isBlock(blockAccess, x - 1, y, z, block))
+		{
+			tessellator.setBrightness(b2);
+			tessellator.setColorOpaque_F(1, 1, 1);
+			renderer.renderMaxX = offset * 2;
+			renderer.renderFaceXPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 4));
+			renderer.renderMaxX = 1;
 			render = true;
 		}
 
 		if (renderSide[5])
 		{
-			tessellator.setBrightness(Math.max(b, block.getMixedBrightnessForBlock(blockAccess, x + 1, y, z)));
+			tessellator.setBrightness(max(b, block, blockAccess, x + 1, y, z));
 			tessellator.setColorOpaque_F(red, green, blue);
-			tessellator.addVertexWithUV(xMax - offset, yMin, zMin, minXFluid, maxYFluid);
-			tessellator.addVertexWithUV(xMax - offset, yMax, zMin, minXFluid, minYFluid);
-			tessellator.addVertexWithUV(xMax - offset, yMax, zMax, maxXFluid, minYFluid);
-			tessellator.addVertexWithUV(xMax - offset, yMin, zMax, maxXFluid, maxYFluid);
+			renderer.renderMaxX = 1 - offset;
+			renderer.renderFaceXPos(block, x, y, z, iconFluid);
+			renderer.renderMaxX = 1;
 
 			tessellator.setColorOpaque_F(1, 1, 1);
-			renderer.renderFaceXPos(block, x, y, z, block.getIcon(5, 0));
+			renderer.renderFaceXPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 5));
+			render = true;
+		}
+		if (!isBlock(blockAccess, x + 1, y, z, block))
+		{
+			tessellator.setBrightness(b2);
+			tessellator.setColorOpaque_F(1, 1, 1);
+			renderer.renderMinX = 1 - offset * 2;
+			renderer.renderFaceXNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 5));
+			renderer.renderMinY = 0;
 			render = true;
 		}
 

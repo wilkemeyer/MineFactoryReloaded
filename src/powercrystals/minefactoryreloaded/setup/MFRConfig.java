@@ -100,7 +100,7 @@ public class MFRConfig
 
 	public static void loadClientConfig(File configFile)
 	{
-		Configuration c = new Configuration(configFile);
+		Configuration c = new Configuration(configFile, true);
 
 		spyglassRange = c.get(CATEGORY_GENERAL, "SpyglassRange", 200);
 		spyglassRange.comment = "The maximum number of blocks the spyglass and ruler can look to find something. This calculation is performed only on the client side.";
@@ -120,7 +120,7 @@ public class MFRConfig
 
 	public static void loadCommonConfig(File configFile)
 	{
-		Configuration c = new Configuration(configFile);
+		Configuration c = new Configuration(configFile, true);
 		c.load();
 		//config = c;
 
