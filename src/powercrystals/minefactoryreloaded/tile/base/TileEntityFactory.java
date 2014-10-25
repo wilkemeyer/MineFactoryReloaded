@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -87,11 +88,11 @@ public abstract class TileEntityFactory extends TileEntityBase
 	@Override
 	public void onChunkUnload()
 	{
-		super.onChunkUnload();
 		if (worldObj != null && worldObj.isRemote && hasHAM())
 		{
 			MineFactoryReloadedClient.removeTileFromAreaList(this);
 		}
+		super.onChunkUnload();
 	}
 
 	/**
@@ -213,7 +214,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		if (worldObj.blockExists(xCoord, yCoord, zCoord))
 		{
-			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
+			MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
 		}
 	}
 

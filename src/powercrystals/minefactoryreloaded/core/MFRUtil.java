@@ -232,6 +232,21 @@ public class MFRUtil
 		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
 	}
 
+	public static void notifyNearbyBlocks(World world, int x, int y, int z, Block block)
+	{
+		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		if (world.blockExists(x, y, z))
+		{
+			for (int j = 0; j < 6; ++j)
+			{
+				ForgeDirection d2 = dirs[j];
+				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
+				if (world.blockExists(x2, y2, z2))
+					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+			}
+		}
+	}
+
 	public static void notifyNearbyBlocksExcept(World world, int x, int y, int z, Block block)
 	{
 		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;

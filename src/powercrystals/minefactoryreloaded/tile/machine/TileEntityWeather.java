@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import static net.minecraftforge.fluids.FluidRegistry.WATER;
 
 import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -127,16 +128,15 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	{
 		if (--_canSeeSky > 0) return _openSky;
 		_canSeeSky = 70;
-		int h = worldObj.getHeight();
+		int h = BlockHelper.getHighestY(worldObj, xCoord, zCoord);
 		_openSky = true;
 		for (int y = yCoord + 1; y < h; y++)
 		{
 			Block block = worldObj.getBlock(xCoord, y, zCoord);
-			if (!block.isAir(worldObj, xCoord, y, zCoord))
-			{
-				_openSky = false;
-				break;
-			}
+			if (block.getCollisionBoundingBoxFromPool(worldObj, xCoord, y, zCoord) == null)
+				continue;
+			_openSky = false;
+			break;
 		}
 		return _openSky;
 	}
