@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -17,7 +18,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
+public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered implements IFactoryLaserSource
 {
 	public TileEntityLaserDrillPrecharger()
 	{
@@ -48,10 +49,9 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	protected boolean activateMachine()
 	{
 		IFactoryLaserTarget drill = getDrill();
-		if(drill == null)
+		if (drill == null)
 		{
 			setIdleTicks(getIdleTicksMax());
-			resetLaser();
 		}
 		else
 		{
@@ -59,7 +59,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 			ForgeDirection facing = getDirectionFacing().getOpposite();
 			if (drill.canFormBeamWith(facing))
 			{
-				stripBlock();
+				stripBlock(false);
 				int excess = drill.addEnergy(facing, energy, true);
 				if (excess == 0)
 				{
@@ -70,16 +70,11 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 				{
 					excess = drill.addEnergy(facing, energy, false);
 					drainEnergy(energy - excess);
+					return false; // energy is manually drained because it's less than activation energy
 				}
 			}
 			else
-				if (stripTick > 0)
-					--stripTick;
-				else
-				{
-					resetLaser();
-					stripTick = 20;
-				}
+				stripBlock(true);
 		}
 		return false;
 	}
@@ -122,7 +117,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 	}
 
 	private int stripTick = 0;
-	protected void stripBlock()
+	protected void stripBlock(boolean set)
 	{
 		if (stripTick > 0)
 		{
@@ -133,28 +128,19 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered
 		BlockPosition bp = new BlockPosition(this);
 		bp.orientation = getDirectionFacing();
 		bp.moveForwards(1);
-		if (!worldObj.getBlock(bp.x, bp.y, bp.z).equals(MFRThings.fakeLaserBlock))
-			worldObj.setBlock(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, 1, 3);
+		if (set == worldObj.getBlock(bp.x, bp.y, bp.z).equals(MFRThings.fakeLaserBlock))
+			worldObj.setBlock(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, bp.orientation.getOpposite().ordinal() + 1, 3);
+		else if (set)
+			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, 1);
 	}
 
 	@Override
-	public void onDisassembled()
+	public boolean canFormBeamFrom(ForgeDirection from)
 	{
-		super.onDisassembled();
-		resetLaser();
-	}
-
-	protected void resetLaser()
-	{
-		BlockPosition bp = new BlockPosition(this);
-		bp.orientation = getDirectionFacing();
-		bp.moveForwards(1);
-		if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(MFRThings.fakeLaserBlock))
-		{
-			worldObj.setBlockMetadataWithNotify(bp.x, bp.y, bp.z, 0, 0);
-			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, 1);
-		}
-
+		if (from != getDirectionFacing().getOpposite())
+			return false;
+		IFactoryLaserTarget drill = getDrill();
+		return drill != null && drill.canFormBeamWith(getDirectionFacing().getOpposite());
 	}
 
 	@Override

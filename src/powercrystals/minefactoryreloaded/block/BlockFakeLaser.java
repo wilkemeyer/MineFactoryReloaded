@@ -11,10 +11,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
@@ -94,7 +97,20 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
-		if (world.isRemote || world.getBlockMetadata(x, y, z) != 0) return;
+		if (world.isRemote) return;
+		int meta = world.getBlockMetadata(x, y, z);
+		l: if (meta != 0)
+		{
+			ForgeDirection dir = ForgeDirection.getOrientation(meta - 1);
+			if (world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).equals(this))
+				if (world.getBlockMetadata(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == meta)
+					return;
+				else break l;
+			TileEntity te = world.getTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+			if (te instanceof IFactoryLaserSource && ((IFactoryLaserSource)te).canFormBeamFrom(dir))
+				return;
+			world.setBlockMetadataWithNotify(x, y, z, 0, 0);
+		}
 
 		Block upperId = world.getBlock(x, y + 1, z);
 		if (!upperId.equals(this) && !(world.getTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill))

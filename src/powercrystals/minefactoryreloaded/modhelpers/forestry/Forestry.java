@@ -134,8 +134,6 @@ public class Forestry
 			return;
 		}
 
-		MineFactoryReloadedCore.proxy.onPostTextureStitch(null);
-
 		TileEntityUnifier.updateUnifierLiquids();
 	}
 }
