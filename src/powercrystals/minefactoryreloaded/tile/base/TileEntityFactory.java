@@ -88,7 +88,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public void onChunkUnload()
 	{
 		super.onChunkUnload();
-		if (worldObj.isRemote && hasHAM())
+		if (worldObj != null && worldObj.isRemote && hasHAM())
 		{
 			MineFactoryReloadedClient.removeTileFromAreaList(this);
 		}

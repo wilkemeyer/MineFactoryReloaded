@@ -88,24 +88,27 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 
 					boolean hasMatch = false;
 
+					int amt = 1;
 					for (int i = getSizeItemList(); i --> 0; )
 						if (itemMatches(_inventory[i], itemstack))
 						{
 							hasMatch = true;
+							amt = Math.max(1, _inventory[i].stackSize);
 							break;
 						}
 
 					if (_whitelist != hasMatch) continue set;
 
 					ItemStack stackToDrop = itemstack.copy();
-					stackToDrop.stackSize = 1;
+					amt = Math.min(itemstack.stackSize, amt);
+					stackToDrop.stackSize = amt;
 					ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
 							facing, facing);
 
 					// remaining == null if dropped successfully.
-					if (remaining == null)
+					if (remaining == null || remaining.stackSize < amt)
 					{
-						inventory.removeItem(1, stackToDrop);
+						inventory.removeItem(amt - (remaining == null ? 0 : remaining.stackSize), stackToDrop);
 						break inv;
 					}
 				}
