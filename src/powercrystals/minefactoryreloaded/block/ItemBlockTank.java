@@ -1,11 +1,20 @@
 package powercrystals.minefactoryreloaded.block;
 
+import static cofh.lib.util.helpers.StringHelper.*;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
 public class ItemBlockTank extends ItemBlockFactory implements IFluidContainerItem
@@ -89,4 +98,19 @@ public class ItemBlockTank extends ItemBlockFactory implements IFluidContainerIt
 		return fluid;
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
+	{
+		if (adv || isShiftKeyDown()) {
+			FluidStack fluid = getFluid(stack);
+			info.add(localize("info.cofh.fluid") + ": " + getFluidName(fluid, MFRUtil.empty()) + END);
+			int amt = (fluid == null ? 0 : fluid.amount);
+			info.add(localize("info.cofh.amount") + ": " + amt + " / " + getCapacity(stack) + "mB" + END);
+		} else {
+			info.add(shiftForDetails());
+		}
+		super.addInformation(stack, player, info, adv);
+	}
 }

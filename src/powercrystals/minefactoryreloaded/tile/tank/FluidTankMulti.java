@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
 import cofh.core.util.fluid.FluidTankAdv;
+import com.google.common.base.Throwables;
 
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -11,6 +12,11 @@ public class FluidTankMulti implements IFluidTank {
 	FluidTankAdv[] tanks = new FluidTankAdv[2];
 	int length, index;
 	private FluidStack fluid = null;
+	private TankNetwork grid;
+
+	public FluidTankMulti(TankNetwork network) {
+		grid = network;
+	}
 
 	public void addTank(FluidTankAdv tank) {
 		if (++length >= tanks.length) {
@@ -27,7 +33,13 @@ public class FluidTankMulti implements IFluidTank {
 		while (i --> 0) if (tanks[i] == tank) break;
 		if (i < 0) return;
 
-		FluidStack r = drain(tank.drain(tank.getFluidAmount(), false), true);
+		FluidStack r;
+		try {
+		r = drain(tank.drain(tank.getFluidAmount(), false), true);
+		} catch (Throwable _) {
+			System.out.format("index: %s, length: %s, tanks.length: %s, ", index, length, tanks.length);
+			throw Throwables.propagate(_);
+		}
 
 		if (--length != i) {
 			FluidTankAdv[] old = tanks;
@@ -40,6 +52,7 @@ public class FluidTankMulti implements IFluidTank {
 		}
 
 		tanks[length] = null;
+		if (tanks[index] == null) --index;
 		tank.setFluid(r);
 	}
 
@@ -84,8 +97,10 @@ public class FluidTankMulti implements IFluidTank {
 				 --i;
 			if (doFill) {
 				index = i;
-				if (fluid == null)
+				if (fluid == null) {
 					fluid = new FluidStack(resource, 0);
+					grid.updateNodes();
+				}
 				fluid.amount += f;
 			}
 		}
@@ -112,8 +127,10 @@ public class FluidTankMulti implements IFluidTank {
 			if (doDrain) {
 				index = i;
 				fluid.amount -= r.amount;
-				if (fluid.amount <= 0)
+				if (fluid.amount <= 0) {
 					fluid = null;
+					grid.updateNodes();
+				}
 			}
 			return r;
 		}

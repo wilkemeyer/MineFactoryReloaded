@@ -71,12 +71,11 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
 			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.storage.getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
-					tank.grid.addNode(this);
-				if (grid != null)
-				{
-					tank.join(to.getOpposite());
-					join(to);
-				}
+					if (tank.grid.addNode(this))
+					{
+						tank.join(to.getOpposite());
+						join(to);
+					}
 			}
 		}
 		if (grid == null)
@@ -95,11 +94,15 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	public void join(ForgeDirection from)
 	{
 		sides |= (1 << from.ordinal());
+		markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void part(ForgeDirection from)
 	{
 		sides &= ~(1 << from.ordinal());
+		markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public boolean isInterfacing(ForgeDirection to)

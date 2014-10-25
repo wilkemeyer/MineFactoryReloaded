@@ -13,7 +13,7 @@ public class TankNetwork
 {
 	private LinkedHashSet<TileEntityTank> nodeSet;
 	private TileEntityTank master;
-	FluidTankMulti storage = new FluidTankMulti();
+	FluidTankMulti storage = new FluidTankMulti(this);
 
 	public TankNetwork() {
 	}
@@ -23,10 +23,10 @@ public class TankNetwork
 		addNode(base);
 	}
 
-	public void addNode(TileEntityTank cond) {
+	public boolean addNode(TileEntityTank cond) {
 		if (nodeSet.add(cond))
-			if (!nodeAdded(cond))
-				return;
+			return nodeAdded(cond);
+		return false;
 	}
 
 	public void removeNode(TileEntityTank cond) {
@@ -75,6 +75,7 @@ public class TankNetwork
 			newGrid.nodeSet = oldSet;
 			newGrid.markSweep();
 		}
+		updateNodes();
 	}
 
 	public void destroyGrid() {
@@ -84,9 +85,16 @@ public class TankNetwork
 		storage.empty();
 	}
 
+	void updateNodes() {
+		for (TileEntityTank node : nodeSet) {
+			node.markDirty();
+			node.getWorldObj().markBlockForUpdate(node.xCoord, node.yCoord, node.zCoord);
+		}
+	}
+
 	public boolean canMergeGrid(TankNetwork grid) {
 		if (grid == null) return false;
-		return FluidHelper.isFluidEqual(grid.storage.getFluid(), storage.getFluid());
+		return FluidHelper.isFluidEqualOrNull(grid.storage.getFluid(), storage.getFluid());
 	}
 
 	public void mergeGrid(TankNetwork grid) {
