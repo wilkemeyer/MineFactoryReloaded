@@ -83,7 +83,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 				set: for (Entry<Integer, ItemStack> stack : contents.entrySet())
 				{
 					ItemStack itemstack = stack.getValue();
-					if (itemstack == null || !inventory.canRemoveItem(itemstack, stack.getKey()))
+					if (itemstack == null || itemstack.stackSize < 1 || !inventory.canRemoveItem(itemstack, stack.getKey()))
 						continue;
 
 					boolean hasMatch = false;
