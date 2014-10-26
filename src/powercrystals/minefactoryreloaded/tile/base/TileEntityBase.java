@@ -40,6 +40,13 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		_invName = null;
 	}
 
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+		markChunkDirty();
+	}
+
 	protected final IChatComponent text(String str)
 	{
 		return new ChatComponentText(str);

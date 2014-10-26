@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cofh.core.util.CoreUtils;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.ItemHelper;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -171,7 +170,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		 */
 		for (ItemResourceTracker t : requiredItems)
 		{
-			FMLLog.severe("Tracker: " + t);
 			if (t.found < t.required)
 			{
 				_resourcesChangedSinceLastFailedCraft = false;
