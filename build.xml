@@ -76,7 +76,6 @@
 		<condition property="have.libs">
 			<and>
 				<istrue value="${forge.exists}"/>
-				<available file="${lib.dir}/codechickenlib.jar" type="file"/>
 				<available file="${lib.dir}/CoFHLib.jar" type="file"/>
 				<available file="${lib.dir}/CoFHCore.jar" type="file"/>
 				<available file="${lib.dir}/Buildcraft.jar" type="file"/>
@@ -99,9 +98,6 @@
 	<target name="get-dependencies" unless="have.libs">
 		<delete dir="${lib.dir}/"/>
 		<mkdir dir="${lib.dir}/"/>
-
-		<echo message="Downloading CCL..."/>
-		<get src="http://files.minecraftforge.net/maven/codechicken/CodeChickenLib/1.7.10-1.1.1.88/CodeChickenLib-1.7.10-1.1.1.88-dev.jar" dest="${download.dir}/codechickenlib.jar"/>
 
 		<echo message="Downloading IC2 API... "/>
 		<get src="http://ic2api.player.to:8080/job/IC2_experimental/650/artifact/build/libs/industrialcraft-2-2.2.650-experimental-dev.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
@@ -178,9 +174,6 @@
 	</target>
 
 	<target name="extract-dependencies" depends="setup-forge,get-dependencies" unless="have.libs">
-		<echo message="Extracting CCL... "/>
-		<move file="${download.dir}/codechickenlib.jar" todir="${lib.dir}/"/>
-
 		<echo message="Extracting CoFHLib..."/>
 		<copy file="${download.dir}/CoFHLib.jar" todir="${lib.dir}"/>
 		
