@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded;
 //this import brought to you by the department of redundancies department, the department that brought you this import
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
-
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
 import cofh.lib.util.RegistryUtils;
@@ -155,6 +154,7 @@ import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
+import powercrystals.minefactoryreloaded.setup.recipe.EnderIO;
 import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
 import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
@@ -493,6 +493,9 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		if (MFRConfig.thermalExpansionRecipes.getBoolean(false))
 			recipeSets.add(new ThermalExpansion());
+		
+		if (MFRConfig.enderioRecipes.getBoolean(false))
+		    recipeSets.add(new EnderIO());
 
 		GameRegistry.registerTileEntity(TileEntityConveyor.class, "factoryConveyor");
 		GameRegistry.registerTileEntity(TileEntityRedNetCable.class, "factoryRedstoneCable");
