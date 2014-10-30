@@ -97,11 +97,14 @@ public class FluidTankMulti implements IFluidTank {
 				 --i;
 			if (doFill) {
 				index = i;
+				boolean u = false;
 				if (fluid == null) {
+					u = true;
 					fluid = new FluidStack(resource, 0);
-					grid.updateNodes();
 				}
 				fluid.amount += f;
+				if (u)
+					grid.updateNodes();
 			}
 		}
 		return f;

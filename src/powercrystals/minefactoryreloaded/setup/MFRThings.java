@@ -62,6 +62,7 @@ public class MFRThings
 	public static BlockFactoryFluid steamFluid;
 
 	public static Block plasticTank;
+	public static Item plasticTankItem;
 
 	public static Block fakeLaserBlock;
 

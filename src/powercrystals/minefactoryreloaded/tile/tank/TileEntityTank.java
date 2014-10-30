@@ -23,6 +23,7 @@ import powercrystals.minefactoryreloaded.core.IDelayedValidate;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.ConnectionHandler;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
 public class TileEntityTank extends TileEntityFactory implements ITankContainerBucketable, IDelayedValidate
@@ -71,7 +72,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
 			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.storage.getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
-					if (tank.grid.addNode(this))
+					if (tank.grid == grid || tank.grid.addNode(this))
 					{
 						tank.join(to.getOpposite());
 						join(to);
@@ -140,6 +141,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			break;
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.func_147451_t(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -211,7 +213,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
-		return true;
+		return stack.getItem() != MFRThings.plasticTankItem;
 	}
 
 	@Override
@@ -238,10 +240,11 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			info.add(new ChatComponentText(MFRUtil.getFluidName(grid.storage.getFluid())));
 		info.add(new ChatComponentText((grid.storage.getFluidAmount() / (float)grid.storage.getCapacity() * 100f) + "%"));
 		if (debug) {
+			info.add(new ChatComponentText("Sides: " + Integer.toBinaryString(sides)));
 			info.add(new ChatComponentText(grid.storage.getFluidAmount() + " / " + grid.storage.getCapacity()));
 			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " + _tank.getFluid()));
-			info.add(new ChatComponentText("Size: " + grid.storage.length + " | index: " + grid.storage.index +
-					" | reserve: " + grid.storage.tanks.length));
+			info.add(new ChatComponentText("Length: " + grid.storage.length + " | Index: " + grid.storage.index +
+					" | Reserve: " + grid.storage.tanks.length));
 		}
 	}
 }

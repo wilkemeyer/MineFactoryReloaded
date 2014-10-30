@@ -412,6 +412,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		}
 
 		registerBlock(plasticTank, ItemBlockTank.class);
+		plasticTankItem = Item.getItemFromBlock(plasticTank);
 		registerBlock(plasticPipeBlock, ItemBlockFactory.class);
 
 		registerBlock(rednetCableBlock, ItemBlockFactory.class, BlockRedNetCable._names);

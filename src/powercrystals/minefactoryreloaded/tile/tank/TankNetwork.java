@@ -109,6 +109,7 @@ public class TankNetwork
 			addNode(cond);
 
 		grid.nodeSet.clear();
+		updateNodes();
 	}
 
 	public void nodeRemoved(TileEntityTank cond) {
