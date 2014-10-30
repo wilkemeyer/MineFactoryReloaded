@@ -249,7 +249,7 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 			tessellator.setBrightness(b2);
 			tessellator.setColorOpaque_F(1, 1, 1);
 			renderer.renderMaxZ = offset * 2;
-			renderer.renderFaceZPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 2));
+			renderer.renderFaceZPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 3));
 			renderer.renderMaxZ = 1;
 			render = true;
 		}
@@ -271,7 +271,7 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 			tessellator.setBrightness(b2);
 			tessellator.setColorOpaque_F(1, 1, 1);
 			renderer.renderMinZ = 1 - offset * 2;
-			renderer.renderFaceZNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 3));
+			renderer.renderFaceZNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 2));
 			renderer.renderMinZ = 0;
 			render = true;
 		}
@@ -293,7 +293,7 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 			tessellator.setBrightness(b2);
 			tessellator.setColorOpaque_F(1, 1, 1);
 			renderer.renderMaxX = offset * 2;
-			renderer.renderFaceXPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 4));
+			renderer.renderFaceXPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 5));
 			renderer.renderMaxX = 1;
 			render = true;
 		}
@@ -315,7 +315,7 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 			tessellator.setBrightness(b2);
 			tessellator.setColorOpaque_F(1, 1, 1);
 			renderer.renderMinX = 1 - offset * 2;
-			renderer.renderFaceXNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 5));
+			renderer.renderFaceXNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 4));
 			renderer.renderMinY = 0;
 			render = true;
 		}
