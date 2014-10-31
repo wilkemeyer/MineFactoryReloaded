@@ -52,7 +52,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	private ForgeDirection _forwardDirection;
-	private boolean _canRotate = false;
+	private boolean _canRotate = false, _notifyRotate = false;
 
 	private boolean _manageFluids = false;
 	private boolean _manageSolids = false;
@@ -83,6 +83,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		{
 			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
+		_notifyRotate = true;
 	}
 
 	@Override
@@ -214,7 +215,8 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		if (worldObj.blockExists(xCoord, yCoord, zCoord))
 		{
-			MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
+			if (_notifyRotate)
+				MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
 		}
 	}
 
