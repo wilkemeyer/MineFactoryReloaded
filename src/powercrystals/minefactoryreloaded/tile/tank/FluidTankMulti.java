@@ -41,14 +41,16 @@ public class FluidTankMulti implements IFluidTank {
 			throw Throwables.propagate(_);
 		}
 
-		if (--length != i) {
+		{
 			FluidTankAdv[] old = tanks;
-			if (length <= tanks.length / 4) {
-				tanks = new FluidTankAdv[tanks.length / 2];
+			if (--length != i) {
+				System.arraycopy(old, i + 1, old, i, length - i + 1);
+			}
+			if (length <= old.length / 4) {
+				tanks = new FluidTankAdv[old.length / 2];
 				if (i > 0)
 					System.arraycopy(old, 0, tanks, 0, i);
 			}
-			System.arraycopy(old, i + 1, tanks, i, length - i + 1);
 		}
 
 		tanks[length] = null;

@@ -271,6 +271,15 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
+	public void writeToNBT(NBTTagCompound nbttagcompound)
+	{
+		ItemStack o = _inventory[2];
+		_inventory[2] = null;
+		super.writeToNBT(nbttagcompound);
+		_inventory[2] = o;
+	}
+
+	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		_ignoreChanges = true;
