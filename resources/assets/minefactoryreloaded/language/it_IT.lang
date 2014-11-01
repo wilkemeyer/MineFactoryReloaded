@@ -154,10 +154,10 @@ tile.mfr.rubberwood.log.name = Legno della gomma
 tile.mfr.rubberwood.leaves.name = Foglie della gomma
 tile.mfr.rubberwood.leaves.dry.name = Foglie della gomma secche
 
-tile.mfr.rail.cargo.dropoff.name = Binario dropoff per merci
-tile.mfr.rail.cargo.pickup.name = Binario pickup per merci
-tile.mfr.rail.passenger.dropoff.name = Binario dropoff per passeggeri
-tile.mfr.rail.passenger.pickup.name = Binario pickup per passeggeri
+tile.mfr.rail.cargo.dropoff.name = Rotaia di sbarco per merci
+tile.mfr.rail.cargo.pickup.name = Rotaia d'imbarco per merci
+tile.mfr.rail.passenger.dropoff.name = Rotaia di sbarco per passeggeri
+tile.mfr.rail.passenger.pickup.name = Rotaia d'imbarco per passeggeri
 
 tile.mfr.cable.redstone.name = Cavo RedNet
 tile.mfr.cable.redstone.glass.name = Cavo RedNet
