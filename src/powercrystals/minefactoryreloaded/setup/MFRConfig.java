@@ -130,7 +130,7 @@ public class MFRConfig
 		enableSpawnerCarts.comment = "If true, using a portaspawner on an empty minecart will make it into a spawner cart";
 
 		playSounds = c.get(CATEGORY_GENERAL, "PlaySounds", true);
-		playSounds.comment = "Set to false to disable the harvester's sound when a block is harvested.";
+		playSounds.comment = "Set to false to disable various sounds and aprticle effects, such as when a block is harvested.";
 
 		//{ Searching
 		treeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + ".SearchDistance", "Tree.MaxHorizontal", 512);
