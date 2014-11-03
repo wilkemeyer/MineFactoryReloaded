@@ -8,6 +8,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -22,6 +23,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init();
 		FMLCommonHandler.instance().bus().register(this);
+		MinecraftForge.EVENT_BUS.register(this);
 		MineFactoryReloadedClient.init();
 	}
 

@@ -21,7 +21,6 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.FMLModIdMappingEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -40,7 +39,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
-import net.minecraft.entity.ai.EntityMinecartMobSpawner;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -49,7 +47,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.WeightedRandomFishable;
@@ -57,8 +54,6 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.event.entity.item.ItemExpireEvent;
-import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
@@ -150,6 +145,7 @@ import powercrystals.minefactoryreloaded.item.ItemSyringeZombie;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemXpExtractor;
 import powercrystals.minefactoryreloaded.net.IMFRProxy;
+import powercrystals.minefactoryreloaded.net.MobHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
@@ -578,10 +574,9 @@ public class MineFactoryReloadedCore extends BaseMod
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
-		MinecraftForge.EVENT_BUS.register(instance);
-		MinecraftForge.EVENT_BUS.register(proxy);
 		MinecraftForge.EVENT_BUS.register(rednetCableBlock);
 		MinecraftForge.EVENT_BUS.register(plasticPipeBlock);
+		MinecraftForge.EVENT_BUS.register(new MobHandler());
 
 		proxy.init();
 		MFRFarmables.load();
@@ -784,57 +779,6 @@ public class MineFactoryReloadedCore extends BaseMod
 	public void remap(FMLModIdMappingEvent evt)
 	{
 		powercrystals.minefactoryreloaded.core.OreDictionaryArbiter.bake();
-	}
-
-	@SubscribeEvent
-	public void onMinecartInteract(MinecartInteractEvent e)
-	{
-		if (e.player.worldObj.isRemote)
-			return;
-		if (!MFRConfig.enableSpawnerCarts.getBoolean(true))
-			return;
-		if (e.minecart != null && !e.minecart.isDead)
-		{
-			ItemStack item = e.player.getCurrentEquippedItem();
-			if (item != null && item.getItem().equals(portaSpawnerItem) &
-					e.minecart.ridingEntity == null &
-					e.minecart.riddenByEntity == null)
-			{
-				if (e.minecart.getMinecartType() == 0)
-				{
-					if (ItemPortaSpawner.hasData(item))
-					{
-						e.setCanceled(true);
-						NBTTagCompound tag = ItemPortaSpawner.getSpawnerTag(item);
-						e.player.destroyCurrentEquippedItem();
-						e.minecart.writeToNBT(tag);
-						e.minecart.setDead();
-						EntityMinecartMobSpawner ent = new EntityMinecartMobSpawner(e.minecart.worldObj);
-						ent.readFromNBT(tag);
-						ent.worldObj.spawnEntityInWorld(ent);
-						ent.worldObj.playAuxSFXAtEntity(null, 2004, // particles
-								(int)ent.posX, (int)ent.posY, (int)ent.posZ, 0);
-					}
-				}
-				else if (e.minecart.getMinecartType() == 4)
-				{
-					// maybe
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onItemExpire(ItemExpireEvent e)
-	{
-		ItemStack stack = e.entityItem.getEntityItem();
-		if (stack.getItem().equals(rubberLeavesBlock) && stack.getItemDamage() == 0)
-		{
-			e.setCanceled(true);
-			e.extraLife = 0;
-			e.entityItem.age = 0;
-			e.entityItem.setEntityItemStack(new ItemStack(stack.getItem(), stack.stackSize, 1));
-		}
 	}
 
 	@Override
