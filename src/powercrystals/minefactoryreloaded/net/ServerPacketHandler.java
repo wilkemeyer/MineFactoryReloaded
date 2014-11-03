@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -42,20 +43,19 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 	@Override
 	public IMessage onMessage(MFRMessage message, MessageContext ctx)
 	{
-		//readData(message.buf);
-		// to deal with changes this occurs when the MFRMessage object is created.
-		// the message object contains no data
+		if (message.packet != null)
+			ctx.getServerHandler().sendPacket(message.packet);
 		return null;
 	}
-	
-	private static void readData(ByteBuf data)
+
+	private static Packet readData(ByteBuf data)
 	{
 		TileEntity te;
 		int x, y, z, a;
 		byte amt;
 		World world = DimensionManager.getWorld(data.readInt());
 		EntityPlayer player;
-		
+
 		switch (data.readUnsignedShort())
 		{
 		case Packets.HAMUpdate:
@@ -63,13 +63,13 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			te = world.getTileEntity(x, y, z);
 			if (te instanceof TileEntityFactory && ((TileEntityFactory)te).hasHAM())
 			{
-				Packets.sendToAllPlayersWatching(te, ((TileEntityFactory)te).getHAM().getUpgradePacket(te));
+				return ((TileEntityFactory)te).getHAM().getUpgradePacket();
 			}
 			break;
 		case Packets.EnchanterButton: // client -> server: autoenchanter GUI buttons
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
-			
+
 			amt = data.readByte();
 			if (te instanceof TileEntityAutoEnchanter)
 			{
@@ -96,7 +96,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		case Packets.ChronotyperButton: // client -> server: toggle chronotyper
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
-			
+
 			if(te instanceof TileEntityChronotyper)
 			{
 				((TileEntityChronotyper)te).setMoveOld(!((TileEntityChronotyper)te).getMoveOld());
@@ -105,7 +105,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		case Packets.AutoJukeboxButton: // client -> server: copy record
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
-			
+
 			if(te instanceof TileEntityAutoJukebox)
 			{
 				TileEntityAutoJukebox j = ((TileEntityAutoJukebox)te);
@@ -118,7 +118,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		case Packets.AutoSpawnerButton: // client -> server: toggle autospawner
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
-			
+
 			if(te instanceof TileEntityAutoSpawner)
 			{
 				((TileEntityAutoSpawner)te).setSpawnExact(!((TileEntityAutoSpawner)te).getSpawnExact());
@@ -127,7 +127,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		case Packets.CircuitDefinition: // client -> server: request circuit from server
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
-			
+
 			if(te instanceof TileEntityRedNetLogic)
 			{
 				((TileEntityRedNetLogic)te).sendCircuitDefinition(data.readInt());
@@ -179,7 +179,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		case Packets.RouterButton: // client -> server: toggle 'levels'/'reject unmapped' mode
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
-			
+
 			a = data.readInt();
 			if(te instanceof TileEntityEnchantmentRouter)
 			{
@@ -244,7 +244,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt(); y = data.readInt(); z = data.readInt();
 			te = world.getTileEntity(x, y, z);
 			player = (EntityPlayer)world.getEntityByID(data.readInt());
-			
+
 			ItemStack playerStack = player.inventory.getItemStack();
 			int slotNumber = data.readInt(), click = data.readByte();
 			if(te instanceof IInventory)
@@ -261,7 +261,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 					if (!UtilInventory.stacksEqual(s, playerStack))
 						playerStack.stackSize = 1;
 					else
-						playerStack.stackSize = Math.min(playerStack.stackSize + s.stackSize, 1);
+						playerStack.stackSize = Math.max(playerStack.stackSize + s.stackSize, 1);
 					((IInventory)te).setInventorySlotContents(slotNumber, playerStack);
 				}
 			}
@@ -274,7 +274,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			{
 				target = world.getEntityByID(t);
 			}
-			
+
 			if(owner instanceof EntityLivingBase)
 			{
 				EntityRocket r = new EntityRocket(world, ((EntityLivingBase)owner), target);
@@ -282,11 +282,13 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			}
 			break;
 		}
+		return null;
 	}
-	
+
 	public static class MFRMessage implements IMessage
 	{
 		public ByteBuf buf;
+		public Packet packet;
 		public MFRMessage() {}
 		public MFRMessage(short packet, TileEntity te, Object... args)
 		{
@@ -308,12 +310,11 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			handleObjects(buff, args);
 			buf = buff;
 		}
-		
+
 		@Override
 		public void fromBytes(ByteBuf buf)
 		{
-			//this.buf = buf;
-			readData(buf);
+			packet = readData(buf);
 		}
 
 		@Override
@@ -321,12 +322,12 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		{
 			buf.writeBytes(this.buf);
 		}
-		
+
 		private static void handleObjects(ByteBuf data, Object[] objects)
 		{
 			for (Object obj : objects)
 			{
-				Class<?> objClass = obj.getClass(); 
+				Class<?> objClass = obj.getClass();
 				if (objClass.equals(Integer.class))
 				{
 					data.writeInt((Integer) obj);

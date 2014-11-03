@@ -66,7 +66,7 @@ public final class Packets
 			}
 		}
 	}
-	
+
 	public static final short EnchanterButton	= 0;
 	public static final short HarvesterButton	= 1;
 	public static final short ChronotyperButton	= 2;
@@ -80,7 +80,7 @@ public final class Packets
 	public static final short RouterButton		= 10;
 	public static final short RocketLaunch		= 11;
 	public static final short FakeSlotChange		= 20; // TODO: remove in favor of CoFH fake slots
-	
+
 	public static void sendToServer(short packet, TileEntity te, Object... args)
 	{
 		sendToServer(new MFRMessage(packet, te, args));
