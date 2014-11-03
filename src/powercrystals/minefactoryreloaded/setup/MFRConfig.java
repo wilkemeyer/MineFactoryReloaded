@@ -266,7 +266,7 @@ public class MFRConfig
 
 		category = "Machine." + Machine.AutoSpawner.getName();
 		spawnerBlacklist = c.get(category, "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
-		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider, VillagerGolem, Forestry.butterflyGE) to blacklist from the AutoSpawner.";
+		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider or VillagerGolem or Forestry.butterflyGE) to blacklist from the AutoSpawner. The Debugger item will display an entity's ID when used.";
 		category += ".Cost";
 		autospawnerCostExact = c.get(category, "Exact", 5).setRequiresMcRestart(true);
 		autospawnerCostExact.comment = "The multiplier for work required to generate a mob in exact mode.";
