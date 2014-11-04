@@ -52,7 +52,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	private ForgeDirection _forwardDirection;
-	private boolean _canRotate = false, _notifyRotate = false;
+	private boolean _canRotate = false;
 
 	private boolean _manageFluids = false;
 	private boolean _manageSolids = false;
@@ -60,6 +60,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	private boolean _isActive = false, _prevActive;
 	protected byte _activeSyncTimeout = 101;
 	private long _lastActive = -100;
+	private int _lastUpgrade = 0;
 
 	protected int _rednetState;
 
@@ -74,16 +75,14 @@ public abstract class TileEntityFactory extends TileEntityBase
 		_forwardDirection = ForgeDirection.NORTH;
 	}
 
-	@Override
-	public void validate()
+	//@Override
+	public void cofh_validate()
 	{
-		super.validate();
 		onRotate();
 		if (worldObj.isRemote && hasHAM())
 		{
 			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
-		_notifyRotate = true;
 	}
 
 	@Override
@@ -215,8 +214,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		if (worldObj.blockExists(xCoord, yCoord, zCoord))
 		{
-			if (_notifyRotate)
-				MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
+			MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
 		}
 	}
 
@@ -297,7 +295,11 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		if (worldObj != null && !worldObj.isRemote && hasHAM())
 		{
-			Packets.sendToAllPlayersWatching(worldObj, xCoord, yCoord, zCoord, getHAM().getUpgradePacket(this));
+			HarvestAreaManager<TileEntityFactory> ham = getHAM();
+			int u = ham.getUpgradeLevel();
+			if (_lastUpgrade != u)
+				Packets.sendToAllPlayersWatching(worldObj, xCoord, yCoord, zCoord, ham.getUpgradePacket());
+			_lastUpgrade = u;
 		}
 		super.markDirty();
 	}
@@ -328,15 +330,16 @@ public abstract class TileEntityFactory extends TileEntityBase
 			_isActive = data.getBoolean("a");
 			if (_prevActive != _isActive)
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			if (_lastActive < 0)
+			if (_lastActive < 0 && hasHAM())
 			{
 				Packets.sendToServer(Packets.HAMUpdate, this);
-				_lastActive = 5;
 			}
+			_lastActive = 5;
 			break;
 		case 255:
-			if (hasHAM())
+			if (hasHAM()) {
 				getHAM().setUpgradeLevel(data.getInteger("_upgradeLevel"));
+			}
 			break;
 		}
 	}
