@@ -15,12 +15,12 @@ import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class MobHandler
+public class EntityHandler
 {
 	@SubscribeEvent
 	public void onEntityJoinWorldEvent(EntityJoinWorldEvent evt)
 	{
-		if (!(evt.entity instanceof EntitySkeleton))
+		if (evt.world.isRemote || !(evt.entity instanceof EntitySkeleton))
 			return;
 		EntitySkeleton ent = (EntitySkeleton) evt.entity;
 

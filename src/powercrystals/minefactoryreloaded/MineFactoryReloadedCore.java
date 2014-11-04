@@ -71,6 +71,7 @@ import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
 import powercrystals.minefactoryreloaded.block.BlockRubberSapling;
 import powercrystals.minefactoryreloaded.block.BlockRubberWood;
 import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
+import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
 import powercrystals.minefactoryreloaded.block.ItemBlockDetCord;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryLeaves;
@@ -144,8 +145,8 @@ import powercrystals.minefactoryreloaded.item.ItemSyringeSlime;
 import powercrystals.minefactoryreloaded.item.ItemSyringeZombie;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemXpExtractor;
+import powercrystals.minefactoryreloaded.net.EntityHandler;
 import powercrystals.minefactoryreloaded.net.IMFRProxy;
-import powercrystals.minefactoryreloaded.net.MobHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
@@ -398,7 +399,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		rocketLauncherItem = (new ItemRocketLauncher()).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
-		registerBlock(conveyorBlock, ItemBlockFactory.class, BlockConveyor._names);
+		registerBlock(conveyorBlock, ItemBlockConveyor.class, BlockConveyor._names);
 		registerBlock(machineItem, ItemBlockFactory.class, BlockFactoryDecoration._names);
 		machineBaseItem = Item.getItemFromBlock(machineItem);
 
@@ -576,7 +577,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	{
 		MinecraftForge.EVENT_BUS.register(rednetCableBlock);
 		MinecraftForge.EVENT_BUS.register(plasticPipeBlock);
-		MinecraftForge.EVENT_BUS.register(new MobHandler());
+		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 
 		proxy.init();
 		MFRFarmables.load();
