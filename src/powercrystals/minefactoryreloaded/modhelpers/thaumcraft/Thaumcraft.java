@@ -2,10 +2,11 @@ package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import cofh.asm.relauncher.Strippable;
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -40,13 +41,9 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 public class Thaumcraft
 {
 	@EventHandler
-	public static void load(FMLPostInitializationEvent e)
+	@Strippable("mod:Thaumcraft")
+	public static void load(FMLInitializationEvent e)
 	{
-		if(!Loader.isModLoaded("Thaumcraft"))
-		{
-			return;
-		}
-
 		try
 		{
 			final Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
@@ -112,14 +109,27 @@ public class Thaumcraft
 
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
+		}
+		catch(Throwable x)
+		{
+			x.printStackTrace();
+		}
+	}
 
+	@EventHandler
+	@Strippable("api:Thaumcraft|API")
+	public static void load(FMLPostInitializationEvent e)
+	{
+		try
+		{
 			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
 			aspects = (LinkedHashMap<String, ? extends Object>)Aspect.
 					getDeclaredField("aspects").get(null);
 			Class<?> ThaumcraftApi = Class.forName("thaumcraft.api.ThaumcraftApi");
 			AspectList = Class.forName("thaumcraft.api.aspects.AspectList");
-			registerItem = ThaumcraftApi.getDeclaredMethod("registerObjectTag", ItemStack.class, AspectList);
-			Class<?> EntityTagsNBT = Class.forName("[Lthaumcraft.api.ThaumcraftApi$EntityTagsNBT");
+			registerItem = ThaumcraftApi.getDeclaredMethod("registerObjectTag",
+					ItemStack.class, AspectList);
+			Class<?> EntityTagsNBT = Class.forName("[Lthaumcraft.api.ThaumcraftApi$EntityTagsNBT;");
 			registerEntity = ThaumcraftApi.getDeclaredMethod("registerEntityTag",
 					String.class, AspectList, EntityTagsNBT);
 			addAspect = AspectList.getDeclaredMethod("add", Aspect, int.class);
@@ -244,13 +254,13 @@ public class Thaumcraft
 		parseAspects(Machine.ItemRouter, "2 motus, 4 iter, 2 sensus,  5 machina");
 		parseAspects(Machine.LaserDrill, "30 perfodio, 15 lux, 5 machina, 4 victus");
 		parseAspects(Machine.LaserDrillPrecharger, "4 lux, 5 machina, 25 potentia, 2 victus");
-		parseAspects(Machine.LavaFabricator, "4 ignis, 4 saxum, 4 fabrico, 5 machina");
+		parseAspects(Machine.LavaFabricator, "4 ignis, 4 terra, 4 fabrico, 5 machina");
 		parseAspects(Machine.LiquiCrafter, "5 aqua, 5 fabrico, 5 machina");
 		parseAspects(Machine.LiquidRouter, "1 motus, 4 iter, 2 sensus, 5 machina, 1 aqua");
 		parseAspects(Machine.MeatPacker, "2 ordo, 2 corpus, 2 fames, 5 machina");
 		parseAspects(Machine.MobCounter, "5 ordo, 5 machina, 5 cognitio");
-		parseAspects(Machine.MobRouter, "3 ordo, 3 beastia, 5 machina, 3 sensus");
-		parseAspects(Machine.Planter, "4 herba, 2 granum, 4 messis, 5 machina");
+		parseAspects(Machine.MobRouter, "3 ordo, 3 bestia, 5 machina, 3 sensus");
+		parseAspects(Machine.Planter, "4 herba, 2 arbor, 4 messis, 5 machina");
 		parseAspects(Machine.Rancher, "6 meto, 5 machina, 4 metallum, 2 instrumentum");
 		parseAspects(Machine.RedNote, "4 aer, 4 sensus, 5 machina");
 		parseAspects(Machine.Sewer, "1 venenum, 3 aqua, 5 machina, 4 bestia");
@@ -264,17 +274,19 @@ public class Thaumcraft
 
 		parseAspects("mfrEntityPinkSlime", "1 aqua, 2 limus, 1 corpus, 1 bestia");
 
-		parseAspects(machineItem, 0, "2 fabrico, 2 machina, 1 saxum"); // factory machine block
+		parseAspects(machineItem, 0, "2 fabrico, 2 machina, 1 terra"); // factory machine block
 		parseAspects(machineItem, 1, "1 cognitio, 3 machina"); // PRC housing
 		parseAspects(rubberBarItem, "1 motus, 1 arbor, 1 ignis"); // rubber bar
 		parseAspects(rubberLeavesBlock, "1 herba"); // rubber leaves
-		parseAspects(rubberSaplingBlock, "1 arbor, 1 herba, 1 granum"); // rubber sapling
+		parseAspects(rubberSaplingBlock, "1 arbor, 1 herba"); // rubber sapling
 		parseAspects(rubberWoodBlock, 0, "3 arbor"); // rubber wood
 		parseAspects(rubberWoodBlock, 1, "3 arbor, 1 limus"); // rubber wood
 		parseAspects(rawRubberItem, "2 limus, 1 arbor"); // raw rubber
 		parseAspects(rawPlasticItem, "1 fabrico, 1 ignis, 1 ordo, 1 perditio"); // raw plastic
 		parseAspects(plasticSheetItem, "1 fabrico, 1 ignis, 2 ordo"); // plastic sheet
 		parseAspects(factoryPlasticBlock, "1 iter, 1 fabrico, 1 sensus"); // plastic block
+		parseAspects(plasticPipeBlock, "1 aqua, 1 machina", true);
+		parseAspects(plasticTank, "4 aqua, 4 vacuos");
 		parseAspects(bioFuelBucketItem, "2 herba, 1 potentia, 1 aqua, 8 metallum, 1 vacuos");
 		parseAspects(biofuelLiquid, "4 herba, 2 potentia, 2 aqua");
 		parseAspects(blankRecordItem, "4 sensus, 4 aer, 4 lucrum, 4 vacuos");
@@ -285,7 +297,7 @@ public class Thaumcraft
 		parseAspects(essenceLiquid, "4 praecantatio, 2 cognitio, 2 aqua");
 		parseAspects(factoryGlassBlock, "1 vitreus, 1 sensus");
 		parseAspects(factoryHammerItem, "1 instrumentum, 2 fabrico, 2 ignis, 3 ordo");
-		parseAspects(fertilizerItem, "1 granum, 1 herba, 1 messis, 1 sensus");
+		parseAspects(fertilizerItem, "1 arbor, 1 herba, 1 messis, 1 sensus");
 		parseAspects(laserFocusItem, "1 ordo, 1 vitreus, 4 lucrum");
 		parseAspects(meatBucketItem, "3 corpus, 1 bestia, 1 aqua, 8 metallum, 1 vacuos");
 		parseAspects(meatIngotCookedItem, "3 corpus, 2 fames, 1 ignis");
@@ -303,7 +315,10 @@ public class Thaumcraft
 		parseAspects(pinkSlimeBucketItem, "2 limus, 2 corpus, 1 aqua, 8 metallum, 1 vacuos");
 		parseAspects(pinkSlimeLiquid, "4 limus, 4 corpus, 2 aqua");
 		parseAspects(portaSpawnerItem, "8 alienis, 4 bestia, 4 exanimis, 4 iter, 8 praecantatio, 8 permutatio");
-		parseAspects(rednetCableBlock, "1 cognitio, 1 machina", true);
+		parseAspects(rednetCableBlock, 0, "1 cognitio, 1 machina", true);
+		parseAspects(rednetCableBlock, 1, "1 cognitio, 1 machina, 1 vitreus", true);
+		parseAspects(rednetCableBlock, 2, "1 cognitio, 1 machina, 3 potentia", true);
+		parseAspects(rednetCableBlock, 3, "1 cognitio, 1 machina, 3 potentia, 1 vitreus", true);
 		parseAspects(rednetLogicBlock, "15 cognitio, 5 machina", true);
 		parseAspects(rednetMemoryCardItem, "3 cognitio, 1 machina");
 		parseAspects(rednetMeterItem, 0, "1 instrumentum, 1 sensus, 1 machina");
@@ -342,39 +357,39 @@ public class Thaumcraft
 		parseAspects(factoryDecorativeBrickBlock,  0, "2 gelum, 1 terra"); // ice
 		parseAspects(factoryDecorativeBrickBlock,  1, "1 terra, 3 lux, 2 sensus"); // glowstone
 		parseAspects(factoryDecorativeBrickBlock,  2, "2 terra, 4 sensus"); // lapis
-		parseAspects(factoryDecorativeBrickBlock,  3, "1 terra, 3 ignis, 1 saxum, 1 tenebrae"); // obsidian
-		parseAspects(factoryDecorativeBrickBlock,  4, "2 terra, 1 saxum"); // paved stone
+		parseAspects(factoryDecorativeBrickBlock,  3, "2 terra, 3 ignis, 1 tenebrae"); // obsidian
+		parseAspects(factoryDecorativeBrickBlock,  4, "2 terra, 1 ordo"); // paved stone
 		parseAspects(factoryDecorativeBrickBlock,  5, "1 gelum, 1 terra"); // snow
-		parseAspects(factoryDecorativeBrickBlock,  6, "2 gelum, 1 saxum"); // ice large
-		parseAspects(factoryDecorativeBrickBlock,  7, "1 saxum, 3 lux, 2 sensus"); // glowstone large
-		parseAspects(factoryDecorativeBrickBlock,  8, "2 saxum, 4 sensus"); // lapis large
-		parseAspects(factoryDecorativeBrickBlock,  9, "3 ignis, 2 saxum, 1 tenebrae"); // obsidian large
-		parseAspects(factoryDecorativeBrickBlock, 10, "3 saxum"); // pavedstone large
-		parseAspects(factoryDecorativeBrickBlock, 12, "1 gelum, 1 saxum"); // snow large
+		parseAspects(factoryDecorativeBrickBlock,  6, "2 gelum, 1 terra"); // ice large
+		parseAspects(factoryDecorativeBrickBlock,  7, "1 terra, 3 lux, 2 sensus"); // glowstone large
+		parseAspects(factoryDecorativeBrickBlock,  8, "2 terra, 4 sensus"); // lapis large
+		parseAspects(factoryDecorativeBrickBlock,  9, "3 ignis, 2 terra, 1 tenebrae"); // obsidian large
+		parseAspects(factoryDecorativeBrickBlock, 10, "3 terra"); // pavedstone large
+		parseAspects(factoryDecorativeBrickBlock, 12, "1 gelum, 1 terra"); // snow large
 		parseAspects(factoryDecorativeBrickBlock, 12, "3 corpus, 2 fames, 1 bestia", true); // raw meat block
 		parseAspects(factoryDecorativeBrickBlock, 13, "3 corpus, 2 fames, 1 ignis", true); // cooked meat block
-		parseAspects(factoryDecorativeBrickBlock, 14, "2 saxum"); // brick large
-		parseAspects(factoryDecorativeBrickBlock, 15, "10 ignis"); // sugar charcoal
+		parseAspects(factoryDecorativeBrickBlock, 14, "4 terra, 4 ignis"); // brick large
+		parseAspects(factoryDecorativeBrickBlock, 15, "10 ignis, 10 potentia"); // sugar charcoal
 
-		parseAspects(factoryDecorativeStoneBlock, 0, "2 saxum, 1 tenebrae");
-		parseAspects(factoryDecorativeStoneBlock, 1, "2 saxum, 1 victus");
-		parseAspects(factoryDecorativeStoneBlock, 2, "1 perditio, 1 saxum, 1 tenebrae");
-		parseAspects(factoryDecorativeStoneBlock, 3, "1 perditio, 1 saxum, 1 victus");
-		parseAspects(factoryDecorativeStoneBlock, 4, "2 saxum, 1 tenebrae");
-		parseAspects(factoryDecorativeStoneBlock, 5, "2 saxum, 1 victus");
-		parseAspects(factoryDecorativeStoneBlock, 6, "2 terra, 1 saxum, 1 tenebrae");
-		parseAspects(factoryDecorativeStoneBlock, 7, "2 terra, 1 saxum, 1 victus");
-		parseAspects(factoryDecorativeStoneBlock, 8, "1 terra, 1 saxum, 1 tenebrae");
-		parseAspects(factoryDecorativeStoneBlock, 9, "1 terra, 1 saxum, 1 victus");
-		parseAspects(factoryDecorativeStoneBlock, 10, "3 saxum, 1 tenebrae");
-		parseAspects(factoryDecorativeStoneBlock, 11, "3 saxum, 1 victus");
-		//parseAspects(factoryDecorativeStoneBlock, 12, "2 saxum, 1 tenebrae");
-		//parseAspects(factoryDecorativeStoneBlock, 13, "2 saxum, 1 victus");
+		parseAspects(factoryDecorativeStoneBlock, 0, "2 terra, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 1, "2 terra, 1 victus");
+		parseAspects(factoryDecorativeStoneBlock, 2, "1 perditio, 1 terra, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 3, "1 perditio, 1 terra, 1 victus");
+		parseAspects(factoryDecorativeStoneBlock, 4, "2 terra, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 5, "2 terra, 1 victus");
+		parseAspects(factoryDecorativeStoneBlock, 6, "3 terra, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 7, "3 terra, 1 victus");
+		parseAspects(factoryDecorativeStoneBlock, 8, "2 terra, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 9, "2 terra, 1 victus");
+		parseAspects(factoryDecorativeStoneBlock, 10, "3 terra, 1 tenebrae");
+		parseAspects(factoryDecorativeStoneBlock, 11, "3 terra, 1 victus");
+		//parseAspects(factoryDecorativeStoneBlock, 12, "2 terra, 1 tenebrae");
+		//parseAspects(factoryDecorativeStoneBlock, 13, "2 terra, 1 victus");
 
-		parseAspects(factoryRoadBlock, 0, "3 iter, 1 saxum, 1 sensus");
-		parseAspects(factoryRoadBlock, 1, "3 iter, 1 saxum, 1 sensus, 3 lux"); // road light (off)
-		parseAspects(factoryRoadBlock, 2, "3 iter, 1 saxum, 1 sensus, 3 lux"); // road light (on)
-		parseAspects(factoryRoadBlock, 3, "3 iter, 1 saxum, 1 sensus, 3 lux"); // road light inverted (off)
-		parseAspects(factoryRoadBlock, 4, "3 iter, 1 saxum, 1 sensus, 3 lux"); // road light inverted (on)
+		parseAspects(factoryRoadBlock, 0, "3 iter, 1 terra, 1 sensus");
+		parseAspects(factoryRoadBlock, 1, "3 iter, 1 terra, 1 sensus, 3 lux"); // road light (off)
+		parseAspects(factoryRoadBlock, 2, "3 iter, 1 terra, 1 sensus, 3 lux"); // road light (on)
+		parseAspects(factoryRoadBlock, 3, "3 iter, 1 terra, 1 sensus, 3 lux"); // road light inverted (off)
+		parseAspects(factoryRoadBlock, 4, "3 iter, 1 terra, 1 sensus, 3 lux"); // road light inverted (on)
 	}
 }
