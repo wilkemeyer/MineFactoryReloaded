@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.setup;
 
+import static net.minecraft.util.EnumChatFormatting.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
 import cofh.lib.util.RegistryUtils;
@@ -29,6 +30,7 @@ import net.minecraftforge.common.config.Property;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryGenerator;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoBrewer;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
@@ -197,6 +199,7 @@ public class Machine
 	protected int _activationEnergy;
 	protected int _energyStoredMax;
 	protected boolean _useDaRF;
+	protected boolean _generator;
 
 	protected Property _isRecipeEnabled;
 
@@ -241,6 +244,8 @@ public class Machine
 		_energyStoredMax = energyStoredMax;
 		_useDaRF = configurable;
 
+		_generator = TileEntityFactoryGenerator.class.isAssignableFrom(tileEntityClass);
+
 		_machineMappings.put(_machineIndex, this);
 		_machines.add(this);
 
@@ -284,6 +289,20 @@ public class Machine
 
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 	{
+		if (stack.stackTagCompound != null)
+		{
+			NBTTagCompound tag = stack.stackTagCompound;
+			if (_energyStoredMax > 0)
+				info.add(MFRUtil.localize("info.cofh.energyStored") + ": " +
+						Math.min(_energyStoredMax, tag.getInteger("energyStored")) + "/" + _energyStoredMax + " RF");
+		}
+		if (_activationEnergy > 0)
+		{
+			if (_generator)
+				info.add(MFRUtil.localize("info.cofh.energyProduce") + ": " + GREEN + _activationEnergy + " RF/t" + RESET);
+			else
+				info.add(MFRUtil.localize("info.cofh.energyConsume") + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
+		}
 		String s = "tip.info.mfr." + _name.toLowerCase();
 		if (StatCollector.canTranslate(s))
 		{
