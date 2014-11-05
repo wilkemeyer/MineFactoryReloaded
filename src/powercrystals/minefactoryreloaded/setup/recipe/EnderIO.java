@@ -32,7 +32,10 @@ public class EnderIO extends Vanilla
     ItemStack capacitorOctadic;
     ItemStack gear;
     ItemStack chassis;
+    ItemStack zombieElectrode;
     ItemStack zombieController;
+    ItemStack frankNZombie;
+    ItemStack enderTransmitter;
     ItemStack dsAxe;
     ItemStack dsPick;
     ItemStack dsSword;
@@ -72,7 +75,10 @@ public class EnderIO extends Vanilla
         capacitorOctadic    = stackFor("itemBasicCapacitor", 2);
         chassis             = stackFor("itemMachinePart");
         gear                = stackFor("itemMachinePart", 1);
+        zombieElectrode     = stackFor("itemFrankenSkull");
         zombieController    = stackFor("itemFrankenSkull", 1);
+        frankNZombie        = stackFor("itemFrankenSkull", 2);
+        enderTransmitter    = stackFor("itemFrankenSkull", 3);
         dsAxe               = stackFor("item.darkSteel_axe");
         dsSword             = stackFor("item.darkSteel_sword");
         dsPick              = stackFor("item.darkSteel_pickaxe");
@@ -193,7 +199,7 @@ public class EnderIO extends Vanilla
                 'T', syringeEmptyItem,
                 'F', chassis,
                 'O', prefix + "Copper",
-                'C', zombieController
+                'C', zombieElectrode
         } );
 
         registerMachine(Machine.ItemCollector, 8, new Object[] {
@@ -274,7 +280,7 @@ public class EnderIO extends Vanilla
                 'S', Items.golden_carrot,
                 'F', chassis,
                 'O', "dyePurple",
-                'C', zombieController
+                'C', zombieElectrode
         } );
 
         registerMachine(Machine.Grinder, new Object[] {
@@ -325,21 +331,23 @@ public class EnderIO extends Vanilla
         registerMachine(Machine.ItemRouter, 8, new Object[] {
                 "PTP",
                 "SFS",
-                "PSP",
+                "PHP",
                 'P', "sheetPlastic",
                 'T', Blocks.chest,
                 'S', probe,
-                'F', chassis
+                'F', chassis,
+                'H', Blocks.hopper
         } );
 
         registerMachine(Machine.LiquidRouter, 8, new Object[] {
                 "PTP",
                 "SFS",
-                "PSP",
+                "PHP",
                 'P', "sheetPlastic",
                 'T', conduitLiquid,
                 'S', probe,
-                'F', chassis
+                'F', chassis,
+                'H', Blocks.hopper
         } );
 
         int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
