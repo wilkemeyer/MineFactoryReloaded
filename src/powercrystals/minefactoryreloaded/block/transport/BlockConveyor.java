@@ -67,6 +67,12 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode
 	}
 
 	@Override
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	{
+		return false;
+	}
+
+	@Override
 	public boolean canRenderInPass(int pass)
 	{
 		renderPass = pass;
