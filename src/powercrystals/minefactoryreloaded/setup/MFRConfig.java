@@ -39,6 +39,7 @@ public class MFRConfig
 	public static Property disenchanterEssence;
 	public static Property steamBoilerExplodes;
 
+	public static Property largeSlimesDrop;
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
 
@@ -223,6 +224,9 @@ public class MFRConfig
 
 		enableLiquidSyringe = c.get(CATEGORY_ITEM, "LiquidSyringes", true).setRequiresMcRestart(true);
 		enableLiquidSyringe.comment = "If true, Empty Syringes will be able to contain liquids and inject players.";
+
+		largeSlimesDrop = c.get(CATEGORY_ITEM, "LargeSlimeDrop", false);
+		largeSlimesDrop.comment = "If true, only pink slimes larger than tiny will drop pink slimeballs. Provided for those who want a more work-intensive laser drill. (slimes can only be made larger through the slime embiggening syringe)";
 		//}
 
 		//{ Alterations to recipes

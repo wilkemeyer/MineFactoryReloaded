@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class EntityPinkSlime extends EntitySlime
@@ -27,7 +28,8 @@ public class EntityPinkSlime extends EntitySlime
 	@Override
 	protected Item getDropItem()
 	{
-		return this.getSlimeSize() == 1 ? MFRThings.pinkSlimeItem : Item.getItemById(0);
+		boolean drop = MFRConfig.largeSlimesDrop.getBoolean() ? getSlimeSize() > 1 : getSlimeSize() == 1;
+		return drop ? MFRThings.pinkSlimeItem : Item.getItemById(0);
 	}
 
 	@Override
