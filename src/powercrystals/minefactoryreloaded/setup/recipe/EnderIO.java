@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.setup.recipe;
 
 import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.MissingModsException;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -13,9 +14,9 @@ import java.util.Collections;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -25,7 +26,7 @@ public class EnderIO extends Vanilla
     private static final String EIO = "EnderIO";
 
     String redstone = "dustRedstone";
-     
+
     /* Items */
     ItemStack capacitorBasic;
     ItemStack capacitorDouble;
@@ -44,7 +45,7 @@ public class EnderIO extends Vanilla
     ItemStack xpRod;
     ItemStack soulVial;
     ItemStack fireWaterBucket;
-    
+
     /* Blocks */
     ItemStack light;
     ItemStack reservoir;
@@ -87,9 +88,9 @@ public class EnderIO extends Vanilla
         xpRod               = stackFor("itemXpTransfer");
         soulVial            = stackFor("itemSoulVessel");
         fireWaterBucket     = stackFor("bucketFire_water");
-        
+
         /* Blocks */
-        light               = stackForBlock("blockElectricLight", 2);        
+        light               = stackForBlock("blockElectricLight", 2);
         reservoir           = stackForBlock("blockReservoir");
         dimTrans            = stackForBlock("blockTransceiver");
         vacuumChest         = stackForBlock("blockVacuumChest");
@@ -99,27 +100,27 @@ public class EnderIO extends Vanilla
         darkSteelAnvil      = stackForBlock("blockDarkSteelAnvil");
         capBank             = stackForBlock("blockCapacitorBank");
         reinforcedObsidian  = stackForBlock("blockReinforcedObsidian");
-            
+
         /* Machines */
         crafter         = stackForBlock("blockCrafter");
         combustionGen   = stackForBlock("blockCombustionGenerator");
     }
-    
+
     private ItemStack stackFor(String itemName)
     {
         return stackFor(itemName, 0);
     }
-    
+
     private ItemStack stackFor(String itemName, int damage)
     {
         return new ItemStack(GameRegistry.findItem(EIO, itemName), 1, damage);
     }
-    
+
     private ItemStack stackForBlock(String blockName)
     {
         return stackForBlock(blockName, 0);
     }
-    
+
     private ItemStack stackForBlock(String blockName, int damage)
     {
         return new ItemStack(GameRegistry.findBlock(EIO, blockName), 1, damage);
@@ -292,7 +293,7 @@ public class EnderIO extends Vanilla
                 'O', Items.book,
                 'F', chassis,
                 'S', prefix + "ElectricalSteel",
-                'C', conduitLiquid 
+                'C', conduitLiquid
         } );
 
         registerMachine(Machine.AutoEnchanter, new Object[] {
