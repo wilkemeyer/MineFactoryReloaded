@@ -121,6 +121,7 @@ public class MFRThings
 	public static Item needlegunItem;
 	public static Item needlegunAmmoEmptyItem;
 	public static Item needlegunAmmoStandardItem;
+	public static Item needlegunAmmoPierceItem;
 	public static Item needlegunAmmoLavaItem;
 	public static Item needlegunAmmoSludgeItem;
 	public static Item needlegunAmmoSewageItem;

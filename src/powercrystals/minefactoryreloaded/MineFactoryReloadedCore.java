@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded;
 //this import brought to you by the department of redundancies department, the department that brought you this import
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
+
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
 import cofh.lib.util.RegistryUtils;
@@ -390,6 +391,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		needlegunItem = (new ItemNeedleGun()).setUnlocalizedName("mfr.needlegun").setMaxStackSize(1);
 		needlegunAmmoEmptyItem = (new ItemFactory()).setUnlocalizedName("mfr.needlegun.ammo.empty");
 		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard()).setUnlocalizedName("mfr.needlegun.ammo.standard");
+		needlegunAmmoPierceItem = (new ItemNeedlegunAmmoStandard(16, 3f, 8)).setUnlocalizedName("mfr.needlegun.ammo.pierce");
 		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.flowing_lava, 3)).setUnlocalizedName("mfr.needlegun.ammo.lava");
 		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid, 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
 		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid, 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
@@ -491,7 +493,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		if (MFRConfig.thermalExpansionRecipes.getBoolean(false))
 			recipeSets.add(new ThermalExpansion());
-		
+
 		if (MFRConfig.enderioRecipes.getBoolean(false))
 		    recipeSets.add(new EnderIO());
 

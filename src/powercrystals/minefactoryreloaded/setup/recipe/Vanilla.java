@@ -1420,6 +1420,16 @@ public class Vanilla
 			'G', gunpowder
 				}));
 
+		addRecipe(ShapedRecipe(stack(needlegunAmmoPierceItem), new Object[]
+				{
+			"AAA",
+			"AAA",
+			"GMG",
+			'A', flint,
+			'M', needlegunAmmoEmptyItem,
+			'G', gunpowder
+				}));
+
 		addRecipe(ShapedRecipe(stack(needlegunAmmoAnvilItem), new Object[]
 				{
 			"SAS",
@@ -1432,7 +1442,7 @@ public class Vanilla
 				}));
 
 		addShapelessRecipe(stack(needlegunAmmoFireItem),
-				needlegunAmmoStandardItem, flint_and_steel);
+				needlegunAmmoPierceItem, flint_and_steel);
 
 		addShapelessRecipe(stack(needlegunAmmoLavaItem),
 				needlegunAmmoStandardItem, plasticCupItem,

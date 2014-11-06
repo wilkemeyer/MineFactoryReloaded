@@ -7,24 +7,27 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
+public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmoStandard
 {
 	protected Block _block;
 	protected int _blockMeta;
 
-	public ItemNeedlegunAmmoBlock(Block block, int blockMeta)
+	public ItemNeedlegunAmmoBlock(Block block, int blockMeta, float spread)
 	{
-		setMaxDamage(3);
-		setHasSubtypes(false);
-		assert block != null : "Null block";
+		super(2, spread, 4);
+		if (block == null) throw new IllegalArgumentException("Null block");
 		_block = block;
 		_blockMeta = blockMeta;
+	}
+
+	public ItemNeedlegunAmmoBlock(Block block, int blockMeta)
+	{
+		this(block, blockMeta, 1.5f);
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmo
 	@Override
 	public boolean onHitEntity(ItemStack stack, EntityPlayer owner, Entity hit, double distance)
 	{
-		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
+		super.onHitEntity(stack, owner, hit, distance);
 		Vec3 placement = calculatePlacement(hit);
 		placeBlockAt(hit.worldObj, (int)placement.xCoord, (int)placement.yCoord, (int)placement.zCoord,
 				distance);

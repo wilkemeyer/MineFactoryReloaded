@@ -56,9 +56,9 @@ public class ItemNeedleGun extends ItemFactoryGun
 				ItemStack item = inv[i];
 				if (item != null && ammo.getItem().equals(item.getItem()))
 				{
-					if (!creative) inv[i] = ItemHelper.consumeItem(item);
-					ammo.setItemDamage(0);
+					ammo = ItemHelper.cloneStack(item, 1);
 					ammo.writeToNBT(t);
+					if (!creative) inv[i] = ItemHelper.consumeItem(item);
 					reloaded = true;
 					break;
 				}
@@ -67,14 +67,14 @@ public class ItemNeedleGun extends ItemFactoryGun
 			if (!(world.isRemote | creative))
 				player.dropItem(MFRThings.needlegunAmmoEmptyItem, 1);
 		}
-		stack.getTagCompound().setTag("ammo", t);
+		stack.setTagInfo("ammo", t);
 		return reloaded;
 	}
 
 	@Override
 	protected int getDelay(ItemStack stack, boolean fired)
 	{
-		return fired ? 27 : 7;
+		return 5 + (fired ? 20 : 0);
 	}
 
 	@Override

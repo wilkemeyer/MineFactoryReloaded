@@ -10,6 +10,11 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public abstract class ItemNeedlegunAmmo extends ItemFactory implements INeedleAmmo
 {
+	public ItemNeedlegunAmmo()
+	{
+		setHasSubtypes(false);
+	}
+
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips)
 	{

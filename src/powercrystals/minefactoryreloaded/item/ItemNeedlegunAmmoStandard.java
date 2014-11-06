@@ -8,16 +8,40 @@ import net.minecraft.world.World;
 
 public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo
 {
+	protected int damage;
+	protected float spread;
+
+	public ItemNeedlegunAmmoStandard(int damage, float spread, int shots)
+	{
+		this.damage = damage;
+		this.spread = spread;
+		setMaxDamage(shots - 1);
+	}
+
+	public ItemNeedlegunAmmoStandard(int damage, float spread)
+	{
+		this(damage, spread, 12);
+	}
+
+	public ItemNeedlegunAmmoStandard(int damage, int shots)
+	{
+		this(damage, 2f, shots);
+	}
+
+	public ItemNeedlegunAmmoStandard(int damage)
+	{
+		this(damage, 2f);
+	}
+
 	public ItemNeedlegunAmmoStandard()
 	{
-		setMaxDamage(11);
-		setHasSubtypes(false);
+		this(8);
 	}
 
 	@Override
 	public boolean onHitEntity(ItemStack stack, EntityPlayer owner, Entity hit, double distance)
 	{
-		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 8);
+		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), damage);
 		return true;
 	}
 
@@ -29,6 +53,6 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo
 	@Override
 	public float getSpread(ItemStack stack)
 	{
-		return 2.0F;
+		return spread;
 	}
 }

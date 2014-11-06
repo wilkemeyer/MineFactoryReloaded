@@ -4,26 +4,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 
 public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock
 {
 	public ItemNeedlegunAmmoFire()
 	{
-		super(Blocks.fire, 4);
+		super(Blocks.fire, 0, 2f);
+		this.damage = 6;
 	}
 
 	@Override
 	public boolean onHitEntity(ItemStack stack, EntityPlayer owner, Entity hit, double distance)
 	{
 		hit.setFire(10);
-		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), 2);
+		super.onHitEntity(stack, owner, hit, distance);
 		return true;
-	}
-	
-	@Override
-	public float getSpread(ItemStack stack)
-	{
-		return 2.0F;
 	}
 }
