@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.api.energy.IEnergyContainerItem;
+import cofh.lib.util.helpers.StringHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,13 +17,13 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergyContainerItem
 {
 	private int _machineBlockIndex;
-	
+
 	public ItemBlockFactoryMachine(net.minecraft.block.Block blockId)
 	{
 		super(blockId);
 		setMaxDamage(0);
 		setHasSubtypes(true);
-		
+
 		_machineBlockIndex = ((BlockFactoryMachine)blockId).getBlockIndex();
 		int highestMeta = Machine.getHighestMetadata(_machineBlockIndex);
 		String[] names = new String[highestMeta + 1];
@@ -37,40 +38,47 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 			GameRegistry.registerCustomItemStack(item.getUnlocalizedName(), item);
 		}
 	}
-	
+
 	@Override
 	public boolean isFull3D()
 	{
 		return true; // TODO: replace this with a proper renderer so it looks right in 3rd person
 	}
-	
+
 	@Override
 	public boolean shouldRotateAroundWhenRendering()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
 	{
-		getMachine(stack).addInformation(stack, player, info, adv);
+		if (StringHelper.displayShiftForDetail && !StringHelper.isShiftKeyDown())
+		{
+			info.add(StringHelper.shiftForDetails());
+		}
+		else
+		{
+			getMachine(stack).addInformation(stack, player, info, adv);
+		}
 	}
-	
+
 	private Machine getMachine(ItemStack stack)
 	{
 		return Machine.getMachineFromIndex(_machineBlockIndex, stack.getItemDamage());
 	}
-	
+
 	// TE methods
-	
+
 	private int getTransferRate(ItemStack container)
 	{
 		if (container.stackSize != 1)
@@ -84,7 +92,7 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 		if (tag == null) container.setTagCompound(tag = new NBTTagCompound());
 		tag.setInteger("energyStored", newEnergy);
 	}
-	
+
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate)
 	{

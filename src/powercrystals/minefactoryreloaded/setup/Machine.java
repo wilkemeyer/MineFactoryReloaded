@@ -133,14 +133,7 @@ public class Machine
 	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class);
 	public static Machine AutoSpawner = new Machine(1, 9, "AutoSpawner", TileEntityAutoSpawner.class, 600, 32000);
 	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class);
-	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, 160, 10000) {
-		@Override
-		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
-		{
-			super.addInformation(stack, player, info, adv);
-			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
-		}
-	};
+	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, 160, 10000);
 	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, 320, 16000) {
 		@Override
 		public void load(Configuration c)
@@ -165,14 +158,7 @@ public class Machine
 	public static Machine FruitPicker = new Machine(2, 6, "FruitPicker", TileEntityFruitPicker.class, 320, 16000);
 	public static Machine BlockPlacer = new Machine(2, 7, "BlockPlacer", TileEntityBlockPlacer.class, 10, 16000);
 	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class);
-	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, 160, 10000) {
-		@Override
-		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
-		{
-			super.addInformation(stack, player, info, adv);
-			info.add(StatCollector.translateToLocal("tip.info.mfr.generator.produces"));
-		}
-	};
+	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, 160, 10000);
 	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, 10, Integer.MAX_VALUE, false) {
 		@Override
 		public void load(Configuration c)
@@ -296,15 +282,16 @@ public class Machine
 			if (_energyStoredMax > 0) {
 				String max = StringHelper.getScaledNumber(_energyStoredMax);
 				String cur = StringHelper.getScaledNumber(Math.min(_energyStoredMax, tag.getInteger("energyStored")));
-				info.add(MFRUtil.localize("info.cofh.energyStored") + ": " + cur + " / " + max + " RF");
+				info.add(MFRUtil.localize("info.cofh.energyStored", true) + ": " + cur + " / " + max + " RF");
 			}
 		}
 		if (_activationEnergy > 0)
 		{
-			if (_generator)
-				info.add(MFRUtil.localize("info.cofh.energyProduce") + ": " + GREEN + _activationEnergy + " RF/t" + RESET);
-			else
-				info.add(MFRUtil.localize("info.cofh.energyConsume") + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
+			if (_generator) {
+				info.add(MFRUtil.localize("info.cofh.energyProduce", true) + ": " + GREEN + _activationEnergy + " RF/t" + RESET);
+				info.add(MFRUtil.localize("tip.info.mfr.generator.produces", true));
+			} else
+				info.add(MFRUtil.localize("info.cofh.energyConsume", true) + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
 		}
 		String s = "tip.info.mfr." + _name.toLowerCase();
 		if (StatCollector.canTranslate(s))
