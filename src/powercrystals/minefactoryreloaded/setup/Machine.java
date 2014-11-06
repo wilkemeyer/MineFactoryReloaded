@@ -4,6 +4,7 @@ import static net.minecraft.util.EnumChatFormatting.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
 import cofh.lib.util.RegistryUtils;
+import cofh.lib.util.helpers.StringHelper;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -292,9 +293,11 @@ public class Machine
 		if (stack.stackTagCompound != null)
 		{
 			NBTTagCompound tag = stack.stackTagCompound;
-			if (_energyStoredMax > 0)
-				info.add(MFRUtil.localize("info.cofh.energyStored") + ": " +
-						Math.min(_energyStoredMax, tag.getInteger("energyStored")) + "/" + _energyStoredMax + " RF");
+			if (_energyStoredMax > 0) {
+				String max = StringHelper.getScaledNumber(_energyStoredMax);
+				String cur = StringHelper.getScaledNumber(Math.min(_energyStoredMax, tag.getInteger("energyStored")));
+				info.add(MFRUtil.localize("info.cofh.energyStored") + ": " + cur + " / " + max + " RF");
+			}
 		}
 		if (_activationEnergy > 0)
 		{
