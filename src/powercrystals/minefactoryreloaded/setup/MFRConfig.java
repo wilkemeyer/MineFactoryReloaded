@@ -96,6 +96,7 @@ public class MFRConfig
 	// recipes config
 	public static Property vanillaRecipes;
 	public static Property thermalExpansionRecipes;
+    public static Property enderioRecipes;
 
 	public static String CATEGORY_ITEM = "item";
 
@@ -203,6 +204,8 @@ public class MFRConfig
 		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
 		thermalExpansionRecipes = c.get("RecipeSets", "ThermalExpansion", false).setRequiresMcRestart(true);
 		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
+		enderioRecipes = c.get("RecipeSets", "EnderIO", false).setRequiresMcRestart(true);
+		enderioRecipes.comment = "If true, MFR will register its EnderIO-based recipes.";
 		//}
 
 		//{ Item/block behavior overriding
