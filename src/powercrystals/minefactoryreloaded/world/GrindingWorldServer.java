@@ -18,53 +18,53 @@ public class GrindingWorldServer extends WorldServerProxy
 	protected TileEntityFactoryPowered grinder;
 	protected boolean allowSpawns;
 	protected ArrayList<Entity> entitiesToGrind = new ArrayList<Entity>();
-	
+
 	public GrindingWorldServer(WorldServer world, TileEntityFactoryPowered grinder)
 	{
 		this(world, grinder, false);
 	}
-	
+
 	public GrindingWorldServer(WorldServer world, TileEntityFactoryPowered grinder, boolean allowSpawns)
 	{
 		super(world);
 		this.grinder = grinder;
 		this.allowSpawns = allowSpawns;
 	}
-	
+
 	public void setAllowSpawns(boolean allow)
 	{
 		this.allowSpawns = allow;
 	}
-	
+
 	public void setMachine(TileEntityFactoryPowered machine)
 	{
 		this.grinder = machine;
 	}
-	
+
 	@Override
 	public boolean spawnEntityInWorld(Entity entity)
 	{
 		if (grinder != null)
 		{
-			if (grinder.manageSolids())
+			if (entity instanceof EntityItem)
 			{
-				if (entity instanceof EntityItem)
+				if (grinder.manageSolids())
 				{
 					ItemStack drop = ((EntityItem)entity).getEntityItem();
 					if (drop != null) grinder.doDrop(drop);
-					entity.setDead();
-					return true;
 				}
-				else if (entity instanceof EntityXPOrb)
+				entity.setDead();
+				return true;
+			}
+			else if (entity instanceof EntityXPOrb)
+			{
+				EntityXPOrb orb = (EntityXPOrb)entity;
+				if (grinder instanceof TileEntityGrinder)
 				{
-					EntityXPOrb orb = (EntityXPOrb)entity;
-					if (grinder instanceof TileEntityGrinder)
-					{
-						((TileEntityGrinder)grinder).acceptXPOrb(orb);
-						entity.setDead();
-						return true; // consume any orbs not made into essence
-					}
+					((TileEntityGrinder)grinder).acceptXPOrb(orb);
 				}
+				entity.setDead();
+				return true; // consume any orbs not made into essence
 			}
 		}
 
@@ -76,7 +76,7 @@ public class GrindingWorldServer extends WorldServerProxy
 		entity.setDead();
 		return true;
 	}
-	
+
 	public boolean addEntityForGrinding(Entity entity)
 	{
 		if(entity.worldObj == this) return true;
@@ -88,7 +88,7 @@ public class GrindingWorldServer extends WorldServerProxy
 		}
 		return false;
 	}
-	
+
 	public void clearReferences()
 	{
 		for(Entity ent : entitiesToGrind)
@@ -97,7 +97,7 @@ public class GrindingWorldServer extends WorldServerProxy
 		}
 		entitiesToGrind.clear();
 	}
-	
+
 	public void cleanReferences()
 	{
 		for(int i = entitiesToGrind.size(); i --> 0;)
@@ -106,5 +106,5 @@ public class GrindingWorldServer extends WorldServerProxy
 			if(ent.isDead) entitiesToGrind.remove(ent);
 		}
 	}
-	
+
 }

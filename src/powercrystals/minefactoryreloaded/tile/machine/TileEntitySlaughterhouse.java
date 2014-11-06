@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -23,7 +24,7 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		_tanks[0].setLock(FluidRegistry.getFluid("meat"));
 		_tanks[1].setLock(FluidRegistry.getFluid("pinkslime"));
 	}
-	
+
 	@Override
 	public void setWorldObj(World world)
 	{
@@ -31,20 +32,20 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		if (_grindingWorld != null)
 			this._grindingWorld.setAllowSpawns(true);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME),
 				new FluidTankAdv(2 * BUCKET_VOLUME)};
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
 		_grindingWorld.cleanReferences();
 		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
-		
+
 		entityList: for(Object o : entities)
 		{
 			EntityLivingBase e = (EntityLivingBase)o;
@@ -79,7 +80,12 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
+	@Override
+	public void acceptXPOrb(EntityXPOrb orb)
+	{
+	}
+
 	@Override
 	protected void damageEntity(EntityLivingBase entity)
 	{
