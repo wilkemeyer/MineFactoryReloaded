@@ -36,40 +36,40 @@ import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
 public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
 	public static final int DAMAGE = Integer.MAX_VALUE;
-	
+
 	protected Random _rand;
 	protected GrindingWorldServer _grindingWorld;
 	protected GrindingDamage _damageSource;
-	
+
 	protected TileEntityGrinder(Machine machine)
 	{
 		super(machine);
-		createEntityHAM(this); 
+		createEntityHAM(this);
 		_rand = new Random();
 		setManageSolids(true);
 		setCanRotate(true);
 		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
 	}
-	
+
 	public TileEntityGrinder()
 	{
 		this(Machine.Grinder);
 		_damageSource = new GrindingDamage();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public void setWorldObj(World world)
 	{
@@ -82,7 +82,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		if(this.worldObj instanceof WorldServer)
 			_grindingWorld = new GrindingWorldServer((WorldServer)this.worldObj, this);
 	}
-	
+
 	@Override
 	public void onChunkUnload()
 	{
@@ -94,36 +94,36 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		}
 		_grindingWorld = null;
 	}
-	
+
 	public Random getRandom()
 	{
 		return _rand;
 	}
-	
+
 	@Override
 	protected boolean shouldPumpLiquid()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 200;
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
 		_grindingWorld.cleanReferences();
 		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
-		
+
 		entityList: for(Object o : entities)
 		{
 			EntityLivingBase e = (EntityLivingBase)o;
@@ -131,7 +131,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			{
 				continue;
 			}
-			
+
 			processEntity:
 			{
 				if(MFRRegistry.getGrindables().containsKey(e.getClass()))
@@ -152,7 +152,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 						break processEntity;
 					}
 				}
-				
+
 				for(Class<?> t : MFRRegistry.getGrinderBlacklist())
 				{
 					if(t.isInstance(e))
@@ -161,12 +161,12 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 					}
 				}
 			}
-			
+
 			if(!_grindingWorld.addEntityForGrinding(e))
 			{
 				continue entityList;
 			}
-			
+
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
@@ -182,59 +182,59 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	protected void setRecentlyHit(EntityLivingBase entity, int t)
 	{
 		entity.recentlyHit = t;
 	}
-	
+
 	protected void damageEntity(EntityLivingBase entity)
 	{
 		setRecentlyHit(entity, 100);
 		entity.attackEntityFrom(_damageSource, DAMAGE);
 	}
-	
+
 	public void acceptXPOrb(EntityXPOrb orb)
 	{
 		MFRLiquidMover.fillTankWithXP(_tanks[0], orb);
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 0;
 	}
-	
+
 	protected void fillTank(FluidTankAdv tank, String fluid, float amount)
 	{
 		tank.fill(FluidRegistry.getFluidStack(fluid, (int)(100 * amount)), true);
 		markDirty();
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{

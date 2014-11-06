@@ -56,8 +56,8 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 					continue entityList;
 				}
 			}
-			if((e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0) || e.isEntityInvulnerable() || e.getHealth() <= 0
-					|| !_grindingWorld.addEntityForGrinding(e))
+			if((e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0) || e.isEntityInvulnerable() ||
+					e.getHealth() <= 0 || !_grindingWorld.addEntityForGrinding(e))
 			{
 				continue;
 			}
