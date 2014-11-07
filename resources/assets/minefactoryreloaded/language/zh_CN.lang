@@ -312,6 +312,7 @@ item.mfr.upgrade.logic.500.name = PRC LX-500型逻辑扩展卡
 item.mfr.needlegun.name = 针击枪
 item.mfr.needlegun.ammo.empty.name = 空心针管
 item.mfr.needlegun.ammo.standard.name = 标准针管
+item.mfr.needlegun.ammo.pierce.name = 榴霰针管
 item.mfr.needlegun.ammo.lava.name = 岩浆针管
 item.mfr.needlegun.ammo.sludge.name = 污泥针管
 item.mfr.needlegun.ammo.sewage.name = 污水针管
