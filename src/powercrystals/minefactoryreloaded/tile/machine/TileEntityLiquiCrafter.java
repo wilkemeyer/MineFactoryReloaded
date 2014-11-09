@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -486,16 +487,45 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
+		super.readFromNBT(tag);
 		calculateOutput();
+
+		if (tag.hasKey("OutItems"))
+		{
+			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+			NBTTagList nbttaglist = tag.getTagList("OutItems", 10);
+			for (int i = nbttaglist.tagCount(); i --> 0; )
+			{
+				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+				ItemStack item = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+				if (item != null && item.stackSize > 0)
+				{
+					drops.add(item);
+				}
+			}
+			outputs = drops;
+		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(nbttagcompound);
+		super.writeToNBT(tag);
+
+		if (outputs.size() != 0)
+		{
+			NBTTagList dropItems = new NBTTagList();
+			for (ItemStack item : outputs)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				item.writeToNBT(nbttagcompound1);
+				dropItems.appendTag(nbttagcompound1);
+			}
+			if (dropItems.tagCount() > 0)
+				tag.setTag("OutItems", dropItems);
+		}
 	}
 
 	@Override
