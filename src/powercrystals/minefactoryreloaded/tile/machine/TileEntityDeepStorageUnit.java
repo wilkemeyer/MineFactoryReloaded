@@ -249,7 +249,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
 		int storedAdd = 0;
 		ItemStack o = _inventory[2];
@@ -258,40 +258,41 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			storedAdd = o.stackSize;
 			_inventory[2] = null;
 		}
-		super.writeItemNBT(nbttagcompound);
+		super.writeItemNBT(tag);
 		_inventory[2] = o;
 
 		if (_storedItem != null)
 		{
-			nbttagcompound.setTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
-			nbttagcompound.setInteger("storedQuantity", _storedQuantity + storedAdd);
+			tag.setTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
+			tag.setInteger("storedQuantity", _storedQuantity + storedAdd);
 		}
 		else
-			nbttagcompound.setInteger("storedQuantity", 0);
+			tag.setInteger("storedQuantity", 0);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public void writeToNBT(NBTTagCompound tag)
 	{
 		ItemStack o = _inventory[2];
 		_inventory[2] = null;
-		super.writeToNBT(nbttagcompound);
+		super.writeToNBT(tag);
 		_inventory[2] = o;
+		writeItemNBT(tag);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readFromNBT(NBTTagCompound tag)
 	{
 		_ignoreChanges = true;
-		super.readFromNBT(nbttagcompound);
+		super.readFromNBT(tag);
 
-		_storedQuantity = nbttagcompound.getInteger("storedQuantity");
+		_storedQuantity = tag.getInteger("storedQuantity");
 		_storedItem = null;
 
-		if (nbttagcompound.hasKey("storedStack"))
+		if (tag.hasKey("storedStack"))
 		{
 			_storedItem = ItemStack.
-					loadItemStackFromNBT((NBTTagCompound)nbttagcompound.getTag("storedStack"));
+					loadItemStackFromNBT((NBTTagCompound)tag.getTag("storedStack"));
 		}
 
 		if (_storedItem == null & _storedQuantity > 0)

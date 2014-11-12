@@ -41,6 +41,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 		return new ContainerAutoJukebox(this, inventoryPlayer);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void setCanCopy(boolean canCopy)
 	{
 		_canCopy = canCopy;
@@ -60,6 +61,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void setCanPlay(boolean canPlay)
 	{
 		_canPlay = canPlay;
