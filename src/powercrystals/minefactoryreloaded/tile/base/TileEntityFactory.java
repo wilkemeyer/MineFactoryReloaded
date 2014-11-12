@@ -75,10 +75,11 @@ public abstract class TileEntityFactory extends TileEntityBase
 		_forwardDirection = ForgeDirection.NORTH;
 	}
 
-	//@Override
-	public void cofh_validate()
+	@Override
+	public void validate()
 	{
 		onRotate();
+		super.validate();
 		if (worldObj.isRemote && hasHAM())
 		{
 			MineFactoryReloadedClient.addTileToAreaList(this);
@@ -212,7 +213,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 
 	protected void onRotate()
 	{
-		if (worldObj.blockExists(xCoord, yCoord, zCoord))
+		if (!isInvalid() && worldObj.blockExists(xCoord, yCoord, zCoord))
 		{
 			MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
 		}
