@@ -78,6 +78,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	@Override
 	public void validate()
 	{
+		tileEntityInvalid = true;
 		onRotate();
 		super.validate();
 		if (worldObj.isRemote && hasHAM())
