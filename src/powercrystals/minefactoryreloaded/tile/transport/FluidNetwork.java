@@ -1,10 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
 import cofh.core.util.fluid.FluidTankAdv;
+import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.position.BlockPosition;
-
-import java.util.LinkedHashSet;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -12,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
@@ -22,8 +22,8 @@ public class FluidNetwork implements IGrid
 	static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> HANDLER =
 			GridTickHandler.fluid;
 
-	private LinkedHashSet<TileEntityPlasticPipe> nodeSet = new LinkedHashSet<TileEntityPlasticPipe>();
-	private LinkedHashSet<TileEntityPlasticPipe> conduitSet;
+	private ArrayHashList<TileEntityPlasticPipe> nodeSet = new ArrayHashList<TileEntityPlasticPipe>();
+	private LinkedHashList<TileEntityPlasticPipe> conduitSet;
 	private TileEntityPlasticPipe master;
 	private int overflowSelector;
 	private boolean regenerating = false;
@@ -38,7 +38,7 @@ public class FluidNetwork implements IGrid
 
 
 	public FluidNetwork(TileEntityPlasticPipe base) { this();
-		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>();
+		conduitSet = new LinkedHashList<TileEntityPlasticPipe>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
@@ -96,20 +96,21 @@ public class FluidNetwork implements IGrid
 		destroyGrid();
 		if (conduitSet.isEmpty())
 			return;
-		TileEntityPlasticPipe main = conduitSet.iterator().next();
-		LinkedHashSet<TileEntityPlasticPipe> oldSet = conduitSet;
+		TileEntityPlasticPipe main = conduitSet.poke();
+		LinkedHashList<TileEntityPlasticPipe> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>(Math.min(oldSet.size() / 6, 5));
+		conduitSet = new LinkedHashList<TileEntityPlasticPipe>();
+		//Math.min(oldSet.size() / 6, 5)
 		rebalanceGrid();
 
-		LinkedHashSet<TileEntityPlasticPipe> toCheck = new LinkedHashSet<TileEntityPlasticPipe>();
-		LinkedHashSet<TileEntityPlasticPipe> checked = new LinkedHashSet<TileEntityPlasticPipe>();
+		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<TileEntityPlasticPipe>();
+		LinkedHashList<TileEntityPlasticPipe> checked = new LinkedHashList<TileEntityPlasticPipe>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
-			main = toCheck.iterator().next();
+			main = toCheck.shift();
 			addConduit(main);
 			World world = main.getWorldObj();
 			for (int i = 6; i --> 0; ) {
@@ -124,7 +125,6 @@ public class FluidNetwork implements IGrid
 					}
 				}
 			}
-			toCheck.remove(main);
 			oldSet.remove(main);
 		}
 		if (!oldSet.isEmpty()) {
@@ -199,19 +199,17 @@ public class FluidNetwork implements IGrid
 		distributionSide = sideDistribute;
 		FluidStack stack = storage.drain(sideDistribute, false);
 
-		TileEntityPlasticPipe master = this.master;
-		int overflow = overflowSelector, selector = 0;
+		int overflow = overflowSelector;
+		TileEntityPlasticPipe master = nodeSet.get(overflow);
 		if (size > 1)
 			overflowSelector = (overflow + 1) % size;
 
 		if (sideDistribute > 0) for (TileEntityPlasticPipe cond : nodeSet)
-			if (selector++ != overflow) {
+			if (cond != master) {
 				int e = 0;
 				for (int i = 6; i --> 0; )
 					e += cond.transfer(directions[i], stack, fluid);
 				if (e > 0) storage.drain(e, true);
-			} else {
-				master = cond;
 			}
 
 		toDistribute += storage.getFluidAmount() % size;
@@ -274,7 +272,7 @@ public class FluidNetwork implements IGrid
 				master = null;
 				HANDLER.removeGrid(this);
 			} else {
-				master = nodeSet.iterator().next();
+				master = nodeSet.get(0);
 			}
 		}
 	}
