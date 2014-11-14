@@ -6,39 +6,35 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import buildcraft.api.gates.ITrigger;
-import buildcraft.api.gates.ITriggerParameter;
-
-public abstract class MFRBCTrigger implements ITrigger
+public abstract class MFRBCTrigger// implements ITrigger
 {
 	@SideOnly(Side.CLIENT)
 	protected IIcon _icon;
-	protected String _iconName; 
+	protected String _iconName;
 	protected String _tag;
 	protected String _desc;
-	
+
 	protected MFRBCTrigger(String tag, String desc, String icon)
 	{
 		_tag = tag;
 		_desc = desc;
 		_iconName = "minefactoryreloaded:buildcraft/trigger/" + icon;
 	}
-	@Override
+	//@Override
 	public String getUniqueTag()
 	{
 		return _tag;
 	}
 
-	@Override
+	//@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon()
 	{
 		return _icon;
 	}
 
-	@Override
+	//@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)
 	{
@@ -46,39 +42,39 @@ public abstract class MFRBCTrigger implements ITrigger
 			_icon = iconRegister.registerIcon(_iconName);
 	}
 
-	@Override
+	//@Override
 	public boolean hasParameter()
 	{
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean requiresParameter()
 	{
 		return false;
 	}
 
-	@Override
+	//@Override
 	public String getDescription()
 	{
 		return _desc;
 	}
 
-	//@Override
+	/*@Override
 	public abstract boolean isTriggerActive(ForgeDirection side,
-			TileEntity tile, ITriggerParameter parameter);
+			TileEntity tile, ITriggerParameter parameter);//*/
 
-	@Override
+	/*@Override
 	public ITriggerParameter createParameter()
 	{
 		return null;
-	}
-	
+	}//*/
+
 	public abstract boolean canApplyTo(TileEntity tile);
 
-	@Override
+	/*@Override
 	public ITrigger rotateLeft()
 	{
 		return null;
-	}
+	}//*/
 }

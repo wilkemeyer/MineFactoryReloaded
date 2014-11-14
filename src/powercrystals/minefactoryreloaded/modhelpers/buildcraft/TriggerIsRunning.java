@@ -3,13 +3,10 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
-
-import buildcraft.api.gates.ITriggerParameter;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 public class TriggerIsRunning extends MFRBCTrigger
 {
@@ -18,7 +15,7 @@ public class TriggerIsRunning extends MFRBCTrigger
 	{
 		super(id, desc, icon);
 	}
-	
+
 	public TriggerIsRunning()
 	{
 		this("MFR:ConveyorIsRunning", "Is Running", "ConveyorActive");
@@ -37,13 +34,13 @@ public class TriggerIsRunning extends MFRBCTrigger
 		_icon = iconRegister.registerIcon("buildcraft:triggers/action_machinecontrol_on");
 	}
 
-	@Override
+	/*@Override
 	public boolean isTriggerActive(ForgeDirection side, TileEntity tile, ITriggerParameter parameter)
 	{
 		if (!canApplyTo(tile))
 			return false;
 		return ((TileEntityConveyor)tile).getConveyorActive();
-	}
+	}//*/
 
 	@Override
 	public boolean canApplyTo(TileEntity tile)
