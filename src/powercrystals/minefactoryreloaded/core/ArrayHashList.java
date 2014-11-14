@@ -168,6 +168,17 @@ public class ArrayHashList<E extends Object> extends AbstractCollection<E> imple
 	}
 
 	// { following methods (until the next }) copied mostly verbatim from ArrayList
+	@Override
+	public void clear() {
+        modCount++;
+
+        // clear to let GC do its work
+        for (int i = 0; i < size; i++)
+            elementData[i] = null;
+
+        size = 0;
+    }
+
 	/**
 	 * Trims the capacity of this <tt>ArrayHashList</tt> instance to be the
 	 * list's current size.  An application can use this operation to minimize

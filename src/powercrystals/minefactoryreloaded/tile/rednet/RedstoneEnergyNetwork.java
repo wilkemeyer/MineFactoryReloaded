@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
@@ -19,7 +20,7 @@ public class RedstoneEnergyNetwork implements IGrid
 	static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> HANDLER =
 			GridTickHandler.energy;
 
-	private LinkedHashSet<TileEntityRedNetEnergy> nodeSet = new LinkedHashSet<TileEntityRedNetEnergy>();
+	private ArrayHashList<TileEntityRedNetEnergy> nodeSet = new ArrayHashList<TileEntityRedNetEnergy>();
 	private LinkedHashSet<TileEntityRedNetEnergy> conduitSet;
 	private TileEntityRedNetEnergy master;
 	private int overflowSelector;
@@ -192,19 +193,17 @@ public class RedstoneEnergyNetwork implements IGrid
 		distribution = toDistribute;
 		distributionSide = sideDistribute;
 
-		TileEntityRedNetEnergy master = this.master;
-		int overflow = overflowSelector, selector = 0;
+		int overflow = overflowSelector;
+		TileEntityRedNetEnergy master = nodeSet.get(overflow);
 		if (size > 1)
 			overflowSelector = (overflow + 1) % size;
 
 		if (sideDistribute > 0) for (TileEntityRedNetEnergy cond : nodeSet)
-			if (selector++ != overflow) {
+			if (cond != master) {
 				int e = 0;
 				for (int i = 6; i --> 0; )
 					e += cond.transfer(directions[i], sideDistribute);
 				if (e > 0) storage.modifyEnergyStored(-e);
-			} else {
-				master = cond;
 			}
 
 		toDistribute += storage.getEnergyStored() % size;
@@ -260,7 +259,7 @@ public class RedstoneEnergyNetwork implements IGrid
 				master = null;
 				HANDLER.removeGrid(this);
 			} else {
-				master = nodeSet.iterator().next();
+				master = nodeSet.get(0);
 			}
 		}
 	}
