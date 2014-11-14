@@ -5,6 +5,8 @@ import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.position.BlockPosition;
 
+import java.util.LinkedHashSet;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -23,7 +25,7 @@ public class FluidNetwork implements IGrid
 			GridTickHandler.fluid;
 
 	private ArrayHashList<TileEntityPlasticPipe> nodeSet = new ArrayHashList<TileEntityPlasticPipe>();
-	private LinkedHashList<TileEntityPlasticPipe> conduitSet;
+	private LinkedHashSet<TileEntityPlasticPipe> conduitSet;
 	private TileEntityPlasticPipe master;
 	private int overflowSelector;
 	private boolean regenerating = false;
@@ -38,7 +40,7 @@ public class FluidNetwork implements IGrid
 
 
 	public FluidNetwork(TileEntityPlasticPipe base) { this();
-		conduitSet = new LinkedHashList<TileEntityPlasticPipe>();
+		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
@@ -96,10 +98,10 @@ public class FluidNetwork implements IGrid
 		destroyGrid();
 		if (conduitSet.isEmpty())
 			return;
-		TileEntityPlasticPipe main = conduitSet.poke();
-		LinkedHashList<TileEntityPlasticPipe> oldSet = conduitSet;
+		TileEntityPlasticPipe main = conduitSet.iterator().next();
+		LinkedHashSet<TileEntityPlasticPipe> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashList<TileEntityPlasticPipe>();
+		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>();
 		//Math.min(oldSet.size() / 6, 5)
 		rebalanceGrid();
 
