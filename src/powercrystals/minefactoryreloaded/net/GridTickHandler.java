@@ -86,14 +86,15 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 
 	public void tickStart()
 	{
-		//{ Grids that have had significant conduits removed and need to rebuild/split 
+		//{ Grids that have had significant conduits removed and need to rebuild/split
 		if (!tickingGridsToRegenerate.isEmpty())
 		synchronized (tickingGridsToRegenerate) {
 			for (G grid : tickingGridsToRegenerate)
 				grid.markSweep();
+			tickingGridsToRegenerate.clear();
 		}
 		//}
-		
+
 		//{ Updating internal types of conduits
 		// this pass is needed to handle issues with threading
 		if (!conduitToUpd.isEmpty())
@@ -101,7 +102,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			conduit.addAll(conduitToUpd);
 			conduitToUpd.clear();
 		}
-		
+
 		if (!conduit.isEmpty())
 		{
 			N cond = null;
@@ -119,7 +120,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			}
 		}
 		//}
-		
+
 		//{ Early update pass to extract energy from sources
 		if (!tickingGrids.isEmpty())
 			for (G grid : tickingGrids)
@@ -136,7 +137,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			tickingGrids.removeAll(tickingGridsToRemove);
 			tickingGridsToRemove.clear();
 		}
-		
+
 		if (!tickingGridsToAdd.isEmpty())
 		synchronized(tickingGridsToAdd)
 		{
@@ -144,13 +145,13 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			tickingGridsToAdd.clear();
 		}
 		//}
-		
+
 		//{ Ticking grids to transfer energy/etc.
 		if (!tickingGrids.isEmpty())
 			for (G grid : tickingGrids)
 				grid.doGridUpdate();
 		//}
-		
+
 		//{ Initial update tick for conduits added to the world
 		if (!conduitToAdd.isEmpty())
 		synchronized(conduitToAdd)
@@ -158,7 +159,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			conduit.addAll(conduitToAdd);
 			conduitToAdd.clear();
 		}
-		
+
 		if (!conduit.isEmpty())
 		{
 			N cond = null;

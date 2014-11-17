@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock;
 
+import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.position.BlockPosition;
 
 import java.util.Arrays;
@@ -136,14 +137,14 @@ public class RedstoneNetwork implements IGrid
 		LinkedHashSet<TileEntityRedNetCable> oldSet = conduitSet;
 		conduitSet = new LinkedHashSet<TileEntityRedNetCable>(Math.min(oldSet.size() / 6, 5));
 
-		LinkedHashSet<TileEntityRedNetCable> toCheck = new LinkedHashSet<TileEntityRedNetCable>();
+		LinkedHashList<TileEntityRedNetCable> toCheck = new LinkedHashList<TileEntityRedNetCable>();
 		LinkedHashSet<TileEntityRedNetCable> checked = new LinkedHashSet<TileEntityRedNetCable>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
-			main = toCheck.iterator().next();
+			main = toCheck.shift();
 			addConduit(main);
 			World world = main.getWorldObj();
 			for (int i = 6; i --> 0; ) {
@@ -158,7 +159,6 @@ public class RedstoneNetwork implements IGrid
 					}
 				}
 			}
-			toCheck.remove(main);
 			oldSet.remove(main);
 		}
 		if (!oldSet.isEmpty()) {

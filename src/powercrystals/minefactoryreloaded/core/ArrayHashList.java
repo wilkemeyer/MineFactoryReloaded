@@ -170,14 +170,17 @@ public class ArrayHashList<E extends Object> extends AbstractCollection<E> imple
 	// { following methods (until the next }) copied mostly verbatim from ArrayList
 	@Override
 	public void clear() {
-        modCount++;
+		modCount++;
 
-        // clear to let GC do its work
-        for (int i = 0; i < size; i++)
-            elementData[i] = null;
+		// clear to let GC do its work
+		for (int i = 0; i < size; i++)
+			elementData[i] = null;
 
-        size = 0;
-    }
+		for (int i = hashTable.length; i --> 0; )
+			hashTable[i] = null;
+
+		size = 0;
+	}
 
 	/**
 	 * Trims the capacity of this <tt>ArrayHashList</tt> instance to be the
@@ -404,7 +407,7 @@ public class ArrayHashList<E extends Object> extends AbstractCollection<E> imple
 				throw new ConcurrentModificationException();
 		}
 	}
-/*
+	/*
 	private class ListItr extends Itr implements ListIterator<E> {
 		ListItr(int index) {
 			super();

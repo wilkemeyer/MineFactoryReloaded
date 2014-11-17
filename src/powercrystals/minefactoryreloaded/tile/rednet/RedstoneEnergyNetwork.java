@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import cofh.api.energy.EnergyStorage;
+import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.position.BlockPosition;
 
 import java.util.LinkedHashSet;
@@ -44,7 +45,7 @@ public class RedstoneEnergyNetwork implements IGrid
 
 	public int getNodeShare(TileEntityRedNetEnergy cond) {
 		int size = nodeSet.size();
-		if (size == 1)
+		if (size <= 1)
 			return storage.getEnergyStored();
 		int amt = 0;
 		if (master == cond) amt = storage.getEnergyStored() % size;
@@ -97,16 +98,15 @@ public class RedstoneEnergyNetwork implements IGrid
 		LinkedHashSet<TileEntityRedNetEnergy> oldSet = conduitSet;
 		nodeSet.clear();
 		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>(Math.min(oldSet.size() / 6, 5));
-		rebalanceGrid();
 
-		LinkedHashSet<TileEntityRedNetEnergy> toCheck = new LinkedHashSet<TileEntityRedNetEnergy>();
+		LinkedHashList<TileEntityRedNetEnergy> toCheck = new LinkedHashList<TileEntityRedNetEnergy>();
 		LinkedHashSet<TileEntityRedNetEnergy> checked = new LinkedHashSet<TileEntityRedNetEnergy>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
-			main = toCheck.iterator().next();
+			main = toCheck.shift();
 			addConduit(main);
 			World world = main.getWorldObj();
 			for (int i = 6; i --> 0; ) {
@@ -121,7 +121,6 @@ public class RedstoneEnergyNetwork implements IGrid
 					}
 				}
 			}
-			toCheck.remove(main);
 			oldSet.remove(main);
 		}
 		if (!oldSet.isEmpty()) {
@@ -134,6 +133,7 @@ public class RedstoneEnergyNetwork implements IGrid
 			HANDLER.removeGrid(this);
 		else
 			HANDLER.addGrid(this);
+		rebalanceGrid();
 		regenerating = false;
 	}
 
@@ -193,10 +193,8 @@ public class RedstoneEnergyNetwork implements IGrid
 		distribution = toDistribute;
 		distributionSide = sideDistribute;
 
-		int overflow = overflowSelector;
+		int overflow = overflowSelector = (overflowSelector + 1) % size;
 		TileEntityRedNetEnergy master = nodeSet.get(overflow);
-		if (size > 1)
-			overflowSelector = (overflow + 1) % size;
 
 		if (sideDistribute > 0) for (TileEntityRedNetEnergy cond : nodeSet)
 			if (cond != master) {
@@ -218,7 +216,7 @@ public class RedstoneEnergyNetwork implements IGrid
 			int e = 0;
 			for (int i = 6; i --> 0 && e < toDistribute; )
 				e += master.transfer(directions[i], toDistribute - e);
-			if (e > 0) storage.extractEnergy(e, false);
+			if (e > 0) storage.modifyEnergyStored(-e);
 		}
 	}
 

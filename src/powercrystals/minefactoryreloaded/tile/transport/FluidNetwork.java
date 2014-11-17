@@ -201,10 +201,8 @@ public class FluidNetwork implements IGrid
 		distributionSide = sideDistribute;
 		FluidStack stack = storage.drain(sideDistribute, false);
 
-		int overflow = overflowSelector;
+		int overflow = overflowSelector = (overflowSelector + 1) % size;
 		TileEntityPlasticPipe master = nodeSet.get(overflow);
-		if (size > 1)
-			overflowSelector = (overflow + 1) % size;
 
 		if (sideDistribute > 0) for (TileEntityPlasticPipe cond : nodeSet)
 			if (cond != master) {

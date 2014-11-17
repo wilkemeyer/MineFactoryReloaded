@@ -100,8 +100,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
+	public void invalidate() {
 		if (_network != null) {
 			_network.removeConduit(this);
 			int c = 0;
@@ -112,6 +111,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				_network.regenerate();
 			_network = null;
 		}
+		super.invalidate();
 	}
 
 	@Override

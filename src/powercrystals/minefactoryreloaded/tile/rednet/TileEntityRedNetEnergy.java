@@ -39,7 +39,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
 @Strippable("appeng.api.implementations.tiles.ICrankable")
-public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements 
+public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 									IEnergyHandler, ICrankable//, IEnergyInfo
 {
 	private static boolean IC2Classes = false, IC2Net = false;
@@ -85,8 +85,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
+	public void invalidate() {
 		if (_grid != null) {
 			_grid.removeConduit(this);
 			_grid.storage.modifyEnergyStored(-energyForGrid);
@@ -99,6 +98,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = true;
 			_grid = null;
 		}
+		super.invalidate();
 	}
 
 	private void reCache() {
@@ -175,7 +175,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		else if (y > yCoord)
 			addCache(tile, 0);
 	}
-	
+
 	private void addCache(TileEntity tile) {
 		if (tile == null) return;
 		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
@@ -315,7 +315,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return _grid.storage.getMaxEnergyStored();
 		return 0;
 	}
-	
+
 	// ICrankable
 
 	@Override
@@ -367,9 +367,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (_grid != null) {
 			if (isNode) {
 				energyForGrid = _grid.getNodeShare(this);
-				nbt.setInteger("Energy", energyForGrid);
 			}
-		} else if (energyForGrid > 0)
+		}
+		if (energyForGrid > 0)
 			nbt.setInteger("Energy", energyForGrid);
 		else
 			energyForGrid = 0;
@@ -627,10 +627,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				info.add("Throughput All: " + _grid.distribution);
 				info.add("Throughput Side: " + _grid.distributionSide);
 			} else//*/
-			if (!debug)
-				info.add(text("Saturation: " +
-					(Math.ceil(_grid.storage.getEnergyStored() /
-							(float)_grid.storage.getMaxEnergyStored() * 1000) / 10f)));
+			if (!debug) {
+				float sat = 0;
+				if (_grid.getNodeCount() != 0)
+					sat = (float)(Math.ceil(_grid.storage.getEnergyStored() /
+							(float)_grid.storage.getMaxEnergyStored() * 1000f) / 10f);
+				info.add(text("Saturation: " + sat));
+			}
 		} else if (!debug)
 			info.add(text("Null Grid"));
 		if (debug) {
@@ -646,7 +649,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				info.add(text("Null Grid"));
 			}
 			info.add(text("SideType: " + Arrays.toString(sideMode)));
-			info.add(text("Node: " + isNode));
+			info.add(text("Node: " + isNode + ", Energy: " + energyForGrid));
 			return;
 		}
 	}

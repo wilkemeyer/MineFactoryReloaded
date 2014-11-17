@@ -72,8 +72,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
+	public void invalidate() {
 		if (_grid != null) {
 			_grid.removeConduit(this);
 			_grid.storage.drain(fluidForGrid, true);
@@ -86,6 +85,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			deadCache = true;
 			_grid = null;
 		}
+		super.invalidate();
 	}
 
 	@Override
