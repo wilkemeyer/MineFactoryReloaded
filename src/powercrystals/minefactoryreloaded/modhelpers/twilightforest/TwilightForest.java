@@ -88,7 +88,7 @@ public class TwilightForest
 			MFRRegistry.registerGrinderBlacklist(tfSnowQueen);
 			MFRRegistry.registerGrinderBlacklist(tfPhantomKnight);
 
-			MFRRegistry.registerMobEggHandler(new TwilightForestEggHandler());
+			//MFRRegistry.registerMobEggHandler(new TwilightForestEggHandler());
 
 			MFRRegistry.registerRanchable(new RanchableTFBighorn(tfBighorn));
 
