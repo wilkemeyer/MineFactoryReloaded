@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 
+import buildcraft.api.fuels.BuildcraftFuelRegistry;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -10,6 +12,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 import net.minecraft.block.Block;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import org.apache.logging.log4j.Level;
 
@@ -19,8 +22,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
 name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version,
 dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
-//@Strippable("buildcraft.api.gates.ITriggerProvider")
-public class Buildcraft// implements ITriggerProvider
+public class Buildcraft
 {
 	private static String name(Block obj)
 	{
@@ -43,23 +45,11 @@ public class Buildcraft// implements ITriggerProvider
 	}
 
 	@Mod.EventHandler
-	//@Strippable({"buildcraft.api.gates.ITriggerProvider","buildcraft.api.gates.ITrigger"})
 	private void postInit(FMLPostInitializationEvent evt)
 	{
 		try
 		{
-			//IronEngineFuel.addFuel("biofuel", 4, 15000);
-
-			/*
-			isBackstuffed = new TriggerIsBackstuffed();
-			isRunning = new TriggerIsRunning();
-			isReversed = new TriggerIsReversed();
-
-			ActionManager.registerTriggerProvider(this);
-			ActionManager.registerTrigger(isBackstuffed);
-			ActionManager.registerTrigger(isRunning);
-			ActionManager.registerTrigger(isReversed);
-			//*/
+			BuildcraftFuelRegistry.fuel.addFuel(FluidRegistry.getFluid("biofuel"), 4, 15000);
 		}
 		catch (Throwable _)
 		{
@@ -68,37 +58,4 @@ public class Buildcraft// implements ITriggerProvider
 			_.printStackTrace();
 		}
 	}
-
-	/*
-	//@Override
-	@Strippable("buildcraft.api.gates.ITriggerProvider")
-	public LinkedList<ITrigger> getPipeTriggers(IPipeTile pipe)
-	{
-		return null;
-	}
-
-	@Strippable("buildcraft.api.gates.ITrigger")
-	private static MFRBCTrigger isBackstuffed;
-	@Strippable("buildcraft.api.gates.ITrigger")
-	private static MFRBCTrigger isRunning;
-	@Strippable("buildcraft.api.gates.ITrigger")
-	private static MFRBCTrigger isReversed;
-
-	//@Override
-	@Strippable("buildcraft.api.gates.ITriggerProvider")
-	public LinkedList<ITrigger> getNeighborTriggers(Block block, TileEntity tile)
-	{
-		LinkedList<ITrigger> triggers = new LinkedList<ITrigger>();
-		addTrigger(triggers, isBackstuffed, tile);
-		addTrigger(triggers, isRunning, tile);
-		addTrigger(triggers, isReversed, tile);
-		return triggers;
-	}
-
-	@Strippable("buildcraft.api.gates.ITriggerProvider")
-	private void addTrigger(LinkedList<ITrigger> triggers, MFRBCTrigger t, TileEntity tile)
-	{
-		if (t.canApplyTo(tile))
-			triggers.add(t);
-	}//*/
 }
