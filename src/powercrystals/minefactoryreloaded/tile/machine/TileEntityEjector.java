@@ -36,7 +36,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	protected boolean _ignoreDamage = true;
 
 	protected boolean _hasItems = false;
-	protected ForgeDirection[] _pullDirections;
+	protected ForgeDirection[] _pullDirections = {};
 
 	public TileEntityEjector()
 	{
