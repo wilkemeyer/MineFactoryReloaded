@@ -17,7 +17,9 @@ public class BagContainerWrapper implements IInventory
 	public BagContainerWrapper(ItemStack stack)
 	{
 		_stack = stack;
-		_inventory = stack.getTagCompound().getCompoundTag("inventory");
+		if (stack.stackTagCompound == null || !stack.stackTagCompound.hasKey("inventory"))
+			stack.setTagInfo("inventory", new NBTTagCompound());
+		_inventory = stack.stackTagCompound.getCompoundTag("inventory");
 		for (int i = _stacks.length; i --> 0; )
 			if (_inventory.hasKey("slot" + i))
 				_stacks[i] = ItemStack.loadItemStackFromNBT(_inventory.getCompoundTag("slot" + i));
