@@ -19,6 +19,10 @@ public class FluidTankMulti implements IFluidTank {
 	}
 
 	public void addTank(FluidTankAdv tank) {
+		for (int i = length; i --> 0; )
+			if (tanks[i] == tank)
+				return;
+
 		if (++length >= tanks.length) {
 			FluidTankAdv[] old = tanks;
 			tanks = new FluidTankAdv[length * 2];
@@ -33,14 +37,6 @@ public class FluidTankMulti implements IFluidTank {
 		while (i --> 0) if (tanks[i] == tank) break;
 		if (i < 0) return;
 
-		FluidStack r;
-		try {
-		r = drain(tank.drain(tank.getFluidAmount(), false), true);
-		} catch (Throwable _) {
-			System.out.format("index: %s, length: %s, tanks.length: %s, ", index, length, tanks.length);
-			throw Throwables.propagate(_);
-		}
-
 		{
 			FluidTankAdv[] old = tanks;
 			if (--length != i) {
@@ -53,8 +49,18 @@ public class FluidTankMulti implements IFluidTank {
 			}
 		}
 
+		if (index >= i) --index;
+
+		FluidStack r = tank.getFluid();
+		if (r != null) {
+			fluid.amount -= r.amount;
+			if (fluid.amount <= 0) {
+				fluid = null;
+				grid.updateNodes();
+			}
+		}
+
 		tanks[length] = null;
-		if (tanks[index] == null) --index;
 		tank.setFluid(r);
 	}
 
@@ -62,6 +68,8 @@ public class FluidTankMulti implements IFluidTank {
 		for (int i = length; i --> 0;)
 			tanks[i] = null;
 		length = 0;
+		index = 0;
+		fluid = null;
 	}
 
 	@Override
@@ -114,18 +122,21 @@ public class FluidTankMulti implements IFluidTank {
 
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
+		try {
 		if (fluid != null) {
 			FluidStack r = new FluidStack(fluid, 0);
 			int i = index;
 			while (i >= 0) {
+				int c = tanks[i].getFluidAmount();
 				FluidStack d = tanks[i].drain(maxDrain, doDrain);
 				if (d != null) {
 					r.amount += d.amount;
 					maxDrain -= d.amount;
+					if (c == d.amount)
+						--i;
 				}
-				if (maxDrain <= 0)
+				if (d == null || maxDrain <= 0)
 					break;
-				--i;
 			}
 			if (i == -1)
 				 ++i;
@@ -138,6 +149,10 @@ public class FluidTankMulti implements IFluidTank {
 				}
 			}
 			return r;
+		}
+		} catch (Throwable _) {
+			System.out.format("index: %s, length: %s, tanks.length: %s, ", index, length, tanks.length);
+			throw Throwables.propagate(_);
 		}
 		return null;
 	}

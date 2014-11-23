@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.tile.tank;
 
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.FluidHelper;
+import cofh.lib.util.helpers.StringHelper;
 import cofh.lib.util.position.BlockPosition;
 
 import java.util.List;
@@ -231,7 +232,8 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		if (grid == null) {
 			info.add(new ChatComponentText("Null Grid!!"));
 			if (debug)
-				info.add(new ChatComponentText("FluidForGrid: " + _tank.getFluid()));
+				info.add(new ChatComponentText("FluidForGrid: " +
+						StringHelper.getFluidName(_tank.getFluid(), "") + "@" + _tank.getFluidAmount()));
 			return;
 		}
 		if (grid.storage.getFluidAmount() == 0)
@@ -242,7 +244,8 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		if (debug) {
 			info.add(new ChatComponentText("Sides: " + Integer.toBinaryString(sides)));
 			info.add(new ChatComponentText(grid.storage.getFluidAmount() + " / " + grid.storage.getCapacity()));
-			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " + _tank.getFluid()));
+			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " +
+					StringHelper.getFluidName(_tank.getFluid(), "") + "@" + _tank.getFluidAmount()));
 			info.add(new ChatComponentText("Length: " + grid.storage.length + " | Index: " + grid.storage.index +
 					" | Reserve: " + grid.storage.tanks.length));
 		}
