@@ -173,7 +173,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	//static{DepLoader.load();}
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modName = "MineFactory Reloaded";
-	public static final String version = "1.7.10R2.8.0RC4";
+	public static final String version = "1.7.10R2.8.0RC5";
 	public static final String dependencies = CoFHProps.DEPENDENCIES +
 			";required-after:CoFHCore@[" + CoFHProps.VERSION + ",)";
 	public static final String modNetworkChannel = "MFReloaded";
