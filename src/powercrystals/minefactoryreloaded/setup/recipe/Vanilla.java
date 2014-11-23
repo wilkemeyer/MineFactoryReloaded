@@ -135,14 +135,6 @@ public class Vanilla
 		}
 		_registeredMachines = true;
 
-		addRecipe(ShapedRecipe(stack(machineBaseItem, 3), new Object[]
-				{
-			"PPP",
-			"SSS",
-			'P', "sheetPlastic",
-			'S', "stone",
-				} ));
-
 		// regex: if\s*\((Machine\.\w+)[^\n]+\n[^\n]+\n[^\n]+\n\s+(\{[^}]+\} \))[^\n]+\n[^\n]+
 
 		registerMachine(Planter, new Object[]
@@ -981,6 +973,14 @@ public class Vanilla
 			return;
 		}
 		_registeredPlastics = true;
+
+		addRecipe(ShapedRecipe(stack(machineBaseItem, 3), new Object[]
+				{
+			"PPP",
+			"SSS",
+			'P', "sheetPlastic",
+			'S', "stone",
+				} ));
 
 		addSmallStorageRecipe(stack(plasticSheetItem, 4), "dustPlastic");
 
