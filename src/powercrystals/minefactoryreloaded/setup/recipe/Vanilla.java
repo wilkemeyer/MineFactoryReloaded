@@ -90,6 +90,8 @@ public class Vanilla
 		registerOre("fertilizerOrganic", fertilizerItem);
 		registerOre("wireExplosive",     detCordBlock);
 		registerOre("listAllmilk",       milkBottleItem);
+		registerOre("listAllmeatraw",    meatIngotRawItem);
+		registerOre("listAllmeatcooked", meatIngotCookedItem);
 
 		{ // GLASS:
 			String pane = "paneGlass", glass = "blockGlass";

@@ -10,9 +10,11 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,6 +30,9 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -40,13 +45,17 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
+import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
@@ -77,6 +86,7 @@ import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetCardItemRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
@@ -85,7 +95,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 @SideOnly(Side.CLIENT)
-public class MineFactoryReloadedClient
+public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 {
 	public static MineFactoryReloadedClient instance;
 
@@ -156,14 +166,10 @@ public class MineFactoryReloadedClient
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(plasticTank), tankRender);
 
-		MinecraftForgeClient.registerItemRenderer(logicCardItem,
-				new RedNetCardItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(needlegunItem,
-				new NeedleGunItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(rocketItem,
-				new RocketItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem,
-				new RocketLauncherItemRenderer());
+		MinecraftForgeClient.registerItemRenderer(logicCardItem, new RedNetCardItemRenderer());
+		MinecraftForgeClient.registerItemRenderer(needlegunItem, new NeedleGunItemRenderer());
+		MinecraftForgeClient.registerItemRenderer(rocketItem, new RocketItemRenderer());
+		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem, new RocketLauncherItemRenderer());
 
 		RenderFluidOverlayItem fluidRender = new RenderFluidOverlayItem();
 		MinecraftForgeClient.registerItemRenderer(plasticCupItem, fluidRender);
@@ -210,6 +216,55 @@ public class MineFactoryReloadedClient
 		MinecraftForge.EVENT_BUS.register(instance);
 		FMLCommonHandler.instance().bus().register(instance);
 		gl14 = GLContext.getCapabilities().OpenGL14;
+
+		IReloadableResourceManager manager = (IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager();
+		manager.registerReloadListener(instance);
+	}
+
+	@Override
+	public void onResourceManagerReload(IResourceManager p_110549_1_)
+	{
+		NeedleGunItemRenderer.updateModel();
+	}
+
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void onPostTextureStitch(TextureStitchEvent.Post e)
+	{
+		setIcons("milk", MFRThings.milkLiquid);
+		setIcons("sludge", MFRThings.sludgeLiquid);
+		setIcons("sewage", MFRThings.sewageLiquid);
+		setIcons("mobessence", MFRThings.essenceLiquid);
+		setIcons("biofuel", MFRThings.biofuelLiquid);
+		setIcons("meat", MFRThings.meatLiquid);
+		setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
+		setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
+		setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
+		setIcons("steam", MFRThings.steamFluid);
+	}
+
+	private void setIcons(String name, BlockFactoryFluid block)
+	{
+		Fluid fluid = FluidRegistry.getFluid(name);
+		if (fluid.getBlock().equals(block))
+		{
+			fluid.setIcons(block.getIcon(1, 0), block.getIcon(2, 0));
+		}
+		else
+		{
+			block.setIcons(fluid.getStillIcon(), fluid.getFlowingIcon());
+		}
+	}
+
+	@SubscribeEvent
+	public void clientLoggedIn(ClientConnectedToServerEvent evt)
+	{
+		prcPages.clear();
+	}
+
+	@SubscribeEvent
+	public void onPlayerChangedDimension(PlayerChangedDimensionEvent player)
+	{
+		_areaTileEntities.clear();
 	}
 
 	@SubscribeEvent

@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.setup.recipe;
 import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import cofh.api.modhelpers.ThermalExpansionHelper;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.MissingModsException;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -36,6 +37,7 @@ public class ThermalExpansion extends Vanilla
 	ItemStack tesseractFrameFull;
 	ItemStack strongBox;
 	ItemStack strongBoxBasic;
+	ItemStack sulfur;
 	ItemStack multimeter;
 	ItemStack invarAxe;
 	ItemStack invarSword;
@@ -91,6 +93,7 @@ public class ThermalExpansion extends Vanilla
 		invarSword = GameRegistry.findItemStack(TE, "toolInvarSword", 1);
 		invarPickaxe = GameRegistry.findItemStack(TE, "toolInvarPickaxe", 1);
 		invarShovel = GameRegistry.findItemStack(TE, "toolInvarShovel", 1);
+		sulfur = GameRegistry.findItemStack("ThermalFoundation", "dustSulfur", 1);
 	}
 
 	@Override
@@ -650,16 +653,23 @@ public class ThermalExpansion extends Vanilla
 	}
 
 	@Override
+	protected void registerSmelting()
+	{
+		super.registerSmelting();
+		ThermalExpansionHelper.addSmelterRecipe(2000, stack(rawRubberItem, 2), sulfur,
+				stack(rubberBarItem, 4), stack(rubberBarItem, 1), 45);
+	}
+	@Override
 	protected void registerMiscItems()
 	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fertilizerItem, 16), new Object[]
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fertilizerItem, 24), new Object[]
 				{
 			"WBW",
 			"STS",
 			"WBW",
 			'W', Items.wheat,
 			'B', new ItemStack(Items.dye, 1, 15),
-			'S', Items.string,
+			'S', sulfur,
 			'T', "stickWood",
 				} ));
 

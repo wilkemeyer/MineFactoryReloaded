@@ -17,7 +17,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.client.event.TextureStitchEvent.Post;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -73,11 +72,6 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.cameraYaw, ep.cameraPitch);
 		}
 		e.setPositionAndUpdate(x, y, z);
-	}
-
-	@Override
-	public void onPostTextureStitch(Post e)
-	{
 	}
 
 	@Override

@@ -100,7 +100,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		if (hasDrops())
 			return;
 
-		if(shouldCheckDrill())
+		if (shouldCheckDrill())
 		{
 			updateDrill();
 		}
@@ -123,7 +123,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		}
 
 		int energyToDraw = Math.min(_energyPerWork, _energyStored);
-		float energyPerWorkHere = (float)(_energyPerWork * (1 - 0.2 * Math.min(yCoord - _bedrockLevel, 128.0) / 128.0));
+		float energyPerWorkHere = _energyPerWork * (1.2f - 0.4f * Math.min(yCoord - _bedrockLevel, 128f) / 128f);
 
 		float workDone = energyToDraw / energyPerWorkHere;
 		_workStored += workDone;

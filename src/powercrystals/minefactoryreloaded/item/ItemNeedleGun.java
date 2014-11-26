@@ -46,7 +46,7 @@ public class ItemNeedleGun extends ItemFactoryGun
 		NBTTagCompound t = new NBTTagCompound();
 		if (!creative)
 			ammo.setItemDamage(ammo.getItemDamage() + 1);
-		if(ammo.getItemDamage() <= ammo.getMaxDamage())
+		if (ammo.getItemDamage() <= ammo.getMaxDamage())
 			ammo.writeToNBT(t);
 		else
 		{
