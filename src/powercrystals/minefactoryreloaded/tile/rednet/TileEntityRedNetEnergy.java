@@ -9,6 +9,8 @@ import appeng.api.implementations.tiles.ICrankable;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.util.position.BlockPosition;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
@@ -55,7 +57,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	private byte[] sideMode = {1,1, 1,1,1,1, 0};
-	private IEnergyHandler[] handlerCache = null;
+	private IEnergyReceiver[] receiverCache = null;
+	private IEnergyProvider[] providerCache = null;
 	private IC2Cache ic2Cache = null;
 	private boolean deadCache = false;
 	private boolean readFromNBT = false;
@@ -72,7 +75,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	public void validate() {
 		super.validate();
 		deadCache = true;
-		handlerCache = null;
+		receiverCache = null;
+		providerCache = null;
 		ic2Cache = null;
 		if (worldObj.isRemote)
 			return;
@@ -195,8 +199,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	private void addCache(TileEntity tile, int side) {
-		if (handlerCache != null)
-			handlerCache[side] = null;
+		if (receiverCache != null)
+			receiverCache[side] = null;
+		if (providerCache != null)
+			providerCache[side] = null;
 		if (ic2Cache != null)
 			ic2Cache.erase(side);
 		int lastMode = sideMode[side];
@@ -206,15 +212,17 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			if (((TileEntityRedNetEnergy)tile)._grid == _grid) {
 				sideMode[side] |= 1; // always enable
 			}
-		} else if (tile instanceof IEnergyHandler) {
-			if (((IEnergyHandler)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
-				if (handlerCache == null) handlerCache = new IEnergyHandler[6];
-				handlerCache[side] = (IEnergyHandler)tile;
-				sideMode[side] |= 1 << 1;
-			}
 		} else if (tile instanceof IEnergyConnection) {
 			if (((IEnergyConnection)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
 				sideMode[side] |= 1 << 1;
+				if (tile instanceof IEnergyReceiver) {
+					if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
+					receiverCache[side] = (IEnergyReceiver)tile;
+				}
+				if (tile instanceof IEnergyProvider) {
+					if (providerCache == null) providerCache = new IEnergyProvider[6];
+					providerCache[side] = (IEnergyProvider)tile;
+				}
 			}
 		}
 		else if (checkIC2Tiles(tile, side)) {
@@ -381,8 +389,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if ((sideMode[bSide] & 1) != 0) {
 			switch (sideMode[bSide] >> 1) {
 			case 1: // IEnergyHandler
-				if (handlerCache != null) {
-					IEnergyHandler handlerTile = handlerCache[bSide];
+				if (providerCache != null) {
+					IEnergyProvider handlerTile = providerCache[bSide];
 					if (handlerTile != null)
 					{
 						int e = handlerTile.extractEnergy(side, TRANSFER_RATE, true);
@@ -411,8 +419,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if ((sideMode[bSide] & 1) != 0) {
 			switch (sideMode[bSide] >> 1) {
 			case 1: // IEnergyHandler
-				if (handlerCache != null) {
-					IEnergyHandler handlerTile = handlerCache[bSide];
+				if (receiverCache != null) {
+					IEnergyReceiver handlerTile = receiverCache[bSide];
 					if (handlerTile != null)
 						return handlerTile.receiveEnergy(side, energy, false);
 				}
@@ -642,8 +650,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				info.add(text("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount()));
 				info.add(text("Grid Max: " + _grid.storage.getMaxEnergyStored() + ", Grid Cur: " +
 						_grid.storage.getEnergyStored()));
-				info.add(text("Caches: (RF, EU):(" +
-						Arrays.toString(handlerCache) + ", " +
+				info.add(text("Caches: (RF, EU):({" + Arrays.toString(receiverCache) + "," +
+						Arrays.toString(providerCache) + "}, " +
 						ic2Cache + ")"));
 			} else {
 				info.add(text("Null Grid"));

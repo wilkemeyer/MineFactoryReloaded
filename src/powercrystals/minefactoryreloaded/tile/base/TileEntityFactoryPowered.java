@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.base;
 
 import appeng.api.implementations.tiles.ICrankable;
 
-import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -26,7 +26,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
  */
 @Strippable("appeng.api.implementations.tiles.ICrankable")
 public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventory
-												implements IEnergyHandler, ICrankable
+												implements IEnergyReceiver, ICrankable
 {
 	public static final int energyPerAE = 2;
 	public static final int energyPerEU = 4;
@@ -266,12 +266,6 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
 	{
 		return storeEnergy(maxReceive, !simulate);
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean doExtract)
-	{
-		return 0;
 	}
 
 	@Override
