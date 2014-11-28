@@ -28,6 +28,10 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 @Implementable("buildcraft.api.tools.IToolWrench")
 public class ItemFactoryHammer extends ItemFactory implements IMFRHammer, IToolHammer
 {
+	public ItemFactoryHammer() {
+		setHarvestLevel("wrench", 1);
+	}
+
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
 			int x, int y, int z, int side, float hitX, float hitY, float hitZ)
@@ -50,7 +54,7 @@ public class ItemFactoryHammer extends ItemFactory implements IMFRHammer, IToolH
 				player.swingItem();
 				return !world.isRemote;
 			}
-			else if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) 
+			else if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side)))
 			{
 				player.swingItem();
 				return !world.isRemote;
