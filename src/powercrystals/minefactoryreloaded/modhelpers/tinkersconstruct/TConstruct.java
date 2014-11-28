@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.tinkersconstruct;
 
-import static cofh.lib.util.helpers.ItemHelper.*;
+import static cofh.lib.util.helpers.ItemHelper.stack;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -48,12 +48,12 @@ public class TConstruct {
 		tag.setInteger("Attack", 1);
 		tag.setFloat("HandleModifier", 2.5f);
 		tag.setString("Style", EnumChatFormatting.LIGHT_PURPLE.toString());
-		tag.setInteger("Color", 0xFFF4DAD4);
+		tag.setInteger("Color", 0xFFF3AEC6);
 		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tag);
 
 		tag = new NBTTagCompound();
 		tag.setInteger("MaterialId", 1001);
-		tag.setTag("Item", stack2(MFRThings.pinkSlimeItem, 1).writeToNBT(new NBTTagCompound()));
+		tag.setTag("Item", stack(MFRThings.pinkSlimeItem, 1, 1).writeToNBT(new NBTTagCompound()));
 		//tag.setTag("Shard", stack(MFRThings.plasticSheetItem).writeToNBT(new NBTTagCompound()));
 		tag.setInteger("Value", 2);
 		FMLInterModComms.sendMessage("TConstruct", "addPartBuilderMaterial", tag);
