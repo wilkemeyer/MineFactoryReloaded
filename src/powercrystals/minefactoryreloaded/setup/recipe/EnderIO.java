@@ -482,7 +482,7 @@ public class EnderIO extends Vanilla
                 'G', "sheetPlastic",
                 'S', dsSword,
                 'X', dsAxe,
-                'I', "ingotIron",
+                'I', prefix + "ElectricalSteel",
                 'F', chassis,
                 'C', redstone
         } );
@@ -713,7 +713,7 @@ public class EnderIO extends Vanilla
                 "GLG",
                 "DND",
                 "GLG",
-                'G', "ingotIron",
+                'G', prefix + "ElectricalSteel",
                 'L', "blockGlass",
                 'D', "ingotVibrantAlloy",
                 'N', Items.nether_star
