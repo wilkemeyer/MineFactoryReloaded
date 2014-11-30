@@ -482,7 +482,7 @@ public class EnderIO extends Vanilla
                 'G', "sheetPlastic",
                 'S', dsSword,
                 'X', dsAxe,
-                'I', "gearInvar",
+                'I', "ingotIron",
                 'F', chassis,
                 'C', redstone
         } );
@@ -514,7 +514,7 @@ public class EnderIO extends Vanilla
                 "DHD",
                 'G', "sheetPlastic",
                 'D', "gemDiamond",
-                'H', "blockFusedQuartz",
+                'H', "blockGlassHardened",
                 'F', light,
                 'C', capacitorOctadic
         } );
@@ -713,7 +713,7 @@ public class EnderIO extends Vanilla
                 "GLG",
                 "DND",
                 "GLG",
-                'G', "ingotInvar",
+                'G', "ingotIron",
                 'L', "blockGlass",
                 'D', "ingotVibrantAlloy",
                 'N', Items.nether_star
