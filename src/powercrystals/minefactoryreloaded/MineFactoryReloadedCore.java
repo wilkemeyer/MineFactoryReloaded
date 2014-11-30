@@ -10,6 +10,7 @@ import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -167,7 +168,8 @@ import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 
-@Mod(modid = modId, name = modName, version = version, dependencies = dependencies)
+@Mod(modid = modId, name = modName, version = version, dependencies = dependencies,
+customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class MineFactoryReloadedCore extends BaseMod
 {
 	//static{DepLoader.load();}

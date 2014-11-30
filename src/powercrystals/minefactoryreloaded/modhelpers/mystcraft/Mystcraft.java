@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.modhelpers.mystcraft;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -11,11 +12,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-@Mod(modid = "MineFactoryReloaded|CompatMystcraft", name = "MFR Compat: Mystcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Mystcraft")
+@Mod(modid = "MineFactoryReloaded|CompatMystcraft", name = "MFR Compat: Mystcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Mystcraft",
+customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class Mystcraft
 {
 	private static final String lastUpdated = "for Mystcraft-uni-1.5.1-0.10.3.00, current release as of May 25 2013";
-	
+
 	@EventHandler
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void load(FMLInitializationEvent e)
@@ -37,7 +39,7 @@ public class Mystcraft
 			x.printStackTrace();
 		}
 	}
-	
+
 	public static void blackListFluid(String FluidName){
 		NBTTagCompound NBTMsg = new NBTTagCompound();
 		NBTTagCompound fluidMsg = new NBTTagCompound();

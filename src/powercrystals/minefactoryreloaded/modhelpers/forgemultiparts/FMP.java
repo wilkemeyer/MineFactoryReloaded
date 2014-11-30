@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -24,7 +25,8 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 @Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock",
 name = "MFR Compat: ForgeMicroblock",
 version = MineFactoryReloadedCore.version,
-dependencies = "after:MineFactoryReloaded")
+dependencies = "after:MineFactoryReloaded",
+customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class FMP
 {
 	@Mod.EventHandler

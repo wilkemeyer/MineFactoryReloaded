@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.modhelpers.projectred;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -15,8 +16,9 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSta
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
-@Mod(modid = "MineFactoryReloaded|CompatProjRed", name = "MFR Compat: ProjectRed", version = MineFactoryReloadedCore.version, 
-	 dependencies = "after:MineFactoryReloaded;after:ProjRed|Core;after:ProjRed|Exploration")
+@Mod(modid = "MineFactoryReloaded|CompatProjRed", name = "MFR Compat: ProjectRed", version = MineFactoryReloadedCore.version,
+dependencies = "after:MineFactoryReloaded;after:ProjRed|Core;after:ProjRed|Exploration",
+customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class ProjectRedCompat
 {
 	@EventHandler
@@ -30,10 +32,10 @@ public class ProjectRedCompat
 		{
 			Block stainedLeaf = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyeleaf");
 			Block stainedSapling = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyesapling");
-			
+
 			MFRRegistry.registerPlantable(new PlantableSapling(stainedSapling));
 			MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(stainedLeaf));
-			MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)stainedSapling));				
+			MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)stainedSapling));
 		}
 		catch (Exception ex)
 		{

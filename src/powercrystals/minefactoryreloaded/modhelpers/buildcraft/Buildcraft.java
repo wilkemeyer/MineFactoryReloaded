@@ -6,6 +6,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -21,7 +22,8 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
 name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version,
-dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core")
+dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core",
+customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class Buildcraft
 {
 	private static String name(Block obj)
