@@ -354,8 +354,8 @@ public class Vanilla
 				}
 				return;
 			}
-		if (netherName != null & dustName != null)
-			for (ItemStack ore : OreDictionary.getOres(dustName))
+		if (netherName != null )
+			for (ItemStack ore : OreDictionary.getOres(netherName))
 				if (ore != null)
 				{
 					registerOreDictLaserOre(weight / 2, netherName, netherFocus, null, null);
