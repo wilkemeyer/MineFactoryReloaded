@@ -233,7 +233,7 @@ public class Vanilla
 		registerOreDictLaserOre( 70, "Gold",              yellow, false);
 		registerOreDictLaserOre( 70, "oreQuartz",          white, null);
 		registerOreDictLaserOre( 60, "Lead",              purple, false);
-		registerOreDictLaserOre( 60, "oreZinc",            white, "oreSphalerite");
+		registerOreDictLaserOre( 60, "oreZinc",            white, "oreSphalerite", orange);
 		registerOreDictLaserOre( 60, "NaturalAluminum",    white, false);
 		registerOreDictLaserOre( 60, "Aluminium",          white, false);
 		registerOreDictLaserOre( 60, "Aluminum",           white, false);
