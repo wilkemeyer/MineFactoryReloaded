@@ -685,6 +685,8 @@ public class EnderIO extends Vanilla
     @Override
     protected void registerMiscItems()
     {
+        String prefix = "ingot";
+
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fertilizerItem, 16), new Object[]
                 {
             "WBW",
