@@ -1120,7 +1120,20 @@ public class Vanilla
 		}
 		_registeredSafariNets = true;
 
-		addGearRecipe(stack(safariNetItem, 1), stack2(ender_pearl), stack2(ghast_tear));
+		if (MFRConfig.enableExpensiveSafariNet.getBoolean(false)) {
+			addRecipe(ShapedRecipe(stack(safariNetItem, 1), new Object[]
+					{
+				"SLS",
+				"PBP",
+				"SPS",
+				'S', string,
+				'L', leather,
+				'P', ender_pearl,
+				'B', portaSpawnerItem,
+					}));
+		} else {
+			addGearRecipe(stack(safariNetItem, 1), stack2(ender_pearl), stack2(ghast_tear));
+		}
 
 		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 1), new Object[]
 				{

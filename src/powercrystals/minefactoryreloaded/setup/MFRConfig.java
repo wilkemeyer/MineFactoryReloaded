@@ -57,7 +57,7 @@ public class MFRConfig
 	public static Property enableSPAMRExploding;
 	public static Property enableFuelExploding;
 	public static Property enableSpawnerCarts;
-	public static Property enableMassiveTree;
+	public static Property enableExpensiveSafariNet;
 
 	public static Property enableChunkLimitBypassing;
 	public static Property enableChunkLoaderRequiresOwner;
@@ -72,6 +72,7 @@ public class MFRConfig
 	public static Property rubberTreeWorldGen;
 	public static Property rubberTreeBiomeWhitelist;
 	public static Property rubberTreeBiomeBlacklist;
+	public static Property enableMassiveTree;
 
 	public static Property mfrLakeWorldGen;
 	public static Property mfrLakeSewageRarity;
@@ -252,6 +253,8 @@ public class MFRConfig
 		enableSmoothSlabRecipe.comment = "If true, smooth double stone slabs can be craftable.";
 		enableCheapCL = c.get(category, "CheaperChunkLoader", false).setRequiresMcRestart(true);
 		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
+		enableExpensiveSafariNet = c.get(category, "ExpensiveSafariNet", false).setRequiresMcRestart(true);
+		enableExpensiveSafariNet.comment = "If true, the reusable safarinet will require a portaspawner to craft. The portaspawner must be enabled for the safarinet to be craftable.";
 		//}
 
 		//{ Additional machine configs
