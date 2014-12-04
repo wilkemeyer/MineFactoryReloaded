@@ -40,6 +40,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -777,6 +778,12 @@ public class MineFactoryReloadedCore extends BaseMod
 		for (Property prop : MFRConfig.spawnerCustomization.values())
 		{
 			MFRRegistry.setBaseSpawnCost(prop.getName(), prop.getInt(0));
+		}
+		list = MFRConfig.safarinetBlacklist.getStringList();
+		for (String s : list) {
+			Class<?> cl = (Class<?>) EntityList.stringToClassMapping.get(s);
+			if (cl != null)
+				MFRRegistry.registerSafariNetBlacklist(cl);
 		}
 
 		powercrystals.minefactoryreloaded.core.OreDictionaryArbiter.initialize();

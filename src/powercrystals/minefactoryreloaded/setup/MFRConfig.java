@@ -88,6 +88,7 @@ public class MFRConfig
 
 	public static Property unifierBlacklist;
 	public static Property spawnerBlacklist;
+	public static Property safarinetBlacklist;
 
 	public static ConfigCategory spawnerCustomization;
 
@@ -134,6 +135,9 @@ public class MFRConfig
 
 		playSounds = c.get(CATEGORY_GENERAL, "PlaySounds", true);
 		playSounds.comment = "Set to false to disable various sounds and particle effects, such as when a block is harvested.";
+
+		safarinetBlacklist = c.get(CATEGORY_GENERAL, "SafariNetBlacklist", new String[0]);
+		safarinetBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider or VillagerGolem or Forestry.butterflyGE) to blacklist from being captured by the SafariNet. The Debugger item will display an entity's ID when used.";
 
 		//{ Searching
 		treeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + ".SearchDistance", "Tree.MaxHorizontal", 512);
