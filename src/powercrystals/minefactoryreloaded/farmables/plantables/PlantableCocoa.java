@@ -11,12 +11,12 @@ import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
 public class PlantableCocoa extends PlantableStandard
 {
-	
+
 	public PlantableCocoa(Item source, Block plantedBlock)
 	{
 		this(source, plantedBlock, WILDCARD);
 	}
-	
+
 	public PlantableCocoa(Item source, Block plantedBlock, int validMeta)
 	{
 		super(source, plantedBlock, validMeta);
@@ -24,28 +24,28 @@ public class PlantableCocoa extends PlantableStandard
 			@Override
 			public int getMeta(World world, int x, int y, int z, ItemStack stack)
 			{
-				int blockDirection = 4; // NORTH
+				int meta = 3; // NORTH
 				if (isGoodLog(world, x-1, y, z))
-					blockDirection = 5; // SOUTH
+					meta = 1; // SOUTH
 				else if (isGoodLog(world, x, y, z+1))
-					blockDirection = 2; // EAST
+					meta = 0; // EAST
 				else if (isGoodLog(world, x, y, z-1))
-					blockDirection = 3; // WEST
-				
-				return blockDirection;
+					meta = 2; // WEST
+
+				return meta;
 			}
 		};
 	}
-	
+
 	@Override
 	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
 	{
 		if (!world.isAirBlock(x, y, z))
 			return false;
-		
+
 		return isNextToAcceptableLog(world, x, y, z);
 	}
-	
+
 	protected boolean isNextToAcceptableLog(World world, int x, int y, int z)
 	{
 		return isGoodLog(world, x+1, y, z) ||
@@ -53,7 +53,7 @@ public class PlantableCocoa extends PlantableStandard
 				isGoodLog(world, x, y, z+1) ||
 				isGoodLog(world, x, y, z-1);
 	}
-	
+
 	protected boolean isGoodLog(World world, int x, int y, int z)
 	{
 		return world.getBlock(x, y, z).equals(Blocks.log) &&
