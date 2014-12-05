@@ -419,7 +419,7 @@ tip.info.mfr.prc = Wenn du dich verloren fühlst, lies das (Ingame-)Benutzerhand
 
 tip.info.mfr.needlegun.ammo = Schuss
 
-tip.info.mfr.upgrade.radius = Radius-Erhöhung:
+tip.info.mfr.upgrade.radius = Radius-Erhöhung: %s
 
 tip.info.mfr.xpextractor = Benötigt einen Leeren Behälter zum Füllen
 
