@@ -22,7 +22,6 @@ public class EntityHandler
 	{
 		if (evt.world.isRemote || !(evt.entity instanceof EntitySkeleton))
 			return;
-		EntitySkeleton ent = (EntitySkeleton) evt.entity;
 
 	}
 

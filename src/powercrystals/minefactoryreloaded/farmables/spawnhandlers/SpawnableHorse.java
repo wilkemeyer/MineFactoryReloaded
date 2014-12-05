@@ -25,7 +25,7 @@ public class SpawnableHorse implements IMobSpawnHandler
 		EntityHorse ent = (EntityHorse)entity;
 		try
 		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityHorse.class, ent, null, "horseChest", "func_110164_bC");
+			ObfuscationReflectionHelper.setPrivateValue(EntityHorse.class, ent, null, "horseChest", "field_110296_bG");
 			EntityHorse.class.getDeclaredMethod("func_110226_cD").invoke(entity);
 		}
 		catch (Throwable e)
