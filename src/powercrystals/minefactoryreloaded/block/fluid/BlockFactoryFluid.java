@@ -37,8 +37,11 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDecorative
 { // TODO: convert to BlockFluidFinite
-	private static DamageSource steam = new DamageSource("steam").
-			setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
+	private static DamageSource steam = new DamageSource("steam");
+	{
+			steam.setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
+			steam.setDamageIsAbsolute();
+	}
 	public static final Material material = new MaterialLiquid(MapColor.waterColor);
 
 	@SideOnly(Side.CLIENT)
@@ -88,27 +91,27 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			EntityLivingBase ent = (EntityLivingBase)entity;
 			if (this == MFRThings.milkLiquid)
 			{
-				ent.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 6 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 6 * 20, 0, true));
 			}
 			else if (this == MFRThings.sludgeLiquid)
 			{
 				ent.addPotionEffect(new PotionEffect(Potion.wither.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0, true));
+				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 16 * 20, 0, true));
 			}
 			else if (this == MFRThings.sewageLiquid)
 			{
-				ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 12 * 20, 0, true));
 				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 12 * 20, 0, true));
 			}
 			else if (this == MFRThings.essenceLiquid)
 			{
-				ent.addPotionEffect(new PotionEffect(Potion.nightVision.id, 60 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.nightVision.id, 60 * 20, 0, true));
 			}
 			else if (this == MFRThings.biofuelLiquid)
 			{
-				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0, true));
 			}
 			else if (this == MFRThings.steamFluid)
 			{
