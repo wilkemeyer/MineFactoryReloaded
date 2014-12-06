@@ -8,21 +8,24 @@ import cofh.lib.gui.slot.SlotRemoveOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class ContainerAutoBrewer extends ContainerFactoryPowered
 {
+	public static IIcon ingredient;
+	public static IIcon bottle;
 	public ContainerAutoBrewer(TileEntityFactoryPowered te, InventoryPlayer inv)
 	{
 		super(te, inv);
 	}
-	
+
 	@Override
 	protected void addSlots()
 	{
-		for(int row = 0; row < 6; row++)
+		for (int row = 0; row < 6; row++)
 		{
 			addSlotToContainer(new SlotPotion(_te, row * 5, 8, 34 + row * 18));
 			addSlotToContainer(new SlotFake(_te, row * 5 + 1, 44, 34 + row * 18));
@@ -32,8 +35,12 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered
 		}
 		addSlotToContainer(new SlotRemoveOnly(_te, 30, 8, 142));
 		addSlotToContainer(new SlotAcceptInsertable(_te, 31, 146, 142));
+
+		for (int row = 0; row < 6; row++)
+			getSlot(row * 5 + 1).setBackgroundIcon(ingredient);
+		getSlot(31).setBackgroundIcon(bottle);
 	}
-	
+
 	@Override
 	protected int getPlayerInventoryVerticalOffset()
 	{

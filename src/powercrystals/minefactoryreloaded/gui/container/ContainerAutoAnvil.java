@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.lib.gui.slot.SlotAcceptInsertable;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.gui.slot.SlotViewOnly;
 import cpw.mods.fml.relauncher.Side;
@@ -7,7 +8,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoAnvil;
@@ -27,8 +27,8 @@ public class ContainerAutoAnvil extends ContainerFactoryPowered
 	@Override
 	protected void addSlots()
 	{
-		addSlotToContainer(new Slot(_te, 0, 8, 24));
-		addSlotToContainer(new Slot(_te, 1, 26, 24));
+		addSlotToContainer(new SlotAcceptInsertable(_te, 0, 8, 24));
+		addSlotToContainer(new SlotAcceptInsertable(_te, 1, 26, 24));
 		addSlotToContainer(new SlotRemoveOnly(_te, 2, 8, 48));
 		addSlotToContainer(new SlotViewOnly(_te, 2, 45, 24, false) {
 			@Override
@@ -38,6 +38,8 @@ public class ContainerAutoAnvil extends ContainerFactoryPowered
 			@Override
 			public void onSlotChanged() {}
 		});
+
+		getSlot(1).setBackgroundIcon(ContainerAutoDisenchanter.background);
 	}
 
 	@Override

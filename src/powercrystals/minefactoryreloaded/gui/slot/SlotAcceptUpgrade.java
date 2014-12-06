@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.gui.slot;
 
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -13,6 +14,12 @@ public class SlotAcceptUpgrade extends Slot
 	{
 		super(inv, index, x, y);
 		_inv = inv;
+	}
+
+	public SlotAcceptUpgrade(TileEntityFactoryInventory inv, int index, int x, int y, IIcon icon)
+	{
+		this(inv, index, x, y);
+		setBackgroundIcon(icon);
 	}
 
 	@Override

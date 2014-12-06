@@ -9,13 +9,14 @@ import net.minecraft.inventory.Slot;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
 public class ContainerPlanter extends ContainerUpgradable
 {
 	private TileEntityPlanter _planter;
 	private boolean consumeAll;
-	
+
 	public ContainerPlanter(TileEntityPlanter te, InventoryPlayer inv)
 	{
 		super(te, inv);
@@ -49,7 +50,7 @@ public class ContainerPlanter extends ContainerUpgradable
 			_planter.setConsumeAll((value & 1) == 1);
 		}
 	}
-	
+
 	@Override
 	protected void addSlots()
 	{
@@ -63,14 +64,14 @@ public class ContainerPlanter extends ContainerUpgradable
 		addSlotToContainer(new SlotFake(_te, 6, 8, 69));
 		addSlotToContainer(new SlotFake(_te, 7, 26, 69));
 		addSlotToContainer(new SlotFake(_te, 8, 44, 69));
-		
+
 		//upgrade slot
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79));
-		
+		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79, ItemUpgrade.background));
+
 		//resource slots
 		int xStart = 65;
 		int yStart = 15;
-		
+
 		for(int i = 0; i < 4; i++)
 		{
 			for(int j = 0; j < 4; j++)
@@ -79,7 +80,7 @@ public class ContainerPlanter extends ContainerUpgradable
 			}
 		}
 	}
-	
+
 	@Override
 	protected int getPlayerInventoryVerticalOffset()
 	{

@@ -13,13 +13,13 @@ public class ContainerAutoSpawner extends ContainerFactoryPowered
 	{
 		super(te, inv);
 	}
-	
+
 	@Override
 	protected void addSlots()
 	{
 		addSlotToContainer(new SlotAcceptReusableSafariNet(_te, 0, 8, 24));
 	}
-	
+
 	@Override
 	public void detectAndSendChanges()
 	{
@@ -31,7 +31,7 @@ public class ContainerAutoSpawner extends ContainerFactoryPowered
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 102, ((TileEntityFactoryPowered)_te).getWorkMax() >>> 16);
 		}
 	}
-	
+
 	@Override
 	public void updateProgressBar(int var, int value)
 	{

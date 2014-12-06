@@ -1,16 +1,28 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.lib.gui.slot.SlotAcceptValid;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.util.IIcon;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityFisher;
 
 public class ContainerFisher extends ContainerFactoryPowered {
 
+	public static IIcon background;
+
 	public ContainerFisher(TileEntityFactoryPowered te, InventoryPlayer inv)
 	{
 		super(te, inv);
+	}
+
+	@Override
+	public void addSlots() {
+		addSlotToContainer(new SlotAcceptValid(_te, 0, 8, 15));
+
+		getSlot(0).setBackgroundIcon(background);
 	}
 
 	@Override

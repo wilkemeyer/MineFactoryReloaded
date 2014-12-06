@@ -5,27 +5,33 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptBlankRecord;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptRecord;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 
 public class ContainerAutoJukebox extends ContainerFactoryInventory
 {
+	public static IIcon background;
 	private TileEntityAutoJukebox _jukebox;
-	
+
 	public ContainerAutoJukebox(TileEntityAutoJukebox tileentity, InventoryPlayer inv)
 	{
 		super(tileentity, inv);
 		_jukebox = tileentity;
 	}
-	
+
 	@Override
 	protected void addSlots()
 	{
 		addSlotToContainer(new SlotAcceptRecord(_te, 0, 8, 24));
 		addSlotToContainer(new SlotAcceptBlankRecord(_te, 1, 8, 54));
+
+		getSlot(0).setBackgroundIcon(background);
+		getSlot(1).setBackgroundIcon(background);
 	}
-	
+
 	@Override
 	public void detectAndSendChanges()
 	{
@@ -39,7 +45,7 @@ public class ContainerAutoJukebox extends ContainerFactoryInventory
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateProgressBar(int var, int value)
 	{
@@ -50,19 +56,19 @@ public class ContainerAutoJukebox extends ContainerFactoryInventory
 			_jukebox.setCanPlay((value & 2) != 0 ? true : false);
 		}
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
 		ItemStack stack = null;
 		Slot slotObject = (Slot) inventorySlots.get(slot);
 		int machInvSize = _jukebox.getSizeInventory();
-		
+
 		if(slotObject != null && slotObject.getHasStack())
 		{
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
-			
+
 			if(slot < machInvSize)
 			{
 				if(!mergeItemStack(stackInSlot, machInvSize, inventorySlots.size(), true))
@@ -74,7 +80,7 @@ public class ContainerAutoJukebox extends ContainerFactoryInventory
 			{
 				return null;
 			}
-			
+
 			if(stackInSlot.stackSize == 0)
 			{
 				slotObject.putStack(null);
@@ -83,15 +89,15 @@ public class ContainerAutoJukebox extends ContainerFactoryInventory
 			{
 				slotObject.onSlotChanged();
 			}
-			
+
 			if(stackInSlot.stackSize == stack.stackSize)
 			{
 				return null;
 			}
-			
+
 			slotObject.onPickupFromSlot(player, stackInSlot);
 		}
-		
+
 		return stack;
 	}
 }
