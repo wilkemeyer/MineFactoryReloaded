@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,7 +29,7 @@ public abstract class UtilInventory
 {
 	/**
 	 * Searches from position x, y, z, checking for TE-compatible pipes in all directions.
-	 * 
+	 *
 	 * @return Map<ForgeDirection, IItemDuct> specifying all found pipes and their directions.
 	 */
 	public static Map<ForgeDirection, IItemDuct> findConduits(World world, int x, int y, int z)
@@ -38,7 +39,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Searches from position x, y, z, checking for TE-compatible pipes in each directiontocheck.
-	 * 
+	 *
 	 * @return Map<ForgeDirection, IItemDuct> specifying all found pipes and their directions.
 	 */
 	public static Map<ForgeDirection, IItemDuct> findConduits(World world, int x, int y, int z,
@@ -61,7 +62,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Searches from position x, y, z, checking for BC-compatible pipes in all directions.
-	 * 
+	 *
 	 * @return Map<ForgeDirection, IPipeTile> specifying all found pipes and their directions.
 	 */
 	@Strippable(pipeClass)
@@ -72,7 +73,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Searches from position x, y, z, checking for BC-compatible pipes in each directiontocheck.
-	 * 
+	 *
 	 * @return Map<ForgeDirection, IPipeTile> specifying all found pipes and their directions.
 	 */
 	@Strippable(pipeClass)
@@ -96,7 +97,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Searches from position x, y, z, checking for inventories in all directions.
-	 * 
+	 *
 	 * @return Map<ForgeDirection, IInventory> specifying all found inventories and their directions.
 	 */
 	public static Map<ForgeDirection, IInventory> findChests(World world, int x, int y, int z)
@@ -106,7 +107,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Searches from position x, y, z, checking for inventories in each directiontocheck.
-	 * 
+	 *
 	 * @return Map<ForgeDirection, IInventory> specifying all found inventories and their directions.
 	 */
 	public static Map<ForgeDirection, IInventory> findChests(World world, int x, int y, int z,
@@ -126,7 +127,7 @@ public abstract class UtilInventory
 		}
 		return chests;
 	}
-	
+
 	private static IInventory checkForDoubleChest(World world, TileEntity te, BlockPosition chestloc)
 	{
 		Block block = world.getBlock(chestloc.x, chestloc.y, chestloc.z);
@@ -156,7 +157,7 @@ public abstract class UtilInventory
 	/**
 	 * Drops an ItemStack, checking all directions for pipes > chests. DOESN'T drop items into the world.
 	 * Example of this behavior: Cargo dropoff rail, item collector.
-	 * 
+	 *
 	 * @return The remainder of the ItemStack. Whatever -wasn't- successfully dropped.
 	 */
 	public static ItemStack dropStack(TileEntity from, ItemStack stack)
@@ -168,7 +169,7 @@ public abstract class UtilInventory
 	/**
 	 * Drops an ItemStack, checking all directions for pipes > chests. Drops items into the world.
 	 * Example of this behavior: Harvesters, sludge boilers, etc.
-	 * 
+	 *
 	 * @param airdropdirection
 	 *            the direction that the stack may be dropped into air.
 	 * @return The remainder of the ItemStack. Whatever -wasn't- successfully dropped.
@@ -182,7 +183,7 @@ public abstract class UtilInventory
 	/**
 	 * Drops an ItemStack, into chests > pipes > the world, but only in a single direction.
 	 * Example of this behavior: Item Router, Ejector
-	 * 
+	 *
 	 * @param dropdirection
 	 *            a -single- direction in which to check for pipes/chests
 	 * @param airdropdirection
@@ -199,7 +200,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Drops an ItemStack, checks pipes > chests > world in that order.
-	 * 
+	 *
 	 * @param from
 	 *            the TileEntity doing the dropping
 	 * @param stack
@@ -221,7 +222,7 @@ public abstract class UtilInventory
 
 	/**
 	 * Drops an ItemStack, checks pipes > chests > world in that order. It generally shouldn't be necessary to call this explicitly.
-	 * 
+	 *
 	 * @param world
 	 *            the worldObj
 	 * @param bp
@@ -273,13 +274,13 @@ public abstract class UtilInventory
 		if (MFRUtil.VALID_DIRECTIONS.contains(airdropdirection) && isAirDrop(world, bp.x, bp.y, bp.z))
 		{
 			bp.moveBackwards(1);
-			dropStackInAir(stack, bp, world, airdropdirection);
+			dropStackInAir(world, bp, stack, airdropdirection);
 			return null;
 		}
 		// (4) Is the stack still here? :( Better give it back.
 		return stack;
 	}
-	
+
 	public static boolean isAirDrop(World world, int x, int y, int z)
 	{
 		Block block = world.getBlock(x, y, z);
@@ -288,7 +289,7 @@ public abstract class UtilInventory
 		block.setBlockBoundsBasedOnState(world, x, y, z);
 		return block.getCollisionBoundingBoxFromPool(world, x, y, z) == null;
 	}
-	
+
 	private static ItemStack handleIPipeTile(World world, BlockPosition bp, ForgeDirection[] dropdirections, ItemStack stack)
 	{
 		for (Entry<ForgeDirection, IPipeTile> pipe : findPipes(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
@@ -309,7 +310,40 @@ public abstract class UtilInventory
 		return stack;
 	}
 
-	private static void dropStackInAir(ItemStack stack, BlockPosition bp, World world, ForgeDirection towards)
+	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack) {
+		dropStackInAir(world, bp, stack, ForgeDirection.UNKNOWN);
+	}
+
+	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack, int delay) {
+		dropStackInAir(world, bp, stack, delay, ForgeDirection.UNKNOWN);
+	}
+
+	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack, ForgeDirection towards) {
+		dropStackInAir(world, bp, stack, 20, towards);
+	}
+
+	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack, int delay, ForgeDirection towards) {
+		dropStackInAir(world, bp.x, bp.y, bp.z, stack, delay, towards);
+	}
+
+	public static void dropStackInAir(World world, Entity bp, ItemStack stack) {
+		dropStackInAir(world, bp, stack, ForgeDirection.UNKNOWN);
+	}
+
+	public static void dropStackInAir(World world, Entity bp, ItemStack stack, int delay) {
+		dropStackInAir(world, bp, stack, delay, ForgeDirection.UNKNOWN);
+	}
+
+	public static void dropStackInAir(World world, Entity bp, ItemStack stack, ForgeDirection towards) {
+		dropStackInAir(world, bp, stack, 20, towards);
+	}
+
+	public static void dropStackInAir(World world, Entity bp, ItemStack stack, int delay, ForgeDirection towards) {
+		dropStackInAir(world, bp.posX, bp.posY, bp.posZ, stack, delay, towards);
+	}
+
+	public static void dropStackInAir(World world, double x, double y, double z, ItemStack stack,
+			int delay, ForgeDirection towards)
 	{
 		float dropOffsetX = 0.0F;
 		float dropOffsetY = 0.0F;
@@ -317,7 +351,6 @@ public abstract class UtilInventory
 
 		switch (towards)
 		{
-		case UNKNOWN:
 		case UP:
 			dropOffsetX = 0.5F;
 			dropOffsetY = 1.5F;
@@ -348,17 +381,16 @@ public abstract class UtilInventory
 			dropOffsetY = 0.5F;
 			dropOffsetZ = 0.5F;
 			break;
-		default:
+		case UNKNOWN:
 			break;
-
 		}
 
-		EntityItem entityitem = new EntityItem(world, bp.x + dropOffsetX, bp.y + dropOffsetY, bp.z + dropOffsetZ, stack.copy());
+		EntityItem entityitem = new EntityItem(world, x + dropOffsetX, y + dropOffsetY, z + dropOffsetZ, stack.copy());
 		entityitem.motionX = 0.0D;
 		if (towards != ForgeDirection.DOWN)
 			entityitem.motionY = 0.3D;
 		entityitem.motionZ = 0.0D;
-		entityitem.delayBeforeCanPickup = 20;
+		entityitem.delayBeforeCanPickup = delay;
 		world.spawnEntityInWorld(entityitem);
 	}
 
@@ -368,7 +400,7 @@ public abstract class UtilInventory
 			return null;
 
 		Item item = stack.getItem();
-		
+
 		stack.stackSize -= 1;
 		if (item.hasContainerItem(stack))
 		{
@@ -408,12 +440,12 @@ public abstract class UtilInventory
 		if (s1 == null | s2 == null) return false;
 		if (!s1.isItemEqual(s2)) return false;
 		if (!nbtSensitive) return true;
-		
+
 		if (s1.getTagCompound() == s2.getTagCompound()) return true;
 		if (s1.getTagCompound() == null || s2.getTagCompound() == null) return false;
 		return s1.getTagCompound().equals(s2.getTagCompound());
 	}
-	
+
 	private static boolean handlePipeTiles = false;
 	private static final String pipeClass = "buildcraft.api.transport.IPipeTile";
 	static {
