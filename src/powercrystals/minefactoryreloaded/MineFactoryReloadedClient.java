@@ -62,7 +62,13 @@ import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
-import powercrystals.minefactoryreloaded.item.ItemRocketLauncher;
+import powercrystals.minefactoryreloaded.gui.container.ContainerAutoBrewer;
+import powercrystals.minefactoryreloaded.gui.container.ContainerAutoDisenchanter;
+import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptLaserFocus;
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptReusableSafariNet;
+import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
 import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
@@ -227,19 +233,43 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		NeedleGunItemRenderer.updateModel();
 	}
 
+	@SubscribeEvent
+	public void onPreTextureStitch(TextureStitchEvent.Pre e)
+	{
+		switch (e.map.getTextureType()) {
+		case 1:
+			SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
+			ContainerAutoDisenchanter.background = e.map.registerIcon("minefactoryreloaded:gui/book");
+			ContainerAutoJukebox.background = e.map.registerIcon("minefactoryreloaded:gui/record");
+			SlotAcceptLaserFocus.background = e.map.registerIcon("minefactoryreloaded:gui/laserfocus");
+			ContainerAutoBrewer.ingredient = e.map.registerIcon("minefactoryreloaded:gui/netherwart");
+			ContainerAutoBrewer.bottle = e.map.registerIcon("minefactoryreloaded:gui/bottle");
+			ContainerFisher.background = e.map.registerIcon("minefactoryreloaded:gui/fishingrod");
+			break;
+		default:
+			break;
+		}
+	}
+
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void onPostTextureStitch(TextureStitchEvent.Post e)
 	{
-		setIcons("milk", MFRThings.milkLiquid);
-		setIcons("sludge", MFRThings.sludgeLiquid);
-		setIcons("sewage", MFRThings.sewageLiquid);
-		setIcons("mobessence", MFRThings.essenceLiquid);
-		setIcons("biofuel", MFRThings.biofuelLiquid);
-		setIcons("meat", MFRThings.meatLiquid);
-		setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
-		setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
-		setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
-		setIcons("steam", MFRThings.steamFluid);
+		switch (e.map.getTextureType()) {
+		case 0:
+			setIcons("milk", MFRThings.milkLiquid);
+			setIcons("sludge", MFRThings.sludgeLiquid);
+			setIcons("sewage", MFRThings.sewageLiquid);
+			setIcons("mobessence", MFRThings.essenceLiquid);
+			setIcons("biofuel", MFRThings.biofuelLiquid);
+			setIcons("meat", MFRThings.meatLiquid);
+			setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
+			setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
+			setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
+			setIcons("steam", MFRThings.steamFluid);
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void setIcons(String name, BlockFactoryFluid block)

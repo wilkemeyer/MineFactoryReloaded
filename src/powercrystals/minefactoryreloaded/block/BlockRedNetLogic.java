@@ -25,8 +25,8 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
-import powercrystals.minefactoryreloaded.item.ItemRedNetMemoryCard;
-import powercrystals.minefactoryreloaded.item.ItemRedNetMeter;
+import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMemoryCard;
+import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 

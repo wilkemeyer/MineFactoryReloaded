@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import static powercrystals.minefactoryreloaded.item.ItemMulti.getName;
+import static powercrystals.minefactoryreloaded.item.base.ItemMulti.getName;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -34,9 +34,10 @@ import powercrystals.minefactoryreloaded.core.IUseHandler;
 import powercrystals.minefactoryreloaded.core.IUseable;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DefaultUseHandler;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
+import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 
-public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable
-{
+public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable {
+
 	public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 	public final static IUseHandler defaultUseAction = new DefaultUseHandler();
 	public final static IUseHandler drinkUseAction = new DrinkUseHandler();
@@ -46,8 +47,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	protected IIcon fillIcon;
 	protected List<IUseHandler> useHandlers;
 
-	public ItemFactoryCup(int stackSize, int maxUses)
-	{
+	public ItemFactoryCup(int stackSize, int maxUses) {
 		this.setMaxStackSize(stackSize);
 		this.setMaxDamage(maxUses);
 		this.setHasSubtypes(true);
@@ -75,15 +75,13 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{
+	public String getUnlocalizedName(ItemStack stack) {
 		if (getFluid(stack) != null)
 			return getUnlocalizedName() + (_prefix ? ".prefix" : ".suffix");
 		return getUnlocalizedName();
 	}
 
-	public String getLocalizedName(String str)
-	{
+	public String getLocalizedName(String str) {
 		String name = getUnlocalizedName() + "." + str;
 		if (StatCollector.canTranslate(name))
 			return StatCollector.translateToLocal(name);
@@ -91,18 +89,15 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public String getItemStackDisplayName(ItemStack item)
-	{
+	public String getItemStackDisplayName(ItemStack item) {
 		String ret = getFluidName(item), t = getLocalizedName(ret);
 		if (t != null && !t.isEmpty())
 			return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
-		if (ret == null)
-		{
+		if (ret == null) {
 			return super.getItemStackDisplayName(item);
 		}
 		FluidStack liquid = getFluid(item);
-		if (liquid != null)
-		{
+		if (liquid != null) {
 			ret = liquid.getFluid().getLocalizedName(liquid);
 		}
 		_prefix = true;
@@ -116,19 +111,16 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		return ret;
 	}
 
-	public String getFluidName(ItemStack stack)
-	{
+	public String getFluidName(ItemStack stack) {
 		NBTTagCompound tag = stack.stackTagCompound;
 		return tag == null || !tag.hasKey("fluid") ? null : tag.getCompoundTag("fluid").getString("FluidName");
 	}
 
 	@Override
-	public FluidStack getFluid(ItemStack stack)
-	{
+	public FluidStack getFluid(ItemStack stack) {
 		NBTTagCompound tag = stack.stackTagCompound;
 		FluidStack fluid = null;
-		if (tag != null && tag.hasKey("fluid"))
-		{
+		if (tag != null && tag.hasKey("fluid")) {
 			fluid = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
 			if (fluid == null)
 				tag.removeTag("fluid");
@@ -137,14 +129,12 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public int getCapacity(ItemStack container)
-	{
+	public int getCapacity(ItemStack container) {
 		return FluidContainerRegistry.BUCKET_VOLUME;
 	}
 
 	@Override
-	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
-	{
+	public int fill(ItemStack stack, FluidStack resource, boolean doFill) {
 		if (resource == null || stack.stackSize != 1)
 			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
@@ -155,21 +145,17 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 				(fluidTag = tag.getCompoundTag("fluid")) == null ||
 				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			fillAmount = Math.min(capacity, resource.amount);
-		if (fluid == null)
-		{
-			if (doFill)
-			{
+		if (fluid == null) {
+			if (doFill) {
 				fluid = resource.copy();
 				fluid.amount = 0;
 			}
-		}
-		else if (!fluid.isFluidEqual(resource))
+		} else if (!fluid.isFluidEqual(resource))
 			return 0;
 		else
 			fillAmount = Math.min(capacity - fluid.amount, resource.amount);
 		fillAmount = Math.max(fillAmount, 0);
-		if (doFill)
-		{
+		if (doFill) {
 			if (tag == null)
 				tag = stack.stackTagCompound = new NBTTagCompound();
 			fluid.amount += fillAmount;
@@ -179,8 +165,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
-	{
+	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain) {
 		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
@@ -188,23 +173,18 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
 			return null;
 		int drainAmount = Math.min(maxDrain, fluid.amount);
-		if (doDrain)
-		{
+		if (doDrain) {
 			tag.removeTag("fluid");
 			tag.setBoolean("drained", true);
 			fluid.amount -= drainAmount;
 			if (fluid.amount > 0)
 				fill(stack, fluid, true);
-			if (tag.hasKey("toDrain"))
-			{
+			if (tag.hasKey("toDrain")) {
 				drainAmount = tag.getInteger("toDrain");
 				tag.removeTag("toDrain");
-			}
-			else
+			} else
 				drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
-		}
-		else
-		{
+		} else {
 			drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
 			tag.setInteger("toDrain", drainAmount);
 		}
@@ -213,22 +193,18 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public Item getContainerItem()
-	{
+	public Item getContainerItem() {
 		return this;
 	}
 
 	@Override
-	public ItemStack getContainerItem(ItemStack stack)
-	{
+	public ItemStack getContainerItem(ItemStack stack) {
 		if (stack.stackSize <= 0)
 			return null;
 		ItemStack r = stack.copy();
 		NBTTagCompound tag = r.getTagCompound();
-		if (tag != null)
-		{
-			if (tag.hasKey("drained"))
-			{
+		if (tag != null) {
+			if (tag.hasKey("drained")) {
 				r.stackSize = 1;
 				r.attemptDamageItem(1, itemRand);
 			}
@@ -242,14 +218,12 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public boolean hasContainerItem(ItemStack stack)
-	{
+	public boolean hasContainerItem(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
 		return tag != null && (tag.hasKey("fluid") || tag.hasKey("drained"));
 	}
 
-	public boolean hasDrinkableLiquid(ItemStack stack)
-	{
+	public boolean hasDrinkableLiquid(ItemStack stack) {
 		return stack.stackSize == 1 &&
 				MFRRegistry.getLiquidDrinkHandlers().containsKey(getFluidName(stack)) &&
 				getFluid(stack).amount == getCapacity(stack);
@@ -289,8 +263,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
+	public void registerIcons(IIconRegister par1IconRegister) {
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
 	}
@@ -298,8 +271,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass) {
-		switch (pass)
-		{
+		switch (pass) {
 		case 1:
 			return this.fillIcon;
 		case 0:
@@ -309,8 +281,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity)
-	{
+	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity) {
 		if (armorType == 0)
 			if (entity instanceof EntityPlayer &&
 					((EntityPlayer)entity).getCommandSenderName().equalsIgnoreCase("Eyamaz"))
@@ -320,43 +291,36 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
-	{
+	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
 		return MineFactoryReloadedCore.textureFolder + "armor/plastic_layer_1.png";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot)
-	{
-		if (armorSlot == 0)
-		{
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
+		if (armorSlot == 0) {
 			return null; // TODO
 		}
 		return null;
 	}
 
 	@Override
-	public boolean canBeFilledFromWorld()
-	{
+	public boolean canBeFilledFromWorld() {
 		return true;
 	}
 
 	@Override
-	public boolean canPlaceInWorld()
-	{
+	public boolean canPlaceInWorld() {
 		return false;
 	}
 
 	@Override
-	public boolean shouldReplaceWhenFilled()
-	{
+	public boolean shouldReplaceWhenFilled() {
 		return true;
 	}
 
 	@Override
-	public MovingObjectPosition rayTrace(World world, EntityLivingBase entity, boolean adjacent)
-	{
+	public MovingObjectPosition rayTrace(World world, EntityLivingBase entity, boolean adjacent) {
 		float f1 = entity.rotationPitch;
 		float f2 = entity.rotationYaw;
 		double y = entity.posY + entity.getEyeHeight() - entity.yOffset;
@@ -368,8 +332,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		float f7 = f4 * f5;
 		float f8 = f3 * f5;
 		double d3 = 5.0D;
-		if (entity instanceof EntityPlayerMP)
-		{
+		if (entity instanceof EntityPlayerMP) {
 			d3 = ((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance();
 		}
 		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
@@ -385,8 +348,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	//@Override
 	// TODO: implement pipette thing
-	public boolean canPipette(ItemStack pipette)
-	{
+	public boolean canPipette(ItemStack pipette) {
 		return true;
 	}
+
 }

@@ -8,18 +8,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 
-public class ItemFishingRod extends ItemFactory
-{
-	public ItemFishingRod()
-	{
+public class ItemFishingRod extends ItemFactoryTool {
+
+	public ItemFishingRod() {
 		setUnlocalizedName("mfr.fishingrod");
 		setMaxStackSize(1);
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if (!par3EntityPlayer.capabilities.isCreativeMode)
 			--par1ItemStack.stackSize;
 
@@ -30,18 +29,11 @@ public class ItemFishingRod extends ItemFactory
 
 		return par1ItemStack;
 	}
-    
+
 	@Override
 	@SideOnly(Side.CLIENT)
-    public boolean isFull3D()
-    {
-        return true;
-    }
+	public boolean shouldRotateAroundWhenRendering() {
+		return true;
+	}
 
-    @Override
-	@SideOnly(Side.CLIENT)
-    public boolean shouldRotateAroundWhenRendering()
-    {
-        return true;
-    }
 }

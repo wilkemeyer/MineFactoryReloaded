@@ -9,9 +9,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import java.lang.reflect.Method;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.item.ItemFactoryHammer;
-import powercrystals.minefactoryreloaded.item.ItemSafariNetLauncher;
-import powercrystals.minefactoryreloaded.item.ItemSpyglass;
+import powercrystals.minefactoryreloaded.item.gun.ItemSafariNetLauncher;
+import powercrystals.minefactoryreloaded.item.tool.ItemFactoryHammer;
+import powercrystals.minefactoryreloaded.item.tool.ItemSpyglass;
 
 @Mod(modid = "MineFactoryReloaded|CompatBackTools", name = "MFR Compat: BackTools", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:mod_BackTools",
 customProperties = @CustomProperty(k = "cofhversion", v = "true"))

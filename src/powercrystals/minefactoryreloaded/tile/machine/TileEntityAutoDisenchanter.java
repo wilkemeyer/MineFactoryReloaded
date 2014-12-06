@@ -80,7 +80,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
 	{
-		if(slot == 2 || slot == 3) return true;
+		if (slot == 2 || slot == 3) return true;
 		return false;
 	}
 

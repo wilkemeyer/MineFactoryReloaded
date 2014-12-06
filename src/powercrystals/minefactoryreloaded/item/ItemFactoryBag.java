@@ -7,9 +7,10 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 
-public class ItemFactoryBag extends ItemFactory
-{
+public class ItemFactoryBag extends ItemFactory {
+
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
@@ -19,10 +20,8 @@ public class ItemFactoryBag extends ItemFactory
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-	{
-		if (stack.stackSize != 1)
-		{
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if (stack.stackSize != 1) {
 			if (!world.isRemote)
 				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.bag.stacksize"));
 			return stack;
@@ -34,4 +33,5 @@ public class ItemFactoryBag extends ItemFactory
 			player.openGui(MineFactoryReloadedCore.instance(), 2, world, 0, 0, 0);
 		return stack;
 	}
+
 }

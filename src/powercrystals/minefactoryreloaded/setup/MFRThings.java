@@ -12,8 +12,8 @@ import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
-import powercrystals.minefactoryreloaded.item.ItemFactoryArmor;
 import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
 
 public class MFRThings
 {
