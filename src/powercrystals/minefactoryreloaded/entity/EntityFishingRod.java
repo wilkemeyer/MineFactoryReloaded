@@ -77,8 +77,8 @@ public class EntityFishingRod extends EntityThrowable {
 	}
 
 	@Override
-    @SideOnly(Side.CLIENT)
-    public void handleHealthUpdate(byte state) {
+	@SideOnly(Side.CLIENT)
+	public void handleHealthUpdate(byte state) {
 		super.handleHealthUpdate(state);
 		if (state == 18) {
 			Block block = worldObj.getBlock((int)Math.floor(posX), (int)Math.floor(posY + 0.25), (int)Math.floor(posZ));
