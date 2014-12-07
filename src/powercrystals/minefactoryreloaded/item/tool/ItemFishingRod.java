@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.item;
+package powercrystals.minefactoryreloaded.item.tool;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
