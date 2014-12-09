@@ -620,10 +620,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	{
 		super.readFromNBT(tag);
 		_sideColors = tag.getIntArray("sideSubnets");
-		if(_sideColors.length == 0)
-		{
+		if (_sideColors.length < 6)
 			_sideColors = new int[6];
-		}
+
 		byte _mode = tag.getByte("mode");
 		_cableMode = tag.getByteArray("cableMode");
 		if (_cableMode.length < 6) _cableMode = new byte[] {0,0,0, 0,0,0, 0};
@@ -640,7 +639,6 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		case 3:
 			for (int i = 6; i --> 0; )
 				_cableMode[i] = (byte) ((_cableMode[i] << 1) | 1);
-			break;
 		case 4:
 			_cableMode[6] = (byte) (_cableMode[6] > 0 ? 1 : 0);
 			break;
