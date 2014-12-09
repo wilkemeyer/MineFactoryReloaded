@@ -525,13 +525,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		Block b = worldObj.getBlock(x, y, z);
 		boolean node = false;
 
-		// air - never connect
-		if (b.isAir(worldObj, x, y, z))
-		{
-			return RedNetConnectionType.None;
-		}
 		// cables - always connect
-		else if (b == rednetCableBlock)
+		if (b == rednetCableBlock)
 		{
 			if (((TileEntityRedNetCable)worldObj.getTileEntity(x, y, z)).canInterface(this, side.getOpposite()))
 				return RedNetConnectionType.CableAll;
@@ -556,8 +551,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			node = true;
 			nodeFlags = type.flags;
 		}
+		// IRedNetNoConnection or air - don't connect
 		// Placed here so subclasses that are API nodes can override
-		else if (b instanceof IRedNetNoConnection)
+		else if (b instanceof IRedNetNoConnection || b.isAir(worldObj, x, y, z))
 		{
 			return RedNetConnectionType.None;
 		}
