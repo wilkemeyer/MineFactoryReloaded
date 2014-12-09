@@ -36,6 +36,7 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	@Override
 	public void onChunkUnload()
 	{
+		invalidate();
 		if (worldObj == null || !worldObj.isRemote)
 			worldObj = null;
 		_invName = null;
