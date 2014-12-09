@@ -115,7 +115,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	@Override
 	public final boolean isNotValid() {
-		return tileEntityInvalid || worldObj == null;
+		return tileEntityInvalid;
 	}
 
 	@Override
