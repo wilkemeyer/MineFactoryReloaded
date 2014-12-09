@@ -5,8 +5,6 @@ import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.position.BlockPosition;
 
-import java.util.LinkedHashSet;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -17,15 +15,15 @@ import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
-public class FluidNetwork implements IGrid
-{
+public class FluidNetwork implements IGrid {
+
 	public static final int TRANSFER_RATE = 80;
 	public static final int STORAGE = TRANSFER_RATE * 6;
 	static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> HANDLER =
 			GridTickHandler.fluid;
 
 	private ArrayHashList<TileEntityPlasticPipe> nodeSet = new ArrayHashList<TileEntityPlasticPipe>();
-	private LinkedHashSet<TileEntityPlasticPipe> conduitSet;
+	private LinkedHashList<TileEntityPlasticPipe> conduitSet;
 	private TileEntityPlasticPipe master;
 	private int overflowSelector;
 	private boolean regenerating = false;
@@ -40,7 +38,7 @@ public class FluidNetwork implements IGrid
 
 
 	public FluidNetwork(TileEntityPlasticPipe base) { this();
-		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>();
+		conduitSet = new LinkedHashList<TileEntityPlasticPipe>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
@@ -98,11 +96,10 @@ public class FluidNetwork implements IGrid
 		destroyGrid();
 		if (conduitSet.isEmpty())
 			return;
-		TileEntityPlasticPipe main = conduitSet.iterator().next();
-		LinkedHashSet<TileEntityPlasticPipe> oldSet = conduitSet;
+		TileEntityPlasticPipe main = conduitSet.poke();
+		LinkedHashList<TileEntityPlasticPipe> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashSet<TileEntityPlasticPipe>();
-		//Math.min(oldSet.size() / 6, 5)
+		conduitSet = new LinkedHashList<TileEntityPlasticPipe>(Math.min(oldSet.size() / 6, 5));
 		rebalanceGrid();
 
 		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<TileEntityPlasticPipe>();
@@ -121,9 +118,9 @@ public class FluidNetwork implements IGrid
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityPlasticPipe) {
-						if (main.canInterface((TileEntityPlasticPipe)te, dir[i^1]) && !checked.contains(te))
-							toCheck.add((TileEntityPlasticPipe)te);
-						checked.add((TileEntityPlasticPipe)te);
+						TileEntityPlasticPipe tep = (TileEntityPlasticPipe)te;
+						if (main.canInterface(tep, dir[i^1]) && checked.add(tep))
+							toCheck.add(tep);
 					}
 				}
 			}

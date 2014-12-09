@@ -4,8 +4,6 @@ import cofh.api.energy.EnergyStorage;
 import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.position.BlockPosition;
 
-import java.util.LinkedHashSet;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,15 +12,15 @@ import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
-public class RedstoneEnergyNetwork implements IGrid
-{
+public class RedstoneEnergyNetwork implements IGrid {
+
 	public static final int TRANSFER_RATE = 1000;
 	public static final int STORAGE = TRANSFER_RATE * 6;
 	static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> HANDLER =
 			GridTickHandler.energy;
 
 	private ArrayHashList<TileEntityRedNetEnergy> nodeSet = new ArrayHashList<TileEntityRedNetEnergy>();
-	private LinkedHashSet<TileEntityRedNetEnergy> conduitSet;
+	private LinkedHashList<TileEntityRedNetEnergy> conduitSet;
 	private TileEntityRedNetEnergy master;
 	private int overflowSelector;
 	private boolean regenerating = false;
@@ -37,7 +35,7 @@ public class RedstoneEnergyNetwork implements IGrid
 	}
 
 	public RedstoneEnergyNetwork(TileEntityRedNetEnergy base) { this();
-		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>();
+		conduitSet = new LinkedHashList<TileEntityRedNetEnergy>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
@@ -94,13 +92,13 @@ public class RedstoneEnergyNetwork implements IGrid
 		destroyGrid();
 		if (conduitSet.isEmpty())
 			return;
-		TileEntityRedNetEnergy main = conduitSet.iterator().next();
-		LinkedHashSet<TileEntityRedNetEnergy> oldSet = conduitSet;
+		TileEntityRedNetEnergy main = conduitSet.poke();
+		LinkedHashList<TileEntityRedNetEnergy> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashSet<TileEntityRedNetEnergy>(Math.min(oldSet.size() / 6, 5));
+		conduitSet = new LinkedHashList<TileEntityRedNetEnergy>(Math.min(oldSet.size() / 6, 5));
 
 		LinkedHashList<TileEntityRedNetEnergy> toCheck = new LinkedHashList<TileEntityRedNetEnergy>();
-		LinkedHashSet<TileEntityRedNetEnergy> checked = new LinkedHashSet<TileEntityRedNetEnergy>();
+		LinkedHashList<TileEntityRedNetEnergy> checked = new LinkedHashList<TileEntityRedNetEnergy>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
@@ -115,9 +113,9 @@ public class RedstoneEnergyNetwork implements IGrid
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityRedNetEnergy) {
-						if (main.canInterface((TileEntityRedNetEnergy)te, dir[i^1]) && !checked.contains(te))
-							toCheck.add((TileEntityRedNetEnergy)te);
-						checked.add((TileEntityRedNetEnergy)te);
+						TileEntityRedNetEnergy ter = (TileEntityRedNetEnergy)te;
+						if (main.canInterface(ter, dir[i^1]) && checked.add(ter))
+							toCheck.add(ter);
 					}
 				}
 			}

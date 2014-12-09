@@ -21,13 +21,14 @@ import org.apache.logging.log4j.Logger;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOutputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedstoneAlike;
+import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-public class RedstoneNetwork implements IGrid
-{
+public class RedstoneNetwork implements IGrid {
+
 	static final GridTickHandler<RedstoneNetwork, TileEntityRedNetCable> HANDLER =
 			GridTickHandler.redstone;
 
@@ -43,8 +44,8 @@ public class RedstoneNetwork implements IGrid
 	private Set<BlockPosition> _weakNodes = new LinkedHashSet<BlockPosition>();
 
 	private boolean regenerating;
-	private LinkedHashSet<TileEntityRedNetCable> nodeSet = new LinkedHashSet<TileEntityRedNetCable>();
-	private LinkedHashSet<TileEntityRedNetCable> conduitSet;
+	private ArrayHashList<TileEntityRedNetCable> nodeSet = new ArrayHashList<TileEntityRedNetCable>();
+	private LinkedHashList<TileEntityRedNetCable> conduitSet;
 
 	private int[] _powerLevelOutput = new int[16];
 	private BlockPosition[] _powerProviders = new BlockPosition[16];
@@ -53,27 +54,22 @@ public class RedstoneNetwork implements IGrid
 
 	private static boolean log = false;
 	private static Logger _log = LogManager.getLogger("RedNet Debug");
-	public static void log(String format, Object... data)
-	{
-		if (log && format != null)
-		{
+	public static void log(String format, Object... data) {
+		if (log && format != null) {
 			_log.debug(format, data);
 		}
 	}
 
-	private RedstoneNetwork(World world)
-	{
+	private RedstoneNetwork(World world) {
 		_world = world;
 		log = MFRConfig.redNetDebug.getBoolean(false);
 
 		for (int i = 0; i < 16; i++)
-		{
 			_singleNodes[i] = new LinkedHashSet<BlockPosition>();
-		}
 	}
 
 	public RedstoneNetwork(TileEntityRedNetCable base) { this(base.getWorldObj());
-		conduitSet = new LinkedHashSet<TileEntityRedNetCable>();
+		conduitSet = new LinkedHashList<TileEntityRedNetCable>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
@@ -134,11 +130,11 @@ public class RedstoneNetwork implements IGrid
 		for (Set<BlockPosition> a : _singleNodes)
 			a.clear();
 		//}
-		LinkedHashSet<TileEntityRedNetCable> oldSet = conduitSet;
-		conduitSet = new LinkedHashSet<TileEntityRedNetCable>(Math.min(oldSet.size() / 6, 5));
+		LinkedHashList<TileEntityRedNetCable> oldSet = conduitSet;
+		conduitSet = new LinkedHashList<TileEntityRedNetCable>(Math.min(oldSet.size() / 6, 5));
 
 		LinkedHashList<TileEntityRedNetCable> toCheck = new LinkedHashList<TileEntityRedNetCable>();
-		LinkedHashSet<TileEntityRedNetCable> checked = new LinkedHashSet<TileEntityRedNetCable>();
+		LinkedHashList<TileEntityRedNetCable> checked = new LinkedHashList<TileEntityRedNetCable>();
 		BlockPosition bp = new BlockPosition(0,0,0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
@@ -153,9 +149,9 @@ public class RedstoneNetwork implements IGrid
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityRedNetCable) {
-						if (main.canInterface((TileEntityRedNetCable)te, dir[i^1]) && !checked.contains(te))
-							toCheck.add((TileEntityRedNetCable)te);
-						checked.add((TileEntityRedNetCable)te);
+						TileEntityRedNetCable tec = (TileEntityRedNetCable)te;
+						if (main.canInterface(tec, dir[i^1]) && checked.add(tec))
+							toCheck.add(tec);
 					}
 				}
 			}
