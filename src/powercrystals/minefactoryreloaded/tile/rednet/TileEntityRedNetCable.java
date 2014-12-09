@@ -91,8 +91,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void validate()
-	{
+	public void validate() {
 		super.validate();
 		if (worldObj.isRemote)
 			return;
@@ -115,32 +114,27 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean isNotValid()
-	{
+	public final boolean isNotValid() {
 		return tileEntityInvalid || worldObj == null;
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
+	public boolean canUpdate() {
 		return false;
 	}
 
 	@Override
-	public void onNeighborBlockChange()
-	{
+	public void onNeighborBlockChange() {
 		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
 	}
 
 	@Override
-	public void onMatchedNeighborBlockChange()
-	{
+	public void onMatchedNeighborBlockChange() {
 		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
 	}
 
 	@Override
-	public void firstTick(IGridController grid)
-	{
+	public void firstTick(IGridController grid) {
 		if (worldObj == null || worldObj.isRemote) return;
 		if (grid != RedstoneNetwork.HANDLER) return;
 		if (_network == null) {

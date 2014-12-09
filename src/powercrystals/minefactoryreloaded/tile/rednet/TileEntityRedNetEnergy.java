@@ -83,11 +83,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		RedstoneEnergyNetwork.HANDLER.addConduitForTick(this);
 	}
 
-	@Override // cannot share mcp names
-	public boolean isNotValid() {
-		return tileEntityInvalid;
-	}
-
 	@Override
 	public void invalidate() {
 		if (_grid != null) {
