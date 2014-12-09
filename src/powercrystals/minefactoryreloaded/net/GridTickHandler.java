@@ -17,8 +17,8 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.transport.FluidNetwork;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
-public class GridTickHandler<G extends IGrid, N extends INode> implements IGridController
-{
+public class GridTickHandler<G extends IGrid, N extends INode> implements IGridController {
+
 	public static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> energy =
 			new GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy>("Energy");
 	public static final GridTickHandler<RedstoneNetwork, TileEntityRedNetCable> redstone =
@@ -42,41 +42,34 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 		label = "GridTickHandler[" + name + "]";
 	}
 
-	public void addGrid(G grid)
-	{
+	public void addGrid(G grid) {
 		tickingGridsToAdd.add(grid);
 		tickingGridsToRemove.remove(grid);
 	}
 
-	public void removeGrid(G grid)
-	{
+	public void removeGrid(G grid) {
 		tickingGridsToRemove.add(grid);
 		tickingGridsToAdd.remove(grid);
 	}
 
-	public void regenerateGrid(G grid)
-	{
+	public void regenerateGrid(G grid) {
 		tickingGridsToRegenerate.add(grid);
 	}
 
-	public boolean isGridTicking(G grid)
-	{
+	public boolean isGridTicking(G grid) {
 		return tickingGrids.contains(grid);
 	}
 
-	public void addConduitForTick(N node)
-	{
+	public void addConduitForTick(N node) {
 		conduitToAdd.add(node);
 	}
 
-	public void addConduitForUpdate(N node)
-	{
+	public void addConduitForUpdate(N node) {
 		conduitToUpd.add(node);
 	}
 
 	@SubscribeEvent
-	public void tick(ServerTickEvent evt)
-	{
+	public void tick(ServerTickEvent evt) {
 		// TODO: this needs split up into groups per-world when worlds are threaded
 		if (evt.phase == Phase.START)
 			tickStart();
@@ -84,8 +77,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			tickEnd();
 	}
 
-	public void tickStart()
-	{
+	public void tickStart() {
 		//{ Grids that have had significant conduits removed and need to rebuild/split
 		if (!tickingGridsToRegenerate.isEmpty())
 		synchronized (tickingGridsToRegenerate) {
@@ -103,13 +95,11 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			conduitToUpd.clear();
 		}
 
-		if (!conduit.isEmpty())
-		{
+		if (!conduit.isEmpty()) {
 			N cond = null;
 			try {
 				Iterator<N> iter = conduit.iterator();
-				while (iter.hasNext())
-				{
+				while (iter.hasNext()) {
 					synchronized (cond = iter.next()) {
 						if (!cond.isNotValid())
 							cond.updateInternalTypes(this);
@@ -129,19 +119,16 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 		//}
 	}
 
-	public void tickEnd()
-	{
+	public void tickEnd() {
 		//{ Changes in what grids are being ticked
 		if (!tickingGridsToRemove.isEmpty())
-		synchronized(tickingGridsToRemove)
-		{
+		synchronized(tickingGridsToRemove) {
 			tickingGrids.removeAll(tickingGridsToRemove);
 			tickingGridsToRemove.clear();
 		}
 
 		if (!tickingGridsToAdd.isEmpty())
-		synchronized(tickingGridsToAdd)
-		{
+		synchronized(tickingGridsToAdd) {
 			tickingGrids.addAll(tickingGridsToAdd);
 			tickingGridsToAdd.clear();
 		}
@@ -155,19 +142,16 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 
 		//{ Initial update tick for conduits added to the world
 		if (!conduitToAdd.isEmpty())
-		synchronized(conduitToAdd)
-		{
+		synchronized(conduitToAdd) {
 			conduit.addAll(conduitToAdd);
 			conduitToAdd.clear();
 		}
 
-		if (!conduit.isEmpty())
-		{
+		if (!conduit.isEmpty()) {
 			N cond = null;
 			try {
 				Iterator<N> iter = conduit.iterator();
-				while (iter.hasNext())
-				{
+				while (iter.hasNext()) {
 					synchronized (cond = iter.next()) {
 						if (!cond.isNotValid())
 							cond.firstTick(this);
