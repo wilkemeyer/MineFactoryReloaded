@@ -50,6 +50,13 @@ public class ItemSafariNet extends ItemFactory {
 	}
 
 	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		if (isSingleUse(stack) && isEmpty(stack))
+			return 12;
+		return maxStackSize;
+	}
+
+	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
 		super.addInfo(stack, player, infoList, advancedTooltips);
 		if (stack.getTagCompound() == null) {
@@ -320,6 +327,14 @@ public class ItemSafariNet extends ItemFactory {
 			if (!flag)
 				entity.setDead();
 			if (flag | entity.isDead) {
+				itemstack.stackSize--;
+				if (itemstack.stackSize > 0) {
+					itemstack = itemstack.copy();
+					if (!player.inventory.addItemStackToInventory(itemstack)) {
+						player.func_146097_a(itemstack, false, true);
+					}
+				}
+				itemstack.stackSize = 1;
 				itemstack.setTagCompound(c);
 				return true;
 			} else {
