@@ -26,6 +26,7 @@ public class MFRConfig
 	public static Property conveyorNeverCapturesPlayers;
 	public static Property conveyorNeverCapturesTCGolems;
 	public static Property playSounds;
+	public static Property defaultRedNetCableOnly;
 
 	public static Property treeSearchMaxVertical;
 	public static Property treeSearchMaxHorizontal;
@@ -162,6 +163,8 @@ public class MFRConfig
 		redNetDebug.comment = "If true, RedNet cables will dump a massive amount of data to the log file. You should probably only use this if PC tells you to.";
 		redNetConnectionBlacklist = c.get(category, "ConnectionBlackList", new String[] {}).setRequiresMcRestart(true);
 		redNetConnectionBlacklist.comment = "A list of block IDs to prevent RedNet cables from connecting to. (e.g., minecraft:torch)";
+		defaultRedNetCableOnly = c.get(category, "CableOnly", false);
+		defaultRedNetCableOnly.comment = "If true, placed rednet cable will default to cable-only connections.";
 		//}
 
 		//{ Worldgen

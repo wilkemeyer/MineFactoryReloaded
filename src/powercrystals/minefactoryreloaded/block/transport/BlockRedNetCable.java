@@ -31,6 +31,7 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
@@ -275,6 +276,17 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 	public boolean renderAsNormalBlock()
 	{
 		return false;
+	}
+
+	@Override
+	public void onPostBlockPlaced(World world, int x, int y, int z, int metadata) {
+		if (MFRConfig.defaultRedNetCableOnly.getBoolean(false)) {
+			TileEntity te = world.getTileEntity(x, y, z);
+			if (te instanceof TileEntityRedNetCable) {
+				TileEntityRedNetCable cable = (TileEntityRedNetCable)te;
+				cable.setMode(6, (byte) 1);
+			}
+		}
 	}
 
 	@Override
