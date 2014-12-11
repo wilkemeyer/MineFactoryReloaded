@@ -42,6 +42,11 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
+	public boolean canUpdate() {
+		return false;
+	}
+
+	@Override
 	public void invalidate()
 	{
 		super.invalidate();
