@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +35,7 @@ import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.ISafariNetHandler;
 import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
@@ -327,15 +329,20 @@ public class ItemSafariNet extends ItemFactory {
 			if (!flag)
 				entity.setDead();
 			if (flag | entity.isDead) {
-				itemstack.stackSize--;
-				if (itemstack.stackSize > 0) {
+				flag = false;
+				if (--itemstack.stackSize > 0) {
+					flag = true;
 					itemstack = itemstack.copy();
-					if (!player.inventory.addItemStackToInventory(itemstack)) {
-						player.func_146097_a(itemstack, false, true);
-					}
 				}
 				itemstack.stackSize = 1;
 				itemstack.setTagCompound(c);
+				if (flag && (player == null || !player.inventory.addItemStackToInventory(itemstack)))
+					UtilInventory.dropStackInAir(entity.worldObj, entity, itemstack);
+				else if (flag) {
+					player.openContainer.detectAndSendChanges();
+					((EntityPlayerMP)player).sendContainerAndContentsToPlayer(player.openContainer, player.openContainer.getInventory());
+				}
+
 				return true;
 			} else {
 				return false;

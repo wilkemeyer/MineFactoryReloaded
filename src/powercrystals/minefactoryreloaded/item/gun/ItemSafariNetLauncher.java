@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.item.gun;
 
+import cofh.lib.util.helpers.ItemHelper;
+
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,13 +49,17 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 			ItemStack ammo = player.inventory.getStackInSlot(i);
 			if (ItemSafariNet.isSafariNet(ammo)) {
 				if (ItemSafariNet.isEmpty(ammo) == isCaptureMode(stack)) {
+					player.inventory.setInventorySlotContents(i, ItemHelper.consumeItem(ammo));
+					if (ammo.stackSize > 0) {
+						ammo = ammo.copy();
+					}
+					ammo.stackSize = 1;
 					if (!world.isRemote) {
 						EntitySafariNet esn = new EntitySafariNet(world, player, ammo);
 						world.spawnEntityInWorld(esn);
 
 						world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 					}
-					player.inventory.setInventorySlotContents(i, null);
 					return true;
 				}
 			}
