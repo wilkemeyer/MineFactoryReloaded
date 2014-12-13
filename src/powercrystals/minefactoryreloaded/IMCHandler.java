@@ -49,31 +49,24 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 
-public class IMCHandler
-{
+public class IMCHandler {
+
 	@SuppressWarnings("unchecked")
-	public static void processIMC(List<IMCMessage> l)
-	{
+	public static void processIMC(List<IMCMessage> l) {
 		Logger _log = MineFactoryReloadedCore.instance().getLogger();
-		for (IMCMessage m : l)
-		{
-			try
-			{
+		for (IMCMessage m : l) {
+			try {
 				String k = m.key;
 				//{ FactoryRegistry methods
 				/*
 				 * Laser Preferred Ores
 				 */
-				if ("addLaserPreferredOre".equals(k))
-				{
-					if (m.isNBTMessage())
-					{
+				if ("addLaserPreferredOre".equals(k)) {
+					if (m.isNBTMessage()) {
 						NBTTagCompound item = m.getNBTValue();
 						MFRRegistry.addLaserPreferredOre(item.getInteger("value"),
 								ItemStack.loadItemStackFromNBT(item));
-					}
-					else
-					{
+					} else {
 						ValuedItem item = (ValuedItem)getValue(m);
 						MFRRegistry.addLaserPreferredOre(item.value, item.item);
 					}
@@ -81,8 +74,7 @@ public class IMCHandler
 				/*
 				 * AutoSpawner Blacklist
 				 */
-				else if ("registerAutoSpawnerBlacklist".equals(k))
-				{
+				else if ("registerAutoSpawnerBlacklist".equals(k)) {
 					if (m.isStringMessage())
 						MFRRegistry.registerAutoSpawnerBlacklist(m.getStringValue());
 					else
@@ -92,58 +84,48 @@ public class IMCHandler
 				/*
 				 * Fertilizables
 				 */
-				else if ("registerFertilizable".equals(k))
-				{
+				else if ("registerFertilizable".equals(k)) {
 					MFRRegistry.registerFertilizable((IFactoryFertilizable) getValue(m));
 				}
 				/*
-				 * Fertilizers 
+				 * Fertilizers
 				 */
-				else if ("registerFertilizer".equals(k))
-				{
+				else if ("registerFertilizer".equals(k)) {
 					MFRRegistry.registerFertilizer((IFactoryFertilizer) getValue(m));
 				}
 				/*
 				 * Fruit logs
 				 */
-				else if ("registerFruitLog".equals(k))
-				{
+				else if ("registerFruitLog".equals(k)) {
 					MFRRegistry.registerFruitLogBlock(Block.getBlockFromName(m.getStringValue()));
 				}
 				/*
 				 * Grinding handlers
 				 */
-				else if ("registerGrindable".equals(k))
-				{
+				else if ("registerGrindable".equals(k)) {
 					MFRRegistry.registerGrindable((IFactoryGrindable) getValue(m));
 				}
 				/*
 				 * Grinder blacklist
 				 */
-				else if ("registerGrinderBlacklist".equals(k))
-				{
+				else if ("registerGrinderBlacklist".equals(k)) {
 					MFRRegistry.registerGrinderBlacklist((Class<? extends EntityLivingBase>) getValue(m));
 				}
 				/*
 				 * Harvestables
 				 */
-				else if ("registerHarvestable".equals(k))
-				{
+				else if ("registerHarvestable".equals(k)) {
 					MFRRegistry.registerHarvestable((IFactoryHarvestable) getValue(m));
 				}
 				/*
 				 * Laser ores drops
 				 */
-				else if ("registerLaserOre".equals(k))
-				{
-					if (m.isNBTMessage())
-					{
+				else if ("registerLaserOre".equals(k)) {
+					if (m.isNBTMessage()) {
 						NBTTagCompound item = m.getNBTValue();
 						MFRRegistry.registerLaserOre(item.getInteger("value"),
 								ItemStack.loadItemStackFromNBT(item));
-					}
-					else
-					{
+					} else {
 						ValuedItem item = (ValuedItem)getValue(m);
 						MFRRegistry.registerLaserOre(item.value, item.item);
 					}
@@ -151,89 +133,73 @@ public class IMCHandler
 				/*
 				 * Liquid Drinking Handlers
 				 */
-				else if ("registerLiquidDrinkHandler".equals(k))
-				{
+				else if ("registerLiquidDrinkHandler".equals(k)) {
 					ValuedItem item = (ValuedItem)getValue(m);
 					MFRRegistry.registerLiquidDrinkHandler(item.key, (ILiquidDrinkHandler) item.object);
 				}
 				/*
 				 * Mob egg handlers
 				 */
-				else if ("registerMobEggHandler".equals(k))
-				{
+				else if ("registerMobEggHandler".equals(k)) {
 					MFRRegistry.registerMobEggHandler((IMobEggHandler) getValue(m));
 				}
 				/*
 				 * Fruit Handlers
 				 */
-				else if ("registerPickableFruit".equals(k))
-				{
+				else if ("registerPickableFruit".equals(k)) {
 					MFRRegistry.registerFruit((IFactoryFruit) getValue(m));
 				}
 				/*
 				 * Plantables
 				 */
-				else if ("registerPlantable".equals(k))
-				{
+				else if ("registerPlantable".equals(k)) {
 					MFRRegistry.registerPlantable((IFactoryPlantable) getValue(m));
 				}
 				/*
 				 * Ranching Handlers
 				 */
-				else if ("registerRanchable".equals(k))
-				{
+				else if ("registerRanchable".equals(k)) {
 					MFRRegistry.registerRanchable((IFactoryRanchable) getValue(m));
 				}
 				/*
 				 * RedNet Logic Circuits
 				 */
-				else if ("registerRedNetLogicCircuit".equals(k))
-				{
-					if (m.isStringMessage())
-					{
+				else if ("registerRedNetLogicCircuit".equals(k)) {
+					if (m.isStringMessage()) {
 						MFRRegistry.registerRedNetLogicCircuit((IRedNetLogicCircuit)
 								Class.forName(m.getStringValue()).newInstance());
-					}
-					else
-					{
+					} else {
 						MFRRegistry.registerRedNetLogicCircuit((IRedNetLogicCircuit) getValue(m));
 					}
 				}
 				/*
 				 * Rubber tree biome whitelisting
 				 */
-				else if ("registerRubberTreeBiome".equals(k))
-				{
+				else if ("registerRubberTreeBiome".equals(k)) {
 					MFRRegistry.registerRubberTreeBiome(m.getStringValue());
 				}
 				/*
 				 * SafariNet Blacklist
 				 */
-				else if ("registerSafariNetBlacklist".equals(k))
-				{
+				else if ("registerSafariNetBlacklist".equals(k)) {
 					MFRRegistry.registerSafariNetBlacklist((Class<? extends EntityLivingBase>)
 							getValue(m));
 				}
 				/*
 				 * SafariNet Information Handler
 				 */
-				else if ("registerSafariNetHandler".equals(k))
-				{
+				else if ("registerSafariNetHandler".equals(k)) {
 					MFRRegistry.registerSafariNetHandler((ISafariNetHandler) getValue(m));
 				}
 				/*
 				 * Sludge drop list
 				 */
-				else if ("registerSludgeDrop".equals(k))
-				{
-					if (m.isNBTMessage())
-					{
+				else if ("registerSludgeDrop".equals(k)) {
+					if (m.isNBTMessage()) {
 						NBTTagCompound item = m.getNBTValue();
 						MFRRegistry.registerSludgeDrop(item.getInteger("value"),
 								ItemStack.loadItemStackFromNBT(item));
-					}
-					else
-					{
+					} else {
 						ValuedItem item = (ValuedItem)getValue(m);
 						MFRRegistry.registerSludgeDrop(item.value, item.item);
 					}
@@ -241,15 +207,13 @@ public class IMCHandler
 				/*
 				 * Mob Spawning handlers
 				 */
-				else if ("registerSpawnHandler".equals(k))
-				{
+				else if ("registerSpawnHandler".equals(k)) {
 					MFRRegistry.registerSpawnHandler((IMobSpawnHandler) getValue(m));
 				}
 				/*
 				 * Random mob providers
 				 */
-				else if ("registerVillagerTradeMob".equals(k))
-				{
+				else if ("registerVillagerTradeMob".equals(k)) {
 					MFRRegistry.registerRandomMobProvider((IRandomMobProvider) getValue(m));
 				}
 				//}
@@ -260,74 +224,63 @@ public class IMCHandler
 				/*
 				 * HarvestableStandard
 				 */
-				else if ("registerHarvestable_Standard".equals(k))
-				{
+				else if ("registerHarvestable_Standard".equals(k)) {
 					MFRRegistry.registerHarvestable(new HarvestableStandard(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * HarvestableWood
 				 */
-				else if ("registerHarvestable_Log".equals(k))
-				{
+				else if ("registerHarvestable_Log".equals(k)) {
 					MFRRegistry.registerHarvestable(new HarvestableWood(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * HarvestableTreeLeaves
 				 */
-				else if ("registerHarvestable_Leaves".equals(k))
-				{
+				else if ("registerHarvestable_Leaves".equals(k)) {
 					MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * HarvestableVine
 				 */
-				else if ("registerHarvestable_Vine".equals(k))
-				{
+				else if ("registerHarvestable_Vine".equals(k)) {
 					MFRRegistry.registerHarvestable(new HarvestableVine(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * HarvestableShrub
 				 */
-				else if ("registerHarvestable_Shrub".equals(k))
-				{
+				else if ("registerHarvestable_Shrub".equals(k)) {
 					MFRRegistry.registerHarvestable(new HarvestableShrub(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * HarvestableMushroom
 				 */
-				else if ("registerHarvestable_Mushroom".equals(k))
-				{
+				else if ("registerHarvestable_Mushroom".equals(k)) {
 					MFRRegistry.registerHarvestable(new HarvestableMushroom(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * HarvestableCrop
 				 */
-				else if ("registerHarvestable_Crop".equals(k))
-				{
-					if (m.isItemStackMessage())
-					{
+				else if ("registerHarvestable_Crop".equals(k)) {
+					if (m.isItemStackMessage()) {
 						ItemStack item = m.getItemStackValue();
 						MFRRegistry.registerHarvestable(new HarvestableCropPlant(
 								Block.getBlockFromItem(item.getItem()), item.getItemDamage()));
-					}
-					else
-					{
+					} else {
 						ValuedItem item = (ValuedItem) getValue(m);
 						MFRRegistry.registerHarvestable(new HarvestableCropPlant(
 								(Block)item.object, item.value));
 					}
 				}
 				/*
-				 * HarvestableStemPlant 
+				 * HarvestableStemPlant
 				 */
-				else if ("registerHarvestable_Gourd".equals(k))
-				{
+				else if ("registerHarvestable_Gourd".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					MFRRegistry.registerHarvestable(new HarvestableStemPlant(
 							Block.getBlockFromName(item.getString("stem")),
@@ -342,8 +295,7 @@ public class IMCHandler
 				/*
 				 * PlantableCropPlant
 				 */
-				else if ("registerPlantable_Crop".equals(k))
-				{
+				else if ("registerPlantable_Crop".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("meta"))
 						MFRRegistry.registerPlantable(new PlantableCropPlant(
@@ -358,8 +310,7 @@ public class IMCHandler
 				/*
 				 * PlantableSapling
 				 */
-				else if ("registerPlantable_Sapling".equals(k))
-				{
+				else if ("registerPlantable_Sapling".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("seed"))
 						MFRRegistry.registerPlantable(new PlantableSapling(
@@ -372,8 +323,7 @@ public class IMCHandler
 				/*
 				 * PlantableStandard
 				 */
-				else if ("registerPlantable_Standard".equals(k))
-				{
+				else if ("registerPlantable_Standard".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("meta"))
 						MFRRegistry.registerPlantable(new PlantableStandard(
@@ -392,8 +342,7 @@ public class IMCHandler
 				/*
 				 * FertilizerStandard
 				 */
-				else if ("registerFertilizer".equals(k))
-				{
+				else if ("registerFertilizer".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					MFRRegistry.registerFertilizer(new FertilizerStandard(
 							(Item)Item.itemRegistry.getObject(item.getString("fert")),
@@ -403,24 +352,21 @@ public class IMCHandler
 				/*
 				 * FertilizableGrass
 				 */
-				else if ("registerFertilizable_Grass".equals(k))
-				{
+				else if ("registerFertilizable_Grass".equals(k)) {
 					MFRRegistry.registerFertilizable(new FertilizableGrass(
 							Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * FertilizableStemPlants
 				 */
-				else if ("registerFertilizable_Gourd".equals(k))
-				{
+				else if ("registerFertilizable_Gourd".equals(k)) {
 					MFRRegistry.registerFertilizable(new FertilizableStemPlants(
 							(IGrowable)Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * FertilizableCropPlant
 				 */
-				else if ("registerFertilizable_Crop".equals(k))
-				{
+				else if ("registerFertilizable_Crop".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("type"))
 						MFRRegistry.registerFertilizable(new FertilizableCropPlant(
@@ -435,8 +381,7 @@ public class IMCHandler
 				/*
 				 * FertilizableCocoa
 				 */
-				else if ("registerFertilizable_Cocoa".equals(k))
-				{
+				else if ("registerFertilizable_Cocoa".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("type"))
 						MFRRegistry.registerFertilizable(new FertilizableCocoa(
@@ -449,8 +394,7 @@ public class IMCHandler
 				/*
 				 * FertilizableStandard
 				 */
-				else if ("registerFertilizable_Standard".equals(k))
-				{
+				else if ("registerFertilizable_Standard".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("type"))
 						MFRRegistry.registerFertilizable(new FertilizableStandard(
@@ -470,21 +414,18 @@ public class IMCHandler
 				else
 					bigWarning(_log, Level.WARN, "Unknown IMC message (%s)\nfrom %s", k, m.getSender());
 			}
-			catch (Throwable _)
-			{
+			catch (Throwable _) {
 				bigWarning(_log, Level.ERROR, "Bad IMC message (%s)\nfrom %s", m.key, m.getSender());
 				_log.catching(_);
 			}
 		}
 	}
 
-	private static Object getValue(IMCMessage m)
-	{
+	private static Object getValue(IMCMessage m) {
 		return ReflectionHelper.getPrivateValue(IMCMessage.class, m, "value");
 	}
-	
-	private static void bigWarning(Logger log, Level Level, String format, Object... data)
-	{
+
+	private static void bigWarning(Logger log, Level Level, String format, Object... data) {
 		String o = String.format(format, data);
 		String err = "************************";
 		err += err;
@@ -497,4 +438,5 @@ public class IMCHandler
         log.log(Level, err);
         log.log(Level, err);
 	}
+
 }
