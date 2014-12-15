@@ -16,13 +16,12 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowered implements ITankContainerBucketable
-{
+public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowered implements ITankContainerBucketable {
+
 	private FluidStack fluid;
 	private int _liquidFabPerTick;
-	
-	protected TileEntityLiquidFabricator(int liquidId, int liquidFabPerTick, Machine machine)
-	{
+
+	protected TileEntityLiquidFabricator(int liquidId, int liquidFabPerTick, Machine machine) {
 		super(machine, machine.getActivationEnergy() * liquidFabPerTick);
 		_liquidFabPerTick = liquidFabPerTick;
 		if (liquidId > 0)
@@ -30,10 +29,9 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 		else
 			fluid = null;
 	}
-	
+
 	@Override
-	protected boolean activateMachine()
-	{
+	protected boolean activateMachine() {
 		if (fluid != null && _tanks[0].getSpace() >= _liquidFabPerTick)
 			if (_tanks[0].fill(fluid, true) > 0)
 				return true;
@@ -41,83 +39,70 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
 		return 0;
 	}
-	
+
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
 		return 200;
 	}
-	
+
 	@Override
-	protected boolean shouldPumpLiquid()
-	{
+	protected boolean shouldPumpLiquid() {
 		return true;
 	}
-	
+
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
 		return 0;
 	}
-	
+
 	@Override
-	protected FluidTankAdv[] createTanks()
-	{
+	protected FluidTankAdv[] createTanks() {
 		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME)};
 	}
-	
+
 	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
+	public boolean allowBucketDrain(ItemStack stack) {
 		return true;
 	}
-	
+
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		return fill(resource, doFill);
 	}
-	
+
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
 		return drain(resource, doDrain);
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		return false;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		return true;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 }
