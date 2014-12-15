@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
@@ -63,7 +65,8 @@ public class NeedleGunItemRenderer implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glNormal3f(0.0F, 0.0F, -1.0F);
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
 
 		if (renderengine != null)
@@ -72,6 +75,7 @@ public class NeedleGunItemRenderer implements IItemRenderer
 		}
 
 		CCRenderState.reset();
+		RenderHelper.disableStandardItemLighting();
 		GL11.glPushMatrix();
 
 		if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
@@ -87,9 +91,14 @@ public class NeedleGunItemRenderer implements IItemRenderer
 		}
 		else
 		{
-			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glRotatef(270, 1, 0, 0);
 			GL11.glTranslatef(0, -0.4F, 0);
+		}
+		if (type == ItemRenderType.INVENTORY) {
+			GL11.glNormal3f(0.0F, 0.0F, 1.0F);
+			RenderHelper.enableGUIStandardItemLighting();
+		} else {
+			RenderHelper.enableStandardItemLighting();
 		}
 
 		Tessellator.instance.startDrawing(4);
@@ -100,6 +109,5 @@ public class NeedleGunItemRenderer implements IItemRenderer
 		Tessellator.instance.draw();
 
 		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 }
