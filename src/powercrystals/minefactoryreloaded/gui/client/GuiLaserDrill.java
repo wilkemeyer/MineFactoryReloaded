@@ -4,23 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class GuiLaserDrill extends GuiFactoryInventory
 {
 	private static final int _barEnergyIndex = 0;
 	private static final int _barWorkIndex   = 1;
-	
+
 	private TileEntityLaserDrill _drill;
-	
+
 	public GuiLaserDrill(ContainerFactoryInventory container, TileEntityLaserDrill tileentity)
 	{
 		super(container, tileentity);
 		_drill = tileentity;
 		ySize = 180;
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
@@ -29,21 +28,19 @@ public class GuiLaserDrill extends GuiFactoryInventory
 		drawBar(150, 75, _drill.getEnergyMax(), _drill.getEnergyStored(), _barEnergyIndex);
 		drawBar(160, 75, _drill.getWorkMax(), _drill.getWorkDone(), _barWorkIndex);
 	}
-	
+
 	@Override
 	protected void drawTooltips(int mouseX, int mouseY)
 	{
 		super.drawTooltips(mouseX, mouseY);
-		
+
 		if(isPointInRegion(150, 15, 8, 60, mouseX, mouseY))
 		{
-			int energyPerEU = TileEntityFactoryPowered.energyPerEU;
 			int stored = _drill.getEnergyStored();
 			int storedMax = _drill.getEnergyMax();
 			List<String> lines = new ArrayList<String>();
 			lines.add("Energy");
 			lines.add(stored + " / " + storedMax + " " + "RF");
-			lines.add(stored / energyPerEU + " / " + storedMax / energyPerEU + " " + "EU");
 			drawTooltip(lines, mouseX, mouseY);
 		}
 		else if(isPointInRegion(160, 15, 8, 60, mouseX, mouseY))
