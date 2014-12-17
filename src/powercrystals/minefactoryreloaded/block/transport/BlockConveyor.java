@@ -428,6 +428,12 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode
 	}
 
 	@Override
+	public boolean isNormalCube()
+	{
+		return false;
+	}
+
+	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3 vec3d, Vec3 vec3d1)
 	{
 		setBlockBoundsBasedOnState(world, i, j, k);
