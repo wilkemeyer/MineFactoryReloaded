@@ -288,8 +288,10 @@ public class FluidNetwork implements IGrid {
 			if (!FluidHelper.isFluidEqualOrNull(cond.fluidForGrid, storage.getFluid())) {
 				conduitSet.remove(cond);
 				return false;
-			} else
+			} else {
 				cond.setGrid(this);
+				storage.fill(new FluidStack(cond.fluidForGrid.fluidID, 0), true);
+			}
 		} else {
 			cond.setGrid(this);
 		}
