@@ -65,7 +65,6 @@ public class NeedleGunItemRenderer implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		GL11.glNormal3f(0.0F, 0.0F, -1.0F);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
 
@@ -98,6 +97,7 @@ public class NeedleGunItemRenderer implements IItemRenderer
 			GL11.glNormal3f(0.0F, 0.0F, 1.0F);
 			RenderHelper.enableGUIStandardItemLighting();
 		} else {
+			GL11.glNormal3f(0.0F, 0.0F, -1.0F);
 			RenderHelper.enableStandardItemLighting();
 		}
 
@@ -109,5 +109,7 @@ public class NeedleGunItemRenderer implements IItemRenderer
 		Tessellator.instance.draw();
 
 		GL11.glPopMatrix();
+		GL11.glNormal3f(0.0F, 0.0F, 0.0F);
+		RenderHelper.enableStandardItemLighting();
 	}
 }
