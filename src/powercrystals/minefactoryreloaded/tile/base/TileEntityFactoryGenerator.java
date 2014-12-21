@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.core.util.CoreUtils;
@@ -154,10 +153,10 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 		if (receiverCache != null)
 			receiverCache[side] = null;
 
-		if (tile instanceof IEnergyHandler) {
-			if (((IEnergyHandler)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
-				if (receiverCache == null) receiverCache = new IEnergyHandler[6];
-				receiverCache[side] = (IEnergyHandler)tile;
+		if (tile instanceof IEnergyReceiver) {
+			if (((IEnergyReceiver)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
+				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
+				receiverCache[side] = (IEnergyReceiver)tile;
 			}
 		}
 	}

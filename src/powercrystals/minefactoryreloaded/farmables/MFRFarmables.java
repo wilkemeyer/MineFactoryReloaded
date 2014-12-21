@@ -127,7 +127,7 @@ public class MFRFarmables {
 		MFRRegistry.registerGrinderBlacklist(IBossDisplayData.class);
 
 		MFRRegistry.registerPlantable(new PlantableSapling(rubberSaplingBlock));
-		MFRRegistry.registerPlantable(new PlantableSoil(fertileSoil));
+		MFRRegistry.registerPlantable(new PlantableSoil(fertileSoil, 3));
 
 		MFRRegistry.registerHarvestable(new HarvestableWood(rubberWoodBlock));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(rubberLeavesBlock));

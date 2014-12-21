@@ -444,7 +444,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		pinkSlimeBlockItem = Item.getItemFromBlock(pinkSlimeBlock);
 
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);
-		registerBlock(fertileSoil, ItemBlockFactory.class);
+		registerBlock(fertileSoil, ItemBlockFactory.class, 3);
 
 		registerBlock(detCordBlock, ItemBlockDetCord.class);
 

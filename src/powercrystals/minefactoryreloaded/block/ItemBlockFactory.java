@@ -20,17 +20,30 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 public class ItemBlockFactory extends ItemBlock
 {
 	protected String[] _names = {null};
-	
+	protected int metaOffset = 0;
+
 	public ItemBlockFactory(Block p_i45328_1_)
 	{
 		super(p_i45328_1_);
 		setMaxDamage(0);
 	}
-	
+
 	public ItemBlockFactory(Block p_i45328_1_, String[] names)
 	{
 		this(p_i45328_1_);
 		setNames(names);
+	}
+
+	public ItemBlockFactory(Block p_i45328_1_, Integer metaOffset, String[] names)
+	{
+		this(p_i45328_1_, names);
+		this.metaOffset = metaOffset.intValue();
+	}
+
+	public ItemBlockFactory(Block p_i45328_1_, Integer metaOffset)
+	{
+		this(p_i45328_1_);
+		this.metaOffset = metaOffset.intValue();
 	}
 
 	protected void setNames(String[] names)
@@ -38,7 +51,7 @@ public class ItemBlockFactory extends ItemBlock
 		_names = names;
 		setHasSubtypes(true);
 	}
-	
+
 	protected String name(ItemStack stack)
 	{
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
@@ -54,7 +67,7 @@ public class ItemBlockFactory extends ItemBlock
 	@Override
 	public int getMetadata(int meta)
 	{
-		return meta;
+		return (metaOffset + meta) & 15;
 	}
 
 	@Override
@@ -62,7 +75,7 @@ public class ItemBlockFactory extends ItemBlock
 	{
 		return getName(getUnlocalizedName(), name(stack));
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	@SideOnly(Side.CLIENT)

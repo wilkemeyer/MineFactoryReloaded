@@ -7,6 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.api.ReplacementBlock;
+
 public class PlantableSoil extends PlantableStandard
 {
 	public PlantableSoil(Block block)
@@ -22,6 +24,15 @@ public class PlantableSoil extends PlantableStandard
 	public PlantableSoil(Item block, Block plantedBlock, int validMeta)
 	{
 		super(block, plantedBlock, validMeta);
+	}
+
+	public PlantableSoil(Block block, int plantedMeta) {
+		this(Item.getItemFromBlock(block), plantedMeta, block);
+	}
+
+	public PlantableSoil(Item block, int plantedMeta, Block plantedBlock)
+	{
+		super(block, plantedBlock, WILDCARD, new ReplacementBlock(plantedBlock).setMeta(plantedMeta));
 	}
 
 	@Override

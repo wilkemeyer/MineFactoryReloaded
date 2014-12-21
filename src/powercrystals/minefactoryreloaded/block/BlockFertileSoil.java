@@ -107,7 +107,8 @@ public class BlockFertileSoil extends Block implements IGrowable
 					func_149853_b(world, world.rand, x, y, z);
 					world.playAuxSFXAtEntity(null, 2005, x, y, z, 0);
 				}
-				player.setCurrentItemOrArmor(0, UtilInventory.consumeItem(stack, player));
+				if (!player.capabilities.isCreativeMode)
+					player.setCurrentItemOrArmor(0, UtilInventory.consumeItem(stack, player));
 				return true;
 			}
 		}
@@ -134,10 +135,12 @@ public class BlockFertileSoil extends Block implements IGrowable
 			alterMetadata(world, x, y, z, -1);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
 		super.onNeighborBlockChange(world, x, y, z, block);
+		if (true) return; // TODO: if neighborChange becomes sided, remove
 		Block above = world.getBlock(x, y + 1, z);
 		if (block != above)
 			return;
