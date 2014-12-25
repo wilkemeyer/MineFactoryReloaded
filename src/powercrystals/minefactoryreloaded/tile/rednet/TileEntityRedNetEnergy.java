@@ -290,6 +290,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+		if (from == ForgeDirection.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.receiveEnergy(maxReceive, simulate);
 		return 0;
@@ -302,11 +303,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
+		if (from == ForgeDirection.UNKNOWN) return false;
 		return (sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null;
 	}
 
 	@Override
 	public int getEnergyStored(ForgeDirection from) {
+		if (from == ForgeDirection.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getEnergyStored();
 		return 0;
@@ -314,6 +317,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public int getMaxEnergyStored(ForgeDirection from) {
+		if (from == ForgeDirection.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getMaxEnergyStored();
 		return 0;
