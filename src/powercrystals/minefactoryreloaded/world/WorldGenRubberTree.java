@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.world;
 
+import cofh.lib.util.helpers.BlockHelper;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -26,25 +28,10 @@ public class WorldGenRubberTree extends WorldGenerator
 	{
 		for (int c = 0; c < retries; c++)
 		{
-			int y = world.getChunkFromBlockCoords(x, z).getTopFilledSegment() + 16;
+			int y = BlockHelper.getSurfaceBlockY(world, x, z);
 
-			l: {
-				Block block;
-				do {
-					if (--y <= 0)
-					{
-						retries--;
-						break l; // we're too low, skip trying to grow the tree
-					}
-					block = world.getBlock(x, y, z);
-				} while (block.isAir(world, x, y, z) ||
-						block.isLeaves(world, x, y, z) ||
-						block.isReplaceable(world, x, y, z) ||
-						block.canBeReplacedByLeaves(world, x, y, z));
-
-				if (!growTree(world, rand, x, y + 1, z))
-					retries--;
-			}
+			if (y > 0 && !growTree(world, rand, x, y + 1, z))
+				retries--;
 
 			x += rand.nextInt(16) - 8;
 			z += rand.nextInt(16) - 8;
