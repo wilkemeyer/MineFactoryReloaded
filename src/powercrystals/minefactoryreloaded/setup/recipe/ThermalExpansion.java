@@ -59,9 +59,9 @@ public class ThermalExpansion extends Vanilla
 			throw new MissingModsException(Collections.
 					singleton((ArtifactVersion)new DefaultArtifactVersion(TE)));
 		}
-		if(Loader.isModLoaded("ThermalDucts"))
+		if(Loader.isModLoaded("ThermalDynamics"))
 		{
-			conduitLiquid = GameRegistry.findItemStack("ThermalDucts", "conduitFluidOpaque", 1);
+			conduitLiquid = GameRegistry.findItemStack("ThermalDynamics", "conduitFluidOpaque", 1);
 		}
 		else
 		{
@@ -669,7 +669,7 @@ public class ThermalExpansion extends Vanilla
 			"WBW",
 			'W', Items.wheat,
 			'B', new ItemStack(Items.dye, 1, 15),
-			'S', sulfur,
+			'S', "dustSulfur",
 			'T', "stickWood",
 				} ));
 
