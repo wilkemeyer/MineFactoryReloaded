@@ -29,6 +29,10 @@ public class TConstruct {
 		tag.setInteger("HarvestLevel", 1);
 		tag.setInteger("Attack", -1);
 		tag.setFloat("HandleModifier", 0.1f);
+		tag.setFloat("Bow_ProjectileSpeed", 4.2f);
+		tag.setInteger("Bow_DrawSpeed", 20);
+		tag.setFloat("Projectile_Mass", 0.25f);
+		tag.setFloat("Projectile_Fragility", 0.5f);
 		tag.setString("Style", EnumChatFormatting.GRAY.toString());
 		tag.setInteger("Color", 0xFFADADAD);
 		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tag);
@@ -49,6 +53,10 @@ public class TConstruct {
 		tag.setInteger("HarvestLevel", 1);
 		tag.setInteger("Attack", 1);
 		tag.setFloat("HandleModifier", 2.5f);
+		tag.setFloat("Bow_ProjectileSpeed", 4.7f);
+		tag.setInteger("Bow_DrawSpeed", 15);
+		tag.setFloat("Projectile_Mass", 0.20f);
+		tag.setFloat("Projectile_Fragility", 0.0f);
 		tag.setString("Style", EnumChatFormatting.LIGHT_PURPLE.toString());
 		tag.setInteger("Color", 0xFFF3AEC6);
 		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tag);
