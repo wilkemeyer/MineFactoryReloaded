@@ -222,6 +222,7 @@ item.mfr.hammer.name = Precision Sledgehammer
 item.mfr.plastic.sheet.name = Plastic Sheets
 item.mfr.plastic.raw.name = Raw Plastic
 item.mfr.plastic.bag.name = Plastic Bag
+item.mfr.plastic = Plastic
 item.mfr.plastic.display = Plastic
 item.mfr.plastic.ability = Tough
 item.mfr.rubber.bar.name = Rubber Bar
@@ -252,6 +253,7 @@ item.mfr.meat.ingot.cooked.name = Cooked Meat Ingot
 item.mfr.meat.nugget.raw.name = Raw "Meat" Nugget
 item.mfr.meat.nugget.cooked.name = Cooked "Meat" Nugget
 
+item.mfr.pinkslime = Pink Slime
 item.mfr.pinkslime.display = Pink Slime
 item.mfr.pinkslime.ability = Slimy\nPink
 item.mfr.pinkslime.ball.name = Pink Slimeball
