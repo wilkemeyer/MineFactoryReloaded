@@ -222,6 +222,7 @@ item.mfr.hammer.name = Точная кувалда
 item.mfr.plastic.sheet.name = Пластиковые листы
 item.mfr.plastic.raw.name = Сырой пластик
 item.mfr.plastic.bag.name = Пластиковый пакет
+item.mfr.plastic = Пластик
 item.mfr.plastic.display = Пластиков.
 item.mfr.plastic.ability = Прочность
 item.mfr.rubber.bar.name = Плитка резины
@@ -233,7 +234,7 @@ item.mfr.safarinet.singleuse.name = Сафари сеть (Одноразова�
 item.mfr.safarinet.jailer.name = Тюремная сафари сеть
 item.mfr.safarinet.launcher.name = Метатель сети
 
-item.mfr.sugarcharcoal.name = Сахарный уголь
+item.mfr.sugarcharcoal.name = Сахарный древесный уголь
 item.mfr.fertilizer.name = Промышленное удобрение
 item.mfr.milkbottle.name = Бутылка молока
 item.mfr.spyglass.name = Подзорная труба
@@ -252,6 +253,7 @@ item.mfr.meat.ingot.cooked.name = Приготовленный слиток мя
 item.mfr.meat.nugget.raw.name = Кусочек сырого мяса
 item.mfr.meat.nugget.cooked.name = Кусочек приготовленного мяса
 
+item.mfr.pinkslime = Розовая слизь
 item.mfr.pinkslime.display = Розовослизнев.
 item.mfr.pinkslime.ability = Розовая\nслизь
 item.mfr.pinkslime.ball.name = Шарик розовой слизи
