@@ -59,11 +59,6 @@ public class ThermalExpansion extends Vanilla
 			throw new MissingModsException(Collections.
 					singleton((ArtifactVersion)new DefaultArtifactVersion(TE)));
 		}
-		if(Loader.isModLoaded("ThermalDynamics"))
-		{
-			conduitLiquid = GameRegistry.findItemStack("ThermalDynamics", "conduitFluidOpaque", 1);
-		}
-		else
 		{
 			conduitLiquid = new ItemStack(plasticPipeBlock);
 		}
