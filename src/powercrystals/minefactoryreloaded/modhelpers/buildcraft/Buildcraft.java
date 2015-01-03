@@ -2,9 +2,9 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 
 import buildcraft.api.fuels.BuildcraftFuelRegistry;
 
+import cofh.asm.relauncher.Strippable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.ModContainer;
@@ -31,11 +31,9 @@ public class Buildcraft
 		return Block.blockRegistry.getNameForObject(obj);
 	}
 	@Mod.EventHandler
+	@Strippable("mod:BuildCraft|Core")
 	public void init(FMLInitializationEvent evt)
 	{
-		if (!Loader.isModLoaded("BuildCraft|Core"))
-			return;
-
 		for (Object[] q : new Object[][]{ {16, name(MFRThings.factoryDecorativeBrickBlock)},
 									{12, name(MFRThings.factoryDecorativeStoneBlock)}})
 			for(int i = (Integer)q[0]; i --> 0; )
@@ -47,6 +45,7 @@ public class Buildcraft
 	}
 
 	@Mod.EventHandler
+	@Strippable("api:BuildCraftAPI|fuels")
 	private void postInit(FMLPostInitializationEvent evt)
 	{
 		try
