@@ -61,35 +61,35 @@ public class FactoryRegistry
 	 * }
 	 * { Plantables
 	 * registerPlantable_Standard       | An NBTTag with the seed (Item, String identifier), and
-	 * 									  crop (Block, String identifier) attributes set, optionally
-	 * 									  also having the meta (Integer, accepted metadata value of the seed item) attribute set.
-	 * 									  No special checks for location, just sustainability.
+	 *                                    crop (Block, String identifier) attributes set, optionally
+	 *                                    also having the meta (Integer, accepted metadata value of the seed item) attribute set.
+	 *                                    No special checks for location, just sustainability.
 	 * registerPlantable_Crop           | An NBTTag with the seed (Item, String identifier), and
-	 * 									  crop (Block, String identifier) attributes set, optionally
-	 * 									  also having the meta (Integer, accepted metadata value of the seed item) attribute set.
-	 * 									  Will automatically hoe dirt and grass into farmland when planting.
+	 *                                    crop (Block, String identifier) attributes set, optionally
+	 *                                    also having the meta (Integer, accepted metadata value of the seed item) attribute set.
+	 *                                    Will automatically hoe dirt and grass into farmland when planting.
 	 * registerPlantable_Sapling        | An NBTTag with the sapling (Block, String identifier), and optionally
-	 * 									  the seed (Item, String identifier) attributes set.
+	 *                                    the seed (Item, String identifier) attributes set.
 	 * }
 	 * { Fertilizer
 	 * registerFertilizer_Standard      | An NBTTag with the fert (Item, String identifier), meta (Integer), and
-	 * 									  type (Integer, index into FertilizerType.values()) attributes set.
+	 *                                    type (Integer, index into FertilizerType.values()) attributes set.
 	 * }
 	 * { Fertilizables
 	 * registerFertilizable_Grass       | The String identifier of a block. Will bonemeal the block and expect
-	 * 									  tall grass be planted above and around it, must be IGrowable. Works with
-	 * 									  the GrowPlant and Grass type fertilizers, not recommended for crop plants.
+	 *                                    tall grass be planted above and around it, must be IGrowable. Works with
+	 *                                    the GrowPlant and Grass type fertilizers, not recommended for crop plants.
 	 * registerFertilizable_Gourd       | The String identifier of a block. Must be IGrowable, and expects identical
-	 * 									  behavior to vanilla stems. Works with the GrowPlant fertilizers.
+	 *                                    behavior to vanilla stems. Works with the GrowPlant fertilizers.
 	 * registerFertilizable_Crop        | An NBTTag with the plant (Block, String identifier, IGrowable), and
-	 * 									  meta (Integer, max growth phase) attributes set, optionally also having
-	 * 									  the type (Integer, index into FertilizerType) attribute set.
+	 *                                    meta (Integer, max growth phase) attributes set, optionally also having
+	 *                                    the type (Integer, index into FertilizerType) attribute set.
 	 * registerFertilizable_Cocoa       | An NBTTag with the plant (Block, String identifier), and optionally also
-	 * 									  the type (Integer, index into FertilizerType) attributes set.
-	 * 									  Expects metadata of the block to exactly match cocoa pods.
+	 *                                    the type (Integer, index into FertilizerType) attributes set.
+	 *                                    Expects metadata of the block to exactly match cocoa pods.
 	 * registerFertilizable_Standard    | An NBTTag with the plant (Block, String identifier, IGrowable), and
-	 * 									  optionally also the type (Integer, index into FertilizerType) attributes set.
-	 * 									  Expects the block to change when successfully grown (e.g., saplings).
+	 *                                    optionally also the type (Integer, index into FertilizerType) attributes set.
+	 *                                    Expects the block to change when successfully grown (e.g., saplings).
 	 * }
 	 */
 	public static void sendMessage(String message, Object value)
