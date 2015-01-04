@@ -194,7 +194,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		for (int i = _connectionState.length; i --> 0; ) {
 			ForgeDirection d = dirs[i];
 			int x = xCoord + d.offsetX, y = yCoord + d.offsetY, z = zCoord + d.offsetZ;
-			if (!worldObj.getBlock(x, y, z).equals(rednetCableBlock))
+			if (worldObj.blockExists(x, y, z) && !worldObj.getBlock(x, y, z).equals(rednetCableBlock))
 				isRSNode |= _connectionState[i].isConnected;
 		}
 		if (lastNode != isRSNode)
@@ -515,6 +515,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		int x = xCoord + side.offsetX;
 		int y = yCoord + side.offsetY;
 		int z = zCoord + side.offsetZ;
+
+		if (!worldObj.blockExists(x, y, z))
+			return RedNetConnectionType.None;
 
 		Block b = worldObj.getBlock(x, y, z);
 		boolean node = false;
