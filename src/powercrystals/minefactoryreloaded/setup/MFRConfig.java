@@ -59,6 +59,7 @@ public class MFRConfig
 	public static Property enableFuelExploding;
 	public static Property enableSpawnerCarts;
 	public static Property enableExpensiveSafariNet;
+	public static Property enableFancySafariNet;
 
 	public static Property enableChunkLimitBypassing;
 	public static Property enableChunkLoaderRequiresOwner;
@@ -262,6 +263,8 @@ public class MFRConfig
 		enableCheapCL.comment = "If true, the ChunkLoader can be built out of cheaper materials. Does nothing if the recipe is disabled.";
 		enableExpensiveSafariNet = c.get(category, "ExpensiveSafariNet", false).setRequiresMcRestart(true);
 		enableExpensiveSafariNet.comment = "If true, the reusable safarinet will require a portaspawner to craft. The portaspawner must be enabled for the safarinet to be craftable.";
+		enableFancySafariNet = c.get(category, "GoldenJailerSafariNet", true).setRequiresMcRestart(true);
+		enableFancySafariNet.comment = "If true, the golden jailer safarinet will be craftable. It causes released mobs to always render their nametag, like a player would.";
 		//}
 
 		//{ Additional machine configs

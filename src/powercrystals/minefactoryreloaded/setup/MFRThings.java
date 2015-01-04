@@ -134,4 +134,5 @@ public class MFRThings
 	public static Item fishingRodItem;
 	public static Item plasticBagItem;
 	public static ItemFactoryArmor plasticBootsItem;
+	public static Item safariNetFancyJailerItem;
 }

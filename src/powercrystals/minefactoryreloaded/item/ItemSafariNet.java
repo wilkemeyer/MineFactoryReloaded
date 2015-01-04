@@ -46,27 +46,41 @@ public class ItemSafariNet extends ItemFactory {
 	private IIcon _iconBack;
 	private IIcon _iconMid;
 	private IIcon _iconFront;
+	private final boolean multiuse;
+	private final int type;
 
-	public ItemSafariNet() {
-		setMaxStackSize(1);
+	public ItemSafariNet(int type) {
+		this(type, false);
+	}
+
+	public ItemSafariNet(int type, boolean multiuse) {
+		this.multiuse = multiuse;
+		this.type = type;
+		setMaxStackSize(multiuse ? 12 : 1);
 	}
 
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
-		if (isSingleUse(stack) && isEmpty(stack))
-			return 12;
+		if (!isSingleUse(stack) || !isEmpty(stack))
+			return 1;
 		return maxStackSize;
 	}
 
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
 		super.addInfo(stack, player, infoList, advancedTooltips);
-		if (stack.getTagCompound() == null) {
-			return;
+
+		int type = ((ItemSafariNet)stack.getItem()).type;
+		if (1 == (type & 1)) {
+			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.persistent"));
 		}
 
-		if (stack.getItem().equals(MFRThings.safariNetJailerItem)) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.jailer"));
+		if (2 == (type & 2)) {
+			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.nametag"));
+		}
+
+		if (stack.getTagCompound() == null) {
+			return;
 		}
 
 		if (stack.getTagCompound().getBoolean("hide")) {
@@ -201,13 +215,14 @@ public class ItemSafariNet extends ItemFactory {
 
 		if (spawnedCreature != null) {
 			if ((spawnedCreature instanceof EntityLiving)) {
-				if (itemstack.getItem().equals(MFRThings.safariNetJailerItem)) {
+				int type = ((ItemSafariNet)itemstack.getItem()).type;
+				if (1 == (type & 1)) {
 					((EntityLiving)spawnedCreature).func_110163_bv();
 				}
 				if (itemstack.hasDisplayName()) {
 					((EntityLiving)spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
-					// TODO: secondary jailer net for:
-					// ((EntityLiving)spawnedCreature).setAlwaysRenderNameTag(true);
+					if (2 == (type & 2))
+						((EntityLiving)spawnedCreature).setAlwaysRenderNameTag(true);
 				}
 			}
 
@@ -322,9 +337,6 @@ public class ItemSafariNet extends ItemFactory {
 			entity.writeToNBT(c);
 
 			c.setString("id", EntityList.getEntityString(entity));
-			if (itemstack.equals(MFRThings.safariNetJailerItem)) {
-				c.setBoolean("PersistenceRequired", true);
-			}
 
 			if (!flag)
 				entity.setDead();
@@ -356,7 +368,7 @@ public class ItemSafariNet extends ItemFactory {
 	}
 
 	public static boolean isSingleUse(ItemStack s) {
-		return s != null && (s.getItem().equals(MFRThings.safariNetSingleItem) || s.getItem().equals(MFRThings.safariNetJailerItem));
+		return isSafariNet(s) && !((ItemSafariNet)s.getItem()).multiuse;
 	}
 
 	public static boolean isSafariNet(ItemStack s) {

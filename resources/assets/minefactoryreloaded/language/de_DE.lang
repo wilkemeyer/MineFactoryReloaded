@@ -412,7 +412,7 @@ tip.info.mfr.holdShift2 = Shift
 tip.info.mfr.holdShift3 = für weitere Informationen
 
 tip.info.mfr.safarinet.mode = Shift-klicke, um Modus zu ändern
-tip.info.mfr.safarinet.jailer = Freigelassene Kreaturen verschwinden nicht auf normale Weise
+tip.info.mfr.safarinet.persistent = Freigelassene Kreaturen verschwinden nicht auf normale Weise
 tip.info.mfr.safarinet.mystery = Es ist ein Mysterium
 
 tip.info.mfr.prc = Wenn du dich verloren fühlst, lies das (Ingame-)Benutzerhandbuch

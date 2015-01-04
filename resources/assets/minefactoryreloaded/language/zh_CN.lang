@@ -457,7 +457,7 @@ tip.info.mfr.laserdrillprecharger = 放置于有些激光目标一格远的地�
 tip.info.mfr.cannotplace = 无法放置%s 秒.
 
 tip.info.mfr.safarinet.mode = 潜行点击改变模式
-tip.info.mfr.safarinet.jailer = 释放出来的生物不会被刷新而消失(despawn)
+tip.info.mfr.safarinet.persistent = 释放出来的生物不会被刷新而消失(despawn)
 tip.info.mfr.safarinet.mystery = 这是个秘密
 
 tip.info.mfr.memorycard.wipe = 放入合成栏消除

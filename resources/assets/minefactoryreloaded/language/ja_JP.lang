@@ -457,7 +457,7 @@ tip.info.mfr.laserdrillprecharger = Placed one block away from a valid laser tar
 tip.info.mfr.cannotplace = Cannot place for %s more seconds.
 
 tip.info.mfr.safarinet.mode = Sneak-click to change mode
-tip.info.mfr.safarinet.jailer = Released creatures don't despawn normally
+tip.info.mfr.safarinet.persistent = Released creatures don't despawn normally
 tip.info.mfr.safarinet.mystery = It is a mystery
 
 tip.info.mfr.memorycard.wipe = Place in crafting grid to wipe

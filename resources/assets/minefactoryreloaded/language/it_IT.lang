@@ -456,7 +456,7 @@ tip.info.mfr.laserdrillprecharger = Mettilo un blocco da un laser
 tip.info.mfr.cannotplace = Non può piazzare per altri %s secondi.
 
 tip.info.mfr.safarinet.mode = Shift-click per cambiare modalità
-tip.info.mfr.safarinet.jailer = Creature lasciate non despawnano normalmente
+tip.info.mfr.safarinet.persistent = Creature lasciate non despawnano normalmente
 tip.info.mfr.safarinet.mystery = E' un mistero
 
 tip.info.mfr.memorycard.wipe = Metti in una griglia di fabbricazione per cancellare

@@ -361,9 +361,10 @@ public class MineFactoryReloadedCore extends BaseMod
 		syringeCureItem = (new ItemSyringeCure()).setUnlocalizedName("mfr.syringe.cure").setContainerItem(syringeEmptyItem);
 
 		safariNetLauncherItem = (new ItemSafariNetLauncher()).setUnlocalizedName("mfr.safarinet.launcher").setMaxStackSize(1);
-		safariNetItem = (new ItemSafariNet()).setUnlocalizedName("mfr.safarinet.reusable");
-		safariNetSingleItem = (new ItemSafariNet()).setUnlocalizedName("mfr.safarinet.singleuse");
-		safariNetJailerItem = (new ItemSafariNet()).setUnlocalizedName("mfr.safarinet.jailer");
+		safariNetItem = (new ItemSafariNet(0, true)).setUnlocalizedName("mfr.safarinet.reusable");
+		safariNetSingleItem = (new ItemSafariNet(0)).setUnlocalizedName("mfr.safarinet.singleuse");
+		safariNetJailerItem = (new ItemSafariNet(1)).setUnlocalizedName("mfr.safarinet.jailer");
+		safariNetFancyJailerItem = (new ItemSafariNet(3)).setUnlocalizedName("mfr.safarinet.jailer.fancy");
 
 		portaSpawnerItem = (new ItemPortaSpawner()).setUnlocalizedName("mfr.portaspawner").setMaxStackSize(1);
 

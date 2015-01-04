@@ -233,6 +233,7 @@ item.mfr.record.blank.name = Blank Record
 item.mfr.safarinet.reusable.name = Safari Net (Reusable)
 item.mfr.safarinet.singleuse.name = Safari Net (Single-Use)
 item.mfr.safarinet.jailer.name = Jailer's Safari Net
+item.mfr.safarinet.jailer.fancy.name = Golden Jailer's Safari Net
 item.mfr.safarinet.launcher.name = Safari Net Launcher
 
 item.mfr.sugarcharcoal.name = Sugar Charcoal
@@ -463,7 +464,8 @@ tip.info.mfr.laserdrillprecharger = Placed one block away from a valid laser tar
 tip.info.mfr.cannotplace = Cannot place for %s more seconds.
 
 tip.info.mfr.safarinet.mode = Sneak-click to change mode
-tip.info.mfr.safarinet.jailer = Released creatures don't despawn normally
+tip.info.mfr.safarinet.persistent = Released creatures don't despawn normally
+tip.info.mfr.safarinet.nametag = Released creatures will always display their nametag
 tip.info.mfr.safarinet.mystery = It is a mystery
 
 tip.info.mfr.memorycard.wipe = Place in crafting grid to wipe

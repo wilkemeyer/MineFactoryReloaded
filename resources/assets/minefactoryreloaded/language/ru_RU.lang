@@ -463,7 +463,7 @@ tip.info.mfr.laserdrillprecharger = Размещается в одном бло�
 tip.info.mfr.cannotplace = Не может быть размещён в течении %s секунд.
 
 tip.info.mfr.safarinet.mode = Клик присев, чтобы изменить режим
-tip.info.mfr.safarinet.jailer = Выпущенные существа не исчезают
+tip.info.mfr.safarinet.persistent = Выпущенные существа не исчезают
 tip.info.mfr.safarinet.mystery = Это тайна
 
 tip.info.mfr.memorycard.wipe = Положите в сетку создания, чтобы стереть

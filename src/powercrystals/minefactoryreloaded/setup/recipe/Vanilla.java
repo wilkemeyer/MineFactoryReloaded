@@ -1147,6 +1147,16 @@ public class Vanilla
 
 		addGearRecipe(stack(safariNetJailerItem, 1), stack2(iron_bars), stack(safariNetSingleItem));
 
+		if (MFRConfig.enableFancySafariNet.getBoolean(true))
+			addRecipe(ShapedRecipe(stack(safariNetFancyJailerItem, 1), new Object[]
+					{
+				"GGG",
+				"GBG",
+				"GGG",
+				'G', gold_nugget,
+				'B', safariNetJailerItem,
+					}));
+
 		if (MFRConfig.enableNetLauncher.getBoolean(true))
 			addRecipe(ShapedRecipe(stack(safariNetLauncherItem, 1), new Object[]
 					{
