@@ -5,6 +5,7 @@ import cofh.lib.util.position.BlockPosition;
 
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -47,6 +48,10 @@ public abstract class MFRLiquidMover
 						disposePlayerItem(ci, drop, entityplayer, true);
 					} else
 						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, UtilInventory.consumeItem(ci, entityplayer));
+					if (entityplayer.worldObj.isRemote) {
+						entityplayer.openContainer.detectAndSendChanges();
+						((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
+					}
 				}
 				return true;
 			}
@@ -68,13 +73,17 @@ public abstract class MFRLiquidMover
 							drop = null;
 					}
 					disposePlayerItem(ci, drop, entityplayer, true);
+					if (entityplayer.worldObj.isRemote) {
+						entityplayer.openContainer.detectAndSendChanges();
+						((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
+					}
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Attempts to drain tank into the player's current item.
 	 * @param	itcb			the tank the liquid is coming from
@@ -104,7 +113,7 @@ public abstract class MFRLiquidMover
 					if (fluidContainer.fill(filledBucket, tankLiquid, false) > 0) {
 						int amount = fluidContainer.fill(filledBucket, tankLiquid, true);
 						bucketLiquid = new FluidStack(tankLiquid.fluidID, amount);
-						FluidStack l = itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, false); 
+						FluidStack l = itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, false);
 						if (l == null || l.amount < amount)
 							filledBucket = null;
 					}
@@ -128,6 +137,10 @@ public abstract class MFRLiquidMover
 				{
 					if (disposePlayerItem(ci, filledBucket, entityplayer, MFRConfig.dropFilledContainers.getBoolean(true)))
 					{
+						if (entityplayer.worldObj.isRemote) {
+							entityplayer.openContainer.detectAndSendChanges();
+							((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
+						}
 						itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, true);
 						return true;
 					}
@@ -136,12 +149,12 @@ public abstract class MFRLiquidMover
 		}
 		return false;
 	}
-	
+
 	public static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack, EntityPlayer entityplayer, boolean allowDrop)
 	{
 		return disposePlayerItem(stack, dropStack, entityplayer, allowDrop, true);
 	}
-	
+
 	public static boolean disposePlayerItem(ItemStack stack, ItemStack dropStack,
 			EntityPlayer entityplayer, boolean allowDrop, boolean allowReplace)
 	{
@@ -163,7 +176,7 @@ public abstract class MFRLiquidMover
 		}
 		return false;
 	}
-	
+
 	public static int fillTankWithXP(FluidTankAdv tank, EntityXPOrb orb)
 	{
 		int maxAmount = tank.getSpace(), maxXP = (int) (maxAmount / 66.66666667f);
@@ -186,7 +199,7 @@ public abstract class MFRLiquidMover
 		}
 		return 0;
 	}
-	
+
 	public static void pumpLiquid(IFluidTank iFluidTank, TileEntityFactory from)
 	{
 		if (iFluidTank != null && iFluidTank.getFluid() != null && iFluidTank.getFluid().amount > 0)
@@ -211,5 +224,5 @@ public abstract class MFRLiquidMover
 			}
 		}
 	}
-	
+
 }
