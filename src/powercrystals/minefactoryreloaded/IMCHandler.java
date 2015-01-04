@@ -342,7 +342,7 @@ public class IMCHandler {
 				/*
 				 * FertilizerStandard
 				 */
-				else if ("registerFertilizer".equals(k)) {
+				else if ("registerFertilizer_Standard".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					MFRRegistry.registerFertilizer(new FertilizerStandard(
 							(Item)Item.itemRegistry.getObject(item.getString("fert")),
