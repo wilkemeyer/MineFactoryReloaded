@@ -12,9 +12,9 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo {
 	protected float spread;
 
 	public ItemNeedlegunAmmoStandard(int damage, float spread, int shots) {
-		this.damage = damage;
 		this.spread = spread;
-		setMaxDamage(shots - 1);
+		setDamage(damage);
+		setShots(shots);
 	}
 
 	public ItemNeedlegunAmmoStandard(int damage, float spread) {
@@ -22,15 +22,25 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo {
 	}
 
 	public ItemNeedlegunAmmoStandard(int damage, int shots) {
-		this(damage, 2f, shots);
+		this(damage, 1f, shots);
 	}
 
 	public ItemNeedlegunAmmoStandard(int damage) {
-		this(damage, 2f);
+		this(damage, 1f);
 	}
 
 	public ItemNeedlegunAmmoStandard() {
 		this(8);
+	}
+
+	protected ItemNeedlegunAmmoStandard setDamage(int damage) {
+		this.damage = damage;
+		return this;
+	}
+
+	protected ItemNeedlegunAmmoStandard setShots(int shots) {
+		setMaxDamage(shots - 1);
+		return this;
 	}
 
 	@Override

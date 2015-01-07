@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock {
 
 	public ItemNeedlegunAmmoAnvil(Block block, int meta) {
-		super(block, meta, 0.5f);
-		setMaxDamage(0);
+		super(block, meta);
+		setShots(1);
 	}
 
 	public ItemNeedlegunAmmoAnvil() {

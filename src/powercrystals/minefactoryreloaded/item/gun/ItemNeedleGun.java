@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
@@ -36,7 +37,10 @@ public class ItemNeedleGun extends ItemFactoryGun {
 		boolean reloaded = false, creative = player.capabilities.isCreativeMode;
 
 		if (!world.isRemote) {
-			EntityNeedle needle = new EntityNeedle(world, player, ammo, 1.0F);
+			float spread = 1f;
+			if (MFRRegistry.getNeedleAmmoTypes().containsKey(ammo.getItem()))
+				spread = MFRRegistry.getNeedleAmmoTypes().get(ammo.getItem()).getSpread(ammo);
+			EntityNeedle needle = new EntityNeedle(world, player, ammo, spread);
 			world.spawnEntityInWorld(needle);
 			world.playSoundAtEntity(player, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 2.0F);
 		}
