@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock {
 
 	public ItemNeedlegunAmmoFire() {
-		super(Blocks.fire, 0, 1f);
-		setShots(12);
-		setDamage(8);
+		super(Blocks.fire, 0);
+		setShots(8);
+		setDamage(10);
 	}
 
 	@Override

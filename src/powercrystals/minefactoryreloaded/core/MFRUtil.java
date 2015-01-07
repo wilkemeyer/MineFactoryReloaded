@@ -106,6 +106,13 @@ public class MFRUtil
 		return StatCollector.translateToLocal(s);
 	}
 
+	public static String localize(String s, Object... data)
+	{
+		if (!StatCollector.canTranslate(s))
+			return s;
+		return StatCollector.translateToLocalFormatted(s, data);
+	}
+
 	public static final List<ForgeDirection> VALID_DIRECTIONS = Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
 
 	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z)
