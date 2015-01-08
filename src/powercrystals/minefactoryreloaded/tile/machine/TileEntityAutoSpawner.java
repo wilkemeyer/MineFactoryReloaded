@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -310,17 +311,29 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
-	{
-		super.readFromNBT(nbttagcompound);
-		_spawnExact = nbttagcompound.getBoolean("spawnExact");
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setBoolean("spawnExact", _spawnExact);
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound nbttagcompound)
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		setSpawnExact(tag.getBoolean("spawnExact"));
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeItemNBT(nbttagcompound);
-		nbttagcompound.setBoolean("spawnExact", _spawnExact);
+		super.writeItemNBT(tag);
+		tag.setBoolean("spawnExact", _spawnExact);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		_spawnExact = tag.getBoolean("spawnExact");
 	}
 
 	@Override

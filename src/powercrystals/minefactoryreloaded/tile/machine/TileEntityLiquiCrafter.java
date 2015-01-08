@@ -490,6 +490,36 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		// TODO: save/write recipe
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+
+		if (outputs.size() != 0)
+		{
+			NBTTagList dropItems = new NBTTagList();
+			for (ItemStack item : outputs)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				item.writeToNBT(nbttagcompound1);
+				dropItems.appendTag(nbttagcompound1);
+			}
+			if (dropItems.tagCount() > 0)
+				tag.setTag("OutItems", dropItems);
+		}
+	}
+
+	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
@@ -509,25 +539,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 				}
 			}
 			outputs = drops;
-		}
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-
-		if (outputs.size() != 0)
-		{
-			NBTTagList dropItems = new NBTTagList();
-			for (ItemStack item : outputs)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				item.writeToNBT(nbttagcompound1);
-				dropItems.appendTag(nbttagcompound1);
-			}
-			if (dropItems.tagCount() > 0)
-				tag.setTag("OutItems", dropItems);
 		}
 	}
 

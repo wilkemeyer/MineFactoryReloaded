@@ -4,12 +4,14 @@ import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.api.inventory.IInventoryConnection;
+import cofh.api.tileentity.IPortableData;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.util.position.IRotateableTile;
 import com.google.common.base.Strings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -29,8 +31,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public abstract class TileEntityFactory extends TileEntityBase
-									 implements IRotateableTile, IPipeConnection,
-												IHarvestAreaContainer, IInventoryConnection
+implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaContainer, IPipeConnection
 {
 	// first index is rotation, second is side
 	private static final int[][] _textureSelection = new int[][]
@@ -347,12 +348,18 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		int rotation = tag.getInteger("rotation");
-		rotateDirectlyTo(rotation);
-		_owner = tag.getString("owner");
+	public String getDataType() {
+		return _machine.getInternalName() + ".name";
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
 	}
 
 	@Override
@@ -360,6 +367,15 @@ public abstract class TileEntityFactory extends TileEntityBase
 	{
 		super.writeToNBT(tag);
 		tag.setInteger("rotation", getDirectionFacing().ordinal());
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		int rotation = tag.getInteger("rotation");
+		rotateDirectlyTo(rotation);
+		_owner = tag.getString("owner");
 	}
 
 	@Override

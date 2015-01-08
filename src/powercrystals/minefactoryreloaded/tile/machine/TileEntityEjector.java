@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -199,13 +200,29 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		_lastRedstoneState = tag.getBoolean("redstone");
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setBoolean("whitelist", _whitelist);
+		tag.setBoolean("matchNBT", _matchNBT);
+		tag.setBoolean("ignoreDamage", _ignoreDamage);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
 		_whitelist = tag.getBoolean("whitelist");
 		_matchNBT = !tag.hasKey("matchNBT") || tag.getBoolean("matchNBT");
 		_ignoreDamage = tag.getBoolean("ignoreDamage");
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
+	{
+		super.writeItemNBT(tag);
+		tag.setBoolean("whitelist", _whitelist);
+		tag.setBoolean("matchNBT", _matchNBT);
+		tag.setBoolean("ignoreDamage", _ignoreDamage);
+		// TODO: write items
 	}
 
 	@Override
@@ -216,12 +233,13 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		super.writeItemNBT(tag);
-		tag.setBoolean("whitelist", _whitelist);
-		tag.setBoolean("matchNBT", _matchNBT);
-		tag.setBoolean("ignoreDamage", _ignoreDamage);
+		super.readFromNBT(tag);
+		_lastRedstoneState = tag.getBoolean("redstone");
+		_whitelist = tag.getBoolean("whitelist");
+		_matchNBT = !tag.hasKey("matchNBT") || tag.getBoolean("matchNBT");
+		_ignoreDamage = tag.getBoolean("ignoreDamage");
 	}
 
 	public boolean getIsWhitelist() { return _whitelist; }

@@ -4,6 +4,7 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -97,6 +98,18 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 
 		setIdleTicks(getIdleTicksMax());
 		return false;
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setBoolean("keepLastItem", keepLastItem);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		keepLastItem = tag.getBoolean("keepLastItem");
 	}
 
 	@Override

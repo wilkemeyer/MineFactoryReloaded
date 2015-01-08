@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -249,10 +250,27 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setInteger("fortune", _fortune);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		setFortune(tag.getInteger("fortune"));
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag) {
+		super.writeItemNBT(tag);
+		tag.setInteger("fortune", _fortune);
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		tag.setInteger("fortune", _fortune);
 		tag.setBoolean("shouldWork", _shouldWork);
 		if (_lastInput != null)
 			tag.setTag("stack", _lastInput.writeToNBT(new NBTTagCompound()));

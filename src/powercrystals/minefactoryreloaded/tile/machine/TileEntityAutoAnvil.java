@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -444,6 +445,18 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 
 			return outputItem;
 		}
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setBoolean("repairOnly", repairOnly);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		setRepairOnly(tag.getBoolean("repairOnly"));
 	}
 
 	@Override

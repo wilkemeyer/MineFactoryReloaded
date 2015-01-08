@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
+import cofh.api.tileentity.IPortableData;
 import cofh.lib.util.position.BlockPosition;
 import cofh.lib.util.position.IRotateableTile;
 import cpw.mods.fml.relauncher.Side;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
@@ -26,7 +28,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityRedNetLogic extends TileEntityBase implements IRotateableTile
+public class TileEntityRedNetLogic extends TileEntityBase implements IRotateableTile, IPortableData
 {
 	public static class PinMapping
 	{
@@ -393,9 +395,46 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
+	public String getDataType() {
+		return "tile.mfr.rednet.logic.name";
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		writeCricuitsOnly(tag);
+		player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		int circuitCount = tag.getTagList("circuits", 10).tagCount();
+		if (circuitCount > getCircuitCount()) {
+			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
+		} else {
+			readCircuitsOnly(tag);
+			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
+		}
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag) {
+
+		super.writeItemNBT(tag);
+		writeCricuitsOnly(tag);
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+
+		tag.setIntArray("upgrades", _upgradeLevel);
+		tag.setIntArray("vars", _buffers[13]);
+	}
+
+	public void writeCricuitsOnly(NBTTagCompound tag) {
 
 		NBTTagList circuits = new NBTTagList();
 		for (int c = 0; c < _circuits.length; c++)
@@ -433,8 +472,6 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 
 		tag.setTag("circuits", circuits);
-		tag.setIntArray("upgrades", _upgradeLevel);
-		tag.setIntArray("vars", _buffers[13]);
 	}
 
 	@Override
@@ -458,9 +495,9 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		readCircuitsOnly(tag);
 	}
 
-	public void readCircuitsOnly(NBTTagCompound nbttagcompound)
+	public void readCircuitsOnly(NBTTagCompound tag)
 	{
-		NBTTagList circuits = nbttagcompound.getTagList("circuits", 10);
+		NBTTagList circuits = tag.getTagList("circuits", 10);
 		if (circuits != null)
 		{
 			for (int c = 0; c < circuits.tagCount(); c++)

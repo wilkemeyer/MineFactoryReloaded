@@ -151,6 +151,11 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
+	public String getDataType() {
+		return "tile.mfr.tank.name";
+	}
+
+	@Override
 	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);

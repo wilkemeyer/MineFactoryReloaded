@@ -22,15 +22,15 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	private ArrayQueue<Integer> _valuesClient;
 	@SideOnly(Side.CLIENT)
 	private int _currentValueClient;
-	
+
 	private int _currentSubnet = 0;
 	private int[] _lastValues = new int[16];
-	
+
 	public TileEntityRedNetHistorian()
 	{
 		super(null);
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -41,7 +41,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
 	{
@@ -58,7 +58,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 			break;
 		}
 	}
-	
+
 	@Override
 	public void validate()
 	{
@@ -72,14 +72,14 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 			_currentValueClient = 0;
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.SERVER)
 	public boolean canUpdate()
 	{
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateEntity()
@@ -91,7 +91,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 			_valuesClient.push(_currentValueClient);
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public Integer[] getValues()
 	{
@@ -104,7 +104,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	{
 		_currentValueClient = value;
 	}
-	
+
 	public void setSelectedSubnet(int newSubnet)
 	{
 		_currentSubnet = newSubnet;
@@ -117,7 +117,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 			sendValue(_lastValues[_currentSubnet]);
 		}
 	}
-	
+
 	public void valuesChanged(int[] values)
 	{
 		for(int i = 0; i < 16; i++)
@@ -132,7 +132,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 			}
 		}
 	}
-	
+
 	protected void sendValue(int value)
 	{
 		NBTTagCompound data = new NBTTagCompound();
@@ -140,25 +140,30 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 50,
 				new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
 	}
-	
+
 	public int getSelectedSubnet()
 	{
 		return _currentSubnet;
 	}
-	
+
 	@Override
 	public boolean canRotate()
 	{
 		return true;
 	}
-	
+
+	@Override
+	public String getDataType() {
+		return "tile.mfr.rednet.panel.historian.name";
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound)
 	{
 		super.readFromNBT(nbttagcompound);
 		_currentSubnet = nbttagcompound.getInteger("subnet");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{

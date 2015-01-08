@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -348,11 +349,33 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
 
-		_treeManager.writeToNBT(tag);
+		NBTTagCompound list = new NBTTagCompound();
+		for(Entry<String, Boolean> setting : _settings.entrySet())
+		{
+			String key = setting.getKey();
+			if ("playSounds" == key || "isHarvestingTree" == key)
+				continue;
+			list.setBoolean(key, setting.getValue() == Boolean.TRUE);
+		}
+		tag.setTag("harvesterSettings", list);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		NBTTagCompound list = (NBTTagCompound)tag.getTag("harvesterSettings");
+		if (list != null)
+		{
+			for (String s : _settings.keySet())
+			{
+				if ("playSounds".equals(s))
+					continue;
+				boolean b = list.getBoolean(s);
+				_settings.put(s.intern(), b);
+			}
+		}
 	}
 
 	@Override
@@ -368,6 +391,14 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			list.setBoolean(key, setting.getValue() == Boolean.TRUE);
 		}
 		tag.setTag("harvesterSettings", list);
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+
+		_treeManager.writeToNBT(tag);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -188,6 +189,18 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	public int getIdleTicksMax()
 	{
 		return 1;
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setBoolean("repeatDisenchant", _repeatDisenchant);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		_repeatDisenchant = tag.getBoolean("repeatDisenchant");
 	}
 
 	@Override

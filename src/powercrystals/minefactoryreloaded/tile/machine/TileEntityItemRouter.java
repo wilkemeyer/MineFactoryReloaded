@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -317,17 +318,30 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
-	{
-		super.readFromNBT(nbttagcompound);
-		_rejectUnmapped = nbttagcompound.getBoolean("rejectUnmapped");
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setBoolean("rejectUnmapped", _rejectUnmapped);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		_rejectUnmapped = tag.getBoolean("rejectUnmapped");
 		recalculateDefaultRoutes();
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound nbttagcompound)
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeItemNBT(nbttagcompound);
-		nbttagcompound.setBoolean("rejectUnmapped", _rejectUnmapped);
+		super.writeItemNBT(tag);
+		tag.setBoolean("rejectUnmapped", _rejectUnmapped);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		_rejectUnmapped = tag.getBoolean("rejectUnmapped");
+		recalculateDefaultRoutes();
 	}
 }

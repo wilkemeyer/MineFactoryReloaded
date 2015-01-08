@@ -4,9 +4,11 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -146,10 +148,10 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		for(int i = 0; i < 6; i++)
 		{
 			ItemStack stack = _inventory[i];
-			Item item = stack != null ? stack.getItem() : null; 
+			Item item = stack != null ? stack.getItem() : null;
 			if(item != null &&
 					resource.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(_inventory[i])) ||
-					(item instanceof IFluidContainerItem && 
+					(item instanceof IFluidContainerItem &&
 							resource.isFluidEqual(((IFluidContainerItem)item).getFluid(stack))))
 			{
 				routeWeights[i] = _inventory[i].stackSize;
@@ -178,6 +180,17 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			}
 		}
 		return routeWeights;
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		// TODO: save/write items
 	}
 
 	@Override

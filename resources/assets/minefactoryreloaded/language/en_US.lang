@@ -468,6 +468,7 @@ tip.info.mfr.safarinet.persistent = Released creatures don't despawn normally
 tip.info.mfr.safarinet.nametag = Released creatures will always display their nametag
 tip.info.mfr.safarinet.mystery = It is a mystery
 
+tip.info.mfr.memorycard.programmed = Programmed %d circuits
 tip.info.mfr.memorycard.wipe = Place in crafting grid to wipe
 
 tip.info.mfr.generator.produces = Produces RF only.

@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -94,17 +95,29 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound nbttagcompound)
-	{
-		super.writeItemNBT(nbttagcompound);
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
 
-		nbttagcompound.setBoolean("moveOld", _moveOld);
+		tag.setBoolean("moveOld", _moveOld);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		_moveOld = tag.getBoolean("moveOld");
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
-		_moveOld = nbttagcompound.getBoolean("moveOld");
+		super.writeItemNBT(tag);
+
+		tag.setBoolean("moveOld", _moveOld);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		_moveOld = tag.getBoolean("moveOld");
 	}
 }

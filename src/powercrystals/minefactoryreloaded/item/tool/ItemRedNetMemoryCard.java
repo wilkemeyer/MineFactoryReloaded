@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
+import cofh.api.tileentity.IPortableData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,39 +22,73 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
 		super.addInfo(stack, player, infoList, advancedTooltips);
-		if (stack.getTagCompound() != null) {
-			infoList.add("Programmed, " + stack.getTagCompound().getTagList("circuits", 10).tagCount() + " circuits");
-			// TODO: localize ^
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null) {
+			l: {
+				if (tag.hasKey("Type") && !tag.getString("Type").equals("tile.mfr.rednet.logic.name"))
+					break l;
+				if (tag.hasKey("circuits", 10)) {
+					int c = stack.getTagCompound().getTagList("circuits", 10).tagCount();
+					infoList.add(MFRUtil.localize("tip.info.mfr.memorycard.programmed", c));
+				}
+			}
 			infoList.add(MFRUtil.localize("tip.info.mfr.memorycard.wipe", true));
 		}
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
 			float xOffset, float yOffset, float zOffset) {
 		if (world.isRemote) {
 			return true;
 		}
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileEntityRedNetLogic) {
-			if (itemstack.getTagCompound() == null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				te.writeToNBT(tag);
-				itemstack.setTagCompound(tag);
-				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
-			} else {
-				int circuitCount = itemstack.getTagCompound().getTagList("circuits", 10).tagCount();
-				if (circuitCount > ((TileEntityRedNetLogic)te).getCircuitCount()) {
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
-				} else {
-					((TileEntityRedNetLogic)te).readCircuitsOnly(itemstack.getTagCompound());
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
+		NBTTagCompound tag = stack.getTagCompound();
+		boolean read = tag == null || !tag.hasKey("Type"), special = false;
+		if (tag == null)
+			stack.setTagCompound(tag = new NBTTagCompound());
+		else if (read != tag.hasKey("circuits", 10)) {
+			special = true;
+			read = false;
+		}
+
+		l: if (!special && te instanceof IPortableData) {
+			if (read) {
+				NBTTagCompound tag2 = (NBTTagCompound) tag.copy();
+				((IPortableData) te).writePortableData(player, tag2);
+				if (!tag2.equals(tag)) {
+					tag = tag2;
+					tag.setString("Type", ((IPortableData) te).getDataType());
 				}
+			} else {
+				if (tag.getString("Type").equals(((IPortableData) te).getDataType())) {
+					((IPortableData) te).readPortableData(player, tag);
+				} else
+					break l;
 			}
+			stack.setTagCompound(tag);
 
 			return true;
 		}
+		else if (te instanceof TileEntityRedNetLogic) {
+			if (read) {
+				te.writeToNBT(tag);
+				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
+			} else if (special) {
+				int circuitCount = tag.getTagList("circuits", 10).tagCount();
+				if (circuitCount > ((TileEntityRedNetLogic)te).getCircuitCount()) {
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
+				} else {
+					((TileEntityRedNetLogic)te).readCircuitsOnly(tag);
+					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
+				}
+			}
+			stack.setTagCompound(tag);
+
+			return true;
+		}
+
 		return false;
 	}
 

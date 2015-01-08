@@ -9,6 +9,7 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 import java.lang.reflect.Field;
 import java.util.Set;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,14 +45,14 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			f.setInt(tick, Short.MAX_VALUE);
 		} catch(Throwable _) {}
 	}
-	
+
 	protected static TObjectIntHashMap<String> fluidConsumptionRate = new TObjectIntHashMap<String>();
 	static {
 		fluidConsumptionRate.put("mobessence", 10);
 		fluidConsumptionRate.put("liquidessence", 20);
 		fluidConsumptionRate.put("ender", 40);
 	}
-	
+
 	protected short _radius;
 	protected boolean activated, unableToRequestTicket;
 	public boolean useAltPower;
@@ -59,25 +60,25 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	protected int consumptionTicks;
 	protected int emptyTicks, prevEmpty;
 	protected int unactivatedTicks;
-	
+
 	public TileEntityChunkLoader()
 	{
 		super(Machine.ChunkLoader);
 		_radius = 0;
 		useAltPower = MFRConfig.enableConfigurableCLEnergy.getBoolean(false);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
 		return new GuiChunkLoader(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
 	{
-		if (unableToRequestTicket && 
+		if (unableToRequestTicket &&
 				inventoryPlayer.player.getCommandSenderName().equals(_owner))
 		{
 			inventoryPlayer.player.addChatMessage(
@@ -85,13 +86,13 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		}
 		return new ContainerChunkLoader(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	protected FluidTankAdv[] createTanks()
 	{
 		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 10)};
 	}
-	
+
 	@Override
 	public void onChunkUnload()
 	{
@@ -102,7 +103,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			ForgeChunkManager.releaseTicket(_ticket);
 		}
 	}
-	
+
 	public void setRadius(short r)
 	{
 		int maxR = 38;
@@ -135,7 +136,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
@@ -162,7 +163,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				unforceChunks();
 			return;
 		}
-		
+
 		if (!activated)
 		l: {
 			if (_ticket != null)
@@ -170,7 +171,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
 				if (chunks.size() == 0)
 					break l;
-				
+
 				unactivatedTicks = Math.min(_tanks[0].getCapacity() + 10, unactivatedTicks + 1);
 				if (consumptionTicks > 0)
 					consumptionTicks /= 10;
@@ -189,7 +190,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 							break l;
 					}
 				}
-				
+
 				for (ChunkCoordIntPair c : chunks)
 					ForgeChunkManager.unforceChunk(_ticket, c);
 			}
@@ -209,30 +210,30 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				_ticket.getModData().setInteger("X", xCoord);
 				_ticket.getModData().setInteger("Y", yCoord);
 				_ticket.getModData().setInteger("Z", zCoord);
-				
+
 			}
 			forceChunks();
 		}
-		
+
 		if (prevEmpty != emptyTicks)
 		{
 			prevEmpty = emptyTicks;
 			onFactoryInventoryChanged();
 		}
-		
+
 		super.setIsActive(activated);
 	}
-	
+
 	protected void unforceChunks()
 	{
 		Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
 		if (chunks.size() == 0)
 			return;
-		
+
 		for (ChunkCoordIntPair c : chunks)
 			ForgeChunkManager.unforceChunk(_ticket, c);
 	}
-	
+
 	protected void forceChunks()
 	{
 		if (_ticket == null)
@@ -262,7 +263,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				}
 		}
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
@@ -338,30 +339,41 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		}
 		return false;
 	}
-	
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setShort("radius", _radius);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		setRadius(tag.getShort("radius"));
+	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		
+
 		tag.setShort("radius", _radius);
 		tag.setInteger("empty", emptyTicks);
 		tag.setInteger("inactive", unactivatedTicks);
 		tag.setInteger("consumed", consumptionTicks);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		
-		_radius = tag.getShort("radius");
+
 		emptyTicks = tag.getInteger("empty");
 		unactivatedTicks = tag.getInteger("inactive");
 		consumptionTicks = tag.getInteger("consumed");
 		onFactoryInventoryChanged();
 	}
-	
+
 	protected boolean isFluidFuel(FluidStack fuel)
 	{
 		String name = getFluidName(fuel);
@@ -369,7 +381,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			return false;
 		return fluidConsumptionRate.containsKey(name);
 	}
-	
+
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
@@ -379,25 +391,25 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					return _tank.fill(resource, doFill);
 		return 0;
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		return drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return drain(resource, doDrain);
 	}
-	
+
 	@Override
 	public boolean allowBucketFill(ItemStack stack)
 	{
 		return !unableToRequestTicket;
 	}
-	
+
 	@Override
 	public boolean allowBucketDrain(ItemStack stack)
 	{
@@ -415,7 +427,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		return unableToRequestTicket;
 	}
-	
+
 	protected String getFluidName(FluidStack fluid)
 	{
 		if (fluid == null || fluid.getFluid() == null)

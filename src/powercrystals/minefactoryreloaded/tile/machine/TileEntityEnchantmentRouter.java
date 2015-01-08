@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Map;
 
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -102,16 +103,30 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
-	{
-		super.readFromNBT(nbttagcompound);
-		_matchLevels = nbttagcompound.getBoolean("matchLevels");
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		super.writePortableData(player, tag);
+		tag.setBoolean("matchLevels", _matchLevels);
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound nbttagcompound)
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		super.readPortableData(player, tag);
+		_matchLevels = tag.getBoolean("matchLevels");
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.writeItemNBT(nbttagcompound);
-		nbttagcompound.setBoolean("matchLevels", _matchLevels);
+		super.writeItemNBT(tag);
+		tag.setBoolean("matchLevels", _matchLevels);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		_matchLevels = tag.getBoolean("matchLevels");
 	}
 }

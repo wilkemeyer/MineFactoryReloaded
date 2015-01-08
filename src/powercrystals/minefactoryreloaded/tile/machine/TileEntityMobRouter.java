@@ -144,6 +144,20 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 	}
 
 	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setInteger("mode", _matchMode);
+		tag.setBoolean("blacklist", _blacklist);
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		setMatchMode(tag.getInteger("mode"));
+		_blacklist = tag.getBoolean("blacklist");
+	}
+
+	@Override
 	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);

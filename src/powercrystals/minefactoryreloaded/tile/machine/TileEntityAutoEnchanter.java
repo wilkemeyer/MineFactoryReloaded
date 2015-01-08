@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -258,17 +259,29 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound nbttagcompound)
-	{
-		super.writeItemNBT(nbttagcompound);
-		nbttagcompound.setInteger("targetLevel", _targetLevel);
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		tag.setInteger("targetLevel", _targetLevel);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound)
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		setTargetLevel(tag.getInteger("targetLevel"));
+	}
+
+	@Override
+	public void writeItemNBT(NBTTagCompound tag)
 	{
-		super.readFromNBT(nbttagcompound);
-		_targetLevel = nbttagcompound.getInteger("targetLevel");
+		super.writeItemNBT(tag);
+		tag.setInteger("targetLevel", _targetLevel);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		_targetLevel = tag.getInteger("targetLevel");
 	}
 
 	@Override
