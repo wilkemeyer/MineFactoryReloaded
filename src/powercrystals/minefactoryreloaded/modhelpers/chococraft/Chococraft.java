@@ -30,11 +30,13 @@ public class Chococraft
 
 		try
 		{
-			Class<?> mod = Class.forName("chococraft.common.ModChocoCraft");
+			Class<?> blocks = Class.forName("chococraft.common.config.ChocoCraftBlocks");
 
 			FMLLog.info("Registering Gysahls for Planter/Harvester/Fertilizer");
-			Block blockId = ((Block)(mod.getField("gysahlStemBlock").get(null)));
-			Item seedId = ((Item)(mod.getField("gysahlSeedsItem").get(null)));
+			Block blockId = ((Block)(blocks.getField("gysahlStemBlock").get(null)));
+			
+			Class<?> items = Class.forName("chococraft.common.config.ChocoCraftItems");
+			Item seedId = ((Item)(items.getField("gysahlSeedsItem").get(null)));
 
 			MFRRegistry.registerPlantable(new PlantableCropPlant(seedId, blockId));
 			MFRRegistry.registerHarvestable(new HarvestableChococraft(blockId));
@@ -47,6 +49,7 @@ public class Chococraft
 		}
 		catch (Exception e)
 		{
+			FMLLog.warning("Clienthax prob screwed up support for mfr, email him at clienthax@gmail.com");
 			e.printStackTrace();
 		}
 	}
