@@ -143,15 +143,6 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			ret.add(new ItemStack(getItemDropped(meta & 3, world.rand, fortune), 1,
 					world.rand.nextInt(50000) == 0 ? 2 : 0));
 
-		/* TODO: drop book (counts as fuel) with info on MFR
-		chance = 100;
-
-		if (fortune > 0)
-			chance = Math.min(chance - (8 << fortune), 30);
-
-		if (world.rand.nextInt(chance) == 0)
-			ret.add(new ItemStack(Item.appleRed, 1, 0));
-		//*/
 		return ret;
 	}
 

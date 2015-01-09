@@ -72,6 +72,7 @@ public class ConnectionHandler
 	@SubscribeEvent
 	public void onItemPickUp(ItemPickupEvent evt) {
 		if (evt.pickedUp.getEntityItem().getItem() == MFRThings.rubberWoodItem) {
+			// TODO: give player a book
 			evt.player.triggerAchievement(AchievementList.mineWood);
 		}
 	}
