@@ -368,6 +368,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	{
 		super.readFromNBT(tag);
 
+		setRadius(tag.getShort("radius"));
 		emptyTicks = tag.getInteger("empty");
 		unactivatedTicks = tag.getInteger("inactive");
 		consumptionTicks = tag.getInteger("consumed");
