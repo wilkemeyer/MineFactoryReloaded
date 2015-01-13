@@ -1,29 +1,23 @@
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
+import static cofh.api.modhelpers.ThaumcraftHelper.parseAspects;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.asm.relauncher.Strippable;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -40,14 +34,11 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Mod(modid = "MineFactoryReloaded|CompatThaumcraft", name = "MFR Compat: Thaumcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Thaumcraft",
 customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class Thaumcraft
-{
+public class Thaumcraft {
 	@EventHandler
 	@Strippable("mod:Thaumcraft")
-	public static void load(FMLInitializationEvent e)
-	{
-		try
-		{
+	public static void load(FMLInitializationEvent e) {
+		try {
 			final Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
 			final Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
 			final Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
@@ -69,8 +60,7 @@ public class Thaumcraft
 			MFRRegistry.registerGrinderBlacklist(golem);
 			MFRRegistry.registerGrinderBlacklist(trunk);
 
-			if (MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false))
-			{
+			if (MFRConfig.conveyorNeverCapturesTCGolems.getBoolean(false)) {
 				MFRRegistry.registerConveyerBlacklist(golem);
 				MFRRegistry.registerConveyerBlacklist(trunk);
 			}
@@ -85,8 +75,7 @@ public class Thaumcraft
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling));
 			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean, tcPod) {
 				@Override
-				protected boolean isNextToAcceptableLog(World world, int x, int y, int z)
-				{
+				protected boolean isNextToAcceptableLog(World world, int x, int y, int z) {
 					boolean isMagic = false;
 					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 					if (biome != null)
@@ -99,8 +88,7 @@ public class Thaumcraft
 				}
 
 				@Override
-				protected boolean isGoodLog(World world, int x, int y, int z)
-				{
+				protected boolean isGoodLog(World world, int x, int y, int z) {
 					Block id = world.getBlock(x, y, z);
 					return id == tcLog || id.equals(Blocks.log);
 				}
@@ -112,167 +100,66 @@ public class Thaumcraft
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
 		}
-		catch(Throwable x)
-		{
+		catch(Throwable x) {
 			x.printStackTrace();
 		}
 	}
 
 	@EventHandler
 	@Strippable("api:Thaumcraft|API")
-	public static void load(FMLPostInitializationEvent e)
-	{
-		try
-		{
-			Class<?> Aspect = Class.forName("thaumcraft.api.aspects.Aspect");
-			aspects = (LinkedHashMap<String, ? extends Object>)Aspect.
-					getDeclaredField("aspects").get(null);
-			Class<?> ThaumcraftApi = Class.forName("thaumcraft.api.ThaumcraftApi");
-			AspectList = Class.forName("thaumcraft.api.aspects.AspectList");
-			registerItem = ThaumcraftApi.getDeclaredMethod("registerObjectTag",
-					ItemStack.class, AspectList);
-			Class<?> EntityTagsNBT = Class.forName("[Lthaumcraft.api.ThaumcraftApi$EntityTagsNBT;");
-			registerEntity = ThaumcraftApi.getDeclaredMethod("registerEntityTag",
-					String.class, AspectList, EntityTagsNBT);
-			addAspect = AspectList.getDeclaredMethod("add", Aspect, int.class);
-			newAspectList = AspectList.getDeclaredConstructor(ItemStack.class);
-
-			doAspects();
-		}
-		catch(Throwable x)
-		{
-			x.printStackTrace();
-		}
+	public static void load(FMLLoadCompleteEvent e) throws Throwable {
+		doAspects();
 	}
 
-	private static LinkedHashMap<String, ? extends Object> aspects = null;
-	private static Method registerItem = null;
-	private static Method registerEntity = null;
-	private static Class<?> AspectList = null;
-	private static Constructor<?> newAspectList = null;
-	private static Method addAspect = null;
-
-	private static void parseAspects(ItemStack item, String toadd, boolean craftedAspects) throws Throwable
-	{
-		Object aspectList;
-		if (craftedAspects)
-			aspectList = newAspectList.newInstance(item);
-		else
-			aspectList = AspectList.newInstance();
-		if (!toadd.trim().isEmpty())
-		{
-			String[] list = toadd.split(",");
-			for (int i = list.length; i --> 0; )
-			{
-				String[] temp = list[i].trim().split(" ");
-				if (aspects.containsKey(temp[1]))
-					addAspect.invoke(aspectList, aspects.get(temp[1]), Integer.parseInt(temp[0], 10));
-				else
-					FMLLog.severe("%s aspect missing.", temp[1]);
-			}
-		}
-		registerItem.invoke(null, item, aspectList);
+	private static void parseAspects2(Machine item, String toadd) throws Throwable {
+		parseAspects(item.getItemStack(), toadd, true);
 	}
 
-	private static void parseAspects(String entity, String toadd) throws Throwable
-	{
-		String[] list = toadd.split(",");
-		Object aspectList = AspectList.newInstance();
-		for (int i = list.length; i --> 0; )
-		{
-			String[] temp = list[i].trim().split(" ");
-			if (aspects.containsKey(temp[1]))
-				addAspect.invoke(aspectList, aspects.get(temp[1]), Integer.parseInt(temp[0], 10));
-		}
-		registerEntity.invoke(null, entity, aspectList, null);
-	}
-
-	private static void parseAspects(Item item, String toadd) throws Throwable
-	{
-		parseAspects(item, OreDictionary.WILDCARD_VALUE, toadd, true);
-	}
-
-	private static void parseAspects(Item item, int meta, String toadd) throws Throwable
-	{
-		parseAspects(item, meta, toadd, true);
-	}
-
-	private static void parseAspects(Item item, int meta, String toadd, boolean craftedAspects) throws Throwable
-	{
-		parseAspects(new ItemStack(item, 1, meta), toadd, craftedAspects);
-	}
-
-	private static void parseAspects(Block item, int meta, String toadd) throws Throwable
-	{
-		parseAspects(new ItemStack(item, 1, meta), toadd, true);
-	}
-
-	private static void parseAspects(Block item, String toadd) throws Throwable
-	{
-		parseAspects(item, OreDictionary.WILDCARD_VALUE, toadd);
-	}
-
-	private static void parseAspects(Block item, int meta, String toadd, boolean craftedAspects) throws Throwable
-	{
-		parseAspects(new ItemStack(item, 1, meta), toadd, craftedAspects);
-	}
-
-	private static void parseAspects(Block item, String toadd, boolean craftedAspects) throws Throwable
-	{
-		parseAspects(item, OreDictionary.WILDCARD_VALUE, toadd, craftedAspects);
-	}
-
-	private static void parseAspects(Machine item, String toadd) throws Throwable
-	{
-		parseAspects(new ItemStack(item.getBlock(), 1, item.getMeta()), toadd, true);
-	}
-
-	private static void doAspects() throws Throwable
-	{
-		parseAspects(Machine.AutoAnvil, "3 permutatio, 5 fabrico, 10 metallum, 5 machina");
-		parseAspects(Machine.AutoBrewer, "4 ignis, 2 fabrico, 2 aqua, 2 praecantatio, 5 machina");
-		parseAspects(Machine.AutoDisenchanter, "4 praecantatio, 4 permutatio, 5 machina");
-		parseAspects(Machine.AutoEnchanter, "8 praecantatio, 4 cognitio, 4 fabrico, 5 machina");
-		parseAspects(Machine.AutoJukebox, "4 sensus, 4 aer, 5 machina");
-		parseAspects(Machine.AutoSpawner, "4 bestia, 4 exanimis, 7 praecantatio, 4 alienis, 5 machina, 10 permutatio");
-		parseAspects(Machine.BioFuelGenerator, "15 potentia, 3 herba, 5 machina, 3 permutatio");
-		parseAspects(Machine.BioReactor, "4 herba, 2 potentia, 5 machina, 5 permutatio");
-		parseAspects(Machine.BlockBreaker, "15 perfodio, 5 machina, 5 metallum, 3 lucrum");
-		parseAspects(Machine.BlockPlacer, "1 motus, 1 ordo, 5 machina, 5 metallum, 3 lucrum");
-		parseAspects(Machine.BlockSmasher, "5 perditio, 5 machina, 3 permutatio, 3 praecantatio");
-		parseAspects(Machine.Breeder, "2 bestia, 2 fames, 5 machina");
-		parseAspects(Machine.Chronotyper, "3 tempus, 3 bestia, 5 machina, 3 sensus");
-		parseAspects(Machine.ChunkLoader, "100 potentia, 30 alienis, 20 praecantatio, 10 iter, 10 vacuos, 5 machina, 5 instrumentum");
-		parseAspects(Machine.Composter, "2 bestia, 2 aqua, 5 machina");
-		parseAspects(Machine.DeepStorageUnit, "4971027 vacuos, 5 machina, 15 alienis, 1 praecantatio");
-		parseAspects(Machine.Ejector, "4 motus, 5 machina");
-		parseAspects(Machine.EnchantmentRouter, "1 motus, 4 iter, 2 sensus, 5 machina, 1 praecantatio");
-		parseAspects(Machine.Fertilizer, "6 herba, 5 machina, 1 vitreus, 3 victus");
-		parseAspects(Machine.Fisher, "3 aqua, 5 machina, 4 metallum, 2 instrumentum");
-		parseAspects(Machine.Fountain, "10 aqua, 5 machina, 3 fabrico, 1 iter");
-		parseAspects(Machine.FruitPicker, "2 herba, 4 meto, 5 machina");
-		parseAspects(Machine.Grinder, "10 telum, 6 mortuus, 7 meto, 5 machina, 4 metallum, 2 lucrum");
-		parseAspects(Machine.ItemCollector, "4 vacuos, 5 machina, 2 arbor, 4 motus");
-		parseAspects(Machine.ItemRouter, "2 motus, 4 iter, 2 sensus,  5 machina");
-		parseAspects(Machine.LaserDrill, "30 perfodio, 15 lux, 5 machina, 4 victus");
-		parseAspects(Machine.LaserDrillPrecharger, "4 lux, 5 machina, 25 potentia, 2 victus");
-		parseAspects(Machine.LavaFabricator, "4 ignis, 4 terra, 4 fabrico, 5 machina");
-		parseAspects(Machine.LiquiCrafter, "5 aqua, 5 fabrico, 5 machina");
-		parseAspects(Machine.LiquidRouter, "1 motus, 4 iter, 2 sensus, 5 machina, 1 aqua");
-		parseAspects(Machine.MeatPacker, "2 ordo, 2 corpus, 2 fames, 5 machina");
-		parseAspects(Machine.MobCounter, "5 ordo, 5 machina, 5 cognitio");
-		parseAspects(Machine.MobRouter, "3 ordo, 3 bestia, 5 machina, 3 sensus");
-		parseAspects(Machine.Planter, "4 herba, 2 arbor, 4 messis, 5 machina");
-		parseAspects(Machine.Rancher, "6 meto, 5 machina, 4 metallum, 2 instrumentum");
-		parseAspects(Machine.RedNote, "4 aer, 4 sensus, 5 machina");
-		parseAspects(Machine.Sewer, "1 venenum, 3 aqua, 5 machina, 4 bestia");
-		parseAspects(Machine.Slaughterhouse, "12 telum, 10 mortuus, 5 machina, 12 metallum, 6 lucrum");
-		parseAspects(Machine.SludgeBoiler, "3 ordo, 3 venenum, 3 terra, 2 aqua, 5 machina, 2 ignis");
-		parseAspects(Machine.SteamBoiler, "3 fabrico, 7 aqua, 5 machina, 10 ignis, 3 perditio");
-		parseAspects(Machine.SteamTurbine, "3 vacuos, 3 aqua, 5 machina, 10 potentia, 1 fabrico, 3 ordo");
-		parseAspects(Machine.Unifier, "5 ordo, 2 alienis, 5 machina");
-		parseAspects(Machine.Vet, "4 sano, 5 machina, 4 bestia");
-		parseAspects(Machine.WeatherCollector, " 4 vacuos, 5 machina, 5 metallum, 4 tempestas");
+	private static void doAspects() throws Throwable {
+		parseAspects2(Machine.AutoAnvil, "3 permutatio, 5 fabrico, 10 metallum, 5 machina");
+		parseAspects2(Machine.AutoBrewer, "4 ignis, 2 fabrico, 2 aqua, 2 praecantatio, 5 machina");
+		parseAspects2(Machine.AutoDisenchanter, "4 praecantatio, 4 permutatio, 5 machina");
+		parseAspects2(Machine.AutoEnchanter, "8 praecantatio, 4 cognitio, 4 fabrico, 5 machina");
+		parseAspects2(Machine.AutoJukebox, "4 sensus, 4 aer, 5 machina");
+		parseAspects2(Machine.AutoSpawner, "4 bestia, 4 exanimis, 7 praecantatio, 4 alienis, 5 machina, 10 permutatio");
+		parseAspects2(Machine.BioFuelGenerator, "15 potentia, 3 herba, 5 machina, 3 permutatio");
+		parseAspects2(Machine.BioReactor, "4 herba, 2 potentia, 5 machina, 5 permutatio");
+		parseAspects2(Machine.BlockBreaker, "15 perfodio, 5 machina, 5 metallum, 3 lucrum");
+		parseAspects2(Machine.BlockPlacer, "1 motus, 1 ordo, 5 machina, 5 metallum, 3 lucrum");
+		parseAspects2(Machine.BlockSmasher, "5 perditio, 5 machina, 3 permutatio, 3 praecantatio");
+		parseAspects2(Machine.Breeder, "2 bestia, 2 fames, 5 machina");
+		parseAspects2(Machine.Chronotyper, "3 tempus, 3 bestia, 5 machina, 3 sensus");
+		parseAspects2(Machine.ChunkLoader, "100 potentia, 30 alienis, 20 praecantatio, 10 iter, 10 vacuos, 5 machina, 5 instrumentum");
+		parseAspects2(Machine.Composter, "2 bestia, 2 aqua, 5 machina");
+		parseAspects2(Machine.DeepStorageUnit, "4971027 vacuos, 5 machina, 15 alienis, 1 praecantatio");
+		parseAspects2(Machine.Ejector, "4 motus, 5 machina");
+		parseAspects2(Machine.EnchantmentRouter, "1 motus, 4 iter, 2 sensus, 5 machina, 1 praecantatio");
+		parseAspects2(Machine.Fertilizer, "6 herba, 5 machina, 1 vitreus, 3 victus");
+		parseAspects2(Machine.Fisher, "3 aqua, 5 machina, 4 metallum, 2 instrumentum");
+		parseAspects2(Machine.Fountain, "10 aqua, 5 machina, 3 fabrico, 1 iter");
+		parseAspects2(Machine.FruitPicker, "2 herba, 4 meto, 5 machina");
+		parseAspects2(Machine.Grinder, "10 telum, 6 mortuus, 7 meto, 5 machina, 4 metallum, 2 lucrum");
+		parseAspects2(Machine.ItemCollector, "4 vacuos, 5 machina, 2 arbor, 4 motus");
+		parseAspects2(Machine.ItemRouter, "2 motus, 4 iter, 2 sensus,  5 machina");
+		parseAspects2(Machine.LaserDrill, "30 perfodio, 15 lux, 5 machina, 4 victus");
+		parseAspects2(Machine.LaserDrillPrecharger, "4 lux, 5 machina, 25 potentia, 2 victus");
+		parseAspects2(Machine.LavaFabricator, "4 ignis, 4 terra, 4 fabrico, 5 machina");
+		parseAspects2(Machine.LiquiCrafter, "5 aqua, 5 fabrico, 5 machina");
+		parseAspects2(Machine.LiquidRouter, "1 motus, 4 iter, 2 sensus, 5 machina, 1 aqua");
+		parseAspects2(Machine.MeatPacker, "2 ordo, 2 corpus, 2 fames, 5 machina");
+		parseAspects2(Machine.MobCounter, "5 ordo, 5 machina, 5 cognitio");
+		parseAspects2(Machine.MobRouter, "3 ordo, 3 bestia, 5 machina, 3 sensus");
+		parseAspects2(Machine.Planter, "4 herba, 2 arbor, 4 messis, 5 machina");
+		parseAspects2(Machine.Rancher, "6 meto, 5 machina, 4 metallum, 2 instrumentum");
+		parseAspects2(Machine.RedNote, "4 aer, 4 sensus, 5 machina");
+		parseAspects2(Machine.Sewer, "1 venenum, 3 aqua, 5 machina, 4 bestia");
+		parseAspects2(Machine.Slaughterhouse, "12 telum, 10 mortuus, 5 machina, 12 metallum, 6 lucrum");
+		parseAspects2(Machine.SludgeBoiler, "3 ordo, 3 venenum, 3 terra, 2 aqua, 5 machina, 2 ignis");
+		parseAspects2(Machine.SteamBoiler, "3 fabrico, 7 aqua, 5 machina, 10 ignis, 3 perditio");
+		parseAspects2(Machine.SteamTurbine, "3 vacuos, 3 aqua, 5 machina, 10 potentia, 1 fabrico, 3 ordo");
+		parseAspects2(Machine.Unifier, "5 ordo, 2 alienis, 5 machina");
+		parseAspects2(Machine.Vet, "4 sano, 5 machina, 4 bestia");
+		parseAspects2(Machine.WeatherCollector, " 4 vacuos, 5 machina, 5 metallum, 4 tempestas");
 
 		parseAspects("mfrEntityPinkSlime", "1 aqua, 2 limus, 1 corpus, 1 bestia");
 
