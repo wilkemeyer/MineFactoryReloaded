@@ -187,6 +187,10 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	public static SimpleNetworkWrapper networkWrapper = null;
 
+
+	public static Object balance = "balance";
+
+
 	public static final String prefix             = "minefactoryreloaded:";
 	public static final String textureFolder      = prefix + "textures/";
 	public static final String guiFolder          = textureFolder + "gui/";
