@@ -218,11 +218,12 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		{
 			ItemStack outputItem = startingItem.copy();
 			ItemStack addedItem = _inventory[1];
-			if (startingItem.getItem().equals(Items.book))
-				outputItem = new ItemStack(Items.enchanted_book);
 
 			@SuppressWarnings("unchecked")
 			Map<Integer, Integer> existingEnchantments = EnchantmentHelper.getEnchantments(outputItem);
+
+			if (outputItem.getItem().equals(Items.book))
+				outputItem = new ItemStack(Items.enchanted_book);
 
 			boolean enchantingWithBook = false;
 			int repairCost = outputItem.getRepairCost() + (addedItem == null ? 0 : addedItem.getRepairCost());
