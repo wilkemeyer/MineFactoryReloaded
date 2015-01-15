@@ -54,21 +54,21 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
 		if (stack == null) return false;
+		Item item = stack.getItem();
 		if (repairOnly)
 		{
-			if (slot == 0) return stack.getItem().isRepairable();
-			if (slot == 1 && _inventory[0] != null && stack.getItem().isRepairable())
-				return _inventory[0].getItem().equals(stack.getItem());
+			if (slot == 0) return item.isRepairable();
+			if (slot == 1 && _inventory[0] != null && item.isRepairable())
+				return _inventory[0].getItem().equals(item);
 			return false;
 		}
-		if (slot == 0) return stack.isItemStackDamageable() || stack.getItem().equals(Items.enchanted_book);
+		if (slot == 0) return (item.isItemTool(stack) || item.equals(Items.enchanted_book)) || item.isRepairable();
 		if (slot == 1 && _inventory[0] != null)
 		{
-			if (stack.getItem().equals(Items.enchanted_book) &&
-					Items.enchanted_book.func_92110_g(stack).tagCount() > 0)
+			if (item.equals(Items.enchanted_book) && Items.enchanted_book.func_92110_g(stack).tagCount() > 0)
 				return true;
-			return 	(stack.getItem().equals(_inventory[0].getItem()) &&
-					stack.isItemStackDamageable() && stack.getItem().isRepairable()) ||
+			return 	(item.equals(_inventory[0].getItem()) &&
+					stack.isItemStackDamageable() && item.isRepairable()) ||
 					_inventory[0].getItem().getIsRepairable(_inventory[0], stack);
 		}
 		return false;
@@ -218,6 +218,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 		{
 			ItemStack outputItem = startingItem.copy();
 			ItemStack addedItem = _inventory[1];
+			if (startingItem.getItem().equals(Items.book))
+				outputItem = new ItemStack(Items.enchanted_book);
 
 			@SuppressWarnings("unchecked")
 			Map<Integer, Integer> existingEnchantments = EnchantmentHelper.getEnchantments(outputItem);
