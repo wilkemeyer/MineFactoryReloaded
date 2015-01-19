@@ -263,8 +263,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		/**
 		 * Crafting
 		 */
-		if (recipe.matches(craft, worldObj))
+		try {
 			_inventory[9] = recipe.getCraftingResult(craft);
+		} catch (Throwable t) {
+			if (recipe.matches(craft, worldObj))
+				_inventory[9] = recipe.getCraftingResult(craft);
+		}
 
 		if (_inventory[9] == null)
 			return;

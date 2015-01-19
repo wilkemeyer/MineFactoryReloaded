@@ -16,8 +16,8 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.setup.recipe.handler.ShapelessMachineTinker;
 
-public class Vanilla
-{
+public class Vanilla {
+
 	// prevent derived recipe sets from double-registering this one if multiple sets are enabled
 	private static boolean _registeredMachines;
 	private static boolean _registeredMachineUpgrades;
@@ -37,11 +37,11 @@ public class Vanilla
 	private static boolean _registeredOreDict;
 
 	protected static String[] DYES = { "Black", "Red", "Green", "Brown",
-		"Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime",
-		"Yellow", "LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
+			"Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime",
+			"Yellow", "LightBlue", "Magenta", "Orange", "White" }; // order copied from forge
 
-	public final void registerRecipes()
-	{
+	public final void registerRecipes() {
+
 		gatherItems();
 		registerConveyors();
 		registerMachines();
@@ -62,35 +62,35 @@ public class Vanilla
 		registerRedNetManual();
 	}
 
-	public static void registerOredict()
-	{
+	public static void registerOredict() {
+
 		if (_registeredOreDict) return;
 		_registeredOreDict = true;
 
-		registerOre("itemRubber",        rubberBarItem);
-		registerOre("itemRawRubber",     rawRubberItem);
-		registerOre("woodRubber",        rubberWoodBlock);
-		registerOre("leavesRubber",      rubberLeavesBlock);
-		registerOre("blockPlastic",      factoryPlasticBlock);
-		registerOre("sheetPlastic",      plasticSheetItem);
-		registerOre("dustPlastic",       rawPlasticItem);
-		registerOre("ingotMeat",         meatIngotCookedItem);
-		registerOre("ingotMeatRaw",      meatIngotRawItem);
-		registerOre("nuggetMeat",        meatNuggetCookedItem);
-		registerOre("nuggetMeatRaw",     meatNuggetRawItem);
-		registerOre("blockMeat",         stack(factoryDecorativeBrickBlock, 1, 13));
-		registerOre("blockMeatRaw",      stack(factoryDecorativeBrickBlock, 1, 12));
+		registerOre("itemRubber", rubberBarItem);
+		registerOre("itemRawRubber", rawRubberItem);
+		registerOre("woodRubber", rubberWoodBlock);
+		registerOre("leavesRubber", rubberLeavesBlock);
+		registerOre("blockPlastic", factoryPlasticBlock);
+		registerOre("sheetPlastic", plasticSheetItem);
+		registerOre("dustPlastic", rawPlasticItem);
+		registerOre("ingotMeat", meatIngotCookedItem);
+		registerOre("ingotMeatRaw", meatIngotRawItem);
+		registerOre("nuggetMeat", meatNuggetCookedItem);
+		registerOre("nuggetMeatRaw", meatNuggetRawItem);
+		registerOre("blockMeat", stack(factoryDecorativeBrickBlock, 1, 13));
+		registerOre("blockMeatRaw", stack(factoryDecorativeBrickBlock, 1, 12));
 		registerOre("itemCharcoalSugar", sugarCharcoalItem);
-		registerOre("cableRedNet",       stack(rednetCableBlock, 1, 0));
-		registerOre("cableRedNet",       stack(rednetCableBlock, 1, 1));
+		registerOre("cableRedNet", stack(rednetCableBlock, 1, 0));
+		registerOre("cableRedNet", stack(rednetCableBlock, 1, 1));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 2));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 3));
-		registerOre("slimeball",         stack(pinkSlimeItem, 1, 0));
-		registerOre("dyeBrown",          fertilizerItem);
+		registerOre("slimeball", stack(pinkSlimeItem, 1, 0));
+		registerOre("dyeBrown", fertilizerItem);
 		registerOre("fertilizerOrganic", fertilizerItem);
-		registerOre("wireExplosive",     detCordBlock);
-		registerOre("listAllmilk",       milkBottleItem);
-		registerOre("listAllmeatraw",    meatIngotRawItem);
+		registerOre("wireExplosive", detCordBlock);
+		registerOre("listAllmilk", milkBottleItem);
+		registerOre("listAllmeatraw", meatIngotRawItem);
 		registerOre("listAllmeatcooked", meatIngotCookedItem);
 
 		{ // GLASS:
@@ -99,8 +99,8 @@ public class Vanilla
 			ItemStack paneStack = stack2(factoryGlassPaneBlock, 1);
 			registerOre(glass, glassStack.copy());
 			registerOre(pane, paneStack.copy());
-			for (int i = 0; i < 16; i++)
-			{
+
+			for (int i = 0; i < 16; i++) {
 				ItemStack ceramicDye = stack(ceramicDyeItem, 1, i);
 				glassStack = stack(factoryGlassBlock, 1, i);
 				paneStack = stack(factoryGlassPaneBlock, 1, i);
@@ -112,8 +112,8 @@ public class Vanilla
 			}
 		}
 
-		registerOre("stone",       stack(factoryDecorativeStoneBlock, 1, 0));
-		registerOre("stone",       stack(factoryDecorativeStoneBlock, 1, 1));
+		registerOre("stone", stack(factoryDecorativeStoneBlock, 1, 0));
+		registerOre("stone", stack(factoryDecorativeStoneBlock, 1, 1));
 		registerOre("cobblestone", stack(factoryDecorativeStoneBlock, 1, 2));
 		registerOre("cobblestone", stack(factoryDecorativeStoneBlock, 1, 3));
 
@@ -121,26 +121,24 @@ public class Vanilla
 		registerOre("listAllmilk", milk_bucket);
 	}
 
-	public void registerOredictEntries()
-	{
+	public void registerOredictEntries() {
+
 	}
 
-	protected void gatherItems()
-	{
+	protected void gatherItems() {
+
 	}
 
-	protected void registerMachines()
-	{
-		if(_registeredMachines)
-		{
+	protected void registerMachines() {
+
+		if (_registeredMachines) {
 			return;
 		}
 		_registeredMachines = true;
 
 		// regex: if\s*\((Machine\.\w+)[^\n]+\n[^\n]+\n[^\n]+\n\s+(\{[^}]+\} \))[^\n]+\n[^\n]+
 
-		registerMachine(Planter, new Object[]
-				{
+		registerMachine(Planter, new Object[] {
 				"GGG",
 				"CPC",
 				" M ",
@@ -148,10 +146,9 @@ public class Vanilla
 				'P', piston,
 				'C', Items.flower_pot,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Fisher, new Object[]
-				{
+		registerMachine(Fisher, new Object[] {
 				"GGG",
 				"RRR",
 				"BMB",
@@ -159,10 +156,9 @@ public class Vanilla
 				'R', fishing_rod,
 				'B', bucket,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Harvester, new Object[]
-				{
+		registerMachine(Harvester, new Object[] {
 				"GGG",
 				"SXS",
 				" M ",
@@ -170,10 +166,9 @@ public class Vanilla
 				'X', golden_axe,
 				'S', shears,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Rancher, new Object[]
-				{
+		registerMachine(Rancher, new Object[] {
 				"GGG",
 				"SBS",
 				"PMP",
@@ -182,10 +177,9 @@ public class Vanilla
 				'S', shears,
 				'P', plasticPipeBlock,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Fertilizer, new Object[]
-				{
+		registerMachine(Fertilizer, new Object[] {
 				"GGG",
 				"LBL",
 				" M ",
@@ -193,10 +187,9 @@ public class Vanilla
 				'L', leather,
 				'B', glass_bottle,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Vet, new Object[]
-				{
+		registerMachine(Vet, new Object[] {
 				"GGG",
 				"SSS",
 				"EME",
@@ -204,20 +197,18 @@ public class Vanilla
 				'E', spider_eye,
 				'S', syringeEmptyItem,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(ItemCollector, 8, new Object[]
-				{
+		registerMachine(ItemCollector, 8, new Object[] {
 				"GGG",
 				" C ",
 				" M ",
 				'G', "sheetPlastic",
 				'C', chest,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(BlockBreaker, new Object[]
-				{
+		registerMachine(BlockBreaker, new Object[] {
 				"GGG",
 				"PHS",
 				" M ",
@@ -226,10 +217,9 @@ public class Vanilla
 				'H', factoryHammerItem,
 				'S', golden_shovel,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(WeatherCollector, new Object[]
-				{
+		registerMachine(WeatherCollector, new Object[] {
 				"GGG",
 				"BBB",
 				"UMU",
@@ -237,20 +227,18 @@ public class Vanilla
 				'B', iron_bars,
 				'U', bucket,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(SludgeBoiler, new Object[]
-				{
+		registerMachine(SludgeBoiler, new Object[] {
 				"GGG",
 				"FFF",
 				" M ",
 				'G', "sheetPlastic",
 				'F', furnace,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Sewer, 4, new Object[]
-				{
+		registerMachine(Sewer, 4, new Object[] {
 				"GGG",
 				"BUB",
 				"BMB",
@@ -258,10 +246,9 @@ public class Vanilla
 				'B', brick,
 				'U', bucket,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Composter, new Object[]
-				{
+		registerMachine(Composter, new Object[] {
 				"GGG",
 				"PFP",
 				" M ",
@@ -269,10 +256,9 @@ public class Vanilla
 				'P', piston,
 				'F', furnace,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Breeder, new Object[]
-				{
+		registerMachine(Breeder, new Object[] {
 				"GGG",
 				"CAC",
 				"PMP",
@@ -281,10 +267,9 @@ public class Vanilla
 				'C', golden_carrot,
 				'A', golden_apple,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Grinder, new Object[]
-				{
+		registerMachine(Grinder, new Object[] {
 				"GGG",
 				"BSP",
 				" M ",
@@ -293,10 +278,9 @@ public class Vanilla
 				'B', book,
 				'S', golden_sword,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(AutoEnchanter, new Object[]
-				{
+		registerMachine(AutoEnchanter, new Object[] {
 				"GGG",
 				"BBB",
 				"DMD",
@@ -304,10 +288,9 @@ public class Vanilla
 				'B', book,
 				'D', diamond,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Chronotyper, new Object[]
-				{
+		registerMachine(Chronotyper, new Object[] {
 				"GGG",
 				"EEE",
 				"PMP",
@@ -315,10 +298,9 @@ public class Vanilla
 				'E', emerald,
 				'P', "dyePurple",
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Ejector, 8, new Object[]
-				{
+		registerMachine(Ejector, 8, new Object[] {
 				"GGG",
 				" D ",
 				"RMR",
@@ -326,10 +308,9 @@ public class Vanilla
 				'D', dropper,
 				'R', "dustRedstone",
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(ItemRouter, 8, new Object[]
-				{
+		registerMachine(ItemRouter, 8, new Object[] {
 				"GGG",
 				"RCR",
 				" M ",
@@ -337,10 +318,9 @@ public class Vanilla
 				'C', chest,
 				'R', repeater,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(LiquidRouter, 8, new Object[]
-				{
+		registerMachine(LiquidRouter, 8, new Object[] {
 				"GGG",
 				"RBR",
 				"PMP",
@@ -349,11 +329,10 @@ public class Vanilla
 				'B', bucket,
 				'P', plasticPipeBlock,
 				'M', machineBaseItem,
-				} );
+		});
 
 		int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
-		registerMachine(DeepStorageUnit, dsuCount, new Object[]
-				{
+		registerMachine(DeepStorageUnit, dsuCount, new Object[] {
 				"GGG",
 				"PPP",
 				"EME",
@@ -361,23 +340,20 @@ public class Vanilla
 				'P', ender_pearl,
 				'E', ender_eye,
 				'M', machineBaseItem,
-				} );
+		});
 
-		if (MFRConfig.enableCheapDSU.getBoolean(false))
-		{
-			registerMachine(DeepStorageUnit, new Object[]
-					{
+		if (MFRConfig.enableCheapDSU.getBoolean(false)) {
+			registerMachine(DeepStorageUnit, new Object[] {
 					"GGG",
 					"CCC",
 					"CMC",
 					'G', "sheetPlastic",
 					'C', chest,
 					'M', machineBaseItem,
-					} );
+			});
 		}
 
-		registerMachine(LiquiCrafter, new Object[]
-				{
+		registerMachine(LiquiCrafter, new Object[] {
 				"GGG",
 				"BWB",
 				"FMF",
@@ -386,10 +362,9 @@ public class Vanilla
 				'W', crafting_table,
 				'F', item_frame,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(LavaFabricator, new Object[]
-				{
+		registerMachine(LavaFabricator, new Object[] {
 				"GGG",
 				"OBO",
 				"CMC",
@@ -398,10 +373,9 @@ public class Vanilla
 				'B', blaze_rod,
 				'C', magma_cream,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(SteamBoiler, new Object[]
-				{
+		registerMachine(SteamBoiler, new Object[] {
 				"GGG",
 				"OTO",
 				"NBN",
@@ -411,20 +385,18 @@ public class Vanilla
 				'N', nether_brick_stairs,
 				'B', SludgeBoiler,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(AutoJukebox, new Object[]
-				{
+		registerMachine(AutoJukebox, new Object[] {
 				"GGG",
 				" J ",
 				" M ",
 				'G', "sheetPlastic",
 				'J', jukebox,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Unifier, new Object[]
-				{
+		registerMachine(Unifier, new Object[] {
 				"GGG",
 				"CBC",
 				" M ",
@@ -432,10 +404,9 @@ public class Vanilla
 				'B', book,
 				'C', comparator,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(AutoSpawner, new Object[]
-				{
+		registerMachine(AutoSpawner, new Object[] {
 				"GGG",
 				"NCS",
 				"EME",
@@ -445,10 +416,9 @@ public class Vanilla
 				'S', sugar,
 				'E', "gemEmerald",
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(BioReactor, new Object[]
-				{
+		registerMachine(BioReactor, new Object[] {
 				"GGG",
 				"UEU",
 				"SMS",
@@ -457,10 +427,9 @@ public class Vanilla
 				'E', fermented_spider_eye,
 				'S', "slimeball",
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(BioFuelGenerator, new Object[]
-				{
+		registerMachine(BioFuelGenerator, new Object[] {
 				"GGG",
 				"PFP",
 				"RMR",
@@ -469,10 +438,9 @@ public class Vanilla
 				'P', piston,
 				'R', blaze_rod,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(AutoDisenchanter, new Object[]
-				{
+		registerMachine(AutoDisenchanter, new Object[] {
 				"GGG",
 				"RDR",
 				"BMB",
@@ -481,10 +449,9 @@ public class Vanilla
 				'D', diamond,
 				'R', nether_brick,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(Slaughterhouse, new Object[]
-				{
+		registerMachine(Slaughterhouse, new Object[] {
 				"GGG",
 				"SSS",
 				"XMX",
@@ -492,10 +459,9 @@ public class Vanilla
 				'S', golden_sword,
 				'X', golden_axe,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(MeatPacker, new Object[]
-				{
+		registerMachine(MeatPacker, new Object[] {
 				"GGG",
 				"BFB",
 				"BMB",
@@ -503,10 +469,9 @@ public class Vanilla
 				'B', brick_block,
 				'F', flint_and_steel,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(EnchantmentRouter, new Object[]
-				{
+		registerMachine(EnchantmentRouter, new Object[] {
 				"GGG",
 				"RBR",
 				" M ",
@@ -514,10 +479,9 @@ public class Vanilla
 				'B', book,
 				'R', repeater,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(LaserDrill, new Object[]
-				{
+		registerMachine(LaserDrill, new Object[] {
 				"GGG",
 				"LLL",
 				"DMD",
@@ -525,10 +489,9 @@ public class Vanilla
 				'L', glowstone,
 				'D', "gemDiamond",
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(LaserDrillPrecharger, new Object[]
-				{
+		registerMachine(LaserDrillPrecharger, new Object[] {
 				"GGG",
 				"LSL",
 				"DMD",
@@ -537,20 +500,18 @@ public class Vanilla
 				'D', "gemDiamond",
 				'S', stack(pinkSlimeItem, 1, 1),
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(AutoAnvil, new Object[]
-				{
+		registerMachine(AutoAnvil, new Object[] {
 				"GGG",
 				"AAA",
 				" M ",
 				'G', "sheetPlastic",
 				'A', anvil,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(BlockSmasher, new Object[]
-				{
+		registerMachine(BlockSmasher, new Object[] {
 				"GGG",
 				"HHH",
 				"BMB",
@@ -558,10 +519,9 @@ public class Vanilla
 				'H', factoryHammerItem,
 				'B', book,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(RedNote, new Object[]
-				{
+		registerMachine(RedNote, new Object[] {
 				"GGG",
 				"CNC",
 				" M ",
@@ -569,10 +529,9 @@ public class Vanilla
 				'C', "cableRedNet",
 				'N', noteblock,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(AutoBrewer, new Object[]
-				{
+		registerMachine(AutoBrewer, new Object[] {
 				"GGG",
 				"CBC",
 				"RMR",
@@ -581,10 +540,9 @@ public class Vanilla
 				'B', Items.brewing_stand,
 				'R', comparator,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(FruitPicker, new Object[]
-				{
+		registerMachine(FruitPicker, new Object[] {
 				"GGG",
 				"SXS",
 				"SMS",
@@ -592,20 +550,18 @@ public class Vanilla
 				'X', golden_axe,
 				'S', shears,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(BlockPlacer, new Object[]
-				{
+		registerMachine(BlockPlacer, new Object[] {
 				"GGG",
 				"DDD",
 				" M ",
 				'G', "sheetPlastic",
 				'D', dispenser,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(MobCounter, new Object[]
-				{
+		registerMachine(MobCounter, new Object[] {
 				"GGG",
 				"RCR",
 				"SMS",
@@ -614,10 +570,9 @@ public class Vanilla
 				'C', comparator,
 				'S', spyglassItem,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(SteamTurbine, new Object[]
-				{
+		registerMachine(SteamTurbine, new Object[] {
 				"GGG",
 				"PFP",
 				"RMR",
@@ -626,10 +581,9 @@ public class Vanilla
 				'P', piston,
 				'R', netherbrick,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(ChunkLoader, new Object[]
-				{
+		registerMachine(ChunkLoader, new Object[] {
 				"GGG",
 				"PFP",
 				"RMR",
@@ -638,11 +592,9 @@ public class Vanilla
 				'P', DeepStorageUnit,
 				'R', "blockRedstone",
 				'M', machineBaseItem,
-				} );
-		if (MFRConfig.enableCheapCL.getBoolean(false))
-		{
-			registerMachine(ChunkLoader, new Object[]
-					{
+		});
+		if (MFRConfig.enableCheapCL.getBoolean(false)) {
+			registerMachine(ChunkLoader, new Object[] {
 					"GGG",
 					"PFP",
 					"RMR",
@@ -651,11 +603,10 @@ public class Vanilla
 					'P', ender_eye,
 					'R', "blockRedstone",
 					'M', machineBaseItem,
-					} );
+			});
 		}
 
-		registerMachine(Fountain, new Object[]
-				{
+		registerMachine(Fountain, new Object[] {
 				"GBG",
 				"GBG",
 				"UMU",
@@ -663,10 +614,9 @@ public class Vanilla
 				'B', iron_bars,
 				'U', bucket,
 				'M', machineBaseItem,
-				} );
+		});
 
-		registerMachine(MobRouter, new Object[]
-				{
+		registerMachine(MobRouter, new Object[] {
 				"GGG",
 				"BRB",
 				"PCP",
@@ -675,96 +625,88 @@ public class Vanilla
 				'R', ItemRouter,
 				'P', "dyeOrange",
 				'C', Chronotyper,
-				} );
+		});
 
-
-		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[]
-				{
-			"PPP",
-			"P P",
-			"PMP",
-			'P', "sheetPlastic",
-			'M', machineBaseItem,
-				}));
+		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[] {
+				"PPP",
+				"P P",
+				"PMP",
+				'P', "sheetPlastic",
+				'M', machineBaseItem,
+		}));
 	}
 
-	protected void registerMachine(Machine machine, Object... recipe)
-	{
+	protected void registerMachine(Machine machine, Object... recipe) {
+
 		registerMachine(machine, 1, recipe);
 	}
 
-	protected void registerMachine(Machine machine, int amount, Object... recipe)
-	{
-		if (machine.getIsRecipeEnabled())
-		{
+	protected void registerMachine(Machine machine, int amount, Object... recipe) {
+
+		if (machine.getIsRecipeEnabled()) {
 			ItemStack item = machine.getItemStack();
 			item.stackSize = amount;
-			for (int i = recipe.length; i --> 0; )
+			for (int i = recipe.length; i-- > 0;)
 				if (recipe[i] instanceof Machine)
-					recipe[i] = ((Machine)recipe[i]).getItemStack();
+					recipe[i] = ((Machine) recipe[i]).getItemStack();
 			addRecipe(ShapedRecipe(item, recipe));
 		}
 	}
 
-	protected void registerMachineUpgrades()
-	{
-		if(_registeredMachineUpgrades)
-		{
+	protected void registerMachineUpgrades() {
+
+		if (_registeredMachineUpgrades) {
 			return;
 		}
 		_registeredMachineUpgrades = true;
 
-		String[] materials = {"gemLapis", "ingotTin", "ingotIron", "ingotCopper", "ingotBronze",
+		String[] materials = { "gemLapis", "ingotTin", "ingotIron", "ingotCopper", "ingotBronze",
 				"ingotSilver", "ingotGold", "gemQuartz", "gemDiamond", "ingotPlatinum", "gemEmerald",
-				"cobblestone"};
+				"cobblestone" };
 
-		for (int i = 0, e = materials.length; i < e; ++i)
-		{
-			addRecipe(ShapedRecipe(stack(upgradeItem, 1, i), new Object[]
-					{
-				"III",
-				"PPP",
-				"RGR",
-				'I', materials[i],
-				'P', "dustPlastic",
-				'R', "dustRedstone",
-				'G', "nuggetGold",
-					} ));
+		for (int i = 0, e = materials.length; i < e; ++i) {
+			addRecipe(ShapedRecipe(stack(upgradeItem, 1, i), new Object[] {
+					"III",
+					"PPP",
+					"RGR",
+					'I', materials[i],
+					'P', "dustPlastic",
+					'R', "dustRedstone",
+					'G', "nuggetGold",
+			}));
 		}
 
-		for(int i = 0; i < 16; i++)
-		{
-			addRecipe(ShapedRecipe(stack(laserFocusItem, 1, i), new Object[]
-					{
-				"ENE",
-				"NGN",
-				"ENE",
-				'E', "gemEmerald",
-				'N', "nuggetGold",
-				'G', stack(factoryGlassPaneBlock, 1, i)
-					} ));
+		for (int i = 0; i < 16; i++) {
+			addRecipe(ShapedRecipe(stack(laserFocusItem, 1, i), new Object[] {
+					"ENE",
+					"NGN",
+					"ENE",
+					'E', "gemEmerald",
+					'N', "nuggetGold",
+					'G', stack(factoryGlassPaneBlock, 1, i)
+			}));
 		}
 	}
 
-	protected void registerMachineTinkers()
-	{
-		if(_registeredMachineTinkers)
-		{
+	protected void registerMachineTinkers() {
+
+		if (_registeredMachineTinkers) {
 			return;
 		}
 		_registeredMachineTinkers = true;
 
 		addRecipe(new ShapelessMachineTinker(Machine.ItemCollector, "Emits comparator signal",
 				stack(gold_nugget)) {
+
 			@Override
-			protected boolean isMachineTinkerable(ItemStack machine)
-			{
+			protected boolean isMachineTinkerable(ItemStack machine) {
+
 				return !machine.hasTagCompound() || !machine.getTagCompound().hasKey("hasTinkerStuff");
 			}
 
 			@Override
-			protected ItemStack getTinkeredMachine(ItemStack machine)
-			{
+			protected ItemStack getTinkeredMachine(ItemStack machine) {
+
 				machine = machine.copy();
 				NBTTagCompound tag = machine.getTagCompound();
 				if (tag == null) machine.setTagCompound(tag = new NBTTagCompound());
@@ -774,35 +716,31 @@ public class Vanilla
 		});
 	}
 
-	protected void registerConveyors()
-	{
-		if(_registeredConveyors)
-		{
+	protected void registerConveyors() {
+
+		if (_registeredConveyors) {
 			return;
 		}
 		_registeredConveyors = true;
 
-		addRecipe(ShapedRecipe(stack(conveyorBlock, 16, 16), new Object[]
-				{
-			"UUU",
-			"RIR",
-			'U', "itemRubber",
-			'R', "dustRedstone",
-			'I', "ingotIron",
-				} ));
+		addRecipe(ShapedRecipe(stack(conveyorBlock, 16, 16), new Object[] {
+				"UUU",
+				"RIR",
+				'U', "itemRubber",
+				'R', "dustRedstone",
+				'I', "ingotIron",
+		}));
 
-		for (int i = 0; i < 16; i++)
-		{
+		for (int i = 0; i < 16; i++) {
 			addRecipe(ShapelessRecipe(stack(conveyorBlock, 1, i),
-					stack2(conveyorBlock, 1),
-					"dyeCeramic" + DYES[15 - i]));
+				stack2(conveyorBlock, 1),
+				"dyeCeramic" + DYES[15 - i]));
 		}
 	}
 
-	protected void registerDecorative()
-	{
-		if(_registeredDecorative)
-		{
+	protected void registerDecorative() {
+
+		if (_registeredDecorative) {
 			return;
 		}
 		_registeredDecorative = true;
@@ -810,11 +748,9 @@ public class Vanilla
 		addSurroundRecipe(stack(factoryRoadBlock, 16), "sheetPlastic", stack(stonebrick, 1, 0));
 		addRotatedGearRecipe(stack(factoryRoadBlock, 4, 1), stack(factoryRoadBlock, 1, 0), stack(redstone_lamp));
 		addTwoWayConversionRecipe(stack(factoryRoadBlock, 1, 4), stack(factoryRoadBlock, 1, 1));
-
 		{ // GLASS
 			String pane = "paneGlass", glass = "blockGlass";
-			for (int i = 0; i < 16; i++)
-			{
+			for (int i = 0; i < 16; i++) {
 				ItemStack ceramicDye = stack(ceramicDyeItem, 1, i);
 				ItemStack glassStack = stack(factoryGlassBlock, 1, i);
 				ItemStack paneStack = stack(factoryGlassPaneBlock, 1, i);
@@ -923,256 +859,233 @@ public class Vanilla
 		addReverseStorageRecipe(stack(pinkSlimeItem), stack(pinkSlimeBlock));
 	}
 
-	protected void registerSyringes()
-	{
-		if(_registeredSyringes)
-		{
+	protected void registerSyringes() {
+
+		if (_registeredSyringes) {
 			return;
 		}
 		_registeredSyringes = true;
 
-		addRecipe(ShapedRecipe(stack(xpExtractorItem), new Object[]
-				{
-			"PLP",
-			"PLP",
-			"RPR",
-			'R', "itemRubber",
-			'L', "blockGlass",
-			'P', "sheetPlastic",
-				} ));
+		addRecipe(ShapedRecipe(stack(xpExtractorItem), new Object[] {
+				"PLP",
+				"PLP",
+				"RPR",
+				'R', "itemRubber",
+				'L', "blockGlass",
+				'P', "sheetPlastic",
+		}));
 
-		addRecipe(ShapedRecipe(stack(syringeEmptyItem, 1), new Object[]
-				{
-			"PRP",
-			"P P",
-			" I ",
-			'P', "sheetPlastic",
-			'R', "itemRubber",
-			'I', "ingotIron",
-				} ));
+		addRecipe(ShapedRecipe(stack(syringeEmptyItem, 1), new Object[] {
+				"PRP",
+				"P P",
+				" I ",
+				'P', "sheetPlastic",
+				'R', "itemRubber",
+				'I', "ingotIron",
+		}));
 
 		addShapelessRecipe(stack(syringeHealthItem), new Object[] { syringeEmptyItem, apple });
 		addShapelessRecipe(stack(syringeGrowthItem), new Object[] { syringeEmptyItem, golden_carrot });
 
 		addSurroundRecipe(stack(syringeZombieItem, 1), stack(syringeEmptyItem), stack2(rotten_flesh));
 
-		addRecipe(ShapedRecipe(stack(syringeSlimeItem, 1), new Object[]
-				{
-			" S ",
-			"BLB",
-			'B', "slimeball",
-			'L', "gemLapis",
-			'S', syringeEmptyItem,
-				}));
+		addRecipe(ShapedRecipe(stack(syringeSlimeItem, 1), new Object[] {
+				" S ",
+				"BLB",
+				'B', "slimeball",
+				'L', "gemLapis",
+				'S', syringeEmptyItem,
+		}));
 
 		addShapelessRecipe(stack(syringeCureItem), new Object[] { syringeEmptyItem, golden_apple });
 	}
 
-	protected void registerPlastics()
-	{
-		if(_registeredPlastics)
-		{
+	protected void registerPlastics() {
+
+		if (_registeredPlastics) {
 			return;
 		}
 		_registeredPlastics = true;
 
-		addRecipe(ShapedRecipe(stack(machineBaseItem, 3), new Object[]
-				{
-			"PPP",
-			"SSS",
-			'P', "sheetPlastic",
-			'S', "stone",
-				} ));
+		addRecipe(ShapedRecipe(stack(machineBaseItem, 3), new Object[] {
+				"PPP",
+				"SSS",
+				'P', "sheetPlastic",
+				'S', "stone",
+		}));
 
 		addSmallStorageRecipe(stack(plasticSheetItem, 4), "dustPlastic");
 
 		addSmallStorageRecipe(stack(factoryPlasticBlock, 1), "sheetPlastic");
 		addSmallReverseStorageRecipe(stack(plasticSheetItem, 4), "blockPlastic");
 
-		addRecipe(ShapedRecipe(stack(factoryHammerItem, 1), new Object[]
-				{
-			"PPP",
-			" S ",
-			" S ",
-			'P', "sheetPlastic",
-			'S', "stickWood",
-				} ));
+		addRecipe(ShapedRecipe(stack(factoryHammerItem, 1), new Object[] {
+				"PPP",
+				" S ",
+				" S ",
+				'P', "sheetPlastic",
+				'S', "stickWood",
+		}));
 
-		addRecipe(ShapedRecipe(stack(strawItem), new Object[]
-				{
-			"PP",
-			"P ",
-			"P ",
-			'P', "sheetPlastic",
-				} ));
+		addRecipe(ShapedRecipe(stack(strawItem), new Object[] {
+				"PP",
+				"P ",
+				"P ",
+				'P', "sheetPlastic",
+		}));
 
-		addRecipe(ShapedRecipe(stack(rulerItem), new Object[]
-				{
-			"P",
-			"A",
-			"P",
-			'P', "sheetPlastic",
-			'A', paper,
-				} ));
+		addRecipe(ShapedRecipe(stack(rulerItem), new Object[] {
+				"P",
+				"A",
+				"P",
+				'P', "sheetPlastic",
+				'A', paper,
+		}));
 
-		addRecipe(ShapedRecipe(stack(plasticCupItem, 16), new Object[]
-				{
-			" P ",
-			"P P",
-			'P', "sheetPlastic",
-				} ));
+		addRecipe(ShapedRecipe(stack(plasticCupItem, 16), new Object[] {
+				" P ",
+				"P P",
+				'P', "sheetPlastic",
+		}));
 		/*
-		addRecipe(ShapedRecipe(stack(plasticCellItem, 12), new Object[]
-				{
-			" P ",
-			"P P",
-			" P ",
-			'P', "sheetPlastic",
-				} ));//*/
+		 * addRecipe(ShapedRecipe(stack(plasticCellItem, 12), new Object[] {
+		 * " P ",
+		 * "P P",
+		 * " P ",
+		 * 'P', "sheetPlastic",
+		 * } ));//
+		 */
 
-		addRecipe(ShapedRecipe(stack(plasticBagItem, 3), new Object[]
-				{
-			"SPS",
-			"P P",
-			"PPP",
-			'P', "sheetPlastic",
-			'S', string
-				} ));
+		addRecipe(ShapedRecipe(stack(plasticBagItem, 3), new Object[] {
+				"SPS",
+				"P P",
+				"PPP",
+				'P', "sheetPlastic",
+				'S', string
+		}));
 
 		addShapelessRecipe(stack(plasticBagItem), plasticBagItem);
 
-		addRecipe(ShapedRecipe(stack(plasticBootsItem, 1), new Object[]
-				{
-			"P P",
-			"P P",
-			'P', "sheetPlastic",
-				} ));
+		addRecipe(ShapedRecipe(stack(plasticBootsItem, 1), new Object[] {
+				"P P",
+				"P P",
+				'P', "sheetPlastic",
+		}));
 
-		addRecipe(ShapedRecipe(stack(plasticPipeBlock, 8), new Object[]
-				{
-			"PPP",
-			"   ",
-			"PPP",
-			'P', "sheetPlastic",
-				} ));
+		addRecipe(ShapedRecipe(stack(plasticPipeBlock, 8), new Object[] {
+				"PPP",
+				"   ",
+				"PPP",
+				'P', "sheetPlastic",
+		}));
 	}
 
-	protected void registerMiscItems()
-	{
-		if(_registeredMiscItems)
-		{
+	protected void registerMiscItems() {
+
+		if (_registeredMiscItems) {
 			return;
 		}
 		_registeredMiscItems = true;
 
-		addRecipe(ShapedRecipe(stack(fertilizerItem, 16), new Object[]
-				{
-			"WBW",
-			"STS",
-			"WBW",
-			'W', Items.wheat,
-			'B', stack(dye, 1, 15),
-			'S', string,
-			'T', "stickWood",
-				} ));
+		addRecipe(ShapedRecipe(stack(fertilizerItem, 16), new Object[] {
+				"WBW",
+				"STS",
+				"WBW",
+				'W', Items.wheat,
+				'B', stack(dye, 1, 15),
+				'S', string,
+				'T', "stickWood",
+		}));
 
-		addRecipe(ShapedRecipe(stack(spyglassItem), new Object[]
-				{
-			"GLG",
-			"PLP",
-			" S ",
-			'G', "ingotGold",
-			'L', "blockGlass",
-			'P', "sheetPlastic",
-			'S', "stickWood",
-				} ));
-
-		if (MFRConfig.enablePortaSpawner.getBoolean(true))
-			addRecipe(ShapedRecipe(stack(portaSpawnerItem), new Object[]
-					{
+		addRecipe(ShapedRecipe(stack(spyglassItem), new Object[] {
 				"GLG",
-				"DND",
-				"GLG",
+				"PLP",
+				" S ",
 				'G', "ingotGold",
 				'L', "blockGlass",
-				'D', "gemDiamond",
-				'N', nether_star
-					}));
+				'P', "sheetPlastic",
+				'S', "stickWood",
+		}));
+
+		if (MFRConfig.enablePortaSpawner.getBoolean(true))
+			addRecipe(ShapedRecipe(stack(portaSpawnerItem), new Object[] {
+					"GLG",
+					"DND",
+					"GLG",
+					'G', "ingotGold",
+					'L', "blockGlass",
+					'D', "gemDiamond",
+					'N', nether_star
+			}));
 
 		addSurroundRecipe(stack(detCordBlock, 12), stack2(tnt), "itemRubber");
 
-		addRecipe(ShapedRecipe(stack(fishingRodItem, 1), new Object[]
-				{
-			"DD ",
-			"DFD",
-			"TDD",
-			'D', "wireExplosive",
-			'F', fishing_rod,
-			'T', redstone_torch
-				} ));
+		addRecipe(ShapedRecipe(stack(fishingRodItem, 1), new Object[] {
+				"DD ",
+				"DFD",
+				"TDD",
+				'D', "wireExplosive",
+				'F', fishing_rod,
+				'T', redstone_torch
+		}));
 	}
 
-	protected void registerSafariNets()
-	{
-		if(_registeredSafariNets)
-		{
+	protected void registerSafariNets() {
+
+		if (_registeredSafariNets) {
 			return;
 		}
 		_registeredSafariNets = true;
 
 		if (MFRConfig.enableExpensiveSafariNet.getBoolean(false)) {
-			addRecipe(ShapedRecipe(stack(safariNetItem, 1), new Object[]
-					{
-				"SLS",
-				"PBP",
-				"SPS",
-				'S', string,
-				'L', leather,
-				'P', ender_pearl,
-				'B', portaSpawnerItem,
-					}));
+			addRecipe(ShapedRecipe(stack(safariNetItem, 1), new Object[] {
+					"SLS",
+					"PBP",
+					"SPS",
+					'S', string,
+					'L', leather,
+					'P', ender_pearl,
+					'B', portaSpawnerItem,
+			}));
 		} else {
 			addGearRecipe(stack(safariNetItem, 1), stack2(ender_pearl), stack2(ghast_tear));
 		}
 
-		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 1), new Object[]
-				{
-			"SLS",
-			" B ",
-			"S S",
-			'S', string,
-			'L', leather,
-			'B', "slimeball",
-				}));
+		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 1), new Object[] {
+				"SLS",
+				" B ",
+				"S S",
+				'S', string,
+				'L', leather,
+				'B', "slimeball",
+		}));
 
 		addGearRecipe(stack(safariNetJailerItem, 1), stack2(iron_bars), stack(safariNetSingleItem));
 
 		if (MFRConfig.enableFancySafariNet.getBoolean(true))
-			addRecipe(ShapedRecipe(stack(safariNetFancyJailerItem, 1), new Object[]
-					{
-				"GGG",
-				"GBG",
-				"GGG",
-				'G', gold_nugget,
-				'B', safariNetJailerItem,
-					}));
+			addRecipe(ShapedRecipe(stack(safariNetFancyJailerItem, 1), new Object[] {
+					"GGG",
+					"GBG",
+					"GGG",
+					'G', gold_nugget,
+					'B', safariNetJailerItem,
+			}));
 
 		if (MFRConfig.enableNetLauncher.getBoolean(true))
-			addRecipe(ShapedRecipe(stack(safariNetLauncherItem, 1), new Object[]
-					{
-				"PGP",
-				"LGL",
-				"IRI",
-				'P', "sheetPlastic",
-				'L', glowstone_dust,
-				'G', gunpowder,
-				'I', "ingotIron",
-				'R', "dustRedstone",
-					} ));
+			addRecipe(ShapedRecipe(stack(safariNetLauncherItem, 1), new Object[] {
+					"PGP",
+					"LGL",
+					"IRI",
+					'P', "sheetPlastic",
+					'L', glowstone_dust,
+					'G', gunpowder,
+					'I', "ingotIron",
+					'R', "dustRedstone",
+			}));
 	}
 
-	protected void registerSmelting()
-	{
+	protected void registerSmelting() {
+
 		if (_registeredSmelting) return;
 		_registeredSmelting = true;
 
@@ -1203,10 +1116,9 @@ public class Vanilla
 		addWeakSmelting(stack(factoryDecorativeStoneBlock, 1, 1), stack(factoryDecorativeStoneBlock, 1, 3));
 	}
 
-	protected void registerVanillaImprovements()
-	{
-		if(_registeredVanillaImprovements)
-		{
+	protected void registerVanillaImprovements() {
+
+		if (_registeredVanillaImprovements) {
 			return;
 		}
 		_registeredVanillaImprovements = true;
@@ -1215,54 +1127,46 @@ public class Vanilla
 
 		addShapelessRecipe(stack(piston, 1, 0), stack(sticky_piston, 1, 0), stack(milk_bucket, 1, 0));
 
-		addRecipe(ShapedRecipe(stack(sticky_piston), new Object[]
-				{
-			"R",
-			"P",
-			'R', "itemRawRubber",
-			'P', piston
-				}));
+		addRecipe(ShapedRecipe(stack(sticky_piston), new Object[] {
+				"R",
+				"P",
+				'R', "itemRawRubber",
+				'P', piston
+		}));
 
 		addSurroundRecipe(stack(blankRecordItem, 1), stack2(paper), "dustPlastic");
 
-		if (MFRConfig.enableMossyCobbleRecipe.getBoolean(true))
-		{
-			addShapelessRecipe(stack(mossy_cobblestone), new Object[]
-					{
-				cobblestone,
-				water_bucket,
-				Items.wheat
-					} );
-			addShapelessRecipe(stack(stonebrick, 1, 1), new Object[]
-					{
-				stack(stonebrick, 1, 0),
-				water_bucket,
-				Items.wheat
-					} );
+		if (MFRConfig.enableMossyCobbleRecipe.getBoolean(true)) {
+			addShapelessRecipe(stack(mossy_cobblestone), new Object[] {
+					cobblestone,
+					water_bucket,
+					Items.wheat
+			});
+			addShapelessRecipe(stack(stonebrick, 1, 1), new Object[] {
+					stack(stonebrick, 1, 0),
+					water_bucket,
+					Items.wheat
+			});
 		}
 
-		if (MFRConfig.enableSmoothSlabRecipe.getBoolean(true))
-		{
-			addRecipe(stack(double_stone_slab, 1, 8), new Object[]
-					{
+		if (MFRConfig.enableSmoothSlabRecipe.getBoolean(true)) {
+			addRecipe(stack(double_stone_slab, 1, 8), new Object[] {
+					"VV",
+					'V', stack(stone_slab, 1, 0)
+			});
+		}
+
+		addRecipe(stack(vineScaffoldBlock, 8), new Object[] {
 				"VV",
-				'V', stack(stone_slab, 1, 0)
-					});
-		}
+				"VV",
+				"VV",
+				'V', vine,
+		});
 
-		addRecipe(stack(vineScaffoldBlock, 8), new Object[]
-				{
-			"VV",
-			"VV",
-			"VV",
-			'V', vine,
-				} );
-
-		addShapelessRecipe(stack(milkBottleItem), new Object[]
-				{
-			milk_bucket,
-			glass_bottle
-				} );
+		addShapelessRecipe(stack(milkBottleItem), new Object[] {
+				milk_bucket,
+				glass_bottle
+		});
 
 		addSurroundRecipe(stack(dirt, 1, 2), stack(dirt), stack(leaves, 1, 1));
 
@@ -1272,374 +1176,339 @@ public class Vanilla
 
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
-		addRecipe(ShapedRecipe(stack(torch, 4), new Object[]
-				{
-			"R",
-			"S",
-			'R', "itemRawRubber",
-			'S', "stickWood",
-				} ));
+		addRecipe(ShapedRecipe(stack(torch, 4), new Object[] {
+				"R",
+				"S",
+				'R', "itemRawRubber",
+				'S', "stickWood",
+		}));
 
-		addRecipe(ShapedRecipe(stack(torch, 1), new Object[]
-				{
-			"C",
-			"S",
-			'C', "itemCharcoalSugar",
-			'S', "stickWood",
-				} ));
+		addRecipe(ShapedRecipe(stack(torch, 1), new Object[] {
+				"C",
+				"S",
+				'C', "itemCharcoalSugar",
+				'S', "stickWood",
+		}));
 
-		for (ItemStack torchStone : getOres("torchStone"))
-		{
+		for (ItemStack torchStone : getOres("torchStone")) {
 			if (torchStone == null)
 				continue;
 			torchStone = torchStone.copy();
 			torchStone.stackSize = 4;
-			addRecipe(ShapedRecipe(torchStone, new Object[]
-					{
+			addRecipe(ShapedRecipe(torchStone, new Object[] {
 					"R",
 					"S",
 					'R', "itemRawRubber",
 					'S', "stoneRod",
-					} ));
+			}));
 			torchStone = torchStone.copy();
 			torchStone.stackSize = 1;
 
-			addRecipe(ShapedRecipe(torchStone, new Object[]
-					{
+			addRecipe(ShapedRecipe(torchStone, new Object[] {
 					"C",
 					"S",
 					'C', "itemCharcoalSugar",
 					'S', "stoneRod",
-					} ));
+			}));
 			break;
 		}
 	}
 
-	protected void registerRails()
-	{
-		if(_registeredRails)
-		{
+	protected void registerRails() {
+
+		if (_registeredRails) {
 			return;
 		}
 		_registeredRails = true;
 
-		addRecipe(ShapedRecipe(stack(railPickupCargoBlock, 2), new Object[]
-				{
-			" C ",
-			"SDS",
-			"SSS",
-			'C', chest,
-			'S', "sheetPlastic",
-			'D', detector_rail
-				} ));
+		addRecipe(ShapedRecipe(stack(railPickupCargoBlock, 2), new Object[] {
+				" C ",
+				"SDS",
+				"SSS",
+				'C', chest,
+				'S', "sheetPlastic",
+				'D', detector_rail
+		}));
 
-		addRecipe(ShapedRecipe(stack(railDropoffCargoBlock, 2), new Object[]
-				{
-			"SSS",
-			"SDS",
-			" C ",
-			'C', chest,
-			'S', "sheetPlastic",
-			'D', detector_rail
-				} ));
+		addRecipe(ShapedRecipe(stack(railDropoffCargoBlock, 2), new Object[] {
+				"SSS",
+				"SDS",
+				" C ",
+				'C', chest,
+				'S', "sheetPlastic",
+				'D', detector_rail
+		}));
 
-		addRecipe(ShapedRecipe(stack(railPickupPassengerBlock, 3), new Object[]
-				{
-			" L ",
-			"SDS",
-			"SSS",
-			'L', lapis_block,
-			'S', "sheetPlastic",
-			'D', detector_rail
-				} ));
+		addRecipe(ShapedRecipe(stack(railPickupPassengerBlock, 3), new Object[] {
+				" L ",
+				"SDS",
+				"SSS",
+				'L', lapis_block,
+				'S', "sheetPlastic",
+				'D', detector_rail
+		}));
 
-		addRecipe(ShapedRecipe(stack(railDropoffPassengerBlock, 3), new Object[]
-				{
-			"SSS",
-			"SDS",
-			" L ",
-			'L', lapis_block,
-			'S', "sheetPlastic",
-			'D', detector_rail
-				} ));
+		addRecipe(ShapedRecipe(stack(railDropoffPassengerBlock, 3), new Object[] {
+				"SSS",
+				"SDS",
+				" L ",
+				'L', lapis_block,
+				'S', "sheetPlastic",
+				'D', detector_rail
+		}));
 	}
 
-	protected void registerGuns()
-	{
-		if(_registeredGuns)
-		{
+	protected void registerGuns() {
+
+		if (_registeredGuns) {
 			return;
 		}
 		_registeredGuns = true;
 
-		addRecipe(ShapedRecipe(stack(needlegunItem), new Object[]
-				{
-			"PGP",
-			"PLP",
-			"SIS",
-			'P', "sheetPlastic",
-			'I', "ingotIron",
-			'S', magma_cream,
-			'L', safariNetLauncherItem,
-			'G', spyglassItem
-				}));
+		addRecipe(ShapedRecipe(stack(needlegunItem), new Object[] {
+				"PGP",
+				"PLP",
+				"SIS",
+				'P', "sheetPlastic",
+				'I', "ingotIron",
+				'S', magma_cream,
+				'L', safariNetLauncherItem,
+				'G', spyglassItem
+		}));
 
-		addRecipe(ShapedRecipe(stack(rocketLauncherItem), new Object[]
-				{
-			"PCP",
-			"PRP",
-			"ILI",
-			'P', "sheetPlastic",
-			'I', minecart,
-			'L', needlegunItem,
-			'R', stack(logicCardItem, 1, 1),
-			'C', stack(logicCardItem, 1, 2)
-				}));
+		addRecipe(ShapedRecipe(stack(rocketLauncherItem), new Object[] {
+				"PCP",
+				"PRP",
+				"ILI",
+				'P', "sheetPlastic",
+				'I', minecart,
+				'L', needlegunItem,
+				'R', stack(logicCardItem, 1, 1),
+				'C', stack(logicCardItem, 1, 2)
+		}));
 
-		addRecipe(ShapedRecipe(stack(needlegunAmmoEmptyItem, 4), new Object[]
-				{
-			"P P",
-			"PIP",
-			"PPP",
-			'P', "sheetPlastic",
-			'I', "ingotIron",
-				}));
+		addRecipe(ShapedRecipe(stack(needlegunAmmoEmptyItem, 4), new Object[] {
+				"P P",
+				"PIP",
+				"PPP",
+				'P', "sheetPlastic",
+				'I', "ingotIron",
+		}));
 
-		addRecipe(ShapedRecipe(stack(rocketItem, 2, 0), new Object[]
-				{
-			"PCP",
-			"PTP",
-			"IMI",
-			'C', stack(logicCardItem, 1, 0),
-			'M', needlegunAmmoEmptyItem,
-			'P', "sheetPlastic",
-			'T', tnt,
-			'I', fireworks
-				}));
+		addRecipe(ShapedRecipe(stack(rocketItem, 2, 0), new Object[] {
+				"PCP",
+				"PTP",
+				"IMI",
+				'C', stack(logicCardItem, 1, 0),
+				'M', needlegunAmmoEmptyItem,
+				'P', "sheetPlastic",
+				'T', tnt,
+				'I', fireworks
+		}));
 
-		addRecipe(ShapedRecipe(stack(rocketItem, 2, 1), new Object[]
-				{
-			"PPP",
-			"PTP",
-			"IMI",
-			'M', needlegunAmmoEmptyItem,
-			'P', "sheetPlastic",
-			'T', tnt,
-			'I', fireworks
-				}));
+		addRecipe(ShapedRecipe(stack(rocketItem, 2, 1), new Object[] {
+				"PPP",
+				"PTP",
+				"IMI",
+				'M', needlegunAmmoEmptyItem,
+				'P', "sheetPlastic",
+				'T', tnt,
+				'I', fireworks
+		}));
 
-		addRecipe(ShapelessRecipe(stack(rocketItem, 2, 0), new Object[]
-				{
-			stack(rocketItem, 1, 1),
-			stack(logicCardItem, 1, 0),
-			stack(rocketItem, 1, 1)
-				}));
+		addRecipe(ShapelessRecipe(stack(rocketItem, 2, 0), new Object[] {
+				stack(rocketItem, 1, 1),
+				stack(logicCardItem, 1, 0),
+				stack(rocketItem, 1, 1)
+		}));
 
-		addRecipe(ShapedRecipe(stack(needlegunAmmoStandardItem), new Object[]
-				{
-			"AAA",
-			"AAA",
-			"GMG",
-			'A', arrow,
-			'M', needlegunAmmoEmptyItem,
-			'G', gunpowder
-				}));
+		addRecipe(ShapedRecipe(stack(needlegunAmmoStandardItem), new Object[] {
+				"AAA",
+				"AAA",
+				"GMG",
+				'A', arrow,
+				'M', needlegunAmmoEmptyItem,
+				'G', gunpowder
+		}));
 
-		addRecipe(ShapedRecipe(stack(needlegunAmmoPierceItem), new Object[]
-				{
-			"AAA",
-			"AAA",
-			"GMG",
-			'A', flint,
-			'M', needlegunAmmoEmptyItem,
-			'G', gunpowder
-				}));
+		addRecipe(ShapedRecipe(stack(needlegunAmmoPierceItem), new Object[] {
+				"AAA",
+				"AAA",
+				"GMG",
+				'A', flint,
+				'M', needlegunAmmoEmptyItem,
+				'G', gunpowder
+		}));
 
-		addRecipe(ShapedRecipe(stack(needlegunAmmoAnvilItem), new Object[]
-				{
-			"SAS",
-			"STS",
-			"SMS",
-			'S', string,
-			'A', stack(anvil, 1, 0),
-			'T', tnt,
-			'M', needlegunAmmoEmptyItem,
-				}));
+		addRecipe(ShapedRecipe(stack(needlegunAmmoAnvilItem), new Object[] {
+				"SAS",
+				"STS",
+				"SMS",
+				'S', string,
+				'A', stack(anvil, 1, 0),
+				'T', tnt,
+				'M', needlegunAmmoEmptyItem,
+		}));
 
 		addShapelessRecipe(stack(needlegunAmmoFireItem),
-				needlegunAmmoPierceItem, flint_and_steel);
+			needlegunAmmoPierceItem, flint_and_steel);
 
 		addShapelessRecipe(stack(needlegunAmmoLavaItem),
-				needlegunAmmoStandardItem, plasticCupItem,
-				lava_bucket);
+			needlegunAmmoStandardItem, plasticCupItem,
+			lava_bucket);
 
 		addShapelessRecipe(stack(needlegunAmmoSludgeItem),
-				needlegunAmmoStandardItem, plasticCupItem,
-				sludgeBucketItem);
+			needlegunAmmoStandardItem, plasticCupItem,
+			sludgeBucketItem);
 
 		addShapelessRecipe(stack(needlegunAmmoSewageItem),
-				needlegunAmmoStandardItem, plasticCupItem,
-				sewageBucketItem);
+			needlegunAmmoStandardItem, plasticCupItem,
+			sewageBucketItem);
 	}
 
-	protected void registerRedNet()
-	{
-		if(_registeredRedNet)
-		{
+	protected void registerRedNet() {
+
+		if (_registeredRedNet) {
 			return;
 		}
 		_registeredRedNet = true;
 
-		addRecipe(ShapedRecipe(stack(rednetCableBlock, 8), new Object[]
-				{
-			"PPP",
-			"RRR",
-			"PPP",
-			'R', "dustRedstone",
-			'P', "sheetPlastic",
-				} ));
+		addRecipe(ShapedRecipe(stack(rednetCableBlock, 8), new Object[] {
+				"PPP",
+				"RRR",
+				"PPP",
+				'R', "dustRedstone",
+				'P', "sheetPlastic",
+		}));
 
-		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), new Object[]
-				{
-			"dustRedstone",
-			"dustRedstone",
-			stack(plasticPipeBlock),
-			stack(plasticPipeBlock),
-			stack(plasticPipeBlock),
-			stack(plasticPipeBlock),
-			stack(plasticPipeBlock),
-				}));
+		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), new Object[] {
+				"dustRedstone",
+				"dustRedstone",
+				stack(plasticPipeBlock),
+				stack(plasticPipeBlock),
+				stack(plasticPipeBlock),
+				stack(plasticPipeBlock),
+				stack(plasticPipeBlock),
+		}));
 
-		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 1, 2), new Object[]
-				{
-			"nuggetGold",
-			"nuggetGold",
-			"nuggetGold",
-			"dustRedstone",
-			"dustRedstone",
-			stack(rednetCableBlock),
-				} ));
+		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 1, 2), new Object[] {
+				"nuggetGold",
+				"nuggetGold",
+				"nuggetGold",
+				"dustRedstone",
+				"dustRedstone",
+				stack(rednetCableBlock),
+		}));
 
-		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 6, 2), new Object[]
-				{
-			"ingotGold",
-			"ingotGold",
-			"blockRedstone",
-			stack(rednetCableBlock),
-			stack(rednetCableBlock),
-			stack(rednetCableBlock),
-			stack(rednetCableBlock),
-			stack(rednetCableBlock),
-			stack(rednetCableBlock),
-				} ));
+		addRecipe(ShapelessRecipe(stack(rednetCableBlock, 6, 2), new Object[] {
+				"ingotGold",
+				"ingotGold",
+				"blockRedstone",
+				stack(rednetCableBlock),
+				stack(rednetCableBlock),
+				stack(rednetCableBlock),
+				stack(rednetCableBlock),
+				stack(rednetCableBlock),
+				stack(rednetCableBlock),
+		}));
 
-		addRecipe(ShapedRecipe(stack(machineItem, 1, 1), new Object[]
-				{
-			"PRP",
-			"RGR",
-			"PIP",
-			'R', "dustRedstone",
-			'P', "sheetPlastic",
-			'G', "blockGlass",
-			'I', "ingotIron",
-				} ));
+		addRecipe(ShapedRecipe(stack(machineItem, 1, 1), new Object[] {
+				"PRP",
+				"RGR",
+				"PIP",
+				'R', "dustRedstone",
+				'P', "sheetPlastic",
+				'G', "blockGlass",
+				'I', "ingotIron",
+		}));
 
-		addRecipe(ShapedRecipe(stack(rednetLogicBlock), new Object[]
-				{
-			"RDR",
-			"LGL",
-			"PHP",
-			'H', stack(machineItem, 1, 1),
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'L', "gemLapis",
-			'D', "gemDiamond",
-			'R', "dustRedstone",
-				} ));
+		addRecipe(ShapedRecipe(stack(rednetLogicBlock), new Object[] {
+				"RDR",
+				"LGL",
+				"PHP",
+				'H', stack(machineItem, 1, 1),
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'L', "gemLapis",
+				'D', "gemDiamond",
+				'R', "dustRedstone",
+		}));
 
-		addRecipe(ShapedRecipe(stack(logicCardItem, 1, 0), new Object[]
-				{
-			"RPR",
-			"PGP",
-			"RPR",
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'R', "dustRedstone",
-				} ));
+		addRecipe(ShapedRecipe(stack(logicCardItem, 1, 0), new Object[] {
+				"RPR",
+				"PGP",
+				"RPR",
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'R', "dustRedstone",
+		}));
 
-		addRecipe(ShapedRecipe(stack(logicCardItem, 1, 1), new Object[]
-				{
-			"GPG",
-			"PCP",
-			"RGR",
-			'C', stack(logicCardItem, 1, 0),
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'R', "dustRedstone",
-				} ));
+		addRecipe(ShapedRecipe(stack(logicCardItem, 1, 1), new Object[] {
+				"GPG",
+				"PCP",
+				"RGR",
+				'C', stack(logicCardItem, 1, 0),
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'R', "dustRedstone",
+		}));
 
-		addRecipe(ShapedRecipe(stack(logicCardItem, 1, 2), new Object[]
-				{
-			"DPD",
-			"RCR",
-			"GDG",
-			'C', stack(logicCardItem, 1, 1),
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'D', "gemDiamond",
-			'R', "dustRedstone",
-				} ));
+		addRecipe(ShapedRecipe(stack(logicCardItem, 1, 2), new Object[] {
+				"DPD",
+				"RCR",
+				"GDG",
+				'C', stack(logicCardItem, 1, 1),
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'D', "gemDiamond",
+				'R', "dustRedstone",
+		}));
 
-		addRecipe(ShapedRecipe(stack(rednetMeterItem, 1, 0), new Object[]
-				{
-			" G",
-			"PR",
-			"PP",
-			'P', "sheetPlastic",
-			'G', "nuggetGold",
-			'R', "dustRedstone",
-				} ));
+		addRecipe(ShapedRecipe(stack(rednetMeterItem, 1, 0), new Object[] {
+				" G",
+				"PR",
+				"PP",
+				'P', "sheetPlastic",
+				'G', "nuggetGold",
+				'R', "dustRedstone",
+		}));
 
-		addRecipe(ShapedRecipe(stack(rednetMeterItem, 1, 1), new Object[]
-				{
-			"RGR",
-			"IMI",
-			"PPP",
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'I', "ingotIron",
-			'R', "dustRedstone",
-			'M', stack(rednetMeterItem, 1, 0)
-				} ));
+		addRecipe(ShapedRecipe(stack(rednetMeterItem, 1, 1), new Object[] {
+				"RGR",
+				"IMI",
+				"PPP",
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'I', "ingotIron",
+				'R', "dustRedstone",
+				'M', stack(rednetMeterItem, 1, 0)
+		}));
 
-		addRecipe(ShapedRecipe(stack(rednetMemoryCardItem, 1, 0), new Object[]
-				{
-			"GGG",
-			"PRP",
-			"PPP",
-			'P', "sheetPlastic",
-			'G', "nuggetGold",
-			'R', "dustRedstone",
-				} ));
+		addRecipe(ShapedRecipe(stack(rednetMemoryCardItem, 1, 0), new Object[] {
+				"GGG",
+				"PRP",
+				"PPP",
+				'P', "sheetPlastic",
+				'G', "nuggetGold",
+				'R', "dustRedstone",
+		}));
 
-		addRecipe(ShapedRecipe(stack(rednetPanelBlock, 1, 0), new Object[]
-				{
-			"PCP",
-			"PBP",
-			"KPK",
-			'P', "sheetPlastic",
-			'C', rednetCableBlock,
-			'B', bookshelf,
-			'K', "dyeBlack"
-				} ));
+		addRecipe(ShapedRecipe(stack(rednetPanelBlock, 1, 0), new Object[] {
+				"PCP",
+				"PBP",
+				"KPK",
+				'P', "sheetPlastic",
+				'C', rednetCableBlock,
+				'B', bookshelf,
+				'K', "dyeBlack"
+		}));
 
 		addShapelessRecipe(stack(rednetMemoryCardItem, 1, 0), stack(rednetMemoryCardItem, 1, 0));
 	}
 
-	private final void registerRedNetManual()
-	{
-		if(_registeredRedNetManual)
-		{
+	private final void registerRedNetManual() {
+
+		if (_registeredRedNetManual) {
 			return;
 		}
 		_registeredRedNetManual = true;

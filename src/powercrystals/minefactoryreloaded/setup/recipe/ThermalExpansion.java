@@ -22,8 +22,8 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public class ThermalExpansion extends Vanilla
-{
+public class ThermalExpansion extends Vanilla {
+
 	private static final String TE = "ThermalExpansion";
 	ItemStack conduitLiquid;
 	ItemStack tankBasic;
@@ -51,14 +51,14 @@ public class ThermalExpansion extends Vanilla
 	ItemStack igniter;
 
 	@Override
-	protected void gatherItems()
-	{
-		if(!Loader.isModLoaded(TE))
-		{
+	protected void gatherItems() {
+
+		if (!Loader.isModLoaded(TE)) {
 			MineFactoryReloadedCore.log().fatal("ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
 			throw new MissingModsException(Collections.
-					singleton((ArtifactVersion)new DefaultArtifactVersion(TE)));
+					singleton((ArtifactVersion) new DefaultArtifactVersion(TE)));
 		}
+
 		{
 			conduitLiquid = new ItemStack(plasticPipeBlock);
 		}
@@ -92,8 +92,8 @@ public class ThermalExpansion extends Vanilla
 	}
 
 	@Override
-	protected void registerMachines()
-	{
+	protected void registerMachines() {
+
 		String prefix = "ingot";
 		if (true) {
 			prefix = "thermalexpansion:machine";
@@ -109,7 +109,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Copper",
 				'C', powerCoilGold,
-					} );
+		});
 
 		registerMachine(Machine.Fisher, new Object[] {
 				"PTP",
@@ -121,7 +121,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Iron",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Harvester, new Object[] {
 				"PTP",
@@ -133,7 +133,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Gold",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Rancher, new Object[] {
 				"PTP",
@@ -145,7 +145,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Tin",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Fertilizer, new Object[] {
 				"PTP",
@@ -157,7 +157,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Nickel",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Vet, new Object[] {
 				"PTP",
@@ -168,7 +168,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Copper",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.ItemCollector, 8, new Object[] {
 				"P P",
@@ -177,7 +177,7 @@ public class ThermalExpansion extends Vanilla
 				'P', "sheetPlastic",
 				'F', machineFrame,
 				'C', Blocks.chest
-					} );
+		});
 
 		registerMachine(Machine.BlockBreaker, new Object[] {
 				"PTP",
@@ -190,7 +190,7 @@ public class ThermalExpansion extends Vanilla
 				'A', invarShovel,
 				'O', prefix + "Iron",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.WeatherCollector, new Object[] {
 				"PBP",
@@ -202,7 +202,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Copper",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.SludgeBoiler, new Object[] {
 				"PTP",
@@ -214,7 +214,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Iron",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Sewer, 4, new Object[] {
 				"PTP",
@@ -225,7 +225,7 @@ public class ThermalExpansion extends Vanilla
 				'S', Items.brick,
 				'F', machineFrame,
 				'Q', pneumaticServo,
-					} );
+		});
 
 		registerMachine(Machine.Composter, new Object[] {
 				"PTP",
@@ -237,7 +237,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', Items.brick,
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Breeder, new Object[] {
 				"PTP",
@@ -249,7 +249,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', "dyePurple",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Grinder, new Object[] {
 				"PTP",
@@ -261,7 +261,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'S', prefix + "Tin",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.AutoEnchanter, new Object[] {
 				"PTP",
@@ -273,7 +273,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', "gemDiamond",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Chronotyper, new Object[] {
 				"PTP",
@@ -284,7 +284,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', "dyePurple",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Ejector, 8, new Object[] {
 				"PPP",
@@ -294,7 +294,7 @@ public class ThermalExpansion extends Vanilla
 				'T', pneumaticServo,
 				'F', machineFrame,
 				'O', "dustRedstone"
-					} );
+		});
 
 		registerMachine(Machine.ItemRouter, 8, new Object[] {
 				"PTP",
@@ -304,7 +304,7 @@ public class ThermalExpansion extends Vanilla
 				'T', Blocks.chest,
 				'S', multimeter,
 				'F', machineFrame
-					} );
+		});
 
 		registerMachine(Machine.LiquidRouter, 8, new Object[] {
 				"PTP",
@@ -314,28 +314,27 @@ public class ThermalExpansion extends Vanilla
 				'T', conduitLiquid,
 				'S', multimeter,
 				'F', machineFrame
-					} );
+		});
 
 		int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
 		registerMachine(Machine.DeepStorageUnit, dsuCount, new Object[] {
-			"PCP",
-			"CFC",
-			"PCP",
-			'P', "sheetPlastic",
-			'C', strongBox,
-			'F', tesseractFrameFull
-				} );
-
-		if(MFRConfig.enableCheapDSU.getBoolean(false))
-		{
-			registerMachine(Machine.DeepStorageUnit, new Object[] {
 				"PCP",
 				"CFC",
 				"PCP",
 				'P', "sheetPlastic",
-				'C', strongBoxBasic,
-				'F', machineFrame
-					} );
+				'C', strongBox,
+				'F', tesseractFrameFull
+		});
+
+		if (MFRConfig.enableCheapDSU.getBoolean(false)) {
+			registerMachine(Machine.DeepStorageUnit, new Object[] {
+					"PCP",
+					"CFC",
+					"PCP",
+					'P', "sheetPlastic",
+					'C', strongBoxBasic,
+					'F', machineFrame
+			});
 		}
 
 		registerMachine(Machine.LiquiCrafter, new Object[] {
@@ -348,7 +347,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', Items.book,
 				'C', pneumaticServo
-					} );
+		});
 
 		registerMachine(Machine.LavaFabricator, new Object[] {
 				"PTP",
@@ -360,7 +359,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', Items.blaze_rod,
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.SteamBoiler, new Object[] {
 				"PPP",
@@ -370,7 +369,7 @@ public class ThermalExpansion extends Vanilla
 				'T', tankHardened,
 				'B', Machine.SludgeBoiler.getItemStack(),
 				'O', Blocks.nether_brick
-					} );
+		});
 
 		registerMachine(Machine.AutoJukebox, new Object[] {
 				"PJP",
@@ -378,7 +377,7 @@ public class ThermalExpansion extends Vanilla
 				'P', "sheetPlastic",
 				'J', Blocks.jukebox,
 				'F', machineFrame
-					} );
+		});
 
 		registerMachine(Machine.Unifier, new Object[] {
 				"PTP",
@@ -390,7 +389,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'S', prefix + "Silver",
 				'C', Items.book
-					} );
+		});
 
 		registerMachine(Machine.AutoSpawner, new Object[] {
 				"PTP",
@@ -402,7 +401,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', "gemEmerald",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.BioReactor, new Object[] {
 				"PTP",
@@ -414,7 +413,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', Items.brick,
 				'C', Items.sugar
-					} );
+		});
 
 		registerMachine(Machine.BioFuelGenerator, new Object[] {
 				"PTP",
@@ -426,7 +425,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', Items.blaze_rod,
 				'C', powerCoilSilver
-					} );
+		});
 
 		registerMachine(Machine.AutoDisenchanter, new Object[] {
 				"PTP",
@@ -438,7 +437,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', "gemDiamond",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.Slaughterhouse, new Object[] {
 				"GIG",
@@ -450,7 +449,7 @@ public class ThermalExpansion extends Vanilla
 				'I', "gearInvar",
 				'F', machineFrame,
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.MeatPacker, new Object[] {
 				"GSG",
@@ -461,7 +460,7 @@ public class ThermalExpansion extends Vanilla
 				'S', igniter,
 				'F', machineFrame,
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.EnchantmentRouter, new Object[] {
 				"PBP",
@@ -471,7 +470,7 @@ public class ThermalExpansion extends Vanilla
 				'B', Items.book,
 				'S', Items.repeater,
 				'F', machineFrame
-					} );
+		});
 
 		registerMachine(Machine.LaserDrill, new Object[] {
 				"GFG",
@@ -482,7 +481,7 @@ public class ThermalExpansion extends Vanilla
 				'H', "blockGlassHardened",
 				'F', lamp,
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.LaserDrillPrecharger, new Object[] {
 				"GSG",
@@ -494,7 +493,7 @@ public class ThermalExpansion extends Vanilla
 				'H', "blockGlassHardened",
 				'F', lamp,
 				'C', powerCoilElectrum
-					} );
+		});
 
 		registerMachine(Machine.AutoAnvil, new Object[] {
 				"GGG",
@@ -505,7 +504,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'C', powerCoilGold,
 				'O', prefix + "Iron"
-					} );
+		});
 
 		registerMachine(Machine.BlockSmasher, new Object[] {
 				"GPG",
@@ -517,7 +516,7 @@ public class ThermalExpansion extends Vanilla
 				'B', Items.book,
 				'F', machineFrame,
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.RedNote, new Object[] {
 				"GNG",
@@ -526,7 +525,7 @@ public class ThermalExpansion extends Vanilla
 				'C', "cableRedNet",
 				'N', Blocks.noteblock,
 				'F', machineFrame
-					} );
+		});
 
 		registerMachine(Machine.AutoBrewer, new Object[] {
 				"GBG",
@@ -538,7 +537,7 @@ public class ThermalExpansion extends Vanilla
 				'R', Items.repeater,
 				'F', machineFrame,
 				'P', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.FruitPicker, new Object[] {
 				"GXG",
@@ -550,10 +549,9 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'C', powerCoilGold,
 				'O', prefix + "Tin"
-					} );
+		});
 
-		registerMachine(Machine.BlockPlacer, new Object[]
-					{
+		registerMachine(Machine.BlockPlacer, new Object[] {
 				"GDG",
 				"DMD",
 				"GSG",
@@ -561,10 +559,9 @@ public class ThermalExpansion extends Vanilla
 				'D', Blocks.dispenser,
 				'S', powerCoilGold,
 				'M', machineFrame,
-					} );
+		});
 
-		registerMachine(Machine.MobCounter, new Object[]
-					{
+		registerMachine(Machine.MobCounter, new Object[] {
 				"GGG",
 				"RCR",
 				"SMS",
@@ -573,7 +570,7 @@ public class ThermalExpansion extends Vanilla
 				'C', Items.comparator,
 				'S', multimeter,
 				'M', machineFrame,
-					} );
+		});
 
 		registerMachine(Machine.SteamTurbine, new Object[] {
 				"PTP",
@@ -585,7 +582,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Silver",
 				'C', powerCoilSilver
-					} );
+		});
 
 		registerMachine(Machine.ChunkLoader, new Object[] {
 				"PEP",
@@ -597,9 +594,8 @@ public class ThermalExpansion extends Vanilla
 				'F', tesseractFrameEmpty,
 				'O', prefix + "Electrum",
 				'C', powerCoilElectrum
-					} );
-		if (MFRConfig.enableCheapCL.getBoolean(false))
-		{
+		});
+		if (MFRConfig.enableCheapCL.getBoolean(false)) {
 			registerMachine(Machine.ChunkLoader, new Object[] {
 					"PEP",
 					"TFT",
@@ -610,7 +606,7 @@ public class ThermalExpansion extends Vanilla
 					'F', machineFrame,
 					'O', prefix + "Electrum",
 					'C', powerCoilElectrum
-						} );
+			});
 		}
 
 		registerMachine(Machine.Fountain, new Object[] {
@@ -623,7 +619,7 @@ public class ThermalExpansion extends Vanilla
 				'F', machineFrame,
 				'O', prefix + "Nickel",
 				'C', powerCoilGold
-					} );
+		});
 
 		registerMachine(Machine.MobRouter, new Object[] {
 				"PPP",
@@ -634,223 +630,206 @@ public class ThermalExpansion extends Vanilla
 				'R', Machine.ItemRouter.getItemStack(),
 				'O', "dyeOrange",
 				'C', Machine.Chronotyper.getItemStack(),
-					} );
+		});
 
-
-		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[]
-				{
-			"PPP",
-			"P P",
-			"PMP",
-			'P', "sheetPlastic",
-			'M', machineBaseItem,
-				}));
+		addRecipe(ShapedRecipe(stack(plasticTank, 1), new Object[] {
+				"PPP",
+				"P P",
+				"PMP",
+				'P', "sheetPlastic",
+				'M', machineBaseItem,
+		}));
 	}
 
 	@Override
-	protected void registerSmelting()
-	{
+	protected void registerSmelting() {
+
 		super.registerSmelting();
 		ThermalExpansionHelper.addSmelterRecipe(2000, stack(rawRubberItem, 2), sulfur,
-				stack(rubberBarItem, 4), stack(rubberBarItem, 1), 45);
+			stack(rubberBarItem, 4), stack(rubberBarItem, 1), 45);
 	}
-	@Override
-	protected void registerMiscItems()
-	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fertilizerItem, 24), new Object[]
-				{
-			"WBW",
-			"STS",
-			"WBW",
-			'W', Items.wheat,
-			'B', new ItemStack(Items.dye, 1, 15),
-			'S', "dustSulfur",
-			'T', "stickWood",
-				} ));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(spyglassItem), new Object[]
-				{
-			"GLG",
-			"PLP",
-			" S ",
-			'G', "ingotGold",
-			'L', "blockGlass",
-			'P', "sheetPlastic",
-			'S', "stickWood",
-				} ));
+	@Override
+	protected void registerMiscItems() {
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fertilizerItem, 24), new Object[] {
+				"WBW",
+				"STS",
+				"WBW",
+				'W', Items.wheat,
+				'B', new ItemStack(Items.dye, 1, 15),
+				'S', "dustSulfur",
+				'T', "stickWood",
+		}));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(spyglassItem), new Object[] {
+				"GLG",
+				"PLP",
+				" S ",
+				'G', "ingotGold",
+				'L', "blockGlass",
+				'P', "sheetPlastic",
+				'S', "stickWood",
+		}));
 
 		if (MFRConfig.enablePortaSpawner.getBoolean(true))
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(portaSpawnerItem), new Object[]
-				{
-			"GLG",
-			"DND",
-			"GLG",
-			'G', "ingotInvar",
-			'L', "blockGlass",
-			'D', "ingotEnderium",
-			'N', Items.nether_star
-				} ));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(portaSpawnerItem), new Object[] {
+					"GLG",
+					"DND",
+					"GLG",
+					'G', "ingotInvar",
+					'L', "blockGlass",
+					'D', "ingotEnderium",
+					'N', Items.nether_star
+			}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(detCordBlock, 12), new Object[]
-				{
-			"PPP",
-			"PTP",
-			"PPP",
-			'P', "itemRubber",
-			'T', Blocks.tnt,
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(detCordBlock, 12), new Object[] {
+				"PPP",
+				"PTP",
+				"PPP",
+				'P', "itemRubber",
+				'T', Blocks.tnt,
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fishingRodItem, 1), new Object[]
-				{
-			"DD ",
-			"DFD",
-			"TDD",
-			'D', "wireExplosive",
-			'F', Items.fishing_rod,
-			'T', Blocks.redstone_torch
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fishingRodItem, 1), new Object[] {
+				"DD ",
+				"DFD",
+				"TDD",
+				'D', "wireExplosive",
+				'F', Items.fishing_rod,
+				'T', Blocks.redstone_torch
+		}));
 	}
 
 	@Override
-	protected void registerRedNet()
-	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetCableBlock, 8), new Object[]
-				{
-			"PPP",
-			"RRR",
-			"PPP",
-			'R', "dustRedstone",
-			'P', "sheetPlastic",
-				} ));
+	protected void registerRedNet() {
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetCableBlock, 8), new Object[] {
+				"PPP",
+				"RRR",
+				"PPP",
+				'R', "dustRedstone",
+				'P', "sheetPlastic",
+		}));
 
 		{
 			ItemStack pipe = stack(plasticPipeBlock);
 			addRecipe(ShapelessRecipe(stack(rednetCableBlock, 5), pipe, pipe, pipe, pipe, pipe, "dustRedstone", "dustRedstone"));
 		}
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rednetCableBlock, 1, 2), new Object[]
-				{
-			"nuggetElectrum",
-			"nuggetElectrum",
-			"nuggetElectrum",
-			"dustRedstone",
-			"dustRedstone",
-			new ItemStack(rednetCableBlock),
-				} ));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rednetCableBlock, 1, 2), new Object[] {
+				"nuggetElectrum",
+				"nuggetElectrum",
+				"nuggetElectrum",
+				"dustRedstone",
+				"dustRedstone",
+				new ItemStack(rednetCableBlock),
+		}));
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rednetCableBlock, 6, 2), new Object[]
-				{
-			"ingotElectrum",
-			"ingotElectrum",
-			Blocks.redstone_block,
-			new ItemStack(rednetCableBlock),
-			new ItemStack(rednetCableBlock),
-			new ItemStack(rednetCableBlock),
-			new ItemStack(rednetCableBlock),
-			new ItemStack(rednetCableBlock),
-			new ItemStack(rednetCableBlock),
-				} ));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rednetCableBlock, 6, 2), new Object[] {
+				"ingotElectrum",
+				"ingotElectrum",
+				Blocks.redstone_block,
+				new ItemStack(rednetCableBlock),
+				new ItemStack(rednetCableBlock),
+				new ItemStack(rednetCableBlock),
+				new ItemStack(rednetCableBlock),
+				new ItemStack(rednetCableBlock),
+				new ItemStack(rednetCableBlock),
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineItem, 1, 1), new Object[]
-				{
-			"PRP",
-			"RGR",
-			"PIP",
-			'R', "dustRedstone",
-			'P', "sheetPlastic",
-			'G', "blockGlass",
-			'I', "ingotIron",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineItem, 1, 1), new Object[] {
+				"PRP",
+				"RGR",
+				"PIP",
+				'R', "dustRedstone",
+				'P', "sheetPlastic",
+				'G', "blockGlass",
+				'I', "ingotIron",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetLogicBlock), new Object[]
-				{
-			"RDR",
-			"LGL",
-			"PHP",
-			'H', new ItemStack(machineItem, 1, 1),
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'L', "gemLapis",
-			'D', "gemDiamond",
-			'R', "dustRedstone",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetLogicBlock), new Object[] {
+				"RDR",
+				"LGL",
+				"PHP",
+				'H', new ItemStack(machineItem, 1, 1),
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'L', "gemLapis",
+				'D', "gemDiamond",
+				'R', "dustRedstone",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(logicCardItem, 1, 0), new Object[]
-				{
-			"RPR",
-			"PGP",
-			"RPR",
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'R', "dustRedstone",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(logicCardItem, 1, 0), new Object[] {
+				"RPR",
+				"PGP",
+				"RPR",
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'R', "dustRedstone",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(logicCardItem, 1, 1), new Object[]
-				{
-			"GPG",
-			"PCP",
-			"RGR",
-			'C', new ItemStack(logicCardItem, 1, 0),
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'R', "dustRedstone",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(logicCardItem, 1, 1), new Object[] {
+				"GPG",
+				"PCP",
+				"RGR",
+				'C', new ItemStack(logicCardItem, 1, 0),
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'R', "dustRedstone",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(logicCardItem, 1, 2), new Object[]
-				{
-			"DPD",
-			"RCR",
-			"GDG",
-			'C', new ItemStack(logicCardItem, 1, 1),
-			'P', "sheetPlastic",
-			'G', "ingotGold",
-			'D', "gemDiamond",
-			'R', "dustRedstone",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(logicCardItem, 1, 2), new Object[] {
+				"DPD",
+				"RCR",
+				"GDG",
+				'C', new ItemStack(logicCardItem, 1, 1),
+				'P', "sheetPlastic",
+				'G', "ingotGold",
+				'D', "gemDiamond",
+				'R', "dustRedstone",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetMeterItem, 1, 0), new Object[]
-				{
-			" G",
-			"PR",
-			"PP",
-			'P', "sheetPlastic",
-			'G', "nuggetElectrum",
-			'R', "dustRedstone",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetMeterItem, 1, 0), new Object[] {
+				" G",
+				"PR",
+				"PP",
+				'P', "sheetPlastic",
+				'G', "nuggetElectrum",
+				'R', "dustRedstone",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetMeterItem, 1, 1), new Object[]
-				{
-			"RGR",
-			"IMI",
-			"PPP",
-			'P', "sheetPlastic",
-			'G', powerCoilElectrum,
-			'I', "ingotCopper",
-			'R', "dustRedstone",
-			'M', new ItemStack(rednetMeterItem, 1, 0)
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetMeterItem, 1, 1), new Object[] {
+				"RGR",
+				"IMI",
+				"PPP",
+				'P', "sheetPlastic",
+				'G', powerCoilElectrum,
+				'I', "ingotCopper",
+				'R', "dustRedstone",
+				'M', new ItemStack(rednetMeterItem, 1, 0)
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetMemoryCardItem, 1, 0), new Object[]
-				{
-			"GGG",
-			"PRP",
-			"PPP",
-			'P', "sheetPlastic",
-			'G', "nuggetGold",
-			'R', "dustRedstone",
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetMemoryCardItem, 1, 0), new Object[] {
+				"GGG",
+				"PRP",
+				"PPP",
+				'P', "sheetPlastic",
+				'G', "nuggetGold",
+				'R', "dustRedstone",
+		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetPanelBlock, 1, 0), new Object[]
-				{
-			"PCP",
-			"PBP",
-			"KPK",
-			'P', "sheetPlastic",
-			'C', rednetCableBlock,
-			'B', Blocks.bookshelf,
-			'K', new ItemStack(Items.dye, 1, 0)
-				} ));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rednetPanelBlock, 1, 0), new Object[] {
+				"PCP",
+				"PBP",
+				"KPK",
+				'P', "sheetPlastic",
+				'C', rednetCableBlock,
+				'B', Blocks.bookshelf,
+				'K', new ItemStack(Items.dye, 1, 0)
+		}));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(rednetMemoryCardItem, 1, 0), new ItemStack(rednetMemoryCardItem, 1, 0));
 	}
+
 }
