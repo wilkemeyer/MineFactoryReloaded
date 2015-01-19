@@ -48,7 +48,7 @@ public abstract class MFRLiquidMover
 						disposePlayerItem(ci, drop, entityplayer, true);
 					} else
 						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, UtilInventory.consumeItem(ci, entityplayer));
-					if (entityplayer.worldObj.isRemote) {
+					if (!entityplayer.worldObj.isRemote) {
 						entityplayer.openContainer.detectAndSendChanges();
 						((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 					}
@@ -73,7 +73,7 @@ public abstract class MFRLiquidMover
 							drop = null;
 					}
 					disposePlayerItem(ci, drop, entityplayer, true);
-					if (entityplayer.worldObj.isRemote) {
+					if (!entityplayer.worldObj.isRemote) {
 						entityplayer.openContainer.detectAndSendChanges();
 						((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 					}
@@ -137,7 +137,7 @@ public abstract class MFRLiquidMover
 				{
 					if (disposePlayerItem(ci, filledBucket, entityplayer, MFRConfig.dropFilledContainers.getBoolean(true)))
 					{
-						if (entityplayer.worldObj.isRemote) {
+						if (!entityplayer.worldObj.isRemote) {
 							entityplayer.openContainer.detectAndSendChanges();
 							((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 						}
