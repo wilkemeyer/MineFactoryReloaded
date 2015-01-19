@@ -155,12 +155,12 @@ public class EnderIO extends Vanilla {
 		});
 
 		registerMachine(Machine.Harvester, new Object[] {
-				"PTP",
-				"SFS",
+				"PSP",
+				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', dsAxe,
 				'S', Items.shears,
+				'T', dsAxe,
 				'F', chassis,
 				'O', prefix + "Gold",
 				'C', zombieController

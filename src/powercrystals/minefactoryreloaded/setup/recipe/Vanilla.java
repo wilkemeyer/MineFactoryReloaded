@@ -160,7 +160,7 @@ public class Vanilla {
 
 		registerMachine(Harvester, new Object[] {
 				"GGG",
-				"SXS",
+				"xSx",
 				" M ",
 				'G', "sheetPlastic",
 				'X', golden_axe,
@@ -545,10 +545,10 @@ public class Vanilla {
 		registerMachine(FruitPicker, new Object[] {
 				"GGG",
 				"SXS",
-				"SMS",
+				" M ",
 				'G', "sheetPlastic",
-				'X', golden_axe,
 				'S', shears,
+				'X', golden_axe,
 				'M', machineBaseItem,
 		});
 

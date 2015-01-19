@@ -124,12 +124,12 @@ public class ThermalExpansion extends Vanilla {
 		});
 
 		registerMachine(Machine.Harvester, new Object[] {
-				"PTP",
-				"SFS",
+				"PSP",
+				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', invarAxe,
 				'S', Items.shears,
+				'T', invarAxe,
 				'F', machineFrame,
 				'O', prefix + "Gold",
 				'C', powerCoilGold
