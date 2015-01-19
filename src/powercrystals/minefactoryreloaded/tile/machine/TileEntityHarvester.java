@@ -135,7 +135,12 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	@Override
 	public int getIdleTicksMax()
 	{
-		return 5;
+		return 5 + getExtraIdleTime(10);
+	}
+
+	protected int getExtraIdleTime(int additionalDelay) {
+
+		return (_tanks[0].getFluidAmount() * additionalDelay / _tanks[0].getCapacity());
 	}
 
 	@Override
@@ -184,6 +189,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 						Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
 			}
 		}
+
+		setIdleTicks(getExtraIdleTime(10));
 
 		doDrop(drops);
 		_tanks[0].fill(FluidRegistry.getFluidStack("sludge", 10), true);
