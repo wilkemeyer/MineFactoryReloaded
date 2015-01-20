@@ -1,0 +1,484 @@
+tile.mfr.machine.planter.name = Planter
+tile.mfr.machine.fisher.name = Fisher
+tile.mfr.machine.harvester.name = Harvester
+tile.mfr.machine.rancher.name = Rancher
+tile.mfr.machine.fertilizer.name = Fertilizer
+tile.mfr.machine.vet.name = Veterinary Station
+tile.mfr.machine.itemcollector.name = Item Collector
+tile.mfr.machine.blockbreaker.name = Block Breaker
+tile.mfr.machine.weathercollector.name = Weather Collector
+tile.mfr.machine.sludgeboiler.name = Sludge Boiler
+tile.mfr.machine.sewer.name = Sewer
+tile.mfr.machine.composter.name = Composter
+tile.mfr.machine.breeder.name = Breeder
+tile.mfr.machine.grinder.name = Grinder
+tile.mfr.machine.autoenchanter.name = Auto-Enchanter
+tile.mfr.machine.chronotyper.name = Chronotyper
+
+tile.mfr.machine.ejector.name = Ejector
+tile.mfr.machine.itemrouter.name = Item Router
+tile.mfr.machine.liquidrouter.name = Liquid Router
+tile.mfr.machine.deepstorageunit.name = Deep Storage Unit
+tile.mfr.machine.liquicrafter.name = LiquiCrafter
+tile.mfr.machine.lavafabricator.name = Lava Fabricator
+tile.mfr.machine.steamboiler.name = Steam Boiler
+tile.mfr.machine.autojukebox.name = Auto-Jukebox
+tile.mfr.machine.unifier.name = Unifier
+tile.mfr.machine.autospawner.name = Auto-Spawner
+tile.mfr.machine.bioreactor.name = BioReactor
+tile.mfr.machine.biofuelgenerator.name = BioFuel Generator
+tile.mfr.machine.autodisenchanter.name = Auto-Disenchanter
+tile.mfr.machine.slaughterhouse.name = Slaughterhouse
+tile.mfr.machine.meatpacker.name = Meat Packer
+tile.mfr.machine.enchantmentrouter.name = Enchantment Router
+
+tile.mfr.machine.laserdrill.name = Laser Drill
+tile.mfr.machine.laserdrillprecharger.name = Laser Drill Precharger
+tile.mfr.machine.autoanvil.name = Auto-Anvil
+tile.mfr.machine.blocksmasher.name = Block Smasher
+tile.mfr.machine.rednote.name = RedNote Block
+tile.mfr.machine.autobrewer.name = Auto-Brewer
+tile.mfr.machine.fruitpicker.name = Fruit Picker
+tile.mfr.machine.blockplacer.name = Block Placer
+tile.mfr.machine.mobcounter.name = Mob Counter
+tile.mfr.machine.steamturbine.name = Steam Turbine
+tile.mfr.machine.chunkloader.name = Chunk Loader
+tile.mfr.machine.fountain.name = Fountain
+tile.mfr.machine.mobrouter.name = Mob Router
+
+tile.mfr.conveyor.default.name = Conveyor Belt
+tile.mfr.conveyor.white.name = Conveyor Belt (White)
+tile.mfr.conveyor.orange.name = Conveyor Belt (Orange)
+tile.mfr.conveyor.magenta.name = Conveyor Belt (Magenta)
+tile.mfr.conveyor.lightblue.name = Conveyor Belt (Light Blue)
+tile.mfr.conveyor.yellow.name = Conveyor Belt (Yellow)
+tile.mfr.conveyor.lime.name = Conveyor Belt (Lime)
+tile.mfr.conveyor.pink.name = Conveyor Belt (Pink)
+tile.mfr.conveyor.gray.name = Conveyor Belt (Gray)
+tile.mfr.conveyor.lightgray.name = Conveyor Belt (Light Gray)
+tile.mfr.conveyor.cyan.name = Conveyor Belt (Cyan)
+tile.mfr.conveyor.purple.name = Conveyor Belt (Purple)
+tile.mfr.conveyor.blue.name = Conveyor Belt (Blue)
+tile.mfr.conveyor.brown.name = Conveyor Belt (Brown)
+tile.mfr.conveyor.green.name = Conveyor Belt (Green)
+tile.mfr.conveyor.red.name = Conveyor Belt (Red)
+tile.mfr.conveyor.black.name = Conveyor Belt (Black)
+
+tile.mfr.stainedglass.block.white.name = Stained Glass (White)
+tile.mfr.stainedglass.block.orange.name = Stained Glass (Orange)
+tile.mfr.stainedglass.block.magenta.name = Stained Glass (Magenta)
+tile.mfr.stainedglass.block.lightblue.name = Stained Glass (Light Blue)
+tile.mfr.stainedglass.block.yellow.name = Stained Glass (Yellow)
+tile.mfr.stainedglass.block.lime.name = Stained Glass (Lime)
+tile.mfr.stainedglass.block.pink.name = Stained Glass (Pink)
+tile.mfr.stainedglass.block.gray.name = Stained Glass (Gray)
+tile.mfr.stainedglass.block.lightgray.name = Stained Glass (Light Gray)
+tile.mfr.stainedglass.block.cyan.name = Stained Glass (Cyan)
+tile.mfr.stainedglass.block.purple.name = Stained Glass (Purple)
+tile.mfr.stainedglass.block.blue.name = Stained Glass (Blue)
+tile.mfr.stainedglass.block.brown.name = Stained Glass (Brown)
+tile.mfr.stainedglass.block.green.name = Stained Glass (Green)
+tile.mfr.stainedglass.block.red.name = Stained Glass (Red)
+tile.mfr.stainedglass.block.black.name = Stained Glass (Black)
+
+tile.mfr.stainedglass.pane.white.name = Stained Glass Pane (White)
+tile.mfr.stainedglass.pane.orange.name = Stained Glass Pane (Orange)
+tile.mfr.stainedglass.pane.magenta.name = Stained Glass Pane (Magenta)
+tile.mfr.stainedglass.pane.lightblue.name = Stained Glass Pane (Light Blue)
+tile.mfr.stainedglass.pane.yellow.name = Stained Glass Pane (Yellow)
+tile.mfr.stainedglass.pane.lime.name = Stained Glass Pane (Lime)
+tile.mfr.stainedglass.pane.pink.name = Stained Glass Pane (Pink)
+tile.mfr.stainedglass.pane.gray.name = Stained Glass Pane (Gray)
+tile.mfr.stainedglass.pane.lightgray.name = Stained Glass Pane (Light Gray)
+tile.mfr.stainedglass.pane.cyan.name = Stained Glass Pane (Cyan)
+tile.mfr.stainedglass.pane.purple.name = Stained Glass Pane (Purple)
+tile.mfr.stainedglass.pane.blue.name = Stained Glass Pane (Blue)
+tile.mfr.stainedglass.pane.brown.name = Stained Glass Pane (Brown)
+tile.mfr.stainedglass.pane.green.name = Stained Glass Pane (Green)
+tile.mfr.stainedglass.pane.red.name = Stained Glass Pane (Red)
+tile.mfr.stainedglass.pane.black.name = Stained Glass Pane (Black)
+
+tile.mfr.road.default.name = Road
+tile.mfr.road.light.off.name = Road Light
+tile.mfr.road.light.on.name = Road Light
+tile.mfr.road.light.inverted.off.name = Road Light (Inverted)
+tile.mfr.road.light.inverted.on.name = Road Light (Inverted)
+
+tile.mfr.plastic.name = Block of Plastic
+
+tile.mfr.decorative.brick.ice.name = Ice Bricks
+tile.mfr.decorative.brick.glowstone.name = Glowstone Bricks
+tile.mfr.decorative.brick.lapis.name = Lapis Bricks
+tile.mfr.decorative.brick.obsidian.name = Obsidian Bricks
+tile.mfr.decorative.brick.pavedstone.name = Paved Stone Bricks
+tile.mfr.decorative.brick.snow.name = Snow Bricks
+tile.mfr.decorative.brick.ice_large.name = Large Ice Bricks
+tile.mfr.decorative.brick.glowstone_large.name = Large Glowstone Bricks
+tile.mfr.decorative.brick.lapis_large.name = Large Lapis Bricks
+tile.mfr.decorative.brick.obsidian_large.name = Large Obsidian Bricks
+tile.mfr.decorative.brick.pavedstone_large.name = Large Paved Stone Bricks
+tile.mfr.decorative.brick.snow_large.name = Large Snow Bricks
+tile.mfr.decorative.brick.meat.raw.name = Raw Meat Block
+tile.mfr.decorative.brick.meat.cooked.name = Cooked Meat Block
+tile.mfr.decorative.brick.brick_large.name = Large Bricks
+tile.mfr.decorative.brick.sugar_charcoal.name = Sugar Charcoal Block
+
+tile.mfr.decorative.stone.black.smooth.name = Smooth Blackstone
+tile.mfr.decorative.stone.black.cobble.name = Cobble Blackstone
+tile.mfr.decorative.stone.black.brick.small.name = Small Blackstone Bricks
+tile.mfr.decorative.stone.black.brick.large.name = Large Blackstone Bricks
+tile.mfr.decorative.stone.black.gravel.name = Blackstone Gravel
+tile.mfr.decorative.stone.black.paved.name = Paved Blackstone
+tile.mfr.decorative.stone.white.smooth.name = Smooth Whitestone
+tile.mfr.decorative.stone.white.cobble.name = Cobble Whitestone
+tile.mfr.decorative.stone.white.brick.small.name = Small Whitestone Bricks
+tile.mfr.decorative.stone.white.brick.large.name = Large Whitestone Bricks
+tile.mfr.decorative.stone.white.gravel.name = Whitestone Gravel
+tile.mfr.decorative.stone.white.paved.name = Paved Whitestone
+
+tile.mfr.pinkslime.block.name = Pink Slime Block
+
+tile.ice.unmelting.name = Ice (Unmelting)
+
+tile.mfr.vinescaffold.name = Vine Scaffolding
+
+tile.mfr.detcord.name = DetCord
+
+tile.mfr.farmland.name = Fertile Soil
+
+tile.mfr.rubberwood.sapling.name = Rubber Sapling
+tile.mfr.rubberwood.sapling.sacred.name = Sacred Rubber Sapling
+tile.mfr.rubberwood.sapling.mega.name = Mega Rubber Sapling
+tile.mfr.rubberwood.sapling.massive.name = Sacred Rubber Sapling
+tile.mfr.rubberwood.log.name = Rubber Wood
+tile.mfr.rubberwood.leaves.name = Rubber Leaves
+tile.mfr.rubberwood.leaves.dry.name = Dry Rubber Leaves
+
+tile.mfr.rail.cargo.dropoff.name = Cargo Dropoff Rail
+tile.mfr.rail.cargo.pickup.name = Cargo Pickup Rail
+tile.mfr.rail.passenger.dropoff.name = Passenger Dropoff Rail
+tile.mfr.rail.passenger.pickup.name = Passenger Pickup Rail
+
+tile.mfr.cable.redstone.name = Cabo RedNet
+tile.mfr.cable.redstone.glass.name = Cabo RedNet
+tile.mfr.cable.redstone.energy.name = Cabo RedNet de Energia
+tile.mfr.cable.redstone.energyglass.name = Cabo RedNet de Energia
+tile.mfr.cable.plastic.name = Tubo de Plástico
+
+tile.mfr.rednet.logic.name = Controlador Programável de RedNet
+tile.mfr.rednet.panel.historian.name = Historiador RedNet
+
+tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.prc.name = Encaixe do Controlador Programável de RedNet
+
+tile.mfr.tank.name = Tanque de Plástico
+
+fluid.mfr.milk.still.name = Leite
+fluid.mfr.sludge.still.name = Lodo
+fluid.mfr.sewage.still.name = Esgoto
+fluid.mfr.mobessence.still.name = Essência
+fluid.mfr.biofuel.still.name = Bio-Combustível
+fluid.mfr.meat.still.name = Carne
+fluid.mfr.pinkslime.still.name = Gosma Rosa
+fluid.mfr.chocolatemilk.still.name = Leite com Chocolate
+fluid.mfr.mushroomsoup.still.name = Sopa de Cogumelos
+fluid.mfr.steam.still.name = Vapor
+
+entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Slime Rosa
+
+item.mfr.bucket.milk.name = Balde de Leite
+item.mfr.bucket.sewage.name = Balde de Esgoto
+item.mfr.bucket.sludge.name = Balde de Lodo
+item.mfr.bucket.essence.name = Balde de Essência
+item.mfr.bucket.biofuel.name = Balde de Bio-Combustível
+item.mfr.bucket.meat.name = Balde de Carne
+item.mfr.bucket.pinkslime.name = Balde de Gosma Rosa
+item.mfr.bucket.chocolatemilk.name = Balde de Leite com Chocolate
+item.mfr.bucket.mushroomsoup.name = Balde de Sopa de Cogumelo
+
+item.mfr.plastic.cup.name = Copo de Plástico
+item.mfr.plastic.cup.prefix.name =
+item.mfr.plastic.cup.suffix.name = Copo
+item.mfr.plastic.cell.name = Célula Plástica
+item.mfr.plastic.cell.prefix.name =
+item.mfr.plastic.cell.suffix.name = Célula
+
+item.mfr.plastic.armor.helm.name  = Capacete de Plástico
+item.mfr.plastic.armor.chest.name = Peitoral de Plástico
+item.mfr.plastic.armor.legs.name  = Perneiras de Plástico
+item.mfr.plastic.armor.boots.name = Botas de Plástico
+
+item.mfr.syringe.cure.name = Seringa de Dezumbificação
+item.mfr.syringe.empty.name = Seringa Vazia
+item.mfr.syringe.empty.prefix.name =
+item.mfr.syringe.empty.suffix.name = Seringa
+item.mfr.syringe.growth.name = Seringa de Crescimento
+item.mfr.syringe.health.name = Seringa de Saúde
+item.mfr.syringe.slime.name = Seringa de Crescimento de Slime
+item.mfr.syringe.zombie.name = Seringa Zumbi
+
+item.mfr.machineblock.name = Bloco de Máquina de Fábrica
+item.mfr.hammer.name = Marreta de Precisão
+item.mfr.plastic.sheet.name = Folhas de Plástico
+item.mfr.plastic.raw.name = Plástico Cru
+item.mfr.plastic.bag.name = Sacola Plástica
+item.mfr.plastic.display = Plástico
+item.mfr.plastic.ability = Resistente
+item.mfr.rubber.bar.name = Barra de Borracha
+item.mfr.rubber.raw.name = Borracha Crua
+item.mfr.record.blank.name = Disco em Branco
+
+item.mfr.safarinet.reusable.name = Rede de Safari (Reutilizável)
+item.mfr.safarinet.singleuse.name = Rede de Safari (Uso único)
+item.mfr.safarinet.jailer.name = Rede de Safari do Carcereiro
+item.mfr.safarinet.launcher.name = Lançador de Rede de Safari
+
+item.mfr.sugarcharcoal.name = Carvão Vegetal de Açúcar
+item.mfr.fertilizer.name = Fertlizante Industrial
+item.mfr.milkbottle.name = Garrafa de Leite
+item.mfr.spyglass.name = Luneta
+item.mfr.ruler.name = Régua
+item.mfr.xpextractor.name = Extrator de XP
+item.mfr.portaspawner.name = PortaInvocador
+item.mfr.straw.name = Canudo
+
+item.mfr.rednet.meter.name = Medidor RedNet
+item.mfr.rednet.meter.info.name = Multimedidor RedNet
+item.mfr.rednet.meter.debug.name = Depurador
+item.mfr.rednet.memorycard.name = Cartão de Memória PRC
+
+item.mfr.meat.ingot.raw.name = Barra de Carne Crua
+item.mfr.meat.ingot.cooked.name = Barra de Carne Cozida
+item.mfr.meat.nugget.raw.name = Pepita de "Carne" Crua
+item.mfr.meat.nugget.cooked.name = Pepita de "Carne" Cozida
+
+item.mfr.pinkslime.display = Slime Rosa
+item.mfr.pinkslime.ability = Slimy\nRosa
+item.mfr.pinkslime.ball.name = Bola de Gosma Rosa
+item.mfr.pinkslime.gem.name = Cristal de Slime Rosa
+
+item.mfr.rocket.name = Super Projétil Anti-Matéria
+item.mfr.rocket.smart.name = Super Projétil Anti-Matéria Guiado
+item.mfr.rocketlauncher.name = Lança-SPAM
+item.mfr.fishingrod.name = Vara de Pescar
+
+item.mfr.ceramicdye.white.name = Corante de Cerâmica (White)
+item.mfr.ceramicdye.orange.name = Corante de Cerâmica (Orange)
+item.mfr.ceramicdye.magenta.name = Corante de Cerâmica (Magenta)
+item.mfr.ceramicdye.lightblue.name = Corante de Cerâmica (Light Blue)
+item.mfr.ceramicdye.yellow.name = Corante de Cerâmica (Yellow)
+item.mfr.ceramicdye.lime.name = Corante de Cerâmica (Lime)
+item.mfr.ceramicdye.pink.name = Corante de Cerâmica (Pink)
+item.mfr.ceramicdye.gray.name = Corante de Cerâmica (Gray)
+item.mfr.ceramicdye.lightgray.name = Corante de Cerâmica (Light Gray)
+item.mfr.ceramicdye.cyan.name = Corante de Cerâmica (Cyan)
+item.mfr.ceramicdye.purple.name = Corante de Cerâmica (Purple)
+item.mfr.ceramicdye.blue.name = Corante de Cerâmica (Blue)
+item.mfr.ceramicdye.brown.name = Corante de Cerâmica (Brown)
+item.mfr.ceramicdye.green.name = Corante de Cerâmica (Green)
+item.mfr.ceramicdye.red.name = Corante de Cerâmica (Red)
+item.mfr.ceramicdye.black.name = Corante de Cerâmica (Black)
+
+item.mfr.laserfocus.white.name = Foco de Laser (White)
+item.mfr.laserfocus.orange.name = Foco de Laser (Orange) ####
+item.mfr.laserfocus.magenta.name = Foco de Laser (Magenta)
+item.mfr.laserfocus.lightblue.name = Foco de Laser (Light Blue)
+item.mfr.laserfocus.yellow.name = Foco de Laser (Yellow)
+item.mfr.laserfocus.lime.name = Foco de Laser (Lime)
+item.mfr.laserfocus.pink.name = Foco de Laser (Pink)
+item.mfr.laserfocus.gray.name = Foco de Laser (Gray)
+item.mfr.laserfocus.lightgray.name = Foco de Laser (Light Gray)
+item.mfr.laserfocus.cyan.name = Foco de Laser (Cyan)
+item.mfr.laserfocus.purple.name = Foco de Laser (Purple)
+item.mfr.laserfocus.blue.name = Foco de Laser (Blue)
+item.mfr.laserfocus.brown.name = Foco de Laser (Brown)
+item.mfr.laserfocus.green.name = Foco de Laser (Green)
+item.mfr.laserfocus.red.name = Foco de Laser (Red)
+item.mfr.laserfocus.black.name = Foco de Laser (Black)
+
+item.mfr.upgrade.radius.cobble.name = Melhoria (Pedregulho)
+item.mfr.upgrade.radius.lapis.name = Melhoria (Lápis)
+item.mfr.upgrade.radius.iron.name = Melhoria (Ferro)
+item.mfr.upgrade.radius.tin.name = Melhoria (Estanho)
+item.mfr.upgrade.radius.copper.name = Melhoria (Cobre)
+item.mfr.upgrade.radius.bronze.name = Melhoria (Bronze)
+item.mfr.upgrade.radius.silver.name = Melhoria (Prata)
+item.mfr.upgrade.radius.gold.name = Melhoria (Ouro)
+item.mfr.upgrade.radius.quartz.name = Melhoria (Quartzo)
+item.mfr.upgrade.radius.diamond.name = Melhoria (Diamante)
+item.mfr.upgrade.radius.platinum.name = Melhoria (Platina)
+item.mfr.upgrade.radius.emerald.name = Melhoria (Esmeralda)
+
+item.mfr.upgrade.logic.100.name = Cartão de Expansão de Lógica PRC LX-100 
+item.mfr.upgrade.logic.300.name = Cartão de Expansão de Lógica PRC LX-300
+item.mfr.upgrade.logic.500.name = Cartão de Expansão de Lógica PRC LX-500
+
+item.mfr.needlegun.name = Flechete
+item.mfr.needlegun.ammo.empty.name = Carregador de Flechete
+item.mfr.needlegun.ammo.standard.name = Munição de Flechete (Agulhas)
+item.mfr.needlegun.ammo.pierce.name = Munição de Flechete (Metralha)
+item.mfr.needlegun.ammo.lava.name = Munição de Flechete (Lava)
+item.mfr.needlegun.ammo.sludge.name = Munição de Flechete (Lodo)
+item.mfr.needlegun.ammo.sewage.name = Munição de Flechete (Esgoto)
+item.mfr.needlegun.ammo.fire.name = Munição de Flechete (Fogo)
+item.mfr.needlegun.ammo.anvil.name = Munição de Flechete (Bigorna)
+
+circuit.mfr.noop = (No-Op)
+circuit.mfr.adder.analog = Adder (Analog)
+circuit.mfr.adder.digital.full = Adder (Digital, Full)
+circuit.mfr.adder.digital.half = Adder (Digital, Half) ####
+circuit.mfr.and.2 = And (2-Entradas)
+circuit.mfr.and.3 = And (3-Entradas)
+circuit.mfr.and.4 = And (4-Entradas)
+circuit.mfr.boolean.equal = Equals
+circuit.mfr.boolean.greater = Greater Than
+circuit.mfr.boolean.greaterequal = Greater Than Or Equal
+circuit.mfr.boolean.less = Less Than
+circuit.mfr.boolean.lessequal = Less Than Or Equal
+circuit.mfr.boolean.notequal = Not Equals
+circuit.mfr.counter = Counter
+circuit.mfr.decompose.decimal = Decompose Int -> Decimal
+circuit.mfr.delay = Delay
+circuit.mfr.delay8ch = Delay (8-Channel)
+circuit.mfr.demux.16.analog = DeMux (16-Out, Analog)
+circuit.mfr.demux.4 = DeMux (4-Saídas)
+circuit.mfr.fanout = Fanout
+circuit.mfr.flipflop.jk = JK-FlipFlop
+circuit.mfr.flipflop.t = T-FlipFlop
+circuit.mfr.inverter = Inverter
+circuit.mfr.latch.d.clocked = D-Latch (Clocked)
+circuit.mfr.latch.d.gated = D-Latch (Gated)
+circuit.mfr.latch.sr = Latch SR
+circuit.mfr.latch.sr.gated = Latch SR (Gated)
+circuit.mfr.max.2 = Máximo (2-Entradas)
+circuit.mfr.max.3 = Máximo (3-Entradas)
+circuit.mfr.max.4 = Máximo (4-Entradas)
+circuit.mfr.min.2 = Mínimo (2-Entradas)
+circuit.mfr.min.3 = Mínimo (3-Entradas)
+circuit.mfr.min.4 = Mínimo (4-Entradas)
+circuit.mfr.multiplier = Multiplicador
+circuit.mfr.multipulse = Multipulsp
+circuit.mfr.mux.16.analog = Mux (15-Entradas, Analógico)
+circuit.mfr.mux.4 = Mux (4-Entradas)
+circuit.mfr.nand.2 = Nand (2-Entradas)
+circuit.mfr.nand.3 = Nand (3-Entradas)
+circuit.mfr.nand.4 = Nand (4-Entradas)
+circuit.mfr.negator = Negador
+circuit.mfr.nor.2 = Nor (2-Entradas)
+circuit.mfr.nor.3 = Nor (3-Entradas)
+circuit.mfr.nor.4 = Nor (4-Entradas)
+circuit.mfr.oneshot = Pulso One-Shot
+circuit.mfr.or.2 = Or (2-Entradas)
+circuit.mfr.or.3 = Or (3-Entradas)
+circuit.mfr.or.4 = Or (4-Entradas)
+circuit.mfr.passthrough = Passthrough
+circuit.mfr.passthrough.gated = Passthrough (Gated)
+circuit.mfr.passthrough.roundrobin = Passthrough (Anel)
+circuit.mfr.pulselengthener = Prolongador de Pulso
+circuit.mfr.randomizer.analog = Aleatorizador (Analógico)
+circuit.mfr.randomizer.digital = Aleatorizador (Digital)
+circuit.mfr.scaler = Escalador
+circuit.mfr.schmitttrigger = Disparador Schmitt
+circuit.mfr.sevensegmentencoder = Codificador de Sete Segmentos
+circuit.mfr.subtractor = Subtrator
+circuit.mfr.wavegenerator.sawtooth.falling = Onda (Serrilhado, Decadente)
+circuit.mfr.wavegenerator.sawtooth.rising = Onda (Serrilhado, Ascendente)
+circuit.mfr.wavegenerator.sine = Onda (Seno)
+circuit.mfr.wavegenerator.square = Onda (Quadrado) [Timer]
+circuit.mfr.wavegenerator.triangle = Onda (Triângulo)
+circuit.mfr.xnor.2 = Xnor (2-Entradas)
+circuit.mfr.xnor.3 = Xnor (3-Entradas)
+circuit.mfr.xnor.4 = Xnor (4-Entradas)
+circuit.mfr.xor.2 = Xor (2-Entradas)
+circuit.mfr.xor.3 = Xor (3-Entradas)
+circuit.mfr.xor.4 = Xor (4-Entradas)
+
+container.mfr.radius = Alcance:
+container.mfr.power = Drenagem de poder:
+
+chat.info.mfr.safarinet.capture = Trocado para o modo de captura.
+chat.info.mfr.safarinet.release = Trocado para o modo de soltura.
+
+chat.info.mfr.spyglass.nosight = Nada a vista.
+chat.info.mfr.spyglass.hitentity = Achei um %s em %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitblock = Achei um %s [%s:%d] em %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitunknown = Achei um DESCONHECIDO (mod bugado?) em %.1f, %.1f, %.1f
+
+chat.info.mfr.ruler.nosight = Nada a vista.
+chat.info.mfr.ruler.hitentity = Entidade atingida - medição falhou.
+chat.info.mfr.ruler.startposition = Posição inicial gravada.
+chat.info.mfr.ruler.distance = distância: %d, contagem: %d
+chat.info.mfr.ruler.total = Distância Total: %.1f
+
+chat.info.mfr.rednet.meter.cable.allzero = All RedNet subnets are 0
+chat.info.mfr.rednet.meter.cable.restzero = All other RedNet subnets are 0
+chat.info.mfr.rednet.meter.varprefix = Variable
+chat.info.mfr.rednet.meter.var.allzero = All variables are 0
+chat.info.mfr.rednet.meter.var.restzero = All other variables are 0
+chat.info.mfr.rednet.meter.dustprefix = Redstone Dust
+
+chat.info.mfr.rednet.memorycard.uploaded = PRC program uploaded to memory card from PRC
+chat.info.mfr.rednet.memorycard.downloaded = PRC program downloaded from memory card to PRC
+chat.info.mfr.rednet.memorycard.error = PRC contains insufficient circuits to hold this program
+
+chat.info.mfr.rednet.tile.standard = Set cable to standard connection mode
+chat.info.mfr.rednet.tile.cableonly = Set cable to cable-only connection mode
+
+chat.info.mfr.rednet.connection.standard = Set side to standard connection mode
+chat.info.mfr.rednet.connection.forced = Set side to forced-connection mode
+chat.info.mfr.rednet.connection.forcedstrong = Set side to strong-connection mode
+chat.info.mfr.rednet.connection.cableonly = Set side to cable-only connection mode
+
+chat.info.mfr.fluid.connection.disabled = Lado ajustado para o modo conexão desativada.
+chat.info.mfr.fluid.connection.output = Lado ajudstado para o modo conexão de saída.
+chat.info.mfr.fluid.connection.extract = Lado ajustado para o modo conexão de extração.
+
+chat.info.mfr.fluid.install.torch = Tocha de Redstone instalada, controle por RS invertido.
+chat.info.mfr.fluid.install.block = Bloco de Redstone instalado, controle por RS desativado.
+
+chat.info.mfr.bag.stacksize = Você só pode abrir uma sacola por vez.
+
+chat.info.mfr.chunkloader.noticket = Você tem muitos carregadores de chunk, e esse não pode funcionar.
+
+# Tooltips: these can be added to any item by a lang file, but they cannot be removed
+# this is a limitation of the localization system.
+# Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
+# displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
+
+tip.info.mfr.rubberwood.sapling.massive = Aviso: Enviado do mundo do Pakratt.
+
+tip.info.mfr.prc = Se você está perdido, leia o manual (dentro do jogo).
+
+tip.info.mfr.xpextractor = Requer um contêiner vazio para preencher.
+
+tip.info.mfr.mobcounter = Emite um sinal analógico de redstone \nproporcional à contagem de \nmobs dentro da área.
+
+tip.info.mfr.laserdrill = Colocado sobre um buraco até a bedrock ou o Void.
+tip.info.mfr.laserdrillprecharger = Colocado a um bloco de um alvo laser válido
+
+# These tooltips are not the entire tooltip, but part of a custom format or entry
+
+tip.info.mfr.cannotplace = Não se pode colocar por mais %s segundos.
+
+tip.info.mfr.safarinet.mode = Clique agachado para mudar o modo
+tip.info.mfr.safarinet.jailer = Criaturas soltas não despawnam normalmente.
+tip.info.mfr.safarinet.mystery = É um mistério
+
+tip.info.mfr.memorycard.wipe = Coloque em uma grade de crafting para limpar.
+
+tip.info.mfr.generator.produces = Produz apenas RF.
+
+tip.info.mfr.dsu.contains = Contém %s
+
+tip.info.mfr.needlegun.ammo = %s cartuchos
+
+tip.info.mfr.upgrade.radius = Aumento de alcance: %s
+
+death.attack.mfr.slaughterhouse = %1$s foi processado em Carne Líquida
+death.attack.mfr.slaughterhouse.player = %1$s foi condenado a ser processado em Carne Líquida por %2$s
+death.attack.mfr.slaughterhouse.1 = %1$s foi processado em molho de carne
+death.attack.mfr.slaughterhouse.1.player = %1$s foi condenado a ser processado em molho de carne por %2$s
+death.attack.mfr.grinder = %1$s foi moído aos pedacinhos.
+death.attack.mfr.grinder.player = %2$s fez certeza de que %1$s foi moído aos pedacinhos.
+death.attack.mfr.laser = %1$s foi desintegrado.
+death.attack.mfr.laser.player = %2$s fez certeza de que %1$s foi desintegrado.
