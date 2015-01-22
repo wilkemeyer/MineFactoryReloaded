@@ -181,7 +181,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 							if(nextColor < 0) nextColor = 15;
 						}
 						cable.setSideColor(ForgeDirection.getOrientation(side), nextColor);
-						world.markBlockForUpdate(x, y, z);
 						return true;
 					}
 				}
@@ -190,7 +189,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 					if (!world.isRemote)
 					{
 						cable.setSideColor(ForgeDirection.getOrientation(side), 15 - s.getItemDamage());
-						world.markBlockForUpdate(x, y, z);
 						return true;
 					}
 				}
@@ -208,16 +206,13 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 							if (mode > 1)
 								mode = 0;
 							cable.setMode(side, mode);
-							world.markBlockForUpdate(x, y, z);
 							switch (mode)
 							{
 							case 0:
-								player.addChatMessage(new ChatComponentTranslation(
-										"chat.info.mfr.rednet.tile.standard"));
+								player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.tile.standard"));
 								break;
 							case 1:
-								player.addChatMessage(new ChatComponentTranslation(
-										"chat.info.mfr.rednet.tile.cableonly"));
+								player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.tile.cableonly"));
 								break;
 							default:
 							}
@@ -228,24 +223,19 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 							mode = 0;
 						}
 						cable.setMode(side, mode);
-						world.markBlockForUpdate(x, y, z);
 						switch (mode)
 						{
 						case 0:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.rednet.connection.standard"));
+							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.connection.standard"));
 							break;
 						case 1:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.rednet.connection.forced"));
+							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.connection.forced"));
 							break;
 						case 2:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.rednet.connection.forcedstrong"));
+							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.connection.forcedstrong"));
 							break;
 						case 3:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.rednet.connection.cableonly"));
+							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.connection.cableonly"));
 							break;
 						default:
 						}

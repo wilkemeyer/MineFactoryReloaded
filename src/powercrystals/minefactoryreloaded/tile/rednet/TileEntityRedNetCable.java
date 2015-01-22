@@ -481,7 +481,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		if (mustUpdate)
 		{
-			onNeighborBlockChange();
+			updateNearbyNode(ForgeDirection.getOrientation(side));
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -653,7 +654,11 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return;
 		}
 		_sideColors[side.ordinal()] = color;
-		//updateNetwork();
+
+		{
+			updateNearbyNode(side);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	public int getSideColor(ForgeDirection side)
