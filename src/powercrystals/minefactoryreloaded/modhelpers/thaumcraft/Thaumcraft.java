@@ -45,12 +45,10 @@ public class Thaumcraft {
 			final Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
 			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
 			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
-			Class<? extends EntityLivingBase> golem = (Class<? extends EntityLivingBase>) Class.
-					forName("thaumcraft.common.entities.golems.EntityGolemBase");
-			Class<? extends EntityLivingBase> trunk = (Class<? extends EntityLivingBase>) Class.
-					forName("thaumcraft.common.entities.golems.EntityTravelingTrunk");
-			Class<? extends EntityLivingBase> pech = (Class<? extends EntityLivingBase>) Class.
-					forName("thaumcraft.common.entities.monster.EntityPech");
+			@SuppressWarnings("unchecked") Class<? extends EntityLivingBase>
+					golem = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityGolemBase"),
+					trunk = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk"),
+					pech = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.monster.EntityPech");
 
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);

@@ -27,12 +27,14 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IToolHammer {
 
 	public ItemFactoryHammer() {
+
 		setHarvestLevel("wrench", 1);
 	}
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
 			int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+
 		Block block = world.getBlock(x, y, z);
 		if (block != null) {
 			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK,
@@ -43,9 +45,9 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 			}
 
 			if (player.isSneaking() && block instanceof IDismantleable &&
-					((IDismantleable)block).canDismantle(player, world, x, y, z)) {
+					((IDismantleable) block).canDismantle(player, world, x, y, z)) {
 				if (!world.isRemote)
-					((IDismantleable)block).dismantleBlock(player, world, x, y, z, false);
+					((IDismantleable) block).dismantleBlock(player, world, x, y, z, false);
 				player.swingItem();
 				return !world.isRemote;
 			} else if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) {
@@ -58,33 +60,39 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 	@Override
 	public boolean isUsable(ItemStack item, EntityLivingBase user, int x, int y, int z) {
+
 		return true;
 	}
 
 	@Override
 	public void toolUsed(ItemStack item, EntityLivingBase user, int x, int y, int z) {
+
 	}
 
 	//@Override
 	public boolean canWrench(EntityPlayer player, int x, int y, int z) {
+
 		return true;
 	}
 
 	//@Override
 	public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
+
 	}
 
 	@Override
 	public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
+
 		return true;
 	}
 
 	@Override
 	public boolean canHarvestBlock(Block block, ItemStack stack) {
+
 		if (block == null)
 			return false;
 		Material mat = block.getMaterial();
-		return 	mat == Material.ice |
+		return mat == Material.ice |
 				mat == Material.cake |
 				mat == Material.iron |
 				mat == Material.rock |
@@ -101,6 +109,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 	@Override
 	public float func_150893_a(ItemStack stack, Block block) {
+
 		if (block == null)
 			return 0;
 		Material mat = block.getMaterial();
@@ -114,6 +123,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
+
 		Block block = player.worldObj.getBlock(x, y, z);
 		if (block == null || block.getBlockHardness(player.worldObj, x, y, z) > 2.9f) {
 			Random rnd = player.getRNG();
@@ -121,13 +131,14 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 			for (int i = 0, e = 10 + rnd.nextInt(5); i < e; ++i) {
 				Vec3 vec3 = Vec3.createVectorHelper((rnd.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-				vec3.rotateAroundX(-player.rotationPitch * (float)Math.PI / 180.0F);
-				vec3.rotateAroundY(-player.rotationYaw * (float)Math.PI / 180.0F);
+				vec3.rotateAroundX(-player.rotationPitch * (float) Math.PI / 180.0F);
+				vec3.rotateAroundY(-player.rotationYaw * (float) Math.PI / 180.0F);
 				Vec3 vec31 = Vec3.createVectorHelper((rnd.nextFloat() - 0.5D) * 0.3D, rnd.nextFloat(), 0.6D);
-				vec31.rotateAroundX(-player.rotationPitch * (float)Math.PI / 180.0F);
-				vec31.rotateAroundY(-player.rotationYaw * (float)Math.PI / 180.0F);
+				vec31.rotateAroundX(-player.rotationPitch * (float) Math.PI / 180.0F);
+				vec31.rotateAroundY(-player.rotationYaw * (float) Math.PI / 180.0F);
 				vec31 = vec31.addVector(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-				player.worldObj.spawnParticle("tilecrack_51_0", vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord);
+				player.worldObj.spawnParticle("tilecrack_51_0", vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord,
+					vec3.yCoord + 0.05D, vec3.zCoord);
 			}
 			return true;
 		}
@@ -136,6 +147,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 	@Override
 	protected int getWeaponDamage(ItemStack stack) {
+
 		return 4;
 	}
 
