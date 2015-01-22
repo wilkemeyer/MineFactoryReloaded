@@ -37,8 +37,9 @@ public class BlockFactoryRoad extends Block
 	public void onEntityWalking(World world, int x, int y, int z, Entity e)
 	{
 		final double boost = 1.5 * slipperiness;
+		final double minSpeed = 1e-3;
 
-		if (e.motionX > 0 || e.motionZ > 0)
+		if (Math.abs(e.motionX) > minSpeed || Math.abs(e.motionZ) > minSpeed)
 		{
 			double b = Math.atan2(e.posX - e.prevPosX, e.posZ - e.prevPosZ);
 			double a = (Math.atan2(e.motionX, e.motionZ) * 3 + b * 2) / 5d;
