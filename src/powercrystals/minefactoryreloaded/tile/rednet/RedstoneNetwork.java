@@ -396,7 +396,7 @@ public class RedstoneNetwork implements IGrid {
 					((IRedNetInputNode)block).onInputChanged(_world, node.x, node.y, node.z,
 						node.orientation.getOpposite(), 0);
 			}
-			MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, rednetCableBlock);
+			MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, Blocks.air);
 		}
 	}
 
