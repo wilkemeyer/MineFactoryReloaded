@@ -322,7 +322,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		if (_grid == null | sideMode[6] == 1) return 0;
-		int t = sideMode[from.ordinal()^1];
+		int t = sideMode[from.getOpposite().ordinal()];
 		if (((t & 1) != 0) & isPowered & (t & 2) == 2)
 		{
 			return _grid.storage.fill(resource, doFill);
@@ -333,7 +333,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
 		if (_grid == null | sideMode[6] == 1) return null;
-		int t = sideMode[from.ordinal()^1];
+		int t = sideMode[from.getOpposite().ordinal()];
 		if (((t & 1) != 0) & (t & 2) == 0)
 		{
 			return _grid.storage.drain(resource, doDrain);
@@ -344,7 +344,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
 		if (_grid == null | sideMode[6] == 1) return null;
-		int t = sideMode[from.ordinal()^1];
+		int t = sideMode[from.getOpposite().ordinal()];
 		if (((t & 1) != 0) & (t & 2) == 0)
 			return _grid.storage.drain(maxDrain, doDrain);
 		return null;
@@ -353,14 +353,14 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		if (sideMode[6] == 1) return false;
-		int t = sideMode[from.ordinal()^1];
+		int t = sideMode[from.getOpposite().ordinal()];
 		return ((t & 1) != 0) & (t & 2) == 2;
 	}
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		if (sideMode[6] == 1) return false;
-		int t = sideMode[from.ordinal()^1];
+		int t = sideMode[from.getOpposite().ordinal()];
 		return ((t & 1) != 0) & (t & 2) == 0;
 	}
 
