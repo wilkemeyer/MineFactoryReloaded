@@ -43,12 +43,10 @@ public class Thaumcraft {
 			final Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
 			final Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
 			final Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
-			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
-			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
 			@SuppressWarnings("unchecked") Class<? extends EntityLivingBase>
-					golem = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityGolemBase"),
-					trunk = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk"),
-					pech = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.monster.EntityPech");
+			golem = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityGolemBase"),
+			trunk = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk"),
+			pech = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.monster.EntityPech");
 
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);
@@ -66,11 +64,28 @@ public class Thaumcraft {
 			MFRRegistry.registerHarvestable(new HarvestableWood(tcLog));
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres, HarvestType.Normal));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves,
-					Item.getItemFromBlock(tcSapling)));
+				Item.getItemFromBlock(tcSapling)));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling));
-			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod));
 
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling));
+
+			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
+		}
+		catch(Throwable x) {
+			x.printStackTrace();
+		}
+	}
+
+	@EventHandler
+	@Strippable("mod:Thaumcraft@[4,4.2.1)")
+	public static void loadCocoa(FMLInitializationEvent e) {
+
+		try {
+			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
+			final Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
+			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
+
+			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod));
 			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean, tcPod) {
 				@Override
 				protected boolean isNextToAcceptableLog(World world, int x, int y, int z) {
@@ -96,7 +111,6 @@ public class Thaumcraft {
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
 
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
-			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
 		}
 		catch(Throwable x) {
 			x.printStackTrace();
