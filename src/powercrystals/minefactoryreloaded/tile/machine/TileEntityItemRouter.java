@@ -91,12 +91,12 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		if (hasRoutes(filteredRoutes))
 		{
 			stack = weightedRouteItem(stack, filteredRoutes);
-			stack = (stack == null || stack.stackSize == 0) ? null : stack;
+			stack = (stack == null || stack.stackSize <= 0) ? null : stack;
 		}
 		else if (!_rejectUnmapped && hasRoutes(_defaultRoutes))
 		{
 			stack = weightedRouteItem(stack, _defaultRoutes);
-			stack = (stack == null || stack.stackSize == 0) ? null : stack;
+			stack = (stack == null || stack.stackSize <= 0) ? null : stack;
 		}
 		_routing = false;
 		return stack;
@@ -279,6 +279,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 			int start = getStartInventorySide(ForgeDirection.UNKNOWN);
 			if (stack != null && i >= start && i <= (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
 			{
+				if (stack.stackSize <= 0)
+					return;
 				stack = routeItem(stack);
 				if (stack == null)
 					return;
