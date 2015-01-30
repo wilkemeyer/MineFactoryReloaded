@@ -475,15 +475,13 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		if (side != 6) {
 			mustUpdate = (mode != (_cableMode[side] >> 1));
 			_cableMode[side] = (byte) ((_cableMode[side] & 1) | (mode << 1));
+			updateNearbyNode(ForgeDirection.getOrientation(side));
 		} else {
 			mustUpdate = mode != _cableMode[side];
 			_cableMode[side] = mode;
 		}
 		if (mustUpdate)
-		{
-			updateNearbyNode(ForgeDirection.getOrientation(side));
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
