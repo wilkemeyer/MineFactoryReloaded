@@ -4,6 +4,7 @@ import cofh.api.tileentity.IPortableData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,9 +26,18 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag != null) {
 			l: {
-				if (tag.hasKey("Type") && !tag.getString("Type").equals("tile.mfr.rednet.logic.name"))
-					break l;
-				if (tag.hasKey("circuits", 10)) {
+				if (tag.hasKey("Type")) {
+					String type = tag.getString("Type");
+					String entry = MFRUtil.localize("tip.info.mfr.memorycard.programmedFor", new Object[] {
+							MFRUtil.localize(type)
+					});
+					infoList.addAll(Arrays.asList(entry.split("\n", -1)));
+
+					if (!type.equals("tile.mfr.rednet.logic.name"))
+						break l;
+				}
+				System.out.println(tag.hasKey("circuits"));
+				if (tag.hasKey("circuits", 9)) {
 					int c = stack.getTagCompound().getTagList("circuits", 10).tagCount();
 					infoList.add(MFRUtil.localize("tip.info.mfr.memorycard.programmed", c));
 				}
