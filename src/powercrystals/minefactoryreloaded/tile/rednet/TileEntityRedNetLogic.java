@@ -382,6 +382,10 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	@Override
 	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
 
+		if (!canRotate()) {
+			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error2"));
+			return;
+		}
 		int circuitCount = tag.getTagList("circuits", 10).tagCount();
 		if (circuitCount > getCircuitCount()) {
 			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
