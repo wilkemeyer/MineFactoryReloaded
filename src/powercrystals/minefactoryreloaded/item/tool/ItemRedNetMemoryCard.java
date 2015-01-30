@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
@@ -36,7 +35,6 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 					if (!type.equals("tile.mfr.rednet.logic.name"))
 						break l;
 				}
-				System.out.println(tag.hasKey("circuits"));
 				if (tag.hasKey("circuits", 9)) {
 					int c = stack.getTagCompound().getTagList("circuits", 10).tagCount();
 					infoList.add(MFRUtil.localize("tip.info.mfr.memorycard.programmed", c));
@@ -82,19 +80,8 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 			return true;
 		}
 		else if (te instanceof TileEntityRedNetLogic) {
-			if (read) {
-				te.writeToNBT(tag);
-				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
-			} else if (special) {
-				int circuitCount = tag.getTagList("circuits", 10).tagCount();
-				if (circuitCount > ((TileEntityRedNetLogic)te).getCircuitCount()) {
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
-				} else {
-					((TileEntityRedNetLogic)te).readCircuitsOnly(tag);
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
-				}
-			}
-			stack.setTagCompound(tag);
+			if (special)
+				((IPortableData) te).readPortableData(player, tag);
 
 			return true;
 		}
