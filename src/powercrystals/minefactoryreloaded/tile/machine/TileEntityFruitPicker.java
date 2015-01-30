@@ -115,6 +115,8 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 
 		doDrop(drops);
 
+		// TODO: sludge?
+
 		harvestable.postPick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
 
 		return true;

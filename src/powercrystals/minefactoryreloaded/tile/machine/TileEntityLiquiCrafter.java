@@ -86,9 +86,9 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		}
 
 
-		boolean redstoneState = CoreUtils.isRedstonePowered(this);
-		if (redstoneState && !_lastRedstoneState)
-		{
+		boolean redstoneState = _rednetState != 0 || CoreUtils.isRedstonePowered(this);
+
+		if (redstoneState && !_lastRedstoneState) {
 			if (_resourcesChangedSinceLastFailedCraft && recipe != null &&
 					_inventory[9] != null &&
 					(_inventory[10] == null ||

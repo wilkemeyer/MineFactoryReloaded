@@ -48,7 +48,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 
 			boolean skipConsumption = ++_ticksSinceLastConsumption < _ticksBetweenConsumption;
 
-			if (CoreUtils.isRedstonePowered(this)) {
+			if (_rednetState != 0 || CoreUtils.isRedstonePowered(this)) {
 				setIsActive(false);
 				return;
 			}

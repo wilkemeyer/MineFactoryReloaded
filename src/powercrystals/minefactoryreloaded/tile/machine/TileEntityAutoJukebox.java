@@ -124,7 +124,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 			return;
 		}
 
-		boolean redstoneState = CoreUtils.isRedstonePowered(this);
+		boolean redstoneState = _rednetState != 0 || CoreUtils.isRedstonePowered(this);
 		if(redstoneState && !_lastRedstoneState)
 		{
 			stopRecord();

@@ -128,7 +128,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 			if (_temp == 0 && _inventory[3] == null)
 			{
-				if ((worldObj.getTotalWorldTime() & 0x6F) == 0 && !CoreUtils.isRedstonePowered(this))
+				if ((worldObj.getTotalWorldTime() & 0x6F) == 0 && !(_rednetState != 0 || CoreUtils.isRedstonePowered(this)))
 					mergeFuel();
 				return; // we're not burning anything and not changing the temp
 			}

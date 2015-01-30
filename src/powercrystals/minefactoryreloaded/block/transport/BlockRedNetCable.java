@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
+import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
@@ -376,6 +377,12 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		{
 			((TileEntityRedNetCable)te).updateNearbyNode(subnet, from);
 		}
+	}
+
+	@Override
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
+	{
+		return RedNetConnectionType.CableAll;
 	}
 
 	@Override

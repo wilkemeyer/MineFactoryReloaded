@@ -97,7 +97,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			return;
 		}
 
-		if (CoreUtils.isRedstonePowered(this))
+		if (_rednetState != 0 || CoreUtils.isRedstonePowered(this))
 		{
 			setIdleTicks(getIdleTicksMax());
 		}

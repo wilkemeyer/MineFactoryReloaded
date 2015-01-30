@@ -110,7 +110,7 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 				}
 			}
 
-			if (CoreUtils.isRedstonePowered(this))
+			if (_rednetState != 0 || CoreUtils.isRedstonePowered(this))
 				return;
 
 			int newBurn = getOutputValue();

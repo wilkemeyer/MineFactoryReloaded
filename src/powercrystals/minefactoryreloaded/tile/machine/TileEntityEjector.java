@@ -64,9 +64,9 @@ public class TileEntityEjector extends TileEntityFactoryInventory
 		{
 			return;
 		}
-		boolean redstoneState = CoreUtils.isRedstonePowered(this);
-		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems)))
-		{
+		boolean redstoneState = _rednetState != 0 || CoreUtils.isRedstonePowered(this);
+
+		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems))) {
 			final ForgeDirection facing = getDirectionFacing();
 			Map<ForgeDirection, IInventory> chests = UtilInventory.
 					findChests(worldObj, xCoord, yCoord, zCoord, _pullDirections);
