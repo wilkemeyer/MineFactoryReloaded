@@ -76,7 +76,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			if (to.offsetY != 0 || !BlockPosition.blockExists(this, to))
 				continue;
 			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
-			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.storage.getFluid(), _tank.getFluid())) {
+			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.getStorage().getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
 					if (tank.grid == grid || tank.grid.addNode(this))
 					{
@@ -127,7 +127,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		if (grid == null)
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
-		FluidStack fluid = grid.storage.drain(1, false);
+		FluidStack fluid = grid.getStorage().drain(1, false);
 		data.setTag("fluid", fluid == null ? null : fluid.writeToNBT(new NBTTagCompound()));
 		data.setByte("sides", sides);
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
@@ -174,7 +174,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		if (grid == null)
 			return _tank.getFluid();
-		return grid.storage.getFluid();
+		return grid.getStorage().getFluid();
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		if (grid == null)
 			return 0;
-		return grid.storage.fill(resource, doFill);
+		return grid.getStorage().fill(resource, doFill);
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		if (grid == null)
 			return null;
-		return grid.storage.drain(resource, doDrain);
+		return grid.getStorage().drain(resource, doDrain);
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		if (grid == null)
 			return worldObj.isRemote ? _tank.drain(maxDrain, false) : null;
-		return grid.storage.drain(maxDrain, doDrain);
+		return grid.getStorage().drain(maxDrain, doDrain);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		if (grid == null)
 			return FluidHelper.NULL_TANK_INFO;
-		return new FluidTankInfo[] { grid.storage.getInfo() };
+		return new FluidTankInfo[] { grid.getStorage().getInfo() };
 	}
 
 	@Override
@@ -246,18 +246,18 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 						StringHelper.getFluidName(_tank.getFluid(), "") + "@" + _tank.getFluidAmount()));
 			return;
 		}
-		if (grid.storage.getFluidAmount() == 0)
+		if (grid.getStorage().getFluidAmount() == 0)
 			info.add(new ChatComponentText(MFRUtil.empty()));
 		else
-			info.add(new ChatComponentText(MFRUtil.getFluidName(grid.storage.getFluid())));
-		info.add(new ChatComponentText((grid.storage.getFluidAmount() / (float)grid.storage.getCapacity() * 100f) + "%"));
+			info.add(new ChatComponentText(MFRUtil.getFluidName(grid.getStorage().getFluid())));
+		info.add(new ChatComponentText((grid.getStorage().getFluidAmount() / (float)grid.getStorage().getCapacity() * 100f) + "%"));
 		if (debug) {
 			info.add(new ChatComponentText("Sides: " + Integer.toBinaryString(sides)));
-			info.add(new ChatComponentText(grid.storage.getFluidAmount() + " / " + grid.storage.getCapacity()));
+			info.add(new ChatComponentText(grid.getStorage().getFluidAmount() + " / " + grid.getStorage().getCapacity()));
 			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " +
 					StringHelper.getFluidName(_tank.getFluid(), "") + "@" + _tank.getFluidAmount()));
-			info.add(new ChatComponentText("Length: " + grid.storage.length + " | Index: " + grid.storage.index +
-					" | Reserve: " + grid.storage.tanks.length));
+			info.add(new ChatComponentText("Length: " + grid.getStorage().length + " | Index: " + grid.getStorage().index +
+					" | Reserve: " + grid.getStorage().tanks.length));
 		}
 	}
 }

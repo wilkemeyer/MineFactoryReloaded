@@ -11,25 +11,30 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TankNetwork
 {
+
 	private LinkedHashSet<TileEntityTank> nodeSet;
 	private TileEntityTank master;
-	FluidTankMulti storage = new FluidTankMulti(this);
+	private FluidTankMulti storage = new FluidTankMulti(this);
 
 	public TankNetwork() {
+
 	}
 
 	public TankNetwork(TileEntityTank base) {
+
 		nodeSet = new LinkedHashSet<TileEntityTank>();
 		addNode(base);
 	}
 
 	public boolean addNode(TileEntityTank cond) {
+
 		if (nodeSet.add(cond))
 			return nodeAdded(cond);
 		return false;
 	}
 
 	public void removeNode(TileEntityTank cond) {
+
 		if (!nodeSet.isEmpty()) {
 			if (nodeSet.remove(cond)) {
 				nodeRemoved(cond);
@@ -37,7 +42,8 @@ public class TankNetwork
 		}
 	}
 
-	public void markSweep() {
+	public synchronized void markSweep() {
+
 		destroyGrid();
 		if (nodeSet.isEmpty())
 			return;
@@ -47,7 +53,7 @@ public class TankNetwork
 
 		LinkedHashSet<TileEntityTank> toCheck = new LinkedHashSet<TileEntityTank>();
 		LinkedHashSet<TileEntityTank> checked = new LinkedHashSet<TileEntityTank>();
-		BlockPosition bp = new BlockPosition(0,0,0);
+		BlockPosition bp = new BlockPosition(0, 0, 0);
 		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
@@ -55,15 +61,17 @@ public class TankNetwork
 			main = toCheck.iterator().next();
 			addNode(main);
 			World world = main.getWorldObj();
-			for (int i = 6; i --> 0; ) {
-				bp.x = main.xCoord; bp.y = main.yCoord; bp.z = main.zCoord;
+			for (int i = 6; i-- > 0;) {
+				bp.x = main.xCoord;
+				bp.y = main.yCoord;
+				bp.z = main.zCoord;
 				bp.step(dir[i]);
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityTank) {
 						if (main.isInterfacing(dir[i]) && !checked.contains(te))
-							toCheck.add((TileEntityTank)te);
-						checked.add((TileEntityTank)te);
+							toCheck.add((TileEntityTank) te);
+						checked.add((TileEntityTank) te);
 					}
 				}
 			}
@@ -79,6 +87,7 @@ public class TankNetwork
 	}
 
 	public void destroyGrid() {
+
 		master = null;
 		for (TileEntityTank curCond : nodeSet)
 			curCond.grid = null;
@@ -86,6 +95,7 @@ public class TankNetwork
 	}
 
 	void updateNodes() {
+
 		for (TileEntityTank node : nodeSet) {
 			node.markDirty();
 			node.getWorldObj().markBlockForUpdate(node.xCoord, node.yCoord, node.zCoord);
@@ -93,11 +103,13 @@ public class TankNetwork
 	}
 
 	public boolean canMergeGrid(TankNetwork grid) {
+
 		if (grid == null) return false;
 		return FluidHelper.isFluidEqualOrNull(grid.storage.getFluid(), storage.getFluid());
 	}
 
-	public void mergeGrid(TankNetwork grid) {
+	public synchronized void mergeGrid(TankNetwork grid) {
+
 		if (grid == this) return;
 		if (storage.getFluid() == null && grid.storage.getFluid() != null) {
 			grid.mergeGrid(this);
@@ -113,6 +125,7 @@ public class TankNetwork
 	}
 
 	public void nodeRemoved(TileEntityTank cond) {
+
 		if (cond == master) {
 			if (nodeSet.isEmpty()) {
 				master = null;
@@ -126,6 +139,7 @@ public class TankNetwork
 	}
 
 	public boolean nodeAdded(TileEntityTank cond) {
+
 		if (cond.grid != null) {
 			if (cond.grid != this) {
 				nodeSet.remove(cond);
@@ -151,12 +165,19 @@ public class TankNetwork
 		return true;
 	}
 
+	public synchronized FluidTankMulti getStorage() {
+
+		return storage;
+	}
+
 	public int getSize() {
+
 		return nodeSet.size();
 	}
 
 	@Override
 	public String toString() {
+
 		return "TankNetwork@" + Integer.toString(hashCode()) + "; master:" + master;
 	}
 }
