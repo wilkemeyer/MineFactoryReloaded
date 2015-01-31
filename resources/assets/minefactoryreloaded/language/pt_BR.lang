@@ -46,57 +46,57 @@ tile.mfr.machine.chunkloader.name = Chunk Loader
 tile.mfr.machine.fountain.name = Fountain
 tile.mfr.machine.mobrouter.name = Mob Router
 
-tile.mfr.conveyor.default.name = Conveyor Belt
-tile.mfr.conveyor.white.name = Conveyor Belt (White)
-tile.mfr.conveyor.orange.name = Conveyor Belt (Orange)
-tile.mfr.conveyor.magenta.name = Conveyor Belt (Magenta)
-tile.mfr.conveyor.lightblue.name = Conveyor Belt (Light Blue)
-tile.mfr.conveyor.yellow.name = Conveyor Belt (Yellow)
-tile.mfr.conveyor.lime.name = Conveyor Belt (Lime)
-tile.mfr.conveyor.pink.name = Conveyor Belt (Pink)
-tile.mfr.conveyor.gray.name = Conveyor Belt (Gray)
-tile.mfr.conveyor.lightgray.name = Conveyor Belt (Light Gray)
-tile.mfr.conveyor.cyan.name = Conveyor Belt (Cyan)
-tile.mfr.conveyor.purple.name = Conveyor Belt (Purple)
-tile.mfr.conveyor.blue.name = Conveyor Belt (Blue)
-tile.mfr.conveyor.brown.name = Conveyor Belt (Brown)
-tile.mfr.conveyor.green.name = Conveyor Belt (Green)
-tile.mfr.conveyor.red.name = Conveyor Belt (Red)
-tile.mfr.conveyor.black.name = Conveyor Belt (Black)
+tile.mfr.conveyor.default.name = Esteira Transportadora
+tile.mfr.conveyor.white.name = Esteira Transportadora (Branco)
+tile.mfr.conveyor.orange.name = Esteira Transportadora (Laranja)
+tile.mfr.conveyor.magenta.name = Esteira Transportadora (Magenta)
+tile.mfr.conveyor.lightblue.name = Esteira Transportadora (Azul Claro)
+tile.mfr.conveyor.yellow.name = Esteira Transportadora (Amarelo)
+tile.mfr.conveyor.lime.name = Esteira Transportadora (Lima)
+tile.mfr.conveyor.pink.name = Esteira Transportadora (Rosa)
+tile.mfr.conveyor.gray.name = Esteira Transportadora (Cinza)
+tile.mfr.conveyor.lightgray.name = Esteira Transportadora (Cinza Claro)
+tile.mfr.conveyor.cyan.name = Esteira Transportadora (Ciano)
+tile.mfr.conveyor.purple.name = Esteira Transportadora (Lilás)
+tile.mfr.conveyor.blue.name = Esteira Transportadora (Azul)
+tile.mfr.conveyor.brown.name = Esteira Transportadora (Marrom)
+tile.mfr.conveyor.green.name = Esteira Transportadora (Verde)
+tile.mfr.conveyor.red.name = Esteira Transportadora (Vermelho)
+tile.mfr.conveyor.black.name = Esteira Transportadora (Preto)
 
-tile.mfr.stainedglass.block.white.name = Stained Glass (White)
-tile.mfr.stainedglass.block.orange.name = Stained Glass (Orange)
-tile.mfr.stainedglass.block.magenta.name = Stained Glass (Magenta)
-tile.mfr.stainedglass.block.lightblue.name = Stained Glass (Light Blue)
-tile.mfr.stainedglass.block.yellow.name = Stained Glass (Yellow)
-tile.mfr.stainedglass.block.lime.name = Stained Glass (Lime)
-tile.mfr.stainedglass.block.pink.name = Stained Glass (Pink)
-tile.mfr.stainedglass.block.gray.name = Stained Glass (Gray)
-tile.mfr.stainedglass.block.lightgray.name = Stained Glass (Light Gray)
-tile.mfr.stainedglass.block.cyan.name = Stained Glass (Cyan)
-tile.mfr.stainedglass.block.purple.name = Stained Glass (Purple)
-tile.mfr.stainedglass.block.blue.name = Stained Glass (Blue)
-tile.mfr.stainedglass.block.brown.name = Stained Glass (Brown)
-tile.mfr.stainedglass.block.green.name = Stained Glass (Green)
-tile.mfr.stainedglass.block.red.name = Stained Glass (Red)
-tile.mfr.stainedglass.block.black.name = Stained Glass (Black)
+tile.mfr.stainedglass.block.white.name = Vidro Tingido (Branco)
+tile.mfr.stainedglass.block.orange.name = Vidro Tingido (Laranja)
+tile.mfr.stainedglass.block.magenta.name = Vidro Tingido (Magenta)
+tile.mfr.stainedglass.block.lightblue.name = Vidro Tingido (Azul Claro)
+tile.mfr.stainedglass.block.yellow.name = Vidro Tingido (Amarelo)
+tile.mfr.stainedglass.block.lime.name = Vidro Tingido (Lima)
+tile.mfr.stainedglass.block.pink.name = Vidro Tingido (Rosa)
+tile.mfr.stainedglass.block.gray.name = Vidro Tingido (Cinza)
+tile.mfr.stainedglass.block.lightgray.name = Vidro Tingido (Cinza Claro)
+tile.mfr.stainedglass.block.cyan.name = Vidro Tingido (Ciano)
+tile.mfr.stainedglass.block.purple.name = Vidro Tingido (Lilás)
+tile.mfr.stainedglass.block.blue.name = Vidro Tingido (Azul)
+tile.mfr.stainedglass.block.brown.name = Vidro Tingido (Marrom)
+tile.mfr.stainedglass.block.green.name = Vidro Tingido (Verde)
+tile.mfr.stainedglass.block.red.name = Vidro Tingido (Vermelho)
+tile.mfr.stainedglass.block.black.name = Vidro Tingido (Preto)
 
-tile.mfr.stainedglass.pane.white.name = Stained Glass Pane (White)
-tile.mfr.stainedglass.pane.orange.name = Stained Glass Pane (Orange)
-tile.mfr.stainedglass.pane.magenta.name = Stained Glass Pane (Magenta)
-tile.mfr.stainedglass.pane.lightblue.name = Stained Glass Pane (Light Blue)
-tile.mfr.stainedglass.pane.yellow.name = Stained Glass Pane (Yellow)
-tile.mfr.stainedglass.pane.lime.name = Stained Glass Pane (Lime)
-tile.mfr.stainedglass.pane.pink.name = Stained Glass Pane (Pink)
-tile.mfr.stainedglass.pane.gray.name = Stained Glass Pane (Gray)
-tile.mfr.stainedglass.pane.lightgray.name = Stained Glass Pane (Light Gray)
-tile.mfr.stainedglass.pane.cyan.name = Stained Glass Pane (Cyan)
-tile.mfr.stainedglass.pane.purple.name = Stained Glass Pane (Purple)
-tile.mfr.stainedglass.pane.blue.name = Stained Glass Pane (Blue)
-tile.mfr.stainedglass.pane.brown.name = Stained Glass Pane (Brown)
-tile.mfr.stainedglass.pane.green.name = Stained Glass Pane (Green)
-tile.mfr.stainedglass.pane.red.name = Stained Glass Pane (Red)
-tile.mfr.stainedglass.pane.black.name = Stained Glass Pane (Black)
+tile.mfr.stainedglass.pane.white.name = Painel de Vidro Tingido (Branco)
+tile.mfr.stainedglass.pane.orange.name = Painel de Vidro Tingido (Laranja)
+tile.mfr.stainedglass.pane.magenta.name = Painel de Vidro Tingido (Magenta)
+tile.mfr.stainedglass.pane.lightblue.name = Painel de Vidro Tingido (Azul Claro)
+tile.mfr.stainedglass.pane.yellow.name = Painel de Vidro Tingido (Amarelo)
+tile.mfr.stainedglass.pane.lime.name = Painel de Vidro Tingido (Lima)
+tile.mfr.stainedglass.pane.pink.name = Painel de Vidro Tingido (Rosa)
+tile.mfr.stainedglass.pane.gray.name = Painel de Vidro Tingido (Cinza)
+tile.mfr.stainedglass.pane.lightgray.name = Painel de Vidro Tingido (Cinza Claro)
+tile.mfr.stainedglass.pane.cyan.name = Painel de Vidro Tingido (Ciano)
+tile.mfr.stainedglass.pane.purple.name = Painel de Vidro Tingido (Lilás)
+tile.mfr.stainedglass.pane.blue.name = Painel de Vidro Tingido (Azul)
+tile.mfr.stainedglass.pane.brown.name = Painel de Vidro Tingido (Marrom)
+tile.mfr.stainedglass.pane.green.name = Painel de Vidro Tingido (Verde)
+tile.mfr.stainedglass.pane.red.name = Painel de Vidro Tingido (Vermelho)
+tile.mfr.stainedglass.pane.black.name = Painel de Vidro Tingido (Preto)
 
 tile.mfr.road.default.name = Road
 tile.mfr.road.light.off.name = Road Light
@@ -138,26 +138,26 @@ tile.mfr.decorative.stone.white.paved.name = Paved Whitestone
 
 tile.mfr.pinkslime.block.name = Pink Slime Block
 
-tile.ice.unmelting.name = Ice (Unmelting)
+tile.ice.unmelting.name = Gelo (Inderretível)
 
 tile.mfr.vinescaffold.name = Vine Scaffolding
 
-tile.mfr.detcord.name = DetCord
+tile.mfr.detcord.name = Corda de Detonação
 
-tile.mfr.farmland.name = Fertile Soil
+tile.mfr.farmland.name = Solo Fértil
 
 tile.mfr.rubberwood.sapling.name = Rubber Sapling
 tile.mfr.rubberwood.sapling.sacred.name = Sacred Rubber Sapling
 tile.mfr.rubberwood.sapling.mega.name = Mega Rubber Sapling
 tile.mfr.rubberwood.sapling.massive.name = Sacred Rubber Sapling
-tile.mfr.rubberwood.log.name = Rubber Wood
-tile.mfr.rubberwood.leaves.name = Rubber Leaves
-tile.mfr.rubberwood.leaves.dry.name = Dry Rubber Leaves
+tile.mfr.rubberwood.log.name = Madeira de Borracha
+tile.mfr.rubberwood.leaves.name = Folhas de Borracha
+tile.mfr.rubberwood.leaves.dry.name = Folhas de Borracha Secas
 
-tile.mfr.rail.cargo.dropoff.name = Cargo Dropoff Rail
-tile.mfr.rail.cargo.pickup.name = Cargo Pickup Rail
-tile.mfr.rail.passenger.dropoff.name = Passenger Dropoff Rail
-tile.mfr.rail.passenger.pickup.name = Passenger Pickup Rail
+tile.mfr.rail.cargo.dropoff.name = Trilho de Desembarque de Carga
+tile.mfr.rail.cargo.pickup.name = Trilho de Embarque de Carga
+tile.mfr.rail.passenger.dropoff.name = Trilho de Desembarque de Passageiros
+tile.mfr.rail.passenger.pickup.name = Trilho de Embarque de Passageiros
 
 tile.mfr.cable.redstone.name = Cabo RedNet
 tile.mfr.cable.redstone.glass.name = Cabo RedNet
@@ -245,7 +245,7 @@ item.mfr.straw.name = Canudo
 item.mfr.rednet.meter.name = Medidor RedNet
 item.mfr.rednet.meter.info.name = Multimedidor RedNet
 item.mfr.rednet.meter.debug.name = Depurador
-item.mfr.rednet.memorycard.name = Cartão de Memória PRC
+item.mfr.rednet.memorycard.name = Cartão de Memória CRP
 
 item.mfr.meat.ingot.raw.name = Barra de Carne Crua
 item.mfr.meat.ingot.cooked.name = Barra de Carne Cozida
@@ -262,39 +262,39 @@ item.mfr.rocket.smart.name = Super Projétil Anti-Matéria Guiado
 item.mfr.rocketlauncher.name = Lança-SPAM
 item.mfr.fishingrod.name = Vara de Pescar
 
-item.mfr.ceramicdye.white.name = Corante de Cerâmica (White)
-item.mfr.ceramicdye.orange.name = Corante de Cerâmica (Orange)
+item.mfr.ceramicdye.white.name = Corante de Cerâmica (Branco)
+item.mfr.ceramicdye.orange.name = Corante de Cerâmica (Laranja)
 item.mfr.ceramicdye.magenta.name = Corante de Cerâmica (Magenta)
-item.mfr.ceramicdye.lightblue.name = Corante de Cerâmica (Light Blue)
-item.mfr.ceramicdye.yellow.name = Corante de Cerâmica (Yellow)
-item.mfr.ceramicdye.lime.name = Corante de Cerâmica (Lime)
-item.mfr.ceramicdye.pink.name = Corante de Cerâmica (Pink)
-item.mfr.ceramicdye.gray.name = Corante de Cerâmica (Gray)
-item.mfr.ceramicdye.lightgray.name = Corante de Cerâmica (Light Gray)
-item.mfr.ceramicdye.cyan.name = Corante de Cerâmica (Cyan)
-item.mfr.ceramicdye.purple.name = Corante de Cerâmica (Purple)
-item.mfr.ceramicdye.blue.name = Corante de Cerâmica (Blue)
-item.mfr.ceramicdye.brown.name = Corante de Cerâmica (Brown)
-item.mfr.ceramicdye.green.name = Corante de Cerâmica (Green)
-item.mfr.ceramicdye.red.name = Corante de Cerâmica (Red)
-item.mfr.ceramicdye.black.name = Corante de Cerâmica (Black)
+item.mfr.ceramicdye.lightblue.name = Corante de Cerâmica (Azul Claro)
+item.mfr.ceramicdye.yellow.name = Corante de Cerâmica (Amarelo)
+item.mfr.ceramicdye.lime.name = Corante de Cerâmica (Lima)
+item.mfr.ceramicdye.pink.name = Corante de Cerâmica (Rosa)
+item.mfr.ceramicdye.gray.name = Corante de Cerâmica (Cinza)
+item.mfr.ceramicdye.lightgray.name = Corante de Cerâmica (Cinza Claro)
+item.mfr.ceramicdye.cyan.name = Corante de Cerâmica (Ciano)
+item.mfr.ceramicdye.purple.name = Corante de Cerâmica (Lilás)
+item.mfr.ceramicdye.blue.name = Corante de Cerâmica (Azul)
+item.mfr.ceramicdye.brown.name = Corante de Cerâmica (Marrom)
+item.mfr.ceramicdye.green.name = Corante de Cerâmica (Verde)
+item.mfr.ceramicdye.red.name = Corante de Cerâmica (Vermelho)
+item.mfr.ceramicdye.black.name = Corante de Cerâmica (Preto)
 
-item.mfr.laserfocus.white.name = Foco de Laser (White)
-item.mfr.laserfocus.orange.name = Foco de Laser (Orange) ####
+item.mfr.laserfocus.white.name = Foco de Laser (Branco)
+item.mfr.laserfocus.orange.name = Foco de Laser (Laranja)
 item.mfr.laserfocus.magenta.name = Foco de Laser (Magenta)
-item.mfr.laserfocus.lightblue.name = Foco de Laser (Light Blue)
-item.mfr.laserfocus.yellow.name = Foco de Laser (Yellow)
-item.mfr.laserfocus.lime.name = Foco de Laser (Lime)
-item.mfr.laserfocus.pink.name = Foco de Laser (Pink)
-item.mfr.laserfocus.gray.name = Foco de Laser (Gray)
-item.mfr.laserfocus.lightgray.name = Foco de Laser (Light Gray)
-item.mfr.laserfocus.cyan.name = Foco de Laser (Cyan)
-item.mfr.laserfocus.purple.name = Foco de Laser (Purple)
-item.mfr.laserfocus.blue.name = Foco de Laser (Blue)
-item.mfr.laserfocus.brown.name = Foco de Laser (Brown)
-item.mfr.laserfocus.green.name = Foco de Laser (Green)
-item.mfr.laserfocus.red.name = Foco de Laser (Red)
-item.mfr.laserfocus.black.name = Foco de Laser (Black)
+item.mfr.laserfocus.lightblue.name = Foco de Laser (Azul Claro)
+item.mfr.laserfocus.yellow.name = Foco de Laser (Amarelo)
+item.mfr.laserfocus.lime.name = Foco de Laser (Lima)
+item.mfr.laserfocus.pink.name = Foco de Laser (Rosa)
+item.mfr.laserfocus.gray.name = Foco de Laser (Cinza)
+item.mfr.laserfocus.lightgray.name = Foco de Laser (Cinza Claro)
+item.mfr.laserfocus.cyan.name = Foco de Laser (Ciano)
+item.mfr.laserfocus.purple.name = Foco de Laser (Lilás)
+item.mfr.laserfocus.blue.name = Foco de Laser (Azul)
+item.mfr.laserfocus.brown.name = Foco de Laser (Marrom)
+item.mfr.laserfocus.green.name = Foco de Laser (Verde)
+item.mfr.laserfocus.red.name = Foco de Laser (Vermelho)
+item.mfr.laserfocus.black.name = Foco de Laser (Preto)
 
 item.mfr.upgrade.radius.cobble.name = Melhoria (Pedregulho)
 item.mfr.upgrade.radius.lapis.name = Melhoria (Lápis)
@@ -309,9 +309,9 @@ item.mfr.upgrade.radius.diamond.name = Melhoria (Diamante)
 item.mfr.upgrade.radius.platinum.name = Melhoria (Platina)
 item.mfr.upgrade.radius.emerald.name = Melhoria (Esmeralda)
 
-item.mfr.upgrade.logic.100.name = Cartão de Expansão de Lógica PRC LX-100 
-item.mfr.upgrade.logic.300.name = Cartão de Expansão de Lógica PRC LX-300
-item.mfr.upgrade.logic.500.name = Cartão de Expansão de Lógica PRC LX-500
+item.mfr.upgrade.logic.100.name = Cartão de Expansão de Lógica CRP LX-100 
+item.mfr.upgrade.logic.300.name = Cartão de Expansão de Lógica CRP LX-300
+item.mfr.upgrade.logic.500.name = Cartão de Expansão de Lógica CRP LX-500
 
 item.mfr.needlegun.name = Flechete
 item.mfr.needlegun.ammo.empty.name = Carregador de Flechete
@@ -339,8 +339,8 @@ circuit.mfr.boolean.notequal = Not Equals
 circuit.mfr.counter = Counter
 circuit.mfr.decompose.decimal = Decompose Int -> Decimal
 circuit.mfr.delay = Delay
-circuit.mfr.delay8ch = Delay (8-Channel)
-circuit.mfr.demux.16.analog = DeMux (16-Out, Analog)
+circuit.mfr.delay8ch = Delay (8-Canais)
+circuit.mfr.demux.16.analog = DeMux (16-Saídas, Analógicos)
 circuit.mfr.demux.4 = DeMux (4-Saídas)
 circuit.mfr.fanout = Fanout
 circuit.mfr.flipflop.jk = JK-FlipFlop
@@ -410,28 +410,28 @@ chat.info.mfr.ruler.startposition = Posição inicial gravada.
 chat.info.mfr.ruler.distance = distância: %d, contagem: %d
 chat.info.mfr.ruler.total = Distância Total: %.1f
 
-chat.info.mfr.rednet.meter.cable.allzero = All RedNet subnets are 0
-chat.info.mfr.rednet.meter.cable.restzero = All other RedNet subnets are 0
-chat.info.mfr.rednet.meter.varprefix = Variable
-chat.info.mfr.rednet.meter.var.allzero = All variables are 0
-chat.info.mfr.rednet.meter.var.restzero = All other variables are 0
-chat.info.mfr.rednet.meter.dustprefix = Redstone Dust
+chat.info.mfr.rednet.meter.cable.allzero = Todas as subredes RedNet são 0
+chat.info.mfr.rednet.meter.cable.restzero = Todas as outras subredes RedNet são 0
+chat.info.mfr.rednet.meter.varprefix = Variável
+chat.info.mfr.rednet.meter.var.allzero = Todas as variáveis são 0
+chat.info.mfr.rednet.meter.var.restzero = Todas as outras variáveis são 0
+chat.info.mfr.rednet.meter.dustprefix = Pó de Redstone
 
-chat.info.mfr.rednet.memorycard.uploaded = PRC program uploaded to memory card from PRC
-chat.info.mfr.rednet.memorycard.downloaded = PRC program downloaded from memory card to PRC
-chat.info.mfr.rednet.memorycard.error = PRC contains insufficient circuits to hold this program
+chat.info.mfr.rednet.memorycard.uploaded = Programa do CRP enviado para o cartão de memória do CRP
+chat.info.mfr.rednet.memorycard.downloaded = Programa do CRP baixado do cartão de memória para o CRP
+chat.info.mfr.rednet.memorycard.error = O CRP contém circuitos insuficientes para carregar este programa
 
-chat.info.mfr.rednet.tile.standard = Set cable to standard connection mode
-chat.info.mfr.rednet.tile.cableonly = Set cable to cable-only connection mode
+chat.info.mfr.rednet.tile.standard = Ajustar o lado para o modo de conexão padrão
+chat.info.mfr.rednet.tile.cableonly = Ajustar o lado para o modo de conexão de apenas cabos
 
-chat.info.mfr.rednet.connection.standard = Set side to standard connection mode
-chat.info.mfr.rednet.connection.forced = Set side to forced-connection mode
-chat.info.mfr.rednet.connection.forcedstrong = Set side to strong-connection mode
-chat.info.mfr.rednet.connection.cableonly = Set side to cable-only connection mode
+chat.info.mfr.rednet.connection.standard = Ajustar o lado para o modo de conexão padrão
+chat.info.mfr.rednet.connection.forced = Ajustar o lado para o modo de conexão forçada
+chat.info.mfr.rednet.connection.forcedstrong = Ajustar o lado para o modo de conexão forte
+chat.info.mfr.rednet.connection.cableonly = Ajustar o lado para o modo de conexão de apenas cabos
 
-chat.info.mfr.fluid.connection.disabled = Lado ajustado para o modo conexão desativada.
-chat.info.mfr.fluid.connection.output = Lado ajudstado para o modo conexão de saída.
-chat.info.mfr.fluid.connection.extract = Lado ajustado para o modo conexão de extração.
+chat.info.mfr.fluid.connection.disabled = Ajustar o lado para o modo de conexão desativada.
+chat.info.mfr.fluid.connection.output = Ajustar o lado para o modo de conexão de saída.
+chat.info.mfr.fluid.connection.extract = Ajustar o lado para o modo de conexão de extração.
 
 chat.info.mfr.fluid.install.torch = Tocha de Redstone instalada, controle por RS invertido.
 chat.info.mfr.fluid.install.block = Bloco de Redstone instalado, controle por RS desativado.
@@ -443,13 +443,13 @@ chat.info.mfr.chunkloader.noticket = Você tem muitos carregadores de chunk, e e
 # Tooltips: these can be added to any item by a lang file, but they cannot be removed
 # this is a limitation of the localization system.
 # Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
-# displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
+# displayed under the item with exceptions, such as the CRP which uses a custom entry for legacy reasons
 
 tip.info.mfr.rubberwood.sapling.massive = Aviso: Enviado do mundo do Pakratt.
 
 tip.info.mfr.prc = Se você está perdido, leia o manual (dentro do jogo).
 
-tip.info.mfr.xpextractor = Requer um contêiner vazio para preencher.
+tip.info.mfr.xpextractor = Requer um recipiente vazio para preencher.
 
 tip.info.mfr.mobcounter = Emite um sinal analógico de redstone \nproporcional à contagem de \nmobs dentro da área.
 
