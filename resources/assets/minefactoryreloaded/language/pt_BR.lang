@@ -1,19 +1,19 @@
 tile.mfr.machine.planter.name = Plantador
 tile.mfr.machine.fisher.name = Pescador
 tile.mfr.machine.harvester.name = Colhedor
-tile.mfr.machine.rancher.name = Rancher ####
+tile.mfr.machine.rancher.name = Rancheiro
 tile.mfr.machine.fertilizer.name = Fertilizador
 tile.mfr.machine.vet.name = Estação Veterinária
 tile.mfr.machine.itemcollector.name = Coletor de Itens
 tile.mfr.machine.blockbreaker.name = Quebrador de Blocos
 tile.mfr.machine.weathercollector.name = Coletor de Clima
-tile.mfr.machine.sludgeboiler.name = Sludge Boiler ####
+tile.mfr.machine.sludgeboiler.name = Caldeira de Lodo
 tile.mfr.machine.sewer.name = Esgoto
 tile.mfr.machine.composter.name = Composteira
 tile.mfr.machine.breeder.name = Acasalador
-tile.mfr.machine.grinder.name = Grinder ####
+tile.mfr.machine.grinder.name = Triturador
 tile.mfr.machine.autoenchanter.name = Auto-Encantador
-tile.mfr.machine.chronotyper.name = Cronotyper ####
+tile.mfr.machine.chronotyper.name = Cronotipador
 
 tile.mfr.machine.ejector.name = Ejetor
 tile.mfr.machine.itemrouter.name = Roteador de Itens
@@ -130,26 +130,26 @@ tile.mfr.decorative.stone.black.brick.large.name = Tijolos Largos de Pedra-Negra
 tile.mfr.decorative.stone.black.gravel.name = Cascalho de Pedra-Negra
 tile.mfr.decorative.stone.black.paved.name = Pedra-Negra Pavimentada
 tile.mfr.decorative.stone.white.smooth.name = Pedra-Branca Suave
-tile.mfr.decorative.stone.white.cobble.name = Pedre ####
-tile.mfr.decorative.stone.white.brick.small.name = Small Whitestone Bricks
-tile.mfr.decorative.stone.white.brick.large.name = Large Whitestone Bricks
-tile.mfr.decorative.stone.white.gravel.name = Whitestone Gravel
-tile.mfr.decorative.stone.white.paved.name = Paved Whitestone
+tile.mfr.decorative.stone.white.cobble.name = Pedregulho de Pedra-Branca
+tile.mfr.decorative.stone.white.brick.small.name = Tijolos Pequenos de Pedra-Branca
+tile.mfr.decorative.stone.white.brick.large.name = Tijolos Largos de Pedra-Branca
+tile.mfr.decorative.stone.white.gravel.name = Cascalho de Pedra-Branca
+tile.mfr.decorative.stone.white.paved.name = Pedra-Branca Pavimentada
 
-tile.mfr.pinkslime.block.name = Pink Slime Block
+tile.mfr.pinkslime.block.name = Bloco de Gosma Rosa
 
 tile.ice.unmelting.name = Gelo (Inderretível)
 
-tile.mfr.vinescaffold.name = Vine Scaffolding
+tile.mfr.vinescaffold.name = Andaime de Vinhas
 
 tile.mfr.detcord.name = Corda de Detonação
 
 tile.mfr.farmland.name = Solo Fértil
 
-tile.mfr.rubberwood.sapling.name = Rubber Sapling
-tile.mfr.rubberwood.sapling.sacred.name = Sacred Rubber Sapling
-tile.mfr.rubberwood.sapling.mega.name = Mega Rubber Sapling
-tile.mfr.rubberwood.sapling.massive.name = Sacred Rubber Sapling
+tile.mfr.rubberwood.sapling.name = Muda de Borracha
+tile.mfr.rubberwood.sapling.sacred.name = Muda de Borracha Sagrada
+tile.mfr.rubberwood.sapling.mega.name = Muda de Mega Borracha
+tile.mfr.rubberwood.sapling.massive.name = Muda de Borracha Sagrada
 tile.mfr.rubberwood.log.name = Madeira de Borracha
 tile.mfr.rubberwood.leaves.name = Folhas de Borracha
 tile.mfr.rubberwood.leaves.dry.name = Folhas de Borracha Secas
@@ -184,7 +184,7 @@ fluid.mfr.chocolatemilk.still.name = Leite com Chocolate
 fluid.mfr.mushroomsoup.still.name = Sopa de Cogumelos
 fluid.mfr.steam.still.name = Vapor
 
-entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Slime Rosa
+entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Gosma Rosa
 
 item.mfr.bucket.milk.name = Balde de Leite
 item.mfr.bucket.sewage.name = Balde de Esgoto
@@ -255,7 +255,7 @@ item.mfr.meat.nugget.cooked.name = Pepita de "Carne" Cozida
 item.mfr.pinkslime.display = Slime Rosa
 item.mfr.pinkslime.ability = Slimy\nRosa
 item.mfr.pinkslime.ball.name = Bola de Gosma Rosa
-item.mfr.pinkslime.gem.name = Cristal de Slime Rosa
+item.mfr.pinkslime.gem.name = Cristal de Gosma Rosa
 
 item.mfr.rocket.name = Super Projétil Anti-Matéria
 item.mfr.rocket.smart.name = Super Projétil Anti-Matéria Guiado
@@ -324,28 +324,28 @@ item.mfr.needlegun.ammo.fire.name = Munição de Flechete (Fogo)
 item.mfr.needlegun.ammo.anvil.name = Munição de Flechete (Bigorna)
 
 circuit.mfr.noop = (No-Op)
-circuit.mfr.adder.analog = Adder (Analog)
-circuit.mfr.adder.digital.full = Adder (Digital, Full)
-circuit.mfr.adder.digital.half = Adder (Digital, Half) ####
+circuit.mfr.adder.analog = Adicionador (Analógico)
+circuit.mfr.adder.digital.full = Adicionador (Digital, Cheio)
+circuit.mfr.adder.digital.half = Adicionador (Digital, Metade)
 circuit.mfr.and.2 = And (2-Entradas)
 circuit.mfr.and.3 = And (3-Entradas)
 circuit.mfr.and.4 = And (4-Entradas)
-circuit.mfr.boolean.equal = Equals
-circuit.mfr.boolean.greater = Greater Than
-circuit.mfr.boolean.greaterequal = Greater Than Or Equal
-circuit.mfr.boolean.less = Less Than
-circuit.mfr.boolean.lessequal = Less Than Or Equal
-circuit.mfr.boolean.notequal = Not Equals
-circuit.mfr.counter = Counter
-circuit.mfr.decompose.decimal = Decompose Int -> Decimal
+circuit.mfr.boolean.equal = Igual A
+circuit.mfr.boolean.greater = Maior Que
+circuit.mfr.boolean.greaterequal = Maior ou Igual A
+circuit.mfr.boolean.less = Menor Que
+circuit.mfr.boolean.lessequal = Menor ou Igual A
+circuit.mfr.boolean.notequal = Não Igual A
+circuit.mfr.counter = Contador
+circuit.mfr.decompose.decimal = Decompor Int -> Decimal
 circuit.mfr.delay = Delay
 circuit.mfr.delay8ch = Delay (8-Canais)
-circuit.mfr.demux.16.analog = DeMux (16-Saídas, Analógicos)
+circuit.mfr.demux.16.analog = DeMux (16-Saídas, Analógicas)
 circuit.mfr.demux.4 = DeMux (4-Saídas)
 circuit.mfr.fanout = Fanout
 circuit.mfr.flipflop.jk = JK-FlipFlop
 circuit.mfr.flipflop.t = T-FlipFlop
-circuit.mfr.inverter = Inverter
+circuit.mfr.inverter = Inversor
 circuit.mfr.latch.d.clocked = D-Latch (Clocked)
 circuit.mfr.latch.d.gated = D-Latch (Gated)
 circuit.mfr.latch.sr = Latch SR
@@ -357,7 +357,7 @@ circuit.mfr.min.2 = Mínimo (2-Entradas)
 circuit.mfr.min.3 = Mínimo (3-Entradas)
 circuit.mfr.min.4 = Mínimo (4-Entradas)
 circuit.mfr.multiplier = Multiplicador
-circuit.mfr.multipulse = Multipulsp
+circuit.mfr.multipulse = Multipulso
 circuit.mfr.mux.16.analog = Mux (15-Entradas, Analógico)
 circuit.mfr.mux.4 = Mux (4-Entradas)
 circuit.mfr.nand.2 = Nand (2-Entradas)
@@ -377,7 +377,7 @@ circuit.mfr.passthrough.roundrobin = Passthrough (Anel)
 circuit.mfr.pulselengthener = Prolongador de Pulso
 circuit.mfr.randomizer.analog = Aleatorizador (Analógico)
 circuit.mfr.randomizer.digital = Aleatorizador (Digital)
-circuit.mfr.scaler = Escalador
+circuit.mfr.scaler = Scaler
 circuit.mfr.schmitttrigger = Disparador Schmitt
 circuit.mfr.sevensegmentencoder = Codificador de Sete Segmentos
 circuit.mfr.subtractor = Subtrator
@@ -421,17 +421,17 @@ chat.info.mfr.rednet.memorycard.uploaded = Programa do CRP enviado para o cartã
 chat.info.mfr.rednet.memorycard.downloaded = Programa do CRP baixado do cartão de memória para o CRP
 chat.info.mfr.rednet.memorycard.error = O CRP contém circuitos insuficientes para carregar este programa
 
-chat.info.mfr.rednet.tile.standard = Ajustar o lado para o modo de conexão padrão
-chat.info.mfr.rednet.tile.cableonly = Ajustar o lado para o modo de conexão de apenas cabos
+chat.info.mfr.rednet.tile.standard = Ajusta o lado para o modo de conexão padrão
+chat.info.mfr.rednet.tile.cableonly = Ajusta o lado para o modo de conexão de apenas cabos
 
-chat.info.mfr.rednet.connection.standard = Ajustar o lado para o modo de conexão padrão
-chat.info.mfr.rednet.connection.forced = Ajustar o lado para o modo de conexão forçada
-chat.info.mfr.rednet.connection.forcedstrong = Ajustar o lado para o modo de conexão forte
-chat.info.mfr.rednet.connection.cableonly = Ajustar o lado para o modo de conexão de apenas cabos
+chat.info.mfr.rednet.connection.standard = Ajusta o lado para o modo de conexão padrão
+chat.info.mfr.rednet.connection.forced = Ajusta o lado para o modo de conexão forçada
+chat.info.mfr.rednet.connection.forcedstrong = Ajusta o lado para o modo de conexão forte
+chat.info.mfr.rednet.connection.cableonly = Ajusta o lado para o modo de conexão de apenas cabos
 
-chat.info.mfr.fluid.connection.disabled = Ajustar o lado para o modo de conexão desativada.
-chat.info.mfr.fluid.connection.output = Ajustar o lado para o modo de conexão de saída.
-chat.info.mfr.fluid.connection.extract = Ajustar o lado para o modo de conexão de extração.
+chat.info.mfr.fluid.connection.disabled = Ajusta o lado para o modo de conexão desativada.
+chat.info.mfr.fluid.connection.output = Ajusta o lado para o modo de conexão de saída.
+chat.info.mfr.fluid.connection.extract = Ajusta o lado para o modo de conexão de extração.
 
 chat.info.mfr.fluid.install.torch = Tocha de Redstone instalada, controle por RS invertido.
 chat.info.mfr.fluid.install.block = Bloco de Redstone instalado, controle por RS desativado.
