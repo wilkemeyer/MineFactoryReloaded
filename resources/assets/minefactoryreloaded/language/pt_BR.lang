@@ -231,6 +231,7 @@ item.mfr.record.blank.name = Disco em Branco
 item.mfr.safarinet.reusable.name = Rede de Safari (Reutilizável)
 item.mfr.safarinet.singleuse.name = Rede de Safari (Uso único)
 item.mfr.safarinet.jailer.name = Rede de Safari do Carcereiro
+item.mfr.safarinet.jailer.fancy.name = Rede de Safari Dourada do Carcereiro
 item.mfr.safarinet.launcher.name = Lançador de Rede de Safari
 
 item.mfr.sugarcharcoal.name = Carvão Vegetal de Açúcar
@@ -252,7 +253,7 @@ item.mfr.meat.ingot.cooked.name = Barra de Carne Cozida
 item.mfr.meat.nugget.raw.name = Pepita de "Carne" Crua
 item.mfr.meat.nugget.cooked.name = Pepita de "Carne" Cozida
 
-item.mfr.pinkslime.display = Slime Rosa
+item.mfr.pinkslime = Slime Rosa
 item.mfr.pinkslime.ability = Slimy\nRosa
 item.mfr.pinkslime.ball.name = Bola de Gosma Rosa
 item.mfr.pinkslime.gem.name = Cristal de Gosma Rosa
@@ -401,7 +402,7 @@ chat.info.mfr.safarinet.release = Trocado para o modo de soltura.
 
 chat.info.mfr.spyglass.nosight = Nada a vista.
 chat.info.mfr.spyglass.hitentity = Achei um %s em %.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitblock = Achei um %s [%s:%d] em %.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitblock = Achei um %s [%s#%d] em %.0f, %.0f, %.0f 
 chat.info.mfr.spyglass.hitunknown = Achei um DESCONHECIDO (mod bugado?) em %.1f, %.1f, %.1f
 
 chat.info.mfr.ruler.nosight = Nada a vista.
@@ -423,6 +424,7 @@ chat.info.mfr.rednet.memorycard.error = O CRP contém circuitos insuficientes pa
 
 chat.info.mfr.rednet.tile.standard = Ajusta o lado para o modo de conexão padrão
 chat.info.mfr.rednet.tile.cableonly = Ajusta o lado para o modo de conexão de apenas cabos
+chat.info.mfr.rednet.memorycard.error2 = Esse CRP está sendo usado por alguém
 
 chat.info.mfr.rednet.connection.standard = Ajusta o lado para o modo de conexão padrão
 chat.info.mfr.rednet.connection.forced = Ajusta o lado para o modo de conexão forçada
@@ -461,8 +463,12 @@ tip.info.mfr.laserdrillprecharger = Colocado a um bloco de um alvo laser válido
 tip.info.mfr.cannotplace = Não se pode colocar por mais %s segundos.
 
 tip.info.mfr.safarinet.mode = Clique agachado para mudar o modo
-tip.info.mfr.safarinet.jailer = Criaturas soltas não despawnam normalmente.
+tip.info.mfr.safarinet.persistent = Criaturas soltas não despawnam normalmente.
+tip.info.mfr.safarinet.nametag = Criaturas soltas irão sempre mostrar sua nametag
 tip.info.mfr.safarinet.mystery = É um mistério
+
+tip.info.mfr.memorycard.programmedFor = Programado para:\n      \u00A7a%s
+tip.info.mfr.memorycard.programmed = \u0020     \u00A7aProgramou %d circuitos
 
 tip.info.mfr.memorycard.wipe = Coloque em uma grade de crafting para limpar.
 
