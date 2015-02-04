@@ -79,6 +79,7 @@ public class GrindingWorldServer extends WorldServerProxy
 
 	public boolean addEntityForGrinding(Entity entity)
 	{
+		difficultySetting = proxiedWorld.difficultySetting;
 		if(entity.worldObj == this) return true;
 		if(entity.worldObj == this.proxiedWorld)
 		{
