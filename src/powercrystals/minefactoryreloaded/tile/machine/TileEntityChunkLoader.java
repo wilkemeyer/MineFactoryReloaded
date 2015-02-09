@@ -113,7 +113,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			return;
 		_radius = r;
 		markDirty();
-		if (!worldObj.isRemote)
+		if (worldObj != null && !worldObj.isRemote)
 			forceChunks();
 	}
 
