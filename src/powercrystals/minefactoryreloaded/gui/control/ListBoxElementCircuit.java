@@ -3,41 +3,41 @@ package powercrystals.minefactoryreloaded.gui.control;
 import cofh.lib.gui.element.ElementListBox;
 import cofh.lib.gui.element.listbox.IListBoxElement;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.StatCollector;
-
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
-public class ListBoxElementCircuit implements IListBoxElement
-{
+public class ListBoxElementCircuit implements IListBoxElement {
+
 	private IRedNetLogicCircuit _circuit;
-	
-	public ListBoxElementCircuit(IRedNetLogicCircuit circuit)
-	{
+	private ElementListBox gui;
+
+	public ListBoxElementCircuit(ElementListBox gui, IRedNetLogicCircuit circuit) {
+
 		_circuit = circuit;
+		this.gui = gui;
 	}
-	
+
 	@Override
-	public Object getValue()
-	{
+	public Object getValue() {
+
 		return _circuit;
 	}
-	
+
 	@Override
-	public int getHeight()
-	{
+	public int getHeight() {
+
 		return 10;
 	}
-	
+
 	@Override
-	public int getWidth()
-	{
-		return Minecraft.getMinecraft().fontRenderer.getStringWidth(StatCollector.translateToLocal(_circuit.getUnlocalizedName()));
+	public int getWidth() {
+
+		return gui.getFontRenderer().getStringWidth(MFRUtil.localize(_circuit.getUnlocalizedName()));
 	}
-	
+
 	@Override
-	public void draw(ElementListBox listBox, int x, int y, int backColor, int textColor)
-	{
-		listBox.getContainerScreen().getFontRenderer().drawString(StatCollector.translateToLocal(_circuit.getUnlocalizedName()), x, y, textColor);
+	public void draw(ElementListBox listBox, int x, int y, int backColor, int textColor) {
+
+		listBox.getFontRenderer().drawString(MFRUtil.localize(_circuit.getUnlocalizedName()), x, y, textColor);
 	}
 }
