@@ -274,12 +274,25 @@ public class Machine
 		}
 	}
 
+	private String getTooltipText() {
+
+		return "tip.info.mfr." + _name.toLowerCase();
+	}
+
+	public boolean hasTooltip(ItemStack stack) {
+
+		if (stack.stackTagCompound != null)
+			if (_energyStoredMax > 0 && stack.stackTagCompound.hasKey("energyStored"))
+				return true;
+		return _activationEnergy > 0 || StatCollector.canTranslate(getTooltipText());
+	}
+
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 	{
 		if (stack.stackTagCompound != null)
 		{
 			NBTTagCompound tag = stack.stackTagCompound;
-			if (_energyStoredMax > 0) {
+			if (_energyStoredMax > 0 && tag.hasKey("energyStored")) {
 				String max = StringHelper.getScaledNumber(_energyStoredMax);
 				String cur = StringHelper.getScaledNumber(Math.min(_energyStoredMax, tag.getInteger("energyStored")));
 				info.add(MFRUtil.localize("info.cofh.energyStored", true) + ": " + cur + " / " + max + " RF");
@@ -293,7 +306,7 @@ public class Machine
 			} else
 				info.add(MFRUtil.localize("info.cofh.energyConsume", true) + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
 		}
-		String s = "tip.info.mfr." + _name.toLowerCase();
+		String s = getTooltipText();
 		if (StatCollector.canTranslate(s))
 		{
 			s = StatCollector.translateToLocal(s);
