@@ -5,6 +5,7 @@ import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
 import cofh.lib.util.position.BlockPosition;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -238,6 +239,8 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	{
 		if (debug) {
 			info.add(new ChatComponentText("Grid: " + grid));
+			if (grid != null)
+				info.add(new ChatComponentText(Arrays.toString(grid.getStorage().tanks)));
 		}
 		if (grid == null) {
 			info.add(new ChatComponentText("Null Grid!!"));

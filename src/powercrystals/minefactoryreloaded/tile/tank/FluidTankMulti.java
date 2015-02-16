@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded.tile.tank;
 import cofh.core.util.fluid.FluidTankAdv;
 import com.google.common.base.Throwables;
 
+import java.util.Arrays;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
@@ -19,6 +21,8 @@ public class FluidTankMulti implements IFluidTank {
 	}
 
 	public void addTank(FluidTankAdv tank) {
+		if (tank == null)
+			throw new IllegalArgumentException("null");
 		for (int i = length; i --> 0; )
 			if (tanks[i] == tank)
 				return;
@@ -33,6 +37,8 @@ public class FluidTankMulti implements IFluidTank {
 	}
 
 	public void removeTank(FluidTankAdv tank) {
+		if (tank == null)
+			throw new IllegalArgumentException("null");
 		int i = length;
 		while (i --> 0) if (tanks[i] == tank) break;
 		if (i < 0) return;
@@ -45,7 +51,7 @@ public class FluidTankMulti implements IFluidTank {
 			if (length <= old.length / 4) {
 				tanks = new FluidTankAdv[old.length / 2];
 				if (i > 0)
-					System.arraycopy(old, 0, tanks, 0, i);
+					System.arraycopy(old, 0, tanks, 0, tanks.length);
 			}
 		}
 
@@ -94,6 +100,7 @@ public class FluidTankMulti implements IFluidTank {
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
+		try {
 		int f = 0;
 		if (resource != null && (fluid == null || fluid.isFluidEqual(resource))) {
 			int i = index;
@@ -118,6 +125,11 @@ public class FluidTankMulti implements IFluidTank {
 			}
 		}
 		return f;
+		} catch (Throwable _) {
+			System.out.format("%s, ", Arrays.toString(tanks));
+			System.out.format("index: %s, length: %s, tanks.length: %s, grid: %s\n", index, length, tanks.length, grid);
+			throw Throwables.propagate(_);
+		}
 	}
 
 	@Override
@@ -151,7 +163,8 @@ public class FluidTankMulti implements IFluidTank {
 			return r;
 		}
 		} catch (Throwable _) {
-			System.out.format("index: %s, length: %s, tanks.length: %s, ", index, length, tanks.length);
+			System.out.format("%s, ", Arrays.toString(tanks));
+			System.out.format("index: %s, length: %s, tanks.length: %s, grid: %s\n", index, length, tanks.length, grid);
 			throw Throwables.propagate(_);
 		}
 		return null;
