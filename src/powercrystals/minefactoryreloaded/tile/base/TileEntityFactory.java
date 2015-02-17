@@ -76,12 +76,9 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 		_forwardDirection = ForgeDirection.NORTH;
 	}
 
-	@Override
-	public void validate()
+	public void cofh_validate()
 	{
-		tileEntityInvalid = true;
 		onRotate();
-		super.validate();
 		if (worldObj.isRemote && hasHAM())
 		{
 			MineFactoryReloadedClient.addTileToAreaList(this);
