@@ -123,7 +123,9 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 					FluidStack l = FluidContainerRegistry.getFluidForFilledItem(_inventory[i]);
 					if (l == null) break l;
 
-					requiredItems.add(new ItemResourceTracker(i, l, l.amount));
+					ItemResourceTracker t = new ItemResourceTracker(i, l, l.amount);
+					t.item = _inventory[i];
+					requiredItems.add(t);
 					continue i;
 				}
 
@@ -141,14 +143,20 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 				int size = item.stackSize;
 				for (ItemResourceTracker t : requiredItems)
 				{
-					if (ItemHelper.itemsEqualForCrafting(t.item, item))
+					if (t.fluid != null && t.fluid.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(item))) {
+						int a = FluidContainerRegistry.getFluidForFilledItem(item).amount;
+						int f = Math.min(a * size, t.required - t.found);
+						t.found += f;
+						size -= (int) Math.ceil(f / (float)a);
+					}
+					else if (ItemHelper.itemsEqualForCrafting(t.item, item))
 					{
 						int f = Math.min(size, t.required - t.found);
 						t.found += f;
 						size -= f;
-						if (size <= 0)
-							break;
 					}
+					if (size <= 0)
+						break;
 				}
 			}
 		}
@@ -194,12 +202,18 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 			{
 				for (ItemResourceTracker t : requiredItems)
 				{
-					if (ItemHelper.itemsEqualForCrafting(t.item, item))
+					boolean fluid = t.fluid != null &&
+							t.fluid.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(item));
+					if (fluid || ItemHelper.itemsEqualForCrafting(t.item, item))
 					{
-						int use;
+						int use = 0;
+						if (fluid) {
+							use = FluidContainerRegistry.getFluidForFilledItem(item).amount;
+						}
 						if (item.getItem().hasContainerItem(item))
 						{
-							use = 1;
+							if (!fluid)
+								use = 1;
 							ItemStack container = item.getItem().getContainerItem(_inventory[i]);
 							boolean nul = true;
 							l: {
@@ -218,6 +232,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 							}
 							if (nul)
 								_inventory[i] = null;
+						}
+						else if (fluid)
+						{
+							int use2 = Math.min((int)Math.ceil(t.required / (float)use), item.stackSize);
+							item.stackSize -= use2;
+							use = Math.min(use * use2, t.required);
 						}
 						else
 						{
@@ -249,7 +269,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 
 			for (ItemResourceTracker t : requiredItems)
 			{
-				if (l.isFluidEqual(t.fluid))
+				if (t.required != 0 && l.isFluidEqual(t.fluid))
 				{
 					int use = Math.min(t.required, l.amount);
 					_tanks[i].drain(use, true);
