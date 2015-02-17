@@ -100,6 +100,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		_lastRedstoneState = redstoneState;
 	}
 
+	@Override
+	public boolean hasDrops()
+	{
+		return outputs.size() != 0;
+	}
+
 	private void checkResources()
 	{
 		List<ItemResourceTracker> requiredItems = this.requiredItems;

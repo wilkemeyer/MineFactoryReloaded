@@ -21,16 +21,17 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
 public class ContainerLiquiCrafter extends ContainerFactoryInventory
 {
 	private TileEntityLiquiCrafter _crafter;
-	
+
 	private int _tempTankIndex;
 	private int _tempLiquidId;
-	
+	public boolean drops;
+
 	public ContainerLiquiCrafter(TileEntityLiquiCrafter crafter, InventoryPlayer inventoryPlayer)
 	{
 		super(crafter, inventoryPlayer);
 		_crafter = crafter;
 	}
-	
+
 	@Override
 	protected void addSlots()
 	{
@@ -41,10 +42,10 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 				addSlotToContainer(new SlotFake(_te, j + i * 3, 28 + 8 + j * 18, 20 + i * 18));
 			}
 		}
-		
+
 		addSlotToContainer(new SlotViewOnly(_te, 9, 28 + 80, 38));
 		addSlotToContainer(new SlotRemoveOnly(_te, 10, 28 + 134, 38));
-		
+
 		for(int i = 0; i < 2; i++)
 		{
 			for(int j = 0; j < 9; j++)
@@ -53,7 +54,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 			}
 		}
 	}
-	
+
 	@Override
 	public void detectAndSendChanges()
 	{
@@ -62,9 +63,10 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 		int tankIndex = (int)(_crafter.getWorldObj().getTotalWorldTime() % tanks.length);
 		FluidTankInfo tank = tanks[tankIndex];
 		FluidStack l = tank.fluid;
-		
+
 		for(int i = 0; i < crafters.size(); i++)
 		{
+			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 3, _crafter.hasDrops() ? 1 : 0);
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 0, tankIndex);
 			if(l != null)
 			{
@@ -78,7 +80,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 			}
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int var, int value)
@@ -86,24 +88,25 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 		super.updateProgressBar(var, value);
 		if(var == 0) _tempTankIndex = value;
 		else if(var == 1) _tempLiquidId = value;
+		else if(var == 3) drops = value != 0;
 		else if(var == 2)
 		{
 			_crafter.getTanks()[_tempTankIndex].
 					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(_tempLiquidId), value));
 		}
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
 		ItemStack stack = null;
 		Slot slotObject = (Slot) inventorySlots.get(slot);
-		
+
 		if(slotObject != null && slotObject.getHasStack())
 		{
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
-			
+
 			if(slot < 9 || (slot > 9 && slot < 29))
 			{
 				if(!mergeItemStack(stackInSlot, 29, inventorySlots.size(), true))
@@ -115,7 +118,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 			{
 				return null;
 			}
-			
+
 			if(stackInSlot.stackSize == 0)
 			{
 				slotObject.putStack(null);
@@ -124,24 +127,24 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 			{
 				slotObject.onSlotChanged();
 			}
-			
+
 			if(stackInSlot.stackSize == stack.stackSize)
 			{
 				return null;
 			}
-			
+
 			slotObject.onPickupFromSlot(player, stackInSlot);
 		}
-		
+
 		return stack;
 	}
-	
+
 	@Override
 	protected int getPlayerInventoryVerticalOffset()
 	{
 		return 133;
 	}
-	
+
 	@Override
 	protected int getPlayerInventoryHorizontalOffset()
 	{
