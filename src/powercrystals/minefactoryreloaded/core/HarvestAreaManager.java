@@ -121,6 +121,16 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		}
 	}
 
+	public void setPosition(int position) {
+
+		_currentBlock = position % _harvestedBlocks.size();
+	}
+
+	public int getPosition() {
+
+		return _currentBlock;
+	}
+
 	public void setOverrideDirection(ForgeDirection dir)
 	{
 		_overrideDirection = dir;
