@@ -3,14 +3,22 @@ package powercrystals.minefactoryreloaded.api;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * @author skyboy
+ * Defines a target for the laser blocks. TileEntities that implement this
+ * interface will sustain the beam.
  *
- * Defines a target for the laser blocks. TileEntities that implement this interface will sustain the beam.
+ * @author skyboy
  */
 public interface IFactoryLaserSource {
+
 	/**
-	 * @param from The direction the laser is oriented
-	 * @return true if the beam should be sustained from this side
+	 * Used to determine if laser blocks can remain in the world when emitted
+	 * from <tt>from</tt>
+	 *
+	 * @param from
+	 *            The direction the laser is oriented
+	 *
+	 * @return True if the beam should be sustained from this side
 	 */
 	public boolean canFormBeamFrom(ForgeDirection from);
+
 }
