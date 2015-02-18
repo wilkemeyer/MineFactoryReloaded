@@ -88,6 +88,7 @@ public class Vanilla {
 		registerOre("slimeball", stack(pinkSlimeItem, 1, 0));
 		registerOre("dyeBrown", fertilizerItem);
 		registerOre("fertilizerOrganic", fertilizerItem);
+		registerOre("fertilizer", fertilizerItem);
 		registerOre("wireExplosive", detCordBlock);
 		registerOre("listAllmilk", milkBottleItem);
 		registerOre("listAllmeatraw", meatIngotRawItem);
