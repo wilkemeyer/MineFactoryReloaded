@@ -57,6 +57,7 @@ import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.entity.DebugTracker;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
@@ -78,6 +79,7 @@ import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
+import powercrystals.minefactoryreloaded.render.entity.EntityDebugTrackerRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
@@ -207,6 +209,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				new LaserDrillPrechargerRenderer());
 
 		// Entities
+		RenderingRegistry.registerEntityRenderingHandler(DebugTracker.class, new EntityDebugTrackerRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class, new EntitySafariNetRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPinkSlime.class,
 				new EntityPinkSlimeRenderer(new ModelSlime(16), new ModelSlime(0), 0.25F));
@@ -592,7 +595,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		return null;
 	}
 
-	private static void renderAABB(AxisAlignedBB par0AxisAlignedBB)
+	public static void renderAABB(AxisAlignedBB par0AxisAlignedBB)
 	{
 		double eps = 0.006;
 

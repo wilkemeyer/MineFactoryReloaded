@@ -1,7 +1,10 @@
 package powercrystals.minefactoryreloaded.entity;
 
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import io.netty.buffer.ByteBuf;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 
-public class EntityNeedle extends Entity implements IProjectile
+public class EntityNeedle extends Entity implements IProjectile, IEntityAdditionalSpawnData
 {
 	private String _owner;
 	private int ticksInAir = 0;
@@ -33,13 +36,6 @@ public class EntityNeedle extends Entity implements IProjectile
 		this.setSize(0.5F, 0.5F);
 	}
 
-	public EntityNeedle(World world, double x, double y, double z)
-	{
-		this(world);
-		this.setPosition(x, y, z);
-		this.yOffset = 0.0F;
-	}
-
 	public EntityNeedle(World world, EntityPlayer owner, ItemStack ammoSource, float spread)
 	{
 		this(world);
@@ -48,9 +44,6 @@ public class EntityNeedle extends Entity implements IProjectile
 		_ammoSource = ammoSource;
 
 		this.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw, owner.rotationPitch);
-		this.posX -= (MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-		this.posY -= 0.1D;
-		this.posZ -= (MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.yOffset = 0.0F;
 		this.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
@@ -58,6 +51,21 @@ public class EntityNeedle extends Entity implements IProjectile
 		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
 		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, 3.25F, spread);
 		this.distance = 0;
+		//world.spawnEntityInWorld(new DebugTracker(world, owner, this));
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData) {
+
+		// small hack; offsets on the client only to make it look like it came from the gun
+		posX -= (MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		posY -= 0.08D;
+		posZ -= -(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
 	}
 
 	@Override
