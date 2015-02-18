@@ -2,6 +2,8 @@ package powercrystals.minefactoryreloaded.setup;
 
 import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
 
+import cpw.mods.fml.common.Loader;
+
 import java.io.File;
 
 import net.minecraftforge.common.config.ConfigCategory;
@@ -130,6 +132,18 @@ public class MFRConfig
 		c.load();
 		//config = c;
 
+		{
+			// Alternate recipe sets TODO: auto-register for config handling
+			boolean te = Loader.isModLoaded("ThermalExpansion");
+			boolean eio = Loader.isModLoaded("EnderIO");
+			vanillaRecipes = c.get("RecipeSets", "Vanilla", !eio && !te).setRequiresMcRestart(true);
+			vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
+			thermalExpansionRecipes = c.get("RecipeSets", "ThermalExpansion", te).setRequiresMcRestart(true);
+			thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
+			enderioRecipes = c.get("RecipeSets", "EnderIO", !te && eio).setRequiresMcRestart(true);
+			enderioRecipes.comment = "If true, MFR will register its EnderIO-based recipes.";
+		}
+
 		String category = "Entity", subCategory = "";
 		zoolologistEntityId = c.get(category, "ID.Zoologist", 330).setRequiresMcRestart(true);
 		enableSpawnerCarts = c.get(category, "EnableSpawnerCarts", true);
@@ -206,15 +220,6 @@ public class MFRConfig
 		mfrLakeSewageBiomeList.comment = "A list of biomes to allow/disallow Sewage lakes to spawn in. Does nothing if lake worldgen is disabled.";
 		mfrLakeSewageBiomeListToggle = c.get(subCategory + ".Sewage", "BiomeList.Mode", false).setRequiresMcRestart(true);
 		mfrLakeSewageBiomeListToggle.comment = "If false, the biome list is a blacklist. If true, the biome list is a whitelist.";
-		//}
-
-		// Alternate recipe sets TODO: auto-register for config handling
-		vanillaRecipes = c.get("RecipeSets", "Vanilla", true).setRequiresMcRestart(true);
-		vanillaRecipes.comment = "If true, MFR will register its standard (vanilla-item-only) recipes.";
-		thermalExpansionRecipes = c.get("RecipeSets", "ThermalExpansion", false).setRequiresMcRestart(true);
-		thermalExpansionRecipes.comment = "If true, MFR will register its Thermal Expansion-based recipes.";
-		enderioRecipes = c.get("RecipeSets", "EnderIO", false).setRequiresMcRestart(true);
-		enderioRecipes.comment = "If true, MFR will register its EnderIO-based recipes.";
 		//}
 
 		//{ Item/block behavior overriding
