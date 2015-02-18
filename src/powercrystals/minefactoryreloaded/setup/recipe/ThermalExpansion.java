@@ -27,7 +27,7 @@ public class ThermalExpansion extends Vanilla {
 	private static final String TE = "ThermalExpansion";
 	ItemStack conduitLiquid;
 	ItemStack tankBasic;
-	ItemStack tankHardened;
+	ItemStack tankReinforced;
 	ItemStack lamp;
 	ItemStack machineFrame;
 	ItemStack pneumaticServo;
@@ -65,7 +65,7 @@ public class ThermalExpansion extends Vanilla {
 
 		/* Blocks */
 		tankBasic = GameRegistry.findItemStack(TE, "tankBasic", 1);
-		tankHardened = GameRegistry.findItemStack(TE, "tankHardened", 1);
+		tankReinforced = GameRegistry.findItemStack(TE, "tankReinforced", 1);
 		lamp = GameRegistry.findItemStack(TE, "illuminator", 1);
 		machineFrame = new ItemStack(GameRegistry.findBlock(TE, "Frame"), 1, 0);
 		strongBox = GameRegistry.findItemStack(TE, "strongboxReinforced", 1);
@@ -364,11 +364,11 @@ public class ThermalExpansion extends Vanilla {
 		registerMachine(Machine.SteamBoiler, new Object[] {
 				"PPP",
 				"TBT",
-				"OOO",
+				"SSS",
 				'P', "sheetPlastic",
-				'T', tankHardened,
+				'T', tankReinforced,
 				'B', Machine.SludgeBoiler.getItemStack(),
-				'O', Blocks.nether_brick
+				'S', Blocks.nether_brick_stairs
 		});
 
 		registerMachine(Machine.AutoJukebox, new Object[] {

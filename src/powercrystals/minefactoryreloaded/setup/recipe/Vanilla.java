@@ -385,7 +385,6 @@ public class Vanilla {
 				'O', obsidian,
 				'N', nether_brick_stairs,
 				'B', SludgeBoiler,
-				'M', machineBaseItem,
 		});
 
 		registerMachine(AutoJukebox, new Object[] {
