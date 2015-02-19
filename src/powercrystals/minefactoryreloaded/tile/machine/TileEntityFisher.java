@@ -94,6 +94,12 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 					{
 						++extraBlocks;
 					}
+					else if (isFisher(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z)))
+						extraBlocks -= 18;
+					if (isFisher(bp.x - (xCoord - bp.x), bp.y, bp.z))
+						extraBlocks -= 18;
+					if (isFisher(bp.x, bp.y, bp.z - (zCoord - bp.z)))
+						extraBlocks -= 18;
 				}
 				else if (isValidBlock(bp.x, bp.y - 2, bp.z))
 				{
@@ -103,6 +109,8 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 			_workNeeded = workBase - extraBlocks * 50;
 			_isJammed = false;
 		}
+		if (_isJammed)
+			return false;
 
 		if (!incrementWorkDone()) return false;
 
@@ -115,8 +123,20 @@ public class TileEntityFisher extends TileEntityFactoryPowered
 		return true;
 	}
 
+	protected boolean isFisher(int x, int y, int z)
+	{
+		if (y == yCoord - 1 && !(x == xCoord && z == zCoord)) {
+			if (worldObj.getBlockMetadata(x, yCoord, z) == _machine.getMeta() &&
+					worldObj.getBlock(x, yCoord, z) == _machine.getBlock())
+				return true;
+		}
+		return false;
+	}
+
 	protected boolean isValidBlock(int x, int y, int z)
 	{
+		if (isFisher(x, y, z))
+			return false;
 		int meta = worldObj.getBlockMetadata(x, y, z);
 		if (meta != 0) return false;
 		Block block = worldObj.getBlock(x, y, z);
