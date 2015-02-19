@@ -163,7 +163,7 @@ public class GuiRedNetLogic extends GuiBase {
 		addElement(_circuitScrollV);
 
 		final int maxScrollH = _circuitList.getLastScrollPositionH(), mult = 15;
-		int scrollH = 1 + (maxScrollH + (mult - 1)) / mult, scrollW = 142;
+		int scrollH = (maxScrollH + (mult - 1)) / mult, scrollW = 142;
 		_circuitScrollH = new SliderHorizontal(this, 88, 214, scrollW, 10, scrollH) {
 
 			@Override
