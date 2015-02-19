@@ -45,7 +45,8 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo {
 
 	@Override
 	public boolean onHitEntity(ItemStack stack, EntityPlayer owner, Entity hit, double distance) {
-		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner), damage);
+		// TODO: API needs to accept the needle entity
+		hit.attackEntityFrom(DamageSource.causePlayerDamage(owner).setProjectile(), damage);
 		return true;
 	}
 
