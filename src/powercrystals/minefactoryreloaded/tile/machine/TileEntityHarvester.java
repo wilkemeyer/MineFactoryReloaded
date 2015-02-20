@@ -429,6 +429,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		_treeManager = new TreeHarvestManager(tag, _immutableSettings);
 		if (!_treeManager.getIsDone())
 			_lastTree = _treeManager.getOrigin();
+		_areaManager.getHarvestArea();
 		_areaManager.setPosition(tag.getInteger("bpos"));
 	}
 
