@@ -175,6 +175,14 @@ public class Thaumcraft {
 
 		parseAspects("mfrEntityPinkSlime", "1 aqua, 2 limus, 1 corpus, 1 bestia");
 
+		parseAspects(milkLiquid, "4 fames, 4 sano, 4 aqua, 2 victus");
+		parseAspects(chocolateMilkLiquid, "4 fames, 2 motus, 2 potentia, 4 aqua");
+		parseAspects(essenceLiquid, "4 praecantatio, 2 cognitio, 2 aqua");
+		parseAspects(mushroomSoupLiquid, "4 fames, 4 herba, 1 aqua");
+		parseAspects(pinkSlimeLiquid, "4 limus, 4 corpus, 2 aqua");
+		parseAspects(sewageLiquid, "4 venenum, 2 bestia, 2 aqua, 1 vitium");
+		parseAspects(sludgeLiquid, "4 venenum, 2 terra, 2 aqua, 1 mortuus");
+
 		parseAspects(machineItem, 0, "2 fabrico, 2 machina, 1 terra"); // factory machine block
 		parseAspects(machineItem, 1, "1 cognitio, 3 machina"); // PRC housing
 		parseAspects(rubberBarItem, "1 motus, 1 arbor, 1 ignis"); // rubber bar
@@ -193,9 +201,7 @@ public class Thaumcraft {
 		parseAspects(blankRecordItem, "4 sensus, 4 aer, 4 lucrum, 4 vacuos");
 		parseAspects(ceramicDyeItem, "1 terra, 1 aqua, 1 sensus");
 		parseAspects(chocolateMilkBucketItem, "2 fames, 1 motus, 1 potentia, 2 aqua, 8 metallum, 1 vacuos");
-		parseAspects(chocolateMilkLiquid, "4 fames, 2 motus, 2 potentia, 4 aqua");
 		parseAspects(conveyorBlock, "3 motus, 1 iter, 1 machina");
-		parseAspects(essenceLiquid, "4 praecantatio, 2 cognitio, 2 aqua");
 		parseAspects(factoryGlassBlock, "1 vitreus, 1 sensus");
 		parseAspects(factoryHammerItem, "1 instrumentum, 2 fabrico, 2 ignis, 3 ordo");
 		parseAspects(fertilizerItem, "1 arbor, 1 herba, 1 messis, 1 sensus");
@@ -207,14 +213,11 @@ public class Thaumcraft {
 		parseAspects(meatNuggetCookedItem, "1 fames");
 		parseAspects(meatNuggetRawItem, "1 corpus");
 		parseAspects(milkBottleItem, "1 fames, 1 sano, 1 victus, 1 vitreus");
-		parseAspects(milkLiquid, "4 fames, 4 sano, 4 aqua, 2 victus");
 		parseAspects(mobEssenceBucketItem, "2 praecantatio, 1 cognitio, 1 aqua, 8 metallum, 1 vacuos");
 		parseAspects(mushroomSoupBucketItem, "2 fames, 2 herba, 8 metallum, 1 vacuos");
-		parseAspects(mushroomSoupLiquid, "4 fames, 4 herba, 1 aqua");
 		parseAspects(pinkSlimeItem, "1 limus, 1 corpus");
 		parseAspects(pinkSlimeBlock, "9 limus, 9 corpus, 2 aqua");
 		parseAspects(pinkSlimeBucketItem, "2 limus, 2 corpus, 1 aqua, 8 metallum, 1 vacuos");
-		parseAspects(pinkSlimeLiquid, "4 limus, 4 corpus, 2 aqua");
 		parseAspects(portaSpawnerItem, "8 alienis, 4 bestia, 4 exanimis, 4 iter, 8 praecantatio, 8 permutatio");
 		parseAspects(rednetCableBlock, 0, "1 cognitio, 1 machina", true);
 		parseAspects(rednetCableBlock, 1, "1 cognitio, 1 machina, 1 vitreus", true);
@@ -231,9 +234,7 @@ public class Thaumcraft {
 		parseAspects(safariNetLauncherItem, "2 volatus, 2 instrumentum");
 		parseAspects(safariNetSingleItem, "4 vinculum, 4 spiritus, 2 instrumentum");
 		parseAspects(sewageBucketItem, "2 venenum, 1 bestia, 1 aqua, 8 metallum, 1 vacuos");
-		parseAspects(sewageLiquid, "4 venenum, 2 bestia, 2 aqua");
 		parseAspects(sludgeBucketItem, "2 venenum, 1 terra, 1 aqua, 1 vitium, 8 metallum, 1 vacuos");
-		parseAspects(sludgeLiquid, "4 venenum, 2 terra, 2 aqua, 1 vitium");
 		parseAspects(spyglassItem, "2 victus, 6 sensus");
 		parseAspects(strawItem, "1 vacuos, 4 aqua, 4 fames, 1 instrumentum");
 		parseAspects(sugarCharcoalItem, "2 potentia, 2 ignis");
