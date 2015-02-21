@@ -28,6 +28,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.gui.client.font.PrcFontRenderer;
 import powercrystals.minefactoryreloaded.gui.control.ButtonLogicBufferSelect;
 import powercrystals.minefactoryreloaded.gui.control.ButtonLogicPinSelect;
 import powercrystals.minefactoryreloaded.gui.control.ListBoxElementCircuit;
@@ -76,7 +77,7 @@ public class GuiRedNetLogic extends GuiBase {
 	private boolean _listNeedsUpdated = true;
 	private int _reinitCountdown;
 
-	private FontRenderer uFontRenderer;
+	private FontRenderer uFontRenderer, rFontRenderer;
 
 	public GuiRedNetLogic(Container container, TileEntityRedNetLogic logic) {
 
@@ -91,12 +92,19 @@ public class GuiRedNetLogic extends GuiBase {
 	}
 
 	@Override
+	public FontRenderer getFontRenderer() {
+
+		return rFontRenderer;
+	}
+
+	@Override
 	public void initGui() {
 
-		fontRendererObj = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
-		fontRendererObj.onResourceManagerReload(mc.getResourceManager());
 		uFontRenderer = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, true);
 		uFontRenderer.onResourceManagerReload(mc.getResourceManager());
+
+		rFontRenderer = new PrcFontRenderer(mc.gameSettings, mc.renderEngine, false);
+		rFontRenderer.onResourceManagerReload(mc.getResourceManager());
 
 		super.initGui();
 
@@ -335,14 +343,14 @@ public class GuiRedNetLogic extends GuiBase {
 
 		for (int i = 0; i < _inputIOPinButtons.length; i++) {
 			if (i < _logic.getCircuit(_selectedCircuit).getInputCount()) {
-				fontRendererObj.drawString(_logic.getCircuit(_selectedCircuit).getInputPinLabel(i), 5, 20 + i * pinOffset,
+				rFontRenderer.drawString(_logic.getCircuit(_selectedCircuit).getInputPinLabel(i), 5, 20 + i * pinOffset,
 					4210752);
 			}
 		}
 
 		for (int i = 0; i < _outputIOPinButtons.length; i++) {
 			if (i < _logic.getCircuit(_selectedCircuit).getOutputCount()) {
-				fontRendererObj.drawString(_logic.getCircuit(_selectedCircuit).getOutputPinLabel(i), 234, 20 + i * pinOffset,
+				rFontRenderer.drawString(_logic.getCircuit(_selectedCircuit).getOutputPinLabel(i), 234, 20 + i * pinOffset,
 					4210752);
 			}
 		}
