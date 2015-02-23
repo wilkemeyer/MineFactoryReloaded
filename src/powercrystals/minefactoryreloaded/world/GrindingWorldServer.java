@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldServer;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
@@ -79,7 +80,9 @@ public class GrindingWorldServer extends WorldServerProxy
 
 	public boolean addEntityForGrinding(Entity entity)
 	{
-		difficultySetting = proxiedWorld.difficultySetting;
+		cofh_updateProps();
+		if (difficultySetting == EnumDifficulty.PEACEFUL)
+			difficultySetting = EnumDifficulty.EASY;
 		if(entity.worldObj == this) return true;
 		if(entity.worldObj == this.proxiedWorld)
 		{
