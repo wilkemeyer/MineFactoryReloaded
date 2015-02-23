@@ -38,7 +38,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 				Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 				ItemStack tempStack = null;
 				if (block != null)
-					tempStack = block.getPickBlock(mop, world, mop.blockX, mop.blockY, mop.blockZ);
+					tempStack = block.getPickBlock(mop, world, mop.blockX, mop.blockY, mop.blockZ, player);
 				if (tempStack == null)
 					tempStack = new ItemStack(block, 1, world.getBlockMetadata(mop.blockX, mop.blockY,
 							mop.blockZ));
