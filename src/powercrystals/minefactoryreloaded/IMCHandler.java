@@ -57,6 +57,7 @@ public class IMCHandler {
 		for (IMCMessage m : l) {
 			try {
 				String k = m.key;
+				_log.debug("[IMCHandler] %s from %s", k, m.getSender());
 				//{ FactoryRegistry methods
 				/*
 				 * Laser Preferred Ores
