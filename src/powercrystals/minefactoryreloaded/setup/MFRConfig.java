@@ -95,6 +95,7 @@ public class MFRConfig
 	public static Property safarinetBlacklist;
 
 	public static ConfigCategory spawnerCustomization;
+	public static Property harvesterSkip;
 
 	public static Property passengerRailSearchMaxHorizontal;
 	public static Property passengerRailSearchMaxVertical;
@@ -300,6 +301,9 @@ public class MFRConfig
 		spawnerCustomization = c.getCategory(category + ".Custom").setRequiresMcRestart(true);
 		spawnerCustomization.setComment("Custom base XP costs for entities. format: I:<entityid> = #. e.g.:\n"
 									+ "I:VillagerGolem = 25\nI:Slime = 50");
+
+		harvesterSkip = c.get("Machine." + Machine.Harvester.getName(), "SkipWork", false).setRequiresMcRestart(true);
+		harvesterSkip.comment = "If true, the harvester will skip scanning some bocks when filled with sludge";
 
 		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
 		laserdrillCost.comment = "The work required by the drill to generate a single ore.";

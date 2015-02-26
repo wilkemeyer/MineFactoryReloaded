@@ -86,8 +86,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		int energyRequired = Math.min(getEnergyStoredMax() - getEnergyStored(),
 				getActivationEnergy() + energyFudge);
 
-		_energyRequiredThisTick = Math.max(_energyRequiredThisTick + energyRequired,
-				getMaxEnergyPerTick());
+		_energyRequiredThisTick = Math.max(_energyRequiredThisTick + energyRequired, getMaxEnergyPerTick());
 
 		setIsActive(updateIsActive(failedDrops != null));
 

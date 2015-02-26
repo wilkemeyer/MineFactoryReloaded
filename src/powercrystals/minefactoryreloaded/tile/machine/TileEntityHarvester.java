@@ -42,6 +42,8 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityHarvester extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
+	private static boolean skip = false;
+
 	private Map<String, Boolean> _settings;
 	private Map<String, Boolean> _immutableSettings;
 
@@ -65,6 +67,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 
 		_rand = new Random();
 		setCanRotate(true);
+
+		skip = MFRConfig.harvesterSkip.getBoolean(false);
 	}
 
 	@Override
@@ -206,6 +210,11 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			return getNextTreeSegment(_lastTree, false);
 		BlockPosition bp = _areaManager.getNextBlock();
 		_lastTree = null;
+		if (skip) {
+			int extra = getExtraIdleTime(10);
+			if (extra > 0 && extra > _rand.nextInt(15))
+				return null;
+		}
 		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
 		{
 			return null;
