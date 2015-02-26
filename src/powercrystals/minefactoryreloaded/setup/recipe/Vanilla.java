@@ -86,9 +86,11 @@ public class Vanilla {
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 2));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 3));
 		registerOre("slimeball", stack(pinkSlimeItem, 1, 0));
-		registerOre("dyeBrown", fertilizerItem);
+		registerOre("blockSlimePink", stack(pinkSlimeBlock));
+		registerOre("blockSlime", stack(pinkSlimeBlock));
 		registerOre("fertilizerOrganic", fertilizerItem);
 		registerOre("fertilizer", fertilizerItem);
+		registerOre("dyeBrown", fertilizerItem);
 		registerOre("wireExplosive", detCordBlock);
 		registerOre("listAllmilk", milkBottleItem);
 		registerOre("listAllmeatraw", meatIngotRawItem);
@@ -120,6 +122,8 @@ public class Vanilla {
 
 		// vanilla items
 		registerOre("listAllmilk", milk_bucket);
+		registerOre("listAllwater", water_bucket);
+		registerOre("listAllwater", stack(potionitem, 1, 0));
 	}
 
 	public void registerOredictEntries() {
@@ -850,13 +854,13 @@ public class Vanilla {
 		addStorageRecipe(stack(meatIngotCookedItem), "nuggetMeat");
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 12), "ingotMeatRaw");
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 13), "ingotMeat");
-		addStorageRecipe(stack(pinkSlimeBlock), stack(pinkSlimeItem));
 
-		addReverseStorageRecipe(stack(meatIngotRawItem), "blockMeatRaw");
-		addReverseStorageRecipe(stack(meatIngotCookedItem), "blockMeat");
+		addReverseStorageRecipe(stack(meatIngotRawItem), stack(factoryDecorativeBrickBlock, 1, 12));
+		addReverseStorageRecipe(stack(meatIngotCookedItem), stack(factoryDecorativeBrickBlock, 1, 13));
 		addReverseStorageRecipe(stack(meatNuggetRawItem), "ingotMeatRaw");
 		addReverseStorageRecipe(stack(meatNuggetCookedItem), "ingotMeat");
-		addReverseStorageRecipe(stack(pinkSlimeItem), stack(pinkSlimeBlock));
+
+		addTwoWayStorageRecipe(stack(pinkSlimeBlock), stack(pinkSlimeItem));
 	}
 
 	protected void registerSyringes() {
@@ -1125,7 +1129,7 @@ public class Vanilla {
 
 		addShapelessRecipe(stack(planks, 3, 3), stack(rubberWoodBlock));
 
-		addShapelessRecipe(stack(piston, 1, 0), stack(sticky_piston, 1, 0), stack(milk_bucket, 1, 0));
+		addRecipe(ShapelessRecipe(stack(piston, 1, 0), stack(sticky_piston, 1, 0), "listAllmilk"));
 
 		addRecipe(ShapedRecipe(stack(sticky_piston), new Object[] {
 				"R",
@@ -1137,16 +1141,21 @@ public class Vanilla {
 		addSurroundRecipe(stack(blankRecordItem, 1), stack2(paper), "dustPlastic");
 
 		if (MFRConfig.enableMossyCobbleRecipe.getBoolean(true)) {
-			addShapelessRecipe(stack(mossy_cobblestone), new Object[] {
+			addRecipe(ShapelessRecipe(stack(mossy_cobblestone), new Object[] {
+					cobblestone, cobblestone, cobblestone,
+					cobblestone, cobblestone, cobblestone,
 					cobblestone,
-					water_bucket,
-					Items.wheat
-			});
-			addShapelessRecipe(stack(stonebrick, 1, 1), new Object[] {
+					"listAllwater",
+					Items.wheat,
+			}));
+			addRecipe(ShapelessRecipe(stack(stonebrick, 1, 1), new Object[] {
+					stack(stonebrick, 1, 0), stack(stonebrick, 1, 0),
+					stack(stonebrick, 1, 0), stack(stonebrick, 1, 0),
+					stack(stonebrick, 1, 0), stack(stonebrick, 1, 0),
 					stack(stonebrick, 1, 0),
-					water_bucket,
-					Items.wheat
-			});
+					"listAllwater",
+					Items.wheat,
+			}));
 		}
 
 		if (MFRConfig.enableSmoothSlabRecipe.getBoolean(true)) {
@@ -1172,7 +1181,7 @@ public class Vanilla {
 
 		addRecipe(ShapelessRecipe(stack(fertileSoil), stack(dirt, 1, 2), stack(fertilizerItem), "listAllmilk"));
 
-		addShapelessRecipe(stack(chocolateMilkBucketItem), milk_bucket, bucket, stack(dye, 1, 3));
+		addRecipe(ShapelessRecipe(stack(chocolateMilkBucketItem), "listAllmilk", bucket, stack(dye, 1, 3)));
 
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
