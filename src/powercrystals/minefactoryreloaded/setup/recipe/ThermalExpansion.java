@@ -25,6 +25,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 public class ThermalExpansion extends Vanilla {
 
 	private static final String TE = "ThermalExpansion";
+	private static final String TF = "ThermalFoundation";
 	ItemStack conduitLiquid;
 	ItemStack tankBasic;
 	ItemStack tankReinforced;
@@ -84,11 +85,11 @@ public class ThermalExpansion extends Vanilla {
 		powerCoilSilver = GameRegistry.findItemStack(TE, "powerCoilSilver", 1);
 		multimeter = GameRegistry.findItemStack(TE, "multimeter", 1);
 		igniter = GameRegistry.findItemStack(TE, "igniter", 1);
-		invarAxe = GameRegistry.findItemStack(TE, "toolInvarAxe", 1);
-		invarSword = GameRegistry.findItemStack(TE, "toolInvarSword", 1);
-		invarPickaxe = GameRegistry.findItemStack(TE, "toolInvarPickaxe", 1);
-		invarShovel = GameRegistry.findItemStack(TE, "toolInvarShovel", 1);
-		sulfur = GameRegistry.findItemStack("ThermalFoundation", "dustSulfur", 1);
+		invarAxe = GameRegistry.findItemStack(TF, "toolInvarAxe", 1);
+		invarSword = GameRegistry.findItemStack(TF, "toolInvarSword", 1);
+		invarPickaxe = GameRegistry.findItemStack(TF, "toolInvarPickaxe", 1);
+		invarShovel = GameRegistry.findItemStack(TF, "toolInvarShovel", 1);
+		sulfur = GameRegistry.findItemStack(TF, "dustSulfur", 1);
 	}
 
 	@Override
@@ -666,7 +667,7 @@ public class ThermalExpansion extends Vanilla {
 				"GLG",
 				"PLP",
 				" S ",
-				'G', "ingotGold",
+				'G', "ingotBronze",
 				'L', "blockGlass",
 				'P', "sheetPlastic",
 				'S', "stickWood",
