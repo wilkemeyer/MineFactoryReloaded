@@ -50,8 +50,7 @@ public class FluidTankMulti implements IFluidTank {
 			}
 			if (length <= old.length / 4) {
 				tanks = new FluidTankAdv[old.length / 2];
-				if (i > 0)
-					System.arraycopy(old, 0, tanks, 0, tanks.length);
+				System.arraycopy(old, 0, tanks, 0, tanks.length);
 			}
 		}
 

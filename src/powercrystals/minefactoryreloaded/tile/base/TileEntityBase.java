@@ -33,13 +33,9 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		super.invalidate();
 	}
 
-	@Override
-	public void onChunkUnload()
-	{
+	public void cofh_invalidate() {
 		invalidate();
-		if (worldObj == null || !worldObj.isRemote)
-			worldObj = null;
-		_invName = null;
+		markChunkDirty();
 	}
 
 	@Override
