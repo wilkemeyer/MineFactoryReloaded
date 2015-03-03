@@ -38,7 +38,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	public void onNeighborBlockChange()
 	{
-		if (!worldObj.isAirBlock(bp.x, bp.y, bp.z))
+		if (bp != null && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
 			setIdleTicks(0);
 	}
 
