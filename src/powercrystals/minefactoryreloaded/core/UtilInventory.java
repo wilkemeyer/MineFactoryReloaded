@@ -242,7 +242,7 @@ public abstract class UtilInventory
 	{
 		// (0) Sanity check. Don't bother dropping if there's nothing to drop, and never try to drop items on the client.
 		if (world.isRemote | stack == null || stack.stackSize == 0 || stack.getItem() == null)
-			return stack;
+			return null;
 
 		stack = stack.copy();
 		// (0.5) Try to put stack in conduits that are in valid directions

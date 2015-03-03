@@ -68,7 +68,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			inv: while (failedDrops.size() > 0)
 		{
 			ItemStack itemstack = failedDrops.remove(0);
-			if (itemstack == null)
+			if (itemstack == null || itemstack.getItem() == null)
 			{
 				continue;
 			}
