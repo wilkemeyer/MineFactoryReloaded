@@ -58,8 +58,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	public void updateEntity()
 	{
 		super.updateEntity();
-		if (!worldObj.isRemote)
-		{
+		if (!worldObj.isRemote) {
 			for (int i = 45; i < getSizeInventory(); i++)
 			{
 				if (_inventory[i] != null)
@@ -105,13 +104,14 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	private ItemStack weightedRouteItem(ItemStack stack, int[] routes)
 	{
 		ItemStack remainingOverall = stack.copy();
-		if(stack.stackSize >= totalWeight(routes))
+		int weight = totalWeight(routes);
+		if(stack.stackSize >= weight)
 		{
 			int startingAmount = stack.stackSize;
 			for(int i = 0; i < routes.length; i++)
 			{
 				ItemStack stackForThisRoute = stack.copy();
-				stackForThisRoute.stackSize = startingAmount * routes[i] / totalWeight(routes);
+				stackForThisRoute.stackSize = startingAmount * routes[i] / weight;
 				if(stackForThisRoute.stackSize > 0)
 				{
 					ItemStack remainingFromThisRoute = UtilInventory.dropStack(this, stackForThisRoute, _outputDirections[i], _outputDirections[i]);
@@ -277,16 +277,19 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		if (worldObj != null && !worldObj.isRemote)
 		{
 			int start = getStartInventorySide(ForgeDirection.UNKNOWN);
-			if (stack != null && i >= start && i <= (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
+			if (i >= start && i <= (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
 			{
-				if (stack.stackSize <= 0)
-					return;
-				stack = routeItem(stack);
-				if (stack == null)
-					return;
-				if (stack.stackSize > getInventoryStackLimit())
-				{
-					stack.stackSize = getInventoryStackLimit();
+				l: if (stack != null) {
+					if (stack.stackSize <= 0) {
+						stack = null;
+						break l;
+					}
+					stack = routeItem(stack);
+					if (stack != null)
+						if (stack.stackSize > getInventoryStackLimit())
+						{
+							stack.stackSize = getInventoryStackLimit();
+						}
 				}
 				_inventory[i] = stack;
 				return;
