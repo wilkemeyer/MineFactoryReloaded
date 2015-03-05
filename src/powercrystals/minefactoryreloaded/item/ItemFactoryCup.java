@@ -346,10 +346,4 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		return ret;
 	}
 
-	//@Override
-	// TODO: implement pipette thing
-	public boolean canPipette(ItemStack pipette) {
-		return true;
-	}
-
 }

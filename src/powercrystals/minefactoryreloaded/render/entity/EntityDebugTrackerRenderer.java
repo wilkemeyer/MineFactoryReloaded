@@ -13,11 +13,6 @@ import powercrystals.minefactoryreloaded.entity.DebugTracker;
 
 public class EntityDebugTrackerRenderer extends Render {
 
-	public EntityDebugTrackerRenderer() {
-
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public void doRender(Entity p_76986_1_, double x, double y, double z, float yaw, float partialTicks) {
 
