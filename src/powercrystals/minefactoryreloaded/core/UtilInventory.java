@@ -6,6 +6,7 @@ import cofh.api.transport.IItemDuct;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
+import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.position.BlockPosition;
 
 import java.util.LinkedHashMap;
@@ -19,7 +20,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -396,28 +396,7 @@ public abstract class UtilInventory
 
 	public static ItemStack consumeItem(ItemStack stack, EntityPlayer player)
 	{
-		if (stack == null)
-			return null;
-
-		Item item = stack.getItem();
-
-		stack.stackSize -= 1;
-		if (item.hasContainerItem(stack))
-		{
-			ItemStack ret = item.getContainerItem(stack);
-			if (ret != null && ret.isItemStackDamageable() && ret.getItemDamage() > ret.getMaxDamage())
-				ret = null;
-
-			if (stack.stackSize < 1)
-				return ret;
-
-			if (ret != null && !player.inventory.addItemStackToInventory(ret))
-				player.func_146097_a(ret, false, true);
-		}
-
-		if (stack.stackSize > 0)
-			return stack;
-		return null;
+		return ItemHelper.consumeItem(stack, player);
 	}
 
 	public static void mergeStacks(ItemStack to, ItemStack from)
