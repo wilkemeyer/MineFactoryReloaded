@@ -30,7 +30,7 @@ public class ContainerAutoAnvil extends ContainerFactoryPowered
 		addSlotToContainer(new SlotAcceptInsertable(_te, 0, 8, 24));
 		addSlotToContainer(new SlotAcceptInsertable(_te, 1, 26, 24));
 		addSlotToContainer(new SlotRemoveOnly(_te, 2, 8, 48));
-		addSlotToContainer(new SlotViewOnly(_te, 2, 45, 24, false) {
+		addSlotToContainer(new SlotViewOnly(_te, 2, 45, 24, true) {
 			@Override
 			public ItemStack getStack() {
 				return _anvil.getRepairOutput();

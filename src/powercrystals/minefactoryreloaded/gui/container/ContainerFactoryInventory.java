@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
+import cofh.lib.util.helpers.ItemHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,10 +19,10 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 public class ContainerFactoryInventory extends Container
 {
 	protected TileEntityFactoryInventory _te;
-	
+
 	private int _tankAmount;
 	private int _tankIndex;
-	
+
 	public ContainerFactoryInventory(TileEntityFactoryInventory tileentity, InventoryPlayer inv)
 	{
 		_te = tileentity;
@@ -31,7 +32,7 @@ public class ContainerFactoryInventory extends Container
 		}
 		bindPlayerInventory(inv);
 	}
-	
+
 	protected void addSlots()
 	{
 		addSlotToContainer(new Slot(_te, 0, 8, 15));
@@ -44,12 +45,12 @@ public class ContainerFactoryInventory extends Container
 		addSlotToContainer(new Slot(_te, 7, 26, 51));
 		addSlotToContainer(new Slot(_te, 8, 44, 51));
 	}
-	
+
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		
+
 		FluidTankInfo[] tank = _te.getTankInfo(ForgeDirection.UNKNOWN);
 		int n = tank.length;
 		if (n == 0)
@@ -72,37 +73,37 @@ public class ContainerFactoryInventory extends Container
 			}
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int var, int value)
 	{
 		super.updateProgressBar(var, value);
-		
+
 		if (var == 30) _tankIndex = value;
 		else if (var == 31) _tankAmount = value;
 		else if (var == 32) _te.getTanks()[_tankIndex].
 					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
 		return !_te.isInvalid() && _te.isUseableByPlayer(player);
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
 		ItemStack stack = null;
 		Slot slotObject = (Slot) inventorySlots.get(slot);
 		int machInvSize = _te.getSizeInventory();
-		
+
 		if(slotObject != null && slotObject.getHasStack())
 		{
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
-			
+
 			if(slot < machInvSize)
 			{
 				if(!mergeItemStack(stackInSlot, machInvSize, inventorySlots.size(), true))
@@ -114,7 +115,7 @@ public class ContainerFactoryInventory extends Container
 			{
 				return null;
 			}
-			
+
 			if(stackInSlot.stackSize == 0)
 			{
 				slotObject.putStack(null);
@@ -123,28 +124,28 @@ public class ContainerFactoryInventory extends Container
 			{
 				slotObject.onSlotChanged();
 			}
-			
+
 			if(stackInSlot.stackSize == stack.stackSize)
 			{
 				return null;
 			}
-			
+
 			slotObject.onPickupFromSlot(player, stackInSlot);
 		}
-		
+
 		return stack;
 	}
-	
+
 	protected int getPlayerInventoryVerticalOffset()
 	{
 		return 84;
 	}
-	
+
 	protected int getPlayerInventoryHorizontalOffset()
 	{
 		return 8;
 	}
-	
+
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
 	{
 		int yOff = getPlayerInventoryVerticalOffset();
@@ -156,7 +157,7 @@ public class ContainerFactoryInventory extends Container
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, xOff + j * 18, yOff + i * 18));
 			}
 		}
-		
+
 		for (int i = 0; i < 9; i++)
 		{
 			addSlotToContainer(new Slot(inventoryPlayer, i, xOff + i * 18, yOff + 58));
@@ -180,28 +181,29 @@ public class ContainerFactoryInventory extends Container
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				existingStack = slot.getStack();
 
-				if (slot.isItemValid(stack) && existingStack != null &&
-						existingStack.getItem().equals(stack.getItem()) &&
-						(!stack.getHasSubtypes() ||
-								stack.getItemDamage() == existingStack.getItemDamage()) &&
-								ItemStack.areItemStackTagsEqual(stack, existingStack))
-				{
-					int existingSize = existingStack.stackSize + stack.stackSize;
+				if (existingStack != null) {
 					int maxStack = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
+					int rmv = Math.min(maxStack, stack.stackSize);
 
-					if (existingSize <= maxStack)
+					if (slot.isItemValid(ItemHelper.cloneStack(stack, rmv)) &&
+							ItemHelper.itemsEqualWithMetadata(existingStack, stack, true))
 					{
-						stack.stackSize = 0;
-						existingStack.stackSize = existingSize;
-						slot.onSlotChanged();
-						successful = true;
-					}
-					else if (existingStack.stackSize < maxStack)
-					{
-						stack.stackSize -= maxStack - existingStack.stackSize;
-						existingStack.stackSize = maxStack;
-						slot.onSlotChanged();
-						successful = true;
+						int existingSize = existingStack.stackSize + stack.stackSize;
+
+						if (existingSize <= maxStack)
+						{
+							stack.stackSize -= rmv;
+							existingStack.stackSize = existingSize;
+							slot.onSlotChanged();
+							successful = true;
+						}
+						else if (existingStack.stackSize < maxStack)
+						{
+							stack.stackSize -= maxStack - existingStack.stackSize;
+							existingStack.stackSize = maxStack;
+							slot.onSlotChanged();
+							successful = true;
+						}
 					}
 				}
 
@@ -218,13 +220,18 @@ public class ContainerFactoryInventory extends Container
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				existingStack = slot.getStack();
 
-				if (slot.isItemValid(stack) && existingStack == null)
-				{
+
+				if (existingStack == null) {
 					int maxStack = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
-					existingStack = stack.splitStack(Math.min(stack.stackSize, maxStack));
-					slot.putStack(existingStack);
-					slot.onSlotChanged();
-					successful = true;
+					int rmv = Math.min(maxStack, stack.stackSize);
+
+					if (slot.isItemValid(ItemHelper.cloneStack(stack, rmv)))
+					{
+						existingStack = stack.splitStack(rmv);
+						slot.putStack(existingStack);
+						slot.onSlotChanged();
+						successful = true;
+					}
 				}
 
 				slotIndex += iterOrder;
