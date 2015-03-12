@@ -334,30 +334,36 @@ public class ItemSafariNet extends ItemFactory {
 			boolean flag = player != null && player.capabilities.isCreativeMode;
 			NBTTagCompound c = new NBTTagCompound();
 
-			entity.writeToNBT(c);
+			synchronized (entity) {
+				entity.writeToNBT(c);
 
-			c.setString("id", EntityList.getEntityString(entity));
+				c.setString("id", EntityList.getEntityString(entity));
 
-			if (!flag)
-				entity.setDead();
-			if (flag | entity.isDead) {
-				flag = false;
-				if (--itemstack.stackSize > 0) {
-					flag = true;
-					itemstack = itemstack.copy();
+				if (entity.isDead)
+					return false;
+
+				if (!flag)
+					entity.setDead();
+				if (flag | entity.isDead) {
+					flag = false;
+					if (--itemstack.stackSize > 0) {
+						flag = true;
+						itemstack = itemstack.copy();
+					}
+					itemstack.stackSize = 1;
+					itemstack.setTagCompound(c);
+					if (flag && (player == null || !player.inventory.addItemStackToInventory(itemstack)))
+						UtilInventory.dropStackInAir(entity.worldObj, entity, itemstack);
+					else if (flag) {
+						player.openContainer.detectAndSendChanges();
+						((EntityPlayerMP)player).sendContainerAndContentsToPlayer(player.openContainer,
+							player.openContainer.getInventory());
+					}
+
+					return true;
+				} else {
+					return false;
 				}
-				itemstack.stackSize = 1;
-				itemstack.setTagCompound(c);
-				if (flag && (player == null || !player.inventory.addItemStackToInventory(itemstack)))
-					UtilInventory.dropStackInAir(entity.worldObj, entity, itemstack);
-				else if (flag) {
-					player.openContainer.detectAndSendChanges();
-					((EntityPlayerMP)player).sendContainerAndContentsToPlayer(player.openContainer, player.openContainer.getInventory());
-				}
-
-				return true;
-			} else {
-				return false;
 			}
 		}
 		return true;
