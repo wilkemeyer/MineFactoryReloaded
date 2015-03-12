@@ -28,7 +28,7 @@ tile.mfr.machine.lavafabricator.name = 岩漿製造機
 tile.mfr.machine.steamboiler.name = 蒸汽鍋爐
 tile.mfr.machine.autojukebox.name = 自動音樂盒
 tile.mfr.machine.unifier.name = 統一化機器(轉化通用礦石)
-tile.mfr.machine.autospawner.name = 自動刷怪機
+tile.mfr.machine.autospawner.name = 自動生怪機
 tile.mfr.machine.bioreactor.name = 生物質爐
 tile.mfr.machine.biofuelgenerator.name = 生物燃油發電機
 tile.mfr.machine.autodisenchanter.name = 自動附魔台
@@ -203,9 +203,9 @@ item.mfr.bucket.mushroomsoup.name = 蘑菇湯桶
 item.mfr.plastic.cup.name = 塑膠杯
 item.mfr.plastic.cup.prefix.name =
 item.mfr.plastic.cup.suffix.name =杯
-item.mfr.plastic.cell.name = 塑膠Cell
+item.mfr.plastic.cell.name = 塑膠單元
 item.mfr.plastic.cell.prefix.name =
-item.mfr.plastic.cell.suffix.name = Cell
+item.mfr.plastic.cell.suffix.name = 單元
 
 item.mfr.plastic.armor.helm.name  = 塑膠頭盔
 item.mfr.plastic.armor.chest.name = 塑膠胸甲
@@ -472,9 +472,9 @@ tip.info.mfr.cannotplace = 無法放置 %s 秒.
 tip.info.mfr.safarinet.mode = 潛行點擊改變模式
 tip.info.mfr.safarinet.persistent = 釋放出來的生物不會消失(despawn)
 tip.info.mfr.safarinet.nametag = 釋放出來的生物會顯示他們的命名
-tip.info.mfr.safarinet.mystery = 這是一個謎
+tip.info.mfr.safarinet.mystery = 這是一個謎阿!
 
-tip.info.mfr.memorycard.programmedFor = Programmed for:\n      \u00A7a%s
+tip.info.mfr.memorycard.programmedFor = 燒錄:\n      \u00A7a%s
 tip.info.mfr.memorycard.programmed = \u0020     \u00A7a燒錄 %d 電路
 tip.info.mfr.memorycard.wipe = 放入合成表消除
 
