@@ -88,10 +88,13 @@ public class ItemRedNetMeter extends ItemMulti {
 			}
 			return false;
 		case 1:
-			if (ServerHelper.isClientWorld(world)) {
-				return false;
-			}
 			block = world.getBlock(x, y, z);
+			if (ServerHelper.isClientWorld(world)) {
+				if (block instanceof IBlockConfigGui || block instanceof IBlockInfo)
+					return true;
+				TileEntity theTile = world.getTileEntity(x, y, z);
+				return theTile instanceof ITileInfo;
+			}
 			info = new ArrayList<IChatComponent>();
 			if (player.isSneaking() && block instanceof IBlockConfigGui) {
 				if (((IBlockConfigGui)block).openConfigGui(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player))
@@ -117,10 +120,10 @@ public class ItemRedNetMeter extends ItemMulti {
 			}
 			return false;
 		case 0:
-			if (ServerHelper.isClientWorld(world)) {
-				return false;
-			}
 			block = world.getBlock(x, y, z);
+			if (ServerHelper.isClientWorld(world)) {
+				return block instanceof IRedNetInfo || block.equals(Blocks.redstone_wire);
+			}
 			info = new ArrayList<IChatComponent>();
 			if (block.equals(Blocks.redstone_wire)) {
 				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
