@@ -85,6 +85,7 @@ public class Vanilla {
 		registerOre("cableRedNet", stack(rednetCableBlock, 1, 1));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 2));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 3));
+		registerOre("slimeballPink", stack(pinkSlimeItem, 1, 0));
 		registerOre("slimeball", stack(pinkSlimeItem, 1, 0));
 		registerOre("blockSlimePink", stack(pinkSlimeBlock));
 		registerOre("blockSlime", stack(pinkSlimeBlock));
