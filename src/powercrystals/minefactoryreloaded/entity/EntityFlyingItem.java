@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.entity;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -77,11 +78,48 @@ public class EntityFlyingItem extends EntitySafariNet {
 	}
 
 	@Override
-	protected void impact() {
+	protected void impact(double x, double y, double z, int side) {
+		ItemStack stack = dataWatcher.getWatchableObjectItemStack(13);
+		String impact;
+		if (stack == null)
+			impact = "snowballpoof";
+		else
+			impact = "iconcrack_" + Item.getIdFromItem(stack.getItem()) + "_" + stack.getItemDamage();
 
-		for (int j = 0; j < 8; ++j) {
-			this.worldObj.spawnParticle("snowballpoof", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+		float X = 0, Y = 0.14f, Z = 0;
+		switch (side) {
+		case 1:
+			y += 1;
+		case 0:
+			x += 0.5;
+			z += 0.5;
+			if (side == 0)
+				Y = 0;
+			break;
+		case 3:
+			z += 1;
+		case 2:
+			x += 0.5;
+			y += 0.5;
+			Z = side == 3 ? 1 : -1;
+			break;
+		case 5:
+			x += 1;
+		case 4:
+			y += 0.5;
+			z += 0.5;
+			X = side == 5 ? 1 : -1;
+			break;
 		}
+		for (int j = 0; j < 8; ++j) {
+			float f = (worldObj.rand.nextFloat() - 0.5f) * 0.37f;
+			if (X != 0) f = Math.copySign(f, X);
+			float f2 = (worldObj.rand.nextFloat() - 0.5f) * 0.37f;
+			if (Z != 0) f2 = Math.copySign(f2, Z);
+			worldObj.spawnParticle(impact, x, y, z, f, Y, f2);
+		}
+		if (!worldObj.isRemote)
+			setDead();
 	}
 
 }

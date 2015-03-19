@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.item.gun;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,27 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 	protected boolean hasGUI(ItemStack stack) {
 
 		return false;
+	}
+
+	public int cofh_canEnchantApply(ItemStack stack, Enchantment ench) {
+
+		if (ench.effectId == Enchantment.looting.effectId)
+			return 1;
+		if (ench.type == EnumEnchantmentType.bow)
+			return 1;
+		return -1;
+	}
+
+	@Override
+	public boolean isItemTool(ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	public int getItemEnchantability() {
+
+		return 1;
 	}
 
 	@Override
@@ -39,7 +61,7 @@ public class ItemPotatoCannon extends ItemFactoryGun {
             int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
 
             if (k > 0)
-            	item.setDamage(item.getDamage() + k * 0.4f);
+            	item.setDamage(item.getDamage() + k * 1.2f);
 
             int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
             item.setKnockbackStrength(l);

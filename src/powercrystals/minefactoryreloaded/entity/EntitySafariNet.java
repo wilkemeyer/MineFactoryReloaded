@@ -95,7 +95,7 @@ public class EntitySafariNet extends EntityThrowable {
 		return true;
 	}
 
-	protected void impact() {
+	protected void impact(double x, double y, double z, int side) {
 
 	}
 
@@ -105,13 +105,23 @@ public class EntitySafariNet extends EntityThrowable {
 		ItemStack storedEntity = dataWatcher.getWatchableObjectItemStack(13);
 
 		boolean r = false;
+		double x, y, z;
+		int side;
 		if (mop.typeOfHit == MovingObjectType.ENTITY) {
 			r = onHitEntity(storedEntity, mop);
+			x = mop.entityHit.posX;
+			y = mop.entityHit.posY;
+			z = mop.entityHit.posZ;
+			side = -1;
 		} else {
 			r = onHitBlock(storedEntity, mop);
+			x = mop.blockX;
+			y = mop.blockY;
+			z = mop.blockZ;
+			side = mop.sideHit;
 		}
 		if (r)
-			impact();
+			impact(x, y, z, side);
 	}
 
 	protected void dropAsStack(ItemStack stack) {

@@ -523,7 +523,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, instance, 160, 3, true);
 		EntityRegistry.registerModEntity(EntityRocket.class, "Rocket", 3, instance, 160, 1, true);
 		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, instance, 80, 3, true);
-		EntityRegistry.registerModEntity(EntityFlyingItem.class, "Item", 5, instance, 160, 3, true);
+		EntityRegistry.registerModEntity(EntityFlyingItem.class, "Item", 5, instance, 160, 7, true);
 		EntityRegistry.registerModEntity(DebugTracker.class, "DebugTracker", 99, instance, 250, 10, true);
 
 		Vanilla.registerOredict();
