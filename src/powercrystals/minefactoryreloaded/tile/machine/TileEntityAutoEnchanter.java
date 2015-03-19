@@ -138,7 +138,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 				output = null;
 			}
 		}
-		if ((input.getItem().getItemEnchantability() == 0 &&
+		if ((input.getItem().getItemEnchantability(input) == 0 &&
 				!input.getItem().equals(Items.glass_bottle)) ||
 				input.getItem().equals(Items.enchanted_book))
 		{

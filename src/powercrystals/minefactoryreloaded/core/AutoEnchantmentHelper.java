@@ -96,7 +96,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 	public static List<EnchantmentData> buildEnchantmentList(Random rand, ItemStack stack,
 			int level, boolean blockInvalid)
 	{
-		int itemEnchantability = stack.getItem().getItemEnchantability();
+		int itemEnchantability = stack.getItem().getItemEnchantability(stack);
 
 		if(itemEnchantability <= 0)
 		{
