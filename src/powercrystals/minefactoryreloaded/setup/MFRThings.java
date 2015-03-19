@@ -135,4 +135,5 @@ public class MFRThings
 	public static Item plasticBagItem;
 	public static ItemFactoryArmor plasticBootsItem;
 	public static Item safariNetFancyJailerItem;
+	public static Item potatoLauncherItem;
 }

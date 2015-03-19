@@ -105,6 +105,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerPicku
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
 import powercrystals.minefactoryreloaded.entity.DebugTracker;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
+import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
@@ -127,6 +128,7 @@ import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryBucket;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryFood;
 import powercrystals.minefactoryreloaded.item.gun.ItemNeedleGun;
+import powercrystals.minefactoryreloaded.item.gun.ItemPotatoCannon;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.item.gun.ItemSafariNetLauncher;
 import powercrystals.minefactoryreloaded.item.gun.ammo.ItemNeedlegunAmmoAnvil;
@@ -148,8 +150,8 @@ import powercrystals.minefactoryreloaded.item.tool.ItemRuler;
 import powercrystals.minefactoryreloaded.item.tool.ItemSpyglass;
 import powercrystals.minefactoryreloaded.item.tool.ItemStraw;
 import powercrystals.minefactoryreloaded.item.tool.ItemXpExtractor;
+import powercrystals.minefactoryreloaded.net.CommonProxy;
 import powercrystals.minefactoryreloaded.net.EntityHandler;
-import powercrystals.minefactoryreloaded.net.IMFRProxy;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
@@ -184,7 +186,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy",
 				serverSide = "powercrystals.minefactoryreloaded.net.ServerProxy")
-	public static IMFRProxy proxy;
+	public static CommonProxy proxy;
 
 	public static SimpleNetworkWrapper networkWrapper = null;
 
@@ -410,6 +412,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		rocketLauncherItem = (new ItemRocketLauncher()).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
+		potatoLauncherItem = new ItemPotatoCannon().setUnlocalizedName("mfr.potatolauncher").setMaxStackSize(1);
+
 		registerBlock(conveyorBlock, ItemBlockConveyor.class, BlockConveyor._names);
 		registerBlock(machineItem, ItemBlockFactory.class, BlockFactoryDecoration._names);
 		machineBaseItem = Item.getItemFromBlock(machineItem);
@@ -516,9 +520,10 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "SafariNet", 0, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);
-		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, instance, 160, 5, true);
+		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, instance, 160, 3, true);
 		EntityRegistry.registerModEntity(EntityRocket.class, "Rocket", 3, instance, 160, 1, true);
 		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, instance, 80, 3, true);
+		EntityRegistry.registerModEntity(EntityFlyingItem.class, "Item", 5, instance, 160, 3, true);
 		EntityRegistry.registerModEntity(DebugTracker.class, "DebugTracker", 99, instance, 250, 10, true);
 
 		Vanilla.registerOredict();
@@ -591,7 +596,6 @@ public class MineFactoryReloadedCore extends BaseMod
 	public void init(FMLInitializationEvent evt)
 	{
 		MinecraftForge.EVENT_BUS.register(rednetCableBlock);
-		MinecraftForge.EVENT_BUS.register(plasticPipeBlock);
 		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 
 		proxy.init();

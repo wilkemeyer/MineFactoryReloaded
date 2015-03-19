@@ -263,6 +263,9 @@ item.mfr.pinkslime.gem.name = Pink Slime Crystal
 item.mfr.rocket.name = Self-Propelled Anti Material Rocket
 item.mfr.rocket.smart.name = Tracking Self-Propelled Anti Material Rocket
 item.mfr.rocketlauncher.name = SPAMR Launcher
+
+item.mfr.potatolauncher.name = Potato Cannon
+
 item.mfr.fishingrod.name = Fishing Rod
 
 item.mfr.ceramicdye.white.name = Ceramic Dye (White)
