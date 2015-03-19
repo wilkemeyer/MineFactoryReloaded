@@ -127,10 +127,7 @@ public class EntitySafariNet extends EntityThrowable {
 	protected void dropAsStack(ItemStack stack) {
 
 		if (!worldObj.isRemote && stack != null) {
-			EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, stack);
-			if (stack.getTagCompound() != null) {
-				ei.getEntityItem().setTagCompound(stack.getTagCompound());
-			}
+			EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
 			ei.delayBeforeCanPickup = 40;
 			worldObj.spawnEntityInWorld(ei);
 		}

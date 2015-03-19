@@ -5,6 +5,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.world.World;
@@ -13,6 +14,11 @@ import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
 
 public class ItemPotatoCannon extends ItemFactoryGun {
+
+	private static final Item[] ammo = { Items.potato, Items.poisonous_potato, Items.snowball, Items.clay_ball,
+		Items.apple, Items.bowl, Items.brick, Items.netherbrick };
+	private static final float[] dmg = { 1f, 1f, 0.3f, 0.6f, 1f, 1.1f, 1.3f, 0.9f };
+	private static final int[] recover = { 7, 7, 0, 5, 8, 2, 1, 1 };
 
 	@Override
 	protected boolean hasGUI(ItemStack stack) {
@@ -44,12 +50,19 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 	@Override
 	protected boolean fire(ItemStack stack, World world, EntityPlayer player) {
 
-		boolean flag = player.capabilities.isCreativeMode ||
-				EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
+		boolean flag = player.capabilities.isCreativeMode, a = false;
 
-		if (flag || player.inventory.hasItem(Items.potato)) {
+		int i = 0;
+		if (!flag) {
+			flag = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
+			for (; !a && i < ammo.length; ++i)
+				a = player.inventory.hasItem(ammo[i]);
+			if (a) --i;
+			else if (flag) i = 0;
+		}
+		if (flag || a) {
 
-			ItemStack fstack = new ItemStack(Items.potato);
+			ItemStack fstack = new ItemStack(ammo[i]);
             if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, stack) > 0) {
             	ItemStack sStack = FurnaceRecipes.smelting().getSmeltingResult(fstack);
             	if (sStack != null)
@@ -58,10 +71,10 @@ public class ItemPotatoCannon extends ItemFactoryGun {
             fstack.stackSize = 1;
 			EntityFlyingItem item = new EntityFlyingItem(world, player, fstack);
 
-            int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
+            int k = Math.max(0, EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack));
 
-            if (k > 0)
-            	item.setDamage(item.getDamage() + k * 1.2f);
+            item.setDamage(dmg[i] * (item.getDamage() + k * 1.2f));
+            item.pickupChance = recover[i];
 
             int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
             item.setKnockbackStrength(l);
@@ -69,7 +82,7 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 			if (flag) {
 				item.canBePickedUp = 2;
 			} else {
-				player.inventory.consumeInventoryItem(Items.potato);
+				player.inventory.consumeInventoryItem(ammo[i]);
 			}
 			if (!world.isRemote) {
 				world.playSoundAtEntity(player, "random.bow", 1F, 0.5F / (itemRand.nextFloat() * 0.4F + 1.2F));

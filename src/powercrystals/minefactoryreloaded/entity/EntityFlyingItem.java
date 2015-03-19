@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 public class EntityFlyingItem extends EntitySafariNet {
 
-	public int canBePickedUp = 0;
+	public int canBePickedUp = 0, pickupChance = 7;
 	protected float damage = 2.0f;
 	protected int knockbackStrength;
 
@@ -53,7 +53,7 @@ public class EntityFlyingItem extends EntitySafariNet {
 	@Override
 	protected boolean onHitBlock(ItemStack storedEntity, MovingObjectPosition mop) {
 
-		if (canBePickedUp == 0 && worldObj.rand.nextInt(7) == 0) {
+		if (canBePickedUp == 0 && (pickupChance > 0 && (pickupChance == 1 || worldObj.rand.nextInt(pickupChance) == 0))) {
 			dropAsStack(this.getStoredEntity());
 			return false;
 		}
