@@ -71,7 +71,8 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5,
 		0, 1, 2, 3, 4, 5,
-		0, 1, 2, 3, 4, 5 };
+		0, 1, 2, 3, 4, 5,
+		7, 8, 9, 10, 11, 12 };
 
 	public static Cuboid6[] subSelection = new Cuboid6[2 + 6 * 6];
 
@@ -146,8 +147,10 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 		{
 			TileEntityRedNetCable cable = (TileEntityRedNetCable)te;
 
+			harvesters.set(player);
 			MovingObjectPosition part = collisionRayTrace(world, x, y, z,
 					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+			harvesters.set(null);
 			if (part == null)
 				return false;
 
@@ -194,14 +197,20 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
 					}
 				}
 			}
-			else if (subHit >= 0 && subHit < (2 + 6 * 2))
+			else if (subHit >= 0 && subHit < (2 + 6 * 2) || subHit >= (2 + 6 * 5))
 			{
 				l: if (MFRUtil.isHoldingUsableTool(player, x, y, z))
 				{
-					byte mode = cable.getMode(side);
-					mode++;
 					if (!world.isRemote)
 					{
+						if (side > 6)
+						{
+							cable.toggleSide(side - 7);
+							break l;
+						}
+
+						byte mode = cable.getMode(side);
+						mode++;
 						if (side == 6)
 						{
 							if (mode > 1)

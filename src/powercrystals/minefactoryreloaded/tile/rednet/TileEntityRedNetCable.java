@@ -157,7 +157,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityRedNetCable pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetCable.class);
 					if (pipe != null) {
-						if (pipe._network != null && pipe.canInterface(this)) {
+						if (pipe._network != null && pipe.canInterface(this, dir)) {
 							if (hasGrid) {
 								pipe._network.mergeGrid(_network);
 							} else {
@@ -312,19 +312,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean isLargePart(EntityPlayer player, int subHit)
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool)
 	{
-		return subHit < 2 | ((subHit >= (2 + 6 * 3)) & subHit < (2 + 6 * 5));
-	}
-
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace)
-	{
-		addTraceableCuboids(list, forTrace, false);
-	}
-
-	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw)
-	{
+		hasTool = false;
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
@@ -334,7 +324,6 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		for (int i = sides.length; i --> 0; )
 		{
 			RedNetConnectionType c = getConnectionState(sides[i], true);
-			RedNetConnectionType f = getConnectionState(sides[i], false);
 			int o = 2 + i;
 			if (c.isConnected)
 			{
@@ -343,13 +332,13 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				else if (c.isCable)
 					if (c.isAllSubnets)
 					{
-						if (forDraw)
-							main.setSide(i, i & 1);
-						else {
-							o = 2 + 6*3 + i;
-							list.add((IndexedCuboid6)new IndexedCuboid6(1, // cable part
-									subSelection[o]).setSide(i, i & 1).add(offset));
+						if (hasTool) {
+							list.add((IndexedCuboid6)new IndexedCuboid6(o + 6 * 6,
+								subSelection[o]).add(offset)); // connection point
 						}
+						o = 2 + 6*3 + i;
+						list.add((IndexedCuboid6)new IndexedCuboid6(1, // cable part
+								subSelection[o]).add(offset));
 						continue;
 					}
 				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
@@ -359,9 +348,10 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				o += 6;
 				list.add((IndexedCuboid6)new IndexedCuboid6(1, subSelection[o]).add(offset)); // cable part
 			}
-			else if (forTrace & f.isConnected && _cableMode[6] != 1)
+			else if (forTrace & (getConnectionState(sides[i], false).isConnected) & _cableMode[6] != 1)
 			{ // cable-only
-				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
+				list.add((IndexedCuboid6)new IndexedCuboid6(o + (hasTool ? 6 * 6 : 0),
+					subSelection[o]).add(offset)); // connection point (raytrace)
 			}
 		}
 		main.add(offset);
@@ -411,11 +401,6 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	public boolean canInterface(TileEntityRedNetCable with, ForgeDirection dir) {
 		if ((_cableMode[dir.ordinal()] & 1) == 0) return false;
-		return canInterface(with);
-	}
-
-	public boolean canInterface(TileEntityRedNetCable with)
-	{
 		return true;
 	}
 
@@ -462,6 +447,16 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		return (MFRUtil.COLORS[getSideColor(side) & 15] << 8) | 0xFF;
 	}
 
+	public boolean toggleSide(int side) {
+
+		boolean oldMode = (_cableMode[side] & 1) == 1;
+		_cableMode[side] ^= 1;
+		updateNearbyNode(ForgeDirection.getOrientation(side));
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
+		return oldMode;
+	}
+
 	public byte getMode(int side)
 	{
 		if (side == 6)
@@ -479,6 +474,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		} else {
 			mustUpdate = mode != _cableMode[side];
 			_cableMode[side] = mode;
+			for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
+				updateNearbyNode(d);
 		}
 		if (mustUpdate)
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -524,7 +521,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		// cables - always connect
 		if (b == rednetCableBlock)
 		{
-			if (((TileEntityRedNetCable)worldObj.getTileEntity(x, y, z)).canInterface(this, side.getOpposite()))
+			if (!decorative || ((TileEntityRedNetCable)worldObj.getTileEntity(x, y, z)).canInterface(this, side.getOpposite()))
 				return RedNetConnectionType.CableAll;
 			else
 				return RedNetConnectionType.None;

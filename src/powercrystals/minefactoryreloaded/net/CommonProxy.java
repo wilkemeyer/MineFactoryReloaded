@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.S21PacketChunkData;
 import net.minecraft.server.management.PlayerManager;
@@ -24,7 +25,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
-public class CommonProxy implements IMFRProxy, LoadingCallback
+public class CommonProxy implements LoadingCallback
 {
 	public static LinkedList<Ticket> ticketsInLimbo = new LinkedList<Ticket>();
 
@@ -53,7 +54,11 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 			loadTicket(ticket, true);
 	}
 
-	@Override
+	public EntityPlayer getPlayer() {
+
+		return null;
+	}
+
 	public void init()
 	{
 		FMLCommonHandler.instance().bus().register(GridTickHandler.energy);
@@ -63,7 +68,6 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
 
-	@Override
 	public void movePlayerToCoordinates(EntityLivingBase e, double x, double y, double z)
 	{
 		if (e instanceof EntityPlayerMP)
@@ -74,7 +78,6 @@ public class CommonProxy implements IMFRProxy, LoadingCallback
 		e.setPositionAndUpdate(x, y, z);
 	}
 
-	@Override
 	public void relightChunk(Chunk chunk)
 	{
 		if (chunk != null)

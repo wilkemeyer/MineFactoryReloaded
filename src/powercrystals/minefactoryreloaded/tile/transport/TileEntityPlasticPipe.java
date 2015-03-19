@@ -500,12 +500,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean isLargePart(EntityPlayer player, int subHit)
-	{
-		return subHit < 2 | ((subHit >= (2 + 6 * 3)) & subHit < (2 + 6 * 5));
-	}
-
-	@Override
 	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
 		return subHit < 2;
 	}
@@ -543,7 +537,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw) {
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
@@ -558,13 +552,9 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			int o = 2 + i;
 			if (((sideMode[opposite[i]] & 1) != 0) & mode > 0) {
 				if (mode == 2) {
-					if (forDraw)
-						main.setSide(i, i & 1);
-					else {
-						o = 2 + 6*3 + i;
-						list.add((IndexedCuboid6)new IndexedCuboid6(1,
-								subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
-					}
+					o = 2 + 6*3 + i;
+					list.add((IndexedCuboid6)new IndexedCuboid6(1,
+							subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
 					continue;
 				}
 				if (cableMode) continue;

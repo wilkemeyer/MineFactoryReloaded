@@ -126,6 +126,10 @@ public class MFRUtil
 
 	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z)
 	{
+		if (player == null)
+		{
+			return false;
+		}
 		if (player.inventory.getCurrentItem() == null)
 		{
 			return false;
@@ -149,6 +153,10 @@ public class MFRUtil
 
 	public static void usedWrench(EntityPlayer player, int x, int y, int z)
 	{
+		if (player == null)
+		{
+			return;
+		}
 		if (player.inventory.getCurrentItem() == null)
 		{
 			return;
@@ -186,6 +194,10 @@ public class MFRUtil
 
 	public static boolean isHoldingHammer(EntityPlayer player)
 	{
+		if (player == null)
+		{
+			return false;
+		}
 		if (player.inventory.getCurrentItem() == null)
 		{
 			return false;
@@ -201,6 +213,10 @@ public class MFRUtil
 
 	public static boolean isHolding(EntityPlayer player, Class<? extends Item> itemClass)
 	{
+		if (player == null)
+		{
+			return false;
+		}
 		if(player.inventory.getCurrentItem() == null)
 		{
 			return false;

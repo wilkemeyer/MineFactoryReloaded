@@ -136,7 +136,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityRedNetEnergy pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
 					if (pipe != null) {
-						if (pipe._grid != null && pipe.canInterface(this)) {
+						if (pipe._grid != null && pipe.canInterface(this, dir)) {
 							if (hasGrid) {
 								pipe._grid.mergeGrid(_grid);
 							} else {
@@ -152,7 +152,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	public boolean canInterface(TileEntityRedNetEnergy with, ForgeDirection dir) {
 		if ((_cableMode[dir.ordinal()] & 1) == 0) return false;
-		return canInterface(with);
+		return super.canInterface(with, dir);
 	}
 
 	@Override
@@ -565,8 +565,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean forDraw)
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool)
 	{
+		hasTool = false;
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[1]); // main body
@@ -588,15 +589,16 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				else if (c.isCable)
 					if (c.isAllSubnets)
 					{
-						if (forDraw)
-							main.setSide(i, i & 1);
-						else {
-							o = 2 + 6*3 + i;
-							if (iface | mode == 4)
-								o += 6;
-							list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
-									subSelection[o]).setSide(i, i & 1).add(offset)); // cable part or energy selection box
+						if (hasTool) {
+							list.add((IndexedCuboid6)new IndexedCuboid6(o + 6 * 6,
+								subSelection[o]).add(offset)); // connection point
+							iface = forTrace;
 						}
+						o = 2 + 6*3 + i;
+						if (iface | mode == 4)
+							o += 6;
+						list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
+								subSelection[o]).add(offset)); // cable part or energy selection box
 						continue;
 					}
 				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point

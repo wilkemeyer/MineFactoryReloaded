@@ -9,6 +9,7 @@ import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.repack.codechicken.lib.vec.BlockCoord;
 import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -288,7 +289,8 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList, Entity entity)
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList,
+			Entity entity)
 	{
 		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof ITraceable)
@@ -308,9 +310,6 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		}
 	}
 
-	protected ThreadLocal<Boolean> draw = new ThreadLocal<Boolean>();
-
-
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
 	{
@@ -324,8 +323,9 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-			((ITraceable)te).addTraceableCuboids(cuboids, true, draw.get() == Boolean.TRUE);
-			return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
+			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingHammer(harvesters.get()));
+			return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids,
+				new BlockCoord(x, y, z), this);
 		}
 		else if (world instanceof World)
 		{
@@ -335,20 +335,22 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
-		MovingObjectPosition mop = event.target;
-		int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
-		if (mop.typeOfHit != MovingObjectType.BLOCK)
-			return;
 		EntityPlayer player = event.player;
 		World world = player.worldObj;
+		MovingObjectPosition omop = event.target;
+		harvesters.set(player);
+		MovingObjectPosition mop = omop;//RayTracer.reTrace(world, player);
+		harvesters.set(null);
+		if (mop == null)
+			return;
+		if (mop.typeOfHit != MovingObjectType.BLOCK || omop.typeOfHit != MovingObjectType.BLOCK)
+			return;
+		int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
 		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof ITraceable) {
-			MovingObjectPosition part = RayTracer.retraceBlock(world, player, x, y, z);
-			if (part == null)
-				return;
-			int subHit = part.subHit;
+			int subHit = mop.subHit;
 			if (te instanceof ICustomHitBox)
 			{
 				ICustomHitBox tile = ((ICustomHitBox)te);
@@ -359,13 +361,8 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 					return;
 				}
 			}
-
-			if (((ITraceable)te).isLargePart(player, subHit))
-			{
-				draw.set(Boolean.TRUE);
-				RayTracer.retraceBlock(world, player, x, y, z);
-				draw.set(null);
-			}
+			event.context.drawSelectionBox(player, mop, 0, event.partialTicks);
+			event.setCanceled(true);
 		}
 	}
 
