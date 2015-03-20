@@ -87,6 +87,7 @@ import powercrystals.minefactoryreloaded.render.entity.EntitySafariNetRenderer;
 import powercrystals.minefactoryreloaded.render.item.ConveyorItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.FactoryGlassPaneItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
+import powercrystals.minefactoryreloaded.render.item.PotatoLauncherItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.RocketItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.RocketLauncherItemRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillPrechargerRenderer;
@@ -178,6 +179,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		MinecraftForgeClient.registerItemRenderer(needlegunItem, new NeedleGunItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(rocketItem, new RocketItemRenderer());
 		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem, new RocketLauncherItemRenderer());
+		MinecraftForgeClient.registerItemRenderer(potatoLauncherItem, new PotatoLauncherItemRenderer());
 
 		RenderFluidOverlayItem fluidRender = new RenderFluidOverlayItem();
 		MinecraftForgeClient.registerItemRenderer(plasticCupItem, fluidRender);

@@ -1286,6 +1286,15 @@ public class Vanilla {
 				'G', spyglassItem
 		}));
 
+		addRecipe(ShapedRecipe(stack(potatoLauncherItem), new Object[] {
+				" L ",
+				"PLP",
+				"PTP",
+				'P', "sheetPlastic",
+				'L', stack(plasticPipeBlock),
+				'T', stack(plasticTank)
+		}));
+
 		addRecipe(ShapedRecipe(stack(rocketLauncherItem), new Object[] {
 				"PCP",
 				"PRP",
