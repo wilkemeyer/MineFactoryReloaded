@@ -129,7 +129,8 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
 		FluidStack fluid = grid.getStorage().drain(1, false);
-		data.setTag("fluid", fluid == null ? null : fluid.writeToNBT(new NBTTagCompound()));
+		if (fluid != null)
+			data.setTag("fluid", fluid.writeToNBT(new NBTTagCompound()));
 		data.setByte("sides", sides);
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
