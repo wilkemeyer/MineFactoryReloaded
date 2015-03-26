@@ -425,7 +425,7 @@
 				t.append(fileMain);
 				project.setProperty("fileout", t.toString());
 	
-				t = new Packages.ava.lang.StringBuilder("{changelog:").append('"",');
+				t = new Packages.java.lang.StringBuilder("{changelog:").append('"",');
 				t.append("releaseType:\"alpha\",").append("parentFileID:");
 				t.append(fileMain).append("}");
 				
