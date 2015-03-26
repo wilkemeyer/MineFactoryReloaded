@@ -440,6 +440,7 @@
 					project.setProperty("fileout", t.toString());
 				} else {
 					Packages.java.lang.System.err.println(t.toString());
+					Packages.java.lang.System.err.println(_.toString());
 				}
 			}
 			
