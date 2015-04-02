@@ -11,10 +11,16 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -24,29 +30,36 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCocoa;
+import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableCropPlant;
+import powercrystals.minefactoryreloaded.farmables.fruits.FactoryFruitStandard;
 import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCocoa;
+import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-@Mod(modid = "MineFactoryReloaded|CompatThaumcraft", name = "MFR Compat: Thaumcraft", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Thaumcraft",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
+@Mod(modid = "MineFactoryReloaded|CompatThaumcraft", name = "MFR Compat: Thaumcraft", version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded;after:Thaumcraft",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class Thaumcraft {
+
 	@EventHandler
 	@Strippable("mod:Thaumcraft")
 	public static void load(FMLInitializationEvent e) {
+
 		try {
 			final Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
 			final Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
 			final Block tcLeaves = GameRegistry.findBlock("Thaumcraft", "blockMagicalLeaves");
 			final Block tcFibres = GameRegistry.findBlock("Thaumcraft", "blockTaintFibres");
-			@SuppressWarnings("unchecked") Class<? extends EntityLivingBase>
-			golem = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityGolemBase"),
-			trunk = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk"),
-			pech = (Class<? extends EntityLivingBase>) Class.forName("thaumcraft.common.entities.monster.EntityPech");
+			@SuppressWarnings("unchecked")
+			Class<? extends EntityLivingBase> golem = (Class<? extends EntityLivingBase>) Class
+					.forName("thaumcraft.common.entities.golems.EntityGolemBase"), trunk = (Class<? extends EntityLivingBase>) Class
+					.forName("thaumcraft.common.entities.golems.EntityTravelingTrunk"), pech = (Class<? extends EntityLivingBase>) Class
+					.forName("thaumcraft.common.entities.monster.EntityPech");
 
 			MFRRegistry.registerAutoSpawnerBlacklistClass(golem);
 			MFRRegistry.registerAutoSpawnerBlacklistClass(trunk);
@@ -64,14 +77,112 @@ public class Thaumcraft {
 			MFRRegistry.registerHarvestable(new HarvestableWood(tcLog));
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcFibres, HarvestType.Normal));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftLeaves(tcLeaves,
-				Item.getItemFromBlock(tcSapling)));
+					Item.getItemFromBlock(tcSapling)));
 			MFRRegistry.registerHarvestable(new HarvestableThaumcraftPlant(tcSapling));
 
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling));
 
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
+		} catch (Throwable x) {
+			x.printStackTrace();
 		}
-		catch(Throwable x) {
+	}
+
+	@EventHandler
+	@Strippable("mod:Thaumcraft@[4.2.1,)")
+	public static void loadManabean(FMLInitializationEvent e) {
+
+		try {
+			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
+			final Block tcLog = GameRegistry.findBlock("Thaumcraft", "blockMagicalLog");
+			final Item tcBean = GameRegistry.findItem("Thaumcraft", "ItemManaBean");
+
+			MFRRegistry.registerHarvestable(new HarvestableStandard(tcPod) {
+
+				@Override
+				public boolean canBeHarvested(World world, java.util.Map<String, Boolean> settings, int x, int y, int z) {
+
+					if (settings.get("isHarvestingTree") == Boolean.TRUE)
+						return true;
+					int blockMetadata = world.getBlockMetadata(x, y, z);
+					return blockMetadata >= 5;
+					//while 5 and 6 have a chance to drop 2 beans, 7 seems to do so consistently
+				}
+			});
+			MFRRegistry.registerPlantable(new PlantableStandard(tcBean, tcPod) {
+
+				@Override
+				public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack) {
+
+					if (!world.isAirBlock(x, y, z))
+						return false;
+
+					return isNextToAcceptableLog(world, x, y, z);
+				}
+
+				protected boolean isNextToAcceptableLog(World world, int x, int y, int z) {
+
+					boolean isMagic = false;
+					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+					if (biome != null)
+						isMagic = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.MAGICAL);
+					return isMagic && isGoodLog(world, x, y + 1, z);
+				}
+
+				protected boolean isGoodLog(World world, int x, int y, int z) {
+
+					Block id = world.getBlock(x, y, z);
+					return id == tcLog || id.equals(Blocks.log);
+				}
+
+				@Override
+				public void postPlant(World world, int x, int y, int z, ItemStack stack) {
+
+					NBTTagList aspects = stack.stackTagCompound.getTagList("Aspects", 10);
+					// System.out.println("Aspect_count:"+aspects.tagCount()); //should be one but who knows
+
+					String aspectstr = "herba"; //because pods without aspect seem to drop herba beans as well
+					for (int i = 0; i < aspects.tagCount(); i++) {
+						NBTTagCompound aspect = aspects.getCompoundTagAt(i);
+						if (aspect.hasKey("key")) {
+							//System.out.println("asp:"+aspect.getString("key"));
+							aspectstr = aspect.getString("key");
+							break;
+						}
+					}
+
+					TileEntity te = world.getTileEntity(x, y, z);
+					if (te != null) {
+						NBTTagCompound tag = new NBTTagCompound();
+						te.writeToNBT(tag);
+						tag.setString("aspect", aspectstr);
+						te.readFromNBT(tag);
+					} //else System.out.println("huh, no tile entity?");
+				}
+			});
+
+			MFRRegistry.registerFruitLogBlock(tcLog);
+			MFRRegistry.registerFruit(new FactoryFruitStandard(tcPod) {
+
+				@Override
+				public boolean canBePicked(World world, int x, int y, int z) {
+
+					int blockMetadata = world.getBlockMetadata(x, y, z);
+					return blockMetadata >= 7;
+				}
+			});
+
+			MFRRegistry.registerFertilizable(new FertilizableCropPlant(tcPod, FertilizerType.GrowMagicalCrop, 6) {
+
+				@Override
+				public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType) {
+
+					int meta = world.getBlockMetadata(x, y, z);
+					meta += rand.nextInt(3);
+					return world.setBlockMetadataWithNotify(x, y, z, meta, 2);
+				}
+			});
+		} catch (Throwable x) {
 			x.printStackTrace();
 		}
 	}
@@ -87,21 +198,24 @@ public class Thaumcraft {
 
 			MFRRegistry.registerHarvestable(new HarvestableCocoa(tcPod));
 			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean, tcPod) {
+
 				@Override
 				protected boolean isNextToAcceptableLog(World world, int x, int y, int z) {
+
 					boolean isMagic = false;
 					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 					if (biome != null)
 						isMagic = BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.MAGICAL);
 					return isMagic &&
-							isGoodLog(world, x+1, y, z) ||
-							isGoodLog(world, x-1, y, z) ||
-							isGoodLog(world, x, y, z+1) ||
-							isGoodLog(world, x, y, z-1);
+							isGoodLog(world, x + 1, y, z) ||
+							isGoodLog(world, x - 1, y, z) ||
+							isGoodLog(world, x, y, z + 1) ||
+							isGoodLog(world, x, y, z - 1);
 				}
 
 				@Override
 				protected boolean isGoodLog(World world, int x, int y, int z) {
+
 					Block id = world.getBlock(x, y, z);
 					return id == tcLog || id.equals(Blocks.log);
 				}
@@ -111,8 +225,7 @@ public class Thaumcraft {
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
 
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
-		}
-		catch(Throwable x) {
+		} catch (Throwable x) {
 			x.printStackTrace();
 		}
 	}
@@ -120,14 +233,17 @@ public class Thaumcraft {
 	@EventHandler
 	@Strippable("api:Thaumcraft|API")
 	public static void load(FMLLoadCompleteEvent e) throws Throwable {
+
 		doAspects();
 	}
 
 	private static void parseAspects2(Machine item, String toadd) throws Throwable {
+
 		parseAspects(item.getItemStack(), toadd, true);
 	}
 
 	private static void doAspects() throws Throwable {
+
 		parseAspects2(Machine.AutoAnvil, "3 permutatio, 5 fabrico, 10 metallum, 5 machina");
 		parseAspects2(Machine.AutoBrewer, "4 ignis, 2 fabrico, 2 aqua, 2 praecantatio, 5 machina");
 		parseAspects2(Machine.AutoDisenchanter, "4 praecantatio, 4 permutatio, 5 machina");
@@ -141,7 +257,8 @@ public class Thaumcraft {
 		parseAspects2(Machine.BlockSmasher, "5 perditio, 5 machina, 3 permutatio, 3 praecantatio");
 		parseAspects2(Machine.Breeder, "2 bestia, 2 fames, 5 machina");
 		parseAspects2(Machine.Chronotyper, "3 tempus, 3 bestia, 5 machina, 3 sensus");
-		parseAspects2(Machine.ChunkLoader, "100 potentia, 30 alienis, 20 praecantatio, 10 iter, 10 vacuos, 5 machina, 5 instrumentum");
+		parseAspects2(Machine.ChunkLoader,
+			"100 potentia, 30 alienis, 20 praecantatio, 10 iter, 10 vacuos, 5 machina, 5 instrumentum");
 		parseAspects2(Machine.Composter, "2 bestia, 2 aqua, 5 machina");
 		parseAspects2(Machine.DeepStorageUnit, "4971027 vacuos, 5 machina, 15 alienis, 1 praecantatio");
 		parseAspects2(Machine.Ejector, "4 motus, 5 machina");
@@ -256,16 +373,16 @@ public class Thaumcraft {
 		parseAspects(logicCardItem, 1, "7 cognitio", true);
 		parseAspects(logicCardItem, 2, "10 cognitio", true);
 
-		parseAspects(factoryDecorativeBrickBlock,  0, "2 gelum, 1 terra"); // ice
-		parseAspects(factoryDecorativeBrickBlock,  1, "1 terra, 3 lux, 2 sensus"); // glowstone
-		parseAspects(factoryDecorativeBrickBlock,  2, "2 terra, 4 sensus"); // lapis
-		parseAspects(factoryDecorativeBrickBlock,  3, "2 terra, 3 ignis, 1 tenebrae"); // obsidian
-		parseAspects(factoryDecorativeBrickBlock,  4, "2 terra, 1 ordo"); // paved stone
-		parseAspects(factoryDecorativeBrickBlock,  5, "1 gelum, 1 terra"); // snow
-		parseAspects(factoryDecorativeBrickBlock,  6, "2 gelum, 1 terra"); // ice large
-		parseAspects(factoryDecorativeBrickBlock,  7, "1 terra, 3 lux, 2 sensus"); // glowstone large
-		parseAspects(factoryDecorativeBrickBlock,  8, "2 terra, 4 sensus"); // lapis large
-		parseAspects(factoryDecorativeBrickBlock,  9, "3 ignis, 2 terra, 1 tenebrae"); // obsidian large
+		parseAspects(factoryDecorativeBrickBlock, 0, "2 gelum, 1 terra"); // ice
+		parseAspects(factoryDecorativeBrickBlock, 1, "1 terra, 3 lux, 2 sensus"); // glowstone
+		parseAspects(factoryDecorativeBrickBlock, 2, "2 terra, 4 sensus"); // lapis
+		parseAspects(factoryDecorativeBrickBlock, 3, "2 terra, 3 ignis, 1 tenebrae"); // obsidian
+		parseAspects(factoryDecorativeBrickBlock, 4, "2 terra, 1 ordo"); // paved stone
+		parseAspects(factoryDecorativeBrickBlock, 5, "1 gelum, 1 terra"); // snow
+		parseAspects(factoryDecorativeBrickBlock, 6, "2 gelum, 1 terra"); // ice large
+		parseAspects(factoryDecorativeBrickBlock, 7, "1 terra, 3 lux, 2 sensus"); // glowstone large
+		parseAspects(factoryDecorativeBrickBlock, 8, "2 terra, 4 sensus"); // lapis large
+		parseAspects(factoryDecorativeBrickBlock, 9, "3 ignis, 2 terra, 1 tenebrae"); // obsidian large
 		parseAspects(factoryDecorativeBrickBlock, 10, "3 terra"); // pavedstone large
 		parseAspects(factoryDecorativeBrickBlock, 12, "1 gelum, 1 terra"); // snow large
 		parseAspects(factoryDecorativeBrickBlock, 12, "3 corpus, 2 fames, 1 bestia", true); // raw meat block
