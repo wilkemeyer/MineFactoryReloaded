@@ -84,7 +84,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void invalidate() {
+	public void cofh_invalidate() {
 		if (_grid != null) {
 			_grid.removeConduit(this);
 			_grid.storage.modifyEnergyStored(-energyForGrid);
@@ -97,7 +97,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = true;
 			_grid = null;
 		}
-		super.invalidate();
 	}
 
 	private void reCache() {
