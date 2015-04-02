@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.core;
 import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
@@ -16,7 +16,7 @@ public class GrindingDamage extends DamageSource
 	{
 		this(null, 1);
 	}
-	
+
 	public GrindingDamage(String type)
 	{
 		this(type, 1);
@@ -30,7 +30,7 @@ public class GrindingDamage extends DamageSource
 		_msgCount = Math.max(deathMessages, 1);
 		_rand = new Random();
 	}
-	
+
 	@Override
 	public IChatComponent func_151519_b(EntityLivingBase entity)
     {
@@ -45,7 +45,8 @@ public class GrindingDamage extends DamageSource
         	}
         }
         String s1 = s + ".player";
-        // TODO: change to localized chat message?
-        return new ChatComponentText("").appendText(entityliving1 != null && StatCollector.canTranslate(s1) ? StatCollector.translateToLocalFormatted(s1, new Object[] {entity.getCommandSenderName(), entityliving1.getCommandSenderName()}): StatCollector.translateToLocalFormatted(s, new Object[] {entity.getCommandSenderName()}));
+        if (entityliving1 != null && StatCollector.canTranslate(s1))
+        	return new ChatComponentTranslation(s1, entity.getCommandSenderName(), entityliving1.getCommandSenderName());
+        return new ChatComponentTranslation(s, entity.getCommandSenderName());
     }
 }
