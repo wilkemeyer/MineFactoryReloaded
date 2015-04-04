@@ -1,9 +1,11 @@
 package powercrystals.minefactoryreloaded.modhelpers.atum;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 import java.lang.reflect.Method;
@@ -12,6 +14,9 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -27,11 +32,9 @@ import powercrystals.minefactoryreloaded.modhelpers.FertilizableSaplingReflectio
 customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class Atum
 {
-	private static final String lastUpdated = "Atum 0.4.3B, current release as of Jul 3 2013";
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@EventHandler
-	public static void load(FMLInitializationEvent e)
+	public void load(FMLInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("Atum"))
 		{
@@ -81,10 +84,9 @@ public class Atum
 			MFRRegistry.registerHarvestable(new HarvestableStandard(weedId, HarvestType.Normal));
 
 		}
-		catch (Exception x)
-		{
-			System.out.println("Last updated for " + lastUpdated);
-			x.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 }

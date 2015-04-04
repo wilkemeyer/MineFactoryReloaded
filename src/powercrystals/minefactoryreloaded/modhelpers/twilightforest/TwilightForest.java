@@ -14,6 +14,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.item.Item;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -36,7 +39,7 @@ public class TwilightForest
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@EventHandler
-	public static void load(FMLInitializationEvent e)
+	public void load(FMLInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("TwilightForest"))
 		{
@@ -123,9 +126,9 @@ public class TwilightForest
 
 			MFRRegistry.registerRandomMobProvider(new TwilightForestMobProvider());
 		}
-		catch(Exception x)
-		{
-			MineFactoryReloadedCore.log().catching(x);
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 }

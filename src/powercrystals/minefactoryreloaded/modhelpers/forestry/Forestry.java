@@ -2,16 +2,21 @@ package powercrystals.minefactoryreloaded.modhelpers.forestry;
 
 import static cpw.mods.fml.common.registry.GameRegistry.*;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -26,7 +31,7 @@ public class Forestry
 {
 	private static final String name = "Forestry";
 	@EventHandler
-	public static void load(FMLInitializationEvent e)
+	public void load(FMLInitializationEvent e)
 	{
 		if(!Loader.isModLoaded(name))
 		{
@@ -36,9 +41,9 @@ public class Forestry
 		{
 			initForestry();
 		}
-		catch(Exception x)
-		{
-			x.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

@@ -4,9 +4,11 @@ import static cofh.api.modhelpers.ThaumcraftHelper.parseAspects;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.asm.relauncher.Strippable;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -24,6 +26,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -48,7 +53,7 @@ public class Thaumcraft {
 
 	@EventHandler
 	@Strippable("mod:Thaumcraft")
-	public static void load(FMLInitializationEvent e) {
+	public void load(FMLInitializationEvent e) {
 
 		try {
 			final Block tcSapling = GameRegistry.findBlock("Thaumcraft", "blockCustomPlant");
@@ -83,14 +88,15 @@ public class Thaumcraft {
 			MFRRegistry.registerPlantable(new PlantableThaumcraftTree(tcSapling));
 
 			MFRRegistry.registerFertilizable(new FertilizableTCSapling(tcSapling));
-		} catch (Throwable x) {
-			x.printStackTrace();
+		} catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 
 	@EventHandler
 	@Strippable("mod:Thaumcraft@[4.2.1,)")
-	public static void loadManabean(FMLInitializationEvent e) {
+	public void loadManabean(FMLInitializationEvent e) {
 
 		try {
 			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
@@ -182,14 +188,15 @@ public class Thaumcraft {
 					return world.setBlockMetadataWithNotify(x, y, z, meta, 2);
 				}
 			});
-		} catch (Throwable x) {
-			x.printStackTrace();
+		} catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 
 	@EventHandler
 	@Strippable("mod:Thaumcraft@[4,4.2.1)")
-	public static void loadCocoa(FMLInitializationEvent e) {
+	public void loadCocoa(FMLInitializationEvent e) {
 
 		try {
 			final Block tcPod = GameRegistry.findBlock("Thaumcraft", "blockManaPod");
@@ -225,8 +232,9 @@ public class Thaumcraft {
 			MFRRegistry.registerFruit(new FruitCocoa(tcPod));
 
 			MFRRegistry.registerFertilizable(new FertilizableCocoa(tcPod, FertilizerType.GrowMagicalCrop));
-		} catch (Throwable x) {
-			x.printStackTrace();
+		} catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

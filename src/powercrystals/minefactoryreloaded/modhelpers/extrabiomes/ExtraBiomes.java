@@ -1,13 +1,18 @@
 package powercrystals.minefactoryreloaded.modhelpers.extrabiomes;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -20,7 +25,7 @@ public class ExtraBiomes
 	private static Map<String, HarvestType> _harvestRegistries;
 
 	@EventHandler
-	public static void load(FMLInitializationEvent ev)
+	public void load(FMLInitializationEvent ev)
 	{
 		if(!Loader.isModLoaded("ExtrabiomesXL"))
 		{
@@ -95,9 +100,9 @@ public class ExtraBiomes
 			MFRRegistry.registerRubberTreeBiome("Temperate Rainforest");
 			MFRRegistry.registerRubberTreeBiome("Woodlands");
 		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 }

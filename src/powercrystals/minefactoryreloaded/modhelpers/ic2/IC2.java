@@ -1,9 +1,11 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
 import cofh.asm.relauncher.Strippable;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -18,6 +20,9 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -41,7 +46,7 @@ public class IC2
 
 	@EventHandler
 	@Strippable("mod:IC2")
-	public static void load(FMLInitializationEvent evt)
+	public void load(FMLInitializationEvent evt)
 	{
 		try
 		{
@@ -100,17 +105,15 @@ public class IC2
 			{
 				Recipes.extractor.addRecipe(new RecipeInputItemStack(item), null, rubber);
 			}
-			catch (Throwable _)
-			{
-				{
-					_.printStackTrace();
-				}
+			catch (Throwable $) {
+				ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+				LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 			}
 			copyEthanol();
 		}
-		catch (Exception x)
-		{
-			x.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.forgemultiparts;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
@@ -17,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
@@ -45,11 +45,9 @@ public class FMP
 				addSubtypes((ItemBlockFactory)Item.getItemFromBlock(block));
 			sendComm(new ItemStack(MFRThings.rubberWoodBlock, 1, 0));
 		}
-		catch (Throwable _)
-		{
+		catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
-			FMLLog.log(This.getModId(), Level.WARN, "There was a problem loading %s.", This.getName());
-			_.printStackTrace();
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

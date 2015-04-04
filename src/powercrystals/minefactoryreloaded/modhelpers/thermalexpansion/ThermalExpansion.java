@@ -1,10 +1,12 @@
 package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
@@ -16,6 +18,9 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -47,9 +52,9 @@ public class ThermalExpansion implements IRandomMobProvider
 			sendPulv(new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 1),
 					new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 3));
 		}
-		catch (Exception x)
-		{
-			x.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

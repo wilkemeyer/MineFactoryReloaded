@@ -1,10 +1,15 @@
 package powercrystals.minefactoryreloaded.modhelpers.sufficientbiomes;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -15,7 +20,7 @@ public class SufficientBiomes
 {
 
 	@EventHandler
-	public static void load(FMLInitializationEvent ev)
+	public void load(FMLInitializationEvent ev)
 	{
 		if(!Loader.isModLoaded("EmasherWorldGen"))
 		{
@@ -29,9 +34,9 @@ public class SufficientBiomes
 			MFRRegistry.registerRubberTreeBiome("Sand Forest");
 			MFRRegistry.registerRubberTreeBiome("Prairie Forest");
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

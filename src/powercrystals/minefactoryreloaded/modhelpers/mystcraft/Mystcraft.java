@@ -1,13 +1,18 @@
 package powercrystals.minefactoryreloaded.modhelpers.mystcraft;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 import net.minecraft.nbt.NBTTagCompound;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -16,11 +21,10 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class Mystcraft
 {
-	private static final String lastUpdated = "for Mystcraft-uni-1.5.1-0.10.3.00, current release as of May 25 2013";
 
 	@EventHandler
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void load(FMLInitializationEvent e)
+	public void load(FMLInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("Mystcraft"))
 		{
@@ -33,10 +37,9 @@ public class Mystcraft
 			Class entityLinkbook = Class.forName("com.xcompwiz.mystcraft.entity.EntityLinkbook");
 			MFRRegistry.registerAutoSpawnerBlacklistClass(entityLinkbook);
 		}
-		catch (Exception x)
-		{
-			System.out.println("Last updated for " + lastUpdated);
-			x.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 

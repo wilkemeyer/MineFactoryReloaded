@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.railcraft;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
@@ -17,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -63,11 +63,9 @@ public class Railcraft
 			addOutput.invoke(recipe, new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 9), 1.0f); // Cobble Whitestone -> Gravel + flint
 			addOutput.invoke(recipe, new ItemStack(Items.flint, 1, 0), 0.05f);
 		}
-		catch (Throwable _)
-		{
+		catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
-			FMLLog.log(This.getModId(), Level.WARN, "There was a problem loading %s.", This.getName());
-			_.printStackTrace();
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 }

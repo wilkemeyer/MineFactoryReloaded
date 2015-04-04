@@ -1,14 +1,19 @@
 package powercrystals.minefactoryreloaded.modhelpers.projectred;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -22,7 +27,7 @@ customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class ProjectRedCompat
 {
 	@EventHandler
-	public static void postInit(FMLPostInitializationEvent e)
+	public void postInit(FMLPostInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("ProjRed|Exploration"))
 		{
@@ -37,9 +42,9 @@ public class ProjectRedCompat
 			MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(stainedLeaf));
 			MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)stainedSapling));
 		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 }

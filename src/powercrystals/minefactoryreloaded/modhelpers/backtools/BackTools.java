@@ -1,12 +1,17 @@
 package powercrystals.minefactoryreloaded.modhelpers.backtools;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 import java.lang.reflect.Method;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.item.gun.ItemSafariNetLauncher;
@@ -17,11 +22,10 @@ import powercrystals.minefactoryreloaded.item.tool.ItemSpyglass;
 customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class BackTools
 {
-	private static final String lastUpdated = "for Back Tools 1.5.1v2, current release as of May 20 2013";
 
 	@SuppressWarnings({"rawtypes","unchecked"})
 	@EventHandler
-	public static void load(FMLInitializationEvent e)
+	public void load(FMLInitializationEvent e)
 	{
 		if(!Loader.isModLoaded("mod_BackTools"))
 		{
@@ -43,10 +47,9 @@ public class BackTools
 				addBackItem.invoke(modBackTools, ItemFactoryHammer.class, 1, true);
 			}
 		}
-		catch (Exception x)
-		{
-			System.out.println("Last updated for " + lastUpdated);
-			x.printStackTrace();
+		catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 }
