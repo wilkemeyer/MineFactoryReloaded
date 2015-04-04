@@ -257,13 +257,13 @@ public abstract class UtilInventory
 		}
 		// (1) Try to put stack in pipes that are in valid directions
 		if (handlePipeTiles)
-			handleIPipeTile(world, bp, dropdirections, stack);
+			stack = handleIPipeTile(world, bp, dropdirections, stack);
 		// (2) Try to put stack in chests that are in valid directions
 		for (Entry<ForgeDirection, IInventory> chest : findChests(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
 		{
 			IInventoryManager manager = InventoryManager.create(chest.getValue(), chest.getKey().getOpposite());
 			stack = manager.addItem(stack);
-			if (stack == null || stack.stackSize == 0)
+			if (stack == null || stack.stackSize <= 0)
 			{
 				return null;
 			}
