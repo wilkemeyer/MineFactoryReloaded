@@ -35,7 +35,7 @@ import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
 
 public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable
 {
-	public static final float DAMAGE = Float.MAX_VALUE;
+	public static final float DAMAGE = 0x1.fffffeP+120f;
 
 	protected Random _rand;
 	protected GrindingWorldServer _grindingWorld;
