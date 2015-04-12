@@ -132,6 +132,27 @@ public class MFRFarmables {
 		MFRRegistry.registerHarvestable(new HarvestableWood(rubberWoodBlock));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(rubberLeavesBlock));
 
+		/*if ()
+		{
+			ArrayList<ItemStack> list = OreDictionary.getOres("logWood");
+			for (ItemStack stack : list) {
+				if (stack == null || stack.getItem() == null)
+					continue;
+				Block block = Block.getBlockFromItem(stack.getItem());
+				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
+					MFRRegistry.registerHarvestable(new HarvestableWood(block, true));
+			}
+
+			list = OreDictionary.getOres("treeLeaves");
+			for (ItemStack stack : list) {
+				if (stack == null || stack.getItem() == null)
+					continue;
+				Block block = Block.getBlockFromItem(stack.getItem());
+				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
+					MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(block, true));
+			}
+		}//*/
+
 		MFRRegistry.registerFertilizable(new FertilizableStandard(rubberSaplingBlock));
 		MFRRegistry.registerFertilizable(new FertilizableIGrowable(fertileSoil));
 
