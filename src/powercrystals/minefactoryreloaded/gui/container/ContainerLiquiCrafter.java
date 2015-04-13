@@ -11,6 +11,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -91,8 +92,15 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 		else if(var == 3) drops = value != 0;
 		else if(var == 2)
 		{
-			_crafter.getTanks()[_tempTankIndex].
-					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(_tempLiquidId), value));
+			Fluid fluid = FluidRegistry.getFluid(value);
+			if(fluid == null)
+			{
+				_crafter.getTanks()[_tempTankIndex].setFluid(null);
+			}
+			else {
+				_crafter.getTanks()[_tempTankIndex].
+						setFluid(new FluidStack(FluidRegistry.getFluid(_tempLiquidId), value));
+			}
 		}
 	}
 
