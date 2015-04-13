@@ -278,9 +278,9 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		if(_ethanol != null & _biofuel != null)
 		{
 			if (_ethanol.isFluidEqual(resource))
-				return new FluidStack(_biofuel.fluidID, resource.amount);
+				return new FluidStack(_biofuel, resource.amount);
 			else if (_biofuel.isFluidEqual(resource))
-				return new FluidStack(_ethanol.fluidID, resource.amount);
+				return new FluidStack(_ethanol, resource.amount);
 		}
 		return null;
 	}

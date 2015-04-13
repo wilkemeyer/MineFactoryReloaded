@@ -290,7 +290,7 @@ public class FluidNetwork implements IGrid {
 				return false;
 			} else {
 				cond.setGrid(this);
-				storage.fill(new FluidStack(cond.fluidForGrid.fluidID, 0), true);
+				storage.fill(new FluidStack(cond.fluidForGrid, 0), true);
 			}
 		} else {
 			cond.setGrid(this);

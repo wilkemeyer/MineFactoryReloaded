@@ -82,7 +82,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 				if(te instanceof IFluidHandler && amountForThisRoute > 0)
 				{
 					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),
-							new FluidStack(resource.fluidID, amountForThisRoute), doFill);
+							new FluidStack(resource, amountForThisRoute), doFill);
 					if(amountRemaining <= 0)
 					{
 						break;
@@ -98,7 +98,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			if(te instanceof IFluidHandler)
 			{
 				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(),
-						new FluidStack(resource.fluidID, amountRemaining), doFill);
+						new FluidStack(resource, amountRemaining), doFill);
 			}
 		}
 
