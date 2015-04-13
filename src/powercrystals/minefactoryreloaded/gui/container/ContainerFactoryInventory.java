@@ -11,7 +11,9 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
@@ -82,8 +84,18 @@ public class ContainerFactoryInventory extends Container
 
 		if (var == 30) _tankIndex = value;
 		else if (var == 31) _tankAmount = value;
-		else if (var == 32) _te.getTanks()[_tankIndex].
-					setFluid(FluidRegistry.getFluidStack(FluidRegistry.getFluidName(value), _tankAmount));
+		else if (var == 32)
+		{
+			Fluid fluid = FluidRegistry.getFluid(value);
+			if(fluid == null)
+			{
+				_te.getTanks()[_tankIndex].setFluid(null);
+			}
+			else
+			{
+				_te.getTanks()[_tankIndex].setFluid(new FluidStack(fluid, _tankAmount));
+			}
+		}
 	}
 
 	@Override
