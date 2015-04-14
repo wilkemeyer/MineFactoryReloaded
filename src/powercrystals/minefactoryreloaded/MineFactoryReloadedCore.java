@@ -125,6 +125,7 @@ import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryBucket;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryFood;
 import powercrystals.minefactoryreloaded.item.gun.ItemNeedleGun;
@@ -335,6 +336,9 @@ public class MineFactoryReloadedCore extends BaseMod
 		steamFluid = new BlockFactoryFluid("steam", BlockFactoryFluid.material);
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
+		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 0);
+		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 1);
+		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 2);
 		plasticBootsItem = new ItemPlasticBoots();
 
 		rawRubberItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.raw");
@@ -343,7 +347,13 @@ public class MineFactoryReloadedCore extends BaseMod
 		rawPlasticItem = (new ItemFactory()).setUnlocalizedName("mfr.plastic.raw");
 		plasticSheetItem = (new ItemFactory()).setUnlocalizedName("mfr.plastic.sheet").setMaxStackSize(127);
 
-		plasticBootsItem.addRepairableItem(plasticSheetItem).addRepairableItem(rawPlasticItem);
+		{
+			int i = MFRConfig.armorStacks.getBoolean(false) ? 4 : 1;
+			plasticHelmetItem.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.plastic.armor.helm").setMaxStackSize(i);
+			plasticChestplateItem.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.plastic.armor.chest").setMaxStackSize(i);
+			plasticLeggingsItem.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.plastic.armor.legs").setMaxStackSize(i);
+			plasticBootsItem.setRepairIngot("itemPlastic").setMaxStackSize(i);
+		}
 
 		upgradeItem = (new ItemUpgrade()).setUnlocalizedName("mfr.upgrade.radius").setMaxStackSize(1);
 

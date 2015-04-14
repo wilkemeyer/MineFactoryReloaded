@@ -45,6 +45,7 @@ public class MFRConfig
 	public static Property largeSlimesDrop;
 	public static Property meatSaturation;
 	public static Property fishingDropRate;
+	public static Property armorStacks;
 
 	public static Property vanillaOverrideMilkBucket;
 
@@ -245,6 +246,9 @@ public class MFRConfig
 
 		largeSlimesDrop = c.get(CATEGORY_ITEM, "LargeSlimeDrop", false);
 		largeSlimesDrop.comment = "If true, only pink slimes larger than tiny will drop pink slimeballs. Provided for those who want a more work-intensive laser drill. (slimes can only be made larger through the slime embiggening syringe)";
+
+		armorStacks = c.get(CATEGORY_ITEM, "ArmorStacks", false);
+		armorStacks.comment = "If true, Plastic Armor will stack to 4";
 		//}
 
 		//{ Alterations to recipes

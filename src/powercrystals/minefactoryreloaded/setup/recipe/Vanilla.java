@@ -25,6 +25,7 @@ public class Vanilla {
 	private static boolean _registeredConveyors;
 	private static boolean _registeredDecorative;
 	private static boolean _registeredSyringes;
+	private static boolean _registeredArmor;
 	private static boolean _registeredPlastics;
 	private static boolean _registeredMiscItems;
 	private static boolean _registeredSafariNets;
@@ -48,6 +49,7 @@ public class Vanilla {
 		registerMachineUpgrades();
 		registerMachineTinkers();
 		registerPlastics();
+		registerArmor();
 		registerDecorative();
 		registerMiscItems();
 		registerSmelting();
@@ -73,7 +75,9 @@ public class Vanilla {
 		registerOre("leavesRubber", rubberLeavesBlock);
 		registerOre("blockPlastic", factoryPlasticBlock);
 		registerOre("sheetPlastic", plasticSheetItem);
+		registerOre("itemPlastic", plasticSheetItem);
 		registerOre("dustPlastic", rawPlasticItem);
+		registerOre("itemPlastic", rawPlasticItem);
 		registerOre("ingotMeat", meatIngotCookedItem);
 		registerOre("ingotMeatRaw", meatIngotRawItem);
 		registerOre("nuggetMeat", meatNuggetCookedItem);
@@ -981,6 +985,34 @@ public class Vanilla {
 				"PPP",
 				"   ",
 				"PPP",
+				'P', "sheetPlastic",
+		}));
+	}
+
+	protected void registerArmor() {
+
+		if (_registeredArmor) {
+			return;
+		}
+		_registeredArmor = true;
+
+		addRecipe(ShapedRecipe(stack(plasticHelmetItem, 1), new Object[] {
+				"PPP",
+				"P P",
+				'P', "sheetPlastic",
+		}));
+
+		addRecipe(ShapedRecipe(stack(plasticChestplateItem, 1), new Object[] {
+				"P P",
+				"PPP",
+				"PPP",
+				'P', "sheetPlastic",
+		}));
+
+		addRecipe(ShapedRecipe(stack(plasticLeggingsItem, 1), new Object[] {
+				"PPP",
+				"P P",
+				"P P",
 				'P', "sheetPlastic",
 		}));
 	}
