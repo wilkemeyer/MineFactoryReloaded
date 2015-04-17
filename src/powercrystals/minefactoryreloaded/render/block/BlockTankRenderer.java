@@ -70,9 +70,10 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 		float green = (color >> 8 & 255) / 255.0F;
 		float blue = (color & 255) / 255.0F;
 
-		IIcon iconFluid = fluid != null ? fluid.getFluid().getIcon(fluid) :
-			renderer.getBlockIconFromSideAndMetadata(block, 6, 1);
-		IIcon iconFluidTop = fluid != null ? iconFluid : renderer.getBlockIconFromSideAndMetadata(block, 7, 1);
+		IIcon iconFluid = renderer.getIconSafe(fluid != null ? fluid.getFluid().getIcon(fluid) :
+			renderer.getBlockIconFromSideAndMetadata(block, 6, 1));
+		IIcon iconFluidTop = renderer.getIconSafe(fluid != null ? iconFluid :
+			renderer.getBlockIconFromSideAndMetadata(block, 7, 1));
 
         Tessellator tessellator = Tessellator.instance;
 
@@ -176,8 +177,8 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 		float green = (color >> 8 & 255) / 255.0F;
 		float blue = (color & 255) / 255.0F;
 
-		IIcon iconFluid = block.getIcon(blockAccess, x, y, z, 6);
-		IIcon iconFluidTop = block.getIcon(blockAccess, x, y, z, 7);
+		IIcon iconFluid = renderer.getIconSafe(block.getIcon(blockAccess, x, y, z, 6));
+		IIcon iconFluidTop = renderer.getIconSafe(block.getIcon(blockAccess, x, y, z, 7));
 
 		final double offset = 0.003;
 
