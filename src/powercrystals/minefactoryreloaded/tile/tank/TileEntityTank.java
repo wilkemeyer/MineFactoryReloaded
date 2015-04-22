@@ -73,6 +73,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	@Override
 	public void firstTick()
 	{
+		if (!inWorld) return;
 		for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
 			if (to.offsetY != 0 || !BlockPosition.blockExists(this, to))
 				continue;

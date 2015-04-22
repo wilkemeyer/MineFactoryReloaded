@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 {
 	protected String _invName;
+	protected boolean inWorld;
 
 	public void setBlockName(String name)
 	{
@@ -33,8 +34,13 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		super.invalidate();
 	}
 
+	public void cofh_validate() {
+		inWorld = true;
+	}
+
 	public void cofh_invalidate() {
 		invalidate();
+		inWorld = false;
 		markChunkDirty();
 	}
 

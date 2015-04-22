@@ -97,6 +97,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = true;
 			_grid = null;
 		}
+		super.cofh_invalidate();
 	}
 
 	private void reCache() {
@@ -113,7 +114,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public void firstTick(IGridController grid) {
 		super.firstTick(grid);
-		if (worldObj == null || worldObj.isRemote) return;
+		if (!inWorld || worldObj == null || worldObj.isRemote) return;
 		if (grid != RedstoneEnergyNetwork.HANDLER) return;
 		if (_grid == null) {
 			incorporateTiles();
@@ -129,19 +130,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	private void incorporateTiles() {
 		if (_grid == null) {
-			boolean hasGrid = false;
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityRedNetEnergy pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
 					if (pipe != null) {
 						if (pipe._grid != null && pipe.canInterface(this, dir)) {
-							if (hasGrid) {
-								pipe._grid.mergeGrid(_grid);
-							} else {
-								pipe._grid.addConduit(this);
-								hasGrid = _grid != null;
-							}
+							pipe._grid.addConduit(this);
 						}
 					}
 				}

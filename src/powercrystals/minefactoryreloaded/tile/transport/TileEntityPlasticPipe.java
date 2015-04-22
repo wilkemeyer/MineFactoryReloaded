@@ -72,7 +72,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void invalidate() {
+	public void cofh_invalidate() {
 		if (_grid != null) {
 			_grid.removeConduit(this);
 			_grid.storage.drain(fluidForGrid, true);
@@ -85,7 +85,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			deadCache = true;
 			_grid = null;
 		}
-		super.invalidate();
+		super.cofh_invalidate();
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	@Override
 	public void firstTick(IGridController grid) {
-		if (worldObj == null || worldObj.isRemote) return;
+		if (!inWorld || worldObj == null || worldObj.isRemote) return;
 		if (grid != FluidNetwork.HANDLER) return;
 		if (_grid == null) {
 			incorporateTiles();

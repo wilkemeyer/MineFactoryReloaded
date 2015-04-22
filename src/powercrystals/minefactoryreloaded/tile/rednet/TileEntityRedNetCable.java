@@ -54,9 +54,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	RedstoneNetwork _network;
 
 	@SideOnly(Side.CLIENT)
-	private byte __updatePos;
-	@SideOnly(Side.CLIENT)
 	private long[] __lastUpdates;
+	@SideOnly(Side.CLIENT)
+	private byte __updatePos;
 	@SideOnly(Side.CLIENT)
 	private boolean __useTESR;
 
@@ -99,7 +99,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void invalidate() {
+	public void cofh_invalidate() {
 		if (_network != null) {
 			_network.removeConduit(this);
 			int c = 0;
@@ -110,7 +110,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				_network.regenerate();
 			_network = null;
 		}
-		super.invalidate();
+		super.cofh_invalidate();
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	@Override
 	public void firstTick(IGridController grid) {
-		if (worldObj == null || worldObj.isRemote) return;
+		if (!inWorld || worldObj == null || worldObj.isRemote) return;
 		if (grid != RedstoneNetwork.HANDLER) return;
 		if (_network == null) {
 			incorporateTiles();
@@ -151,19 +151,13 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	private void incorporateTiles() {
 		if (_network == null) {
-			boolean hasGrid = false;
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (readFromNBT && (_cableMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityRedNetCable pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetCable.class);
 					if (pipe != null) {
 						if (pipe._network != null && pipe.canInterface(this, dir)) {
-							if (hasGrid) {
-								pipe._network.mergeGrid(_network);
-							} else {
-								pipe._network.addConduit(this);
-								hasGrid = _network != null;
-							}
+							pipe._network.addConduit(this);
 						}
 					}
 				}
