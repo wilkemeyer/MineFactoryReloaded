@@ -256,8 +256,13 @@ public abstract class UtilInventory
 			}
 		}
 		// (1) Try to put stack in pipes that are in valid directions
-		if (handlePipeTiles)
+		if (handlePipeTiles) {
 			stack = handleIPipeTile(world, bp, dropdirections, stack);
+			if (stack == null || stack.stackSize <= 0)
+			{
+				return null;
+			}
+		}
 		// (2) Try to put stack in chests that are in valid directions
 		for (Entry<ForgeDirection, IInventory> chest : findChests(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
 		{
@@ -345,6 +350,8 @@ public abstract class UtilInventory
 	public static void dropStackInAir(World world, double x, double y, double z, ItemStack stack,
 			int delay, ForgeDirection towards)
 	{
+		if (stack == null) return;
+
 		float dropOffsetX = 0.0F;
 		float dropOffsetY = 0.0F;
 		float dropOffsetZ = 0.0F;
