@@ -171,7 +171,7 @@ tile.mfr.rednet.panel.historian.name = Storico RedNet
 tile.mfr.machineblock = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Custodia per regolatrice programmabile RedNet
 
-tile.mfr.tank.name = Cisterna di plastica
+tile.mfr.tank.name = Serbatoio di plastica
 
 fluid.mfr.milk.still.name = Latte
 fluid.mfr.sludge.still.name = Melma
