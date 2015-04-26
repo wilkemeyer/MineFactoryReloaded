@@ -171,7 +171,7 @@ tile.mfr.rednet.panel.historian.name = Storico RedNet
 tile.mfr.machineblock = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Custodia per regolatrice programmabile RedNet
 
-tile.mfr.tank.name = Cisterna di plastica
+tile.mfr.tank.name = Serbatoio di plastica
 
 fluid.mfr.milk.still.name = Latte
 fluid.mfr.sludge.still.name = Melma
@@ -264,6 +264,8 @@ item.mfr.rocket.name = Razzo autopropulsore anti-materiale
 item.mfr.rocket.smart.name = Razzo autopropulsore anti-materiale a rilevamento
 item.mfr.rocketlauncher.name = Lanciatore RAPAM
 item.mfr.fishingrod.name = Canna da pesca
+
+item.mfr.potatolauncher.name = Cannone a patate
 
 item.mfr.ceramicdye.white.name = Ceramica colorata (bianco)
 item.mfr.ceramicdye.orange.name = Ceramica colorata (arancione)
