@@ -76,8 +76,10 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 		_forwardDirection = ForgeDirection.NORTH;
 	}
 
+	@Override
 	public void cofh_validate()
 	{
+		super.cofh_validate();
 		onRotate();
 		if (worldObj.isRemote && hasHAM())
 		{
