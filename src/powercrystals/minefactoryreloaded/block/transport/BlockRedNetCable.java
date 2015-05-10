@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -38,7 +39,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
 public class BlockRedNetCable extends BlockFactory
-implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo
+implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, ITileEntityProvider
 {
 	public static final String[] _names = {null, "glass", "energy", "energyglass"};
 

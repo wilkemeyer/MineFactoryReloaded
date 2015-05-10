@@ -3,15 +3,16 @@ package powercrystals.minefactoryreloaded.block.transport;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdPPipe;
 import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable._subSideMappings;
 
-import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IBlockInfo;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.position.BlockPosition;
+import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -29,7 +30,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
-public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
+public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileEntityProvider
 {
 	public BlockPlasticPipe()
 	{
@@ -50,7 +51,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			if (part == null)
 				return false;
-			
+
 			int subHit = part.subHit;
 			if (subHit < 0) {
 				MineFactoryReloadedCore.instance().getLogger().error("subHit was " + subHit, new Throwable());
@@ -58,9 +59,9 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 			}
 			int oldSide = side;
 			side = _subSideMappings[subHit];
-			
+
 			ItemStack s = player.getCurrentEquippedItem();
-			
+
 			l2: if (cable.onPartHit(player, side, subHit))
 			{
 				;
@@ -181,7 +182,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
 				damageDropped(metadata));
 			drops.add(machine);
-		
+
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityPlasticPipe)
@@ -195,9 +196,9 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo
 				drops.add(new ItemStack(Blocks.redstone_block));
 				break;
 			}
-			
+
 		}
-		
+
 		return drops;
 	}
 

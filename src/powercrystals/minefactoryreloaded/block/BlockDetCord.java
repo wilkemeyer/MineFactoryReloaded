@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -19,7 +20,7 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityDetCord;
 
-public class BlockDetCord extends BlockFactory {
+public class BlockDetCord extends BlockFactory implements ITileEntityProvider {
 
 	public BlockDetCord() {
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -44,7 +45,7 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
-public class BlockConveyor extends BlockFactory implements IRedNetInputNode
+public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITileEntityProvider
 {
 	public static final String[] _names = {"white", "orange", "magenta", "lightblue", "yellow", "lime",
 		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default"};

@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,7 @@ import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
-public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, IRedNetInfo
+public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, IRedNetInfo, ITileEntityProvider
 {
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
 

@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +22,7 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.render.IconOverlay;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
-public class BlockTank extends BlockFactory implements IBlockInfo
+public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityProvider
 {
 	protected IIcon[] icons = new IIcon[3];
 	public BlockTank()

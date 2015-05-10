@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -56,7 +55,7 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class BlockFactory extends Block implements IRedNetConnection, IDismantleable, ITileEntityProvider
+public class BlockFactory extends Block implements IRedNetConnection, IDismantleable
 {
 	protected boolean providesPower;
 
@@ -400,12 +399,6 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	public int damageDropped(int meta)
 	{
 		return meta;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
-	{
-		return null;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 
-public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
+public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, ITileEntityProvider
 {
 	public BlockRedNetPanel()
 	{

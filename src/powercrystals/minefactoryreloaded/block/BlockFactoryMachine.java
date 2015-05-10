@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +33,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
+public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode, ITileEntityProvider
 {
 	private int _mfrMachineBlockIndex;
 
