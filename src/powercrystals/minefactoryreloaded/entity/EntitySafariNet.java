@@ -153,6 +153,6 @@ public class EntitySafariNet extends EntityThrowable {
 
 		super.readEntityFromNBT(nbttagcompound);
 		NBTTagCompound stackTag = nbttagcompound.getCompoundTag("safariNetStack");
-		dataWatcher.addObject(13, ItemStack.loadItemStackFromNBT(stackTag));
+		setStoredEntity(ItemStack.loadItemStackFromNBT(stackTag));
 	}
 }
