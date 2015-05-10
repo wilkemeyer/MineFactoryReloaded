@@ -21,6 +21,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 {
 	private boolean _ignoreChanges = true;
 	private boolean _shouldTick = true;
+	private boolean _passingItem = false;
 
 	private int _storedQuantity;
 	private ItemStack _storedItem = null;
@@ -177,12 +178,16 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			// boot improperly typed items from the input slots
 			else if (!UtilInventory.stacksEqual(_inventory[slot], _storedItem))
 			{
+				_passingItem = true;
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
+				_passingItem = false;
 			}
 			// internal inventory is full
 			else
 			{
+				_passingItem = true;
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
+				_passingItem = false;
 			}
 		}
 	}
@@ -230,6 +235,8 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{
+		if (_passingItem)
+			return false;
 		if(slot >= 2) return false;
 		ItemStack stored = _storedItem;
 		if (stored == null) stored = _inventory[2];
@@ -239,7 +246,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
-		return canInsertItem(slot, itemstack, -1);
+		return !_passingItem && canInsertItem(slot, itemstack, -1);
 	}
 
 	@Override
