@@ -10,11 +10,9 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -47,6 +45,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent.Unload;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -291,15 +290,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	}
 
 	@SubscribeEvent
-	public void clientLoggedIn(ClientConnectedToServerEvent evt)
+	public void onPlayerChangedDimension(Unload world)
 	{
-		prcPages.clear();
-	}
-
-	@SubscribeEvent
-	public void onPlayerChangedDimension(PlayerChangedDimensionEvent player)
-	{
-		_areaTileEntities.clear();
+		if (world.world.provider.dimensionId == Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId) {
+			_areaTileEntities.clear();
+			prcPages.clear();
+		}
 	}
 
 	@SubscribeEvent
