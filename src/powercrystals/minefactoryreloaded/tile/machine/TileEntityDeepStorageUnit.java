@@ -225,6 +225,10 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
+		if (itemstack != null) {
+			if (itemstack.stackSize < 0)
+				itemstack = null;
+		}
 		_inventory[i] = itemstack;
 		markDirty();
 	}
