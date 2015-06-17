@@ -687,10 +687,11 @@ public class MineFactoryReloadedCore extends BaseMod
 					new WeightedRandomChestContent(new ItemStack(spyglassItem, 1), 1, 1, 7),
 					saplings,
 					new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5),
-					new WeightedRandomChestContent(new ItemStack(Items.reeds, 3), 1, 3, 1),
-					new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds, 1), 1, 1, 1),
-					new WeightedRandomChestContent(new ItemStack(Items.melon_seeds, 1), 1, 1, 1),
-					new WeightedRandomChestContent(new ItemStack(Items.dye, 1, 4), 1, 1, 1)
+					new WeightedRandomChestContent(new ItemStack(Items.reeds, 3), 1, 3, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds, 1), 1, 1, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.melon_seeds, 1), 1, 1, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.dye, 1, 4), 1, 1, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.netherbrick, 1), 1, 1, 1)
 					);
 			@Override
 			public ItemStack func_150708_a(Random r)
