@@ -1088,7 +1088,7 @@ public class Vanilla {
 			addGearRecipe(stack(safariNetItem, 1), stack2(ender_pearl), stack2(ghast_tear));
 		}
 
-		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 1), new Object[] {
+		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 3), new Object[] {
 				"SLS",
 				" B ",
 				"S S",
