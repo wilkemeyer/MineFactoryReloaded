@@ -73,6 +73,7 @@ public class Vanilla {
 		registerOre("itemRawRubber", rawRubberItem);
 		registerOre("woodRubber", rubberWoodBlock);
 		registerOre("leavesRubber", rubberLeavesBlock);
+		registerOre("treeSapling", rubberSaplingBlock);
 		registerOre("blockPlastic", factoryPlasticBlock);
 		registerOre("sheetPlastic", plasticSheetItem);
 		registerOre("itemPlastic", plasticSheetItem);
