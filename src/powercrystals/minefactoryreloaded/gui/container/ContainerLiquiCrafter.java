@@ -71,7 +71,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory
 			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 0, tankIndex);
 			if(l != null)
 			{
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 1, l.fluidID);
+				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 1, l.getFluid().getID());
 				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 2, l.amount);
 			}
 			else

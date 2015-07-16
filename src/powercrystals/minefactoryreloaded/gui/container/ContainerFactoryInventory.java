@@ -65,7 +65,7 @@ public class ContainerFactoryInventory extends Container
 				if(tank[j] != null && tank[j].fluid != null)
 				{
 					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 31, tank[j].fluid.amount);
-					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 32, tank[j].fluid.fluidID);
+					((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 32, tank[j].fluid.getFluid().getID());
 				}
 				else if(tank[j] != null)
 				{
