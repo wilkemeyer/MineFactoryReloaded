@@ -9,7 +9,6 @@ import forestry.api.genetics.IIndividual;
 import forestry.api.genetics.IPollinatable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -84,6 +83,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	{
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override // HARVESTER
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
 	{
@@ -101,7 +101,6 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 			tree.writeToNBT(tag);
 			item.setTagCompound(tag);
 			prod.add(item);
-			modifier = 100f;
 		}
 		else
 		{
@@ -152,9 +151,9 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 			IFruitBearer fruit = (IFruitBearer)te;
 			if (fruit.hasFruit())
 			{
-				int period = tree.getGenome().getFruitProvider().getRipeningPeriod();
-				ItemStack[] o = tree.produceStacks(world, x, y, z, (int)(fruit.getRipeness() * period + 0.1f));
-				prod.addAll(Arrays.asList(o));
+				//int period = tree.getGenome().getFruitProvider().getRipeningPeriod();
+				//ItemStack[] o = tree.produceStacks(world, x, y, z, (int)(fruit.getRipeness() * period + 0.1f));
+				prod.addAll(fruit.pickFruit(null));
 			}
 		}
 	}
