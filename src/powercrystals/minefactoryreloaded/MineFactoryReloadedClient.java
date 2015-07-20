@@ -279,7 +279,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	private void setIcons(String name, BlockFactoryFluid block)
 	{
 		Fluid fluid = FluidRegistry.getFluid(name);
-		if (fluid.getBlock().equals(block))
+		if (block.equals(fluid.getBlock()))
 		{
 			fluid.setIcons(block.getIcon(1, 0), block.getIcon(2, 0));
 		}
