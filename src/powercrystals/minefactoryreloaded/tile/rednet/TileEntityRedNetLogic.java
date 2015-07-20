@@ -376,6 +376,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
 
 		writeCricuitsOnly(tag, false);
+		tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
 	}
 
@@ -399,6 +400,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void writeItemNBT(NBTTagCompound tag) {
 
 		super.writeItemNBT(tag);
+		tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 		writeCricuitsOnly(tag, true);
 	}
 
@@ -407,6 +409,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 		super.writeToNBT(tag);
 
+		tag.setByte("p_rot", (byte) -1);
 		tag.setIntArray("upgrades", _upgradeLevel);
 		tag.setIntArray("vars", _buffers[13]);
 	}
@@ -476,6 +479,15 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void readCircuitsOnly(NBTTagCompound tag) {
 
 		NBTTagList circuits = tag.getTagList("circuits", 10);
+		int rot = tag.hasKey("p_rot") ? tag.getByte("p_rot") : -1, worldRot = 0;
+		int[] map = {0, 1, 2, 3};
+		if (rot != -1) {
+			worldRot = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
+			int[][] data = {{0,1,2,3},{3,2,0,1},{1,0,3,2},{2,3,1,0}};
+			int i = worldRot - rot;
+			if (i < 0) i += 4;
+			map = data[i];
+		}
 		if (circuits != null) {
 			int c = 0, e = circuits.tagCount();
 			for (; c < e; c++) {
@@ -488,7 +500,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 						NBTTagCompound pin = inputPins.getCompoundTagAt(i);
 						int ipin = pin.getInteger("pin");
 						int buffer = pin.getInteger("buffer");
-						_pinMappingInputs[c][i] = new PinMapping(ipin, buffer);
+						_pinMappingInputs[c][i] = new PinMapping(ipin, mapBuffer(map, buffer));
 					}
 				}
 
@@ -498,7 +510,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 						NBTTagCompound pin = outputPins.getCompoundTagAt(i);
 						int ipin = pin.getInteger("pin");
 						int buffer = pin.getInteger("buffer");
-						_pinMappingOutputs[c][i] = new PinMapping(ipin, buffer);
+						_pinMappingOutputs[c][i] = new PinMapping(ipin, mapBuffer(map, buffer));
 					}
 				}
 
@@ -512,6 +524,15 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 				initCircuit(c, new Noop());
 			}
 		}
+	}
+
+	private int mapBuffer(int[] map, int buffer) {
+		if (buffer > 1 && buffer < 6) {
+			buffer = 2 + map[(buffer - 2) & 3];
+		} else if (buffer > 7 && buffer < 12) {
+			buffer = 8 + map[(buffer - 8) & 3];
+		}
+		return buffer;
 	}
 
 	@Override
@@ -622,7 +643,22 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void rotate(ForgeDirection axis) {
 
 		if (canRotate(axis)) {
-			int nextMeta = (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) + 1) & 3; // % 4
+			int currentMeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			int nextMeta = (currentMeta + 1) & 3; // % 4
+			int[] map = {0, 1, 2, 3};
+			{
+				int[][] data = {{0,1,2,3},{3,2,0,1},{1,0,3,2},{2,3,1,0}};
+				int i = nextMeta - currentMeta;
+				if (i < 0) i += 4;
+				map = data[i];
+			}
+			for (PinMapping[][] buffer : new PinMapping[][][]{_pinMappingInputs, _pinMappingOutputs}) {
+				for (PinMapping[] mapping : buffer) {
+					for (PinMapping pin : mapping) {
+						pin.buffer = mapBuffer(map, pin.buffer);
+					}
+				}
+			}
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nextMeta, 3);
 		}
 	}
