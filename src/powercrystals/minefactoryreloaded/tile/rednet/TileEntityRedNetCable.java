@@ -99,7 +99,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void cofh_invalidate() {
+	public void invalidate() {
 		if (_network != null) {
 			_network.removeConduit(this);
 			int c = 0;
@@ -110,7 +110,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				_network.regenerate();
 			_network = null;
 		}
-		super.cofh_invalidate();
+		super.invalidate();
 	}
 
 	@Override
@@ -134,9 +134,9 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void firstTick(IGridController grid) {
-		if (!inWorld || worldObj == null || worldObj.isRemote) return;
-		if (grid != RedstoneNetwork.HANDLER) return;
+	public void cofh_validate() {
+		super.cofh_validate();
+		if (worldObj.isRemote) return;
 		if (_network == null) {
 			incorporateTiles();
 			if (_network == null) {
@@ -144,7 +144,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			}
 		}
 		readFromNBT = true;
-		updateInternalTypes(RedstoneNetwork.HANDLER);
+		RedstoneNetwork.HANDLER.addConduitForUpdate(this);
 		markDirty();
 		Packets.sendToAllPlayersWatching(this);
 	}
@@ -740,5 +740,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			break;
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public void firstTick(IGridController grid) {
+
+		// TODO Auto-generated method stub
+
 	}
 }

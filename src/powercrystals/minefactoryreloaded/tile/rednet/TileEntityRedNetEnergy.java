@@ -80,11 +80,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		ic2Cache = null;
 		if (worldObj.isRemote)
 			return;
-		RedstoneEnergyNetwork.HANDLER.addConduitForTick(this);
 	}
 
 	@Override
-	public void cofh_invalidate() {
+	public void invalidate() {
 		if (_grid != null) {
 			_grid.removeConduit(this);
 			_grid.storage.modifyEnergyStored(-energyForGrid);
@@ -97,7 +96,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = true;
 			_grid = null;
 		}
-		super.cofh_invalidate();
+		super.invalidate();
 	}
 
 	private void reCache() {
@@ -105,17 +104,15 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
-			// This method is only ever called from the same thread as the tick handler
-			// so this method can be safely called *here* without worrying about threading
-			updateInternalTypes(RedstoneEnergyNetwork.HANDLER);
+			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 		}
 	}
 
+
 	@Override
-	public void firstTick(IGridController grid) {
-		super.firstTick(grid);
-		if (!inWorld || worldObj == null || worldObj.isRemote) return;
-		if (grid != RedstoneEnergyNetwork.HANDLER) return;
+	public void cofh_validate() {
+		super.cofh_validate();
+		if (worldObj.isRemote) return;
 		if (_grid == null) {
 			incorporateTiles();
 			if (_grid == null) {
@@ -601,7 +598,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 				o += 6;
 				if (iface | (!forTrace & mode == 4))
-					o += 6;
+					o += 12;
 				// cable part or energy selection box
 				list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
 				iface = false;
@@ -613,7 +610,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			}
 			if (iface | (!forTrace & mode == 4))
 			{
-				o = 2 + 6*4 + i;
+				o = 2 + 6*5 + i;
 				list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
 			}
 		}
