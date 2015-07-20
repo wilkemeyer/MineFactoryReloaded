@@ -292,6 +292,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void onPlayerChangedDimension(Unload world)
 	{
+
+		if (world.world.provider == null ||
+				Minecraft.getMinecraft().thePlayer == null ||
+				Minecraft.getMinecraft().thePlayer.worldObj == null ||
+				Minecraft.getMinecraft().thePlayer.worldObj.provider == null) {
+			return;
+		}
 		if (world.world.provider.dimensionId == Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId) {
 			_areaTileEntities.clear();
 			prcPages.clear();
