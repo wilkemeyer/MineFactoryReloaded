@@ -9,6 +9,6 @@ public class TileEntityLavaFabricator extends TileEntityLiquidFabricator
 {
 	public TileEntityLavaFabricator()
 	{
-		super(FluidRegistry.getFluidID("lava"), 20, Machine.LavaFabricator);
+		super(FluidRegistry.getFluid("lava"), 20, Machine.LavaFabricator);
 	}
 }

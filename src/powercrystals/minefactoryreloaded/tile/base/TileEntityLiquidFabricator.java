@@ -21,11 +21,11 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	private FluidStack fluid;
 	private int _liquidFabPerTick;
 
-	protected TileEntityLiquidFabricator(int liquidId, int liquidFabPerTick, Machine machine) {
+	protected TileEntityLiquidFabricator(Fluid liquid, int liquidFabPerTick, Machine machine) {
 		super(machine, machine.getActivationEnergy() * liquidFabPerTick);
 		_liquidFabPerTick = liquidFabPerTick;
-		if (liquidId > 0)
-			fluid = new FluidStack(liquidId, liquidFabPerTick);
+		if (liquid != null)
+			fluid = new FluidStack(liquid, liquidFabPerTick);
 		else
 			fluid = null;
 	}

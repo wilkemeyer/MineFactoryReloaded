@@ -35,7 +35,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		return TileEntityFurnace.getItemBurnTime(stack) / 2;
 	}
 
-	private final int _liquidId;
+	private final Fluid _liquid;
 	private int _ticksUntilConsumption = 0;
 	private int _ticksSinceLastConsumption = 0;
 	private int _totalBurningTime;
@@ -45,7 +45,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	{
 		super(Machine.SteamBoiler);
 		setManageSolids(true);
-		_liquidId = FluidRegistry.getFluid("steam").getID();
+		_liquid = FluidRegistry.getFluid("steam");
 		_tanks[0].setLock(FluidRegistry.getFluid("steam"));
 		_tanks[1].setLock(FluidRegistry.getFluid("water"));
 	}
@@ -144,7 +144,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 			if (_temp > 80)
 			{
 				int i = drain(_tanks[1], 100, true);
-				_tanks[0].fill(new FluidStack(_liquidId, i * 4), true);
+				_tanks[0].fill(new FluidStack(_liquid, i * 4), true);
 			}
 
 			if (skipConsumption || CoreUtils.isRedstonePowered(this))
