@@ -63,6 +63,7 @@ public class MFRConfig
 	public static Property enableSpawnerCarts;
 	public static Property enableExpensiveSafariNet;
 	public static Property enableFancySafariNet;
+	public static Property enableExpensiveUpgrades;
 
 	public static Property enableChunkLimitBypassing;
 	public static Property enableChunkLoaderRequiresOwner;
@@ -275,6 +276,8 @@ public class MFRConfig
 		enableExpensiveSafariNet.comment = "If true, the reusable safarinet will require a portaspawner to craft. The portaspawner must be enabled for the safarinet to be craftable.";
 		enableFancySafariNet = c.get(category, "GoldenJailerSafariNet", true).setRequiresMcRestart(true);
 		enableFancySafariNet.comment = "If true, the golden jailer safarinet will be craftable. It causes released mobs to always render their nametag, like a player would.";
+		enableExpensiveUpgrades = c.get(category, "ExpensiveRangeUpgrades", false).setRequiresMcRestart(true);
+		enableExpensiveUpgrades.comment = "If true, upgrades will require the previous level upgrade and a diamond. NOTE: this option requires all upgrades have recipes";
 		//}
 
 		//{ Additional machine configs

@@ -4,15 +4,17 @@ import static cofh.lib.util.helpers.ItemHelper.*;
 import static net.minecraft.init.Blocks.*;
 import static net.minecraft.init.Items.*;
 import static net.minecraftforge.oredict.OreDictionary.*;
+import static powercrystals.minefactoryreloaded.setup.MFRConfig.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.*;
+
+import java.util.Arrays;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.setup.recipe.handler.ShapelessMachineTinker;
 
@@ -56,9 +58,9 @@ public class Vanilla {
 		registerVanillaImprovements();
 		registerSafariNets();
 		registerRails();
-		if (MFRConfig.enableSyringes.getBoolean(true))
+		if (enableSyringes.getBoolean(true))
 			registerSyringes();
-		if (MFRConfig.enableGuns.getBoolean(true))
+		if (enableGuns.getBoolean(true))
 			registerGuns();
 		registerRedNet();
 		registerRedNetManual();
@@ -342,7 +344,7 @@ public class Vanilla {
 				'M', machineBaseItem,
 		});
 
-		int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
+		int dsuCount = craftSingleDSU.getBoolean(false) ? 1 : 4;
 		registerMachine(DeepStorageUnit, dsuCount, new Object[] {
 				"GGG",
 				"PPP",
@@ -353,7 +355,7 @@ public class Vanilla {
 				'M', machineBaseItem,
 		});
 
-		if (MFRConfig.enableCheapDSU.getBoolean(false)) {
+		if (enableCheapDSU.getBoolean(false)) {
 			registerMachine(DeepStorageUnit, new Object[] {
 					"GGG",
 					"CCC",
@@ -603,7 +605,7 @@ public class Vanilla {
 				'R', "blockRedstone",
 				'M', machineBaseItem,
 		});
-		if (MFRConfig.enableCheapCL.getBoolean(false)) {
+		if (enableCheapCL.getBoolean(false)) {
 			registerMachine(ChunkLoader, new Object[] {
 					"GGG",
 					"PFP",
@@ -673,16 +675,27 @@ public class Vanilla {
 		String[] materials = { "gemLapis", "ingotTin", "ingotIron", "ingotCopper", "ingotBronze",
 				"ingotSilver", "ingotGold", "gemQuartz", "gemDiamond", "ingotPlatinum", "gemEmerald",
 				"cobblestone" };
+		Object[] upgrade = { "nuggetGold", "nuggetGold", "nuggetGold", "nuggetGold", "nuggetGold",
+				"nuggetGold", "nuggetGold", "nuggetGold", "nuggetGold", "nuggetGold", "nuggetGold",
+				"nuggetGold" };
+		String center = "dustPlastic";
+		if (enableExpensiveUpgrades.getBoolean(false)) {
+			center = "gemDiamond";
+			upgrade[0] = stack(upgradeItem, 1, Arrays.asList(materials).indexOf("cobblestone"));
+			for (int i = 1; i < 11; ++i)
+				upgrade[i] = stack(upgradeItem, 1, i - 1);
+		}
 
 		for (int i = 0, e = materials.length; i < e; ++i) {
 			addRecipe(ShapedRecipe(stack(upgradeItem, 1, i), new Object[] {
 					"III",
-					"PPP",
+					"PCP",
 					"RGR",
 					'I', materials[i],
 					'P', "dustPlastic",
+					'C', center,
 					'R', "dustRedstone",
-					'G', "nuggetGold",
+					'G', upgrade[i],
 			}));
 		}
 
@@ -1045,7 +1058,7 @@ public class Vanilla {
 				'S', "stickWood",
 		}));
 
-		if (MFRConfig.enablePortaSpawner.getBoolean(true))
+		if (enablePortaSpawner.getBoolean(true))
 			addRecipe(ShapedRecipe(stack(portaSpawnerItem), new Object[] {
 					"GLG",
 					"DND",
@@ -1075,7 +1088,7 @@ public class Vanilla {
 		}
 		_registeredSafariNets = true;
 
-		if (MFRConfig.enableExpensiveSafariNet.getBoolean(false)) {
+		if (enableExpensiveSafariNet.getBoolean(false)) {
 			addRecipe(ShapedRecipe(stack(safariNetItem, 1), new Object[] {
 					"SLS",
 					"PBP",
@@ -1100,7 +1113,7 @@ public class Vanilla {
 
 		addGearRecipe(stack(safariNetJailerItem, 1), stack2(iron_bars), stack(safariNetSingleItem));
 
-		if (MFRConfig.enableFancySafariNet.getBoolean(true))
+		if (enableFancySafariNet.getBoolean(true))
 			addRecipe(ShapedRecipe(stack(safariNetFancyJailerItem, 1), new Object[] {
 					"GGG",
 					"GBG",
@@ -1109,7 +1122,7 @@ public class Vanilla {
 					'B', safariNetJailerItem,
 			}));
 
-		if (MFRConfig.enableNetLauncher.getBoolean(true))
+		if (enableNetLauncher.getBoolean(true))
 			addRecipe(ShapedRecipe(stack(safariNetLauncherItem, 1), new Object[] {
 					"PGP",
 					"LGL",
@@ -1174,7 +1187,7 @@ public class Vanilla {
 
 		addSurroundRecipe(stack(blankRecordItem, 1), stack2(paper), "dustPlastic");
 
-		if (MFRConfig.enableMossyCobbleRecipe.getBoolean(true)) {
+		if (enableMossyCobbleRecipe.getBoolean(true)) {
 			addRecipe(ShapelessRecipe(stack(mossy_cobblestone), new Object[] {
 					cobblestone, cobblestone, cobblestone,
 					cobblestone, cobblestone, cobblestone,
@@ -1192,7 +1205,7 @@ public class Vanilla {
 			}));
 		}
 
-		if (MFRConfig.enableSmoothSlabRecipe.getBoolean(true)) {
+		if (enableSmoothSlabRecipe.getBoolean(true)) {
 			addRecipe(stack(double_stone_slab, 1, 8), new Object[] {
 					"VV",
 					'V', stack(stone_slab, 1, 0)
