@@ -2,6 +2,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
 
+import java.util.Locale;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -31,7 +33,7 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 	{
 		if (_machine == null)
 			return null;
-		return _machine.getName().toLowerCase() + "2.png";
+		return _machine.getName().toLowerCase(Locale.US) + "2.png";
 	}
 
 	@Override

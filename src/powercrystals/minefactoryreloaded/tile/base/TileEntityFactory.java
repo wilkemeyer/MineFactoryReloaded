@@ -11,6 +11,8 @@ import com.google.common.base.Strings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.Locale;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -289,7 +291,7 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	{
 		if (_machine == null)
 			return null;
-		return _machine.getName().toLowerCase() + ".png";
+		return _machine.getName().toLowerCase(Locale.US) + ".png";
 	}
 
 	@Override

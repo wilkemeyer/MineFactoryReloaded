@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.BlockSapling;
@@ -69,7 +70,7 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 		default:
 		case 0:
 			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
-			if (b != null && b.biomeName.toLowerCase().contains("mega"))
+			if (b != null && b.biomeName.toLowerCase(Locale.US).contains("mega"))
 				if (rand.nextInt(50) == 0)
 					if (MineFactoryReloadedWorldGen.generateMegaRubberTree(world, rand, x, y, z, true))
 						return;

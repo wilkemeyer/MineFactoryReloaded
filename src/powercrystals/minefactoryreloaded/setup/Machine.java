@@ -14,6 +14,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -223,7 +224,7 @@ public class Machine
 		}
 
 		_name = name;
-		_internalName = "tile.mfr.machine." + name.toLowerCase();
+		_internalName = "tile.mfr.machine." + name.toLowerCase(Locale.US);
 		_tileEntityName = "factory" + name;
 		_tileEntityClass = tileEntityClass;
 
@@ -276,7 +277,7 @@ public class Machine
 
 	private String getTooltipText() {
 
-		return "tip.info.mfr." + _name.toLowerCase();
+		return "tip.info.mfr." + _name.toLowerCase(Locale.US);
 	}
 
 	public boolean hasTooltip(ItemStack stack) {

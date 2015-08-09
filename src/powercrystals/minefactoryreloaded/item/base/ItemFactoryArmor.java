@@ -4,6 +4,8 @@ import cofh.core.item.ItemArmorAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.Locale;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -20,7 +22,7 @@ public class ItemFactoryArmor extends ItemArmorAdv {
 	public ItemFactoryArmor(ItemArmor.ArmorMaterial mat, int type) {
 		super(mat, type);
 		setMaxStackSize(1);
-		String prefix = MineFactoryReloadedCore.armorTextureFolder + mat.name().toLowerCase();
+		String prefix = MineFactoryReloadedCore.armorTextureFolder + mat.name().toLowerCase(Locale.US);
 		setArmorTextures(new String[] { prefix + "_layer_1.png", prefix + "_layer_2.png" });
 	}
 

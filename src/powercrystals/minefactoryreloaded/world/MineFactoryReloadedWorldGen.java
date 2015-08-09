@@ -7,6 +7,7 @@ import com.google.common.primitives.Ints;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.world.World;
@@ -76,7 +77,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				{
 					if (random.nextInt(30) == 0)
 					{
-						String ln = biomeName.toLowerCase();
+						String ln = biomeName.toLowerCase(Locale.US);
 						if (ln.contains("mega"))
 							generateMegaRubberTree(world, random, x, world.getHeightValue(x, z), z, false);
 						else if (ln.contains("sacred") && random.nextInt(20) == 0)
@@ -108,7 +109,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(world.getActualHeight());
 				int lakeZ = z - 8 + random.nextInt(16);
-				String ln = biomeName.toLowerCase();
+				String ln = biomeName.toLowerCase(Locale.US);
 				if (ln.contains("mushroom"))
 				{
 					new WorldGenLakesMeta(mushroomSoupLiquid, 0).generate(world, random, lakeX, lakeY, lakeZ);

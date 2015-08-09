@@ -4,6 +4,8 @@ import cofh.core.util.fluid.FluidTankAdv;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.Locale;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -73,7 +75,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 		String name = fluid.getFluid().getName();
 		if (name == null)
 			return null;
-		return name.trim().toLowerCase();
+		return name.trim().toLowerCase(Locale.US);
 	}
 
 	@Override
