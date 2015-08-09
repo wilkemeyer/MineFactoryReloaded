@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.farmables;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.INpc;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -123,7 +124,9 @@ public class MFRFarmables {
 
 		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
 		//MFRRegistry.registerSafariNetBlacklist(IBossDisplayData.class);
+
 		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
+		MFRRegistry.registerGrinderBlacklist(INpc.class);
 		MFRRegistry.registerGrinderBlacklist(IBossDisplayData.class);
 
 		MFRRegistry.registerPlantable(new PlantableSapling(rubberSaplingBlock));
