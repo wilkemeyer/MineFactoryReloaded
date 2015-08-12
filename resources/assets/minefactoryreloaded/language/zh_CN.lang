@@ -198,7 +198,7 @@ item.mfr.bucket.mushroomsoup.name = 蘑菇汤桶
 
 item.mfr.plastic.cup.name = 塑料杯
 item.mfr.plastic.cup.prefix.name =
-item.mfr.plastic.cup.suffix.name =杯
+item.mfr.plastic.cup.suffix.name = 杯
 item.mfr.plastic.cell.name = 塑料单元
 item.mfr.plastic.cell.prefix.name =
 item.mfr.plastic.cell.suffix.name =单元
@@ -219,10 +219,13 @@ item.mfr.syringe.zombie.name = 僵尸病毒注射器
 
 item.mfr.machineblock.name = 工厂机械块
 item.mfr.hammer.name = 精密锻造锤
-item.mfr.fertilizer.name = 工业肥料
+
+item.mfr.plastic = 塑料
+item.mfr.plastic.ability = 坚韧
 item.mfr.plastic.sheet.name = 塑料片
 item.mfr.plastic.raw.name = 生塑料
 item.mfr.plastic.bag.name = 塑料包
+
 item.mfr.rubber.bar.name = 橡胶杆
 item.mfr.rubber.raw.name = 生橡胶
 item.mfr.record.blank.name = 空唱片
@@ -230,9 +233,11 @@ item.mfr.record.blank.name = 空唱片
 item.mfr.safarinet.reusable.name = 大师球
 item.mfr.safarinet.singleuse.name = 一次性大师球
 item.mfr.safarinet.jailer.name = 狱卒的大师球
+item.mfr.safarinet.jailer.fancy.name = 狱卒的黄金大师球
 item.mfr.safarinet.launcher.name = 大师球发射器
 
 item.mfr.sugarcharcoal.name = 竹炭
+item.mfr.fertilizer.name = 工业肥料
 item.mfr.milkbottle.name = 牛奶瓶
 item.mfr.spyglass.name = 单筒望远镜
 item.mfr.ruler.name = 尺子
@@ -250,12 +255,17 @@ item.mfr.meat.ingot.cooked.name = 烤肉锭
 item.mfr.meat.nugget.raw.name = 生肉粒
 item.mfr.meat.nugget.cooked.name = 烤肉粒
 
+item.mfr.pinkslime = 粉色史莱姆
+item.mfr.pinkslime.ability = 粘滑\n粉色
 item.mfr.pinkslime.ball.name = 粉色粘液球
 item.mfr.pinkslime.gem.name = 粉色粘液水晶
 
 item.mfr.rocket.name = 自推进反物质火箭
 item.mfr.rocket.smart.name = 追踪型自导航反物质火箭
 item.mfr.rocketlauncher.name = 自推进反物质火箭发射筒
+
+item.mfr.potatolauncher.name = 土豆加农炮
+
 item.mfr.fishingrod.name = 炸鱼竿
 
 item.mfr.ceramicdye.white.name = 陶瓷颜料(白色)
@@ -391,31 +401,33 @@ circuit.mfr.xor.4 = 异或(4-输入)
 
 container.mfr.radius = 半径:
 container.mfr.power = 能量图:
+container.mfr.pendingDrops = 该机器被塞满了物品
 
-chat.info.mfr.safarinet.capture=切换为捕获模式
-chat.info.mfr.safarinet.release=切换为释放模式
+chat.info.mfr.safarinet.capture = 切换为捕获模式
+chat.info.mfr.safarinet.release = 切换为释放模式
 
-chat.info.mfr.spyglass.nosight=视野里空无一物
-chat.info.mfr.spyglass.hitentity=发现%s位于%.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitblock=发现%s [%d:%d]位于%.1f, %.1f, %.1f
-chat.info.mfr.spyglass.hitunknown=发现不明物体(来自某个出bug的模组?)位于%.1f, %.1f, %.1f
+chat.info.mfr.spyglass.nosight = 视野里空无一物
+chat.info.mfr.spyglass.hitentity = 发现%s位于%.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitblock = 发现%s [%d:%d]位于%.1f, %.1f, %.1f
+chat.info.mfr.spyglass.hitunknown = 发现不明物体(来自某个出bug的模组?)位于%.1f, %.1f, %.1f
 
-chat.info.mfr.ruler.nosight=视野里空无一物
-chat.info.mfr.ruler.hitentity=击中实体 - 测量失败
-chat.info.mfr.ruler.startposition=记录起始位置
-chat.info.mfr.ruler.distance=距离: %d, 计数: %d
-chat.info.mfr.ruler.total=总距离: %.1f
+chat.info.mfr.ruler.nosight = 视野里空无一物
+chat.info.mfr.ruler.hitentity = 击中实体 - 测量失败
+chat.info.mfr.ruler.startposition = 记录起始位置
+chat.info.mfr.ruler.distance = 距离: %d, 计数: %d
+chat.info.mfr.ruler.total = 总距离: %.1f
 
-chat.info.mfr.rednet.meter.cable.allzero=所有红石线缆子网络信号强度均为0
-chat.info.mfr.rednet.meter.cable.restzero=所有其他红石线缆子网络信号强度均为0
-chat.info.mfr.rednet.meter.varprefix=变量
-chat.info.mfr.rednet.meter.var.allzero=全部变量均为0
-chat.info.mfr.rednet.meter.var.restzero=全部其他变量均为0
-chat.info.mfr.rednet.meter.dustprefix=红石粉
+chat.info.mfr.rednet.meter.cable.allzero = 所有红石线缆子网络信号强度均为0
+chat.info.mfr.rednet.meter.cable.restzero = 所有其他红石线缆子网络信号强度均为0
+chat.info.mfr.rednet.meter.varprefix = 变量
+chat.info.mfr.rednet.meter.var.allzero = 全部变量均为0
+chat.info.mfr.rednet.meter.var.restzero = 全部其他变量均为0
+chat.info.mfr.rednet.meter.dustprefix = 红石粉
 
-chat.info.mfr.rednet.memorycard.uploaded=PRC程序已经从插入PRC的内存卡载入
-chat.info.mfr.rednet.memorycard.downloaded=PRC程序已经下载到插入PRC的内存卡中
-chat.info.mfr.rednet.memorycard.error=PRC元件不足以运行该程序
+chat.info.mfr.rednet.memorycard.uploaded = PRC程序已经从插入PRC的内存卡载入
+chat.info.mfr.rednet.memorycard.downloaded = PRC程序已经下载到插入PRC的内存卡中
+chat.info.mfr.rednet.memorycard.error = PRC没有足够的元件来运行该程序
+chat.info.mfr.rednet.memorycard.error2 = 该PRC已被其他人使用
 
 chat.info.mfr.rednet.tile.standard = 设置线缆为标准连接模式
 chat.info.mfr.rednet.tile.cableonly = 设置线缆为均与线缆连接模式
@@ -458,8 +470,11 @@ tip.info.mfr.cannotplace = 无法放置%s 秒.
 
 tip.info.mfr.safarinet.mode = 潜行点击改变模式
 tip.info.mfr.safarinet.persistent = 释放出来的生物不会被刷新而消失(despawn)
+tip.info.mfr.safarinet.nametag = 释放的生物会一直显示它们的名称标签
 tip.info.mfr.safarinet.mystery = 这是个秘密
 
+tip.info.mfr.memorycard.programmedFor = Programmed for:\n      \u00A7a%s
+tip.info.mfr.memorycard.programmed = \u0020     \u00A7aProgrammed %d circuits
 tip.info.mfr.memorycard.wipe = 放入合成栏消除
 
 tip.info.mfr.generator.produces = 只产生RF.
