@@ -56,23 +56,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public TileEntityPlasticPipe() {
 	}
 
-	@Override
-	public void validate() {
-		super.validate();
-		deadCache = true;
-		handlerCache = null;
-		if (worldObj.isRemote)
-			return;
-		FluidNetwork.HANDLER.addConduitForTick(this);
-	}
-
 	@Override // cannot share mcp names
 	public boolean isNotValid() {
 		return tileEntityInvalid;
 	}
 
 	@Override
-	public void cofh_invalidate() {
+	public void invalidate() {
 		if (_grid != null) {
 			_grid.removeConduit(this);
 			_grid.storage.drain(fluidForGrid, true);
@@ -85,7 +75,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			deadCache = true;
 			_grid = null;
 		}
-		super.cofh_invalidate();
+		super.invalidate();
 	}
 
 	@Override
@@ -115,16 +105,17 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
-			// This method is only ever called from the same thread as the tick handler
-			// so this method can be safely called *here* without worrying about threading
-			updateInternalTypes(FluidNetwork.HANDLER);
+			FluidNetwork.HANDLER.addConduitForUpdate(this);
 		}
 	}
 
 	@Override
-	public void firstTick(IGridController grid) {
-		if (!inWorld || worldObj == null || worldObj.isRemote) return;
-		if (grid != FluidNetwork.HANDLER) return;
+	public void cofh_validate() {
+
+		super.cofh_validate();
+		deadCache = true;
+		handlerCache = null;
+		if (worldObj.isRemote) return;
 		if (_grid == null) {
 			incorporateTiles();
 			if (_grid == null) {
@@ -134,7 +125,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		readFromNBT = true;
 		reCache();
 		markDirty();
-		Packets.sendToAllPlayersWatching(this);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -477,8 +468,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	@Override
 	public void updateInternalTypes(IGridController grid) {
-		if (deadCache) return;
 		if (grid != FluidNetwork.HANDLER) return;
+		if (deadCache) {
+			reCache();
+			return;
+		}
 		boolean node = false;
 		if (sideMode[6] != 1) {
 			for (int i = 0; i < 6; i++) {
@@ -490,7 +484,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		isNode = node;
 		if (_grid != null)
 			_grid.addConduit(this);
-		markDirty();
 		Packets.sendToAllPlayersWatching(this);
 	}
 
@@ -602,5 +595,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			info.add(text("Node: " + isNode));
 			return;
 		}
+	}
+
+	@Override
+	public void firstTick(IGridController grid) {
+
 	}
 }
