@@ -94,9 +94,9 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public void onChunkUnload()
+	public void invalidate()
 	{
-		super.onChunkUnload();
+		super.invalidate();
 		if (_ticket != null)
 		{
 			unforceChunks();
