@@ -30,7 +30,6 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +48,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.ChestGenHooks;
@@ -663,7 +661,7 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.sapling, 2), 1, 16, 7) {
 			@Override
-			protected ItemStack[] generateChestContent(Random random, IInventory newInventory)
+			public ItemStack[] generateChestContent(Random random, IInventory newInventory)
 			{
 				ItemStack item = theItemId.copy();
 				item.setItemDamage(random.nextInt(6));
@@ -676,8 +674,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(plasticSheetItem, 1, 0), 10));
 		FishingHooks.addTreasure(new WeightedRandomFishable(VillageTradeHandler.getHiddenNetStack(), 1));
 		FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(plasticBagItem, 1, 0), 1) {
-			Random rand = new Random();
-			List<WeightedRandomChestContent> loot = Arrays.asList(
+			WeightedRandomChestContent[] loot = {
 					new WeightedRandomChestContent(new ItemStack(safariNetSingleItem, 1), 1, 1, 35),
 					new WeightedRandomChestContent(new ItemStack(Blocks.sand, 4), 1, 16, 20),
 					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 16), 1, 16, 16),
@@ -691,16 +688,16 @@ public class MineFactoryReloadedCore extends BaseMod
 					new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds, 1), 1, 1, 2),
 					new WeightedRandomChestContent(new ItemStack(Items.melon_seeds, 1), 1, 1, 2),
 					new WeightedRandomChestContent(new ItemStack(Items.dye, 1, 4), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.netherbrick, 1), 1, 1, 1)
-					);
+					new WeightedRandomChestContent(new ItemStack(Items.netherbrick, 1), 1, 1, 1),
+			};
+
 			@Override
 			public ItemStack func_150708_a(Random r)
 			{
 				ItemStack a = field_150711_b.copy();
 				a.setTagInfo("loot", new NBTTagByte((byte) 1));
 				BagContainerWrapper w = new BagContainerWrapper(a);
-				w.setInventorySlotContents(rand.nextInt(w.getSizeInventory()),
-						((WeightedRandomChestContent)WeightedRandom.getRandomItem(r, loot)).theItemId);
+				WeightedRandomChestContent.generateChestContents(r, loot, w, 1);
 				return w.getStack();
 			}
 		});
