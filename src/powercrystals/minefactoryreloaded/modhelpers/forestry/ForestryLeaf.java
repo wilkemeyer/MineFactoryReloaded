@@ -83,6 +83,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	{
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override // HARVESTER
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
 	{
@@ -104,7 +105,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		else
 		{
 			boolean hasMate = tree.getMate() != null;
-			for (ITree s : tree.getSaplings(world, null, x, y, z, modifier))
+			for (ITree s : tree.getSaplings(world, x, y, z, modifier))
 				if (s != null) {
 					if ((hasMate && !s.isGeneticEqual(tree)) || rand.nextInt(32) == 0)
 						if (rand.nextBoolean())
