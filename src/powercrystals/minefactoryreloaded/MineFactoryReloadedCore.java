@@ -4,6 +4,7 @@ package powercrystals.minefactoryreloaded;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import cofh.CoFHCore;
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
 import cofh.lib.util.RegistryUtils;
@@ -179,8 +180,7 @@ public class MineFactoryReloadedCore extends BaseMod
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modName = "MineFactory Reloaded";
 	public static final String version = "1.7.10R2.8.1B1";
-	public static final String dependencies = CoFHProps.DEPENDENCIES +
-			";required-after:CoFHCore@[" + CoFHProps.VERSION + ",)";
+	public static final String dependencies = CoFHCore.version_group;
 	public static final String modNetworkChannel = "MFReloaded";
 
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy",
