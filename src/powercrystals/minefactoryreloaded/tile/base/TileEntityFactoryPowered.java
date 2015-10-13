@@ -197,6 +197,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 
 		if (_workDone > 0)
 			tag.setInteger("workDone", _workDone);
+
+		if (_idleTicks > 0)
+			tag.setInteger("idleDone", _idleTicks);
 	}
 
 	@Override
@@ -214,6 +217,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		super.readFromNBT(tag);
 
 		_energyStored = Math.min(tag.getInteger("energyStored"), getEnergyStoredMax());
+		_idleTicks = Math.min(tag.getInteger("idleDone"), getIdleTicksMax());
 		_workDone = Math.min(tag.getInteger("workDone"), getWorkMax());
 	}
 
