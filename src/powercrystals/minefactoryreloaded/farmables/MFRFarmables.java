@@ -123,7 +123,7 @@ public class MFRFarmables {
 		MFRRegistry.registerSafariNetHandler(new SlimeHandler());
 
 		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
-		//MFRRegistry.registerSafariNetBlacklist(IBossDisplayData.class);
+		MFRRegistry.registerSafariNetBlacklist(IBossDisplayData.class);
 
 		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
 		MFRRegistry.registerGrinderBlacklist(INpc.class);
