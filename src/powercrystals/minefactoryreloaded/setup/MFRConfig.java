@@ -19,6 +19,7 @@ public class MFRConfig
 
 	// common config
 	public static Property dropFilledContainers;
+	public static Property autoRegisterHarvestables;
 
 	public static Property zoolologistEntityId;
 
@@ -335,6 +336,9 @@ public class MFRConfig
 		{
 			machine.load(c);
 		}
+
+		autoRegisterHarvestables = c.get(CATEGORY_GENERAL, "Harvestables.Automatic", false);
+		autoRegisterHarvestables.comment = "If true, MFR will attempt to automatically detect harvestable blocks and register them.";
 
 		// TODO: make this config per-player
 		dropFilledContainers = c.get(CATEGORY_GENERAL, "Tanks.FillWithoutEmptySlots", true);

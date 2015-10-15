@@ -2,10 +2,16 @@ package powercrystals.minefactoryreloaded.farmables;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import cofh.core.util.oredict.OreDictionaryArbiter;
+
+import java.util.ArrayList;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -104,15 +110,13 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class MFRFarmables {
 
-	public static void load()
-	{
-		if (MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false))
-		{
+	public static void load() {
+
+		if (MFRConfig.conveyorNeverCapturesPlayers.getBoolean(false)) {
 			MFRRegistry.registerConveyerBlacklist(EntityPlayer.class);
 		}
 
-		if (!MFRConfig.conveyorCaptureNonItems.getBoolean(true))
-		{
+		if (!MFRConfig.conveyorCaptureNonItems.getBoolean(true)) {
 			MFRRegistry.registerConveyerBlacklist(Entity.class);
 		}
 
@@ -134,27 +138,6 @@ public class MFRFarmables {
 
 		MFRRegistry.registerHarvestable(new HarvestableWood(rubberWoodBlock));
 		MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(rubberLeavesBlock));
-
-		/*if ()
-		{
-			ArrayList<ItemStack> list = OreDictionary.getOres("logWood");
-			for (ItemStack stack : list) {
-				if (stack == null || stack.getItem() == null)
-					continue;
-				Block block = Block.getBlockFromItem(stack.getItem());
-				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
-					MFRRegistry.registerHarvestable(new HarvestableWood(block, true));
-			}
-
-			list = OreDictionary.getOres("treeLeaves");
-			for (ItemStack stack : list) {
-				if (stack == null || stack.getItem() == null)
-					continue;
-				Block block = Block.getBlockFromItem(stack.getItem());
-				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
-					MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(block, true));
-			}
-		}//*/
 
 		MFRRegistry.registerFertilizable(new FertilizableStandard(rubberSaplingBlock));
 		MFRRegistry.registerFertilizable(new FertilizableIGrowable(fertileSoil));
@@ -247,6 +230,29 @@ public class MFRFarmables {
 		MFRRegistry.registerRedNetLogicCircuit(new Xor2());
 		MFRRegistry.registerRedNetLogicCircuit(new Xor3());
 		MFRRegistry.registerRedNetLogicCircuit(new Xor4());
+	}
+
+	public static void post() {
+
+		if (MFRConfig.autoRegisterHarvestables.getBoolean(false)) {
+			ArrayList<ItemStack> list = OreDictionaryArbiter.getOres("logWood");
+			for (ItemStack stack : list) {
+				if (stack == null || stack.getItem() == null)
+					continue;
+				Block block = Block.getBlockFromItem(stack.getItem());
+				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
+					MFRRegistry.registerHarvestable(new HarvestableWood(block));
+			}
+
+			list = OreDictionaryArbiter.getOres("treeLeaves");
+			for (ItemStack stack : list) {
+				if (stack == null || stack.getItem() == null)
+					continue;
+				Block block = Block.getBlockFromItem(stack.getItem());
+				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
+					MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(block));
+			}
+		}
 	}
 
 }

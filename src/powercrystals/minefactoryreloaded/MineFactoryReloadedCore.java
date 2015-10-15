@@ -776,6 +776,8 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		for (Vanilla e : recipeSets)
 			e.registerRecipes();
+
+		MFRFarmables.post();
 	}
 
 	@EventHandler
