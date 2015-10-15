@@ -295,6 +295,7 @@ public abstract class UtilInventory
 		return block.getCollisionBoundingBoxFromPool(world, x, y, z) == null;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static ItemStack handleIPipeTile(World world, BlockPosition bp, ForgeDirection[] dropdirections, ItemStack stack)
 	{
 		for (Entry<ForgeDirection, IPipeTile> pipe : findPipes(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
