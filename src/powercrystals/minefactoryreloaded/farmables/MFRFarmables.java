@@ -5,8 +5,10 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import cofh.core.util.oredict.OreDictionaryArbiter;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.boss.IBossDisplayData;
@@ -251,6 +253,13 @@ public class MFRFarmables {
 				Block block = Block.getBlockFromItem(stack.getItem());
 				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
 					MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(block));
+			}
+
+			for (String key : (Set<String>) Block.blockRegistry.getKeys()) {
+				Block block = Block.getBlockFromName(key);
+				if (block instanceof IGrowable && !MFRRegistry.getFertilizables().containsKey(block)) {
+					MFRRegistry.registerFertilizable(new FertilizableIGrowable(block));
+				}
 			}
 		}
 	}
