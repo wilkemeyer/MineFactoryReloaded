@@ -240,9 +240,14 @@ public class Thaumcraft {
 
 	@EventHandler
 	@Strippable("api:Thaumcraft|API")
-	public static void load(FMLLoadCompleteEvent e) throws Throwable {
+	public void load(FMLLoadCompleteEvent e) throws Throwable {
 
-		doAspects();
+		try {
+			doAspects();
+		} catch (Throwable $) {
+			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
+			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
+		}
 	}
 
 	private static void parseAspects2(Machine item, String toadd) throws Throwable {
