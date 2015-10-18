@@ -425,7 +425,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	private void repositionEntity(World world, int x, int y, int z, Entity ent, double xO, double yO, double zO) {
 
-			if (!world.func_147461_a(ent.boundingBox).isEmpty() || !world.func_147461_a(ent.boundingBox.getOffsetBoundingBox(xO * 2, yO * 2, zO * 2)).isEmpty()) {
+			if (!world.func_147461_a(ent.boundingBox).isEmpty() || !world.func_147461_a(ent.boundingBox.getOffsetBoundingBox(xO, yO, zO)).isEmpty()) {
 				return;
 			}
 			if (isZero(ent.motionX) && isZero(ent.motionZ)) {
