@@ -311,7 +311,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		if (getStackInSlot(slot) != null)
 			return false;
 
-		setInventorySlotContents(slot, stack);
+		setInventorySlotContents(slot, stack.splitStack(1));
 		return true;
 	}
 
