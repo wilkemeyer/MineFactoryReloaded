@@ -46,7 +46,7 @@ public class MFRGUIHandler implements IGuiHandler
 			if(player.getCurrentEquippedItem() != null &&
 					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
 			{
-				return new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
+				return new ContainerBag(player.getCurrentEquippedItem(), player.inventory);
 			}
 		}
 		return null;
@@ -80,7 +80,7 @@ public class MFRGUIHandler implements IGuiHandler
 			if(player.getCurrentEquippedItem() != null &&
 					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
 			{
-				return new GUIBag(new ContainerBag(new BagContainerWrapper(player.getCurrentEquippedItem()), player.inventory));
+				return new GUIBag(new ContainerBag(player.getCurrentEquippedItem(), player.inventory));
 			}
 		}
 		return null;

@@ -7,6 +7,7 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import cofh.CoFHCore;
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
+import cofh.lib.gui.container.InventoryContainerItemWrapper;
 import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
@@ -110,7 +111,6 @@ import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.farmables.MFRFarmables;
-import powercrystals.minefactoryreloaded.gui.BagContainerWrapper;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
 import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
@@ -696,9 +696,9 @@ public class MineFactoryReloadedCore extends BaseMod
 			{
 				ItemStack a = field_150711_b.copy();
 				a.setTagInfo("loot", new NBTTagByte((byte) 1));
-				BagContainerWrapper w = new BagContainerWrapper(a);
+				InventoryContainerItemWrapper w = new InventoryContainerItemWrapper(a);
 				WeightedRandomChestContent.generateChestContents(r, loot, w, 1);
-				return w.getStack();
+				return w.getContainerStack();
 			}
 		});
 		//}
