@@ -33,7 +33,9 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 		super.addInfo(stack, player, infoList, advancedTooltips);
 
 		if (getItemStackLimit(stack) == 1) {
-			if (stack.getTagCompound().hasKey("inventory")) {
+			if (stack.getTagCompound().hasKey("loot")) {
+				infoList.add(MFRUtil.localize("info.cofh.loot", true));
+			} else if (stack.getTagCompound().hasKey("inventory")) {
 				infoList.add(MFRUtil.localize("info.cofh.legacy", true));
 			} else if (!StringHelper.displayShiftForDetail || MFRUtil.isShiftKeyDown()) {
 				ItemHelper.addInventoryInformation(stack, infoList);
@@ -60,6 +62,7 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 			return stack;
 		}
 		stack.setTagInfo("Accessible", new NBTTagCompound());
+		stack.getTagCompound().removeTag("loot");
 
 		if (!world.isRemote)
 			player.openGui(MineFactoryReloadedCore.instance(), 2, world, 0, 0, 0);
