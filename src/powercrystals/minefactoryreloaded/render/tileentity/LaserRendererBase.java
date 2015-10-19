@@ -56,8 +56,8 @@ public class LaserRendererBase
 			yStart = -x;
 			xStart = y;
 		}
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, 10497.0F);
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, 10497.0F);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		RenderHelper.disableStandardItemLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
@@ -65,7 +65,7 @@ public class LaserRendererBase
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDepthMask(true);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		float ticks = host.getWorldObj().getTotalWorldTime() + partialTicks;
+		float ticks = (host.getWorldObj().getTotalWorldTime() + partialTicks);
 		float f3 = -ticks * 0.2F - MathHelper.floor_float(-ticks * 0.1F);
 		double d3 = ticks * 0.025D * (1.0D - 2.5D);
 		tessellator.startDrawingQuads();
@@ -83,7 +83,7 @@ public class LaserRendererBase
 		double uStart = 0.0D;
 		double uEnd = 1.0D;
 		double vStart = -1.0F + f3;
-		double vEnd = (256.0F) * (0.5D / d4) + vStart;
+		double vEnd = (height * 4) + vStart;
 		tessellator.addVertexWithUV(xStart + d5, yStart + height, zStart + d6, uEnd, vEnd);
 		tessellator.addVertexWithUV(xStart + d5, yStart, zStart + d6, uEnd, vStart);
 		tessellator.addVertexWithUV(xStart + d7, yStart, zStart + d8, uStart, vStart);
@@ -105,7 +105,7 @@ public class LaserRendererBase
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
 		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA(255, 255, 255, 32);
+		tessellator.setColorRGBA(255, 255, 255, 48);
 		double d18 = 0.2D;
 		double d19 = 0.2D;
 		double d20 = 0.8D;
@@ -115,7 +115,7 @@ public class LaserRendererBase
 		double d24 = 0.8D;
 		double d25 = 0.8D;
 		double d29 = -1.0F + f3;
-		double d30 = (256.0F) + d29;
+		double d30 = (height * 2) + d29;
 		tessellator.addVertexWithUV(xStart + d18, yStart + height, zStart + d19, uEnd, d30);
 		tessellator.addVertexWithUV(xStart + d18, yStart, zStart + d19, uEnd, d29);
 		tessellator.addVertexWithUV(xStart + d20, yStart, zStart + d21, uStart, d29);
