@@ -11,15 +11,23 @@ import org.lwjgl.opengl.GL11;
 
 public class LaserRendererBase
 {
+	public static void setColor(int color) {
+
+		r = (color >> 16) & 255;
+		g = (color >>  8) & 255;
+		b = (color >>  0) & 255;
+	}
+
+	private static int r = 255, g = 255, b = 255;
 	public static void renderLaser(TileEntity host, double x, double y, double z, int length, ForgeDirection orientation, float partialTicks)
 	{
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();
-		
+
 		double xStart = x;
 		double yStart = y;
 		double zStart = z;
-		
+
 		if(orientation == ForgeDirection.DOWN)
 		{
 			yStart -= length;
@@ -61,7 +69,7 @@ public class LaserRendererBase
 		float f3 = -ticks * 0.2F - MathHelper.floor_float(-ticks * 0.1F);
 		double d3 = ticks * 0.025D * (1.0D - 2.5D);
 		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA(255, 255, 255, 32);
+		tessellator.setColorRGBA(r, g, b, 32);
 		double d4 = 0.2D;
 		double d5 = 0.5D + Math.cos(d3 + 2.356194490192345D) * d4;
 		double d6 = 0.5D + Math.sin(d3 + 2.356194490192345D) * d4;
@@ -124,8 +132,9 @@ public class LaserRendererBase
 		tessellator.addVertexWithUV(xStart + d22, yStart, zStart + d23, uEnd, d29);
 		tessellator.addVertexWithUV(xStart + d18, yStart, zStart + d19, uStart, d29);
 		tessellator.addVertexWithUV(xStart + d18, yStart + height, zStart + d19, uStart, d30);
-		
+
 		tessellator.draw();
+		setColor(0xFFFFFF);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDepthMask(true);

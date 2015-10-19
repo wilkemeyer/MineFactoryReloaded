@@ -308,6 +308,14 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 		super.markDirty();
 	}
 
+	protected void writePacketData(NBTTagCompound tag) {
+
+	}
+
+	protected void readPacketData(NBTTagCompound tag) {
+
+	}
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -316,6 +324,7 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 			NBTTagCompound data = new NBTTagCompound();
 			data.setByte("r", (byte)_forwardDirection.ordinal());
 			data.setBoolean("a", _isActive);
+			writePacketData(data);
 			S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 			return packet;
 		}
@@ -332,6 +341,7 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 			rotateDirectlyTo(data.getByte("r"));
 			_prevActive = _isActive;
 			_isActive = data.getBoolean("a");
+			readPacketData(data);
 			if (_prevActive != _isActive)
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			if (_lastActive < 0 && hasHAM())
