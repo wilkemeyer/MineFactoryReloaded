@@ -129,7 +129,7 @@ public class Machine
 		}
 	};
 	public static Machine LiquiCrafter = new Machine(1, 4, "LiquiCrafter", TileEntityLiquiCrafter.class);
-	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, 200, 16000);
+	public static Machine LavaFabricator = new Machine(1, 5, "LavaFabricator", TileEntityLavaFabricator.class, 800, 16000);
 	public static Machine SteamBoiler = new Machine(1, 6, "SteamBoiler", TileEntitySteamBoiler.class);
 	public static Machine AutoJukebox = new Machine(1, 7, "AutoJukebox", TileEntityAutoJukebox.class);
 	public static Machine Unifier = new Machine(1, 8, "Unifier", TileEntityUnifier.class);
