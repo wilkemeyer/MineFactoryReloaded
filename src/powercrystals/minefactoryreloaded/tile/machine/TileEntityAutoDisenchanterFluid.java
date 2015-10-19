@@ -33,7 +33,7 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 	{
 		if (_machine == null)
 			return null;
-		return _machine.getName().toLowerCase(Locale.US) + "2.png";
+		return _machine.getName().toLowerCase(Locale.US) + "2";
 	}
 
 	@Override

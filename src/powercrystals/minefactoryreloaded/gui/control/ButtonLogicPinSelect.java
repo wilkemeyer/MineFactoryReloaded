@@ -1,11 +1,11 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
+import cofh.core.CoFHProps;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButtonManaged;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ButtonLogicPinSelect extends ElementButtonManaged
 {
@@ -205,7 +205,7 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 	{
 		if (_buffer < 12)
 		{
-			if (!MFRConfig.colorblindMode.getBoolean(false))
+			if (!CoFHProps.enableColorBlindTextures)
 			{
 				drawModalRect(posX + 3, posY + 3, posX + sizeX - 3, posY + sizeY - 3, _pinColors[_pin].getColor());
 			}

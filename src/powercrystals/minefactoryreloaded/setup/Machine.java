@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.setup;
 import static net.minecraft.util.EnumChatFormatting.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
+import cofh.core.CoFHProps;
 import cofh.lib.util.RegistryUtils;
 import cofh.lib.util.helpers.StringHelper;
 import cpw.mods.fml.common.FMLLog;
@@ -434,6 +435,17 @@ public class Machine
 		final String a = side.getMain(active);
 		final String name = getInternalName() + ".";
 		String t;
+		if (CoFHProps.enableColorBlindTextures) {
+			final String cb = ".cb";
+			if (RegistryUtils.blockTextureExists(t = base + name + a + cb))
+				return t;
+			else if (side.hasAlt && RegistryUtils.blockTextureExists(t = base + name + side.getAlt(active) + cb))
+				return t;
+			else if (RegistryUtils.blockTextureExists(t = base + name + side.name + cb))
+				return t;
+			else if (side.hasAlt && RegistryUtils.blockTextureExists(t = base + name + side.alt + cb))
+				return t;
+		}
 		if (RegistryUtils.blockTextureExists(t = base + name + a))
 			return t;
 		else if (side.hasAlt && RegistryUtils.blockTextureExists(t = base + name + side.getAlt(active)))

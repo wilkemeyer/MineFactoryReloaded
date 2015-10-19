@@ -291,7 +291,7 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	{
 		if (_machine == null)
 			return null;
-		return _machine.getName().toLowerCase(Locale.US) + ".png";
+		return _machine.getName().toLowerCase(Locale.US);
 	}
 
 	@Override

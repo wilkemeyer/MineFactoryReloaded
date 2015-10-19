@@ -1,7 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
+import cofh.core.CoFHProps;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.gui.GuiBase;
+import cofh.lib.util.RegistryUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -50,8 +52,12 @@ public class GuiFactoryInventory extends GuiBase
 	{
 		super(container);
 		_tileEntity = tileentity;
-		background = new ResourceLocation(MineFactoryReloadedCore.guiFolder +
-				_tileEntity.getGuiBackground());
+		background = new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground() + ".png");
+		if (CoFHProps.enableColorBlindTextures) {
+			ResourceLocation t = new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground() + "_cb.png");
+			if (RegistryUtils.textureExists(t))
+				background = t;
+		}
 	}
 
 	protected boolean isPointInRegion(int x, int y, int w, int h, int a, int b) {

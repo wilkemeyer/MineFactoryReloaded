@@ -23,7 +23,6 @@ public class MFRConfig
 
 	public static Property zoolologistEntityId;
 
-	public static Property colorblindMode;
 	public static Property enableBonemealFertilizing;
 	public static Property conveyorCaptureNonItems;
 	public static Property conveyorNeverCapturesPlayers;
@@ -121,9 +120,6 @@ public class MFRConfig
 		TESRCables = !c.get(CATEGORY_GENERAL, "DisableRedNetFramerateStabilization", false,
 				"Set to true to disable RedNet cables switching to TESRs when they detect " +
 				"that they are updating too rapidly.").getBoolean(false);
-		colorblindMode = c.get(CATEGORY_GENERAL, "EnableColorblindMode", false);
-		colorblindMode.comment = "Set to true to enable the RedNet GUI's colorblind mode.";
-		// TODO: expand this to as many textures as possible (cofh core config option?)
 
 		c.save();
 	}
