@@ -456,7 +456,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	public static boolean isZero(double x) {
 
-		return -1e-5 <= x & x <= 1e-5;
+		return -.025 <= x & x <= .025;
 	}
 
 	@Override
