@@ -407,6 +407,8 @@ public class MineFactoryReloadedCore extends BaseMod
 		rulerItem = (new ItemRuler()).setUnlocalizedName("mfr.ruler").setMaxStackSize(1);
 		fishingRodItem = (new ItemFishingRod());
 
+		potatoLauncherItem = new ItemPotatoCannon().setUnlocalizedName("mfr.potatolauncher").setMaxStackSize(1);
+
 		needlegunItem = (new ItemNeedleGun()).setUnlocalizedName("mfr.needlegun").setMaxStackSize(1);
 		needlegunAmmoEmptyItem = (new ItemFactory()).setUnlocalizedName("mfr.needlegun.ammo.empty");
 		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard()).setUnlocalizedName("mfr.needlegun.ammo.standard");
@@ -419,8 +421,6 @@ public class MineFactoryReloadedCore extends BaseMod
 
 		rocketLauncherItem = (new ItemRocketLauncher()).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
-
-		potatoLauncherItem = new ItemPotatoCannon().setUnlocalizedName("mfr.potatolauncher").setMaxStackSize(1);
 
 		registerBlock(conveyorBlock, ItemBlockConveyor.class, BlockConveyor._names);
 		registerBlock(machineItem, ItemBlockFactory.class, BlockFactoryDecoration._names);
