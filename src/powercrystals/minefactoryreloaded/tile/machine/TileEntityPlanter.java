@@ -16,7 +16,7 @@ import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiPlanter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerPlanter;
-import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
+import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -40,7 +40,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public ContainerUpgradable getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerUpgradeable getContainer(InventoryPlayer inventoryPlayer)
 	{
 		return new ContainerPlanter(this, inventoryPlayer);
 	}
@@ -204,7 +204,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	protected int getUpgradeSlot()
+	public int getUpgradeSlot()
 	{
 		return 9;
 	}

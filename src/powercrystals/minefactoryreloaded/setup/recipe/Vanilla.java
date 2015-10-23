@@ -1010,6 +1010,13 @@ public class Vanilla {
 		}
 		_registeredArmor = true;
 
+		addRecipe(ShapedRecipe(stack(plasticGlasses, 1), new Object[] {
+				"GPG",
+				"P P",
+				'P', "sheetPlastic",
+				'G', "paneGlassBlack",
+		}));
+
 		addRecipe(ShapedRecipe(stack(plasticHelmetItem, 1), new Object[] {
 				"PPP",
 				"P P",

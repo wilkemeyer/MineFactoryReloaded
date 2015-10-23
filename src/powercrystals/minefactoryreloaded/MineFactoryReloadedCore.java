@@ -338,6 +338,7 @@ public class MineFactoryReloadedCore extends BaseMod
 		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 1);
 		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 2);
 		plasticBootsItem = new ItemPlasticBoots();
+		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, 0);
 
 		rawRubberItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.raw");
 		rubberBarItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.bar");
@@ -351,6 +352,7 @@ public class MineFactoryReloadedCore extends BaseMod
 			plasticChestplateItem.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.plastic.armor.chest").setMaxStackSize(i);
 			plasticLeggingsItem.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.plastic.armor.legs").setMaxStackSize(i);
 			plasticBootsItem.setRepairIngot("itemPlastic").setMaxStackSize(i);
+			plasticGlasses.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.glass.armor.helm");
 		}
 
 		upgradeItem = (new ItemUpgrade()).setUnlocalizedName("mfr.upgrade.radius").setMaxStackSize(64);

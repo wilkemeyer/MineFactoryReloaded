@@ -2,21 +2,21 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
 
-import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
+import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
-public class GuiPlanter extends GuiUpgradable
+public class GuiPlanter extends GuiUpgradeable
 {
 	private TileEntityPlanter _planter;
 
 	private GuiButton _consumeToggle;
 
-	public GuiPlanter(ContainerUpgradable container, TileEntityPlanter te)
+	public GuiPlanter(ContainerUpgradeable container, TileEntityPlanter te)
 	{
 		super(container, te);
 		_planter = te;
-		ySize = 200;
+		ySize = 201;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -41,7 +41,7 @@ public class GuiPlanter extends GuiUpgradable
 	{
 		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{

@@ -8,7 +8,7 @@ public class GuiSewer extends GuiFactoryInventory
 	public GuiSewer(ContainerSewer container, TileEntitySewer tileentity)
 	{
 		super(container, tileentity);
-		ySize = 180;
+		ySize = 181;
 		_tanksOffsetX = 152;
 	}
 }

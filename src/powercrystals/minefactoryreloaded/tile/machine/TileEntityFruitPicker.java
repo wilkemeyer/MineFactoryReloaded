@@ -21,8 +21,8 @@ import powercrystals.minefactoryreloaded.core.FruitHarvestManager;
 import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
-import powercrystals.minefactoryreloaded.gui.client.GuiFruitPicker;
-import powercrystals.minefactoryreloaded.gui.container.ContainerFruitPicker;
+import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
+import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
@@ -61,16 +61,16 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public ContainerFruitPicker getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerUpgradeable getContainer(InventoryPlayer inventoryPlayer)
 	{
-		return new ContainerFruitPicker(this, inventoryPlayer);
+		return new ContainerUpgradeable(this, inventoryPlayer);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
-		return new GuiFruitPicker(getContainer(inventoryPlayer), this);
+		return new GuiUpgradeable(getContainer(inventoryPlayer), this);
 	}
 
 	@Override

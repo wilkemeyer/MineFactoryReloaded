@@ -6,9 +6,9 @@ import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class ContainerUpgradable extends ContainerFactoryPowered {
+public class ContainerUpgradeable extends ContainerFactoryPowered {
 
-	public ContainerUpgradable(TileEntityFactoryPowered te, InventoryPlayer inv) {
+	public ContainerUpgradeable(TileEntityFactoryPowered te, InventoryPlayer inv) {
 
 		super(te, inv);
 	}
@@ -16,8 +16,11 @@ public class ContainerUpgradable extends ContainerFactoryPowered {
 	@Override
 	protected void addSlots() {
 
-		super.addSlots();
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79, ItemUpgrade.background) {
+		if (_te.getSizeInventory() > 1) {
+			super.addSlots();
+		}
+
+		addSlotToContainer(new SlotAcceptUpgrade(_te, _te.getUpgradeSlot(), 152, 79, ItemUpgrade.background) {
 
 			@Override
 			public int getSlotStackLimit() {

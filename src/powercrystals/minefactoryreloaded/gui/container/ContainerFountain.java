@@ -6,7 +6,7 @@ import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class ContainerFountain extends ContainerUpgradable
+public class ContainerFountain extends ContainerUpgradeable
 {
 	public ContainerFountain(TileEntityFactoryPowered te, InventoryPlayer inv)
 	{

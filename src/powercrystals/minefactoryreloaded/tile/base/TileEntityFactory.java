@@ -33,23 +33,25 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public abstract class TileEntityFactory extends TileEntityBase
-implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaContainer, IPipeConnection
-{
+																implements IRotateableTile, IInventoryConnection, IPortableData,
+																IHarvestAreaContainer, IPipeConnection {
+
 	// first index is rotation, second is side
 	private static final int[][] _textureSelection = new int[][]
-			{
-				{ 0, 1, 2, 3, 4, 5 }, // 0 D (unused)
-				{ 0, 1, 2, 3, 4, 5 }, // 1 U (unused)
-				{ 0, 1, 2, 3, 4, 5 }, // 2 N
-				{ 0, 1, 3, 2, 5, 4 }, // 3 S
-				{ 0, 1, 5, 4, 2, 3 }, // 4 W
-				{ 0, 1, 4, 5, 3, 2 }, // 5 E
-			};
-	protected static class FactoryAreaManager extends HarvestAreaManager<TileEntityFactory>
 	{
+			{ 0, 1, 2, 3, 4, 5 }, // 0 D (unused)
+			{ 0, 1, 2, 3, 4, 5 }, // 1 U (unused)
+			{ 0, 1, 2, 3, 4, 5 }, // 2 N
+			{ 0, 1, 3, 2, 5, 4 }, // 3 S
+			{ 0, 1, 5, 4, 2, 3 }, // 4 W
+			{ 0, 1, 4, 5, 3, 2 }, // 5 E
+	};
+
+	protected static class FactoryAreaManager extends HarvestAreaManager<TileEntityFactory> {
+
 		public FactoryAreaManager(TileEntityFactory owner, int harvestRadius,
-				int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
-		{
+				int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks) {
+
 			super(owner, harvestRadius, harvestAreaUp, harvestAreaDown, upgradeModifier, usesBlocks);
 		}
 	}
@@ -72,28 +74,26 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 
 	protected String _owner = "";
 
-	protected TileEntityFactory(Machine machine)
-	{
+	protected TileEntityFactory(Machine machine) {
+
 		this._machine = machine;
 		_forwardDirection = ForgeDirection.NORTH;
 	}
 
 	@Override
-	public void cofh_validate()
-	{
+	public void cofh_validate() {
+
 		super.cofh_validate();
 		onRotate();
-		if (worldObj.isRemote && hasHAM())
-		{
+		if (worldObj.isRemote && hasHAM()) {
 			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
 	}
 
 	@Override
-	public void onChunkUnload()
-	{
-		if (worldObj != null && worldObj.isRemote && hasHAM())
-		{
+	public void onChunkUnload() {
+
+		if (worldObj != null && worldObj.isRemote && hasHAM()) {
 			MineFactoryReloadedClient.removeTileFromAreaList(this);
 		}
 		super.onChunkUnload();
@@ -102,85 +102,83 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	/**
 	 * Used to create HarvestAreas for entity-interacting machines.
 	 */
-	protected static void createEntityHAM(TileEntityFactory owner)
-	{
+	protected static void createEntityHAM(TileEntityFactory owner) {
+
 		createHAM(owner, 2, 2, 1, 1.0f, false);
 	}
 
 	/**
 	 * Used to create HarvestAreas for block-interacting machines
 	 */
-	protected static void createHAM(TileEntityFactory owner, int harvestRadius)
-	{
+	protected static void createHAM(TileEntityFactory owner, int harvestRadius) {
+
 		createHAM(owner, harvestRadius, 0, 0, 1.0f, true);
 	}
 
 	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
-			boolean usesBlocks)
-	{
+			boolean usesBlocks) {
+
 		createHAM(owner, harvestRadius, harvestAreaUp, harvestAreaDown, 1.0f, usesBlocks);
 	}
 
 	protected static void createHAM(TileEntityFactory owner, int harvestRadius, int harvestAreaUp, int harvestAreaDown,
-			float upgradeModifier, boolean usesBlocks)
-	{
+			float upgradeModifier, boolean usesBlocks) {
+
 		owner._areaManager = new FactoryAreaManager(owner, harvestRadius, harvestAreaUp, harvestAreaDown,
 				upgradeModifier, usesBlocks);
 	}
 
 	@Override
-	public boolean hasHAM()
-	{
+	public boolean hasHAM() {
+
 		return getHAM() != null;
 	}
 
 	@Override
-	public HarvestAreaManager<TileEntityFactory> getHAM()
-	{
+	public HarvestAreaManager<TileEntityFactory> getHAM() {
+
 		return _areaManager;
 	}
 
-	public World getWorld()
-	{
+	public World getWorld() {
+
 		return worldObj;
 	}
 
 	@Override
-	public ForgeDirection getDirectionFacing()
-	{
+	public ForgeDirection getDirectionFacing() {
+
 		return _forwardDirection;
 	}
 
 	@Override
-	public boolean canRotate()
-	{
+	public boolean canRotate() {
+
 		return _canRotate;
 	}
 
 	@Override
-	public boolean canRotate(ForgeDirection axis)
-	{
+	public boolean canRotate(ForgeDirection axis) {
+
 		return _canRotate;
 	}
 
-	protected void setCanRotate(boolean canRotate)
-	{
+	protected void setCanRotate(boolean canRotate) {
+
 		_canRotate = canRotate;
 	}
 
 	@Override
-	public void rotate(ForgeDirection axis)
-	{
+	public void rotate(ForgeDirection axis) {
+
 		if (canRotate())
 			rotate(false);
 	}
 
-	public void rotate(boolean reverse)
-	{
-		if (worldObj != null && !worldObj.isRemote)
-		{
-			switch ((reverse ? _forwardDirection.getOpposite() : _forwardDirection).ordinal())
-			{
+	public void rotate(boolean reverse) {
+
+		if (worldObj != null && !worldObj.isRemote) {
+			switch ((reverse ? _forwardDirection.getOpposite() : _forwardDirection).ordinal()) {
 			case 2://NORTH:
 				_forwardDirection = ForgeDirection.EAST;
 				break;
@@ -203,52 +201,49 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	}
 
 	@Override
-	public void rotateDirectlyTo(int rotation)
-	{
+	public void rotateDirectlyTo(int rotation) {
+
 		ForgeDirection p = _forwardDirection;
 		_forwardDirection = ForgeDirection.getOrientation(rotation);
-		if (worldObj != null && p != _forwardDirection)
-		{
+		if (worldObj != null && p != _forwardDirection) {
 			onRotate();
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
-	protected void onRotate()
-	{
-		if (!isInvalid() && worldObj.blockExists(xCoord, yCoord, zCoord))
-		{
+	protected void onRotate() {
+
+		if (!isInvalid() && worldObj.blockExists(xCoord, yCoord, zCoord)) {
 			MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
 		}
 	}
 
-	public int getRotatedSide(int side)
-	{
+	public int getRotatedSide(int side) {
+
 		return _textureSelection[_forwardDirection.ordinal()][side];
 	}
 
-	public ForgeDirection getDropDirection()
-	{
+	public ForgeDirection getDropDirection() {
+
 		if (canRotate())
 			return getDirectionFacing().getOpposite();
 		return ForgeDirection.UP;
 	}
 
-	public ForgeDirection[] getDropDirections()
-	{
+	public ForgeDirection[] getDropDirections() {
+
 		return ForgeDirection.VALID_DIRECTIONS;
 	}
 
-	public boolean isActive()
-	{
+	public boolean isActive() {
+
 		return _isActive;
 	}
 
-	public void setIsActive(boolean isActive)
-	{
+	public void setIsActive(boolean isActive) {
+
 		if (_isActive != isActive & worldObj != null &&
-				!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime())
-		{
+				!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime()) {
 			_lastActive = worldObj.getTotalWorldTime() + _activeSyncTimeout;
 			_prevActive = _isActive;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -257,19 +252,18 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	}
 
 	@Override
-	public void updateEntity()
-	{
+	public void updateEntity() {
+
 		super.updateEntity();
 
-		if (!worldObj.isRemote && _prevActive != _isActive && _lastActive < worldObj.getTotalWorldTime())
-		{
+		if (!worldObj.isRemote && _prevActive != _isActive && _lastActive < worldObj.getTotalWorldTime()) {
 			_prevActive = _isActive;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
-	public void setOwner(String owner)
-	{
+	public void setOwner(String owner) {
+
 		if (owner == null)
 			owner = "";
 		if (_owner == null || _owner.isEmpty())
@@ -277,28 +271,27 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	}
 
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return null;
 	}
 
-	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryInventory getContainer(InventoryPlayer inventoryPlayer) {
+
 		return null;
 	}
 
-	public String getGuiBackground()
-	{
+	public String getGuiBackground() {
+
 		if (_machine == null)
 			return null;
 		return _machine.getName().toLowerCase(Locale.US);
 	}
 
 	@Override
-	public void markDirty()
-	{
-		if (worldObj != null && !worldObj.isRemote && hasHAM())
-		{
+	public void markDirty() {
+
+		if (worldObj != null && !worldObj.isRemote && hasHAM()) {
 			HarvestAreaManager<TileEntityFactory> ham = getHAM();
 			int u = ham.getUpgradeLevel();
 			if (_lastUpgrade != u)
@@ -316,13 +309,17 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 
 	}
 
+	public void markForUpdate() {
+
+		_lastActive = 0;
+	}
+
 	@Override
-	public Packet getDescriptionPacket()
-	{
-		if (worldObj != null && _lastActive < worldObj.getTotalWorldTime())
-		{
+	public Packet getDescriptionPacket() {
+
+		if (worldObj != null && _lastActive < worldObj.getTotalWorldTime()) {
 			NBTTagCompound data = new NBTTagCompound();
-			data.setByte("r", (byte)_forwardDirection.ordinal());
+			data.setByte("r", (byte) _forwardDirection.ordinal());
 			data.setBoolean("a", _isActive);
 			writePacketData(data);
 			S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
@@ -332,11 +329,10 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-	{
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+
 		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
-		{
+		switch (pkt.func_148853_f()) {
 		case 0:
 			rotateDirectlyTo(data.getByte("r"));
 			_prevActive = _isActive;
@@ -344,8 +340,7 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 			readPacketData(data);
 			if (_prevActive != _isActive)
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			if (_lastActive < 0 && hasHAM())
-			{
+			if (_lastActive < 0 && hasHAM()) {
 				Packets.sendToServer(Packets.HAMUpdate, this);
 			}
 			_lastActive = 5;
@@ -360,6 +355,7 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 
 	@Override
 	public String getDataType() {
+
 		return _machine.getInternalName() + ".name";
 	}
 
@@ -374,15 +370,15 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
+	public void writeToNBT(NBTTagCompound tag) {
+
 		super.writeToNBT(tag);
 		tag.setInteger("rotation", getDirectionFacing().ordinal());
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		int rotation = tag.getInteger("rotation");
 		rotateDirectlyTo(rotation);
@@ -390,54 +386,55 @@ implements IRotateableTile, IInventoryConnection, IPortableData, IHarvestAreaCon
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		super.writeItemNBT(tag);
 		if (!Strings.isNullOrEmpty(_owner))
 			tag.setString("owner", _owner);
 	}
 
-	public void onRedNetChanged(ForgeDirection side, int value)
-	{
+	public void onRedNetChanged(ForgeDirection side, int value) {
+
 		_rednetState = value;
 	}
 
-	public int getRedNetOutput(ForgeDirection side)
-	{
+	public int getRedNetOutput(ForgeDirection side) {
+
 		return 0;
 	}
 
 	// hoisted IMachine methods
 
-	public void setManageFluids(boolean manageFluids)
-	{
+	public void setManageFluids(boolean manageFluids) {
+
 		_manageFluids = manageFluids;
 	}
 
-	public boolean manageFluids()
-	{
+	public boolean manageFluids() {
+
 		return _manageFluids;
 	}
 
-	public void setManageSolids(boolean manageSolids)
-	{
+	public void setManageSolids(boolean manageSolids) {
+
 		_manageSolids = manageSolids;
 	}
 
-	public boolean manageSolids()
-	{
+	public boolean manageSolids() {
+
 		return _manageSolids;
 	}
 
 	@Override
-	public ConnectionType canConnectInventory(ForgeDirection from)
-	{
+	public ConnectionType canConnectInventory(ForgeDirection from) {
+
 		return manageSolids() ? ConnectionType.FORCE : ConnectionType.DENY;
 	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
 	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+
 		if (type == PipeType.FLUID)
 			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
 		if (type == PipeType.ITEM)

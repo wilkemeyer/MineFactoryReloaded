@@ -18,8 +18,8 @@ import powercrystals.minefactoryreloaded.api.FertilizerType;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 import powercrystals.minefactoryreloaded.api.IFactoryFertilizer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
-import powercrystals.minefactoryreloaded.gui.client.GuiUpgradable;
-import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradable;
+import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
+import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
@@ -27,7 +27,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 public class TileEntityFertilizer extends TileEntityFactoryPowered
 {
 	private Random _rand;
-	
+
 	public TileEntityFertilizer()
 	{
 		super(Machine.Fertilizer);
@@ -36,26 +36,26 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 		setManageSolids(true);
 		setCanRotate(true);
 	}
-	
+
 	@Override
 	protected void onFactoryInventoryChanged()
 	{
 		_areaManager.updateUpgradeLevel(_inventory[9]);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
 	{
-		return new GuiUpgradable(getContainer(inventoryPlayer), this);
+		return new GuiUpgradeable(getContainer(inventoryPlayer), this);
 	}
-	
+
 	@Override
-	public ContainerUpgradable getContainer(InventoryPlayer inventoryPlayer)
+	public ContainerUpgradeable getContainer(InventoryPlayer inventoryPlayer)
 	{
-		return new ContainerUpgradable(this, inventoryPlayer);
+		return new ContainerUpgradeable(this, inventoryPlayer);
 	}
-	
+
 	@Override
 	public boolean activateMachine()
 	{
@@ -67,14 +67,14 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 		}
 
 		Map<Block, IFactoryFertilizable> fertalizables = MFRRegistry.getFertilizables();
-		
+
 		Block target = worldObj.getBlock(bp.x, bp.y, bp.z);
 		if (!fertalizables.containsKey(target))
 		{
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
-		
+
 		IFactoryFertilizable fertilizable = fertalizables.get(target);
 		Map<Item, IFactoryFertilizer> fertilizers = MFRRegistry.getFertilizers();
 		for (int stackIndex = 0, e = getSizeInventory(); stackIndex < e; stackIndex++)
@@ -102,47 +102,47 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered
 				return true;
 			}
 		}
-		
+
 		setIdleTicks(getIdleTicksMax());
 		return false;
 	}
-	
+
 	@Override
 	public int getSizeInventory()
 	{
 		return 10;
 	}
-	
+
 	@Override
 	public int getWorkMax()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public int getIdleTicksMax()
 	{
 		return 20;
 	}
-	
+
 	@Override
 	public int getStartInventorySide(ForgeDirection side)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public int getSizeInventorySide(ForgeDirection side)
 	{
 		return 9;
 	}
-	
+
 	@Override
-	protected int getUpgradeSlot()
+	public int getUpgradeSlot()
 	{
 		return 9;
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
 	{

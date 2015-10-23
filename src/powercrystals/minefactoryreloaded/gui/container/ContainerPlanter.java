@@ -12,7 +12,7 @@ import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
-public class ContainerPlanter extends ContainerUpgradable
+public class ContainerPlanter extends ContainerUpgradeable
 {
 	private TileEntityPlanter _planter;
 	private boolean consumeAll;

@@ -7,7 +7,7 @@ import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityHarvester;
 
-public class ContainerHarvester extends ContainerUpgradable
+public class ContainerHarvester extends ContainerUpgradeable
 {
 	public ContainerHarvester(TileEntityHarvester te, InventoryPlayer inv)
 	{

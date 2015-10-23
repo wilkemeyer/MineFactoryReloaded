@@ -286,7 +286,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return failedDrops != null;
 	}
 
-	protected int getUpgradeSlot()
+	public int getUpgradeSlot()
 	{
 		return -1;
 	}

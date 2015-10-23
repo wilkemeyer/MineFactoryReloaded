@@ -133,6 +133,7 @@ public class MFRThings
 	public static Item plasticCellItem;
 	public static Item fishingRodItem;
 	public static Item plasticBagItem;
+	public static ItemFactoryArmor plasticGlasses;
 	public static ItemFactoryArmor plasticHelmetItem;
 	public static ItemFactoryArmor plasticChestplateItem;
 	public static ItemFactoryArmor plasticLeggingsItem;
