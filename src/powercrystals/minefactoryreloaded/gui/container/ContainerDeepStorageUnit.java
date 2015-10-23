@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.container;
 import cofh.lib.gui.slot.SlotAcceptValid;
 import cofh.lib.gui.slot.SlotInvisible;
 import cofh.lib.gui.slot.SlotRemoveOnly;
+import cofh.lib.gui.slot.SlotViewOnly;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -30,27 +31,56 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory {
 		addSlotToContainer(new SlotAcceptValid(_te, 0, 134, 16));
 		addSlotToContainer(new SlotAcceptValid(_te, 1, 152, 16));
 		addSlotToContainer(new SlotRemoveOnly(_te, 2, 152, 49));
+		addSlotToContainer(new SlotViewOnly(_te, 3, 9, 63, true) {
+			@Override
+			public ItemStack getStack() {
+
+				return _dsu.getStoredItemRaw();
+			}
+		});
 		for (int i = 34; i-- > 0;)
-			addSlotToContainer(new SlotInvisible(_te, 3 + i, 170, 16, 0));
+			addSlotToContainer(new SlotInvisible(_te, 4 + i, 170, 16, 0));
+	}
+
+	@Override
+	public void putStackInSlot(int slot, ItemStack stack) {
+
+		if (slot == 3) {
+			_dsu.setStoredItemRaw(stack);
+		} else {
+			super.putStackInSlot(slot, stack);
+		}
 	}
 
 	@Override
 	protected boolean performMerge(int slot, ItemStack stackInSlot) {
 
-		if (slot < 37) {
-			return mergeItemStack(stackInSlot, 37, inventorySlots.size(), true);
-		}
-		if (_dsu.isItemValidForSlot(0, stackInSlot) && mergeItemStack(stackInSlot, 0, 36, false)) {
-			sendSlots(0, 3);
+		if (slot < 38) {
+			if (mergeItemStack(stackInSlot, 38, inventorySlots.size(), true)) {
+				sendSlots(0, 4);
+				return true;
+			}
+		} else if (_dsu.isItemValidForSlot(0, stackInSlot) && mergeItemStack(stackInSlot, 0, 36, false)) {
+			sendSlots(0, 4);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
+	public ItemStack slotClick(int slotId, int mouseButton, int modifier, EntityPlayer player) {
+
+		ItemStack r = super.slotClick(slotId, mouseButton, modifier, player);
+		if (slotId < 4) {
+			sendSlots(0, 4);
+		}
+		return r;
+	}
+
+	@Override
 	protected boolean supportsShiftClick(EntityPlayer player, int slot) {
 
-		return !player.worldObj.isRemote ? true : slot > 36;
+		return !player.worldObj.isRemote ? true : slot > 37;
 	}
 
 	@Override
@@ -58,9 +88,10 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory {
 
 		super.detectAndSendChanges();
 
+		int v = _dsu.getQuantity();
 		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 200, _dsu.getQuantity());
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 201, _dsu.getQuantity() >> 16);
+			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 200, v);
+			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 201, v >> 16);
 		}
 	}
 

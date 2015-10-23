@@ -17,71 +17,67 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerDeepStorageUnit;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implements IDeepStorageUnit
-{
+public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implements IDeepStorageUnit {
+
 	private boolean _ignoreChanges = true;
-	private boolean _shouldTick = true;
 	private boolean _passingItem = false;
 
 	private int _storedQuantity;
 	private ItemStack _storedItem = null;
 
-	public TileEntityDeepStorageUnit()
-	{
+	public TileEntityDeepStorageUnit() {
+
 		super(Machine.DeepStorageUnit);
 		setManageSolids(true);
 	}
 
 	@Override
-	public void validate()
-	{
-		super.validate();
+	public void cofh_validate() {
+
+		super.cofh_validate();
 		_ignoreChanges = false;
+		onFactoryInventoryChanged();
 	}
 
 	@Override
-	public void invalidate()
-	{
+	public void invalidate() {
+
 		super.invalidate();
 		_ignoreChanges = true;
 	}
 
 	@Override
-	public boolean shouldDropSlotWhenBroken(int slot)
-	{
+	public boolean shouldDropSlotWhenBroken(int slot) {
+
 		return slot < 2;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiDeepStorageUnit(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerDeepStorageUnit getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerDeepStorageUnit getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerDeepStorageUnit(this, inventoryPlayer);
 	}
 
-	public int getQuantity()
-	{
+	public int getQuantity() {
+
 		return _storedQuantity;
 	}
 
-	public int getQuantityAdjusted()
-	{
+	public int getQuantityAdjusted() {
+
 		int quantity = _storedQuantity;
 
-		for(int i = 0; i < getSizeInventory(); i++)
-		{
-			if(_inventory[i] != null && _storedQuantity == 0)
-			{
+		for (int i = 0; i < getSizeInventory(); i++) {
+			if (_inventory[i] != null && _storedQuantity == 0) {
 				quantity += _inventory[i].stackSize;
-			}
-			else if(_inventory[i] != null && UtilInventory.stacksEqual(_storedItem, _inventory[i]))
-			{
+			} else if (_inventory[i] != null && UtilInventory.stacksEqual(_storedItem, _inventory[i])) {
 				quantity += _inventory[i].stackSize;
 			}
 		}
@@ -89,102 +85,89 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		return quantity;
 	}
 
-	public void setQuantity(int quantity)
-	{
+	public void setQuantity(int quantity) {
+
 		_storedQuantity = quantity;
 	}
 
-	public void clearSlots()
-	{
-		for(int i = 0; i < getSizeInventory(); i++)
-		{
+	public void clearSlots() {
+
+		for (int i = 0; i < getSizeInventory(); i++) {
 			_inventory[i] = null;
 		}
 	}
 
 	@Override
-	public ForgeDirection getDropDirection()
-	{
+	public ForgeDirection getDropDirection() {
+
 		return ForgeDirection.UP;
 	}
 
 	@Override
-	public boolean hasWorldObj()
-	{
-		return _shouldTick & worldObj != null;
+	public void updateEntity() {
+
+		super.updateEntity();
+
+		if (worldObj.isRemote)
+			return;
 	}
 
 	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-		_shouldTick = false;
+	public void setIsActive(boolean isActive) {
 
-		if(worldObj.isRemote)
-			return;
-
+		super.setIsActive(isActive);
 		onFactoryInventoryChanged();
 	}
 
 	@Override
-	protected void onFactoryInventoryChanged()
-	{
+	protected void onFactoryInventoryChanged() {
+
 		if (_ignoreChanges | worldObj == null || worldObj.isRemote)
 			return;
 
-		if((_inventory[2] == null) & _storedItem != null & _storedQuantity == 0)
-		{
+		if (!isActive() && (_inventory[2] == null) & _storedItem != null & _storedQuantity == 0) {
 			_storedItem = null;
 		}
 		checkInput(0);
 		checkInput(1);
 
-		if((_inventory[2] == null) & _storedItem != null)
-		{
+		if ((_inventory[2] == null) & _storedItem != null & _storedQuantity > 0) {
 			_inventory[2] = _storedItem.copy();
 			_inventory[2].stackSize = Math.min(_storedQuantity,
-					Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
+				Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
 			_storedQuantity -= _inventory[2].stackSize;
-		}
-		else if(_inventory[2] != null & _storedQuantity > 0 &&
+		} else if (_inventory[2] != null & _storedQuantity > 0 &&
 				_inventory[2].stackSize < _inventory[2].getMaxStackSize() &&
-				UtilInventory.stacksEqual(_storedItem, _inventory[2]))
-		{
+				UtilInventory.stacksEqual(_storedItem, _inventory[2])) {
 			int amount = Math.min(_inventory[2].getMaxStackSize() - _inventory[2].stackSize, _storedQuantity);
 			_inventory[2].stackSize += amount;
 			_storedQuantity -= amount;
 		}
 	}
 
-	private void checkInput(int slot)
-	{
-		if(_inventory[slot] != null)
-		{
-			if(_storedQuantity == 0 &&
+	private void checkInput(int slot) {
+
+		if (_inventory[slot] != null) {
+			if (_storedQuantity == 0 &&
 					(_storedItem == null ||
-					UtilInventory.stacksEqual(_inventory[slot], _storedItem)))
-			{
+					UtilInventory.stacksEqual(_inventory[slot], _storedItem))) {
 				_storedItem = _inventory[slot].copy();
 				_storedItem.stackSize = 1;
 				_storedQuantity = _inventory[slot].stackSize;
 				_inventory[slot] = null;
-			}
-			else if(UtilInventory.stacksEqual(_inventory[slot], _storedItem) &&
-					(getMaxStoredCount() - _storedItem.getMaxStackSize()) - _inventory[slot].stackSize > _storedQuantity)
-			{
+			} else if (UtilInventory.stacksEqual(_inventory[slot], _storedItem) &&
+					(getMaxStoredCount() - _storedItem.getMaxStackSize()) - _inventory[slot].stackSize > _storedQuantity) {
 				_storedQuantity += _inventory[slot].stackSize;
 				_inventory[slot] = null;
 			}
 			// boot improperly typed items from the input slots
-			else if (!UtilInventory.stacksEqual(_inventory[slot], _storedItem))
-			{
+			else if (!UtilInventory.stacksEqual(_inventory[slot], _storedItem)) {
 				_passingItem = true;
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 				_passingItem = false;
 			}
 			// internal inventory is full
-			else
-			{
+			else {
 				_passingItem = true;
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 				_passingItem = false;
@@ -193,38 +176,32 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 3;
 	}
 
 	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
+	public boolean isUseableByPlayer(EntityPlayer player) {
 
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
 		return player.getDistanceSq(xCoord, yCoord, zCoord) <= 64D;
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
+	public int getStartInventorySide(ForgeDirection side) {
+
 		return 0;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
+	public int getSizeInventorySide(ForgeDirection side) {
+
 		return getSizeInventory();
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
+	public void setInventorySlotContents(int i, ItemStack itemstack) {
+
 		if (itemstack != null) {
 			if (itemstack.stackSize < 0)
 				itemstack = null;
@@ -237,53 +214,51 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	 * Should only allow matching items to be inserted in the "in" slots. Nothing goes in the "out" slot.
 	 */
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
-	{
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+
 		if (_passingItem)
 			return false;
-		if(slot >= 2) return false;
+		if (slot >= 2) return false;
 		ItemStack stored = _storedItem;
 		if (stored == null) stored = _inventory[2];
 		return stored == null || UtilInventory.stacksEqual(stored, stack);
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-	{
-		return !_passingItem && canInsertItem(slot, itemstack, -1);
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+
+		return canInsertItem(slot, itemstack, -1);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
-	{
+	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+
 		return true;
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		int storedAdd = 0;
 		ItemStack o = _inventory[2];
-		if (o != null)
-		{
+		if (o != null) {
 			storedAdd = o.stackSize;
 			_inventory[2] = null;
 		}
 		super.writeItemNBT(tag);
 		_inventory[2] = o;
 
-		if (_storedItem != null)
-		{
+		if (_storedItem != null) {
 			tag.setTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
 			tag.setInteger("storedQuantity", _storedQuantity + storedAdd);
-		}
-		else
+			tag.setBoolean("locked", isActive());
+		} else
 			tag.setInteger("storedQuantity", 0);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
+	public void writeToNBT(NBTTagCompound tag) {
+
 		ItemStack o = _inventory[2];
 		_inventory[2] = null;
 		super.writeToNBT(tag);
@@ -292,33 +267,49 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		_ignoreChanges = true;
 		super.readFromNBT(tag);
 
 		_storedQuantity = tag.getInteger("storedQuantity");
 		_storedItem = null;
 
-		if (tag.hasKey("storedStack"))
-		{
-			_storedItem = ItemStack.
-					loadItemStackFromNBT((NBTTagCompound)tag.getTag("storedStack"));
+		if (tag.hasKey("storedStack")) {
+			_storedItem = ItemStack.loadItemStackFromNBT((NBTTagCompound) tag.getTag("storedStack"));
+			if (_storedItem != null) {
+				_storedItem.stackSize = 1;
+				setIsActive(tag.getBoolean("locked"));
+			}
 		}
 
-		if (_storedItem == null & _storedQuantity > 0)
-		{
+		if (_storedItem == null & _storedQuantity > 0) {
 			_storedQuantity = 0;
 		}
 		_ignoreChanges = false;
 	}
 
+	public ItemStack getStoredItemRaw() {
+
+		if (_storedItem != null) {
+			return _storedItem.copy();
+		}
+		return null;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setStoredItemRaw(ItemStack type) {
+
+		if (worldObj.isRemote) {
+			_storedItem = type;
+		}
+	}
+
 	@Override
-	public ItemStack getStoredItemType()
-	{
+	public ItemStack getStoredItemType() {
+
 		int quantity = getQuantityAdjusted();
-		if((quantity != 0) & _storedItem != null)
-		{
+		if ((isActive() || quantity != 0) & _storedItem != null) {
 			ItemStack stack = _storedItem.copy();
 			stack.stackSize = quantity;
 			return stack;
@@ -327,22 +318,15 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void setStoredItemCount(int amount)
-	{
-		for(int i = 0; i < getSizeInventory(); i++)
-		{
-			if(UtilInventory.stacksEqual(_inventory[i], _storedItem))
-			{
-				if(amount == 0)
-				{
+	public void setStoredItemCount(int amount) {
+
+		for (int i = 0; i < getSizeInventory(); i++) {
+			if (UtilInventory.stacksEqual(_inventory[i], _storedItem)) {
+				if (amount == 0) {
 					_inventory[i] = null;
-				}
-				else if(amount >= _inventory[i].stackSize)
-				{
+				} else if (amount >= _inventory[i].stackSize) {
 					amount -= _inventory[i].stackSize;
-				}
-				else if(amount < _inventory[i].stackSize)
-				{
+				} else if (amount < _inventory[i].stackSize) {
 					_inventory[i].stackSize = amount;
 					amount = 0;
 				}
@@ -353,8 +337,10 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void setStoredItemType(ItemStack type, int amount)
-	{
+	public void setStoredItemType(ItemStack type, int amount) {
+
+		if (isActive())
+			return;
 		clearSlots();
 		_storedQuantity = amount;
 		_storedItem = null;
@@ -366,8 +352,8 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public int getMaxStoredCount()
-	{
+	public int getMaxStoredCount() {
+
 		return Integer.MAX_VALUE;
 	}
 }
