@@ -51,10 +51,6 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 			}
 		}
 
-		this.mc.renderEngine.bindTexture(texture);
-		for (int i = 0; i < 8; i++) {
-			this.drawTexturedModalRect(TANK_OFFSET_X + (i % 3 * 18), 10 + (i / 3 * 35), 232, 0, 16, 33);
-		}
 		if (container.drops) {
 			this.drawTexturedModalRect(130, 39, 232, 50, 24, 16);
 		}

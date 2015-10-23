@@ -2,34 +2,19 @@ package powercrystals.minefactoryreloaded.gui.container;
 
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.gui.slot.SlotViewOnly;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
 
 public class ContainerLiquiCrafter extends ContainerFactoryInventory {
 
-	private TileEntityLiquiCrafter _crafter;
-
-	private int _tempTankIndex;
-	private int _tempLiquidId;
-	public boolean drops;
-
 	public ContainerLiquiCrafter(TileEntityLiquiCrafter crafter, InventoryPlayer inventoryPlayer) {
 
 		super(crafter, inventoryPlayer);
-		_crafter = crafter;
 	}
 
 	@Override
@@ -47,49 +32,6 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory {
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(_te, 11 + j + i * 9, 28 + 8 + j * 18, 79 + i * 18));
-			}
-		}
-	}
-
-	@Override
-	public void detectAndSendChanges() {
-
-		super.detectAndSendChanges();
-		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
-		int tankIndex = (int) (_crafter.getWorldObj().getTotalWorldTime() % tanks.length);
-		FluidTankInfo tank = tanks[tankIndex];
-		FluidStack l = tank.fluid;
-
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 3, _crafter.hasDrops() ? 1 : 0);
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 0, tankIndex);
-			if (l != null) {
-				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 1, l.getFluid().getID());
-				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 2, l.amount);
-			} else {
-				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 1, 0);
-				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 2, 0);
-			}
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int var, int value) {
-
-		super.updateProgressBar(var, value);
-		if (var == 0)
-			_tempTankIndex = value;
-		else if (var == 1)
-			_tempLiquidId = value;
-		else if (var == 3)
-			drops = value != 0;
-		else if (var == 2) {
-			Fluid fluid = FluidRegistry.getFluid(value);
-			if (fluid == null) {
-				_crafter.getTanks()[_tempTankIndex].setFluid(null);
-			} else {
-				_crafter.getTanks()[_tempTankIndex].setFluid(new FluidStack(FluidRegistry.getFluid(_tempLiquidId), value));
 			}
 		}
 	}
