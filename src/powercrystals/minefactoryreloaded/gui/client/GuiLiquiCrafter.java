@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -15,47 +16,43 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerLiquiCrafter;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
 
-public class GuiLiquiCrafter extends GuiFactoryInventory
-{
+public class GuiLiquiCrafter extends GuiFactoryInventory {
+
 	private TileEntityLiquiCrafter _crafter;
 	private ContainerLiquiCrafter container;
 	private static final int TANK_OFFSET_X = -22;
 
-	public GuiLiquiCrafter(ContainerLiquiCrafter container, TileEntityLiquiCrafter router)
-	{
+	public GuiLiquiCrafter(ContainerLiquiCrafter container, TileEntityLiquiCrafter router) {
+
 		super(container, router);
 		_crafter = router;
 		this.container = container;
 		xSize = 232;
 		ySize = 215;
-		_xOffset = _xOffset + 27;
+		_xOffset = _xOffset + 28;
 		_renderTanks = false;
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString("Template", 67 + 27, 27, 4210752);
-		fontRendererObj.drawString("Output", 128 + 27, 26, 4210752);
-		// TODO: localize
+		fontRendererObj.drawString(StatCollector.translateToLocal("info.cofh.template"), 67 + 27, 27, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("info.cofh.output"), 128 + 27, 26, 4210752);
 
 		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		for(int i = 0; i < 9; i++)
-		{
+		for (int i = 0; i < 9; i++) {
 			FluidStack l = tanks[i].fluid;
-			if(l != null)
-			{
-				drawTank(TANK_OFFSET_X + (i % 3 * 18), 43 + (i / 3 * 35),  l, l.amount * 33 / tanks[i].capacity);
+			if (l != null) {
+				drawTank(TANK_OFFSET_X + (i % 3 * 18), 43 + (i / 3 * 35), l, l.amount * 33 / tanks[i].capacity);
 			}
 		}
 
 		this.mc.renderEngine.bindTexture(texture);
-		for(int i = 0; i < 8; i++)
-		{
+		for (int i = 0; i < 8; i++) {
 			this.drawTexturedModalRect(TANK_OFFSET_X + (i % 3 * 18), 10 + (i / 3 * 35), 232, 0, 16, 33);
 		}
 		if (container.drops) {
@@ -64,10 +61,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	}
 
 	@Override
-	protected void drawTooltips(int mouseX, int mouseY)
-	{
-		if (isPointInRegion(TANK_OFFSET_X + 1, 11, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY))
-		{
+	protected void drawTooltips(int mouseX, int mouseY) {
+
+		if (isPointInRegion(TANK_OFFSET_X + 1, 11, 18 * 3 - 2, 35 * 3 - 2, mouseX, mouseY)) {
 			int tankX = mouseX - TANK_OFFSET_X - this.guiLeft;
 			int tankY = mouseY - 10 - this.guiTop;
 			if ((tankX % 18 >= 16) | tankY % 35 >= 33)
@@ -82,8 +78,8 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY)
-	{
+	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY) {
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(texture);
 		int x = (width - xSize - 56) / 2;
@@ -92,11 +88,11 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 	}
 
 	@Override
-	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level)
-	{
+	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level) {
+
 		if (stack == null) return;
 		Fluid fluid = stack.getFluid();
-		if(fluid == null) return;
+		if (fluid == null) return;
 
 		int vertOffset = 0;
 
@@ -104,17 +100,13 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 		if (icon == null)
 			icon = Blocks.flowing_lava.getIcon(0, 0);
 
-		while(level > 0)
-		{
+		while (level > 0) {
 			int texHeight = 0;
 
-			if(level > 16)
-			{
+			if (level > 16) {
 				texHeight = 16;
 				level -= 16;
-			}
-			else
-			{
+			} else {
 				texHeight = level;
 				level = 0;
 			}
@@ -128,4 +120,5 @@ public class GuiLiquiCrafter extends GuiFactoryInventory
 		this.mc.renderEngine.bindTexture(texture);
 		this.drawTexturedModalRect(xOffset, yOffset - 33, 232, 0, 16, 33);
 	}
+
 }

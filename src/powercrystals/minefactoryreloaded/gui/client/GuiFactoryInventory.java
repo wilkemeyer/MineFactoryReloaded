@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -50,6 +51,7 @@ public class GuiFactoryInventory extends GuiBase {
 	public GuiFactoryInventory(ContainerFactoryInventory container, TileEntityFactoryInventory tileEntity) {
 
 		super(container, new ResourceLocation(MineFactoryReloadedCore.guiFolder + tileEntity.getGuiBackground() + ".png"));
+		drawInventory = drawTitle = false;
 		_tileEntity = tileEntity;
 		if (CoFHProps.enableColorBlindTextures) {
 			ResourceLocation t = new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground() + "_cb.png");
@@ -91,6 +93,7 @@ public class GuiFactoryInventory extends GuiBase {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		GL11.glColor4f(1f, 1f, 1f, 1f);
 		fontRendererObj.drawString(_tileEntity.getInventoryName(), _xOffset, 6, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 3, 4210752);
 
 		if (_renderTanks) {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
