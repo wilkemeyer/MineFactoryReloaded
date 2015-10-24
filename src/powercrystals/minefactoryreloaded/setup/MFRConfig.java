@@ -10,8 +10,8 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
-public class MFRConfig
-{
+public class MFRConfig {
+
 	// client config
 	public static Property spyglassRange;
 	public static Property brightRednetBand;
@@ -29,6 +29,7 @@ public class MFRConfig
 	public static Property conveyorNeverCapturesTCGolems;
 	public static Property playSounds;
 	public static Property defaultRedNetCableOnly;
+	public static Property fisherNeedsRod;
 
 	public static Property treeSearchMaxVertical;
 	public static Property treeSearchMaxHorizontal;
@@ -109,8 +110,8 @@ public class MFRConfig
 
 	public static String CATEGORY_ITEM = "item";
 
-	public static void loadClientConfig(File configFile)
-	{
+	public static void loadClientConfig(File configFile) {
+
 		Configuration c = new Configuration(configFile, true);
 
 		spyglassRange = c.get(CATEGORY_GENERAL, "SpyglassRange", 200);
@@ -126,8 +127,8 @@ public class MFRConfig
 
 	//private static Configuration config;
 
-	public static void loadCommonConfig(File configFile)
-	{
+	public static void loadCommonConfig(File configFile) {
+
 		Configuration c = new Configuration(configFile, true);
 		c.load();
 		//config = c;
@@ -278,58 +279,62 @@ public class MFRConfig
 		//}
 
 		//{ Additional machine configs
-		category = "Machine.Conveyor";
-		conveyorCaptureNonItems = c.get(category, "CaptureNonItems", true).setRequiresMcRestart(true);
-		conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
-		conveyorNeverCapturesPlayers = c.get(category, "NeverCapturePlayers", false).setRequiresMcRestart(true);
-		conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
-		conveyorNeverCapturesTCGolems = c.get(category, "NeverCaptureTCGolems", false).setRequiresMcRestart(true);
-		conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture ThaumCraft golems regardless of other settings.";
+		{
+			final String machine = "Machine.";
+			category = machine + "Conveyor";
+			conveyorCaptureNonItems = c.get(category, "CaptureNonItems", true).setRequiresMcRestart(true);
+			conveyorCaptureNonItems.comment = "If false, conveyors will not grab non-item entities. Breaks conveyor mob grinders but makes them safe for golems, etc.";
+			conveyorNeverCapturesPlayers = c.get(category, "NeverCapturePlayers", false).setRequiresMcRestart(true);
+			conveyorNeverCapturesPlayers.comment = "If true, conveyors will NEVER capture players regardless of other settings.";
+			conveyorNeverCapturesTCGolems = c.get(category, "NeverCaptureTCGolems", false).setRequiresMcRestart(true);
+			conveyorNeverCapturesTCGolems.comment = "If true, conveyors will NEVER capture ThaumCraft golems regardless of other settings.";
 
-		category = "Machine." + Machine.ChunkLoader.getName();
-		enableChunkLimitBypassing = c.get(category, "IgnoreChunkLimit", false);
-		enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
-		enableChunkLoaderRequiresOwner = c.get(category, "RequiresOwnerOnline", false);
-		enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
-		enableConfigurableCLEnergy = c.get(category, "EnableConfigurableActivationEnergy", false).setRequiresMcRestart(true);
-		enableConfigurableCLEnergy.comment = "If true, the Chunk Loader will use the activation energy config in this section. WARNING: this makes it much more expensive at lower values. (non-configurable is exponential)";
+			category = machine + Machine.ChunkLoader.getName();
+			enableChunkLimitBypassing = c.get(category, "IgnoreChunkLimit", false);
+			enableChunkLimitBypassing.comment = "If true, the Chunk Loader will ignore forgeChunkLoading.cfg.";
+			enableChunkLoaderRequiresOwner = c.get(category, "RequiresOwnerOnline", false);
+			enableChunkLoaderRequiresOwner.comment = "If true, the Chunk Loader will require that the player who placed it be online to function";
+			enableConfigurableCLEnergy = c.get(category, "EnableConfigurableActivationEnergy", false).setRequiresMcRestart(true);
+			enableConfigurableCLEnergy.comment = "If true, the Chunk Loader will use the activation energy config in this section. WARNING: this makes it much more expensive at lower values. (non-configurable is exponential)";
 
-		category = "Machine." + Machine.AutoSpawner.getName();
-		spawnerBlacklist = c.get(category, "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
-		spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider or VillagerGolem or Forestry.butterflyGE) to blacklist from the AutoSpawner. The Debugger item will display an entity's ID when used.";
-		category += ".Cost";
-		autospawnerCostExact = c.get(category, "Exact", 5).setRequiresMcRestart(true);
-		autospawnerCostExact.comment = "The multiplier for work required to generate a mob in exact mode.";
-		autospawnerCostStandard = c.get(category, "Standard", 1).setRequiresMcRestart(true);
-		autospawnerCostStandard.comment = "The multiplier for work required to generate a mob in standard (non-exact) mode.";
-		spawnerCustomization = c.getCategory(category + ".Custom").setRequiresMcRestart(true);
-		spawnerCustomization.setComment("Custom base XP costs for entities. format: I:<entityid> = #. e.g.:\n"
-									+ "I:VillagerGolem = 25\nI:Slime = 50");
+			category = machine + Machine.AutoSpawner.getName();
+			spawnerBlacklist = c.get(category, "Blacklist", new String[] {"VillagerGolem"}).setRequiresMcRestart(true);
+			spawnerBlacklist.comment = "A list of entity IDs (e.g.: CaveSpider or VillagerGolem or Forestry.butterflyGE) to blacklist from the AutoSpawner. The Debugger item will display an entity's ID when used.";
+			category += ".Cost";
+			autospawnerCostExact = c.get(category, "Exact", 5).setRequiresMcRestart(true);
+			autospawnerCostExact.comment = "The multiplier for work required to generate a mob in exact mode.";
+			autospawnerCostStandard = c.get(category, "Standard", 1).setRequiresMcRestart(true);
+			autospawnerCostStandard.comment = "The multiplier for work required to generate a mob in standard (non-exact) mode.";
+			spawnerCustomization = c.getCategory(category + ".Custom").setRequiresMcRestart(true);
+			spawnerCustomization.setComment("Custom base XP costs for entities. format: I:<entityid> = #. e.g.:\n" + "I:VillagerGolem = 25\nI:Slime = 50");
 
-		harvesterSkip = c.get("Machine." + Machine.Harvester.getName(), "SkipWork", false).setRequiresMcRestart(true);
-		harvesterSkip.comment = "If true, the harvester will skip scanning some bocks when filled with sludge";
+			harvesterSkip = c.get(machine + Machine.Harvester.getName(), "SkipWork", false).setRequiresMcRestart(true);
+			harvesterSkip.comment = "If true, the harvester will skip scanning some bocks when filled with sludge";
 
-		laserdrillCost = c.get("Machine." + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
-		laserdrillCost.comment = "The work required by the drill to generate a single ore.";
+			laserdrillCost = c.get(machine + Machine.LaserDrill.getName(), "Work", 300).setRequiresMcRestart(true);
+			laserdrillCost.comment = "The work required by the drill to generate a single ore.";
 
-		unifierBlacklist = c.get("Machine." + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);
-		unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
+			unifierBlacklist = c.get(machine + Machine.Unifier.getName(), "Blacklist", new String[] {"dyeBlue","dyeWhite","dyeBrown","dyeBlack","listAllwater","listAllmilk"}).setRequiresMcRestart(true);
+			unifierBlacklist.comment = "A list of ore dictionary entrys to disable unifying for. By default, MFR will not attempt to unify anything with more than one oredict name.";
 
-		breederShutdownThreshold = c.get("Machine." + Machine.Breeder.getName(), "ShutdownThreshold", 50).setRequiresMcRestart(true);
-		breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
+			breederShutdownThreshold = c.get(machine + Machine.Breeder.getName(), "ShutdownThreshold", 50).setRequiresMcRestart(true);
+			breederShutdownThreshold.comment = "If the number of entities in the breeder's target area exceeds this value, the breeder will cease operating. This is provided to control server lag.";
 
-		enableBonemealFertilizing = c.get("Machine." + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
-		enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
+			enableBonemealFertilizing = c.get(machine + Machine.Fertilizer.getName(), "EnableBonemeal", false).setRequiresMcRestart(true);
+			enableBonemealFertilizing.comment = "If true, the fertilizer will use bonemeal as well as MFR fertilizer. Provided for those who want a less work-intensive farm.";
 
-		disenchanterEssence = c.get("Machine." + Machine.AutoDisenchanter.getName(), "EnableEssence", false).setRequiresMcRestart(true);
-		disenchanterEssence.comment = "If true, the disenchanter will use essence to disenchant items. Provided for those who want a more work-intensive enchanting system.";
+			disenchanterEssence = c.get(machine + Machine.AutoDisenchanter.getName(), "EnableEssence", false).setRequiresMcRestart(true);
+			disenchanterEssence.comment = "If true, the disenchanter will use essence to disenchant items. Provided for those who want a more work-intensive enchanting system.";
 
-		steamBoilerExplodes = c.get("Machine." + Machine.SteamBoiler.getName(), "Explodes", false);
-		steamBoilerExplodes.comment = "If true, the steam boiler will explode if it's hot and dry when you try to pump water into it.";
+			steamBoilerExplodes = c.get(machine + Machine.SteamBoiler.getName(), "Explodes", false);
+			steamBoilerExplodes.comment = "If true, the steam boiler will explode if it's hot and dry when you try to pump water into it.";
+
+			fisherNeedsRod = c.get(machine + Machine.Fisher.getName(), "RequiresFishingRod", false);
+			fisherNeedsRod.comment = "If true, the fisher will require a fishing rod to function.";
+		}
 		//}
 
-		for(Machine machine : Machine.values())
-		{
+		for (Machine machine : Machine.values()) {
 			machine.load(c);
 		}
 
@@ -342,4 +347,5 @@ public class MFRConfig
 
 		c.save();
 	}
+
 }

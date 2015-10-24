@@ -270,7 +270,7 @@ public class GuiFactoryInventory extends GuiBase {
 			String line = lines.get(stringIndex);
 
 			if (stringIndex == 0) {
-				line = "\u00a7" + Integer.toHexString(15) + line;
+				line = "\u00a7F" + line;
 			} else {
 				line = "\u00a77" + line;
 			}
