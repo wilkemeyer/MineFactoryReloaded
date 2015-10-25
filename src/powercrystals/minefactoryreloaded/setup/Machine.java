@@ -81,8 +81,8 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityVet;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityWeather;
 
-public class Machine
-{
+public class Machine {
+
 	public static final Material MATERIAL = new MachineMaterial(MapColor.ironColor);
 	protected static List<Machine> _machines = new LinkedList<Machine>();
 	protected static TIntObjectHashMap<Machine> _machineMappings = new TIntObjectHashMap<Machine>();
@@ -109,20 +109,19 @@ public class Machine
 	public static Machine ItemRouter = new Machine(1, 1, "ItemRouter", TileEntityItemRouter.class);
 	public static Machine LiquidRouter = new Machine(1, 2, "LiquidRouter", TileEntityLiquidRouter.class);
 	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class) {
+
 		@Override
-		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
-		{
+		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {
+
 			NBTTagCompound c = stack.getTagCompound();
-			if (c != null && c.hasKey("storedStack"))
-			{
+			if (c != null && c.hasKey("storedStack")) {
 				ItemStack storedItem = ItemStack.loadItemStackFromNBT(c.getCompoundTag("storedStack"));
 				int storedQuantity = c.getInteger("storedQuantity");
-				if (storedItem != null & storedQuantity > 0)
-				{
+				if (storedItem != null & storedQuantity > 0) {
 					info.add(String.format(MFRUtil.localize("tip.info.mfr.dsu.contains", true),
-							storedQuantity + " " + storedItem.getDisplayName() +
-							(adv ? " (" + Item.itemRegistry.getIDForObject(storedItem.getItem()) + ":" +
-							storedItem.getItemDamageForDisplay() + ")" : "")));
+						storedQuantity + " " + storedItem.getDisplayName() +
+								(adv ? " (" + Item.itemRegistry.getIDForObject(storedItem.getItem()) + ":" +
+										storedItem.getItemDamageForDisplay() + ")" : "")));
 				}
 			}
 			super.addInformation(stack, player, info, adv);
@@ -137,11 +136,11 @@ public class Machine
 	public static Machine BioReactor = new Machine(1, 10, "BioReactor", TileEntityBioReactor.class);
 	public static Machine BioFuelGenerator = new Machine(1, 11, "BioFuelGenerator", TileEntityBioFuelGenerator.class, 160, 10000);
 	public static Machine AutoDisenchanter = new Machine(1, 12, "AutoDisenchanter", TileEntityAutoDisenchanter.class, 320, 16000) {
+
 		@Override
-		public void load(Configuration c)
-		{
-			if (MFRConfig.disenchanterEssence.getBoolean(false))
-			{
+		public void load(Configuration c) {
+
+			if (MFRConfig.disenchanterEssence.getBoolean(false)) {
 				_tileEntityClass = TileEntityAutoDisenchanterFluid.class;
 			}
 			super.load(c);
@@ -152,7 +151,8 @@ public class Machine
 	public static Machine EnchantmentRouter = new Machine(1, 15, "EnchantmentRouter", TileEntityEnchantmentRouter.class);
 
 	public static Machine LaserDrill = new Machine(2, 0, "LaserDrill", TileEntityLaserDrill.class);
-	public static Machine LaserDrillPrecharger = new Machine(2, 1, "LaserDrillPrecharger", TileEntityLaserDrillPrecharger.class, 5000, 96000);
+	public static Machine LaserDrillPrecharger = new Machine(2, 1, "LaserDrillPrecharger", TileEntityLaserDrillPrecharger.class,
+			5000, 96000);
 	public static Machine AutoAnvil = new Machine(2, 2, "AutoAnvil", TileEntityAutoAnvil.class, 160, 16000);
 	public static Machine BlockSmasher = new Machine(2, 3, "BlockSmasher", TileEntityBlockSmasher.class, 10, 16000);
 	public static Machine RedNote = new Machine(2, 4, "RedNote", TileEntityRedNote.class);
@@ -162,9 +162,10 @@ public class Machine
 	public static Machine MobCounter = new Machine(2, 8, "MobCounter", TileEntityMobCounter.class);
 	public static Machine SteamTurbine = new Machine(2, 9, "SteamTurbine", TileEntitySteamTurbine.class, 160, 10000);
 	public static Machine ChunkLoader = new Machine(2, 10, "ChunkLoader", TileEntityChunkLoader.class, 10, Integer.MAX_VALUE, false) {
+
 		@Override
-		public void load(Configuration c)
-		{
+		public void load(Configuration c) {
+
 			if (!MFRConfig.enableConfigurableCLEnergy.getBoolean(false))
 				_activationEnergy = 0;
 			super.load(c);
@@ -193,35 +194,33 @@ public class Machine
 	protected Property _isRecipeEnabled;
 
 	protected Machine(int blockIndex, int meta, String name,
-			Class<? extends TileEntityFactory> tileEntityClass)
-	{
+			Class<? extends TileEntityFactory> tileEntityClass) {
+
 		this(blockIndex, meta, name, tileEntityClass, 0, 0);
 	}
 
 	protected Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass,
-			int activationEnergy, int energyStoredMax)
-	{
+			int activationEnergy, int energyStoredMax) {
+
 		this(blockIndex, meta, name, tileEntityClass, activationEnergy, energyStoredMax, true);
 	}
 
 	protected Machine(int blockIndex, int meta, String name,
 			Class<? extends TileEntityFactory> tileEntityClass,
-			int activationEnergy, int energyStoredMax, boolean configurable)
-	{
+			int activationEnergy, int energyStoredMax, boolean configurable) {
+
 		_blockIndex = blockIndex;
 		_meta = meta;
 		_machineIndex = _meta | (_blockIndex << 4);
 
-		if (_meta > 15)
-		{
+		if (_meta > 15) {
 			throw new IllegalArgumentException("Maximum meta value for machines is 15");
 		}
 
-		if (_machineMappings.get(_machineIndex) != null)
-		{
+		if (_machineMappings.get(_machineIndex) != null) {
 			throw new IllegalArgumentException("Machine with index " + blockIndex + " and meta " +
-												meta + " already exists.");
+					meta + " already exists.");
 		}
 
 		_name = name;
@@ -239,38 +238,35 @@ public class Machine
 		_machines.add(this);
 
 		_highestMetas.ensureCapacity(_blockIndex);
-		if (_highestMetas.getQuick(_blockIndex) < _meta)
-		{
+		if (_highestMetas.getQuick(_blockIndex) < _meta) {
 			_highestMetas.setQuick(_blockIndex, _meta);
 		}
 	}
 
-	public static Machine getMachineFromIndex(int blockIndex, int meta)
-	{
+	public static Machine getMachineFromIndex(int blockIndex, int meta) {
+
 		return _machineMappings.get(meta | (blockIndex << 4));
 	}
 
-	public static Machine getMachineFromId(BlockFactoryMachine block, int meta)
-	{
-		return  _machineMappings.get(meta | (block.getBlockIndex() << 4));
+	public static Machine getMachineFromId(BlockFactoryMachine block, int meta) {
+
+		return _machineMappings.get(meta | (block.getBlockIndex() << 4));
 	}
 
-	public static int getHighestMetadata(int blockIndex)
-	{
+	public static int getHighestMetadata(int blockIndex) {
+
 		return _highestMetas.getQuick(blockIndex);
 	}
 
-	public static List<Machine> values()
-	{
+	public static List<Machine> values() {
+
 		return _machines;
 	}
 
-	public static void LoadTextures(int blockIndex, IIconRegister ir)
-	{
-		for (Machine m : _machines)
-		{
-			if (m.getBlockIndex() == blockIndex)
-			{
+	public static void LoadTextures(int blockIndex, IIconRegister ir) {
+
+		for (Machine m : _machines) {
+			if (m.getBlockIndex() == blockIndex) {
 				m.loadIcons(ir);
 			}
 		}
@@ -289,10 +285,9 @@ public class Machine
 		return _activationEnergy > 0 || StatCollector.canTranslate(getTooltipText());
 	}
 
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
-	{
-		if (stack.stackTagCompound != null)
-		{
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {
+
+		if (stack.stackTagCompound != null) {
 			NBTTagCompound tag = stack.stackTagCompound;
 			if (_energyStoredMax > 0 && tag.hasKey("energyStored")) {
 				String max = StringHelper.getScaledNumber(_energyStoredMax);
@@ -300,8 +295,7 @@ public class Machine
 				info.add(MFRUtil.localize("info.cofh.energyStored", true) + ": " + cur + " / " + max + " RF");
 			}
 		}
-		if (_activationEnergy > 0)
-		{
+		if (_activationEnergy > 0) {
 			if (_generator) {
 				info.add(MFRUtil.localize("info.cofh.energyProduce", true) + ": " + GREEN + _activationEnergy + " RF/t" + RESET);
 				info.add(MFRUtil.localize("tip.info.mfr.generator.produces", true));
@@ -309,8 +303,7 @@ public class Machine
 				info.add(MFRUtil.localize("info.cofh.energyConsume", true) + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
 		}
 		String s = getTooltipText();
-		if (StatCollector.canTranslate(s))
-		{
+		if (StatCollector.canTranslate(s)) {
 			s = StatCollector.translateToLocal(s);
 			if (s.contains("\n"))
 				info.addAll(Arrays.asList(s.split("\n")));
@@ -319,86 +312,80 @@ public class Machine
 		}
 	}
 
-	public final String getName()
-	{
+	public final String getName() {
+
 		return _name;
 	}
 
-	public final String getInternalName()
-	{
+	public final String getInternalName() {
+
 		return _internalName;
 	}
 
-	public Block getBlock()
-	{
+	public Block getBlock() {
+
 		return MFRThings.machineBlocks.get(_blockIndex);
 	}
 
-	public ItemStack getItemStack()
-	{
+	public ItemStack getItemStack() {
+
 		return new ItemStack(MFRThings.machineBlocks.get(_blockIndex), 1, _meta);
 	}
 
-	public final int getMeta()
-	{
+	public final int getMeta() {
+
 		return _meta;
 	}
 
-	public final int getBlockIndex()
-	{
+	public final int getBlockIndex() {
+
 		return _blockIndex;
 	}
 
-	public final boolean getIsRecipeEnabled()
-	{
+	public final boolean getIsRecipeEnabled() {
+
 		return _isRecipeEnabled.getBoolean(true);
 	}
 
-	public TileEntityFactory getNewTileEntity()
-	{
-		try
-		{
+	public TileEntityFactory getNewTileEntity() {
+
+		try {
 			TileEntityFactory tileEntity = _tileEntityClass.newInstance();
 			return tileEntity;
-		}
-		catch (IllegalAccessException x)
-		{
+		} catch (IllegalAccessException x) {
 			FMLLog.severe("Unable to create instance of TileEntity from %s", _tileEntityClass.getName());
 			return null;
-		}
-		catch (InstantiationException x)
-		{
+		} catch (InstantiationException x) {
 			FMLLog.severe("Unable to create instance of TileEntity from %s", _tileEntityClass.getName());
 			return null;
 		}
 	}
 
-	public final int getActivationEnergyDaRF()
-	{
+	public final int getActivationEnergyDaRF() {
+
 		return _activationEnergy / 10;
 	}
 
-	public final int getActivationEnergy()
-	{
+	public final int getActivationEnergy() {
+
 		return _activationEnergy;
 	}
 
-	public final int getMaxEnergyStorage()
-	{
+	public final int getMaxEnergyStorage() {
+
 		return _energyStoredMax;
 	}
 
-	public void load(Configuration c)
-	{
+	public void load(Configuration c) {
+
 		_isRecipeEnabled = c.get("Machine." + _name, "Recipe.Enabled", true).setRequiresMcRestart(true);
-		if (_activationEnergy > 0)
-		{
+		if (_activationEnergy > 0) {
 			String comment = "The energy cost for this machine to complete one work cycle";
 			if (_generator)
 				comment = "The amount of energy generated by this machine in one tick";
 			if (_useDaRF)
 				_activationEnergy = c.get("Machine." + _name, "ActivationCostDaRF", getActivationEnergyDaRF(),
-						comment + ", in units of 10 RF (i.e., 2 DaRF = 20 RF)").setRequiresMcRestart(true).getInt() * 10;
+					comment + ", in units of 10 RF (i.e., 2 DaRF = 20 RF)").setRequiresMcRestart(true).getInt() * 10;
 			else
 				_activationEnergy = c.get("Machine." + _name, "ActivationCostRF", getActivationEnergy(),
 					comment + ", in units of **1** RF").setRequiresMcRestart(true).getInt();
@@ -408,29 +395,29 @@ public class Machine
 		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 
-	public IIcon getIcon(int side, boolean isActive)
-	{
+	public IIcon getIcon(int side, boolean isActive) {
+
 		return (isActive ? _iconsActive : _iconsIdle)[side];
 	}
 
-	public void loadIcons(IIconRegister ir)
-	{
+	public void loadIcons(IIconRegister ir) {
+
 		_iconsActive[0] = ir.registerIcon(loadIcon(bottom, true));
-		_iconsActive[1] = ir.registerIcon(loadIcon(   top, true));
-		_iconsActive[2] = ir.registerIcon(loadIcon( front, true));
-		_iconsActive[3] = ir.registerIcon(loadIcon(  back, true));
-		_iconsActive[4] = ir.registerIcon(loadIcon(  left, true));
-		_iconsActive[5] = ir.registerIcon(loadIcon( right, true));
-		_iconsIdle[0]   = ir.registerIcon(loadIcon(bottom, false));
-		_iconsIdle[1]   = ir.registerIcon(loadIcon(   top, false));
-		_iconsIdle[2]   = ir.registerIcon(loadIcon( front, false));
-		_iconsIdle[3]   = ir.registerIcon(loadIcon(  back, false));
-		_iconsIdle[4]   = ir.registerIcon(loadIcon(  left, false));
-		_iconsIdle[5]   = ir.registerIcon(loadIcon( right, false));
+		_iconsActive[1] = ir.registerIcon(loadIcon(top, true));
+		_iconsActive[2] = ir.registerIcon(loadIcon(front, true));
+		_iconsActive[3] = ir.registerIcon(loadIcon(back, true));
+		_iconsActive[4] = ir.registerIcon(loadIcon(left, true));
+		_iconsActive[5] = ir.registerIcon(loadIcon(right, true));
+		_iconsIdle[0] = ir.registerIcon(loadIcon(bottom, false));
+		_iconsIdle[1] = ir.registerIcon(loadIcon(top, false));
+		_iconsIdle[2] = ir.registerIcon(loadIcon(front, false));
+		_iconsIdle[3] = ir.registerIcon(loadIcon(back, false));
+		_iconsIdle[4] = ir.registerIcon(loadIcon(left, false));
+		_iconsIdle[5] = ir.registerIcon(loadIcon(right, false));
 	}
 
-	protected String loadIcon(Side side, boolean active)
-	{
+	protected String loadIcon(Side side, boolean active) {
+
 		final String base = "minefactoryreloaded:machines/";
 		final String a = side.getMain(active);
 		final String name = getInternalName() + ".";
@@ -464,8 +451,7 @@ public class Machine
 			return base + "tile.mfr.machine.0." + side.alt;
 	}
 
-	protected static enum Side
-	{
+	protected static enum Side {
 		bottom(null),
 		top(null),
 		front("side"),
@@ -473,8 +459,8 @@ public class Machine
 		left("side"),
 		right("side");
 
-		private Side(String _alt)
-		{
+		private Side(String _alt) {
+
 			name = name();
 			hasAlt = _alt != null;
 			if (hasAlt)
@@ -489,13 +475,13 @@ public class Machine
 		public final String alt;
 		public boolean hasAlt;
 
-		public String getMain(boolean _active)
-		{
+		public String getMain(boolean _active) {
+
 			return (_active ? active : idle) + name();
 		}
 
-		public String getAlt(boolean _active)
-		{
+		public String getAlt(boolean _active) {
+
 			return hasAlt ? ((_active ? active : idle) + alt) : "";
 		}
 	}

@@ -53,6 +53,7 @@ public class IMCHandler {
 
 	@SuppressWarnings("unchecked")
 	public static void processIMC(List<IMCMessage> l) {
+
 		Logger _log = MineFactoryReloadedCore.instance().getLogger();
 		for (IMCMessage m : l) {
 			try {
@@ -66,9 +67,9 @@ public class IMCHandler {
 					if (m.isNBTMessage()) {
 						NBTTagCompound item = m.getNBTValue();
 						MFRRegistry.addLaserPreferredOre(item.getInteger("value"),
-								ItemStack.loadItemStackFromNBT(item));
+							ItemStack.loadItemStackFromNBT(item));
 					} else {
-						ValuedItem item = (ValuedItem)getValue(m);
+						ValuedItem item = (ValuedItem) getValue(m);
 						MFRRegistry.addLaserPreferredOre(item.value, item.item);
 					}
 				}
@@ -125,9 +126,9 @@ public class IMCHandler {
 					if (m.isNBTMessage()) {
 						NBTTagCompound item = m.getNBTValue();
 						MFRRegistry.registerLaserOre(item.getInteger("value"),
-								ItemStack.loadItemStackFromNBT(item));
+							ItemStack.loadItemStackFromNBT(item));
 					} else {
-						ValuedItem item = (ValuedItem)getValue(m);
+						ValuedItem item = (ValuedItem) getValue(m);
 						MFRRegistry.registerLaserOre(item.value, item.item);
 					}
 				}
@@ -135,7 +136,7 @@ public class IMCHandler {
 				 * Liquid Drinking Handlers
 				 */
 				else if ("registerLiquidDrinkHandler".equals(k)) {
-					ValuedItem item = (ValuedItem)getValue(m);
+					ValuedItem item = (ValuedItem) getValue(m);
 					MFRRegistry.registerLiquidDrinkHandler(item.key, (ILiquidDrinkHandler) item.object);
 				}
 				/*
@@ -199,9 +200,9 @@ public class IMCHandler {
 					if (m.isNBTMessage()) {
 						NBTTagCompound item = m.getNBTValue();
 						MFRRegistry.registerSludgeDrop(item.getInteger("value"),
-								ItemStack.loadItemStackFromNBT(item));
+							ItemStack.loadItemStackFromNBT(item));
 					} else {
-						ValuedItem item = (ValuedItem)getValue(m);
+						ValuedItem item = (ValuedItem) getValue(m);
 						MFRRegistry.registerSludgeDrop(item.value, item.item);
 					}
 				}
@@ -275,7 +276,7 @@ public class IMCHandler {
 					} else {
 						ValuedItem item = (ValuedItem) getValue(m);
 						MFRRegistry.registerHarvestable(new HarvestableCropPlant(
-								(Block)item.object, item.value));
+								(Block) item.object, item.value));
 					}
 				}
 				/*
@@ -300,13 +301,13 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("meta"))
 						MFRRegistry.registerPlantable(new PlantableCropPlant(
-								(Item)Item.itemRegistry.getObject(item.getString("seed")),
+								(Item) Item.itemRegistry.getObject(item.getString("seed")),
 								Block.getBlockFromName(item.getString("crop")),
 								item.getInteger("meta")));
 					else
 						MFRRegistry.registerPlantable(new PlantableCropPlant(
-							(Item)Item.itemRegistry.getObject(item.getString("seed")),
-							Block.getBlockFromName(item.getString("crop"))));
+								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								Block.getBlockFromName(item.getString("crop"))));
 				}
 				/*
 				 * PlantableSapling
@@ -315,7 +316,7 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("seed"))
 						MFRRegistry.registerPlantable(new PlantableSapling(
-								(Item)Item.itemRegistry.getObject(item.getString("seed")),
+								(Item) Item.itemRegistry.getObject(item.getString("seed")),
 								Block.getBlockFromName(item.getString("sapling"))));
 					else
 						MFRRegistry.registerPlantable(new PlantableSapling(
@@ -328,13 +329,13 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("meta"))
 						MFRRegistry.registerPlantable(new PlantableStandard(
-								(Item)Item.itemRegistry.getObject(item.getString("seed")),
+								(Item) Item.itemRegistry.getObject(item.getString("seed")),
 								Block.getBlockFromName(item.getString("crop")),
 								item.getInteger("meta")));
 					else
 						MFRRegistry.registerPlantable(new PlantableStandard(
-							(Item)Item.itemRegistry.getObject(item.getString("seed")),
-							Block.getBlockFromName(item.getString("crop"))));
+								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								Block.getBlockFromName(item.getString("crop"))));
 				}
 				/**
 				 * }
@@ -346,7 +347,7 @@ public class IMCHandler {
 				else if ("registerFertilizer_Standard".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					MFRRegistry.registerFertilizer(new FertilizerStandard(
-							(Item)Item.itemRegistry.getObject(item.getString("fert")),
+							(Item) Item.itemRegistry.getObject(item.getString("fert")),
 							item.getInteger("meta"),
 							FertilizerType.values()[item.getInteger("type")]));
 				}
@@ -362,7 +363,7 @@ public class IMCHandler {
 				 */
 				else if ("registerFertilizable_Gourd".equals(k)) {
 					MFRRegistry.registerFertilizable(new FertilizableStemPlants(
-							(IGrowable)Block.getBlockFromName(m.getStringValue())));
+							(IGrowable) Block.getBlockFromName(m.getStringValue())));
 				}
 				/*
 				 * FertilizableCropPlant
@@ -371,12 +372,12 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("type"))
 						MFRRegistry.registerFertilizable(new FertilizableCropPlant(
-								(IGrowable)Block.getBlockFromName(item.getString("plant")),
+								(IGrowable) Block.getBlockFromName(item.getString("plant")),
 								FertilizerType.values()[item.getInteger("type")],
 								item.getInteger("meta")));
 					else
 						MFRRegistry.registerFertilizable(new FertilizableCropPlant(
-								(IGrowable)Block.getBlockFromName(item.getString("plant")),
+								(IGrowable) Block.getBlockFromName(item.getString("plant")),
 								item.getInteger("meta")));
 				}
 				/*
@@ -399,11 +400,11 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("type"))
 						MFRRegistry.registerFertilizable(new FertilizableStandard(
-								(IGrowable)Block.getBlockFromName(item.getString("plant")),
+								(IGrowable) Block.getBlockFromName(item.getString("plant")),
 								FertilizerType.values()[item.getInteger("type")]));
 					else
 						MFRRegistry.registerFertilizable(new FertilizableStandard(
-								(IGrowable)Block.getBlockFromName(item.getString("plant"))));
+								(IGrowable) Block.getBlockFromName(item.getString("plant"))));
 				}
 				/**
 				 * }
@@ -414,8 +415,7 @@ public class IMCHandler {
 				 */
 				else
 					bigWarning(_log, Level.WARN, "Unknown IMC message (%s)\nfrom %s", k, m.getSender());
-			}
-			catch (Throwable _) {
+			} catch (Throwable _) {
 				bigWarning(_log, Level.ERROR, "Bad IMC message (%s)\nfrom %s", m.key, m.getSender());
 				_log.catching(_);
 			}
@@ -423,21 +423,22 @@ public class IMCHandler {
 	}
 
 	private static Object getValue(IMCMessage m) {
+
 		return ReflectionHelper.getPrivateValue(IMCMessage.class, m, "value");
 	}
 
 	private static void bigWarning(Logger log, Level Level, String format, Object... data) {
+
 		String o = String.format(format, data);
 		String err = "************************";
 		err += err;
-        log.log(Level, err);
-        log.log(Level, err);
-        for (String str : o.split("\n", 0))
-        {
-        	log.log(Level, str);
-        }
-        log.log(Level, err);
-        log.log(Level, err);
+		log.log(Level, err);
+		log.log(Level, err);
+		for (String str : o.split("\n", 0)) {
+			log.log(Level, str);
+		}
+		log.log(Level, err);
+		log.log(Level, err);
 	}
 
 }
