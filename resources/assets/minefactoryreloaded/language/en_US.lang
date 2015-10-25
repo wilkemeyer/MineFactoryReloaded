@@ -203,6 +203,8 @@ item.mfr.plastic.cell.name = Plastic Cell
 item.mfr.plastic.cell.prefix.name =
 item.mfr.plastic.cell.suffix.name = Cell
 
+item.mfr.glass.armor.helm.name = Sunglasses
+
 item.mfr.plastic.armor.helm.name  = Plastic Helmet
 item.mfr.plastic.armor.chest.name = Plastic Breastplate
 item.mfr.plastic.armor.legs.name  = Plastic Leggings
@@ -401,6 +403,9 @@ circuit.mfr.xor.4 = Xor (4-Input)
 
 container.mfr.radius = Radius:
 container.mfr.power = Energy draw:
+
+container.mfr.autobrewer.resources = Resources
+
 container.mfr.pendingDrops = This machine has stuffed items
 
 chat.info.mfr.safarinet.capture = Changed to capture mode

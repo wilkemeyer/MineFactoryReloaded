@@ -6,35 +6,57 @@ import cofh.lib.gui.slot.SlotPotionIngredient;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class ContainerAutoBrewer extends ContainerFactoryPowered
-{
+public class ContainerAutoBrewer extends ContainerFactoryPowered {
+
+	private class SlotBoundPotionIngredient extends SlotPotionIngredient {
+
+		private final int slotIndex;
+
+		public SlotBoundPotionIngredient(IInventory inventory, int index, int x, int y) {
+
+			super(inventory, index, x, y);
+			slotIndex = index / 5 * 5 + 1;
+		}
+
+		@Override
+		public boolean isItemValid(ItemStack stack) {
+
+			if (super.isItemValid(stack)) {
+				ItemStack slot = getSlot(slotIndex).getStack();
+				return slot == null || stack.getItem().getPotionEffect(stack).equals(slot.getItem().getPotionEffect(slot));
+			}
+			return false;
+		}
+	}
+
 	public static IIcon ingredient;
 	public static IIcon bottle;
-	public ContainerAutoBrewer(TileEntityFactoryPowered te, InventoryPlayer inv)
-	{
+
+	public ContainerAutoBrewer(TileEntityFactoryPowered te, InventoryPlayer inv) {
+
 		super(te, inv);
 	}
 
 	@Override
-	protected void addSlots()
-	{
-		for (int row = 0; row < 6; row++)
-		{
-			addSlotToContainer(new SlotPotion(_te, row * 5, 8, 34 + row * 18));
-			addSlotToContainer(new SlotFake(_te, row * 5 + 1, 44, 34 + row * 18));
-			addSlotToContainer(new SlotPotionIngredient(_te, row * 5 + 2, 80, 34 + row * 18));
-			addSlotToContainer(new SlotPotionIngredient(_te, row * 5 + 3, 98, 34 + row * 18));
-			addSlotToContainer(new SlotPotionIngredient(_te, row * 5 + 4, 116, 34 + row * 18));
+	protected void addSlots() {
+
+		final int y = 24;
+		for (int row = 0; row < 6; row++) {
+			addSlotToContainer(new SlotPotion(_te, row * 5, 8, y + row * 18));
+			addSlotToContainer(new SlotFake(_te, row * 5 + 1, 44, y + row * 18));
+			addSlotToContainer(new SlotBoundPotionIngredient(_te, row * 5 + 2, 80, y + row * 18));
+			addSlotToContainer(new SlotBoundPotionIngredient(_te, row * 5 + 3, 98, y + row * 18));
+			addSlotToContainer(new SlotBoundPotionIngredient(_te, row * 5 + 4, 116, y + row * 18));
 		}
-		addSlotToContainer(new SlotRemoveOnly(_te, 30, 8, 142));
-		addSlotToContainer(new SlotAcceptInsertable(_te, 31, 146, 142));
+		addSlotToContainer(new SlotRemoveOnly(_te, 30, 8, y + 6 * 18));
+		addSlotToContainer(new SlotAcceptInsertable(_te, 31, 146, 141));
 
 		for (int row = 0; row < 6; row++)
 			getSlot(row * 5 + 1).setBackgroundIcon(ingredient);
@@ -42,84 +64,21 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered
 	}
 
 	@Override
-	protected int getPlayerInventoryVerticalOffset()
-	{
-		return 174;
+	protected int getPlayerInventoryVerticalOffset() {
+
+		return 162;
 	}
 
 	@Override
-	protected boolean mergeItemStack(ItemStack stack, int slotStart, int slotRange, boolean reverse)
-	{
-		boolean successful = false;
-		int slotIndex = !reverse ? slotStart : slotRange - 1;
-		int iterOrder = !reverse ? 1 : -1;
-		int machineEnd = _te.getSizeInventory();
+	protected boolean performMerge(int slotIndex, ItemStack stack) {
 
-		Slot slot;
-		ItemStack existingStack;
+		int invBase = getSizeInventory();
+		int invFull = inventorySlots.size();
 
-		l: if (stack.isStackable())
-		{
-			while (stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
-			{
-				slot = (Slot)this.inventorySlots.get(slotIndex);
-				existingStack = slot.getStack();
-
-				if (slot.isItemValid(stack) && existingStack != null &&
-						existingStack.getItem().equals(stack.getItem()) &&
-						(!stack.getHasSubtypes() ||
-								stack.getItemDamage() == existingStack.getItemDamage()) &&
-								ItemStack.areItemStackTagsEqual(stack, existingStack))
-				{
-					if (slotIndex < machineEnd && !_te.canInsertItem(slotIndex, stack, -1))
-						break l;
-					int existingSize = existingStack.stackSize + stack.stackSize;
-					int maxStack = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
-
-					if (existingSize <= maxStack)
-					{
-						stack.stackSize = 0;
-						existingStack.stackSize = existingSize;
-						slot.onSlotChanged();
-						successful = true;
-					}
-					else if (existingStack.stackSize < maxStack)
-					{
-						stack.stackSize -= maxStack - existingStack.stackSize;
-						existingStack.stackSize = maxStack;
-						slot.onSlotChanged();
-						successful = true;
-					}
-				}
-
-				slotIndex += iterOrder;
-			}
+		if (slotIndex < invBase) {
+			return mergeItemStack(stack, invBase, invFull, true);
 		}
-
-		l: if (stack.stackSize > 0)
-		{
-			slotIndex = !reverse ? slotStart : slotRange - 1;
-
-			while (stack.stackSize > 0 && (!reverse && slotIndex < slotRange || reverse && slotIndex >= slotStart))
-			{
-				slot = (Slot)this.inventorySlots.get(slotIndex);
-				existingStack = slot.getStack();
-
-				if (slot.isItemValid(stack) && existingStack == null)
-				{
-					if (slotIndex < machineEnd && !_te.canInsertItem(slotIndex, stack, -1))
-						break l;
-					int maxStack = Math.min(stack.getMaxStackSize(), slot.getSlotStackLimit());
-					existingStack = stack.splitStack(Math.min(stack.stackSize, maxStack));
-					slot.putStack(existingStack);
-					slot.onSlotChanged();
-					successful = true;
-				}
-
-				slotIndex += iterOrder;
-			}
-		}
-
-		return successful;
+		return mergeItemStack(stack, 0, invBase, false);
 	}
+
 }
