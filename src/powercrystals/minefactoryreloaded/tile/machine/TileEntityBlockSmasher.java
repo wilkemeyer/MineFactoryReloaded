@@ -91,7 +91,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			setWorkDone(0);
 			return false;
 		}
-		if(_shouldWork & _fortune > 0 && (drain(_tanks[0], _fortune, false) != _fortune))
+		if(_shouldWork && _fortune > 0 && (drain(_tanks[0], _fortune, false) != _fortune))
 		{
 			return false;
 		}

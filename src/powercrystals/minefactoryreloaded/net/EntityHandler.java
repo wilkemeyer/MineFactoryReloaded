@@ -61,7 +61,7 @@ public class EntityHandler {
 	public void onItemExpire(ItemExpireEvent e) {
 
 		ItemStack stack = e.entityItem.getEntityItem();
-		if (stack.getItem().equals(rubberLeavesBlock) && stack.getItemDamage() == 0) {
+		if (stack.getItem().equals(rubberLeavesItem) && stack.getItemDamage() == 0) {
 			e.setCanceled(true);
 			e.extraLife = 0;
 			e.entityItem.age = 0;

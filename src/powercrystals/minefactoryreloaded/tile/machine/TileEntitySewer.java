@@ -126,7 +126,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			for (Object o : entities)
 			{
 				Entity e = (Entity)o;
-				if (e != null & e instanceof EntityXPOrb && !e.isDead)
+				if (e != null && e instanceof EntityXPOrb && !e.isDead)
 				{
 					EntityXPOrb orb = (EntityXPOrb)o;
 					if (MFRLiquidMover.fillTankWithXP(_tanks[1], orb) == 0)

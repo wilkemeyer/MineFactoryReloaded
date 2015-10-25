@@ -334,7 +334,6 @@ public class TileEntityConveyor extends TileEntityBase
 		{
 			return;
 		}
-		int	horizDirection = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 0x03;
 
 		float dropOffsetX = 0.5F;
 		float dropOffsetY = 0.4F;
@@ -371,23 +370,6 @@ public class TileEntityConveyor extends TileEntityBase
 				motionX = -0.15D;
 				break;
 			case 6: //UNKNOWN
-		}
-
-		if(horizDirection == 0)
-		{
-			motionX = 0.05D;
-		}
-		else if(horizDirection == 1)
-		{
-			motionZ = 0.05D;
-		}
-		else if(horizDirection == 3)
-		{
-			motionX = -0.05D;
-		}
-		else if(horizDirection == 3)
-		{
-			motionZ = -0.05D;
 		}
 
 		EntityItem entityitem = new EntityItem(worldObj, xCoord + dropOffsetX, yCoord + dropOffsetY, zCoord + dropOffsetZ, stack.copy());

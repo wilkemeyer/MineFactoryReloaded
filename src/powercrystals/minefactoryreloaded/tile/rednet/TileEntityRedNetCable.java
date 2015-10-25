@@ -43,8 +43,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityRedNetCable extends TileEntityBase implements INode, ITraceable, ICustomHitBox
-{
+public class TileEntityRedNetCable extends TileEntityBase implements INode, ITraceable, ICustomHitBox {
 	private static boolean isClient = FMLCommonHandler.instance().getSide() == Side.CLIENT;
 	protected int[] _sideColors = new int [6];
 	protected byte[] _cableMode = {1,1,1, 1,1,1, 0};
@@ -66,15 +65,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	private static THashSet<Block> _connectionBlackList;
 
-	public TileEntityRedNetCable()
-	{
-		if (_connectionBlackList == null)
-		{
-			_connectionBlackList = new THashSet<Block>(256);
-			for (String s : MFRConfig.redNetConnectionBlacklist.getStringList())
-			{
+	public TileEntityRedNetCable() {
+		if (_connectionBlackList == null) {
+			THashSet<Block> connectionBlackList = new THashSet<Block>(256);
+			for (String s : MFRConfig.redNetConnectionBlacklist.getStringList()) {
 				if (!StringUtils.isNullOrEmpty(s))
-					_connectionBlackList.add(Block.getBlockFromName(s));
+					connectionBlackList.add(Block.getBlockFromName(s));
 				else
 					System.out.println("Empty or invalid rednet blacklist entry found. Not adding to rednet blacklist.");
 			}
@@ -84,7 +80,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			int i = 1 + 175; // as of 1.7.10
 			while (i --> 0)
 				if (!wl.contains(i))
-					_connectionBlackList.add(Block.getBlockById(i));
+					connectionBlackList.add(Block.getBlockById(i));
+			_connectionBlackList = connectionBlackList;
 		}
 		if (isClient)
 			__lastUpdates = new long[10];
@@ -165,19 +162,16 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 	}
 
-	public void setNetwork(RedstoneNetwork network)
-	{
+	public void setNetwork(RedstoneNetwork network) {
 		_network = network;
 	}
 
-	public RedstoneNetwork getNetwork()
-	{
+	public RedstoneNetwork getNetwork() {
 		return _network;
 	}
 
 	@Override
-	public void updateInternalTypes(IGridController grid)
-	{
+	public void updateInternalTypes(IGridController grid) {
 		if (grid != RedstoneNetwork.HANDLER) return;
 		boolean lastNode = isRSNode;
 		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
@@ -198,48 +192,37 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public void updateNearbyNode(ForgeDirection from)
-	{
+	public void updateNearbyNode(ForgeDirection from) {
 		updateNearbyNode(getSideColor(from), from);
 	}
 
-	public void updateNearbyNode(int subnet, ForgeDirection from)
-	{
+	public void updateNearbyNode(int subnet, ForgeDirection from) {
 		BlockPosition bp = new BlockPosition(xCoord, yCoord, zCoord, from);
 		bp.step(from);
 		updateNearbyNode(bp, subnet);
 	}
 
-	private void updateNearbyNode(BlockPosition bp, int subnet)
-	{
+	private void updateNearbyNode(BlockPosition bp, int subnet) {
 		if (_network == null)
 			return;
 		RedNetConnectionType connectionType = getConnectionState(bp.orientation);
 
-		if (!connectionType.isDecorative & connectionType.isConnected && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
-		{
-			if (connectionType.isAllSubnets)
-			{
+		if (!connectionType.isDecorative & connectionType.isConnected && !worldObj.isAirBlock(bp.x, bp.y, bp.z)) {
+			if (connectionType.isAllSubnets) {
 				_network.addOrUpdateNode(bp);
-			}
-			else
-			{
+			} else {
 				_network.addOrUpdateNode(bp, subnet, connectionType.isPlate);
 			}
-		}
-		else
-		{
+		} else {
 			_network.removeNode(bp);
 		}
 	}
 
-	public int getWeakPower(ForgeDirection to)
-	{
+	public int getWeakPower(ForgeDirection to) {
 		if (_network == null)
 			return 0;
 		RedNetConnectionType state = _connectionState[to.ordinal()];
-		if (!state.isConnected | !state.isSingleSubnet)
-		{
+		if (!state.isConnected | !state.isSingleSubnet) {
 			return 0;
 		}
 
@@ -249,26 +232,21 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		int subnet = getSideColor(to), power;
 
 		RedstoneNetwork.log("Asked for weak power at %s,%s,%s;%s", xCoord, yCoord, zCoord, to);
-		if (_network.isPowerProvider(subnet, nodebp))
-		{
+		if (_network.isPowerProvider(subnet, nodebp)) {
 			RedstoneNetwork.log("\t- power provider for network %s, power 0", _network.hashCode());
 			return 0;
-		}
-		else
-		{
+		} else {
 			power = Math.min(Math.max(_network.getPowerLevelOutput(subnet), 0), 15);
 			RedstoneNetwork.log("\t- got %s from network %s:%s", power, _network.hashCode(), subnet);
 		}
 		return power;
 	}
 
-	public int getStrongPower(ForgeDirection to)
-	{
+	public int getStrongPower(ForgeDirection to) {
 		if (_network == null)
 			return 0;
 		RedNetConnectionType state = _connectionState[to.ordinal()];
-		if (!state.isConnected | !state.isSingleSubnet)
-		{
+		if (!state.isConnected | !state.isSingleSubnet) {
 			return 0;
 		}
 
@@ -278,20 +256,16 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		int subnet = getSideColor(nodebp.orientation);
 
 		RedstoneNetwork.log("Asked for strong power at %s,%s,%s;%s", xCoord, yCoord, zCoord, to);
-		if (_network.isPowerProvider(subnet, nodebp))
-		{
+		if (_network.isPowerProvider(subnet, nodebp)) {
 			RedstoneNetwork.log("\t- power provider for network %s, power 0", _network.hashCode());
 			return 0;
 		}
 		boolean checkWeak = nodebp.getBlock(worldObj).
 				shouldCheckWeakPower(worldObj, nodebp.x, nodebp.y, nodebp.z, to.getOpposite().ordinal());
-		if (checkWeak && _network.isWeakNode(nodebp))
-		{
+		if (checkWeak && _network.isWeakNode(nodebp)) {
 			RedstoneNetwork.log("\t- weak node for network %s, power 0", _network.hashCode());
 			return 0;
-		}
-		else
-		{
+		} else {
 			int power = Math.min(Math.max(_network.getPowerLevelOutput(subnet), 0), 15);
 			RedstoneNetwork.log("\t- got %s from network %s:%s", power, _network.hashCode(), subnet);
 			return power;
@@ -299,15 +273,13 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, int side, int subHit)
-	{
+	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
 		markChunkDirty();
 		return false;
 	}
 
 	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool)
-	{
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
 		hasTool = false;
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
@@ -315,17 +287,14 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		list.add(main);
 
 		ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
-		for (int i = sides.length; i --> 0; )
-		{
+		for (int i = sides.length; i --> 0; ) {
 			RedNetConnectionType c = getConnectionState(sides[i], true);
 			int o = 2 + i;
-			if (c.isConnected)
-			{
+			if (c.isConnected) {
 				if (c.isPlate)
 					o += 6;
 				else if (c.isCable)
-					if (c.isAllSubnets)
-					{
+					if (c.isAllSubnets) {
 						if (hasTool) {
 							list.add((IndexedCuboid6)new IndexedCuboid6(o + 6 * 6,
 								subSelection[o]).add(offset)); // connection point
@@ -341,9 +310,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
 				o += 6;
 				list.add((IndexedCuboid6)new IndexedCuboid6(1, subSelection[o]).add(offset)); // cable part
-			}
-			else if (forTrace & (getConnectionState(sides[i], false).isConnected) & _cableMode[6] != 1)
-			{ // cable-only
+			} else if (forTrace & (getConnectionState(sides[i], false).isConnected) & _cableMode[6] != 1) { // cable-only
 				list.add((IndexedCuboid6)new IndexedCuboid6(o + (hasTool ? 6 * 6 : 0),
 					subSelection[o]).add(offset)); // connection point (raytrace)
 			}
@@ -352,25 +319,21 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player)
-	{
+	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
 		return subHit < 2;
 	}
 
 	@Override
-	public CustomHitBox getCustomHitBox(int hit, EntityPlayer player)
-	{
+	public CustomHitBox getCustomHitBox(int hit, EntityPlayer player) {
 		final List<IndexedCuboid6> list = new ArrayList<IndexedCuboid6>(7);
 		addTraceableCuboids(list, true, false);
 		IndexedCuboid6 cube = list.get(0);
 		cube.expand(0.003);
 		Vector3 min = cube.min, max = cube.max.sub(min);
 		CustomHitBox box = new CustomHitBox(max.x, max.y, max.z, min.x, min.y, min.z);
-		for (int i = 1, e = list.size(); i < e; ++i)
-		{
+		for (int i = 1, e = list.size(); i < e; ++i) {
 			cube = list.get(i);
-			if (shouldRenderCustomHitBox((Integer)cube.data, player))
-			{
+			if (shouldRenderCustomHitBox((Integer)cube.data, player)) {
 				cube.sub(min);
 				if (cube.min.y < 0)
 					box.sideLength[0] = Math.max(box.sideLength[0], -cube.min.y);
@@ -436,8 +399,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 	}
 
-	public int getSideColorValue(ForgeDirection side)
-	{
+	public int getSideColorValue(ForgeDirection side) {
 		return (MFRUtil.COLORS[getSideColor(side) & 15] << 8) | 0xFF;
 	}
 
@@ -451,15 +413,13 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		return oldMode;
 	}
 
-	public byte getMode(int side)
-	{
+	public byte getMode(int side) {
 		if (side == 6)
 			return _cableMode[side];
 		return (byte) (_cableMode[side] >> 1);
 	}
 
-	public void setMode(int side, byte mode)
-	{
+	public void setMode(int side, byte mode) {
 		boolean mustUpdate;
 		if (side != 6) {
 			mustUpdate = (mode != (_cableMode[side] >> 1));
@@ -476,25 +436,21 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@SideOnly(Side.CLIENT)
-	public RedNetConnectionType getCachedConnectionState(ForgeDirection side)
-	{
+	public RedNetConnectionType getCachedConnectionState(ForgeDirection side) {
 		return _connectionState[side.ordinal()];
 	}
 
-	public RedNetConnectionType getConnectionState(ForgeDirection side)
-	{
+	public RedNetConnectionType getConnectionState(ForgeDirection side) {
 		RedNetConnectionType type = getConnectionState(side, true);
 		dirty |= _connectionState[side.ordinal()] != type;
 		_connectionState[side.ordinal()] = type;
 		return type;
 	}
 
-	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative)
-	{
+	protected RedNetConnectionType getConnectionState(ForgeDirection side, boolean decorative) {
 		int _mode = _cableMode[side.ordinal()];
 		if ((_mode & 1) == 0)
-			return RedNetConnectionType.None;
-		{ // eclipse freaks out with bit shifts.
+			return RedNetConnectionType.None; { // eclipse freaks out with bit shifts.
 			_mode >>>= 1;
 		}
 		if (!decorative)
@@ -513,22 +469,19 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		boolean node = false;
 
 		// cables - always connect
-		if (b == rednetCableBlock)
-		{
+		if (b == rednetCableBlock) {
 			if (!decorative || ((TileEntityRedNetCable)worldObj.getTileEntity(x, y, z)).canInterface(this, side.getOpposite()))
 				return RedNetConnectionType.CableAll;
 			else
 				return RedNetConnectionType.None;
 		}
 		// cable-only, and not a cable - don't connect
-		else if (_mode == 3)
-		{
+		else if (_mode == 3) {
 			return RedNetConnectionType.None;
 		}
 
 		short nodeFlags = -1;
-		if (b instanceof IRedNetConnection) // API node - let them figure it out
-		{
+		if (b instanceof IRedNetConnection) { // API node - let them figure it out
 			RedNetConnectionType type = ((IRedNetConnection)b).
 					getConnectionType(worldObj, x, y, z, side.getOpposite());
 			if (_mode == 0 && type.isConnectionForced)
@@ -540,8 +493,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		}
 		// IRedNetNoConnection or air - don't connect
 		// Placed here so subclasses that are API nodes can override
-		else if (b instanceof IRedNetNoConnection || b.isAir(worldObj, x, y, z))
-		{
+		else if (b instanceof IRedNetNoConnection || b.isAir(worldObj, x, y, z)) {
 			return RedNetConnectionType.None;
 		}
 
@@ -553,38 +505,30 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		RedNetConnectionType ret;
 
 		// mode 2 forces cable mode for strong power
-		if (_mode == 2)
-		{
+		if (_mode == 2) {
 			if (b.isSideSolid(worldObj, x, y, z, side.getOpposite()))
 				ret = RedNetConnectionType.ForcedCableSingle;
 			else
 				ret = RedNetConnectionType.ForcedPlateSingle;
 		}
 		// mode 1 forces plate mode for weak power
-		else if (_mode == 1)
-		{
+		else if (_mode == 1) {
 			ret = RedNetConnectionType.ForcedPlateSingle;
 		}
 		// standard connection logic, then figure out if we shouldn't connect
 		// modes 1, 2, and 3 will skip this. _connectionBlackList is a HashMap
 		else if (!node && (_connectionBlackList.contains(b) ||
-				b instanceof IRedNetDecorative))
-		{
+				b instanceof IRedNetDecorative)) {
 			ret = RedNetConnectionType.None;
-		}
-		else if (b.isSideSolid(worldObj, x, y, z, side.getOpposite()))
-		{
+		} else if (b.isSideSolid(worldObj, x, y, z, side.getOpposite())) {
 			ret = RedNetConnectionType.CableSingle;
-		}
-		else
-		{
+		} else {
 			ret = RedNetConnectionType.PlateSingle;
 		}
 		/**
 		 * End of conditions.
 		 */
-		if (nodeFlags > 0)
-		{
+		if (nodeFlags > 0) {
 			short type = ret.flags;
 			type &= ~24; // 24 represents the two connection type bits
 			type |= nodeFlags;
@@ -594,8 +538,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
+	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setIntArray("sideSubnets", _sideColors);
 		tag.setByte("v", (byte)5);
@@ -603,8 +546,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		_sideColors = tag.getIntArray("sideSubnets");
 		if (_sideColors.length < 6)
@@ -613,8 +555,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		byte _mode = tag.getByte("mode");
 		_cableMode = tag.getByteArray("cableMode");
 		if (_cableMode.length < 6) _cableMode = new byte[] {0,0,0, 0,0,0, 0};
-		switch (tag.getByte("v"))
-		{
+		switch (tag.getByte("v")) {
 		case 0:
 			if (_mode == 2)
 				_mode = 3;
@@ -636,35 +577,27 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		readFromNBT = true;
 	}
 
-	public void setSideColor(ForgeDirection side, int color)
-	{
-		if(side == ForgeDirection.UNKNOWN)
-		{
+	public void setSideColor(ForgeDirection side, int color) {
+		if(side == ForgeDirection.UNKNOWN) {
 			return;
 		}
-		_sideColors[side.ordinal()] = color;
-
-		{
+		_sideColors[side.ordinal()] = color; {
 			updateNearbyNode(side);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
-	public int getSideColor(ForgeDirection side)
-	{
-		if(side == ForgeDirection.UNKNOWN)
-		{
+	public int getSideColor(ForgeDirection side) {
+		if(side == ForgeDirection.UNKNOWN) {
 			return 0;
 		}
 		return _sideColors[side.ordinal()];
 	}
 
-	public boolean isSolidOnSide(int side)
-	{
+	public boolean isSolidOnSide(int side) {
 		if (_cableMode[6] == 1)
 			return false;
-		int m = _cableMode[side], i;
-		{
+		int m = _cableMode[side], i; {
 			i = m >> 1;
 		}
 		return ((m & 1) == 1) & i != 3 & i != 1;
@@ -672,21 +605,18 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public double getMaxRenderDistanceSquared()
-	{
+	public double getMaxRenderDistanceSquared() {
 		return 65536D;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldRenderInPass(int pass)
-	{
+	public boolean shouldRenderInPass(int pass) {
 		return pass == 0 ? __useTESR : false;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public boolean onRender()
-	{
+	public boolean onRender() {
 		long[] a = __lastUpdates;
 		int i = a.length, e = i, p = __updatePos;
 		a[p] = worldObj.getTotalWorldTime();
@@ -699,26 +629,23 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
-	{
+	public Packet getDescriptionPacket() {
 		NBTTagCompound data = new NBTTagCompound();
 		data.setIntArray("colors", _sideColors);
-		data.setInteger("mode[0]", _cableMode[0] | (_cableMode[1] << 8) | (_cableMode[2] << 16) |
-				(_cableMode[3] << 24));
-		data.setInteger("mode[1]", _cableMode[4] | (_cableMode[5] << 8) | (_cableMode[6] << 16));
+		data.setInteger("mode[0]", (_cableMode[0] & 0xFF) | ((_cableMode[1] & 0xFF) << 8) | ((_cableMode[2] & 0xFF) << 16) |
+			((_cableMode[3] & 0xFF) << 24));
+		data.setInteger("mode[1]", (_cableMode[4] & 0xFF) | ((_cableMode[5] & 0xFF) << 8) | ((_cableMode[6] & 0xFF) << 16));
 		data.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
-				(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
-				(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
+			(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
+			(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-	{
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
-		{
+		switch (pkt.func_148853_f()) {
 		case 0:
 			_sideColors = data.getIntArray("colors");
 			int mode = data.getInteger("mode[0]");

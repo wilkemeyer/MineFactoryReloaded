@@ -38,38 +38,47 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 	private final String label;
 
 	public GridTickHandler(String name) {
-		name.hashCode();
+
+		if (name == null)
+			throw new IllegalArgumentException("name is null");
 		label = "GridTickHandler[" + name + "]";
 	}
 
 	public void addGrid(G grid) {
+
 		tickingGridsToAdd.add(grid);
 		tickingGridsToRemove.remove(grid);
 	}
 
 	public void removeGrid(G grid) {
+
 		tickingGridsToRemove.add(grid);
 		tickingGridsToAdd.remove(grid);
 	}
 
 	public void regenerateGrid(G grid) {
+
 		tickingGridsToRegenerate.add(grid);
 	}
 
 	public boolean isGridTicking(G grid) {
+
 		return tickingGrids.contains(grid);
 	}
 
 	public void addConduitForTick(N node) {
+
 		conduitToAdd.add(node);
 	}
 
 	public void addConduitForUpdate(N node) {
+
 		conduitToUpd.add(node);
 	}
 
 	@SubscribeEvent
 	public void tick(ServerTickEvent evt) {
+
 		// TODO: this needs split up into groups per-world when worlds are threaded
 		if (evt.phase == Phase.START)
 			tickStart();
@@ -78,22 +87,23 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 	}
 
 	public void tickStart() {
+
 		//{ Grids that have had significant conduits removed and need to rebuild/split
 		if (!tickingGridsToRegenerate.isEmpty())
-		synchronized (tickingGridsToRegenerate) {
-			for (G grid : tickingGridsToRegenerate)
-				grid.markSweep();
-			tickingGridsToRegenerate.clear();
-		}
+			synchronized (tickingGridsToRegenerate) {
+				for (G grid : tickingGridsToRegenerate)
+					grid.markSweep();
+				tickingGridsToRegenerate.clear();
+			}
 		//}
 
 		//{ Updating internal types of conduits
 		// this pass is needed to handle issues with threading
 		if (!conduitToUpd.isEmpty())
-		synchronized (conduitToUpd) {
-			conduit.addAll(conduitToUpd);
-			conduitToUpd.clear();
-		}
+			synchronized (conduitToUpd) {
+				conduit.addAll(conduitToUpd);
+				conduitToUpd.clear();
+			}
 
 		if (!conduit.isEmpty()) {
 			N cond = null;
@@ -105,7 +115,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 						cond.updateInternalTypes(this);
 				}
 				conduit.clear();
-			} catch(Throwable _) {
+			} catch (Throwable _) {
 				throw new RuntimeException("Crashing on conduit " + cond, _);
 			}
 		}
@@ -119,18 +129,19 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 	}
 
 	public void tickEnd() {
+
 		//{ Changes in what grids are being ticked
 		if (!tickingGridsToRemove.isEmpty())
-		synchronized(tickingGridsToRemove) {
-			tickingGrids.removeAll(tickingGridsToRemove);
-			tickingGridsToRemove.clear();
-		}
+			synchronized (tickingGridsToRemove) {
+				tickingGrids.removeAll(tickingGridsToRemove);
+				tickingGridsToRemove.clear();
+			}
 
 		if (!tickingGridsToAdd.isEmpty())
-		synchronized(tickingGridsToAdd) {
-			tickingGrids.addAll(tickingGridsToAdd);
-			tickingGridsToAdd.clear();
-		}
+			synchronized (tickingGridsToAdd) {
+				tickingGrids.addAll(tickingGridsToAdd);
+				tickingGridsToAdd.clear();
+			}
 		//}
 
 		//{ Ticking grids to transfer energy/etc.
@@ -141,10 +152,10 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 
 		//{ Initial update tick for conduits added to the world
 		if (!conduitToAdd.isEmpty())
-		synchronized(conduitToAdd) {
-			conduit.addAll(conduitToAdd);
-			conduitToAdd.clear();
-		}
+			synchronized (conduitToAdd) {
+				conduit.addAll(conduitToAdd);
+				conduitToAdd.clear();
+			}
 
 		if (!conduit.isEmpty()) {
 			N cond = null;
@@ -156,7 +167,7 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 						cond.firstTick(this);
 				}
 				conduit.clear();
-			} catch(Throwable _) {
+			} catch (Throwable _) {
 				throw new RuntimeException("Crashing on conduit " + cond, _);
 			}
 		}
@@ -165,6 +176,8 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 
 	@Override
 	public String toString() {
+
 		return label + "@" + hashCode();
 	}
+
 }

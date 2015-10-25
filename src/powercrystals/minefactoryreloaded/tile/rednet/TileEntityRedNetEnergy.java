@@ -237,12 +237,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
 		data.setIntArray("colors", _sideColors);
-		data.setInteger("mode[0]", _cableMode[0] | (_cableMode[1] << 8) | (_cableMode[2] << 16) |
-				(_cableMode[3] << 24));
-		data.setInteger("mode[1]", _cableMode[4] | (_cableMode[5] << 8) | (_cableMode[6] << 16));
-		data.setInteger("mode[2]", sideMode[0] | (sideMode[1] << 8) | (sideMode[2] << 16) |
-				(sideMode[3] << 24));
-		data.setInteger("mode[3]", sideMode[4] | (sideMode[5] << 8) | (sideMode[6] << 16));
+		data.setInteger("mode[0]", (_cableMode[0] & 0xFF) | ((_cableMode[1] & 0xFF) << 8) | ((_cableMode[2] & 0xFF) << 16) |
+				((_cableMode[3] & 0xFF) << 24));
+		data.setInteger("mode[1]", (_cableMode[4] & 0xFF) | ((_cableMode[5] & 0xFF) << 8) | ((_cableMode[6] & 0xFF) << 16));
+		data.setInteger("mode[2]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
+				((sideMode[3] & 0xFF) << 24));
+		data.setInteger("mode[3]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16));
 		data.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
 				(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
 				(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
@@ -586,7 +586,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 							iface = forTrace;
 						}
 						o = 2 + 6*3 + i;
-						if (iface | mode == 4)
+						if (iface || mode == 4)
 							o += 6;
 						list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
 								subSelection[o]).add(offset)); // cable part or energy selection box

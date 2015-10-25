@@ -435,7 +435,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				NBTTagCompound slot = nbttaglist.getCompoundTagAt(i);
 				int j = slot.getByte("Slot") & 0xff;
-				if ((j >= 0) & (j < _inventory.length))
+				if (j < _inventory.length)
 				{
 					_inventory[j] = ItemStack.loadItemStackFromNBT(slot);
 					if (_inventory[j].stackSize < 0)
@@ -453,7 +453,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			{
 				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				int j = nbttagcompound1.getByte("Tank") & 0xff;
-				if (j >= 0 && j < _tanks.length)
+				if (j < _tanks.length)
 				{
 					FluidStack l = FluidStack.loadFluidStackFromNBT(nbttagcompound1);
 					if(l != null)

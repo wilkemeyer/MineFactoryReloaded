@@ -70,7 +70,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 			l: {
 				BiomeGenBase bgb = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 
-				if (_canWeather & _biome == bgb) break l;
+				if (_canWeather && _biome == bgb) break l;
 				_biome = bgb;
 				if (!bgb.canSpawnLightningBolt() && !bgb.getEnableSnow())
 				{

@@ -238,7 +238,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	}
 
 	@SubscribeEvent
-	public void onPreTextureStitch(TextureStitchEvent.Pre e)
+	public static void onPreTextureStitch(TextureStitchEvent.Pre e)
 	{
 		switch (e.map.getTextureType()) {
 		case 1:

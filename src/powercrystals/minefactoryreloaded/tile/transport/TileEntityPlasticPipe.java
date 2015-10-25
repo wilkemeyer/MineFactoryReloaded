@@ -247,9 +247,9 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		if (deadCache)
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("mode[0]", sideMode[0] | (sideMode[1] << 8) | (sideMode[2] << 16) |
-				(sideMode[3] << 24));
-		data.setInteger("mode[1]", sideMode[4] | (sideMode[5] << 8) | (sideMode[6] << 16) |
+		data.setInteger("mode[0]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
+				((sideMode[3] & 0xFF) << 24));
+		data.setInteger("mode[1]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16) |
 				(isPowered ? 1 << 24 : 0));
 		data.setByte("upgrade", upgradeItem);
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);

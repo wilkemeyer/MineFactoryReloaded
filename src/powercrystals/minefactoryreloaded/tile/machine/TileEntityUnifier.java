@@ -120,7 +120,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		{
 			return;
 		}
-		else if(source.getTagCompound() != null | _inventory[1].getTagCompound() != null)
+		else if(source.getTagCompound() != null || _inventory[1].getTagCompound() != null)
 		{
 			return;
 		}

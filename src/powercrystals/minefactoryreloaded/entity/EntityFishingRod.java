@@ -4,8 +4,6 @@ import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -23,7 +21,6 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class EntityFishingRod extends EntityThrowable {
 	public int fuse;
-	public Random rand = new Random();
 
 	public EntityFishingRod(World world) {
 		super(world);

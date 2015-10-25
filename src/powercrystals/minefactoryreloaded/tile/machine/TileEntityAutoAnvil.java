@@ -330,7 +330,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 
 						for (Integer existingEnchId : existingEnchantments.keySet())
 						{
-							if (existingEnchId != addedEnchId && !enchantment.canApplyTogether(Enchantment.enchantmentsList[existingEnchId]))
+							if (!existingEnchId.equals(addedEnchId) && !enchantment.canApplyTogether(Enchantment.enchantmentsList[existingEnchId]))
 							{
 								canEnchantmentBeAdded = false;
 								totalEnchCost += levelDifference;
