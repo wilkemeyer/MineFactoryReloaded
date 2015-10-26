@@ -147,27 +147,31 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 	private void checkInput(int slot) {
 
-		if (_inventory[slot] != null) {
-			if (_storedQuantity == 0 &&
-					(_storedItem == null ||
-					UtilInventory.stacksEqual(_inventory[slot], _storedItem))) {
+		l: if (_inventory[slot] != null) {
+			if (_storedItem == null) {
 				_storedItem = _inventory[slot].copy();
 				_storedItem.stackSize = 1;
 				_storedQuantity = _inventory[slot].stackSize;
 				_inventory[slot] = null;
-			} else if (UtilInventory.stacksEqual(_inventory[slot], _storedItem) &&
-					(getMaxStoredCount() - _storedItem.getMaxStackSize()) - _inventory[slot].stackSize > _storedQuantity) {
-				_storedQuantity += _inventory[slot].stackSize;
-				_inventory[slot] = null;
+			} else if (UtilInventory.stacksEqual(_inventory[slot], _storedItem)) {
+				if ((getMaxStoredCount() - _storedItem.getMaxStackSize()) - _inventory[slot].stackSize < _storedQuantity) {
+					int amt = (getMaxStoredCount() - _storedItem.getMaxStackSize()) - _storedQuantity;
+					_inventory[slot].stackSize -= amt;
+					_storedQuantity += amt;
+				} else {
+					_storedQuantity += _inventory[slot].stackSize;
+					_inventory[slot] = null;
+				}
 			}
 			// boot improperly typed items from the input slots
-			else if (!UtilInventory.stacksEqual(_inventory[slot], _storedItem)) {
+			else {
 				_passingItem = true;
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 				_passingItem = false;
+				break l;
 			}
 			// internal inventory is full
-			else {
+			if (_inventory[slot] != null) {
 				_passingItem = true;
 				_inventory[slot] = UtilInventory.dropStack(this, _inventory[slot], this.getDropDirection());
 				_passingItem = false;
@@ -221,7 +225,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		if (slot >= 2) return false;
 		ItemStack stored = _storedItem;
 		if (stored == null) stored = _inventory[2];
-		return stored == null || UtilInventory.stacksEqual(stored, stack);
+		return stored == null || (UtilInventory.stacksEqual(stored, stack) && (getMaxStoredCount() - stored.getMaxStackSize()) > _storedQuantity);
 	}
 
 	@Override
