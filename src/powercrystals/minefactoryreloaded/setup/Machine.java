@@ -111,6 +111,12 @@ public class Machine {
 	public static Machine DeepStorageUnit = new Machine(1, 3, "DeepStorageUnit", TileEntityDeepStorageUnit.class) {
 
 		@Override
+		public boolean hasTooltip(ItemStack stack) {
+
+			return stack.hasTagCompound() && stack.getTagCompound().hasKey("storedStack");
+		}
+
+		@Override
 		public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {
 
 			NBTTagCompound c = stack.getTagCompound();
