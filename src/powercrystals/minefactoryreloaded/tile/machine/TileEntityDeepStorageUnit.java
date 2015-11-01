@@ -75,9 +75,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		int quantity = _storedQuantity;
 
 		for (int i = 2; i < getSizeInventory(); i++) {
-			if (_inventory[i] != null && _storedQuantity == 0) {
-				quantity += _inventory[i].stackSize;
-			} else if (_inventory[i] != null && UtilInventory.stacksEqual(_storedItem, _inventory[i])) {
+			if (_inventory[i] != null && UtilInventory.stacksEqual(_storedItem, _inventory[i])) {
 				quantity += _inventory[i].stackSize;
 			}
 		}
