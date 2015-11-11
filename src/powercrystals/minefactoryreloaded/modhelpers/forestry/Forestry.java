@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded.modhelpers.forestry;
 
 import static cpw.mods.fml.common.registry.GameRegistry.*;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -25,30 +25,28 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStand
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 
-@Mod(modid = "MineFactoryReloaded|CompatForestry", name = "MFR Compat: Forestry", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Forestry",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class Forestry
-{
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatForestry",
+		name = "MFR Compat: Forestry",
+		version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded;after:Forestry",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+public class Forestry {
+
 	private static final String name = "Forestry";
+
 	@EventHandler
-	public void load(FMLInitializationEvent e)
-	{
-		if(!Loader.isModLoaded(name))
-		{
-			return;
-		}
-		try
-		{
+	public void load(FMLInitializationEvent e) {
+
+		try {
 			initForestry();
-		}
-		catch (Throwable $) {
+		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 
-	private static void initForestry()
-	{
+	private static void initForestry() {
+
 		Item item = findItem(name, "fertilizerCompound");
 		if (item != null)
 			MFRRegistry.registerFertilizer(new FertilizerStandard(item, 0));
@@ -132,15 +130,11 @@ public class Forestry
 	}
 
 	@EventHandler
-	public static void postInit(FMLPostInitializationEvent e)
-	{
-		MFRRegistry.registerLiquidDrinkHandler("bioethanol", new DrinkHandlerBiofuel());
+	public static void postInit(FMLPostInitializationEvent e) {
 
-		if (!Loader.isModLoaded(name))
-		{
-			return;
-		}
+		MFRRegistry.registerLiquidDrinkHandler("bioethanol", new DrinkHandlerBiofuel());
 
 		TileEntityUnifier.updateUnifierLiquids();
 	}
+
 }

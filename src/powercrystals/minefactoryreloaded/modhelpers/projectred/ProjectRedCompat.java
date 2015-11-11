@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.projectred;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -21,30 +21,27 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableSta
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 
-@Mod(modid = "MineFactoryReloaded|CompatProjRed", name = "MFR Compat: ProjectRed", version = MineFactoryReloadedCore.version,
-dependencies = "after:MineFactoryReloaded;after:ProjRed|Core;after:ProjRed|Exploration",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class ProjectRedCompat
-{
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatProjRed",
+		name = "MFR Compat: ProjectRed",
+		version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded;after:ProjRed|Core;after:ProjRed|Exploration",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+public class ProjectRedCompat {
+
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent e)
-	{
-		if(!Loader.isModLoaded("ProjRed|Exploration"))
-		{
-			return;
-		}
-		try
-		{
+	public void postInit(FMLPostInitializationEvent e) {
+
+		try {
 			Block stainedLeaf = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyeleaf");
 			Block stainedSapling = GameRegistry.findBlock("ProjRed|Exploration", "projectred.exploration.dyesapling");
 
 			MFRRegistry.registerPlantable(new PlantableSapling(stainedSapling));
 			MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(stainedLeaf));
-			MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)stainedSapling));
-		}
-		catch (Throwable $) {
+			MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) stainedSapling));
+		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
+
 }

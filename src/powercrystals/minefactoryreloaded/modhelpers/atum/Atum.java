@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.atum;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -28,20 +28,18 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.modhelpers.FertilizableCropReflection;
 import powercrystals.minefactoryreloaded.modhelpers.FertilizableSaplingReflection;
 
-@Mod(modid = "MineFactoryReloaded|CompatAtum", name = "MFR Compat: Atum", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:Atum",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class Atum
-{
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatAtum",
+		name = "MFR Compat: Atum",
+		version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded;after:Atum",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+public class Atum {
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@EventHandler
-	public void load(FMLInitializationEvent e)
-	{
-		if(!Loader.isModLoaded("Atum"))
-		{
-			return;
-		}
-		try
-		{
+	public void load(FMLInitializationEvent e) {
+
+		try {
 			Class AtumItems = Class.forName("rebelkeithy.mods.atum.AtumItems");
 			Class AtumBlocks = Class.forName("rebelkeithy.mods.atum.AtumBlocks");
 
@@ -50,19 +48,21 @@ public class Atum
 			Class banditWarlord = Class.forName(entityprefix + "BanditWarlord");
 			Class pharaoh = Class.forName(entityprefix + "Pharaoh");
 
-			Block atumLogId = ((Block)AtumBlocks.getField("log").get(null));
-			Block atumLeavesId = ((Block)AtumBlocks.getField("leaves").get(null));
-			Block atumSaplingId = ((Block)AtumBlocks.getField("palmSapling").get(null));
+			Block atumLogId = ((Block) AtumBlocks.getField("log").get(null));
+			Block atumLeavesId = ((Block) AtumBlocks.getField("leaves").get(null));
+			Block atumSaplingId = ((Block) AtumBlocks.getField("palmSapling").get(null));
 
-			Item flaxSeedsId = ((Item)AtumItems.getField("flaxSeeds").get(null));
+			Item flaxSeedsId = ((Item) AtumItems.getField("flaxSeeds").get(null));
 
-			Block flaxId = ((Block)AtumBlocks.getField("flax").get(null));
-			Block papyrusId = ((Block)AtumBlocks.getField("papyrus").get(null));
-			Block shrubId = ((Block)AtumBlocks.getField("shrub").get(null));
-			Block weedId = ((Block)AtumBlocks.getField("weed").get(null));
+			Block flaxId = ((Block) AtumBlocks.getField("flax").get(null));
+			Block papyrusId = ((Block) AtumBlocks.getField("papyrus").get(null));
+			Block shrubId = ((Block) AtumBlocks.getField("shrub").get(null));
+			Block weedId = ((Block) AtumBlocks.getField("weed").get(null));
 
-			Method atumSaplingGrowTree = Class.forName("rebelkeithy.mods.atum.blocks.BlockPalmSapling").getMethod("growTree", World.class, int.class, int.class, int.class, Random.class);
-			Method atumFlaxFertilize = Class.forName("rebelkeithy.mods.atum.blocks.BlockFlax").getMethod("fertilize", World.class, int.class, int.class, int.class);
+			Method atumSaplingGrowTree = Class.forName("rebelkeithy.mods.atum.blocks.BlockPalmSapling").getMethod("growTree",
+				World.class, int.class, int.class, int.class, Random.class);
+			Method atumFlaxFertilize = Class.forName("rebelkeithy.mods.atum.blocks.BlockFlax").getMethod("fertilize",
+				World.class, int.class, int.class, int.class);
 
 			MFRRegistry.registerSafariNetBlacklist(banditWarlord);
 			MFRRegistry.registerSafariNetBlacklist(pharaoh);
@@ -83,10 +83,10 @@ public class Atum
 			MFRRegistry.registerHarvestable(new HarvestableStandard(shrubId, HarvestType.Normal));
 			MFRRegistry.registerHarvestable(new HarvestableStandard(weedId, HarvestType.Normal));
 
-		}
-		catch (Throwable $) {
+		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
+
 }

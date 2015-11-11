@@ -1,8 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -29,37 +28,33 @@ import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@Mod(modid = "MineFactoryReloaded|CompatThermalExpansion", name = "MFR Compat: ThermalExpansion", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ThermalExpansion",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class ThermalExpansion implements IRandomMobProvider
-{
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion",
+		name = "MFR Compat: ThermalExpansion",
+		version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded;after:ThermalExpansion",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+public class ThermalExpansion implements IRandomMobProvider {
+
 	@EventHandler
-	public void init(FMLInitializationEvent e)
-	{
-		if(!Loader.isModLoaded("ThermalExpansion"))
-		{
-			FMLLog.warning("ThermalExpansion missing - Thermal Expansion compat not loading");
-			return;
-		}
-		try
-		{
+	public void init(FMLInitializationEvent e) {
+
+		try {
 			MFRRegistry.registerRandomMobProvider(this);
 
 			// Smooth Blackstone -> Cobble
 			sendPulv(new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 0),
-					new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 2));
+				new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 2));
 			// Smooth Whitestone -> Cobble
 			sendPulv(new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 1),
-					new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 3));
-		}
-		catch (Throwable $) {
+				new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 3));
+		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 
-	private static void sendPulv(ItemStack input, ItemStack output)
-	{
+	private static void sendPulv(ItemStack input, ItemStack output) {
+
 		NBTTagCompound toSend = new NBTTagCompound();
 		toSend.setInteger("energy", 3200);
 		toSend.setTag("input", input.writeToNBT(new NBTTagCompound()));
@@ -67,13 +62,14 @@ public class ThermalExpansion implements IRandomMobProvider
 		sendComm("PulverizerRecipe", toSend);
 	}
 
-	private static void sendComm(String type, NBTTagCompound msg)
-	{
+	private static void sendComm(String type, NBTTagCompound msg) {
+
 		FMLInterModComms.sendMessage("ThermalExpansion", type, msg);
 	}
 
 	@Override
 	public List<RandomMob> getRandomMobs(World world) {
+
 		ArrayList<RandomMob> mobs = new ArrayList<RandomMob>();
 
 		EntityCreeper creeper = MFRUtil.prepareMob(EntityCreeper.class, world);
@@ -89,5 +85,5 @@ public class ThermalExpansion implements IRandomMobProvider
 
 		return mobs;
 	}
+
 }
-//*/

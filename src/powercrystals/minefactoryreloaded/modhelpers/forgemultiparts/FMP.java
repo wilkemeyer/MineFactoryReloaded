@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.forgemultiparts;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.ModContainer;
@@ -22,45 +22,42 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock",
-name = "MFR Compat: ForgeMicroblock",
-version = MineFactoryReloadedCore.version,
-dependencies = "after:MineFactoryReloaded",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class FMP
-{
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatForgeMicroblock",
+		name = "MFR Compat: ForgeMicroblock",
+		version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+public class FMP {
+
 	@Mod.EventHandler
-	public void Init(FMLInitializationEvent evt)
-	{
-		if (!Loader.isModLoaded("ForgeMicroblock"))
-			return;
-		try
-		{
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryDecorativeBrickBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryDecorativeStoneBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryGlassBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.rubberLeavesBlock));
-			addSubtypes((ItemBlockFactory)Item.getItemFromBlock(MFRThings.factoryRoadBlock));
+	public void Init(FMLInitializationEvent evt) {
+
+		try {
+			addSubtypes((ItemBlockFactory) Item.getItemFromBlock(MFRThings.factoryDecorativeBrickBlock));
+			addSubtypes((ItemBlockFactory) Item.getItemFromBlock(MFRThings.factoryDecorativeStoneBlock));
+			addSubtypes((ItemBlockFactory) Item.getItemFromBlock(MFRThings.factoryGlassBlock));
+			addSubtypes((ItemBlockFactory) Item.getItemFromBlock(MFRThings.rubberLeavesBlock));
+			addSubtypes((ItemBlockFactory) Item.getItemFromBlock(MFRThings.factoryRoadBlock));
 			for (Block block : MFRThings.machineBlocks.valueCollection())
-				addSubtypes((ItemBlockFactory)Item.getItemFromBlock(block));
+				addSubtypes((ItemBlockFactory) Item.getItemFromBlock(block));
 			sendComm(new ItemStack(MFRThings.rubberWoodBlock, 1, 0));
-		}
-		catch (Throwable $) {
+		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
 
-	private void addSubtypes(ItemBlockFactory item)
-	{
+	private void addSubtypes(ItemBlockFactory item) {
+
 		List<ItemStack> items = new LinkedList<ItemStack>();
 		item.getSubItems(item, items);
-		for (int i = items.size(); i --> 0; )
+		for (int i = items.size(); i-- > 0;)
 			sendComm(items.get(i));
 	}
 
-	private void sendComm(ItemStack data)
-	{
+	private void sendComm(ItemStack data) {
+
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", data);
 	}
+
 }

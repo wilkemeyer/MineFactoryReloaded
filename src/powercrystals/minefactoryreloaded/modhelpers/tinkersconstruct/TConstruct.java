@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.modhelpers.tinkersconstruct;
 
 import static cofh.lib.util.helpers.ItemHelper.stack;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -14,12 +15,16 @@ import net.minecraft.util.EnumChatFormatting;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@Mod(modid = "MineFactoryReloaded|CompatTConstruct", name = "MFR Compat: Tinkers' Construct", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:TConstruct",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatTConstruct",
+		name = "MFR Compat: Tinkers' Construct",
+		version = MineFactoryReloadedCore.version,
+		dependencies = "after:MineFactoryReloaded;after:TConstruct",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
 public class TConstruct {
 
 	@EventHandler
 	public static void load(FMLInitializationEvent e) {
+
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setInteger("Id", 1000);
 		tag.setString("Name", "Plastic");

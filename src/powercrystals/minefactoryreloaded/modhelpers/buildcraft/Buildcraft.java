@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 import buildcraft.api.fuels.BuildcraftFuelRegistry;
 
 import cofh.asm.relauncher.Strippable;
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
@@ -20,10 +21,11 @@ import org.apache.logging.log4j.LogManager;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
-		name = "MFR Compat: BuildCraft", version = MineFactoryReloadedCore.version,
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
+		name = "MFR Compat: BuildCraft",
+		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:BuildCraft|Core",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true"))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
 public class Buildcraft {
 
 	private static String name(Block obj) {

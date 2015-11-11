@@ -4,6 +4,7 @@ import static cofh.api.modhelpers.ThaumcraftHelper.parseAspects;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.asm.relauncher.Strippable;
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
@@ -46,9 +47,11 @@ import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-@Mod(modid = "MineFactoryReloaded|CompatThaumcraft", name = "MFR Compat: Thaumcraft", version = MineFactoryReloadedCore.version,
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatThaumcraft",
+		name = "MFR Compat: Thaumcraft",
+		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:Thaumcraft",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true"))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
 public class Thaumcraft {
 
 	@EventHandler
@@ -424,4 +427,5 @@ public class Thaumcraft {
 		parseAspects(factoryRoadBlock, 3, "3 iter, 1 terra, 1 sensus, 3 lux"); // road light inverted (off)
 		parseAspects(factoryRoadBlock, 4, "3 iter, 1 terra, 1 sensus, 3 lux"); // road light inverted (on)
 	}
+
 }

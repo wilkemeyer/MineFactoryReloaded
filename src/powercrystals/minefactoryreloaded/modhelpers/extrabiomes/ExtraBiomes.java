@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.modhelpers.extrabiomes;
 
+import cofh.mod.ChildMod;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.CustomProperty;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,19 +18,16 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 
-@Mod(modid = "MineFactoryReloaded|CompatExtraBiomes", name = "MFR Compat: ExtraBiomes", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ExtrabiomesXL",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class ExtraBiomes
-{
+@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatExtraBiomes",
+		name = "MFR Compat: ExtraBiomes",
+		version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded;after:ExtrabiomesXL",
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+public class ExtraBiomes {
+
 	private static Map<String, HarvestType> _harvestRegistries;
 
 	@EventHandler
-	public void load(FMLInitializationEvent ev)
-	{
-		if(!Loader.isModLoaded("ExtrabiomesXL"))
-		{
-			return;
-		}
+	public void load(FMLInitializationEvent ev) {
 
 		_harvestRegistries = new HashMap<String, HarvestType>();
 		_harvestRegistries.put("CATTAIL", HarvestType.Normal);
@@ -43,27 +40,23 @@ public class ExtraBiomes
 		_harvestRegistries.put("QUARTERLOG2", HarvestType.Tree);
 		_harvestRegistries.put("QUARTERLOG3", HarvestType.Tree);
 
-		try
-		{
+		try {
 			/*
 			Class<?> xbbs = Class.forName("extrabiomes.lib.BlockSettings");
 
-			for(String s : new String[] { "AUTUMNLEAVES", "GREENLEAVES" })
-			{
+			for(String s : new String[] { "AUTUMNLEAVES", "GREENLEAVES" }) {
 				Object o = xbbs.getField(s).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
 				MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(blockID));
 			}
 
-			for(Entry<String, HarvestType> e : _harvestRegistries.entrySet())
-			{
+			for(Entry<String, HarvestType> e : _harvestRegistries.entrySet()) {
 				Object o = xbbs.getField(e.getKey()).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
 				MFRRegistry.registerHarvestable(new HarvestableStandard(blockID, e.getValue()));
 			}
 
-			for(String s : new String[] { "SAPLING", "CATTAIL" })
-			{
+			for(String s : new String[] { "SAPLING", "CATTAIL" }) {
 				Object o = xbbs.getField(s).get(null);
 				Integer blockID = (Integer)xbbs.getMethod("getID").invoke(o);
 				MFRRegistry.registerPlantable(new PlantableStandard(blockID, blockID));
@@ -99,10 +92,10 @@ public class ExtraBiomes
 			MFRRegistry.registerRubberTreeBiome("Snowy Rainforest");
 			MFRRegistry.registerRubberTreeBiome("Temperate Rainforest");
 			MFRRegistry.registerRubberTreeBiome("Woodlands");
-		}
-		catch (Throwable $) {
+		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
 		}
 	}
+
 }
