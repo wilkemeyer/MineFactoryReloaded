@@ -42,8 +42,8 @@ public class TreeHarvestManager implements IHarvestManager
 	@Override
 	public BlockPosition getNextBlock()
 	{
-		searchForTreeBlocks(_blocks.poke());
 		BlockNode bn = _blocks.shift();
+		searchForTreeBlocks(bn);
 		BlockPosition bp = new BlockPosition(bn.x, bn.y, bn.z);
 		bn.free();
 		return bp;
