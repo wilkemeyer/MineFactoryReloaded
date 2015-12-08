@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.modhelpers.forestry;
 
+import cofh.asm.relauncher.Strippable;
+import cofh.asm.relauncher.Substitutable;
+
 import forestry.api.arboriculture.EnumGermlingType;
 import forestry.api.arboriculture.ITree;
 import forestry.api.arboriculture.ITreeRoot;
@@ -104,7 +107,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		else
 		{
 			boolean hasMate = tree.getMate() != null;
-			for (ITree s : tree.getSaplings(world, null, x, y, z, modifier))
+			for (ITree s : getSaplings(tree, world, x, y, z, modifier))
 				if (s != null) {
 					if ((hasMate && !s.isGeneticEqual(tree)) || rand.nextInt(32) == 0)
 						if (rand.nextBoolean())
@@ -117,6 +120,17 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		}
 
 		return prod;
+	}
+
+	@Substitutable(value="mod:Forestry@[4.0,)", method="getSaplingsOld")
+	private static ITree[] getSaplings(ITree tree, World world, int x, int y, int z, float modifier) {
+		return tree.getSaplings(world, null, x, y, z, modifier);
+	}
+
+	@Strippable("")
+	@SuppressWarnings("deprecation")
+	private static ITree[] getSaplingsOld(ITree tree, World world, int x, int y, int z, float modifier) {
+		return tree.getSaplings(world, x, y, z, modifier);
 	}
 
 	@Override // FRUIT PICKER

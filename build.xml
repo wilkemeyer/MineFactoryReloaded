@@ -101,7 +101,7 @@
 		<mkdir dir="${lib.dir}/"/>
 
 		<echo message="Downloading IC2 API... "/>
-		<get src="http://ic2api.player.to:8080/job/IC2_experimental/650/artifact/build/libs/industrialcraft-2-2.2.650-experimental-dev.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
+		<get src="http://jenkins.ic2.player.to/job/IC2_experimental/650/artifact/build/libs/industrialcraft-2-2.2.650-experimental-dev.jar" dest="${download.dir}/industrialcraft-2-api.jar"/>
 
 		<echo message="Downloading Buildcraft API.. "/>
 		<get src="https://github.com/BuildCraft/BuildCraft/archive/master.zip" dest="${download.dir}/Buildcraft.zip"/>
@@ -158,12 +158,12 @@
 		<get src="http://ae-mod.info/builds/appliedenergistics2-rv1-stable-1-dev.jar" dest="${download.dir}/AppEng.jar"/>
 
 		<echo message="Downloading Forestry API... "/>
-		<get src="https://github.com/ForestryMC/ForestryAPI/archive/master.zip" dest="${download.dir}/ForestryAPI.zip"/>
+		<get src="https://github.com/ForestryMC/ForestryAPI/archive/53f418f4a4808272ec18bd224dbd5c2c8ea8cfed.zip" dest="${download.dir}/ForestryAPI.zip"/>
 		<!-- Begin hack -->
 		<unzip src="${download.dir}/ForestryAPI.zip" dest="${download.dir}"/>
 		<delete dir="${compile.dir}" failonerror="false"/>
 		<mkdir dir="${compile.dir}"/>
-		<javac srcdir="${download.dir}/ForestryAPI-master" destdir="${compile.dir}"
+		<javac srcdir="${download.dir}/ForestryAPI-53f418f4a4808272ec18bd224dbd5c2c8ea8cfed" destdir="${compile.dir}"
 			target="1.7" source="1.7"
 			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false">
 			<include name="forestry/api/**/*.java"/>

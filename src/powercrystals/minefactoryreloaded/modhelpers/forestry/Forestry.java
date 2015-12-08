@@ -98,11 +98,34 @@ public class Forestry {
 
 		for (int i = 1; true; ++i) {
 			block = findBlock(name, "log" + i);
-			if (block == null) {
+			l: if (block == null) {
 				if (i > 1)
-					MineFactoryReloadedCore.log().info("Forestry logs null at " + i + ".");
-				else
+					MineFactoryReloadedCore.log().debug("Forestry logs null at " + i + ".");
+				else {
+					block = findBlock(name, "logs");
+					if (block != null) {
+						break l;
+					}
 					MineFactoryReloadedCore.log().error("Forestry logs null!");
+				}
+				break;
+			}
+			MFRRegistry.registerHarvestable(new HarvestableWood(block));
+			MFRRegistry.registerFruitLogBlock(block);
+		}
+
+		for (int i = 1; true; ++i) {
+			block = findBlock(name, "fireproofLog" + i);
+			l: if (block == null) {
+				if (i > 1)
+					MineFactoryReloadedCore.log().debug("Forestry logs null at " + i + ".");
+				else {
+					block = findBlock(name, "logsFireproof");
+					if (block != null) {
+						break l;
+					}
+					MineFactoryReloadedCore.log().error("Forestry logs null!");
+				}
 				break;
 			}
 			MFRRegistry.registerHarvestable(new HarvestableWood(block));
