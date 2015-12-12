@@ -11,11 +11,13 @@ import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 public class ItemMilkBottle extends ItemFactory {
 
 	public ItemMilkBottle() {
+
 		setContainerItem(Items.glass_bottle);
 	}
 
 	@Override
 	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+
 		if (!world.isRemote) {
 			player.curePotionEffects(new ItemStack(Items.milk_bucket));
 		}
@@ -39,16 +41,19 @@ public class ItemMilkBottle extends ItemFactory {
 
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
+
 		return 32;
 	}
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
+
 		return EnumAction.drink;
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+
 		player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 		return stack;
 	}

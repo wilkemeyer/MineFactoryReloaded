@@ -7,13 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemCeramicDye extends ItemLaserFocus {
+public class ItemCeramicDye extends ItemFactoryColored {
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-	{
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+
 		Block block = world.getBlock(x, y, z);
 		if (!world.isRemote & block != null) {
 			if (Blocks.glass.equals(block)) {

@@ -8,7 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import powercrystals.minefactoryreloaded.item.ItemLaserFocus;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 
 public class SlotAcceptLaserFocus extends Slot
 {
@@ -21,7 +21,7 @@ public class SlotAcceptLaserFocus extends Slot
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return stack != null && stack.getItem() instanceof ItemLaserFocus;
+		return stack != null && stack.getItem() instanceof ItemFactoryColored;
 	}
 
 	@Override

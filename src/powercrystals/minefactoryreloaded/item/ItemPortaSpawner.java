@@ -26,6 +26,7 @@ public class ItemPortaSpawner extends ItemFactory {
 	private static final String placeTag = "placeDelay";
 
 	public static NBTTagCompound getSpawnerTag(ItemStack stack) {
+
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag != null) {
 			if (tag.hasKey(spawnerTag))
@@ -35,6 +36,7 @@ public class ItemPortaSpawner extends ItemFactory {
 	}
 
 	private static String getEntityId(ItemStack stack) {
+
 		NBTTagCompound tag = getSpawnerTag(stack);
 		if (tag != null)
 			return tag.getString("EntityId");
@@ -42,10 +44,12 @@ public class ItemPortaSpawner extends ItemFactory {
 	}
 
 	public static boolean hasData(ItemStack stack) {
+
 		return getEntityId(stack) != null;
 	}
 
 	private static int getDelay(ItemStack stack) {
+
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag != null) {
 			return tag.getInteger(placeTag);
@@ -55,6 +59,7 @@ public class ItemPortaSpawner extends ItemFactory {
 
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
+
 		super.addInfo(stack, player, infoList, advancedTooltips);
 		String id = getEntityId(stack);
 		if (id != null)
@@ -69,6 +74,7 @@ public class ItemPortaSpawner extends ItemFactory {
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5) {
+
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag != null && tag.hasKey(placeTag) && tag.getInteger(placeTag) > 0) {
 			tag.setInteger(placeTag, tag.getInteger(placeTag) - 1);
@@ -78,6 +84,7 @@ public class ItemPortaSpawner extends ItemFactory {
 	@Override
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
 			float xOffset, float yOffset, float zOffset) {
+
 		if (world.isRemote) {
 			return true;
 		}
@@ -104,6 +111,7 @@ public class ItemPortaSpawner extends ItemFactory {
 
 	private boolean placeBlock(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
 			float xOffset, float yOffset, float zOffset) {
+
 		Block block = world.getBlock(x, y, z);
 
 		if (block == Blocks.snow_layer) {
@@ -142,7 +150,7 @@ public class ItemPortaSpawner extends ItemFactory {
 
 			if (placeBlockAt(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset, meta)) {
 				world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.func_150496_b(),
-						(block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+					(block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 				--itemstack.stackSize;
 			}
 
@@ -153,6 +161,7 @@ public class ItemPortaSpawner extends ItemFactory {
 	}
 
 	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata) {
+
 		// TODO: record and read the block that was consumed
 		if (!world.setBlock(x, y, z, _block, metadata, 3)) {
 			return false;
@@ -178,12 +187,14 @@ public class ItemPortaSpawner extends ItemFactory {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
+
 		return hasData(stack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumRarity getRarity(ItemStack par1ItemStack) {
+
 		return hasData(par1ItemStack) ? EnumRarity.epic : EnumRarity.rare;
 	}
 

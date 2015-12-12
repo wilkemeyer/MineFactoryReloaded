@@ -115,7 +115,6 @@ import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
 import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
 import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
-import powercrystals.minefactoryreloaded.item.ItemLaserFocus;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.ItemMilkBottle;
 import powercrystals.minefactoryreloaded.item.ItemPinkSlime;
@@ -123,6 +122,7 @@ import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryBucket;
@@ -398,7 +398,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		fertilizerItem = (new ItemFactory()).setUnlocalizedName("mfr.fertilizer");
 
 		ceramicDyeItem = (new ItemCeramicDye()).setUnlocalizedName("mfr.ceramicdye");
-		laserFocusItem = (new ItemLaserFocus()).setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
+		laserFocusItem = (new ItemFactoryColored()).setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
 
 		blankRecordItem = (new ItemFactory()).setUnlocalizedName("mfr.record.blank").setMaxStackSize(1);
 		spyglassItem = (new ItemSpyglass()).setUnlocalizedName("mfr.spyglass").setMaxStackSize(1);
