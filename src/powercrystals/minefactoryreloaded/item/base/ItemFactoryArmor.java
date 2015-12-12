@@ -49,4 +49,14 @@ public class ItemFactoryArmor extends ItemArmorAdv {
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 
+	@Override
+	public String toString() {
+
+		StringBuilder b = new StringBuilder(getClass().getName());
+		b.append('@').append(System.identityHashCode(this)).append('{');
+		b.append("l:").append(getUnlocalizedName());
+		b.append('}');
+		return b.toString();
+	}
+
 }
