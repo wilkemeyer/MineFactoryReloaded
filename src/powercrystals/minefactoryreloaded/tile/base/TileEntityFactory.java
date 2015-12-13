@@ -380,9 +380,10 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public void readFromNBT(NBTTagCompound tag) {
 
 		super.readFromNBT(tag);
-		int rotation = tag.getInteger("rotation");
-		rotateDirectlyTo(rotation);
-		_owner = tag.getString("owner");
+		if (tag.hasKey("rotation"))
+			rotateDirectlyTo(tag.getInteger("rotation"));
+		if (tag.hasKey("owner"))
+			_owner = tag.getString("owner");
 	}
 
 	@Override
