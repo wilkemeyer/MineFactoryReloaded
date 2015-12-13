@@ -285,7 +285,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			}
 		}
 
-		if (_storedItem == null & _storedQuantity > 0) {
+		if (_storedItem == null) {
 			_storedQuantity = 0;
 		}
 		_ignoreChanges = false;
