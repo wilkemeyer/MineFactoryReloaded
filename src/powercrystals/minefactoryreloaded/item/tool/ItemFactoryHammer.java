@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.item.tool;
 import cofh.api.block.IDismantleable;
 import cofh.api.item.IToolHammer;
 import cofh.asm.relauncher.Implementable;
+import cofh.lib.util.helpers.BlockHelper;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 
 import java.util.Random;
@@ -37,8 +38,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 		Block block = world.getBlock(x, y, z);
 		if (block != null) {
-			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK,
-					x, y, z, side, world);
+			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
 			if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY
 					|| e.useBlock == Result.DENY || e.useItem == Result.DENY) {
 				return false;
@@ -50,8 +50,21 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 					((IDismantleable) block).dismantleBlock(player, world, x, y, z, false);
 				player.swingItem();
 				return !world.isRemote;
-			} else if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) {
+			}
+
+			if (BlockHelper.canRotate(block)) {
 				player.swingItem();
+				if (player.isSneaking()) {
+					world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotateVanillaBlockAlt(world, block, x, y, z), 3);
+					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), 1.0F, 0.6F);
+				} else {
+					world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotateVanillaBlock(world, block, x, y, z), 3);
+					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), 1.0F, 0.8F);
+				}
+				return !world.isRemote;
+			} else if (!player.isSneaking() && block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) {
+				player.swingItem();
+				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), 1.0F, 0.8F);
 				return !world.isRemote;
 			}
 		}
@@ -125,7 +138,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
 
 		Block block = player.worldObj.getBlock(x, y, z);
-		if (block == null || block.getBlockHardness(player.worldObj, x, y, z) > 2.9f) {
+		if (block.getBlockHardness(player.worldObj, x, y, z) > 2.9f) {
 			Random rnd = player.getRNG();
 			player.playSound("random.break", 0.8F + rnd.nextFloat() * 0.4F, 0.4F);
 
