@@ -458,6 +458,8 @@ chat.info.mfr.chunkloader.noticket = You have too many chunk loaders and this on
 # Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
 # displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
 
+tip.info.mfr.hammer = Like a wrench, but smashier
+
 tip.info.mfr.rubberwood.sapling.massive = Warning: Pakratt's world ship.
 
 tip.info.mfr.prc = If you're lost, read the (in-game) manual
