@@ -39,10 +39,11 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 
 	public BlockFactoryMachine(int index) {
 
-		super(0.5F);
+		super(1.5F);
 		setBlockName("mfr.machine." + index);
 		_mfrMachineBlockIndex = index;
 		providesPower = true;
+		setHarvestLevel("wrench", 0);
 	}
 
 	public int getBlockIndex() {
