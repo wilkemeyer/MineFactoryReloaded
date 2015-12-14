@@ -8,9 +8,12 @@ public class GuiLiquidGenerator extends GuiFactoryInventory {
 
 	private static final int _barEnergyIndex = 0;
 
+	protected TileEntityLiquidGenerator _teGenerator;
+
 	public GuiLiquidGenerator(ContainerFactoryInventory container, TileEntityLiquidGenerator tileentity) {
 
 		super(container, tileentity);
+		_teGenerator = tileentity;
 		ySize = 166;
 		_tanksOffsetX = 142;
 	}
@@ -20,18 +23,16 @@ public class GuiLiquidGenerator extends GuiFactoryInventory {
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		drawBar(160, 75, ((TileEntityLiquidGenerator) _tileEntity).getBufferMax(),
-			((TileEntityLiquidGenerator) _tileEntity).getBuffer(), _barEnergyIndex);
+		drawBar(160, 75, _teGenerator.getBufferMax(), _teGenerator.getBuffer(), _barEnergyIndex);
 	}
 
 	@Override
 	protected void drawTooltips(int mouseX, int mouseY) {
 
 		if (isPointInRegion(160, 15, 8, 60, mouseX, mouseY)) {
-			int buffer = ((TileEntityLiquidGenerator) _tileEntity).getBuffer();
-			int bufferMax = ((TileEntityLiquidGenerator) _tileEntity).getBufferMax();
-			drawBarTooltip(MFRUtil.energy(), "RF", buffer, bufferMax, mouseX, mouseY);
+			drawBarTooltip(MFRUtil.energy(), "RF", _teGenerator.getBuffer(), _teGenerator.getBufferMax(), mouseX, mouseY);
 		} else
 			super.drawTooltips(mouseX, mouseY);
 	}
+
 }

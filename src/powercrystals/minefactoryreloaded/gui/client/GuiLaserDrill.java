@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import static powercrystals.minefactoryreloaded.core.MFRUtil.*;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
@@ -35,14 +34,10 @@ public class GuiLaserDrill extends GuiFactoryInventory {
 		super.drawTooltips(mouseX, mouseY);
 
 		if (isPointInRegion(150, 15, 8, 60, mouseX, mouseY)) {
-			int stored = _drill.getEnergyStored();
-			int storedMax = _drill.getEnergyMax();
-			List<String> lines = new ArrayList<String>();
-			lines.add("Energy");
-			lines.add(stored + " / " + storedMax + " " + "RF");
-			drawTooltip(lines, mouseX, mouseY);
+			drawBarTooltip(energy(), "RF", _drill.getEnergyStored(), _drill.getEnergyMax(), mouseX, mouseY);
 		} else if (isPointInRegion(160, 15, 8, 60, mouseX, mouseY)) {
-			drawBarTooltip("Work", "Wk", _drill.getWorkDone(), _drill.getWorkMax(), mouseX, mouseY);
+			drawBarTooltip(work(), "Wk", _drill.getWorkDone(), _drill.getWorkMax(), mouseX, mouseY);
 		}
 	}
+
 }

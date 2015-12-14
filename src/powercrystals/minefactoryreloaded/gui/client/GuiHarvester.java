@@ -22,7 +22,6 @@ public class GuiHarvester extends GuiUpgradeable {
 		_harvester = te;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 
@@ -40,9 +39,8 @@ public class GuiHarvester extends GuiUpgradeable {
 	}
 
 	@Override
-	public void updateScreen() {
+	protected void updateElementInformation() {
 
-		super.updateScreen();
 		_settingSilkTouch.displayString = _silkTouchText + getSettingText("silkTouch");
 		_settingSmallShrooms.displayString = _smallShroomsText + getSettingText("harvestSmallMushrooms");
 	}
@@ -64,13 +62,12 @@ public class GuiHarvester extends GuiUpgradeable {
 
 	private String getSettingText(String setting) {
 
-		if (_harvester.getSettings().get(setting) == null) return "No";
-		return _harvester.getSettings().get(setting) ? "Yes" : "No";
+		return _harvester.getSettings().get(setting) == Boolean.TRUE ? "Yes" : "No";
 	}
 
 	private Boolean getNewSettingValue(String setting) {
 
-		if (_harvester.getSettings().get(setting) == null) return true;
-		return _harvester.getSettings().get(setting) ? false : true;
+		return _harvester.getSettings().get(setting) == Boolean.TRUE ? false : true;
 	}
+
 }

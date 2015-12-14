@@ -2,51 +2,50 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
-public class GuiPlanter extends GuiUpgradeable
-{
+public class GuiPlanter extends GuiUpgradeable {
+
 	private TileEntityPlanter _planter;
 
 	private GuiButton _consumeToggle;
 
-	public GuiPlanter(ContainerUpgradeable container, TileEntityPlanter te)
-	{
+	public GuiPlanter(ContainerUpgradeable container, TileEntityPlanter te) {
+
 		super(container, te);
 		_planter = te;
 		ySize = 201;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void initGui()
-	{
+	public void initGui() {
+
 		super.initGui();
-		_consumeToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 87, 100, 20, "Consume Stack: On");
-		_consumeToggle.displayString = _planter.getConsumeAll() ? "Consume Stack: Off" : "Consume Stack: On";
+		_consumeToggle = new GuiButton(1, (this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 87, 100, 20, "");
 		buttonList.add(_consumeToggle);
 	}
 
 	@Override
-	public void updateScreen()
-	{
-		super.updateScreen();
+	protected void updateElementInformation() {
+
 		_consumeToggle.displayString = _planter.getConsumeAll() ? "Consume Stack: Off" : "Consume Stack: On";
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button)
-	{
+	protected void actionPerformed(GuiButton button) {
+
 		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString("Filter", 8, 22, 4210752); // TODO: Localize
+		fontRendererObj.drawString(MFRUtil.localize("info.cofh.filter"), 8, 22, 4210752);
 	}
+
 }
