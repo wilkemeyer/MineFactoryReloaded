@@ -24,19 +24,18 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import powercrystals.minefactoryreloaded.core.IDelayedValidate;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.net.ConnectionHandler;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
-public class TileEntityTank extends TileEntityFactory implements ITankContainerBucketable, IDelayedValidate
-{
+public class TileEntityTank extends TileEntityFactory implements ITankContainerBucketable, IDelayedValidate {
+
 	public static int CAPACITY = FluidHelper.BUCKET_VOLUME * 4;
 	TankNetwork grid;
 	FluidTankAdv _tank;
 	protected byte sides;
 
-	public TileEntityTank()
-	{
+	public TileEntityTank() {
+
 		super(null);
 		setManageFluids(true);
 		_tank = new FluidTankAdv(CAPACITY);
@@ -44,12 +43,13 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 	@Override
 	public boolean canUpdate() {
+
 		return false;
 	}
 
 	@Override
-	public void invalidate()
-	{
+	public void invalidate() {
+
 		super.invalidate();
 		if (worldObj.isRemote)
 			return;
@@ -67,12 +67,13 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 	@Override
 	public final boolean isNotValid() {
+
 		return isInvalid();
 	}
 
 	@Override
-	public void firstTick()
-	{
+	public void firstTick() {
+
 		if (!inWorld) return;
 		for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
 			if (to.offsetY != 0 || !BlockPosition.blockExists(this, to))
@@ -80,8 +81,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
 			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.getStorage().getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
-					if (tank.grid == grid || tank.grid.addNode(this))
-					{
+					if (tank.grid == grid || tank.grid.addNode(this)) {
 						tank.join(to.getOpposite());
 						join(to);
 					}
@@ -92,40 +92,41 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public void validate()
-	{
-		super.validate();
+	public void cofh_validate() {
+
+		super.cofh_validate();
 		if (worldObj.isRemote)
 			return;
-		ConnectionHandler.update(this);
+		firstTick();
 	}
 
-	public void join(ForgeDirection from)
-	{
+	public void join(ForgeDirection from) {
+
 		sides |= (1 << from.ordinal());
 		markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public void part(ForgeDirection from)
-	{
+	public void part(ForgeDirection from) {
+
 		sides &= ~(1 << from.ordinal());
 		markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public boolean isInterfacing(ForgeDirection to)
-	{
+	public boolean isInterfacing(ForgeDirection to) {
+
 		return 0 != (sides & (1 << to.ordinal()));
 	}
 
-	int interfaceCount()
-	{
+	int interfaceCount() {
+
 		return Integer.bitCount(sides);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
+
 		if (grid == null)
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
@@ -139,10 +140,10 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+
 		super.onDataPacket(net, pkt);
 		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
-		{
+		switch (pkt.func_148853_f()) {
 		case 0:
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(data.getCompoundTag("fluid"));
 			_tank.setFluid(fluid);
@@ -155,90 +156,91 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 	@Override
 	public String getDataType() {
+
 		return "tile.mfr.tank.name";
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		super.writeItemNBT(tag);
 		if (_tank.getFluidAmount() != 0)
 			tag.setTag("tank", _tank.writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		_tank.readFromNBT(tag.getCompoundTag("tank"));
 	}
 
-	public FluidStack getFluid()
-	{
+	public FluidStack getFluid() {
+
 		if (grid == null)
 			return _tank.getFluid();
 		return grid.getStorage().getFluid();
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+
 		if (grid == null)
 			return 0;
 		return grid.getStorage().fill(resource, doFill);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+
 		if (grid == null)
 			return null;
 		return grid.getStorage().drain(resource, doDrain);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+
 		if (grid == null)
 			return worldObj.isRemote ? _tank.drain(maxDrain, false) : null;
 		return grid.getStorage().drain(maxDrain, doDrain);
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+
 		return grid != null;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+
 		return grid != null;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+
 		if (grid == null)
 			return FluidHelper.NULL_TANK_INFO;
 		return new FluidTankInfo[] { grid.getStorage().getInfo() };
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
+	public boolean allowBucketFill(ItemStack stack) {
+
 		return stack.getItem() != MFRThings.plasticTankItem;
 	}
 
 	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
+	public boolean allowBucketDrain(ItemStack stack) {
+
 		return true;
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug)
-	{
+	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+
 		if (debug) {
 			info.add(new ChatComponentText("Grid: " + grid));
 			if (grid != null)
@@ -255,7 +257,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			info.add(new ChatComponentText(MFRUtil.empty()));
 		else
 			info.add(new ChatComponentText(MFRUtil.getFluidName(grid.getStorage().getFluid())));
-		info.add(new ChatComponentText((grid.getStorage().getFluidAmount() / (float)grid.getStorage().getCapacity() * 100f) + "%"));
+		info.add(new ChatComponentText((grid.getStorage().getFluidAmount() / (float) grid.getStorage().getCapacity() * 100f) + "%"));
 		if (debug) {
 			info.add(new ChatComponentText("Sides: " + Integer.toBinaryString(sides)));
 			info.add(new ChatComponentText(grid.getStorage().getFluidAmount() + " / " + grid.getStorage().getCapacity()));
@@ -265,4 +267,5 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 					" | Reserve: " + grid.getStorage().tanks.length));
 		}
 	}
+
 }
