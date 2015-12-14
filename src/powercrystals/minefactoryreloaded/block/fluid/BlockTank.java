@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +47,23 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	public int getRenderType() {
 
 		return MineFactoryReloadedCore.renderIdFluidTank;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+
+		Block block = world.getBlock(x, y, z);
+		if (side > 1 && block.equals(this)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+
+		return false;
 	}
 
 	@Override

@@ -201,7 +201,6 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 			renderer.renderFaceYNeg(block, x, y, z, block.getIcon(blockAccess, x, y, z, 0));
 			render = true;
 		}
-		if (!isBlock(blockAccess, x, y - 1, z, block))
 		{
 			tessellator.setBrightness(b2);
 			tessellator.setColorOpaque_F(1, 1, 1);
@@ -223,7 +222,6 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 			renderer.renderFaceYPos(block, x, y, z, block.getIcon(blockAccess, x, y, z, 1));
 			render = true;
 		}
-		if (!isBlock(blockAccess, x, y + 1, z, block))
 		{
 			tessellator.setBrightness(b2);
 			tessellator.setColorOpaque_F(1, 1, 1);
