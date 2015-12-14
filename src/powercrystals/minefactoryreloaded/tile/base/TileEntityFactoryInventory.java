@@ -279,7 +279,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected boolean canUseUpgrade(ItemStack stack, IAugmentItem item) {
 
-		return item.getAugmentLevel(stack, "radius") != 0;
+		return _areaManager != null && item.getAugmentLevel(stack, "radius") != 0;
 	}
 
 	public boolean isUsableAugment(ItemStack stack) {
