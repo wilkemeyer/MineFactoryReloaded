@@ -37,7 +37,7 @@ public class ContainerLiquiCrafter extends ContainerFactoryInventory {
 	}
 
 	@Override
-	public boolean performMerge(int slot, ItemStack stackInSlot) {
+	protected boolean performMerge(int slot, ItemStack stackInSlot) {
 
 		if (slot == 9) {
 			return false;
