@@ -125,6 +125,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 				setActivationEnergy(_workTicks * (e + e * (level >> 1) + ((e * (level & 1)) >> 1)));
 			}
 		} else {
+			if (_workTicks > 1) {
+				setActivationEnergy(_machine.getActivationEnergy());
+			}
 			_workTicks = 1;
 		}
 	}
