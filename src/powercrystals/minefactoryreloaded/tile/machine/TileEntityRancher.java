@@ -88,7 +88,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 						didDrop = true;
 					}
 					if (didDrop) {
-						markDirty();
 						setIdleTicks(20);
 						return true;
 					}

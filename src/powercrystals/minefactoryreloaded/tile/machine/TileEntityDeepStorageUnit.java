@@ -120,6 +120,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	protected void onFactoryInventoryChanged() {
 
+		super.onFactoryInventoryChanged();
 		if (_ignoreChanges | worldObj == null || worldObj.isRemote)
 			return;
 

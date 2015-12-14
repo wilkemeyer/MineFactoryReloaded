@@ -169,6 +169,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	@Override
 	protected void onFactoryInventoryChanged() {
 
+		super.onFactoryInventoryChanged();
 		boost = 0;
 		_needItem = false;
 		if (!client && _inventory[0] != null) {

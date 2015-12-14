@@ -65,12 +65,6 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	protected void onFactoryInventoryChanged() {
-
-		_areaManager.updateUpgradeLevel(_inventory[0]);
-	}
-
-	@Override
 	public void updateEntity() {
 
 		super.updateEntity();

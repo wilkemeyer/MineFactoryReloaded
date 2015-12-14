@@ -27,8 +27,8 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerUnifier;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityUnifier extends TileEntityFactoryInventory implements ITankContainerBucketable
-{
+public class TileEntityUnifier extends TileEntityFactoryInventory implements ITankContainerBucketable {
+
 	private boolean ignoreChange = false;
 	private static FluidStack _biofuel;
 	private static FluidStack _ethanol;
@@ -36,60 +36,53 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 
 	private Map<String, ItemStack> _preferredOutputs = new HashMap<String, ItemStack>();
 
-	public TileEntityUnifier()
-	{
+	public TileEntityUnifier() {
+
 		super(Machine.Unifier);
 		_roundingCompensation = 1;
 		setManageSolids(true);
 	}
 
-	public static void updateUnifierLiquids()
-	{
+	public static void updateUnifierLiquids() {
+
 		_biofuel = FluidRegistry.getFluidStack("biofuel", 1);
 		_ethanol = FluidRegistry.getFluidStack("bioethanol", 1);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiUnifier(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerUnifier getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerUnifier getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerUnifier(this, inventoryPlayer);
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
+	public boolean canUpdate() {
+
 		return false;
 	}
 
-	private void unifyInventory()
-	{
-		if (worldObj != null && !worldObj.isRemote)
-		{
+	private void unifyInventory() {
+
+		if (worldObj != null && !worldObj.isRemote) {
 			ItemStack output = null;
-			if (_inventory[0] != null)
-			{
+			if (_inventory[0] != null) {
 				List<String> names = OreDictionaryArbiter.getAllOreNames(_inventory[0]);
 				// tracker does *not* also check the wildcard meta,
 				// avoiding issues with saplings and logs, etc.
 
-				if (names == null || names.size() != 1 || MFRRegistry.getUnifierBlacklist().containsKey(names.get(0)))
-				{
+				if (names == null || names.size() != 1 || MFRRegistry.getUnifierBlacklist().containsKey(names.get(0))) {
 					output = _inventory[0].copy();
-				}
-				else if (_preferredOutputs.containsKey(names.get(0)))
-				{
+				} else if (_preferredOutputs.containsKey(names.get(0))) {
 					output = _preferredOutputs.get(names.get(0)).copy();
 					output.stackSize = _inventory[0].stackSize;
-				}
-				else
-				{
+				} else {
 					output = OreDictionaryArbiter.getOres(names.get(0)).get(0).copy();
 					output.stackSize = _inventory[0].stackSize;
 				}
@@ -102,55 +95,43 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		}
 	}
 
-	private void moveItemStack(ItemStack source)
-	{
-		if(source == null)
-		{
+	private void moveItemStack(ItemStack source) {
+
+		if (source == null) {
 			return;
 		}
 
 		int amt = source.stackSize;
 
-		if(_inventory[1] == null)
-		{
+		if (_inventory[1] == null) {
 			amt = Math.min(Math.min(getInventoryStackLimit(), source.getMaxStackSize()),
-					source.stackSize);
-		}
-		else if(!UtilInventory.stacksEqual(source, _inventory[1], false))
-		{
+				source.stackSize);
+		} else if (!UtilInventory.stacksEqual(source, _inventory[1], false)) {
 			return;
-		}
-		else if(source.getTagCompound() != null || _inventory[1].getTagCompound() != null)
-		{
+		} else if (source.getTagCompound() != null || _inventory[1].getTagCompound() != null) {
 			return;
-		}
-		else
-		{
+		} else {
 			amt = Math.min(source.stackSize,
-					_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
+				_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
 		}
 
-		if(_inventory[1] == null)
-		{
+		if (_inventory[1] == null) {
 			_inventory[1] = source.copy();
 			_inventory[1].stackSize = amt;
 			_inventory[0].stackSize -= amt;
-		}
-		else
-		{
+		} else {
 			_inventory[1].stackSize += amt;
 			_inventory[0].stackSize -= amt;
 		}
 
-		if(_inventory[0].stackSize == 0)
-		{
+		if (_inventory[0].stackSize == 0) {
 			_inventory[0] = null;
 		}
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+
 		_inventory[slot] = stack;
 		if (slot > 1)
 			updatePreferredOutput();
@@ -162,20 +143,16 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		ignoreChange = false;
 	}
 
-	protected void updatePreferredOutput()
-	{
+	protected void updatePreferredOutput() {
+
 		_preferredOutputs.clear();
-		for(int i = 2; i < 11; i++)
-		{
-			if(_inventory[i] == null)
-			{
+		for (int i = 2; i < 11; i++) {
+			if (_inventory[i] == null) {
 				continue;
 			}
 			List<String> names = OreDictionaryArbiter.getAllOreNames(_inventory[i]);
-			if(names != null)
-			{
-				for(String name : names)
-				{
+			if (names != null) {
+				for (String name : names) {
 					_preferredOutputs.put(name, _inventory[i].copy());
 				}
 			}
@@ -183,10 +160,10 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	protected void onFactoryInventoryChanged()
-	{
-		if (!ignoreChange)
-		{
+	protected void onFactoryInventoryChanged() {
+
+		super.onFactoryInventoryChanged();
+		if (!ignoreChange) {
 			updatePreferredOutput();
 			unifyInventory();
 		}
@@ -204,79 +181,75 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 11;
 	}
 
 	@Override
-	public boolean shouldDropSlotWhenBroken(int slot)
-	{
+	public boolean shouldDropSlotWhenBroken(int slot) {
+
 		return slot < 2;
 	}
 
 	@Override
-	public int getInventoryStackLimit()
-	{
+	public int getInventoryStackLimit() {
+
 		return 64;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
+	public int getSizeInventorySide(ForgeDirection side) {
+
 		return 2;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
-	{
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+
 		return slot == 0;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
-	{
+	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+
 		return slot == 1;
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
+	public boolean allowBucketFill(ItemStack stack) {
+
 		return true;
 	}
 
 	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
+	public boolean allowBucketDrain(ItemStack stack) {
+
 		return true;
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if(resource == null || resource.amount == 0) return 0;
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+
+		if (resource == null || resource.amount == 0) return 0;
 
 		FluidStack converted = unifierTransformLiquid(resource, doFill);
 
-		if(converted == null || converted.amount == 0) return 0;
+		if (converted == null || converted.amount == 0) return 0;
 
 		int filled = _tanks[0].fill(converted, doFill);
 
-		if(filled == converted.amount)
-		{
+		if (filled == converted.amount) {
 			return resource.amount;
-		}
-		else
-		{
+		} else {
 			return filled * resource.amount / converted.amount +
 					(resource.amount & _roundingCompensation);
 		}
 	}
 
-	private FluidStack unifierTransformLiquid(FluidStack resource, boolean doFill)
-	{
-		if(_ethanol != null & _biofuel != null)
-		{
+	private FluidStack unifierTransformLiquid(FluidStack resource, boolean doFill) {
+
+		if (_ethanol != null & _biofuel != null) {
 			if (_ethanol.isFluidEqual(resource))
 				return new FluidStack(_biofuel, resource.amount);
 			else if (_biofuel.isFluidEqual(resource))
@@ -286,32 +259,32 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+
 		return drain(maxDrain, doDrain);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+
 		return drain(resource, doDrain);
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
-	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
+	protected FluidTankAdv[] createTanks() {
+
+		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+
 		return true;
 	}
 }

@@ -20,11 +20,12 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityPlanter extends TileEntityFactoryPowered
-{
+public class TileEntityPlanter extends TileEntityFactoryPowered {
+
 	protected boolean keepLastItem = false;
-	public TileEntityPlanter()
-	{
+
+	public TileEntityPlanter() {
+
 		super(Machine.Planter);
 		createHAM(this, 1);
 		_areaManager.setOverrideDirection(ForgeDirection.UP);
@@ -34,37 +35,29 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiPlanter(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerUpgradeable getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerUpgradeable getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerPlanter(this, inventoryPlayer);
 	}
 
 	@Override
-	protected void onFactoryInventoryChanged()
-	{
-		_areaManager.updateUpgradeLevel(_inventory[9]);
-	}
+	public boolean activateMachine() {
 
-	@Override
-	public boolean activateMachine()
-	{
 		BlockPosition bp = _areaManager.getNextBlock();
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
-		{
+		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 
 		ItemStack match = _inventory[getPlanterSlotIdFromBp(bp)];
 
-		for (int stackIndex = 10; stackIndex <= 25; stackIndex++)
-		{
+		for (int stackIndex = 10; stackIndex <= 25; stackIndex++) {
 			ItemStack availableStack = getStackInSlot(stackIndex);
 
 			// skip planting attempt if there's no stack in that slot,
@@ -72,13 +65,11 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 			if (availableStack == null ||
 					(match != null &&
 					!stacksEqual(match, availableStack)) ||
-					!MFRRegistry.getPlantables().containsKey(availableStack.getItem()))
-			{
+					!MFRRegistry.getPlantables().containsKey(availableStack.getItem())) {
 				continue;
 			}
 
-			if (keepLastItem && availableStack.stackSize < 2)
-			{
+			if (keepLastItem && availableStack.stackSize < 2) {
 				continue;
 			}
 			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(availableStack.getItem());
@@ -113,114 +104,110 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		super.writeItemNBT(tag);
 		tag.setBoolean("keepLastItem", keepLastItem);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		keepLastItem = tag.getBoolean("keepLastItem");
 	}
 
-	protected boolean stacksEqual(ItemStack a, ItemStack b)
-	{
+	protected boolean stacksEqual(ItemStack a, ItemStack b) {
+
 		if (a == null | b == null ||
 				(!a.getItem().equals(b.getItem())) ||
 				(a.getItemDamage() != b.getItemDamage()) ||
-				a.hasTagCompound() != b.hasTagCompound())
-		{
+				a.hasTagCompound() != b.hasTagCompound()) {
 			return false;
 		}
-		if (!a.hasTagCompound())
-		{
+		if (!a.hasTagCompound()) {
 			return true;
 		}
-		NBTTagCompound tagA = (NBTTagCompound)a.getTagCompound().copy(),
-				tagB = (NBTTagCompound)b.getTagCompound().copy();
-		tagA.removeTag("display"); tagB.removeTag("display");
-		tagA.removeTag("ench"); tagB.removeTag("ench");
-		tagA.removeTag("RepairCost"); tagB.removeTag("RepairCost");
+		NBTTagCompound tagA = (NBTTagCompound) a.getTagCompound().copy(), tagB = (NBTTagCompound) b.getTagCompound().copy();
+		tagA.removeTag("display");
+		tagB.removeTag("display");
+		tagA.removeTag("ench");
+		tagB.removeTag("ench");
+		tagA.removeTag("RepairCost");
+		tagB.removeTag("RepairCost");
 		return tagA.equals(tagB);
 	}
 
 	//assumes a 3x3 grid in inventory slots 0-8
 	//slot 0 is northwest, slot 2 is northeast, etc
-	protected int getPlanterSlotIdFromBp(BlockPosition bp)
-	{
+	protected int getPlanterSlotIdFromBp(BlockPosition bp) {
+
 		int radius = _areaManager.getRadius();
-		int xAdjusted = Math.round( 1.49F * (bp.x - this.xCoord) / radius);
-		int zAdjusted = Math.round( 1.49F * (bp.z - this.zCoord) / radius);
+		int xAdjusted = Math.round(1.49F * (bp.x - this.xCoord) / radius);
+		int zAdjusted = Math.round(1.49F * (bp.z - this.zCoord) / radius);
 		return 4 + xAdjusted + 3 * zAdjusted;
 	}
 
-	public boolean getConsumeAll()
-	{
+	public boolean getConsumeAll() {
+
 		return keepLastItem;
 	}
 
-	public void setConsumeAll(boolean b)
-	{
+	public void setConsumeAll(boolean b) {
+
 		keepLastItem = b;
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 26;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 1;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 5;
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side)
-	{
+	public int getStartInventorySide(ForgeDirection side) {
+
 		return 9;
 	}
 
 	@Override
-	public boolean shouldDropSlotWhenBroken(int slot)
-	{
+	public boolean shouldDropSlotWhenBroken(int slot) {
+
 		return slot > 8;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
+	public int getSizeInventorySide(ForgeDirection side) {
+
 		return 17;
 	}
 
 	@Override
-	public int getUpgradeSlot()
-	{
+	public int getUpgradeSlot() {
+
 		return 9;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
-	{
-		if (stack != null)
-		{
-			if (slot > 9)
-			{
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+
+		if (stack != null) {
+			if (slot > 9) {
 				IFactoryPlantable p = MFRRegistry.getPlantables().get(stack.getItem());
 				return p != null && p.canBePlanted(stack, false);
-			}
-			else if (slot == 9)
-			{
+			} else if (slot == 9) {
 				return isUsableAugment(stack);
 			}
 		}
@@ -228,8 +215,8 @@ public class TileEntityPlanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
-	{
+	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+
 		if (slot >= 10) return true;
 		return false;
 	}

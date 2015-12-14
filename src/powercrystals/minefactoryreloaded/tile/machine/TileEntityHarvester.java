@@ -144,12 +144,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	protected void onFactoryInventoryChanged() {
-
-		_areaManager.updateUpgradeLevel(_inventory[0]);
-	}
-
-	@Override
 	public boolean activateMachine() {
 
 		BlockPosition target = getNextHarvest();
