@@ -104,22 +104,24 @@ tile.mfr.road.light.on.name = Straßenlaterne
 tile.mfr.road.light.inverted.off.name = Invertierte Straßenlaterne
 tile.mfr.road.light.inverted.on.name = Invertierte Straßenlaterne
 
-tile.mfr.decorative.brick.glowstone.name = Glühsteinziegel
+tile.mfr.plastic.name = Plastikblock
+
 tile.mfr.decorative.brick.ice.name = Eisziegel
+tile.mfr.decorative.brick.glowstone.name = Glühsteinziegel
 tile.mfr.decorative.brick.lapis.name = Lapislazuliziegel
 tile.mfr.decorative.brick.obsidian.name = Obsidianziegel
 tile.mfr.decorative.brick.pavedstone.name = Gepflasterte Steinziegel
 tile.mfr.decorative.brick.snow.name = Schneeziegel
-tile.mfr.decorative.brick.glowstone_large.name = Großer Glühsteinziegel
 tile.mfr.decorative.brick.ice_large.name = Großer Eisziegel
+tile.mfr.decorative.brick.glowstone_large.name = Großer Glühsteinziegel
 tile.mfr.decorative.brick.lapis_large.name = Großer Lapislazuliziegel
 tile.mfr.decorative.brick.obsidian_large.name = Großer Obsidianziegel
-tile.mfr.decorative.brick.snow_large = Großer Schneeziegel
-tile.mfr.machineblock.prc.name = Programmierbarer RedNet Controller - Gehäuse
+tile.mfr.decorative.brick.pavedstone_large.name = Große Gepflasterte Steinziegel
+tile.mfr.decorative.brick.snow_large.name = Großer Schneeziegel
 tile.mfr.decorative.brick.meat.raw.name = Roher Fleischblock
 tile.mfr.decorative.brick.meat.cooked.name = Gekochter Fleischblock
-tile.mfr.decorative.brick.pavedstone_large.name = Große Gepflasterte Steinziegel
 tile.mfr.decorative.brick.brick_large.name = Große Ziegel
+tile.mfr.decorative.brick.sugar_charcoal.name = Zuckerkohleblock
 
 tile.mfr.decorative.stone.black.smooth.name = Glatter schwarzer Stein
 tile.mfr.decorative.stone.black.cobble.name = Schwarzer Pflasterstein
@@ -134,11 +136,15 @@ tile.mfr.decorative.stone.white.brick.large.name = Große weiße Ziegel
 tile.mfr.decorative.stone.white.gravel.name = Weißer Kies
 tile.mfr.decorative.stone.white.paved.name = Weißer gepflasterter Stein
 
+tile.mfr.pinkslime.block.name = Rosa Schleimblock
+
 tile.ice.unmelting.name = Nichtschmelzendes Eis
 
 tile.mfr.vinescaffold.name = Lianengerüst
 
 tile.mfr.detcord.name = Sprengschnur
+
+tile.mfr.farmland.name = Fruchtbare Erde
 
 tile.mfr.rubberwood.sapling.name = Gummibaumsetzling
 tile.mfr.rubberwood.sapling.sacred.name = Heiliger Gummibaumsetzling
@@ -157,8 +163,15 @@ tile.mfr.cable.redstone.name = RedNet-Kabel
 tile.mfr.cable.redstone.glass.name = RedNet-Kabel
 tile.mfr.cable.redstone.energy.name = RedNet-Energiekabel
 tile.mfr.cable.redstone.energyglass.name = RedNet-Energiekabel
+tile.mfr.cable.plastic.name = Plastikrohr
+
 tile.mfr.rednet.logic.name = Programmierbarer RedNet-Controller
 tile.mfr.rednet.panel.historian.name = Graph
+
+tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.prc.name = Gehäuse für den Programmierbaren RedNet-Controller
+
+tile.mfr.tank.name = Plastiktank
 
 fluid.mfr.milk.still.name = Milch
 fluid.mfr.sludge.still.name = Schlacke
@@ -190,17 +203,13 @@ item.mfr.plastic.cell.name = Plastikzelle
 item.mfr.plastic.cell.prefix.name = Zelle mit
 item.mfr.plastic.cell.suffix.name =
 
+item.mfr.glass.armor.helm.name = Sonnenbrille
+
 item.mfr.plastic.armor.helm.name  = Plastikhelm
 item.mfr.plastic.armor.chest.name = Plastikbrustpanzer
 item.mfr.plastic.armor.legs.name  = Plastikbeinschutz
 item.mfr.plastic.armor.boots.name = Plastikstiefel
 
-item.mfr.hammer.name = Schmiedehammer
-item.mfr.fertilizer.name = Industriedünger
-item.mfr.plastic.sheet.name = Plastikfolie
-item.mfr.plastic.raw.name = Rohplastik
-item.mfr.rubber.bar.name = Gummiriegel
-item.mfr.rubber.raw.name = Kautschuk
 item.mfr.syringe.cure.name = Dezombifikationsspritze
 item.mfr.syringe.empty.name = Leere Spritze
 item.mfr.syringe.empty.prefix.name = Spritze mit
@@ -209,31 +218,57 @@ item.mfr.syringe.growth.name = Wachstumsspritze
 item.mfr.syringe.health.name = Gesundheitsspritze
 item.mfr.syringe.slime.name = Schleimvergrößerungsspritze
 item.mfr.syringe.zombie.name = Zombifizierungsspritze
+
+item.mfr.machineblock.name = Maschinenblock
+item.mfr.hammer.name = Präzisionsschmiedehammer
+
+item.mfr.plastic = Plastik
+item.mfr.plastic.ability = Zäh
+item.mfr.plastic.sheet.name = Plastikfolie
+item.mfr.plastic.raw.name = Rohplastik
+item.mfr.plastic.bag.name = Plastiktüte
+
+item.mfr.rubber.bar.name = Gummiriegel
+item.mfr.rubber.raw.name = Kautschuk
 item.mfr.record.blank.name = Leere Schallplatte
+
 item.mfr.safarinet.reusable.name = Wiederverwendbares Safarinetz
 item.mfr.safarinet.singleuse.name = Wegwerfsafarinetz
 item.mfr.safarinet.jailer.name = Gefängnis-Safarinetz
+item.mfr.safarinet.jailer.fancy.name = Goldenes Gefängnis-Safarinetz
 item.mfr.safarinet.launcher.name = Safarinetzwerfer
-item.mfr.machineblock.name = Maschinenblock
+
 item.mfr.sugarcharcoal.name = Zuckerkohle
+item.mfr.fertilizer.name = Industriedünger
 item.mfr.milkbottle.name = Milchflasche
 item.mfr.spyglass.name = Fernglas
+item.mfr.ruler.name = Lineal
 item.mfr.xpextractor.name = Erfahrungsextrakteur
 item.mfr.portaspawner.name = Portalspawner
 item.mfr.straw.name = Strohhalm
+
 item.mfr.rednet.meter.name = RedNet-Messgerät
+item.mfr.rednet.meter.info.name = RedNet-Multimeter
+item.mfr.rednet.meter.debug.name = Debugger
 item.mfr.rednet.memorycard.name = PRC-Speicherkarte
-item.mfr.ruler.name = Lineal
+
 item.mfr.meat.ingot.raw.name = Roher Fleischbarren
 item.mfr.meat.ingot.cooked.name = Gekochter Fleischbarren
 item.mfr.meat.nugget.raw.name = Roher Fleischnugget
 item.mfr.meat.nugget.cooked.name = Gekochter Fleischnugget
-item.mfr.pinkslime.ball.name = Pinker Schleimball
+
+item.mfr.pinkslime = Rosa Schleim
+item.mfr.pinkslime.ability = Schleimig\nRosa
+item.mfr.pinkslime.ball.name = Rosa Schleimball
+item.mfr.pinkslime.gem.name = Rosa Schleimkristall
+
 item.mfr.rocket.name = Selbstangetriebene Anti-Material-Rakete (SPAMR)
 item.mfr.rocket.smart.name = Verfolgende Selbstangetriebene Anti-Material-Rakete
 item.mfr.rocketlauncher.name = SPAMR-Raketenwerfer
+
+item.mfr.potatolauncher.name = Kartoffelkanone
+
 item.mfr.fishingrod.name = Angel
-item.mfr.plastic.bag.name = Plastiktüte
 
 item.mfr.ceramicdye.white.name = Weiße Lasur
 item.mfr.ceramicdye.orange.name = Orange Lasur
@@ -289,13 +324,14 @@ item.mfr.upgrade.logic.500.name = PRC LX-500 Logische Erweiterungskarte
 item.mfr.needlegun.name = Needlegun
 item.mfr.needlegun.ammo.empty.name = Needlegun-Magazin
 item.mfr.needlegun.ammo.standard.name = Needlegun-Munition (Nadeln)
+item.mfr.needlegun.ammo.pierce.name = Needlegun Ammo (Splitter)
 item.mfr.needlegun.ammo.lava.name = Needlegun-Munition (Lava)
 item.mfr.needlegun.ammo.sludge.name = Needlegun-Munition (Schlacke)
 item.mfr.needlegun.ammo.sewage.name = Needlegun-Munition (Gülle)
 item.mfr.needlegun.ammo.fire.name = Needlegun-Munition (Feuer)
 item.mfr.needlegun.ammo.anvil.name = Needlegun-Munition (Amboss)
 
-circuit.mfr.noop = Keine Operation
+circuit.mfr.noop = (No-Op)
 circuit.mfr.adder.analog = Analoger Addierer
 circuit.mfr.adder.digital.full = Volladdierer
 circuit.mfr.adder.digital.half = Halbaddierer
@@ -368,6 +404,10 @@ circuit.mfr.xor.4 = XOR (4 Eingänge)
 container.mfr.radius = Radius:
 container.mfr.power = Energieverbrauch:
 
+container.mfr.autobrewer.resources = Ressourcen
+
+container.mfr.pendingDrops = Dies Maschine ist mit Items gestopft
+
 chat.info.mfr.safarinet.capture = Gewechselt in Fangmodus
 chat.info.mfr.safarinet.release = Gewechselt in Freilassmodus
 
@@ -392,6 +432,7 @@ chat.info.mfr.rednet.meter.dustprefix = Redstonestaub
 chat.info.mfr.rednet.memorycard.uploaded = PRC-Programm vom PRC auf Speicherkarte geladen
 chat.info.mfr.rednet.memorycard.downloaded = PRC-Programm von Speicherkarte auf PRC geladen
 chat.info.mfr.rednet.memorycard.error = PRC besutzt zu wenige Schaltkreise, um dieses Programm zu laden
+chat.info.mfr.rednet.memorycard.error2 = Diese RPC wird von jemandem benutzt
 
 chat.info.mfr.rednet.tile.standard = Kabel auf Standard-Verbindungsmodus gestellt
 chat.info.mfr.rednet.tile.cableonly = Kabel auf Nur-Kabel-Verbindungsmodus gestellt
@@ -401,36 +442,55 @@ chat.info.mfr.rednet.connection.forced = Seite auf Erzwungenen Verbindungsmodus 
 chat.info.mfr.rednet.connection.forcedstrong = Seite auf Verstärkten Verbindungsmodus gestellt
 chat.info.mfr.rednet.connection.cableonly = Seite auf Nur-Kabel-Verbindungsmodus gestellt
 
+chat.info.mfr.fluid.connection.disabled = Lege Seite fest, auf der Verbindungen verhindert werden sollen
+chat.info.mfr.fluid.connection.output = Lege Seite fest, die in den Ausgangsmodus gesetzt werden soll
+chat.info.mfr.fluid.connection.extract = Lege Seite fest, die in den Extraktionsmodus gesetzt werden soll
+
+chat.info.mfr.fluid.install.torch = Installierte Redstone-Fackel, RS-Steuerung invertiert
+chat.info.mfr.fluid.install.block = Installierter Redstone-Block, RS-Steuerung deaktiviert
+
 chat.info.mfr.bag.stacksize = Du kannst nur eine Tüte zur Zeit öffnen
 
 chat.info.mfr.chunkloader.noticket = Du hast zu viele Chunk-Loader, dieser funktioniert nicht.
 
-tip.info.mfr.cannotplace = Kann für %s weitere Sekunden nichts platzieren.
+# Tooltips: these can be added to any item by a lang file, but they cannot be removed
+# this is a limitation of the localization system.
+# Replace "item." or "tile." with "tip.info" and remove ".name" and that tooltip will be
+# displayed under the item with exceptions, such as the PRC which uses a custom entry for legacy reasons
 
-tip.info.mfr.holdShift1 = Halte
-tip.info.mfr.holdShift2 = Shift
-tip.info.mfr.holdShift3 = für weitere Informationen
+tip.info.mfr.hammer = Wie eine Zange, nur mehr zertrümmernd
+
+tip.info.mfr.rubberwood.sapling.massive = Warnung: Packratt's Weltenschiff.
+
+tip.info.mfr.prc = Wenn du nicht mehr weißt, wie es weitergeht, lese die Anleitung.
+
+tip.info.mfr.xpextractor = Benötigt einen leerer Behälter zum Füllen
+
+tip.info.mfr.mobcounter = Gibt ein analoges Redstonesignal ab\nproportinal zur Menge an\nMobs in Reichweite.
+
+tip.info.mfr.laserdrill = Platziert über einem Lock zu Bedrock oder dem Nichts
+tip.info.mfr.laserdrillprecharger = Plaziert einen Block von einem validen Laserziel entfernt
+
+# These tooltips are not the entire tooltip, but part of a custom format or entry
+
+tip.info.mfr.cannotplace = Kann für %s weitere Sekunden nichts platzieren.
 
 tip.info.mfr.safarinet.mode = Shift-klicke, um Modus zu ändern
 tip.info.mfr.safarinet.persistent = Freigelassene Kreaturen verschwinden nicht auf normale Weise
+tip.info.mfr.safarinet.nametag = Freigelassene Kreaturen werden immer ihr Namensschild zeigen
 tip.info.mfr.safarinet.mystery = Es ist ein Mysterium
 
-tip.info.mfr.prc = Wenn du dich verloren fühlst, lies das (Ingame-)Benutzerhandbuch
+tip.info.mfr.memorycard.programmedFor = Programmiert von:\n      \u00A7a%s
+tip.info.mfr.memorycard.programmed = \u0020     \u00A7aProgrammierte %d Schaltungen
+tip.info.mfr.memorycard.wipe = Platziere in Fertigungsgitter zum Löschen
 
-tip.info.mfr.needlegun.ammo = Schuss
+tip.info.mfr.generator.produces = Produziert nur RF.
 
-tip.info.mfr.upgrade.radius = Radius-Erhöhung: %s
+tip.info.mfr.dsu.contains = Enthält %s
 
-tip.info.mfr.xpextractor = Benötigt einen Leeren Behälter zum Füllen
+tip.info.mfr.needlegun.ammo = %s Kugeln
 
-tip.info.mfr.generator.produces = Produziert MJ, und RF.
-
-tip.info.mfr.dsu.contains = Enthält
-
-tip.info.mfr.mobcounter = Sendet ein analoges Redstone-Signal aus,\nproportional zur Menge an\nLebewesen in Reichweite.
-
-tip.info.mfr.laserdrill = Wird über einem bis Bedrock oder ins Leere gehenden Loch platziert
-tip.info.mfr.laserdrillprecharger = Wird einen Block von einem gültigen Laser-Ziel entfernt platziert
+tip.info.mfr.upgrade.radius = Radius increase: %s
 
 death.attack.mfr.slaughterhouse = %1$s wurde zu flüssigem Fleisch verarbeitet
 death.attack.mfr.slaughterhouse.player = %1$s wurde von %2$s dazu verdammt, zu flüssigem Fleisch verarbeitet zu werden
