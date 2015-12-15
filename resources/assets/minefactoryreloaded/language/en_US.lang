@@ -406,7 +406,8 @@ container.mfr.power = Energy draw:
 
 container.mfr.autobrewer.resources = Resources
 
-container.mfr.pendingDrops = This machine has stuffed items
+container.mfr.pendingDrops = This machine has \u00A7cstuffed items
+container.mfr.redstoneSignal = This machine has a \u00A74Redstone signal
 
 chat.info.mfr.safarinet.capture = Changed to capture mode
 chat.info.mfr.safarinet.release = Changed to release mode

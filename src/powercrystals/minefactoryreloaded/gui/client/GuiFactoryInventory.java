@@ -257,8 +257,13 @@ public class GuiFactoryInventory extends GuiBase {
 			tooltipHeight += 2 + (lines.size() - 1) * 10;
 		}
 
-		if (this.guiTop + yStart + tooltipHeight + 6 > this.height) {
-			yStart = this.height - tooltipHeight - this.guiTop - 6;
+		if (xStart + tooltipWidth + 6 > width) {
+			xStart -= 28 + tooltipWidth;
+			xStart &= ~xStart >> 31;
+		}
+
+		if (guiTop + yStart + tooltipHeight + 6 > height) {
+			yStart = height - tooltipHeight - guiTop - 6;
 		}
 
 		this.zLevel = 300.0F;

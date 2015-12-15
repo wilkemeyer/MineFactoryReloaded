@@ -50,6 +50,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 		}
 
 		if (_container.drops) {
+			bindTexture(texture);
 			this.drawTexturedModalRect(130, 39, 232, 50, 24, 16);
 		}
 	}
@@ -75,7 +76,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY) {
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(texture);
+		bindTexture(texture);
 		int x = (width - xSize - 56) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -111,7 +112,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 			vertOffset = vertOffset + 16;
 		}
 
-		this.mc.renderEngine.bindTexture(texture);
+		bindTexture(texture);
 		this.drawTexturedModalRect(xOffset, yOffset - 33, 232, 0, 16, 33);
 	}
 

@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import static powercrystals.minefactoryreloaded.core.MFRUtil.*;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -37,7 +38,13 @@ public class GuiFactoryPowered extends GuiFactoryInventory {
 		} else if (isPointInRegion(150, 15, 8, 60, mouseX, mouseY)) {
 			drawBarTooltip(work(), "Wk", _tePowered.getWorkDone(), _tePowered.getWorkMax(), mouseX, mouseY);
 		} else if (isPointInRegion(160, 15, 8, 60, mouseX, mouseY)) {
-			drawBarTooltip(idle(), "t", _tePowered.getIdleTicks(), _tePowered.getIdleTicksMax(), mouseX, mouseY);
+			String[] e = null;
+			if (_container.drops) {
+				e = new String[] {"", MFRUtil.localize("container.mfr.pendingDrops")};
+			} else if (_container.redstone) {
+				e = new String[] {"", MFRUtil.localize("container.mfr.redstoneSignal")};
+			}
+			drawBarTooltip(idle(), "t", _tePowered.getIdleTicks(), _tePowered.getIdleTicksMax(), mouseX, mouseY, e);
 		} else
 			super.drawTooltips(mouseX, mouseY);
 	}
