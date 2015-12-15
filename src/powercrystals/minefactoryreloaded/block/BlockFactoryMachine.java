@@ -198,6 +198,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 
+		super.onBlockPlacedBy(world, x, y, z, entity, stack);
 		if (entity != null) {
 			TileEntity te = getTile(world, x, y, z);
 			if (te instanceof IRotateableTile)
@@ -224,7 +225,6 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 					((TileEntityFactory) te).setOwner(null);
 			}
 		}
-		super.onBlockPlacedBy(world, x, y, z, entity, stack);
 	}
 
 	@Override

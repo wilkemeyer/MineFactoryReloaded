@@ -196,7 +196,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 			}
 
 			onRotate();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -207,14 +206,15 @@ public abstract class TileEntityFactory extends TileEntityBase
 		_forwardDirection = ForgeDirection.getOrientation(rotation);
 		if (worldObj != null && p != _forwardDirection) {
 			onRotate();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
 	protected void onRotate() {
 
 		if (!isInvalid() && worldObj.blockExists(xCoord, yCoord, zCoord)) {
+			markForUpdate();
 			MFRUtil.notifyNearbyBlocks(worldObj, xCoord, yCoord, zCoord, getBlockType());
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -374,6 +374,9 @@ public abstract class TileEntityFactory extends TileEntityBase
 
 		super.writeToNBT(tag);
 		tag.setInteger("rotation", getDirectionFacing().ordinal());
+		if (!Strings.isNullOrEmpty(_owner))
+			tag.setString("owner", _owner);
+		tag.setBoolean("a", _isActive);
 	}
 
 	@Override
@@ -384,14 +387,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 			rotateDirectlyTo(tag.getInteger("rotation"));
 		if (tag.hasKey("owner"))
 			_owner = tag.getString("owner");
-	}
-
-	@Override
-	public void writeItemNBT(NBTTagCompound tag) {
-
-		super.writeItemNBT(tag);
-		if (!Strings.isNullOrEmpty(_owner))
-			tag.setString("owner", _owner);
+		_isActive = tag.getBoolean("a");
 	}
 
 	public void onRedNetChanged(ForgeDirection side, int value) {
