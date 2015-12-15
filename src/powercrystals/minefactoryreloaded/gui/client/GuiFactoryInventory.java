@@ -39,6 +39,7 @@ public class GuiFactoryInventory extends GuiBase {
 		decimal_format.setMinimumFractionDigits(1);
 	}
 	protected TileEntityFactoryInventory _tileEntity;
+	protected ContainerFactoryInventory _container;
 	protected int _barSizeMax = 60;
 
 	protected int _tankSizeMax = 60;
@@ -51,6 +52,7 @@ public class GuiFactoryInventory extends GuiBase {
 	public GuiFactoryInventory(ContainerFactoryInventory container, TileEntityFactoryInventory tileEntity) {
 
 		super(container, new ResourceLocation(MineFactoryReloadedCore.guiFolder + tileEntity.getGuiBackground() + ".png"));
+		_container = container;
 		drawInventory = drawTitle = false;
 		_tileEntity = tileEntity;
 		if (CoFHProps.enableColorBlindTextures) {
@@ -195,6 +197,11 @@ public class GuiFactoryInventory extends GuiBase {
 
 	protected void drawBarTooltip(String name, String unit, int value, int max, int x, int y) {
 
+		drawBarTooltip(name, unit, value, max, x, y, (String[]) null);
+	}
+
+	protected void drawBarTooltip(String name, String unit, int value, int max, int x, int y, String... extra) {
+
 		List<String> lines = new ArrayList<String>(2);
 		lines.add(name);
 		String m = String.valueOf(max);
@@ -202,6 +209,11 @@ public class GuiFactoryInventory extends GuiBase {
 		while (v.length() < m.length())
 			v = " " + v;
 		lines.add(v + " / " + m + " " + unit);
+		if (extra != null) {
+			for (String l : extra) {
+				lines.add(l);
+			}
+		}
 		drawTooltip(lines, x, y);
 	}
 

@@ -19,14 +19,12 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLiquiCrafter;
 public class GuiLiquiCrafter extends GuiFactoryInventory {
 
 	private TileEntityLiquiCrafter _crafter;
-	private ContainerLiquiCrafter container;
 	private static final int TANK_OFFSET_X = -22;
 
 	public GuiLiquiCrafter(ContainerLiquiCrafter container, TileEntityLiquiCrafter router) {
 
 		super(container, router);
 		_crafter = router;
-		this.container = container;
 		xSize = 232;
 		ySize = 215;
 		_xOffset = _xOffset + 28;
@@ -51,7 +49,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 			}
 		}
 
-		if (container.drops) {
+		if (_container.drops) {
 			this.drawTexturedModalRect(130, 39, 232, 50, 24, 16);
 		}
 	}
@@ -68,7 +66,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 			tankY /= 35;
 			int i = tankX + tankY * 3;
 			drawTankTooltip(_crafter.getTanks()[i], mouseX, mouseY);
-		} else if (container.drops && isPointInRegion(130, 39, 24, 16, mouseX, mouseY)) {
+		} else if (_container.drops && isPointInRegion(130, 39, 24, 16, mouseX, mouseY)) {
 			this.drawTooltip(Arrays.asList(MFRUtil.localize("container.mfr.pendingDrops")), mouseX, mouseY);
 		}
 	}
