@@ -94,7 +94,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 			return;
 		}
 
-		if (_rednetState != 0 || CoreUtils.isRedstonePowered(this)) {
+		if (_rednetState > 0 || CoreUtils.isRedstonePowered(this)) {
 			setIdleTicks(getIdleTicksMax());
 		} else if (_idleTicks > 0) {
 			_idleTicks--;
@@ -119,10 +119,10 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		if (AugmentHelper.isAugmentItem(stack)) {
 			IAugmentItem item = (IAugmentItem) stack.getItem();
 			int level = item.getAugmentLevel(stack, "machineSpeed");
-			if (level > 0) {
+			if (level >= 0) {
 				_workTicks = (int) Math.pow(2, level);
 				int e = _machine.getActivationEnergy();
-				setActivationEnergy(_workTicks * (e + e * (level >> 1) + ((e * (level & 1)) >> 1)));
+				setActivationEnergy(_workTicks * (e + ((e * level) >> 1)));
 			}
 		} else {
 			if (_workTicks > 1) {
