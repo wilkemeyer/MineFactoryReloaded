@@ -54,12 +54,10 @@ public class ContainerFactoryInventory extends ContainerBase {
 
 		FluidTankInfo[] tank = _te.getTankInfo(ForgeDirection.UNKNOWN);
 		int n = tank.length;
-		if (n == 0)
-			return;
 		for (int i = 0; i < crafters.size(); i++) {
-			for (int j = n; j-- > 0;) {
-				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 33, (_te.hasDrops() ? 1 : 0) |
+			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 33, (_te.hasDrops() ? 1 : 0) |
 					(CoreUtils.isRedstonePowered(_te) ? 2 : 0));
+			for (int j = n; j-- > 0;) {
 				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 30, j);
 				if (tank[j] != null && tank[j].fluid != null) {
 					((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 31, tank[j].fluid.amount);
@@ -89,7 +87,7 @@ public class ContainerFactoryInventory extends ContainerBase {
 			} else {
 				_te.getTanks()[_tankIndex].setFluid(new FluidStack(fluid, _tankAmount));
 			}
-		}  else if (var == 33) {
+		} else if (var == 33) {
 			drops = (value & 1) != 0;
 			redstone = (value & 2) != 0;
 		}
