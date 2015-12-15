@@ -77,7 +77,11 @@ public class FluidNetwork implements IGrid {
 			if (nodeSet.remove(cond)) {
 				cond.fluidForGrid = storage.drain(share, true);
 				nodeRemoved(cond);
+			} else {
+				cond.fluidForGrid = storage.drain(0, false);
 			}
+		} else {
+			cond.fluidForGrid = storage.drain(0, false);
 		}
 		rebalanceGrid();
 	}
