@@ -24,10 +24,11 @@ public class HarvestableShrub extends HarvestableStandard {
 
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 
-		boolean doublePlant = getPlant() == Blocks.double_plant;
+		boolean doublePlant = getPlant() == Blocks.double_plant, top = false;
 
 		int meta = world.getBlockMetadata(x, y, z);
-		if (doublePlant && meta == 8) {
+		if (doublePlant && (meta & 8) == 8) {
+			top = true;
 			meta = world.getBlockMetadata(x, y - 1, z);
 		}
 
@@ -48,7 +49,20 @@ public class HarvestableShrub extends HarvestableStandard {
 			drops.addAll(getPlant().getDrops(world, x, y, z, meta, 0));
 		}
 
+		if (doublePlant && top) {
+			world.setBlock(x, y - 1, z, Blocks.air, 0, 2);
+		}
+
 		return drops;
+	}
+
+	@Override
+	public void postHarvest(World world, int x, int y, int z) {
+
+		super.postHarvest(world, x, y, z);
+		if (getPlant() == Blocks.double_plant) {
+			super.postHarvest(world, x, y - 1, z);
+		}
 	}
 
 }
