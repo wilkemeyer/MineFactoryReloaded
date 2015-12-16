@@ -9,69 +9,46 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import powercrystals.minefactoryreloaded.api.HarvestType;
-import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 
-public class HarvestableShrub implements IFactoryHarvestable
-{
-	private Block _block;
+public class HarvestableShrub extends HarvestableStandard {
 
-	public HarvestableShrub(Block block)
-	{
-		_block = block;
+	public HarvestableShrub(Block block) {
+
+		super(block, HarvestType.Normal);
 	}
 
 	@Override
-	public Block getPlant()
-	{
-		return _block;
-	}
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z) {
 
-	@Override
-	public HarvestType getHarvestType()
-	{
-		return HarvestType.Normal;
-	}
-
-	@Override
-	public boolean breakBlock()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
-	{
-		return true;
-	}
-
-	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
-	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 
+		boolean doublePlant = getPlant() == Blocks.double_plant;
+
 		int meta = world.getBlockMetadata(x, y, z);
-		if (!harvesterSettings.get("silkTouch") && (
-				(_block == Blocks.tallgrass && meta == 1) ||
-				(_block == Blocks.double_plant && meta == 2)))
-		{
-			drops.addAll(_block.getDrops(world, x, y, z, meta, 0));
+		if (doublePlant && meta == 8) {
+			meta = world.getBlockMetadata(x, y - 1, z);
 		}
-		else
-		{
-			drops.add(new ItemStack(_block, 1, meta));
+
+		if (harvesterSettings.get("silkTouch") == Boolean.TRUE &&
+				((getPlant() == Blocks.tallgrass && (meta == 1 || meta == 2)) ||
+				(doublePlant && (meta == 2 || meta == 3)))) {
+			int size = 1, oMeta = 1;
+			if (doublePlant) {
+				size = 2;
+				if (meta == 3) {
+					oMeta = 2;
+				}
+			} else if (meta == 2) {
+				oMeta = 2;
+			}
+			drops.add(new ItemStack(Blocks.tallgrass , size, oMeta));
+		} else {
+			drops.addAll(getPlant().getDrops(world, x, y, z, meta, 0));
 		}
 
 		return drops;
 	}
 
-	@Override
-	public void preHarvest(World world, int x, int y, int z)
-	{
-	}
-
-	@Override
-	public void postHarvest(World world, int x, int y, int z)
-	{
-	}
 }

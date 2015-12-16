@@ -44,7 +44,6 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCocoa
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableCropPlant;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableGourd;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableMushroom;
-import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableNetherWart;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableShrub;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStandard;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStemPlant;
@@ -66,12 +65,12 @@ import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableHorse;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 @Mod(modid = "MineFactoryReloaded|CompatVanilla", name = "MFR Compat: Vanilla", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded",
-customProperties = @CustomProperty(k = "cofhversion", v = "true"))
-public class Vanilla
-{
+		customProperties = @CustomProperty(k = "cofhversion", v = "true"))
+public class Vanilla {
+
 	@EventHandler
-	public void load(FMLInitializationEvent event)
-	{
+	public void load(FMLInitializationEvent event) {
+
 		MFRRegistry.registerPlantable(new PlantableSapling(Blocks.sapling));
 		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.brown_mushroom));
 		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.red_mushroom));
@@ -105,28 +104,25 @@ public class Vanilla
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.wheat, 7));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.carrots, 7));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.potatoes, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.nether_wart, 3));
 		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.vine));
-		MFRRegistry.registerHarvestable(new HarvestableNetherWart());
 		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.cocoa));
 
-		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.sapling));
-		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.wheat, 7));
-		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.carrots, 7));
-		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable)Blocks.potatoes, 7));
-		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.brown_mushroom));
-		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable)Blocks.red_mushroom));
-		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable)Blocks.pumpkin_stem));
-		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable)Blocks.melon_stem));
+		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.sapling));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.wheat, 7));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.carrots, 7));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.potatoes, 7));
+		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.brown_mushroom));
+		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.red_mushroom));
+		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable) Blocks.pumpkin_stem));
+		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable) Blocks.melon_stem));
 		MFRRegistry.registerFertilizable(new FertilizableNetherWart());
 		MFRRegistry.registerFertilizable(new FertilizableCocoa(Blocks.cocoa));
 		MFRRegistry.registerFertilizable(new FertilizableGrass());
 
-		if(MFRConfig.enableBonemealFertilizing.getBoolean(false))
-		{
+		if (MFRConfig.enableBonemealFertilizing.getBoolean(false)) {
 			MFRRegistry.registerFertilizer(new FertilizerStandard(Items.dye, 15));
-		}
-		else
-		{
+		} else {
 			MFRRegistry.registerFertilizer(new FertilizerStandard(Items.dye, 15, FertilizerType.Grass));
 		}
 
@@ -140,23 +136,23 @@ public class Vanilla
 		MFRRegistry.registerGrinderBlacklist(EntityWither.class);
 		MFRRegistry.registerGrinderBlacklist(EntityVillager.class);
 
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityChicken.class, new MobDrop[]
-				{
-			new MobDrop(30, null),
-			new MobDrop(10, new ItemStack(Items.egg))
-				}, false));
-		MFRRegistry.registerGrindable(new GrindableStandard(EntityOcelot.class, new MobDrop[]
-				{
-			new MobDrop(10, new ItemStack(Items.fish)),
-			new MobDrop(10, new ItemStack(Items.string))
-				}));
+		MFRRegistry.registerGrindable(new GrindableStandard(EntityChicken.class, new MobDrop[] {
+				new MobDrop(30, null),
+				new MobDrop(10, new ItemStack(Items.egg))
+		}, false));
+		MFRRegistry.registerGrindable(new GrindableStandard(EntityOcelot.class, new MobDrop[] {
+				new MobDrop(10, new ItemStack(Items.fish)),
+				new MobDrop(10, new ItemStack(Items.string))
+		}));
 		MFRRegistry.registerGrindable(new GrindableStandard(EntityWolf.class, new ItemStack(Items.bone)));
 		MFRRegistry.registerGrindable(new GrindableZombiePigman());
 		MFRRegistry.registerGrindable(new GrindableEnderman());
 		MFRRegistry.registerGrindable(new GrindableSlime(EntitySlime.class, new ItemStack(Items.slime_ball), 1));
 		MFRRegistry.registerGrindable(new GrindableSlime(EntityMagmaCube.class, new ItemStack(Items.magma_cream), 1) {
+
 			@Override
 			protected boolean shouldDrop(EntitySlime slime) {
+
 				return slime.getSlimeSize() <= dropSize;
 			}
 		});
@@ -217,8 +213,8 @@ public class Vanilla
 	}
 
 	@EventHandler
-	public void postLoad(FMLPostInitializationEvent event)
-	{
+	public void postLoad(FMLPostInitializationEvent event) {
+
 		registerOreDictLaserOre(175, "Coal",               black, false);
 		registerOreDictLaserOre(150, "Iron",               brown, false);
 		registerOreDictLaserOre(100, "Redstone",             red, false);
@@ -321,41 +317,38 @@ public class Vanilla
 		registerOreDictLaserOre( 20, "orePhosphorite", pink, null);
 	}
 
-	private void registerOreDictLaserOre(int weight, String suffix, int focus, boolean isGem)
-	{
+	private void registerOreDictLaserOre(int weight, String suffix, int focus, boolean isGem) {
+
 		registerOreDictLaserOre(weight, "ore" + suffix, focus, "oreNether" + suffix, focus);
 	}
 
-	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName)
-	{
+	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName) {
+
 		registerOreDictLaserOre(weight, name, focus, netherName, focus);
 	}
 
-	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName,
-			int netherFocus)
-	{
+	private void registerOreDictLaserOre(int weight, String name, int focus, String netherName, int netherFocus) {
+
 		for (ItemStack ore : OreDictionary.getOres(name))
-			if (ore != null)
-			{
+			if (ore != null) {
 				ore = ore.copy();
 				ore.stackSize = 1;
 				MFRRegistry.registerLaserOre(weight, ore);
 				if (focus >= 0)
 					MFRRegistry.addLaserPreferredOre(focus, ore);
-				if (netherName != null)
-				{
+				if (netherName != null) {
 					registerOreDictLaserOre(weight / 2, netherName, netherFocus, null);
 				}
 				return;
 			}
 		if (netherName != null)
 			for (ItemStack ore : OreDictionary.getOres(netherName))
-				if (ore != null)
-				{
+				if (ore != null) {
 					registerOreDictLaserOre(weight / 2, netherName, netherFocus, null);
 					return;
 				}
 	}
+
 	private static final int black = 15;
 	private static final int red = 14;
 	private static final int green = 13;
