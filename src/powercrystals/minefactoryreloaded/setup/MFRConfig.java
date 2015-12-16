@@ -42,6 +42,7 @@ public class MFRConfig {
 	public static Property laserdrillCost;
 	public static Property disenchanterEssence;
 	public static Property steamBoilerExplodes;
+	public static Property autobrewerFluidCost;
 
 	public static Property largeSlimesDrop;
 	public static Property meatSaturation;
@@ -331,6 +332,9 @@ public class MFRConfig {
 
 			fisherNeedsRod = c.get(machine + Machine.Fisher.getName(), "RequiresFishingRod", false);
 			fisherNeedsRod.comment = "If true, the fisher will require a fishing rod to function.";
+
+			autobrewerFluidCost = c.get(machine + Machine.AutoBrewer.getName(), "WaterPerBottle", 250).setMinValue(1).setMaxValue(4000);
+			autobrewerFluidCost.comment = "The amount of water used by the Auto-Brewer to fill a bottle with water";
 		}
 		//}
 

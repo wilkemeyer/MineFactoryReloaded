@@ -23,6 +23,7 @@ import powercrystals.minefactoryreloaded.gui.client.GuiAutoBrewer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoBrewer;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -87,13 +88,14 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 		if (doingWork & !_inventoryDirty)
 			hasWorkToDo = true;
 		else {
+			final int waterCost = MFRConfig.autobrewerFluidCost.getInt();
 			for (int row = 0; row < 6; row++) {
 				int processSlot = getProcessSlot(row), templateSlot = getTemplateSlot(row);
 				if (_inventory[31] != null && _inventory[processSlot] == null && _inventory[templateSlot] != null) {
 					if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null)
 						if (getPotionResult(0, _inventory[templateSlot]) != 0)
-							if (drain(_tanks[0], 250, false) == 250) {
-								drain(_tanks[0], 250, true);
+							if (drain(_tanks[0], waterCost, false) == waterCost) {
+								drain(_tanks[0], waterCost, true);
 								_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
 								_inventory[processSlot] = new ItemStack(Items.potionitem, 1, 0);
 								didWork = true;
