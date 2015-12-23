@@ -611,7 +611,7 @@ public class WorldGenMassiveTree extends WorldGenerator
 		if ((y < 0) | y > 255)
 			return;
 		//++blocksAdded;
-		long pos = (((long)(x & ~15)) << 32) | (z & ~15);
+		long pos = ((x & 0xFFFFFFF0L) << 32) | (z & 0xFFFFFFF0L);
 
 		Chunk chunk;// = chunkMap.get(pos);
 		//if (chunk == null)
