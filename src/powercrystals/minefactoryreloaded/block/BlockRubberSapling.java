@@ -19,12 +19,12 @@ import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 import powercrystals.minefactoryreloaded.world.WorldGenMassiveTree;
 import powercrystals.minefactoryreloaded.world.WorldGenRubberTree;
 
-public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnection
-{
+public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnection {
+
 	private static WorldGenRubberTree treeGen = new WorldGenRubberTree(true);
 
-	public BlockRubberSapling()
-	{
+	public BlockRubberSapling() {
+
 		setHardness(0.0F);
 		setStepSound(soundTypeGrass);
 		setBlockName("mfr.rubberwood.sapling");
@@ -33,34 +33,33 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister)
-	{
+	public void registerBlockIcons(IIconRegister par1IconRegister) {
+
 		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 
 	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
+	public IIcon getIcon(int side, int metadata) {
+
 		return blockIcon;
 	}
 
 	@Override
-	public void func_149878_d(World world, int x, int y, int z, Random rand)
-	{
+	public void func_149878_d(World world, int x, int y, int z, Random rand) {
+
 		if (world.isRemote || !TerrainGen.saplingGrowTree(world, rand, x, y, z))
 			return;
 
 		int meta = damageDropped(world.getBlockMetadata(x, y, z));
 		world.setBlockToAir(x, y, z);
 
-		switch (meta)
-		{
+		switch (meta) {
 		case 1:
 			if (MineFactoryReloadedWorldGen.generateSacredSpringRubberTree(world, rand, x, y, z))
 				return;
 			break;
 		case 2:
-			if (MineFactoryReloadedWorldGen.generateMegaRubberTree(world, rand, x, y, z, false))
+			if (MineFactoryReloadedWorldGen.generateMegaRubberTree(world, rand, x, y, z, true))
 				return;
 			break;
 		case 3:
@@ -82,8 +81,9 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	}
 
 	@Override
-	public int damageDropped(int par1)
-	{
+	public int damageDropped(int par1) {
+
 		return par1 & 7;
 	}
+
 }
