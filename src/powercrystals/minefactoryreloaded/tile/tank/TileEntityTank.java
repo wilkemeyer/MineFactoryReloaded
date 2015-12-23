@@ -50,19 +50,20 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	@Override
 	public void invalidate() {
 
-		super.invalidate();
-		if (worldObj.isRemote)
-			return;
-
-		for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
-			if ((sides & (1 << to.ordinal())) == 0)
-				continue;
-			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
-			if (tank != null)
-				tank.part(to.getOpposite());
+		if (grid != null) {
+			for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
+				if ((sides & (1 << to.ordinal())) == 0)
+					continue;
+				TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
+				if (tank != null)
+					tank.part(to.getOpposite());
+			}
+			if (grid != null)
+				grid.removeNode(this);
+			grid = null;
 		}
-		if (grid != null)
-			grid.removeNode(this);
+
+		super.invalidate();
 	}
 
 	@Override
@@ -103,14 +104,14 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	public void join(ForgeDirection from) {
 
 		sides |= (1 << from.ordinal());
-		markDirty();
+		markChunkDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void part(ForgeDirection from) {
 
 		sides &= ~(1 << from.ordinal());
-		markDirty();
+		markChunkDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 

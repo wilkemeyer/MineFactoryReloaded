@@ -5,12 +5,13 @@ import cofh.lib.util.position.BlockPosition;
 
 import java.util.LinkedHashSet;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TankNetwork
-{
+import powercrystals.minefactoryreloaded.core.IDelayedValidate;
+import powercrystals.minefactoryreloaded.net.ConnectionHandler;
+
+public class TankNetwork implements IDelayedValidate {
 
 	private LinkedHashSet<TileEntityTank> nodeSet;
 	private TileEntityTank master;
@@ -42,6 +43,18 @@ public class TankNetwork
 		}
 	}
 
+	@Override
+	public boolean isNotValid() {
+
+		return nodeSet.size() == 0;
+	}
+
+	@Override // re-using interface for a lighter 'single delayed tick'
+	public void firstTick() {
+
+		markSweep();
+	}
+
 	public synchronized void markSweep() {
 
 		destroyGrid();
@@ -67,11 +80,11 @@ public class TankNetwork
 				bp.z = main.zCoord;
 				bp.step(dir[i]);
 				if (world.blockExists(bp.x, bp.y, bp.z)) {
-					TileEntity te = bp.getTileEntity(world);
-					if (te instanceof TileEntityTank) {
+					TileEntityTank te = bp.getTileEntity(world, TileEntityTank.class);
+					if (te != null) {
 						if (main.isInterfacing(dir[i]) && !checked.contains(te))
-							toCheck.add((TileEntityTank) te);
-						checked.add((TileEntityTank) te);
+							toCheck.add(te);
+						checked.add(te);
 					}
 				}
 			}
@@ -135,7 +148,7 @@ public class TankNetwork
 		}
 		storage.removeTank(cond._tank);
 		if (cond.interfaceCount() > 1)
-			markSweep(); // TODO: tick handler?
+			ConnectionHandler.update(this);
 	}
 
 	public boolean nodeAdded(TileEntityTank cond) {
@@ -180,4 +193,5 @@ public class TankNetwork
 
 		return "TankNetwork@" + Integer.toString(hashCode()) + "; master:" + master;
 	}
+
 }
