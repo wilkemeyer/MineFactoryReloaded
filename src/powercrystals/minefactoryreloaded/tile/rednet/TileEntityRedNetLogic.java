@@ -401,6 +401,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 		super.writeItemNBT(tag);
 		tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		tag.setIntArray("upgrades", _upgradeLevel);
 		writeCricuitsOnly(tag, true);
 	}
 
@@ -410,7 +411,6 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		super.writeToNBT(tag);
 
 		tag.setByte("p_rot", (byte) -1);
-		tag.setIntArray("upgrades", _upgradeLevel);
 		tag.setIntArray("vars", _buffers[13]);
 	}
 
