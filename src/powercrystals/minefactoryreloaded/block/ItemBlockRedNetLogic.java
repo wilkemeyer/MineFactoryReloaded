@@ -15,20 +15,20 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.StatCollector;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
-public class ItemBlockRedNetLogic extends ItemBlock
-{
+public class ItemBlockRedNetLogic extends ItemBlock {
+
 	public static ItemStack manual;
-	
-	static
-	{
+
+	static {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("author", "powercrystals");
 		nbt.setString("title", "PRC Owner's Manual");
-		
+
 		NBTTagList pages = new NBTTagList();
-		pages.appendTag(new NBTTagString("     Programmable\n        RedNet\n      Controller\n\nOwner's Manual v1.0\n\n\n" + 
+		pages.appendTag(new NBTTagString("     Programmable\n        RedNet\n      Controller\n\nOwner's Manual v1.0\n\n\n" +
 				"WARNING: YOU MAY NEED TO ADJUST YOUR GUI SCALE SMALLER TO APPROPRIATELY USE THIS PRODUCT"));
 		pages.appendTag(new NBTTagString("Congratulations on your purchase, assembly, or theft of your new Programmable RedNet Controller (PRC). " +
 				"This manual will attempt to guide you through its features and operations."));
@@ -103,34 +103,51 @@ public class ItemBlockRedNetLogic extends ItemBlock
 		pages.appendTag(new NBTTagString("Summary\n\nNote that the examples all function independently, as the PRC has multiple circuits and " +
 				"can process many tasks at once. Amazing things can be accomplished using the PRC."));
 		pages.appendTag(new NBTTagString("We hope you enjoy your new Programmable RedNet Controller!"));
-		
+
 		nbt.setTag("pages", pages);
 		manual = new ItemStack(Items.written_book);
 		manual.setTagCompound(nbt);
 	}
-	
-	public ItemBlockRedNetLogic(net.minecraft.block.Block id)
-	{
+
+	public ItemBlockRedNetLogic(net.minecraft.block.Block id) {
+
 		super(id);
 		setContainerItem(this);
 		setCreativeTab(MFRCreativeTab.tab);
-		setMaxStackSize(1);
+		setMaxStackSize(64);
 	}
-	
+
+	@Override
+	public int getItemStackLimit(ItemStack stack) {
+
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null && tag.hasKey("circuits"))
+			return 1;
+		return maxStackSize;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips)
-	{
+	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips) {
+
 		infoList.add(StatCollector.translateToLocal("tip.info.mfr.prc"));
+		NBTTagCompound tag = stack.getTagCompound();
+		if (tag != null) {
+			if (tag.hasKey("circuits", 9)) {
+				int c = stack.getTagCompound().getTagList("circuits", 10).tagCount();
+				infoList.add(MFRUtil.localize("tip.info.mfr.memorycard.programmed", c));
+			}
+		}
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(net.minecraft.item.Item itemId, CreativeTabs creativeTab, List subTypes)
-	{
+	public void getSubItems(net.minecraft.item.Item itemId, CreativeTabs creativeTab, List subTypes) {
+
 		subTypes.add(new ItemStack(itemId, 1, 0));
 		subTypes.add(manual);
 	}
+
 }

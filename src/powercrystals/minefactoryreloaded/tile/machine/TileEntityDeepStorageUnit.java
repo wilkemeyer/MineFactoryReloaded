@@ -255,8 +255,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 			tag.setTag("storedStack", _storedItem.writeToNBT(new NBTTagCompound()));
 			tag.setInteger("storedQuantity", _storedQuantity + storedAdd);
 			tag.setBoolean("locked", isActive());
-		} else
-			tag.setInteger("storedQuantity", 0);
+		}
 	}
 
 	@Override

@@ -17,77 +17,74 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerAutoDisenchanter
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
-{
+public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
+
 	private boolean _repeatDisenchant;
 
-	public TileEntityAutoDisenchanter()
-	{
+	public TileEntityAutoDisenchanter() {
+
 		super(Machine.AutoDisenchanter);
 		setManageSolids(true);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiAutoDisenchanter(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerAutoDisenchanter getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerAutoDisenchanter getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerAutoDisenchanter(this, inventoryPlayer);
 	}
 
-	public boolean getRepeatDisenchant()
-	{
+	public boolean getRepeatDisenchant() {
+
 		return _repeatDisenchant;
 	}
 
-	public void setRepeatDisenchant(boolean repeatDisenchant)
-	{
+	public void setRepeatDisenchant(boolean repeatDisenchant) {
+
 		_repeatDisenchant = repeatDisenchant;
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 5;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side)
-	{
+	public int getSizeInventorySide(ForgeDirection side) {
+
 		return 4;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
-	{
+	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+
 		if (stack == null)
 			return false;
-		if (slot == 0)
-		{
+		if (slot == 0) {
 			return stack.getEnchantmentTagList() != null;
-		}
-		else if (slot == 1)
-		{
+		} else if (slot == 1) {
 			return stack.getItem().equals(Items.book);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
-	{
+	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+
 		if (slot == 2 || slot == 3) return true;
 		return false;
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
+	protected boolean activateMachine() {
+
 		if (_inventory[4] == null) {
 			if (_inventory[0] == null)
 				return false;
@@ -100,59 +97,46 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 		ItemStack stack = _inventory[4];
 		boolean isBook = stack.getItem().equals(Items.enchanted_book);
 		NBTTagList list = isBook ? Items.enchanted_book.func_92110_g(stack) : stack.getEnchantmentTagList();
-		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null)
-		{
+		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null) {
 			_inventory[2] = stack;
 			setInventorySlotContents(4, null);
-		}
-		else if ((list != null && list.tagCount() > 0) &&
+		} else if ((list != null && list.tagCount() > 0) &&
 				(_inventory[1] != null && _inventory[1].getItem().equals(Items.book)) &
 				_inventory[2] == null &
-				_inventory[3] == null)
-		{
-			if (getWorkDone() >= getWorkMax())
-			{
+				_inventory[3] == null) {
+			if (getWorkDone() >= getWorkMax()) {
 				decrStackSize(1, 1);
 
 				NBTTagCompound enchTag;
-				if (isBook)
-				{
+				if (isBook) {
 					enchTag = list.getCompoundTagAt(0);
 					list.removeTag(0);
-					if (list.tagCount() == 0)
-					{
+					if (list.tagCount() == 0) {
 						_inventory[4] = new ItemStack(Items.book, 1);
 					}
-				}
-				else
-				{
+				} else {
 					int enchIndex = worldObj.rand.nextInt(list.tagCount());
 					enchTag = list.getCompoundTagAt(enchIndex);
 
 					list.removeTag(enchIndex);
-					if (list.tagCount() == 0)
-					{
+					if (list.tagCount() == 0) {
 						stack.getTagCompound().removeTag("ench");
-						if (stack.getTagCompound().hasNoTags())
-						{
+						if (stack.getTagCompound().hasNoTags()) {
 							stack.setTagCompound(null);
 						}
 					}
 
-					if (stack.isItemStackDamageable())
-					{
+					if (stack.isItemStackDamageable()) {
 						int damage = worldObj.rand.nextInt(1 + (stack.getMaxDamage() / 4));
 						int m = stack.getMaxDamage();
 						damage = Math.min(m, damage + 1 + (m / 10)) + (m == 1 ? 1 : 0);
-						if (stack.attemptDamageItem(damage, worldObj.rand))
-						{
+						if (stack.attemptDamageItem(damage, worldObj.rand)) {
 							_inventory[4] = null;
 						}
 					}
 				}
 
-				if (!_repeatDisenchant || (_inventory[4] != null && _inventory[4].getEnchantmentTagList() == null))
-				{
+				if (!_repeatDisenchant || (_inventory[4] != null && _inventory[4].getEnchantmentTagList() == null)) {
 					_inventory[2] = _inventory[4];
 					_inventory[4] = null;
 				}
@@ -166,9 +150,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 				_inventory[3].setTagCompound(baseTag);
 
 				setWorkDone(0);
-			}
-			else
-			{
+			} else {
 				markChunkDirty();
 				if (!incrementWorkDone())
 					return false;
@@ -180,14 +162,14 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 600;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 1;
 	}
 
@@ -204,15 +186,16 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		super.writeItemNBT(tag);
-		tag.setBoolean("repeatDisenchant", _repeatDisenchant);
+		if (_repeatDisenchant)
+			tag.setBoolean("repeatDisenchant", _repeatDisenchant);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		_repeatDisenchant = tag.getBoolean("repeatDisenchant");
 	}

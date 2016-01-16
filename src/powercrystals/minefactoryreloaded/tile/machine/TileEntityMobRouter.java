@@ -20,13 +20,13 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerMobRouter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityMobRouter extends TileEntityFactoryPowered
-{
+public class TileEntityMobRouter extends TileEntityFactoryPowered {
+
 	protected int _matchMode;
 	protected boolean _blacklist;
 
-	public TileEntityMobRouter()
-	{
+	public TileEntityMobRouter() {
+
 		super(Machine.MobRouter);
 		createEntityHAM(this);
 		setCanRotate(true);
@@ -34,36 +34,33 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiMobRouter(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerMobRouter getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerMobRouter getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerMobRouter(this, inventoryPlayer);
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
+	protected boolean activateMachine() {
+
 		Class<?> matchClass;
-		if (_inventory[0] != null)
-		{
+		if (_inventory[0] != null) {
 			if (!isSafariNet(_inventory[0]) || isSingleUse(_inventory[0]))
 				return false;
 			matchClass = getEntityClass(_inventory[0]);
-		}
-		else
+		} else
 			matchClass = EntityLivingBase.class;
 
 		List<? extends EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
-				_areaManager.getHarvestArea().toAxisAlignedBB());
+			_areaManager.getHarvestArea().toAxisAlignedBB());
 		List<Class<?>> blacklist = MFRRegistry.getSafariNetBlacklist();
 
-		switch (_matchMode)
-		{
+		switch (_matchMode) {
 		case 3:
 			if (matchClass != EntityLivingBase.class)
 				matchClass = matchClass.getSuperclass();
@@ -72,25 +69,24 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 				matchClass = matchClass.getSuperclass();
 		}
 
-		for (EntityLivingBase entity : entities)
-		{
+		for (EntityLivingBase entity : entities) {
 			Class<?> entityClass = entity.getClass();
 			if (blacklist.contains(entityClass) || EntityPlayer.class.isAssignableFrom(entityClass))
 				continue;
 			boolean match;
-			switch (_matchMode)
-			{
+			switch (_matchMode) {
 			case 0:
 				match = matchClass == entityClass;
 				break;
-			case 1: case 2: case 3:
+			case 1:
+			case 2:
+			case 3:
 				match = matchClass.isAssignableFrom(entityClass);
 				break;
 			default:
 				match = false;
 			}
-			if (match ^ _blacklist)
-			{
+			if (match ^ _blacklist) {
 				BlockPosition bp = BlockPosition.fromRotateableTile(this);
 				bp.moveBackwards(1);
 				entity.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
@@ -102,23 +98,23 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 		return false;
 	}
 
-	public boolean getWhiteList()
-	{
+	public boolean getWhiteList() {
+
 		return !_blacklist;
 	}
 
-	public void setWhiteList(boolean whitelist)
-	{
+	public void setWhiteList(boolean whitelist) {
+
 		_blacklist = !whitelist;
 	}
 
-	public int getMatchMode()
-	{
+	public int getMatchMode() {
+
 		return _matchMode;
 	}
 
-	public void setMatchMode(int matchMode)
-	{
+	public void setMatchMode(int matchMode) {
+
 		if (matchMode < 0)
 			_matchMode = 3;
 		else
@@ -126,20 +122,20 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 1;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 1;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 200;
 	}
 
@@ -158,16 +154,18 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		super.writeItemNBT(tag);
-		tag.setInteger("mode", _matchMode);
-		tag.setBoolean("blacklist", _blacklist);
+		if (_matchMode != 0)
+			tag.setInteger("mode", _matchMode);
+		if (_blacklist)
+			tag.setBoolean("blacklist", _blacklist);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		setMatchMode(tag.getInteger("mode"));
 		_blacklist = tag.getBoolean("blacklist");

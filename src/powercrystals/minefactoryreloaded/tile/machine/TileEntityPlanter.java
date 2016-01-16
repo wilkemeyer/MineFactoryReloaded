@@ -107,7 +107,8 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	public void writeItemNBT(NBTTagCompound tag) {
 
 		super.writeItemNBT(tag);
-		tag.setBoolean("keepLastItem", keepLastItem);
+		if (keepLastItem)
+			tag.setBoolean("keepLastItem", keepLastItem);
 	}
 
 	@Override

@@ -43,6 +43,16 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 public class TileEntityHarvester extends TileEntityFactoryPowered implements ITankContainerBucketable {
 
 	private static boolean skip = false;
+	private static Map<String, Boolean> DEFAULT_SETTINGS;
+	static {
+
+		HashMap<String, Boolean> _settings = new HashMap<String, Boolean>();
+		_settings.put("silkTouch", false);
+		_settings.put("harvestSmallMushrooms", false);
+		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
+		_settings.put("isHarvestingTree", false);
+		DEFAULT_SETTINGS = java.util.Collections.unmodifiableMap(_settings);
+	}
 
 	private Map<String, Boolean> _settings;
 	private Map<String, Boolean> _immutableSettings;
@@ -59,10 +69,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		setManageSolids(true);
 
 		_settings = new HashMap<String, Boolean>();
-		_settings.put("silkTouch", false);
-		_settings.put("harvestSmallMushrooms", false);
-		_settings.put("playSounds", MFRConfig.playSounds.getBoolean(true));
-		_settings.put("isHarvestingTree", false);
+		_settings.putAll(DEFAULT_SETTINGS);
 		_immutableSettings = java.util.Collections.unmodifiableMap(_settings);
 
 		_rand = new Random();
@@ -370,11 +377,13 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		NBTTagCompound list = new NBTTagCompound();
 		for (Entry<String, Boolean> setting : _settings.entrySet()) {
 			String key = setting.getKey();
-			if ("playSounds" == key || "isHarvestingTree" == key)
+			if ("playSounds" == key | "isHarvestingTree" == key
+					|| DEFAULT_SETTINGS.get(key) == setting.getValue())
 				continue;
 			list.setBoolean(key, setting.getValue() == Boolean.TRUE);
 		}
-		tag.setTag("harvesterSettings", list);
+		if (!list.hasNoTags())
+			tag.setTag("harvesterSettings", list);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
+
 		super.addInfo(stack, player, infoList, advancedTooltips);
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag != null) {
@@ -28,7 +29,7 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 				if (tag.hasKey("Type")) {
 					String type = tag.getString("Type");
 					String entry = MFRUtil.localize("tip.info.mfr.memorycard.programmedFor", new Object[] {
-							MFRUtil.localize(type)
+						MFRUtil.localize(type)
 					});
 					infoList.addAll(Arrays.asList(entry.split("\n", -1)));
 
@@ -47,6 +48,7 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
 			float xOffset, float yOffset, float zOffset) {
+
 		if (world.isRemote) {
 			return true;
 		}
@@ -56,7 +58,7 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 		boolean read = tag == null || !tag.hasKey("Type"), special = false;
 		if (tag == null)
 			stack.setTagCompound(tag = new NBTTagCompound());
-		else if (read != tag.hasKey("circuits", 10)) {
+		else if (read && tag.hasKey("circuits", 9)) {
 			special = true;
 			read = false;
 		}
@@ -92,7 +94,9 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
-		return stack.getTagCompound() != null;
+
+		NBTTagCompound tag = stack.getTagCompound();
+		return tag != null && (tag.hasKey("Type") || tag.hasKey("circuits", 9));
 	}
 
 }

@@ -316,7 +316,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	public void writeItemNBT(NBTTagCompound tag) {
 
 		super.writeItemNBT(tag);
-		tag.setBoolean("rejectUnmapped", _rejectUnmapped);
+		if (_rejectUnmapped)
+			tag.setBoolean("rejectUnmapped", _rejectUnmapped);
 	}
 
 	@Override

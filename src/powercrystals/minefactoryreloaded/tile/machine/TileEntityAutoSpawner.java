@@ -305,7 +305,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	public void writeItemNBT(NBTTagCompound tag) {
 
 		super.writeItemNBT(tag);
-		tag.setBoolean("spawnExact", _spawnExact);
+		if (_spawnExact)
+			tag.setBoolean("spawnExact", _spawnExact);
 	}
 
 	@Override

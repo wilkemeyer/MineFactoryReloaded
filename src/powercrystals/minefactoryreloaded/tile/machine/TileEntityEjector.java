@@ -212,9 +212,12 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	public void writeItemNBT(NBTTagCompound tag) {
 
 		super.writeItemNBT(tag);
-		tag.setBoolean("whitelist", _whitelist);
-		tag.setBoolean("matchNBT", _matchNBT);
-		tag.setBoolean("ignoreDamage", _ignoreDamage);
+		if (_whitelist)
+			tag.setBoolean("whitelist", _whitelist);
+		if (!_matchNBT)
+			tag.setBoolean("matchNBT", _matchNBT);
+		if (!_ignoreDamage)
+			tag.setBoolean("ignoreDamage", _ignoreDamage);
 		// TODO: write items
 	}
 
@@ -232,7 +235,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 		_lastRedstoneState = tag.getBoolean("redstone");
 		_whitelist = tag.getBoolean("whitelist");
 		_matchNBT = !tag.hasKey("matchNBT") || tag.getBoolean("matchNBT");
-		_ignoreDamage = tag.getBoolean("ignoreDamage");
+		_ignoreDamage = !tag.hasKey("ignoreDamage") || tag.getBoolean("ignoreDamage");
 	}
 
 	public boolean getIsWhitelist() {

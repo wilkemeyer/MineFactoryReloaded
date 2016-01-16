@@ -274,7 +274,8 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	public void writeItemNBT(NBTTagCompound tag)
 	{
 		super.writeItemNBT(tag);
-		tag.setInteger("targetLevel", _targetLevel);
+		if (_targetLevel != 30)
+			tag.setInteger("targetLevel", _targetLevel);
 	}
 
 	@Override

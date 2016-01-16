@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.lib.util.WeightedRandomItemStack;
+import cofh.lib.util.helpers.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -209,8 +210,8 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			}
 			int c = MFRUtil.COLORS[s.getItemDamage()];
 			r += (c >> 16) & 255;
-			g += (c >>  8) & 255;
-			b += (c >>  0) & 255;
+			g += (c >> 8) & 255;
+			b += (c >> 0) & 255;
 		}
 		if (d == 0) {
 			return;
@@ -303,8 +304,10 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 
 		super.writeItemNBT(tag);
 
-		tag.setInteger("energyStored", _energyStored);
-		tag.setFloat("workDone", _workStored);
+		if (_energyStored > 0)
+			tag.setInteger("energyStored", _energyStored);
+		if (!MathHelper.between(-1e-5, _workStored, 1e-5))
+			tag.setFloat("workDone", _workStored);
 	}
 
 	@Override

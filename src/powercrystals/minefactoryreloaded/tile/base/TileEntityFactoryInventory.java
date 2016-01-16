@@ -489,7 +489,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		if (_tanks.length > 0) {
 			NBTTagList tanks = new NBTTagList();
 			for (int i = 0, n = _tanks.length; i < n; i++) {
-				if (_tanks[i].getFluid() != null) {
+				FluidStack fluid = _tanks[i].getFluid();
+				if (fluid != null && fluid.amount > 0) {
 					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 					nbttagcompound1.setByte("Tank", (byte) i);
 
