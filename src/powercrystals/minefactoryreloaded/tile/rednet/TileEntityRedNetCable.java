@@ -263,7 +263,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		int subnet = getSideColor(to), power;
 
-		RedstoneNetwork.log("Asked for weak power at %s,%s,%s;%s", xCoord, yCoord, zCoord, to);
+		RedstoneNetwork.log("Asked for weak power at %s", nodebp);
 		if (_network.isPowerProvider(subnet, nodebp)) {
 			RedstoneNetwork.log("\t- power provider for network %s, power 0", _network.hashCode());
 			return 0;
@@ -288,7 +288,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		int subnet = getSideColor(nodebp.orientation);
 
-		RedstoneNetwork.log("Asked for strong power at %s,%s,%s;%s", xCoord, yCoord, zCoord, to);
+		RedstoneNetwork.log("Asked for strong power at %s", nodebp);
 		if (_network.isPowerProvider(subnet, nodebp)) {
 			RedstoneNetwork.log("\t- power provider for network %s, power 0", _network.hashCode());
 			return 0;
