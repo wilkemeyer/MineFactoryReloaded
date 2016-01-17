@@ -376,8 +376,12 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
 
 		writeCricuitsOnly(tag, false);
-		tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
+		if (tag.hasKey("circuits", 9)) {
+			tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
+		} else {
+			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.empty"));
+		}
 	}
 
 	@Override
@@ -400,9 +404,14 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void writeItemNBT(NBTTagCompound tag) {
 
 		super.writeItemNBT(tag);
-		tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-		tag.setIntArray("upgrades", _upgradeLevel);
 		writeCricuitsOnly(tag, true);
+		if (tag.hasKey("circuits", 9))
+			tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		l: for (int v : _upgradeLevel)
+			if (v != 0) {
+				tag.setIntArray("upgrades", _upgradeLevel);
+				break l;
+			}
 	}
 
 	@Override
@@ -418,11 +427,14 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 		NBTTagList circuits = new NBTTagList();
 		for (int c = 0; c < _circuits.length; c++) {
-			if (!includeNoop && _circuits[c] instanceof Noop) {
+			if (_circuits[c] instanceof Noop) {
 				continue;
 			}
 			NBTTagCompound circuit = new NBTTagCompound();
 			circuit.setString("circuit", _circuits[c].getClass().getName());
+			if (includeNoop) {
+				circuit.setInteger("index", c);
+			}
 
 			NBTTagList inputPins = new NBTTagList();
 			for (int p = 0; p < _pinMappingInputs[c].length; p++) {
@@ -454,7 +466,8 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 			circuits.appendTag(circuit);
 		}
 
-		tag.setTag("circuits", circuits);
+		if (circuits.tagCount() > 0)
+			tag.setTag("circuits", circuits);
 	}
 
 	@Override
@@ -490,38 +503,41 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 		if (circuits != null) {
 			int c = 0, e = circuits.tagCount();
+			Arrays.fill(_circuits, null);
 			for (; c < e; c++) {
 				NBTTagCompound circuit = circuits.getCompoundTagAt(c);
-				initCircuit(c, circuit.getString("circuit"));
+				int i = circuit.hasKey("index") ? circuit.getInteger("index") : c;
+				initCircuit(i, circuit.getString("circuit"));
 
 				NBTTagList inputPins = circuit.getTagList("inputPins", 10);
 				if (inputPins != null) {
-					for (int i = 0; i < inputPins.tagCount() && i < _pinMappingInputs[c].length; i++) {
-						NBTTagCompound pin = inputPins.getCompoundTagAt(i);
+					for (int k = 0; k < inputPins.tagCount() && k < _pinMappingInputs[c].length; k++) {
+						NBTTagCompound pin = inputPins.getCompoundTagAt(k);
 						int ipin = pin.getInteger("pin");
 						int buffer = pin.getInteger("buffer");
-						_pinMappingInputs[c][i] = new PinMapping(ipin, mapBuffer(map, buffer));
+						_pinMappingInputs[i][k] = new PinMapping(ipin, mapBuffer(map, buffer));
 					}
 				}
 
 				NBTTagList outputPins = circuit.getTagList("outputPins", 10);
 				if (outputPins != null) {
-					for (int i = 0; i < outputPins.tagCount() && i < _pinMappingOutputs[c].length; i++) {
-						NBTTagCompound pin = outputPins.getCompoundTagAt(i);
+					for (int k = 0; k < outputPins.tagCount() && k < _pinMappingOutputs[c].length; k++) {
+						NBTTagCompound pin = outputPins.getCompoundTagAt(k);
 						int ipin = pin.getInteger("pin");
 						int buffer = pin.getInteger("buffer");
-						_pinMappingOutputs[c][i] = new PinMapping(ipin, mapBuffer(map, buffer));
+						_pinMappingOutputs[i][k] = new PinMapping(ipin, mapBuffer(map, buffer));
 					}
 				}
 
 				NBTTagCompound circuitState = circuit.getCompoundTag("state");
 				if (circuitState != null) {
-					_circuits[c].readFromNBT(circuitState);
+					_circuits[i].readFromNBT(circuitState);
 				}
 			}
 			e = _circuits.length;
-			for (; c < e; c++) {
-				initCircuit(c, new Noop());
+			for (c = 0; c < e; c++) {
+				if (_circuits[c] == null)
+					initCircuit(c, new Noop());
 			}
 		}
 	}

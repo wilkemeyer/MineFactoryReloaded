@@ -53,10 +53,10 @@ public class FluidNetwork implements IGrid {
 		return amt + storage.getFluidAmount() / size;
 	}
 
-	public void addConduit(TileEntityPlasticPipe cond) {
+	public boolean addConduit(TileEntityPlasticPipe cond) {
 		if (conduitSet.add(cond))
 			if (!conduitAdded(cond))
-				return;
+				return false;
 		if (cond.isNode) {
 			if (nodeSet.add(cond)) {
 				nodeAdded(cond);
@@ -68,6 +68,7 @@ public class FluidNetwork implements IGrid {
 				nodeRemoved(cond);
 			}
 		}
+		return true;
 	}
 
 	public void removeConduit(TileEntityPlasticPipe cond) {
@@ -83,7 +84,6 @@ public class FluidNetwork implements IGrid {
 		} else {
 			cond.fluidForGrid = storage.drain(0, false);
 		}
-		rebalanceGrid();
 	}
 
 	public void regenerate() {
@@ -265,6 +265,7 @@ public class FluidNetwork implements IGrid {
 		}
 		storage.fill(cond.fluidForGrid, true);
 		cond.fluidForGrid = storage.drain(0, false);
+		rebalanceGrid();
 	}
 
 	public void nodeRemoved(TileEntityPlasticPipe cond) {
@@ -276,6 +277,7 @@ public class FluidNetwork implements IGrid {
 				master = nodeSet.get(0);
 			}
 		}
+		rebalanceGrid();
 	}
 
 	public boolean conduitAdded(TileEntityPlasticPipe cond) {
@@ -299,12 +301,11 @@ public class FluidNetwork implements IGrid {
 		} else {
 			cond.setGrid(this);
 		}
-		rebalanceGrid();
 		return true;
 	}
 
 	public void rebalanceGrid() {
-		storage.setCapacity(conduitSet.size() * STORAGE);
+		storage.setCapacity(getNodeCount() * STORAGE);
 	}
 
 	public int getConduitCount() {

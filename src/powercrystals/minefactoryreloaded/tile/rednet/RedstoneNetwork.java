@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOutputNode;
@@ -53,8 +54,9 @@ public class RedstoneNetwork implements IGrid {
 	private World _world;
 
 	private static boolean log = false;
-	private static Logger _log = LogManager.getLogger("RedNet Debug");
+	private static Logger _log = LogManager.getLogger("RedNet Debug", StringFormatterMessageFactory.INSTANCE);
 	public static void log(String format, Object... data) {
+		log = true;
 		if (log && format != null) {
 			_log.debug(format, data);
 		}
@@ -150,7 +152,7 @@ public class RedstoneNetwork implements IGrid {
 					TileEntity te = bp.getTileEntity(world);
 					if (te instanceof TileEntityRedNetCable) {
 						TileEntityRedNetCable tec = (TileEntityRedNetCable)te;
-						if (main.canInterface(tec, dir[i^1]) && checked.add(tec))
+						if (main.canInterface(tec, dir[i]) && checked.add(tec))
 							toCheck.add(tec);
 					}
 				}
@@ -168,11 +170,13 @@ public class RedstoneNetwork implements IGrid {
 		else
 			HANDLER.addGrid(this);
 		regenerating = false;
-		updatePowerLevels = !nodeSet.isEmpty();
+		updatePowerLevels = true;
 	}
 
 	public void destroyGrid() {
 		regenerating = true;
+		Arrays.fill(_powerLevelOutput, 0);
+		Arrays.fill(_powerProviders, null);
 		for (TileEntityRedNetCable curCond : nodeSet)
 			destroyNode(curCond);
 		for (TileEntityRedNetCable curCond : conduitSet)

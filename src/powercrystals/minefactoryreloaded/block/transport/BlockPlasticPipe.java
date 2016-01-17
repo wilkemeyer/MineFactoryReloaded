@@ -5,7 +5,6 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 
 import cofh.api.block.IBlockInfo;
 import cofh.lib.util.helpers.ItemHelper;
-import cofh.lib.util.position.BlockPosition;
 import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -46,7 +45,9 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileE
 		if (te instanceof TileEntityPlasticPipe) {
 			TileEntityPlasticPipe cable = (TileEntityPlasticPipe) te;
 
+			harvesters.set(player);
 			MovingObjectPosition part = collisionRayTrace(world, x, y, z, RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+			harvesters.set(null);
 			if (part == null)
 				return false;
 
@@ -55,13 +56,14 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileE
 				MineFactoryReloadedCore.instance().getLogger().error("subHit was " + subHit, new Throwable());
 				return false;
 			}
-			int oldSide = side;
 			side = _subSideMappings[subHit];
 
 			ItemStack s = player.getCurrentEquippedItem();
 
 			l2: if (cable.onPartHit(player, side, subHit)) {
-				;
+				if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
+					MFRUtil.usedWrench(player, x, y, z);
+				}
 			}
 			else if (s != null && s.isItemEqual(new ItemStack(Blocks.redstone_torch))) {
 				int t = cable.getUpgrade();
@@ -96,65 +98,6 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileE
 							"chat.info.mfr.fluid.install.block"));
 				}
 				return true;
-			}
-			else if (subHit >= 0 && subHit < (2 + 6 * 2)) {
-				l: if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
-					byte mode = cable.getMode(side);
-					mode++;
-					if (mode == 2) ++mode;
-					if (!world.isRemote) {
-						if (side == 6) {
-							te = BlockPosition.getAdjacentTileEntity(cable, ForgeDirection.getOrientation(oldSide));
-							if (te instanceof TileEntityPlasticPipe &&
-									!cable.isInterfacing(ForgeDirection.getOrientation(oldSide)) &&
-									cable.couldInterface((TileEntityPlasticPipe) te)) {
-								cable.mergeWith((TileEntityPlasticPipe) te);
-								((TileEntityPlasticPipe) te).onMerge();
-								cable.onMerge();
-								MFRUtil.usedWrench(player, x, y, z);
-								break l;
-							}
-
-							if (mode > 1)
-								mode = 0;
-							cable.setMode(side, mode);
-							world.markBlockForUpdate(x, y, z);
-							switch (mode) {
-							case 0:
-								player.addChatMessage(new ChatComponentTranslation(
-										"chat.info.mfr.rednet.tile.standard"));
-								break;
-							case 1:
-								player.addChatMessage(new ChatComponentTranslation(
-										"chat.info.mfr.rednet.tile.cableonly"));
-								break;
-							default:
-							}
-							break l;
-						}
-						if (mode > 3) {
-							mode = 0;
-						}
-						cable.setMode(side, mode);
-						world.markBlockForUpdate(x, y, z);
-						switch (mode) {
-						case 0:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.fluid.connection.disabled"));
-							break;
-						case 1:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.fluid.connection.output"));
-							break;
-						case 3:
-							player.addChatMessage(new ChatComponentTranslation(
-									"chat.info.mfr.fluid.connection.extract"));
-							break;
-						default:
-						}
-					}
-					MFRUtil.usedWrench(player, x, y, z);
-				}
 			}
 		}
 		return false;

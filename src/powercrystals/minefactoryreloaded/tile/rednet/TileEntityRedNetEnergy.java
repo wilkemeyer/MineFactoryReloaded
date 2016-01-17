@@ -42,8 +42,9 @@ import powercrystals.minefactoryreloaded.net.Packets;
 
 @Strippable("appeng.api.implementations.tiles.ICrankable")
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
-									IEnergyHandler, ICrankable//, IEnergyInfo
+																	IEnergyHandler, ICrankable//, IEnergyInfo
 {
+
 	private static boolean IC2Classes = false, IC2Net = false;
 
 	static {
@@ -53,10 +54,11 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			IC2Classes = true;
 			Class.forName("ic2.api.energy.EnergyNet");
 			IC2Net = true;
-		} catch(Throwable _) {}
+		} catch (Throwable _) {
+		}
 	}
 
-	private byte[] sideMode = {1,1, 1,1,1,1, 0};
+	private byte[] sideMode = { 1, 1, 1, 1, 1, 1, 0 };
 	private IEnergyReceiver[] receiverCache = null;
 	private IEnergyProvider[] providerCache = null;
 	private IC2Cache ic2Cache = null;
@@ -69,10 +71,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	RedstoneEnergyNetwork _grid;
 
 	public TileEntityRedNetEnergy() {
+
 	}
 
 	@Override
 	public void validate() {
+
 		super.validate();
 		deadCache = true;
 		receiverCache = null;
@@ -84,22 +88,34 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void invalidate() {
+
 		if (_grid != null) {
-			_grid.removeConduit(this);
-			_grid.storage.modifyEnergyStored(-energyForGrid);
-			int c = 0;
-			for (int i = 6; i --> 0; )
-				if ((sideMode[i] >> 1) == 4)
-					++c;
-			if (c > 1)
-				_grid.regenerate();
-			deadCache = true;
-			_grid = null;
+			removeFromGrid();
 		}
 		super.invalidate();
 	}
 
+	private void removeFromGrid() {
+
+		_grid.removeConduit(this);
+		_grid.storage.modifyEnergyStored(-energyForGrid);
+		markForRegen();
+		deadCache = true;
+		_grid = null;
+	}
+
+	private void markForRegen() {
+
+		int c = 0;
+		for (int i = 6; i-- > 0;)
+			if ((sideMode[i]) == 9)
+				++c;
+		if (c > 1)
+			_grid.regenerate();
+	}
+
 	private void reCache() {
+
 		if (deadCache) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
@@ -108,9 +124,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 	}
 
-
 	@Override
 	public void cofh_validate() {
+
 		super.cofh_validate();
 		if (worldObj.isRemote) return;
 		if (_grid == null) {
@@ -126,6 +142,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	private void incorporateTiles() {
+
 		if (_grid == null) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
@@ -142,15 +159,16 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	public boolean canInterface(TileEntityRedNetEnergy with, ForgeDirection dir) {
-		if ((_cableMode[dir.ordinal()] & 1) == 0) return false;
-		return super.canInterface(with, dir);
+
+		return (sideMode[dir.ordinal()] & 1) != 0;
 	}
 
 	@Override
 	public void onNeighborTileChange(int x, int y, int z) {
+
 		if (worldObj.isRemote | deadCache)
 			return;
-		TileEntity tile = worldObj.getTileEntity(x, y, z);
+		TileEntity tile = worldObj.blockExists(x, y, z) ? worldObj.getTileEntity(x, y, z) : null;
 
 		if (x < xCoord)
 			addCache(tile, 5);
@@ -167,6 +185,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	private void addCache(TileEntity tile) {
+
 		if (tile == null) return;
 		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
 
@@ -185,6 +204,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	private void addCache(TileEntity tile, int side) {
+
 		if (receiverCache != null)
 			receiverCache[side] = null;
 		if (providerCache != null)
@@ -194,24 +214,31 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		int lastMode = sideMode[side];
 		sideMode[side] &= 1;
 		if (tile instanceof TileEntityRedNetEnergy) {
-			sideMode[side] = (4 << 1);
-			if (((TileEntityRedNetEnergy)tile)._grid == _grid) {
-				sideMode[side] |= 1; // always enable
+			TileEntityRedNetEnergy cable = ((TileEntityRedNetEnergy) tile);
+			sideMode[side] |= (4 << 1);
+			if (cable.canInterface(this, ForgeDirection.getOrientation(side ^ 1))) {
+				if (_grid == null && cable._grid != null) {
+					cable._grid.addConduit(this);
+				}
+				if (cable._grid == _grid || _grid.addConduit(cable)) {
+					sideMode[side] |= 1; // always enable
+				}
+			} else {
+				sideMode[side] &= ~1;
 			}
 		} else if (tile instanceof IEnergyConnection) {
-			if (((IEnergyConnection)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
+			if (((IEnergyConnection) tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
 				sideMode[side] |= 1 << 1;
 				if (tile instanceof IEnergyReceiver) {
 					if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
-					receiverCache[side] = (IEnergyReceiver)tile;
+					receiverCache[side] = (IEnergyReceiver) tile;
 				}
 				if (tile instanceof IEnergyProvider) {
 					if (providerCache == null) providerCache = new IEnergyProvider[6];
-					providerCache[side] = (IEnergyProvider)tile;
+					providerCache[side] = (IEnergyProvider) tile;
 				}
 			}
-		}
-		else if (checkIC2Tiles(tile, side)) {
+		} else if (checkIC2Tiles(tile, side)) {
 			;
 		}
 		if (!deadCache) {
@@ -222,8 +249,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 	}
 
-	private boolean checkIC2Tiles(TileEntity tile, int side)
-	{
+	private boolean checkIC2Tiles(TileEntity tile, int side) {
+
 		if (!IC2Classes)
 			return false;
 		if (ic2Cache == null) ic2Cache = new IC2Cache();
@@ -231,8 +258,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
-	{
+	public Packet getDescriptionPacket() {
+
 		if (deadCache)
 			return null;
 		NBTTagCompound data = new NBTTagCompound();
@@ -251,22 +278,21 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-	{
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+
 		super.onDataPacket(net, pkt);
 		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
-		{
+		switch (pkt.func_148853_f()) {
 		case 0:
 			int mode = data.getInteger("mode[2]");
-			sideMode[0] = (byte)(mode & 0xFF);
-			sideMode[1] = (byte)((mode >> 8) & 0xFF);
-			sideMode[2] = (byte)((mode >> 16) & 0xFF);
-			sideMode[3] = (byte)((mode >> 24) & 0xFF);
+			sideMode[0] = (byte) (mode & 0xFF);
+			sideMode[1] = (byte) ((mode >> 8) & 0xFF);
+			sideMode[2] = (byte) ((mode >> 16) & 0xFF);
+			sideMode[3] = (byte) ((mode >> 24) & 0xFF);
 			mode = data.getInteger("mode[3]");
-			sideMode[4] = (byte)(mode & 0xFF);
-			sideMode[5] = (byte)((mode >> 8) & 0xFF);
-			sideMode[6] = (byte)((mode >> 16) & 0xFF);
+			sideMode[4] = (byte) (mode & 0xFF);
+			sideMode[5] = (byte) ((mode >> 8) & 0xFF);
+			sideMode[6] = (byte) ((mode >> 16) & 0xFF);
 			break;
 		}
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -274,6 +300,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@SideOnly(Side.CLIENT)
 	public void setModes(byte[] modes) {
+
 		sideMode = modes;
 	}
 
@@ -281,6 +308,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+
 		if (from == ForgeDirection.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.receiveEnergy(maxReceive, simulate);
@@ -289,17 +317,20 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+
 		return 0;
 	}
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
+
 		if (from == ForgeDirection.UNKNOWN) return false;
 		return (sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null;
 	}
 
 	@Override
 	public int getEnergyStored(ForgeDirection from) {
+
 		if (from == ForgeDirection.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getEnergyStored();
@@ -308,6 +339,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public int getMaxEnergyStored(ForgeDirection from) {
+
 		if (from == ForgeDirection.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getMaxEnergyStored();
@@ -317,32 +349,34 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	// ICrankable
 
 	@Override
-	public boolean canTurn()
-	{
+	public boolean canTurn() {
+
 		return _grid.storage.getEnergyStored() < _grid.storage.getMaxEnergyStored();
 	}
 
 	@Override
-	public void applyTurn()
-	{
+	public void applyTurn() {
+
 		_grid.storage.receiveEnergy(90, false);
 	}
 
 	@Override
-	public boolean canCrankAttach(ForgeDirection directionToCrank)
-	{
+	public boolean canCrankAttach(ForgeDirection directionToCrank) {
+
 		return true;
 	}
 
 	// internal
 
 	public boolean isInterfacing(ForgeDirection to) {
+
 		int bSide = to.getOpposite().ordinal();
 		int mode = sideMode[bSide] >> 1;
 		return (sideMode[bSide] & 1) != 0 & mode != 0;
 	}
 
 	public int interfaceMode(ForgeDirection to) {
+
 		int bSide = to.getOpposite().ordinal();
 		int mode = sideMode[bSide] >> 1;
 		return (sideMode[bSide] & 1) != 0 ? mode : 0;
@@ -350,16 +384,18 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
+
 		super.readFromNBT(nbt);
 		sideMode = nbt.getByteArray("SideMode");
 		if (sideMode.length != 7)
-			sideMode = new byte[]{1,1, 1,1,1,1, 0};
+			sideMode = new byte[] { 1, 1, 1, 1, 1, 1, 0 };
 		energyForGrid = nbt.getInteger("Energy");
 		readFromNBT = true;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
+
 		super.writeToNBT(nbt);
 		nbt.setByteArray("SideMode", sideMode);
 		if (_grid != null) {
@@ -374,6 +410,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	void extract(ForgeDirection side, EnergyStorage storage) {
+
 		if (deadCache) return;
 		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
@@ -381,8 +418,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			case 1: // IEnergyHandler
 				if (providerCache != null) {
 					IEnergyProvider handlerTile = providerCache[bSide];
-					if (handlerTile != null)
-					{
+					if (handlerTile != null) {
 						int e = handlerTile.extractEnergy(side, TRANSFER_RATE, true);
 						if (e > 0)
 							handlerTile.extractEnergy(side, storage.receiveEnergy(e, false), false);
@@ -404,6 +440,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	int transfer(ForgeDirection side, int energy) {
+
 		if (deadCache) return 0;
 		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
@@ -430,99 +467,112 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		return 0;
 	}
 
-	private class IC2Cache
-	{
+	private class IC2Cache {
+
 		IEnergySource[] sourceCache = null;
 		IEnergySink[] sinkCache = null;
 
-		void erase(int side)
-		{
+		void erase(int side) {
+
 			if (sourceCache != null)
 				sourceCache[side] = null;
 			if (sinkCache != null)
 				sinkCache[side] = null;
 		}
-		public boolean add(TileEntity tile, int side)
-		{
+
+		public boolean add(TileEntity tile, int side) {
+
 			boolean r = false;
 			if (tile instanceof IEnergyTile) {
 				ForgeDirection fSide = ForgeDirection.VALID_DIRECTIONS[side];
-				if (tile instanceof IEnergySource && ((IEnergySource)tile).emitsEnergyTo(TileEntityRedNetEnergy.this, fSide)) {
+				if (tile instanceof IEnergySource && ((IEnergySource) tile).emitsEnergyTo(TileEntityRedNetEnergy.this, fSide)) {
 					if (sourceCache == null) sourceCache = new IEnergySource[6];
-					sourceCache[side] = (IEnergySource)tile;
+					sourceCache[side] = (IEnergySource) tile;
 					sideMode[side] |= 3 << 1;
 					r = true;
 				}
-				if (tile instanceof IEnergySink && ((IEnergySink)tile).acceptsEnergyFrom(TileEntityRedNetEnergy.this, fSide)) {
+				if (tile instanceof IEnergySink && ((IEnergySink) tile).acceptsEnergyFrom(TileEntityRedNetEnergy.this, fSide)) {
 					if (sinkCache == null) sinkCache = new IEnergySink[6];
-					sinkCache[side] = (IEnergySink)tile;
+					sinkCache[side] = (IEnergySink) tile;
 					sideMode[side] |= 3 << 1;
 					r = true;
 				}
 			}
 			return r;
 		}
-		void extract(int bSide)
-		{
-			if (sourceCache != null)
-			{
+
+		void extract(int bSide) {
+
+			if (sourceCache != null) {
 				IEnergySource source = sourceCache[bSide];
 				if (source == null) return;
-				int e = Math.min((int)(source.getOfferedEnergy() * energyPerEU), TRANSFER_RATE);
+				int e = Math.min((int) (source.getOfferedEnergy() * energyPerEU), TRANSFER_RATE);
 				if (e > 0) {
 					e = _grid.storage.receiveEnergy(e, false);
 					if (e > 0)
-						source.drawEnergy(e / (float)energyPerEU);
+						source.drawEnergy(e / (float) energyPerEU);
 				}
 			}
 			return;
 		}
-		int transmit(int energy, ForgeDirection side, int bSide)
-		{
+
+		int transmit(int energy, ForgeDirection side, int bSide) {
+
 			if (sinkCache != null) {
 				IEnergySink sink = sinkCache[bSide];
 				if (sink == null) return 0;
-				int e = (int)Math.min(getPowerFromTier(sink.getSinkTier()) * energyPerEU, energy);
-				e = Math.min((int)(sink.getDemandedEnergy() * energyPerEU), e);
+				int e = (int) Math.min(getPowerFromTier(sink.getSinkTier()) * energyPerEU, energy);
+				e = Math.min((int) (sink.getDemandedEnergy() * energyPerEU), e);
 				if (e > 0) {
-					float v = e / (float)energyPerEU;
-					e -= (int)Math.ceil(sink.injectEnergy(side, v, getPowerFromTier(getTierFromPower(v))) * energyPerEU);
+					float v = e / (float) energyPerEU;
+					e -= (int) Math.ceil(sink.injectEnergy(side, v, getPowerFromTier(getTierFromPower(v))) * energyPerEU);
 					return e;
 				}
 			}
 			return 0;
 		}
+
 		private double getPowerFromTier(int t) {
+
 			if (IC2Net) return getPower(t);
 			return t * 32;
 		}
+
 		private double getPower(int t) {
+
 			if (EnergyNet.instance != null)
 				return EnergyNet.instance.getPowerFromTier(t);
 			return t * 32;
 		}
+
 		private int getTierFromPower(double t) {
+
 			if (IC2Net) return getTier(t);
 			return 1;
 		}
+
 		private int getTier(double t) {
+
 			if (EnergyNet.instance != null)
 				return EnergyNet.instance.getTierFromPower(t);
 			return 1;
 		}
+
 		@Override
-		public String toString()
-		{
+		public String toString() {
+
 			return "{Source:" + Arrays.toString(sourceCache) + ", Sink:" + Arrays.toString(sinkCache) + "}";
 		}
 	}
 
 	void setGrid(RedstoneEnergyNetwork newGrid) {
+
 		_grid = newGrid;
 	}
 
 	@Override
 	public void updateInternalTypes(IGridController grid) {
+
 		super.updateInternalTypes(grid);
 		if (deadCache) return;
 		if (grid != RedstoneEnergyNetwork.HANDLER) return;
@@ -540,14 +590,25 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
-		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 5)) {
+
+		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 6)) {
 			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
 				if (!player.worldObj.isRemote) {
-					sideMode[ForgeDirection.OPPOSITES[side]] ^= 1;
+					int dir = ForgeDirection.OPPOSITES[side];
+					if (sideMode[dir] == 9) {
+						removeFromGrid();
+					}
+					sideMode[dir] ^= 1;
+					markDirty();
+					if (sideMode[dir] == 8) {
+						deadCache = true;
+						reCache();
+						if (_grid == null)
+							setGrid(new RedstoneEnergyNetwork(this));
+					}
 					RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 					Packets.sendToAllPlayersWatching(this);
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-					markDirty();
 				}
 				return true;
 			}
@@ -556,9 +617,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool)
-	{
-		hasTool = false;
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
+
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[1]); // main body
@@ -566,52 +626,42 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 		ForgeDirection[] side = ForgeDirection.VALID_DIRECTIONS;
 		int[] opposite = ForgeDirection.OPPOSITES;
-		for (int i = side.length; i --> 0; )
-		{
+		for (int i = side.length; i-- > 0;) {
 			RedNetConnectionType c = getConnectionState(side[i], true);
-			RedNetConnectionType f = getConnectionState(side[i], false);
-			int mode = sideMode[opposite[i]] >> 1;
-			boolean iface = mode > 0 & mode != 4;
-			int o = 2 + i;
-			if (c.isConnected)
-			{
+			int mode = sideMode[opposite[i]];
+			boolean iface = mode > 1 & ((mode & 1) == 1 | hasTool);
+			int o = 2 + i, k = o;
+			l: if (c.isConnected) {
 				if (c.isPlate)
 					o += 6;
 				else if (c.isCable)
-					if (c.isAllSubnets)
-					{
-						if (hasTool) {
-							list.add((IndexedCuboid6)new IndexedCuboid6(o + 6 * 6,
-								subSelection[o]).add(offset)); // connection point
-							iface = forTrace;
+					if (c.isAllSubnets) {
+						if (!iface | !hasTool) {
+							o = 2 + 6 * 3 + i;
 						}
-						o = 2 + 6*3 + i;
-						if (iface || mode == 4)
-							o += 6;
-						list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1,
-								subSelection[o]).add(offset)); // cable part or energy selection box
-						continue;
+						list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? k + 6 * 6 : 1, subSelection[o]).add(offset)); // cable part or connection point
+						break l;
 					}
-				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
-				o = 2 + 6*2 + i;
-				if (c.isSingleSubnet) // color band
-					list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset));
-				o += 6;
-				if (iface | (!forTrace & mode == 4))
-					o += 12;
+				k = 2 + 6 * 3 + i;
+				if (iface)
+					k += forTrace ? 6 : 12;
 				// cable part or energy selection box
-				list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
+				list.add((IndexedCuboid6) new IndexedCuboid6(iface & hasTool ? k : 1, subSelection[k]).add(offset));
+				list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
+				o = 2 + 6 * 2 + i;
+				if (c.isSingleSubnet) // color band
+					list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset));
 				iface = false;
-				mode = 0;
+			} else if (forTrace & hasTool & _cableMode[6] != 1 && (c = getConnectionState(side[i], false)).isConnected) { // cable-only
+				if (!iface & c.isAllSubnets & c.isCable) {
+					k += 6 * 3;
+					o += 6 * 6;
+				}
+				list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[k]).add(offset)); // connection point (raytrace)
 			}
-			else if (forTrace & f.isConnected && _cableMode[6] != 1)
-			{ // cable-only
-				list.add((IndexedCuboid6)new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
-			}
-			if (iface | (!forTrace & mode == 4))
-			{
-				o = 2 + 6*5 + i;
-				list.add((IndexedCuboid6)new IndexedCuboid6(iface ? o : 1, subSelection[o]).add(offset));
+			if (iface) {
+				o = 2 + 6 * 5 + i;
+				list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? o : 1, subSelection[o]).add(offset));
 			}
 		}
 		main.add(offset);
@@ -619,19 +669,20 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+
 		info.add(text("-Redstone-"));
 		super.getTileInfo(info, side, player, debug && player.isSneaking());
 		info.add(text("-Energy-"));
 		if (_grid != null) {/* TODO: advanced monitoring
-			if (isNode) {
-				info.add("Throughput All: " + _grid.distribution);
-				info.add("Throughput Side: " + _grid.distributionSide);
-			} else//*/
+							if (isNode) {
+							info.add("Throughput All: " + _grid.distribution);
+							info.add("Throughput Side: " + _grid.distributionSide);
+							} else//*/
 			if (!debug) {
 				float sat = 0;
 				if (_grid.getNodeCount() != 0)
-					sat = (float)(Math.ceil(_grid.storage.getEnergyStored() /
-							(float)_grid.storage.getMaxEnergyStored() * 1000f) / 10f);
+					sat = (float) (Math.ceil(_grid.storage.getEnergyStored() /
+							(float) _grid.storage.getMaxEnergyStored() * 1000f) / 10f);
 				info.add(text("Saturation: " + sat));
 			}
 		} else if (!debug)

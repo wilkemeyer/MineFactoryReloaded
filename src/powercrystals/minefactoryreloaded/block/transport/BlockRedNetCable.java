@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block.transport;
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.renderIdRedNet;
 
 import cofh.api.block.IBlockInfo;
+import cofh.lib.util.position.BlockPosition;
 import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.repack.codechicken.lib.vec.Cuboid6;
 import cpw.mods.fml.relauncher.Side;
@@ -66,13 +67,13 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, ITileEntityProvider
 	private static float _bandDepthStart = _bandOffset;
 	private static float _bandDepthEnd   = _bandOffset + _bandDepth;
 
-	static int[] _subSideMappings = new int[] { 6, 6,
-		0, 1, 2, 3, 4, 5,
-		0, 1, 2, 3, 4, 5,
-		0, 1, 2, 3, 4, 5,
-		0, 1, 2, 3, 4, 5,
-		0, 1, 2, 3, 4, 5,
-		0, 1, 2, 3, 4, 5,
+	public static int[] _subSideMappings = new int[] { 6, 6,
+		0, 1, 2, 3, 4, 5, // 6[0]
+		0, 1, 2, 3, 4, 5, // 6[1]
+		0, 1, 2, 3, 4, 5, // 6[2]
+		0, 1, 2, 3, 4, 5, // 6[3]
+		0, 1, 2, 3, 4, 5, // 6[4]
+		0, 1, 2, 3, 4, 5, // 6[5]
 		7, 8, 9, 10, 11, 12 };
 
 	public static Cuboid6[] subSelection = new Cuboid6[2 + 6 * 6];
@@ -116,14 +117,6 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, ITileEntityProvider
 		subSelection[i++] = new Cuboid6(0, _wireStart, _wireStart, _wireStart, _wireEnd, _wireEnd);
 		subSelection[i++] = new Cuboid6(_wireEnd, _wireStart, _wireStart, 1 - 0, _wireEnd, _wireEnd);
 
-		// ** 6[5] ** wire cage connection hitbox
-		subSelection[i++] = new Cuboid6(_cageStart, 0, _cageStart, _cageEnd, _cageStart, _cageEnd);
-		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - 0, _cageEnd);
-		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, 0, _cageEnd, _cageEnd, _cageStart);
-		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd, 1 - 0);
-		subSelection[i++] = new Cuboid6(0, _cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd);
-		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - 0, _cageEnd, _cageEnd);
-
 		// ** 6[4] ** wire cage minus band connection hitbox
 		subSelection[i++] = new Cuboid6(_cageStart, _bandDepthEnd, _cageStart, _cageEnd, _cageStart, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - _bandDepthEnd, _cageEnd);
@@ -131,6 +124,14 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, ITileEntityProvider
 		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd, 1 - _bandDepthEnd);
 		subSelection[i++] = new Cuboid6(_bandDepthEnd, _cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd);
 		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - _bandDepthEnd, _cageEnd, _cageEnd);
+
+		// ** 6[5] ** wire cage connection hitbox
+		subSelection[i++] = new Cuboid6(_cageStart, 0, _cageStart, _cageEnd, _cageStart, _cageEnd);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageEnd, _cageStart, _cageEnd, 1 - 0, _cageEnd);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, 0, _cageEnd, _cageEnd, _cageStart);
+		subSelection[i++] = new Cuboid6(_cageStart, _cageStart, _cageEnd, _cageEnd, _cageEnd, 1 - 0);
+		subSelection[i++] = new Cuboid6(0, _cageStart, _cageStart, _cageStart, _cageEnd, _cageEnd);
+		subSelection[i++] = new Cuboid6(_cageEnd, _cageStart, _cageStart, 1 - 0, _cageEnd, _cageEnd);
 	}
 
 	public BlockRedNetCable()
@@ -206,7 +207,15 @@ implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, ITileEntityProvider
 					{
 						if (side > 6)
 						{
+							ForgeDirection dir = ForgeDirection.getOrientation(side - 7);
+							TileEntityRedNetCable cable2 = new BlockPosition(x, y, z).step(dir).getTileEntity(world, TileEntityRedNetCable.class);
 							cable.toggleSide(side - 7);
+							if (cable2 != null) {
+								cable2.toggleSide(1 ^ side - 7);
+								if (cable.canInterface(cable2, dir)) {
+									cable.getNetwork().addConduit(cable2);
+								}
+							}
 							break l;
 						}
 

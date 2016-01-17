@@ -44,6 +44,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
@@ -312,7 +313,13 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
 	{
+		if (world.isRemote) {
+			harvesters.set(MineFactoryReloadedCore.proxy.getPlayer());
+		}
 		MovingObjectPosition r = collisionRayTrace((IBlockAccess)world, x, y, z, start, end);
+		if (world.isRemote) {
+			harvesters.set(null);
+		}
 		return r;
 	}
 
@@ -322,7 +329,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingHammer(harvesters.get()));
+			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingUsableTool(harvesters.get(), x, y, z));
 			return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids,
 				new BlockCoord(x, y, z), this);
 		}

@@ -24,6 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -35,6 +36,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.core.ITraceable;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
@@ -69,18 +71,28 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public void invalidate() {
 
 		if (_grid != null) {
-			_grid.removeConduit(this);
-			_grid.storage.drain(fluidForGrid, true);
-			int c = 0;
-			for (int i = 6; i-- > 0;)
-				if (sideMode[i] == ((2 << 2) | 1))
-					++c;
-			if (c > 1)
-				_grid.regenerate();
-			deadCache = true;
-			_grid = null;
+			removeFromGrid();
 		}
 		super.invalidate();
+	}
+
+	private void removeFromGrid() {
+
+		_grid.removeConduit(this);
+		_grid.storage.drain(fluidForGrid, true);
+		markForRegen();
+		deadCache = true;
+		_grid = null;
+	}
+
+	private void markForRegen() {
+
+		int c = 0;
+		for (int i = 6; i-- > 0;)
+			if (sideMode[i] == ((2 << 2) | 1))
+				++c;
+		if (c > 1)
+			_grid.regenerate();
 	}
 
 	@Override
@@ -119,9 +131,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	public void onMerge() {
 
+		markChunkDirty();
 		notifyNeighborTileChange();
 		deadCache = true;
 		reCache();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -148,7 +162,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		if (worldObj.isRemote | deadCache)
 			return;
-		TileEntity tile = worldObj.getTileEntity(x, y, z);
+		TileEntity tile = worldObj.blockExists(x, y, z) ? worldObj.getTileEntity(x, y, z) : null;
 
 		if (x < xCoord)
 			addCache(tile, 5);
@@ -190,9 +204,18 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		int lastMode = sideMode[side];
 		sideMode[side] &= 3;
 		if (tile instanceof TileEntityPlasticPipe) {
-			sideMode[side] = (2 << 2);
-			if (((TileEntityPlasticPipe) tile)._grid == _grid) {
-				sideMode[side] |= 1; // always enable
+			TileEntityPlasticPipe cable = (TileEntityPlasticPipe) tile;
+			sideMode[side] &= ~2;
+			sideMode[side] |= (2 << 2);
+			if (cable.isInterfacing(ForgeDirection.getOrientation(side))) {
+				if (_grid == null && cable._grid != null) {
+					cable._grid.addConduit(this);
+				}
+				if (cable._grid == _grid) {
+					sideMode[side] |= 1; // always enable
+				}
+			} else {
+				sideMode[side] &= ~3;
 			}
 		} else if (tile instanceof IFluidHandler) {
 			//if (((IFluidHandler)tile).canFill(ForgeDirection.VALID_DIRECTIONS[side]))
@@ -222,8 +245,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 							if (hasGrid) {
 								pipe._grid.mergeGrid(_grid);
 							} else {
-								pipe._grid.addConduit(this);
-								hasGrid = _grid != null;
+								if (pipe._grid.addConduit(this)) {
+									hasGrid = true;
+									mergeWith(pipe, dir.ordinal());
+								}
 							}
 						}
 					}
@@ -258,10 +283,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		return fluidForGrid == te.fluidForGrid || FluidHelper.isFluidEqualOrNull(fluidForGrid, te.fluidForGrid);
 	}
 
-	public void mergeWith(TileEntityPlasticPipe te) {
+	private void mergeWith(TileEntityPlasticPipe te, int side) {
 
 		if (_grid != null && te._grid != null && couldInterface(te)) {
 			te._grid.mergeGrid(_grid);
+			final byte one = 1;
+			setMode(side, one);
+			te.setMode(side ^ 1, one);
 		}
 	}
 
@@ -533,12 +561,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
-
-		return false;
-	}
-
-	@Override
 	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
 
 		return subHit < 2;
@@ -548,7 +570,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public CustomHitBox getCustomHitBox(int hit, EntityPlayer player) {
 
 		final List<IndexedCuboid6> list = new ArrayList<IndexedCuboid6>(7);
-		addTraceableCuboids(list, true, false);
+		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord));
 		IndexedCuboid6 cube = list.get(0);
 		cube.expand(0.003);
 		Vector3 min = cube.min, max = cube.max.sub(min);
@@ -578,6 +600,77 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
+	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
+
+		if (subHit >= 0 && subHit < (2 + 6 * 2)) {
+			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
+				if (!worldObj.isRemote) {
+					int data = sideMode[ForgeDirection.OPPOSITES[side]] >> 2;
+					byte mode = getMode(side);
+					if (++mode == 2) ++mode;
+					if (data == 2) {
+						if (mode > 1)
+							mode = 0;
+						ForgeDirection dir = ForgeDirection.getOrientation(side);
+						TileEntityPlasticPipe cable = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
+						if (!isInterfacing(dir)) {
+							if (couldInterface(cable)) {
+								mergeWith(cable, side);
+								cable.onMerge();
+								onMerge();
+							}
+						} else {
+							removeFromGrid();
+							final byte zero = 0;
+							setMode(side, zero);
+							cable.onMerge();
+							onMerge();
+							if (_grid == null)
+								setGrid(new FluidNetwork(this));
+						}
+						return true;
+					}
+					else if (side == 6) {
+						if (mode > 1)
+							mode = 0;
+						setMode(side, mode);
+						markDirty();
+						switch (mode) {
+						case 0:
+							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.tile.standard"));
+							break;
+						case 1:
+							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.tile.cableonly"));
+							break;
+						default:
+						}
+						return true;
+					}
+					if (mode > 3) {
+						mode = 0;
+					}
+					setMode(side, mode);
+					markDirty();
+					switch (mode) {
+					case 0:
+						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.fluid.connection.disabled"));
+						break;
+					case 1:
+						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.fluid.connection.output"));
+						break;
+					case 3:
+						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.fluid.connection.extract"));
+						break;
+					default:
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
 
 		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
@@ -595,7 +688,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			if (((sideMode[opposite[i]] & 1) != 0) & mode > 0) {
 				if (mode == 2) {
 					o = 2 + 6 * 3 + i;
-					list.add((IndexedCuboid6) new IndexedCuboid6(1,
+					list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? 2 + i : 1,
 							subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
 					continue;
 				}
@@ -604,9 +697,16 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 				o = 2 + 6 * 3 + i;
 				list.add((IndexedCuboid6) new IndexedCuboid6(1, subSelection[o]).add(offset)); // cable part
 			}
-			else if (forTrace & !cableMode & iface) {
-				list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
+			else if (forTrace & hasTool) {
+				if (!cableMode & iface) {
+					list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
+				} else if (mode == 2) {
+					o = 2 + 6 * 3 + i;
+					list.add((IndexedCuboid6) new IndexedCuboid6(2 + i,
+							subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
+				}
 			}
+
 		}
 		main.add(offset);
 	}

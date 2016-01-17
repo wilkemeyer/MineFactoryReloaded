@@ -50,10 +50,10 @@ public class RedstoneEnergyNetwork implements IGrid {
 		return amt + storage.getEnergyStored() / size;
 	}
 
-	public void addConduit(TileEntityRedNetEnergy cond) {
+	public boolean addConduit(TileEntityRedNetEnergy cond) {
 		if (conduitSet.add(cond))
 			if (!conduitAdded(cond))
-				return;
+				return false;
 		if (cond.isNode) {
 			if (nodeSet.add(cond)) {
 				nodeAdded(cond);
@@ -65,6 +65,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 				nodeRemoved(cond);
 			}
 		}
+		return true;
 	}
 
 	public void removeConduit(TileEntityRedNetEnergy cond) {
