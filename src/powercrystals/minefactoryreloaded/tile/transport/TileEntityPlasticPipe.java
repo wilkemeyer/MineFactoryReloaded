@@ -79,7 +79,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	private void removeFromGrid() {
 
 		_grid.removeConduit(this);
-		_grid.storage.drain(fluidForGrid, true);
 		markForRegen();
 		deadCache = true;
 		_grid = null;
@@ -123,7 +122,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		if (deadCache) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
+				if (BlockPosition.blockExists(this, dir))
+					addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
 		}
@@ -241,7 +241,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityPlasticPipe pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
 					if (pipe != null) {
-						if (pipe._grid != null && pipe.canInterface(this)) {
+						if (pipe._grid != null &&
+								(readFromNBT ? pipe.couldInterface(this) : pipe.canInterface(this))) {
 							if (hasGrid) {
 								pipe._grid.mergeGrid(_grid);
 							} else {

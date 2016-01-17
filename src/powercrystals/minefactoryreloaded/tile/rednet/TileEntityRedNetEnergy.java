@@ -118,7 +118,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 		if (deadCache) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				addCache(BlockPosition.getAdjacentTileEntity(this, dir));
+				if (BlockPosition.blockExists(this, dir))
+					addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
 			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 		}
