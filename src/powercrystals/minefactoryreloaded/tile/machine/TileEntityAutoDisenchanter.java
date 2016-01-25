@@ -68,7 +68,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 		if (stack == null)
 			return false;
 		if (slot == 0) {
-			return stack.getEnchantmentTagList() != null;
+			return stack.getEnchantmentTagList() != null || stack.getItem().equals(Items.enchanted_book);
 		} else if (slot == 1) {
 			return stack.getItem().equals(Items.book);
 		}
