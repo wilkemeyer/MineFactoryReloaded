@@ -122,10 +122,10 @@ import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
-import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryBucket;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryFood;
 import powercrystals.minefactoryreloaded.item.gun.ItemNeedleGun;
 import powercrystals.minefactoryreloaded.item.gun.ItemPotatoCannon;
@@ -179,7 +179,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 	//static{DepLoader.load();}
 	public static final String modId = "MineFactoryReloaded";
 	public static final String modName = "MineFactory Reloaded";
-	public static final String version = "1.7.10R2.8.1B1";
+	public static final String version = "1.7.10R2.8.1";
 	public static final String dependencies = CoFHCore.version_group;
 	public static final String modNetworkChannel = "MFReloaded";
 
