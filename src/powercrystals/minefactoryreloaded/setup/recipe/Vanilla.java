@@ -173,7 +173,7 @@ public class Vanilla {
 
 		registerMachine(Harvester, new Object[] {
 				"GGG",
-				"xSx",
+				"XSX",
 				" M ",
 				'G', "sheetPlastic",
 				'X', golden_axe,
