@@ -28,6 +28,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	public TileEntityRancher() {
 
 		super(Machine.Rancher);
+		setManageSolids(true);
 		createEntityHAM(this);
 		setCanRotate(true);
 	}
