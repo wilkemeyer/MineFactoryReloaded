@@ -61,8 +61,15 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		meta &= 3;
-		return !isOpaqueCube() ? _iconTransparent[meta] : _iconOpaque[meta];
+		if (isOpaqueCube()) {
+			meta = (meta >= 0 && meta < _iconOpaque.length) ? meta : 0;
+			return _iconOpaque[meta];
+		}
+		else
+		{
+			meta = (meta >= 0 && meta < _iconTransparent.length) ? meta : 0;
+			return _iconTransparent[meta];
+		}
 	}
 
 	@Override
