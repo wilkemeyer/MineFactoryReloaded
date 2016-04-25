@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.lib.util.helpers.ItemHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -125,11 +126,10 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		if (MFRUtil.isHolding(player, ItemLogicUpgradeCard.class)) {
 			TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 			if (logic != null) {
-				if (logic.insertUpgrade(player.inventory.getCurrentItem().getItemDamage() + 1))
-				;
-				{
+				if (logic.insertUpgrade(player.inventory.getCurrentItem().getItemDamage() + 1)) {
 					if (!player.capabilities.isCreativeMode) {
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+						player.inventory.setInventorySlotContents(player.inventory.currentItem,
+							ItemHelper.consumeItem(player.inventory.getCurrentItem(), player));
 					}
 					return true;
 				}
