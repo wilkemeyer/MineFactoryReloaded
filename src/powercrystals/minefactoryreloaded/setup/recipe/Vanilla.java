@@ -1239,14 +1239,14 @@ public class Vanilla {
 
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
-		addRecipe(ShapedRecipe(stack(torch, 4), new Object[] {
+		addRecipe(ShapedRecipe(stack(torch, 3), new Object[] {
 				"R",
 				"S",
 				'R', "itemRawRubber",
 				'S', "stickWood",
 		}));
 
-		addRecipe(ShapedRecipe(stack(torch, 1), new Object[] {
+		addRecipe(ShapedRecipe(stack(torch, 2), new Object[] {
 				"C",
 				"S",
 				'C', "itemCharcoalSugar",
@@ -1256,18 +1256,14 @@ public class Vanilla {
 		for (ItemStack torchStone : getOres("torchStone")) {
 			if (torchStone == null)
 				continue;
-			torchStone = torchStone.copy();
-			torchStone.stackSize = 4;
-			addRecipe(ShapedRecipe(torchStone, new Object[] {
+			addRecipe(ShapedRecipe(cloneStack(torchStone, 3), new Object[] {
 					"R",
 					"S",
 					'R', "itemRawRubber",
 					'S', "stoneRod",
 			}));
-			torchStone = torchStone.copy();
-			torchStone.stackSize = 1;
 
-			addRecipe(ShapedRecipe(torchStone, new Object[] {
+			addRecipe(ShapedRecipe(cloneStack(torchStone, 2), new Object[] {
 					"C",
 					"S",
 					'C', "itemCharcoalSugar",
