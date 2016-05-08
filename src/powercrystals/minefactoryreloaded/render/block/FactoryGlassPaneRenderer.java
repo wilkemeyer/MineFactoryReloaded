@@ -226,18 +226,20 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler {
 		boolean connectedNegX = block.canPaneConnectTo(blockAccess, x - 1, y, z, ForgeDirection.WEST);
 		boolean connectedPosX = block.canPaneConnectTo(blockAccess, x + 1, y, z, ForgeDirection.EAST);
 
+		boolean connected = connectedNegX | connectedPosX | connectedNegZ | connectedPosZ;
+
 		boolean renderTop = y >= worldHeight || block.shouldSideBeRendered(blockAccess, x, y + 1, z, 1);
 		boolean renderBottom = y <= 0 || block.shouldSideBeRendered(blockAccess, x, y - 1, z, 0);
 
-		boolean renderTopNegZ = connectedNegZ;
-		boolean renderTopPosZ = connectedPosZ;
-		boolean renderTopNegX = connectedNegX;
-		boolean renderTopPosX = connectedPosX;
+		boolean renderTopNegZ = connectedNegZ | !connected;
+		boolean renderTopPosZ = connectedPosZ | !connected;
+		boolean renderTopNegX = connectedNegX | !connected;
+		boolean renderTopPosX = connectedPosX | !connected;
 
-		boolean renderBottomNegZ = connectedNegZ;
-		boolean renderBottomPosZ = connectedPosZ;
-		boolean renderBottomNegX = connectedNegX;
-		boolean renderBottomPosX = connectedPosX;
+		boolean renderBottomNegZ = connectedNegZ | !connected;
+		boolean renderBottomPosZ = connectedPosZ | !connected;
+		boolean renderBottomNegX = connectedNegX | !connected;
+		boolean renderBottomPosX = connectedPosX | !connected;
 
 		if (!renderTop && block.canPaneConnectToBlock(blockAccess.getBlock(x, y + 1, z))) {
 			renderTopNegZ = connectedNegZ && !block.canPaneConnectTo(blockAccess, x, y + 1, z - 1, ForgeDirection.NORTH);
@@ -253,7 +255,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler {
 			renderBottomPosX = connectedPosX && !block.canPaneConnectTo(blockAccess, x + 1, y - 1, z, ForgeDirection.EAST);
 		}
 
-		if ((!connectedNegX | !connectedPosX) & (connectedNegX | connectedPosX | connectedNegZ | connectedPosZ)) {
+		if ((!connectedNegX | !connectedPosX) & connected) {
 
 			if (connectedNegX & !connectedPosX) {
 				// TODO: we overlap on corners and at T/+ sections, redesign similar to top/bottom rendering needed
@@ -313,7 +315,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler {
 			}
 		}
 
-		if ((!connectedNegZ | !connectedPosZ) & (connectedNegX | connectedPosX | connectedNegZ | connectedPosZ)) {
+		if ((!connectedNegZ | !connectedPosZ) & connected) {
 
 			if (connectedNegZ & !connectedPosZ) {
 				tess.setColorOpaque_F(red, green, blue);
