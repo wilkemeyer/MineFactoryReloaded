@@ -865,8 +865,8 @@ public class Vanilla {
 		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 4, 10), "dyeBlack", stack(stone_slab, 1, 0));
 		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 4, 11), stack2(sugar), stack(stone_slab, 1, 0));
 		// smooth<->paved
-		addTwoWayConversionRecipe(stack(factoryDecorativeStoneBlock, 1, 10), stack(factoryDecorativeStoneBlock, 1, 0));
-		addTwoWayConversionRecipe(stack(factoryDecorativeStoneBlock, 1, 11), stack(factoryDecorativeStoneBlock, 1, 1));
+		addShapelessRecipe(stack(factoryDecorativeStoneBlock, 1, 0), stack(factoryDecorativeStoneBlock, 1, 10));
+		addShapelessRecipe(stack(factoryDecorativeStoneBlock, 1, 1), stack(factoryDecorativeStoneBlock, 1, 11));
 
 		// TODO: add white/black sand?
 
@@ -1111,11 +1111,11 @@ public class Vanilla {
 		}
 
 		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 3), new Object[] {
-				"SLS",
+				"SPS",
 				" B ",
 				"S S",
 				'S', string,
-				'L', leather,
+				'P', "sheetPlastic",
 				'B', "slimeball",
 		}));
 
@@ -1173,6 +1173,9 @@ public class Vanilla {
 		// decorative bricks: cobble->smooth
 		addWeakSmelting(stack(factoryDecorativeStoneBlock, 1, 0), stack(factoryDecorativeStoneBlock, 1, 2));
 		addWeakSmelting(stack(factoryDecorativeStoneBlock, 1, 1), stack(factoryDecorativeStoneBlock, 1, 3));
+		// smooth -> paved
+		addSmelting(stack(factoryDecorativeStoneBlock, 1, 10), stack(factoryDecorativeStoneBlock, 1, 0));
+		addSmelting(stack(factoryDecorativeStoneBlock, 1, 11), stack(factoryDecorativeStoneBlock, 1, 1));
 	}
 
 	protected void registerVanillaImprovements() {
