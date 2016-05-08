@@ -1,11 +1,14 @@
 package powercrystals.minefactoryreloaded.net;
 
+import com.google.common.base.Throwables;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+
+import net.minecraft.util.ReportedException;
 
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.core.IGridController;
@@ -116,7 +119,12 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 				}
 				conduit.clear();
 			} catch (Throwable _) {
-				throw new RuntimeException("Crashing on conduit " + cond, _);
+				RuntimeException error = new RuntimeException("Crashing on conduit " + cond, _);
+				if (_ instanceof ReportedException) {
+					_.addSuppressed(error);
+					Throwables.propagate(_);
+				}
+				throw error;
 			}
 		}
 		//}
@@ -168,7 +176,12 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 				}
 				conduit.clear();
 			} catch (Throwable _) {
-				throw new RuntimeException("Crashing on conduit " + cond, _);
+				RuntimeException error = new RuntimeException("Crashing on conduit " + cond, _);
+				if (_ instanceof ReportedException) {
+					_.addSuppressed(error);
+					Throwables.propagate(_);
+				}
+				throw error;
 			}
 		}
 		//}
