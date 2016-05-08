@@ -1217,9 +1217,18 @@ public class Vanilla {
 		}
 
 		if (enableSmoothSlabRecipe.getBoolean(true)) {
+			addRecipe(stack(double_stone_slab, 3, 0), new Object[] {
+				"VVV",
+				'V', stack(double_stone_slab, 1, 8)
+			});
+
 			addRecipe(stack(double_stone_slab, 1, 8), new Object[] {
 					"VV",
 					'V', stack(stone_slab, 1, 0)
+			});
+			addRecipe(stack(double_stone_slab, 1, 9), new Object[] {
+				"VV",
+				'V', stack(stone_slab, 1, 1)
 			});
 		}
 
