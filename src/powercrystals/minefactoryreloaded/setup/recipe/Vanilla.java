@@ -88,6 +88,7 @@ public class Vanilla {
 		registerOre("blockMeat", stack(factoryDecorativeBrickBlock, 1, 13));
 		registerOre("blockMeatRaw", stack(factoryDecorativeBrickBlock, 1, 12));
 		registerOre("itemCharcoalSugar", sugarCharcoalItem);
+		registerOre("blockCharcoalSugar", stack(factoryDecorativeBrickBlock, 1, 15));
 		registerOre("cableRedNet", stack(rednetCableBlock, 1, 0));
 		registerOre("cableRedNet", stack(rednetCableBlock, 1, 1));
 		registerOre("cableRedNetEnergy", stack(rednetCableBlock, 1, 2));
