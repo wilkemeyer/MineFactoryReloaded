@@ -805,7 +805,14 @@ public class Vanilla {
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 7), stack2(glowstone), stack(stonebrick));
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 8), "blockLapis", stack(stonebrick));
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 9), stack2(obsidian), stack(stonebrick));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 10), stack(stone_slab, 1, 0), stack(stonebrick));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 4, 10), stack(stone_slab, 1, 0), stack(stonebrick));
+		if (enableSmoothSlabRecipe.getBoolean(true)) {
+			addRecipe(stack(factoryDecorativeBrickBlock, 8, 10), new Object[] {
+				"VV",
+				"VV",
+				'V', stack(double_stone_slab, 1, 8)
+			});
+		}
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 11), stack2(snow), stack(stonebrick));
 		// 12 & 13 are special blocks
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 14), stack(brick_block, 1, 0), stack(stonebrick));
@@ -830,8 +837,6 @@ public class Vanilla {
 		 **/
 		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 2), "dyeBlack", "cobblestone");
 		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 3), stack2(sugar), "cobblestone");
-
-		// meta-sensitive optional override in block code?
 
 		/**
 		 * Large brick:
