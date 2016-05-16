@@ -105,6 +105,12 @@ tile.mfr.road.light.inverted.off.name = Road Light (Inverted)
 tile.mfr.road.light.inverted.on.name = Road Light (Inverted)
 
 tile.mfr.plastic.name = Block of Plastic
+tile.mfr.plastic.bricks.name = Plastic Bricks
+tile.mfr.plastic.bricks_large.name = Large Plastic Bricks
+tile.mfr.plastic.chiseled.name = Chiseled Plastic Bricks
+tile.mfr.plastic.column.name = Plastic Column
+tile.mfr.plastic.paver.name = Plastic Paver
+tile.mfr.plastic.road.name = Plastic Road
 
 tile.mfr.decorative.brick.ice.name = Ice Bricks
 tile.mfr.decorative.brick.glowstone.name = Glowstone Bricks

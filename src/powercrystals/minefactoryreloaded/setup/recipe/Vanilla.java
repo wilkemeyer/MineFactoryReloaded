@@ -794,6 +794,21 @@ public class Vanilla {
 			}
 		}
 
+		addTwoWayConversionRecipe(stack(factoryPlasticBlock, 1, 1), stack(factoryPlasticBlock, 1, 0));
+		addRecipe(stack(factoryPlasticBlock, 3, 2), new Object[] {
+			"XXX",
+			'X', stack(factoryPlasticBlock, 1, 1)
+		});
+		addSmallStorageRecipe(stack(factoryPlasticBlock, 4, 3), stack(factoryPlasticBlock, 1, 0));
+		addSmallStorageRecipe(stack(factoryPlasticBlock, 4, 4), stack(factoryPlasticBlock, 1, 5));
+		addRecipe(stack(factoryPlasticBlock, 8, 5), new Object[] {
+			"XXX",
+			"X X",
+			"XXX",
+			'X', stack(factoryPlasticBlock, 1, 1)
+		});
+		addSmallStorageRecipe(stack(factoryPlasticBlock, 4, 6), stack(factoryPlasticBlock, 1, 3));
+
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 0), stack2(ice), stack2(brick_block));
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 1), stack2(glowstone), stack2(brick_block));
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 2), "blockLapis", stack2(brick_block));
