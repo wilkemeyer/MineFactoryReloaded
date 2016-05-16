@@ -10,39 +10,38 @@ import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
-public class BlockPinkSlime extends BlockBreakable
-{
+public class BlockPinkSlime extends BlockBreakable {
+
 	public static Block.SoundType slime = new SoundType("slime", 1f, 1f);
 
-	public BlockPinkSlime()
-	{
+	public BlockPinkSlime() {
+
 		super("minefactoryreloaded:tile.mfr.pinkslime.block", Material.clay, false); // FIXME: this doesn't take a string in 1.8
 		setCreativeTab(MFRCreativeTab.tab);
 		setBlockName("mfr.pinkslime.block");
 		setBlockTextureName("minefactoryreloaded:" + getUnlocalizedName());
 		slipperiness = 0.8f;
 		setHardness(0.5f);
-		setHarvestLevel("pickaxe", 0);
 		setHarvestLevel("shovel", 0);
 		setStepSound(slime);
 	}
 
 	@Override
-	public int getRenderBlockPass()
-	{
+	public int getRenderBlockPass() {
+
 		return 1;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-    {
-        final float f = 0.125F;
-        return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1 - f, z + 1);
-    }
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+
+		final float f = 0.125F;
+		return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1 - f, z + 1);
+	}
 
 	@Override
-	public void onFallenUpon(World world, int x, int y, int z, Entity entity, float fallDistance)
-	{
+	public void onFallenUpon(World world, int x, int y, int z, Entity entity, float fallDistance) {
+
 		if (entity.isSneaking())
 			super.onFallenUpon(world, x, y, z, entity, fallDistance);
 		else {
@@ -53,17 +52,15 @@ public class BlockPinkSlime extends BlockBreakable
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-	{
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+
 		NBTTagCompound data = entity.getEntityData();
-		if (data.hasKey("mfr:slime"))
-		{
+		if (data.hasKey("mfr:slime")) {
 			entity.motionY = data.getDouble("mfr:slime");
 			data.removeTag("mfr:slime");
 		}
 
-		if (Math.abs(entity.motionY) < 0.1 && !entity.isSneaking())
-		{
+		if (Math.abs(entity.motionY) < 0.1 && !entity.isSneaking()) {
 			double d = 0.4 + Math.abs(entity.motionY) * 0.2;
 			entity.motionX *= d;
 			entity.motionZ *= d;
@@ -71,29 +68,30 @@ public class BlockPinkSlime extends BlockBreakable
 		super.onEntityCollidedWithBlock(world, x, y, z, entity);
 	}
 
-	public static class SoundType extends Block.SoundType
-	{
-		public SoundType(String name, float volume, float frequency)
-		{
+	public static class SoundType extends Block.SoundType {
+
+		public SoundType(String name, float volume, float frequency) {
+
 			super(name, volume, frequency);
 		}
 
 		@Override
-		public String getBreakSound()
-		{
+		public String getBreakSound() {
+
 			return "mob.slime.big";
 		}
 
 		@Override
-		public String getStepResourcePath()
-		{
+		public String getStepResourcePath() {
+
 			return "mob.slime.big";
 		}
 
 		@Override
-		public String func_150496_b()
-		{
+		public String func_150496_b() {
+
 			return "mob.slime.small";
 		}
 	}
+
 }
