@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.render.tileentity;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -9,18 +10,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-public class LaserRendererBase
-{
+public class LaserRendererBase {
+
 	public static void setColor(int color) {
 
 		r = (color >> 16) & 255;
-		g = (color >>  8) & 255;
-		b = (color >>  0) & 255;
+		g = (color >> 8) & 255;
+		b = (color >> 0) & 255;
 	}
 
 	private static int r = 255, g = 255, b = 255;
-	public static void renderLaser(TileEntity host, double x, double y, double z, int length, ForgeDirection orientation, float partialTicks)
-	{
+
+	public static void renderLaser(TileEntity host, double x, double y, double z, int length, ForgeDirection orientation, float partialTicks) {
+
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();
 
@@ -28,33 +30,32 @@ public class LaserRendererBase
 		double yStart = y;
 		double zStart = z;
 
-		if(orientation == ForgeDirection.DOWN)
-		{
+		switch (orientation) {
+		case DOWN:
 			yStart -= length;
-		}
-		if(orientation == ForgeDirection.NORTH)
-		{
+			break;
+		case NORTH:
 			GL11.glRotatef(270, 1, 0, 0);
 			yStart = -z;
 			zStart = y;
-		}
-		else if(orientation == ForgeDirection.SOUTH)
-		{
+			break;
+		case SOUTH:
 			GL11.glRotatef(90, 1, 0, 0);
 			yStart = z + 1;
 			zStart = -y - 1;
-		}
-		else if(orientation == ForgeDirection.EAST)
-		{
+			break;
+		case EAST:
 			GL11.glRotatef(270, 0, 0, 1);
 			yStart = x + 1;
 			xStart = -y - 1;
-		}
-		else if(orientation == ForgeDirection.WEST)
-		{
+			break;
+		case WEST:
 			GL11.glRotatef(90, 0, 0, 1);
 			yStart = -x;
 			xStart = y;
+			break;
+		default:
+			break;
 		}
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
@@ -65,7 +66,7 @@ public class LaserRendererBase
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDepthMask(true);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		float ticks = (host.getWorldObj().getTotalWorldTime() + partialTicks);
+		float ticks = (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() + partialTicks);
 		float f3 = -ticks * 0.2F - MathHelper.floor_float(-ticks * 0.1F);
 		double d3 = ticks * 0.025D * (1.0D - 2.5D);
 		tessellator.startDrawingQuads();
@@ -141,4 +142,5 @@ public class LaserRendererBase
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
+
 }
