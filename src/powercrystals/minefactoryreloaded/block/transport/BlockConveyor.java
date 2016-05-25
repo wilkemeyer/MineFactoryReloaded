@@ -673,5 +673,8 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 				}
 			}
 		}
+		if (entityitem.getEntityItem().stackSize <= 0) {
+			entityitem.setDead();
+		}
 	}
 }
