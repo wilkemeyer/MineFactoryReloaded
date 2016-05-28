@@ -220,7 +220,9 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		g /= d;
 		b /= d;
 		color = (r << 16) | (g << 8) | b;
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		if (worldObj != null) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	public int getColor() {
