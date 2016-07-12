@@ -654,8 +654,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset));
 				iface = false;
 			} else if (forTrace & hasTool & _cableMode[6] != 1 && (c = getConnectionState(side[i], false)).isConnected) { // cable-only
-				if (!iface & c.isAllSubnets & c.isCable) {
-					k += 6 * 3;
+				if (c.isAllSubnets & c.isCable) {
+					if (!iface) {
+						k += 6 * 3;
+					}
 					o += 6 * 6;
 				}
 				list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[k]).add(offset)); // connection point (raytrace)
