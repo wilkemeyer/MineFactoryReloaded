@@ -20,7 +20,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 @ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
 		name = "MFR Compat: BuildCraft",
 		version = MineFactoryReloadedCore.version,
-		dependencies = "after:MineFactoryReloaded;BuildCraftAPI|fuels",
+		dependencies = "after:MineFactoryReloaded;after:BuildCraftAPI|fuels",
 		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
 public class Buildcraft {
 
