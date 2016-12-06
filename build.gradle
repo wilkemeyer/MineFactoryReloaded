@@ -23,6 +23,22 @@ group = 'powercrystals' // Your main package.
 version = "${minecraft_version}-${mod_version}"
 archivesBaseName = 'MineFactoryReloaded'
 
+repositories {
+    maven {
+        name = "ChickenBones repo"
+        url = "http://chickenbones.net/maven/"
+    }
+    maven {
+        name = "CoFH Maven"
+        url = "http://jenkins.podgeweb.com:1616/maven/"
+    }
+}
+
+dependencies {
+    compile "codechicken:CodeChickenLib:${minecraft_version}-${ccl_version}:deobf"
+    compile "cofh:CoFHCore:${minecraft_version}-${cofhcore_version}:deobf"
+}
+
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 

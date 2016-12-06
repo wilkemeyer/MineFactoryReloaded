@@ -23,8 +23,11 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
@@ -293,9 +296,12 @@ public class MFRUtil {
 		return null;
 	}
 
-	public static final TileEntity getTile(World world, int x, int y, int z) {
+	public static TileEntity getTile(IBlockAccess world, BlockPos pos) {
 
-		return world.getChunkFromBlockCoords(x, z).getTileEntityUnsafe(x & 15, y, z & 15);
+		if (world instanceof World) {
+			return ((World) world).getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+		}
+		return world.getTileEntity(pos);
 	}
 
 	public static EnumFacing[] directionsWithoutConveyors(World world, int x, int y, int z) {

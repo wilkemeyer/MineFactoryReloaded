@@ -83,7 +83,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityWeather;
 
 public class Machine {
 
-	public static final Material MATERIAL = new MachineMaterial(MapColor.ironColor);
+	public static final Material MATERIAL = new MachineMaterial(MapColor.IRON);
 	protected static List<Machine> _machines = new LinkedList<Machine>();
 	protected static TIntObjectHashMap<Machine> _machineMappings = new TIntObjectHashMap<Machine>();
 	protected static TIntArrayList _highestMetas = new TIntArrayList();

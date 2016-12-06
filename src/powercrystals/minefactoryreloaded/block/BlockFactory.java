@@ -8,42 +8,40 @@ import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.raytracer.RayTracer;
 import cofh.repack.codechicken.lib.vec.BlockCoord;
 import cofh.repack.codechicken.lib.vec.Vector3;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -56,6 +54,8 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
+import javax.annotation.Nullable;
+
 public class BlockFactory extends Block implements IRedNetConnection, IDismantleable
 {
 	protected boolean providesPower;
@@ -64,7 +64,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	{
 		super(Machine.MATERIAL);
 		setHardness(hardness);
-		setStepSound(soundTypeMetal);
+		setSoundType(SoundType.METAL);
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
 	}
@@ -76,37 +76,37 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		setHarvestLevel("pickaxe", 0);
 	}
 
-	protected static final TileEntity getTile(World world, int x, int y, int z)
+	protected static final TileEntity getTile(IBlockAccess world, BlockPos pos)
 	{
-		return MFRUtil.getTile(world, x, y, z);
+		return MFRUtil.getTile(world, pos);
 	}
 
 	@Override
-	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
+	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{ // HACK: called before block is destroyed by the player prior to the player getting the drops. destroy block here.
 		// hack is needed because the player sets the block to air *before* getting the drops. woo good logic from mojang.
 		if (!player.capabilities.isCreativeMode)
 		{
+			//TODO verify that this logic doesn't conflict with vanilla one now
 			harvesters.set(player);
-			dropBlockAsItem(world, x, y, z, meta, EnchantmentHelper.getFortuneModifier(player));
+			dropBlockAsItem(world, pos, state, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getActiveItemStack()));
 			harvesters.set(null);
-			world.setBlock(x, y, z, Blocks.air, 0, 7);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 7);
 		}
 	}
 
 	@Override
-	public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
-	{
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
 	}
 
 	@Override
-	public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis)
+	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
 		if (world.isRemote)
 		{
 			return false;
 		}
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof IRotateableTile)
 		{
 			IRotateableTile tile = ((IRotateableTile)te);
@@ -120,9 +120,9 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack)
 	{
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 
 		if (te instanceof TileEntityBase && stack.getTagCompound() != null)
 		{
@@ -131,21 +131,21 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public final boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset)
+	public final boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float xOffset, float yOffset, float zOffset)
 	{
-		PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
-		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.useBlock == Result.DENY)
+		PlayerInteractEvent.RightClickBlock e = new PlayerInteractEvent.RightClickBlock(player, hand, heldItem, pos, side, new Vec3d(xOffset, yOffset, zOffset));
+		if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY || e.getUseBlock() == Result.DENY)
 			return false;
 
 		activationOffsets(xOffset, yOffset, zOffset);
-		return activated(world, x, y, z, player, side);
+		return activated(world, pos, player, side);
 	}
 
 	protected void activationOffsets(float xOffset, float yOffset, float zOffset) {}
 
-	protected boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
+	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te == null)
 		{
 			return false;
@@ -175,33 +175,42 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z,
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos,
 			boolean returnBlock)
 	{
-		ArrayList<ItemStack> list = getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		ArrayList<ItemStack> list = getDrops(world, pos, world.getBlockState(pos), 0);
 
-		world.setBlockToAir(x, y, z);
+		world.setBlockToAir(pos);
 		if (!returnBlock)
-            for (ItemStack item : list)
-                    dropBlockAsItem(world, x, y, z, item);
+            for (ItemStack item : list) {
+				float f = 0.3F;
+				double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+				double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+				double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+				EntityItem itemEntity = new EntityItem(world, pos.getX() + x2, pos.getY() + y2, pos.getZ() + z2, item);
+				itemEntity.setPickupDelay(10);
+				world.spawnEntityInWorld(itemEntity);
+			}
 		return list;
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 
-		ItemStack machine = new ItemStack(getItemDropped(metadata, world.rand, fortune), 1,
-				damageDropped(metadata));
+		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
 
-		TileEntity te = getTile(world, x, y, z);
+		ItemStack machine = new ItemStack(getItemDropped(state, rand, fortune), 1,
+				damageDropped(state));
+
+		TileEntity te = getTile(world, pos);
 		if (te instanceof TileEntityBase)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
@@ -214,30 +223,30 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		return drops;
 	}
 
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z, EnumFacing side,
-			EntityPlayer player, List<IChatComponent> info, boolean debug)
+	public void getBlockInfo(IBlockAccess world, BlockPos pos, EnumFacing side,
+			EntityPlayer player, List<ITextComponent> info, boolean debug)
 	{
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBase)
 			((TileEntityBase)tile).getTileInfo(info, side, player, debug);
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
-		onNeighborBlockChange(world, x, y, z, this);
+		onNeighborChange(world, pos, pos);
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block blockId)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		super.onNeighborBlockChange(world, x, y, z, blockId);
+		super.onNeighborChange(world, pos, neighbor);
 		if (world.isRemote)
 		{
 			return;
 		}
 
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof TileEntityBase)
 		{
 			if (blockId != this)
@@ -403,7 +412,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public int damageDropped(int meta)
+	public int damageDropped(IBlockState state)
 	{
 		return meta;
 	}
