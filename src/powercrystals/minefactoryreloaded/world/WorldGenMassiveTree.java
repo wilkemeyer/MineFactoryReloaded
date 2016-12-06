@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -412,7 +412,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 		Block block = worldObj.getBlock(basePos[0], basePos[1] - 1, basePos[2]);
 
 		if (!block.canSustainPlant(worldObj, basePos[0], basePos[1] - 1, basePos[2],
-			ForgeDirection.UP, MFRThings.rubberSaplingBlock))
+			EnumFacing.UP, MFRThings.rubberSaplingBlock))
 			return false;
 		else {
 			int[] var5 = new int[] { basePos[0], basePos[1], basePos[2] };

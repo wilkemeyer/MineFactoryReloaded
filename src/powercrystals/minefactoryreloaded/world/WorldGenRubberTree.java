@@ -7,7 +7,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -55,7 +55,7 @@ public class WorldGenRubberTree extends WorldGenerator {
 
 			block = world.getBlock(x, y - 1, z);
 
-			if ((block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, MFRThings.rubberSaplingBlock)) &&
+			if ((block.canSustainPlant(world, x, y - 1, z, EnumFacing.UP, MFRThings.rubberSaplingBlock)) &&
 					y < worldHeight - treeHeight - 1) {
 				for (yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset) {
 					byte radius;
@@ -105,7 +105,7 @@ public class WorldGenRubberTree extends WorldGenerator {
 				}
 
 				block = world.getBlock(x, y - 1, z);
-				if (!block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, MFRThings.rubberSaplingBlock)) {
+				if (!block.canSustainPlant(world, x, y - 1, z, EnumFacing.UP, MFRThings.rubberSaplingBlock)) {
 					return false; // another chunk generated and invalidated our location
 				}
 				block.onPlantGrow(world, x, y - 1, z, x, y, z);

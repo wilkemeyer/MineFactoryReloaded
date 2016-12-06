@@ -19,7 +19,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.item.base.ItemMulti;
@@ -61,7 +61,7 @@ public class ItemRedNetMeter extends ItemMulti {
 			Block block = world.getBlock(x, y, z);
 			ArrayList<IChatComponent> info = new ArrayList<IChatComponent>();
 			if (player.isSneaking() && block instanceof IBlockDebug) {
-				((IBlockDebug) (block)).debugBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player);
+				((IBlockDebug) (block)).debugBlock(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player);
 				return true;
 			} else if (block instanceof IBlockInfo) {
 				if (ServerHelper.isClientWorld(world)) {
@@ -69,7 +69,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				} else {
 					info.add(new ChatComponentText("-Server-"));
 				}
-				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player, info, true);
+				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player, info, true);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
@@ -78,7 +78,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(x, y, z);
 				if (theTile instanceof ITileInfo) {
 					if (ServerHelper.isServerWorld(world)) {
-						((ITileInfo) theTile).getTileInfo(info, ForgeDirection.UNKNOWN, player, player.isSneaking());
+						((ITileInfo) theTile).getTileInfo(info, EnumFacing.UNKNOWN, player, player.isSneaking());
 						for (int i = 0; i < info.size(); i++) {
 							player.addChatMessage(info.get(i));
 						}
@@ -97,11 +97,11 @@ public class ItemRedNetMeter extends ItemMulti {
 			}
 			info = new ArrayList<IChatComponent>();
 			if (player.isSneaking() && block instanceof IBlockConfigGui) {
-				if (((IBlockConfigGui)block).openConfigGui(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player))
+				if (((IBlockConfigGui)block).openConfigGui(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player))
 					return true;
 			}
 			if (block instanceof IBlockInfo) {
-				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player, info, false);
+				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player, info, false);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
@@ -110,7 +110,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(x, y, z);
 				if (theTile instanceof ITileInfo) {
 					if (ServerHelper.isServerWorld(world)) {
-						((ITileInfo) theTile).getTileInfo(info, ForgeDirection.UNKNOWN, player, false);
+						((ITileInfo) theTile).getTileInfo(info, EnumFacing.UNKNOWN, player, false);
 						for (int i = 0; i < info.size(); i++) {
 							player.addChatMessage(info.get(i));
 						}
@@ -130,7 +130,7 @@ public class ItemRedNetMeter extends ItemMulti {
 						.appendText(": " + world.getBlockMetadata(x, y, z)));
 			}
 			else if (block instanceof IRedNetInfo) {
-				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[hitSide], player, info);
+				((IRedNetInfo) (block)).getRedNetInfo(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player, info);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}

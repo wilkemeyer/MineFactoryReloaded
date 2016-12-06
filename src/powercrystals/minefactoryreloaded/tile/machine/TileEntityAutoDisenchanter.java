@@ -9,7 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoDisenchanter;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -57,7 +57,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 4;
 	}

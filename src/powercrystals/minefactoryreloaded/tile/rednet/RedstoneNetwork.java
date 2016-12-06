@@ -13,7 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -150,7 +150,7 @@ public class RedstoneNetwork implements IGrid {
 		LinkedHashList<TileEntityRedNetCable> toCheck = new LinkedHashList<TileEntityRedNetCable>();
 		LinkedHashList<TileEntityRedNetCable> checked = new LinkedHashList<TileEntityRedNetCable>();
 		BlockPosition bp = new BlockPosition(0, 0, 0);
-		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {

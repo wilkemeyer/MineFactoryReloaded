@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class PlantableSapling extends PlantableStandard
 {
@@ -33,6 +33,6 @@ public class PlantableSapling extends PlantableStandard
 					_block.canPlaceBlockAt(world, x, y, z) || (
 						_block instanceof IPlantable &&
 						ground.canSustainPlant(world, x, y, z,
-								ForgeDirection.UP, (IPlantable)_block)));
+								EnumFacing.UP, (IPlantable)_block)));
 	}
 }

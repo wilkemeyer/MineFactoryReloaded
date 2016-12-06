@@ -15,7 +15,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -115,8 +115,8 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 			if (tile instanceof TileEntityTank) {
 				TileEntityTank tank = (TileEntityTank) tile;
 				int side2 = (((side / 2 - 1) ^ 1) + 1) * 2 + ((side & 1) ^ (side / 2 - 1));
-				boolean a = tank.isInterfacing(ForgeDirection.getOrientation(side2));
-				boolean b = tank.isInterfacing(ForgeDirection.getOrientation(side2 ^ 1));
+				boolean a = tank.isInterfacing(EnumFacing.getOrientation(side2));
+				boolean b = tank.isInterfacing(EnumFacing.getOrientation(side2 ^ 1));
 				if (a) {
 					if (b)
 						meta = 2;
@@ -158,7 +158,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side, EntityPlayer player, List<IChatComponent> info, boolean debug) {
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z, EnumFacing side, EntityPlayer player, List<IChatComponent> info, boolean debug) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityTank) {

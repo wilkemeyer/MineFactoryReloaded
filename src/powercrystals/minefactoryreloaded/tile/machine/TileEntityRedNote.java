@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
@@ -20,7 +20,7 @@ public class TileEntityRedNote extends TileEntityFactory
 	}
 	
 	@Override
-	public void onRedNetChanged(ForgeDirection side, int value)
+	public void onRedNetChanged(EnumFacing side, int value)
 	{
 		if (value <= 0 || value > 120)
 		{

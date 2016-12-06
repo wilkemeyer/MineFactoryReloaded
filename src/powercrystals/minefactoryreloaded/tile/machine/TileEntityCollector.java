@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
@@ -48,7 +48,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	protected ItemStack addToChests(ItemStack s)
 	{
 		s = UtilInventory.dropStack(this, s,
-				MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), ForgeDirection.UNKNOWN);
+				MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), EnumFacing.UNKNOWN);
 		if (canStuff & failedDrops == null & s != null)
 		{
 			doDrop(s);
@@ -70,13 +70,13 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	}
 
 	@Override
-	public ForgeDirection getDropDirection()
+	public EnumFacing getDropDirection()
 	{
-		return ForgeDirection.UNKNOWN;
+		return EnumFacing.UNKNOWN;
 	}
 
 	@Override
-	public ForgeDirection[] getDropDirections()
+	public EnumFacing[] getDropDirections()
 	{
 		return MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord);
 	}

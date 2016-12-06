@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
@@ -56,7 +56,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 		else
 		{
 			int energy = getActivationEnergy();
-			ForgeDirection facing = getDirectionFacing().getOpposite();
+			EnumFacing facing = getDirectionFacing().getOpposite();
 			if (drill.canFormBeamWith(facing))
 			{
 				stripBlock(false);
@@ -135,7 +135,7 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 	}
 
 	@Override
-	public boolean canFormBeamFrom(ForgeDirection from)
+	public boolean canFormBeamFrom(EnumFacing from)
 	{
 		if (from != getDirectionFacing().getOpposite())
 			return false;

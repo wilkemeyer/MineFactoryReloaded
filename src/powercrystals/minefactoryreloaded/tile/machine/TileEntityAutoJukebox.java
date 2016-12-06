@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemRecord;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoJukebox;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -135,7 +135,7 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side)
+	public int getSizeInventorySide(EnumFacing side)
 	{
 		return 1;
 	}

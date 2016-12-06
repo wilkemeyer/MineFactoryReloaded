@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -31,7 +31,7 @@ public class ItemCeramicDye extends ItemFactoryColored {
 					return true;
 				}
 			}
-			if (block.recolourBlock(world, x, y, z, ForgeDirection.getOrientation(side), stack.getItemDamage())) {
+			if (block.recolourBlock(world, x, y, z, EnumFacing.getOrientation(side), stack.getItemDamage())) {
 				if (!player.capabilities.isCreativeMode)
 					stack.stackSize--;
 				return true;

@@ -10,7 +10,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -28,8 +28,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	private boolean _rejectUnmapped;
 
 	protected static final int[] _invOffsets = new int[] { 0, 0, 9, 18, 36, 27 };
-	protected static final ForgeDirection[] _outputDirections = new ForgeDirection[] { ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST,
-			ForgeDirection.WEST };
+	protected static final EnumFacing[] _outputDirections = new EnumFacing[] { EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST,
+			EnumFacing.WEST };
 
 	private int[] _defaultRoutes = new int[_outputDirections.length];
 
@@ -190,9 +190,9 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 		return hasRoutes(getRoutesForItem(stack));
 	}
 
-	private boolean isSideEmpty(ForgeDirection side) {
+	private boolean isSideEmpty(EnumFacing side) {
 
-		if (side == ForgeDirection.UNKNOWN || side == ForgeDirection.UP) {
+		if (side == EnumFacing.UNKNOWN || side == EnumFacing.UP) {
 			return false;
 		}
 
@@ -239,13 +239,13 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 45;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 3;
 	}
@@ -254,8 +254,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	public void setInventorySlotContents(int i, ItemStack stack) {
 
 		if (worldObj != null && !worldObj.isRemote) {
-			int start = getStartInventorySide(ForgeDirection.UNKNOWN);
-			if (i >= start && i <= (start + getSizeInventorySide(ForgeDirection.UNKNOWN))) {
+			int start = getStartInventorySide(EnumFacing.UNKNOWN);
+			if (i >= start && i <= (start + getSizeInventorySide(EnumFacing.UNKNOWN))) {
 				l: if (stack != null) {
 					if (stack.stackSize <= 0) {
 						stack = null;

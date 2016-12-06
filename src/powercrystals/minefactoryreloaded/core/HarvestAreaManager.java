@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 {
@@ -21,9 +21,9 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 	private int _originX;
 	private int _originY;
 	private int _originZ;
-	private ForgeDirection _originOrientation;
+	private EnumFacing _originOrientation;
 
-	private ForgeDirection _overrideDirection;
+	private EnumFacing _overrideDirection;
 	private Area _harvestArea;
 	private int _radius;
 	private int _areaUp;
@@ -45,7 +45,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 			int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
 	{
 		_owner = owner;
-		_overrideDirection = ForgeDirection.UNKNOWN;
+		_overrideDirection = EnumFacing.UNKNOWN;
 		_radius = harvestRadius;
 		_areaUp = harvestAreaUp;
 		_areaDown = harvestAreaDown;
@@ -131,7 +131,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return _currentBlock;
 	}
 
-	public void setOverrideDirection(ForgeDirection dir)
+	public void setOverrideDirection(EnumFacing dir)
 	{
 		_overrideDirection = dir;
 	}
@@ -199,8 +199,8 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 			return;
 		}
 
-		if(		(_overrideDirection != ForgeDirection.UNKNOWN && _originOrientation != _overrideDirection)
-				|| (_overrideDirection == ForgeDirection.UNKNOWN && _originOrientation != _owner.getDirectionFacing())
+		if(		(_overrideDirection != EnumFacing.UNKNOWN && _originOrientation != _overrideDirection)
+				|| (_overrideDirection == EnumFacing.UNKNOWN && _originOrientation != _owner.getDirectionFacing())
 				|| _originX != _owner.xCoord + _originOffsetX
 				|| _originY != _owner.yCoord + _originOffsetY
 				|| _originZ != _owner.zCoord + _originOffsetZ)
@@ -212,7 +212,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 	private void recalculateArea()
 	{
 		BlockPosition ourpos = BlockPosition.fromRotateableTile(_owner);
-		if (_overrideDirection != ForgeDirection.UNKNOWN)
+		if (_overrideDirection != EnumFacing.UNKNOWN)
 		{
 			ourpos.orientation = _overrideDirection;
 		}
@@ -226,10 +226,10 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		int areaUp = _areaUp;
 		int areaDown = _areaDown;
 
-		if (ourpos.orientation == ForgeDirection.UP || ourpos.orientation == ForgeDirection.DOWN)
+		if (ourpos.orientation == EnumFacing.UP || ourpos.orientation == EnumFacing.DOWN)
 		{
 			if (_upgradeVertical)
-				if (ourpos.orientation == ForgeDirection.UP)
+				if (ourpos.orientation == EnumFacing.UP)
 					areaUp += _upgradeLevel * 2;
 				else
 					areaDown += _upgradeLevel * 2;

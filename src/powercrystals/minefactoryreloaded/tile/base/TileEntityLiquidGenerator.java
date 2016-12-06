@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -38,12 +38,12 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 
 	@Override
 	protected boolean consumeFuel() {
-		FluidStack drained = drain(ForgeDirection.UNKNOWN, _liquidConsumedPerTick, false);
+		FluidStack drained = drain(EnumFacing.UNKNOWN, _liquidConsumedPerTick, false);
 
 		if (drained == null || drained.amount != _liquidConsumedPerTick)
 			return false;
 
-		drain(ForgeDirection.UNKNOWN, _liquidConsumedPerTick, true);
+		drain(EnumFacing.UNKNOWN, _liquidConsumedPerTick, true);
 		return true;
 	}
 
@@ -100,7 +100,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		if (resource != null && isFluidFuel(resource))
 			for (FluidTankAdv _tank : getTanks())
 				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
@@ -109,22 +109,22 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		return drain(maxDrain, doDrain);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
 		return drain(resource, doDrain);
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 		return false;
 	}
 }

@@ -13,7 +13,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -37,7 +37,7 @@ public class RanchableMooshroom implements IFactoryRanchable {
 		tag.setLong("mfr:lastRanched", world.getTotalWorldTime() + 20 * 30);
 
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
-		IInventoryManager manager = InventoryManager.create(rancher, ForgeDirection.UP);
+		IInventoryManager manager = InventoryManager.create(rancher, EnumFacing.UP);
 
 		int bowlIndex = manager.findItem(new ItemStack(Items.bowl));
 		if (bowlIndex >= 0) {

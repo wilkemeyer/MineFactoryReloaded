@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import org.lwjgl.opengl.GL11;
 
@@ -221,10 +221,10 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler {
 		double minEdgeX = zMid - offset - rO * 3;
 		double maxEdgeX = zMid + offset + rO * 3;
 
-		boolean connectedNegZ = block.canPaneConnectTo(blockAccess, x, y, z - 1, ForgeDirection.NORTH);
-		boolean connectedPosZ = block.canPaneConnectTo(blockAccess, x, y, z + 1, ForgeDirection.SOUTH);
-		boolean connectedNegX = block.canPaneConnectTo(blockAccess, x - 1, y, z, ForgeDirection.WEST);
-		boolean connectedPosX = block.canPaneConnectTo(blockAccess, x + 1, y, z, ForgeDirection.EAST);
+		boolean connectedNegZ = block.canPaneConnectTo(blockAccess, x, y, z - 1, EnumFacing.NORTH);
+		boolean connectedPosZ = block.canPaneConnectTo(blockAccess, x, y, z + 1, EnumFacing.SOUTH);
+		boolean connectedNegX = block.canPaneConnectTo(blockAccess, x - 1, y, z, EnumFacing.WEST);
+		boolean connectedPosX = block.canPaneConnectTo(blockAccess, x + 1, y, z, EnumFacing.EAST);
 
 		boolean connected = connectedNegX | connectedPosX | connectedNegZ | connectedPosZ;
 
@@ -242,17 +242,17 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler {
 		boolean renderBottomPosX = connectedPosX | !connected;
 
 		if (!renderTop && block.canPaneConnectToBlock(blockAccess.getBlock(x, y + 1, z))) {
-			renderTopNegZ = connectedNegZ && !block.canPaneConnectTo(blockAccess, x, y + 1, z - 1, ForgeDirection.NORTH);
-			renderTopPosZ = connectedPosZ && !block.canPaneConnectTo(blockAccess, x, y + 1, z + 1, ForgeDirection.SOUTH);
-			renderTopNegX = connectedNegX && !block.canPaneConnectTo(blockAccess, x - 1, y + 1, z, ForgeDirection.WEST);
-			renderTopPosX = connectedPosX && !block.canPaneConnectTo(blockAccess, x + 1, y + 1, z, ForgeDirection.EAST);
+			renderTopNegZ = connectedNegZ && !block.canPaneConnectTo(blockAccess, x, y + 1, z - 1, EnumFacing.NORTH);
+			renderTopPosZ = connectedPosZ && !block.canPaneConnectTo(blockAccess, x, y + 1, z + 1, EnumFacing.SOUTH);
+			renderTopNegX = connectedNegX && !block.canPaneConnectTo(blockAccess, x - 1, y + 1, z, EnumFacing.WEST);
+			renderTopPosX = connectedPosX && !block.canPaneConnectTo(blockAccess, x + 1, y + 1, z, EnumFacing.EAST);
 		}
 
 		if (!renderBottom && block.canPaneConnectToBlock(blockAccess.getBlock(x, y - 1, z))) {
-			renderBottomNegZ = connectedNegZ && !block.canPaneConnectTo(blockAccess, x, y - 1, z - 1, ForgeDirection.NORTH);
-			renderBottomPosZ = connectedPosZ && !block.canPaneConnectTo(blockAccess, x, y - 1, z + 1, ForgeDirection.SOUTH);
-			renderBottomNegX = connectedNegX && !block.canPaneConnectTo(blockAccess, x - 1, y - 1, z, ForgeDirection.WEST);
-			renderBottomPosX = connectedPosX && !block.canPaneConnectTo(blockAccess, x + 1, y - 1, z, ForgeDirection.EAST);
+			renderBottomNegZ = connectedNegZ && !block.canPaneConnectTo(blockAccess, x, y - 1, z - 1, EnumFacing.NORTH);
+			renderBottomPosZ = connectedPosZ && !block.canPaneConnectTo(blockAccess, x, y - 1, z + 1, EnumFacing.SOUTH);
+			renderBottomNegX = connectedNegX && !block.canPaneConnectTo(blockAccess, x - 1, y - 1, z, EnumFacing.WEST);
+			renderBottomPosX = connectedPosX && !block.canPaneConnectTo(blockAccess, x + 1, y - 1, z, EnumFacing.EAST);
 		}
 
 		if ((!connectedNegX | !connectedPosX) & connected) {

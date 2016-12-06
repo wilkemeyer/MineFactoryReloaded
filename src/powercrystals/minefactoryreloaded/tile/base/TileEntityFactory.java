@@ -20,7 +20,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
@@ -56,7 +56,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		}
 	}
 
-	private ForgeDirection _forwardDirection;
+	private EnumFacing _forwardDirection;
 	private boolean _canRotate = false;
 
 	private boolean _manageFluids = false;
@@ -77,7 +77,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	protected TileEntityFactory(Machine machine) {
 
 		this._machine = machine;
-		_forwardDirection = ForgeDirection.NORTH;
+		_forwardDirection = EnumFacing.NORTH;
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public ForgeDirection getDirectionFacing() {
+	public EnumFacing getDirectionFacing() {
 
 		return _forwardDirection;
 	}
@@ -158,7 +158,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public boolean canRotate(ForgeDirection axis) {
+	public boolean canRotate(EnumFacing axis) {
 
 		return _canRotate;
 	}
@@ -169,7 +169,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public void rotate(ForgeDirection axis) {
+	public void rotate(EnumFacing axis) {
 
 		if (canRotate())
 			rotate(false);
@@ -180,19 +180,19 @@ public abstract class TileEntityFactory extends TileEntityBase
 		if (worldObj != null && !worldObj.isRemote) {
 			switch ((reverse ? _forwardDirection.getOpposite() : _forwardDirection).ordinal()) {
 			case 2://NORTH:
-				_forwardDirection = ForgeDirection.EAST;
+				_forwardDirection = EnumFacing.EAST;
 				break;
 			case 5://EAST:
-				_forwardDirection = ForgeDirection.SOUTH;
+				_forwardDirection = EnumFacing.SOUTH;
 				break;
 			case 3://SOUTH:
-				_forwardDirection = ForgeDirection.WEST;
+				_forwardDirection = EnumFacing.WEST;
 				break;
 			case 4://WEST:
-				_forwardDirection = ForgeDirection.NORTH;
+				_forwardDirection = EnumFacing.NORTH;
 				break;
 			default:
-				_forwardDirection = ForgeDirection.NORTH;
+				_forwardDirection = EnumFacing.NORTH;
 			}
 
 			onRotate();
@@ -202,8 +202,8 @@ public abstract class TileEntityFactory extends TileEntityBase
 	@Override
 	public void rotateDirectlyTo(int rotation) {
 
-		ForgeDirection p = _forwardDirection;
-		_forwardDirection = ForgeDirection.getOrientation(rotation);
+		EnumFacing p = _forwardDirection;
+		_forwardDirection = EnumFacing.getOrientation(rotation);
 		if (worldObj != null && p != _forwardDirection) {
 			onRotate();
 		}
@@ -223,16 +223,16 @@ public abstract class TileEntityFactory extends TileEntityBase
 		return _textureSelection[_forwardDirection.ordinal()][side];
 	}
 
-	public ForgeDirection getDropDirection() {
+	public EnumFacing getDropDirection() {
 
 		if (canRotate())
 			return getDirectionFacing().getOpposite();
-		return ForgeDirection.UP;
+		return EnumFacing.UP;
 	}
 
-	public ForgeDirection[] getDropDirections() {
+	public EnumFacing[] getDropDirections() {
 
-		return ForgeDirection.VALID_DIRECTIONS;
+		return EnumFacing.VALID_DIRECTIONS;
 	}
 
 	public boolean isActive() {
@@ -390,12 +390,12 @@ public abstract class TileEntityFactory extends TileEntityBase
 		_isActive = tag.getBoolean("a");
 	}
 
-	public void onRedNetChanged(ForgeDirection side, int value) {
+	public void onRedNetChanged(EnumFacing side, int value) {
 
 		_rednetState = value;
 	}
 
-	public int getRedNetOutput(ForgeDirection side) {
+	public int getRedNetOutput(EnumFacing side) {
 
 		return 0;
 	}
@@ -423,14 +423,14 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public ConnectionType canConnectInventory(ForgeDirection from) {
+	public ConnectionType canConnectInventory(EnumFacing from) {
 
 		return manageSolids() ? ConnectionType.FORCE : ConnectionType.DENY;
 	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+	public ConnectOverride overridePipeConnection(PipeType type, EnumFacing with) {
 
 		if (type == PipeType.FLUID)
 			return manageFluids() ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;

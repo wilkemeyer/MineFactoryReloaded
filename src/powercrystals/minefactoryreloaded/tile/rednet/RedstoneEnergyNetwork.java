@@ -6,7 +6,7 @@ import cofh.lib.util.position.BlockPosition;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
@@ -101,7 +101,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 		LinkedHashList<TileEntityRedNetEnergy> toCheck = new LinkedHashList<TileEntityRedNetEnergy>();
 		LinkedHashList<TileEntityRedNetEnergy> checked = new LinkedHashList<TileEntityRedNetEnergy>();
 		BlockPosition bp = new BlockPosition(0,0,0);
-		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
@@ -166,7 +166,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 		EnergyStorage tank = storage;
 		if (tank.getEnergyStored() >= tank.getMaxEnergyStored())
 			return;
-		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
 
 		for (TileEntityRedNetEnergy cond : nodeSet)
 			for (int i = 6; i --> 0; )
@@ -184,7 +184,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 		EnergyStorage storage = this.storage;
 		if (storage.getEnergyStored() <= 0)
 			return;
-		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
 		int size = nodeSet.size();
 		int toDistribute = storage.getEnergyStored() / size;
 		int sideDistribute = toDistribute / 6;

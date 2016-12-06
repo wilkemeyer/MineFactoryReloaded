@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
@@ -28,7 +28,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 
 		super(Machine.Planter);
 		createHAM(this, 1);
-		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		_areaManager.setOverrideDirection(EnumFacing.UP);
 		_areaManager.setOriginOffset(0, 1, 0);
 		setManageSolids(true);
 	}
@@ -178,7 +178,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 9;
 	}
@@ -190,7 +190,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 17;
 	}

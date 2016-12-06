@@ -18,7 +18,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -37,7 +37,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	protected boolean _ignoreDamage = true;
 
 	protected boolean _hasItems = false;
-	protected ForgeDirection[] _pullDirections = { };
+	protected EnumFacing[] _pullDirections = { };
 
 	public TileEntityEjector() {
 
@@ -49,10 +49,10 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	@Override
 	protected void onRotate() {
 
-		LinkedList<ForgeDirection> list = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> list = new LinkedList<EnumFacing>();
 		list.addAll(MFRUtil.VALID_DIRECTIONS);
 		list.remove(getDirectionFacing());
-		_pullDirections = list.toArray(new ForgeDirection[5]);
+		_pullDirections = list.toArray(new EnumFacing[5]);
 		super.onRotate();
 	}
 
@@ -66,10 +66,10 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 		boolean redstoneState = _rednetState != 0 || CoreUtils.isRedstonePowered(this);
 
 		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems))) {
-			final ForgeDirection facing = getDirectionFacing();
-			Map<ForgeDirection, IInventory> chests = UtilInventory.
+			final EnumFacing facing = getDirectionFacing();
+			Map<EnumFacing, IInventory> chests = UtilInventory.
 					findChests(worldObj, xCoord, yCoord, zCoord, _pullDirections);
-			inv: for (Entry<ForgeDirection, IInventory> chest : chests.entrySet()) {
+			inv: for (Entry<EnumFacing, IInventory> chest : chests.entrySet()) {
 				if (chest.getKey() == facing) {
 					continue;
 				}
@@ -269,14 +269,14 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public ConnectionType canConnectInventory(ForgeDirection from) {
+	public ConnectionType canConnectInventory(EnumFacing from) {
 
 		return from == getDirectionFacing() ? ConnectionType.FORCE : ConnectionType.DENY;
 	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+	public ConnectOverride overridePipeConnection(PipeType type, EnumFacing with) {
 
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;

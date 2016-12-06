@@ -1,0 +1,63 @@
+// This simple grabs the latest 'forge' plugin, or ForgeGradle, from Forge's servers.
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+
+// We apply the 'forge' plugin, so ForgeGradle can do it's stuff.
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group = 'powercrystals' // Your main package.
+version = "${minecraft_version}-${mod_version}"
+archivesBaseName = 'MineFactoryReloaded'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+minecraft {
+    version = minecraft_version + "-" + forge_version
+    mappings = mcp_mappings
+    runDir = "run"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "project_version", project.version
+    inputs.property "minecraft_version", minecraft_version
+
+    // Replace stuff in mcmod.info and in .lang files, nothing else.
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // Replace version and mcversion.
+        expand 'project_version': project.version, 'minecraft_version': minecraft_version
+    }
+
+    // Copy everything else that wasn't replaced.
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

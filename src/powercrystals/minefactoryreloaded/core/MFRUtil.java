@@ -24,7 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
@@ -187,7 +187,7 @@ public class MFRUtil {
 		return r.toString();
 	}
 
-	public static final List<ForgeDirection> VALID_DIRECTIONS = Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
+	public static final List<EnumFacing> VALID_DIRECTIONS = Arrays.asList(EnumFacing.VALID_DIRECTIONS);
 
 	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z) {
 
@@ -298,26 +298,26 @@ public class MFRUtil {
 		return world.getChunkFromBlockCoords(x, z).getTileEntityUnsafe(x & 15, y, z & 15);
 	}
 
-	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z) {
+	public static EnumFacing[] directionsWithoutConveyors(World world, int x, int y, int z) {
 
-		ArrayList<ForgeDirection> nonConveyors = new ArrayList<ForgeDirection>();
+		ArrayList<EnumFacing> nonConveyors = new ArrayList<EnumFacing>();
 		Block id = MFRThings.conveyorBlock;
 
-		for (int i = 0, e = ForgeDirection.VALID_DIRECTIONS.length; i < e; ++i) {
-			ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[i];
+		for (int i = 0, e = EnumFacing.VALID_DIRECTIONS.length; i < e; ++i) {
+			EnumFacing direction = EnumFacing.VALID_DIRECTIONS[i];
 			if (!world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ).equals(id))
 				nonConveyors.add(direction);
 		}
 
-		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
+		return nonConveyors.toArray(new EnumFacing[nonConveyors.size()]);
 	}
 
 	public static void notifyNearbyBlocks(World world, int x, int y, int z, Block block) {
 
-		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 		if (world.blockExists(x, y, z)) {
 			for (int j = 0; j < 6; ++j) {
-				ForgeDirection d2 = dirs[j];
+				EnumFacing d2 = dirs[j];
 				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
 				if (world.blockExists(x2, y2, z2))
 					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
@@ -327,11 +327,11 @@ public class MFRUtil {
 
 	public static void notifyNearbyBlocksExcept(World world, int x, int y, int z, Block block) {
 
-		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 		if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {
 			world.notifyBlockOfNeighborChange(x, y, z, block);
 			for (int j = 0; j < 6; ++j) {
-				ForgeDirection d2 = dirs[j];
+				EnumFacing d2 = dirs[j];
 				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
 				if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
 					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
@@ -341,16 +341,16 @@ public class MFRUtil {
 
 	public static void wideNotifyNearbyBlocksExcept(World world, int X, int Y, int Z, Block block) {
 
-		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 		for (int i = 0; i < 6; ++i) {
-			ForgeDirection d = dirs[i];
+			EnumFacing d = dirs[i];
 			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
 			if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {
 				world.notifyBlockOfNeighborChange(x, y, z, block);
 				for (int j = 0; j < 6; ++j) {
 					if ((j ^ 1) == i)
 						continue;
-					ForgeDirection d2 = dirs[j];
+					EnumFacing d2 = dirs[j];
 					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
 					if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
 						world.notifyBlockOfNeighborChange(x2, y2, z2, block);

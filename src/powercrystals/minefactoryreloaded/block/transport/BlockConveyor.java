@@ -33,7 +33,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -71,7 +71,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 
 		return false;
 	}
@@ -174,7 +174,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour) {
+	public boolean recolourBlock(World world, int x, int y, int z, EnumFacing side, int colour) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 
@@ -323,23 +323,23 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		boolean isUphill = (md & 0x04) != 0;
 		boolean isDownhill = (md & 0x08) != 0;
 
-		ForgeDirection dir = null;
+		EnumFacing dir = null;
 		switch (horizDirection) {
 		case 0:
 			xVelocity = 0.1D * mult;
-			dir = ForgeDirection.EAST;
+			dir = EnumFacing.EAST;
 			break;
 		case 1:
 			zVelocity = 0.1D * mult;
-			dir = ForgeDirection.SOUTH;
+			dir = EnumFacing.SOUTH;
 			break;
 		case 2:
 			xVelocity = -0.1D * mult;
-			dir = ForgeDirection.WEST;
+			dir = EnumFacing.WEST;
 			break;
 		case 3:
 			zVelocity = -0.1D * mult;
-			dir = ForgeDirection.NORTH;
+			dir = EnumFacing.NORTH;
 			break;
 		}
 
@@ -543,7 +543,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z) {
 
-		return world.isSideSolid(x, y - 1, z, ForgeDirection.UP);
+		return world.isSideSolid(x, y - 1, z, EnumFacing.UP);
 	}
 
 	@Override
@@ -554,7 +554,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof IRotateableTile) {
-				((IRotateableTile) te).rotate(ForgeDirection.getOrientation(side));
+				((IRotateableTile) te).rotate(EnumFacing.getOrientation(side));
 			}
 			MFRUtil.usedWrench(player, x, y, z);
 			return true;
@@ -636,18 +636,18 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	// IRedNetOmniNode
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side) {
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
 
 		return RedNetConnectionType.PlateSingle;
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues) {
+	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues) {
 
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue) {
+	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue) {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityConveyor) {
@@ -666,7 +666,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 			if (!((TileEntityHopper) teBelow).func_145888_j()) {
 				ItemStack toInsert = entityitem.getEntityItem().copy();
 				toInsert.stackSize = 1;
-				toInsert = TileEntityHopper.func_145889_a((IInventory) teBelow, toInsert, ForgeDirection.UP.ordinal());
+				toInsert = TileEntityHopper.func_145889_a((IInventory) teBelow, toInsert, EnumFacing.UP.ordinal());
 				if (toInsert == null) {
 					entityitem.getEntityItem().stackSize--;
 					((TileEntityHopper) teBelow).func_145896_c(8);

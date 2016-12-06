@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -46,7 +46,7 @@ public class TileEntityMobCounter extends TileEntityFactory
 	}
 
 	@Override
-	public int getRedNetOutput(ForgeDirection side)
+	public int getRedNetOutput(EnumFacing side)
 	{
 		return _lastMobCount;
 	}

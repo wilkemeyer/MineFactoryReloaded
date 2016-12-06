@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -289,25 +289,25 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		}//*/
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
 		return storeEnergy(maxReceive, !simulate);
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 
 		return true;
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 
 		return getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 
 		return getEnergyStoredMax();
 	}
@@ -327,7 +327,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public boolean canCrankAttach(ForgeDirection directionToCrank) {
+	public boolean canCrankAttach(EnumFacing directionToCrank) {
 
 		return true;
 	}

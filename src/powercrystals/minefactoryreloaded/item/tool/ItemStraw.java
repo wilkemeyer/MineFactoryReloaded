@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,7 +40,7 @@ public class ItemStraw extends ItemFactoryTool {
 					TileEntity tile = world.getTileEntity(x, y, z);
 					if (tile instanceof IFluidHandler) {
 						IFluidHandler handler = (IFluidHandler) tile;
-						FluidTankInfo[] info = handler.getTankInfo(ForgeDirection.getOrientation(mop.sideHit));
+						FluidTankInfo[] info = handler.getTankInfo(EnumFacing.getOrientation(mop.sideHit));
 						for (int i = info.length; i-- > 0;) {
 							FluidStack fstack = info[i].fluid;
 							if (fstack != null) {
@@ -48,10 +48,10 @@ public class ItemStraw extends ItemFactoryTool {
 								if (fluid != null && map.containsKey(fluid.getName()) && fstack.amount >= 1000) {
 									fstack = fstack.copy();
 									fstack.amount = 1000;
-									FluidStack r = handler.drain(ForgeDirection.getOrientation(mop.sideHit), fstack.copy(), false);
+									FluidStack r = handler.drain(EnumFacing.getOrientation(mop.sideHit), fstack.copy(), false);
 									if (r != null && r.amount >= 1000) {
 										map.get(fluid.getName()).onDrink(player);
-										handler.drain(ForgeDirection.getOrientation(mop.sideHit), fstack, true);
+										handler.drain(EnumFacing.getOrientation(mop.sideHit), fstack, true);
 										break;
 									}
 								}
@@ -92,13 +92,13 @@ public class ItemStraw extends ItemFactoryTool {
 				TileEntity tile = world.getTileEntity(x, y, z);
 				if (tile instanceof IFluidHandler) {
 					IFluidHandler handler = (IFluidHandler) tile;
-					FluidTankInfo[] info = handler.getTankInfo(ForgeDirection.getOrientation(mop.sideHit));
+					FluidTankInfo[] info = handler.getTankInfo(EnumFacing.getOrientation(mop.sideHit));
 					for (int i = info.length; i-- > 0;) {
 						FluidStack fstack = info[i].fluid;
 						if (fstack != null) {
 							fluid = fstack.getFluid();
 							if (fluid != null && map.containsKey(fluid.getName()) && fstack.amount >= 1000) {
-								FluidStack r = handler.drain(ForgeDirection.getOrientation(mop.sideHit), fstack, false);
+								FluidStack r = handler.drain(EnumFacing.getOrientation(mop.sideHit), fstack, false);
 								if (r != null && r.amount >= 1000) {
 									player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
 									break;

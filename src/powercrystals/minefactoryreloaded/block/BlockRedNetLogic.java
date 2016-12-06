@@ -17,7 +17,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
@@ -66,7 +66,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side) {
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null && side.ordinal() > 1 && side.ordinal() < 6) {
@@ -78,7 +78,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet) {
+	public int getOutputValue(World world, int x, int y, int z, EnumFacing side, int subnet) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null) {
@@ -89,7 +89,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side) {
+	public int[] getOutputValues(World world, int x, int y, int z, EnumFacing side) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null) {
@@ -100,7 +100,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues) {
+	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null) {
@@ -109,7 +109,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue) {
+	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue) {
 
 	}
 
@@ -117,7 +117,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	public boolean activated(World world, int x, int y, int z, EntityPlayer player, int side) {
 
 		if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
-			if (rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) {
+			if (rotateBlock(world, x, y, z, EnumFacing.getOrientation(side))) {
 				MFRUtil.usedWrench(player, x, y, z);
 				return true;
 			}
@@ -165,13 +165,13 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 
 		return side.ordinal() <= 1 || side.ordinal() >= 6 || world.getBlockMetadata(x, y, z) != _sideRemap[side.ordinal() - 2];
 	}
 
 	@Override
-	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,
+	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, EnumFacing side,
 			EntityPlayer player, List<IChatComponent> info) {
 
 		TileEntity te = world.getTileEntity(x, y, z);

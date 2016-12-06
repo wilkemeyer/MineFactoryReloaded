@@ -21,7 +21,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
@@ -281,7 +281,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 
 		return true;
 	}
@@ -291,7 +291,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityFactory) {
-			return ((TileEntityFactory) te).getRedNetOutput(ForgeDirection.getOrientation(side));
+			return ((TileEntityFactory) te).getRedNetOutput(EnumFacing.getOrientation(side));
 		}
 		return 0;
 	}
@@ -303,24 +303,24 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side) {
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
 
 		return RedNetConnectionType.DecorativeSingle;
 	}
 
 	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, ForgeDirection side) {
+	public int[] getOutputValues(World world, int x, int y, int z, EnumFacing side) {
 
 		return null;
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues) {
+	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues) {
 
 	}
 
 	@Override
-	public int getOutputValue(World world, int x, int y, int z, ForgeDirection side, int subnet) {
+	public int getOutputValue(World world, int x, int y, int z, EnumFacing side, int subnet) {
 
 		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityFactory) {
@@ -330,7 +330,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue) {
+	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue) {
 
 		TileEntity te = getTile(world, x, y, z);
 		if (te instanceof TileEntityFactory) {

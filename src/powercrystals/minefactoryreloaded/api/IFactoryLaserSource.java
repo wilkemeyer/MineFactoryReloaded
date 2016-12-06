@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.api;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Defines a target for the laser blocks. TileEntities that implement this
@@ -19,6 +19,6 @@ public interface IFactoryLaserSource {
 	 *
 	 * @return True if the beam should be sustained from this side
 	 */
-	public boolean canFormBeamFrom(ForgeDirection from);
+	public boolean canFormBeamFrom(EnumFacing from);
 
 }

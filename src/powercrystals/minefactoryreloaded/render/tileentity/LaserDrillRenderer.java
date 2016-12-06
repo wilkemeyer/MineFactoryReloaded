@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
@@ -22,7 +22,7 @@ public class LaserDrillRenderer extends TileEntitySpecialRenderer
 		{
 			this.bindTexture(beaconBeam);
 			LaserRendererBase.setColor(laserDrill.getColor());
-			LaserRendererBase.renderLaser(laserDrill, x, y, z, laserDrill.getBeamHeight(), ForgeDirection.DOWN, partialTicks);
+			LaserRendererBase.renderLaser(laserDrill, x, y, z, laserDrill.getBeamHeight(), EnumFacing.DOWN, partialTicks);
 		}
 	}
 }

@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
@@ -33,19 +33,19 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
 		{
-			if(((TileEntityFactory)te).getDirectionFacing() == ForgeDirection.NORTH)
+			if(((TileEntityFactory)te).getDirectionFacing() == EnumFacing.NORTH)
 			{
 				setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
 			}
-			else if(((TileEntityFactory)te).getDirectionFacing() == ForgeDirection.SOUTH)
+			else if(((TileEntityFactory)te).getDirectionFacing() == EnumFacing.SOUTH)
 			{
 				setBlockBounds(0.0F, 0.0F, 0.75F, 1.0F, 1.0F, 1.0F);
 			}
-			else if(((TileEntityFactory)te).getDirectionFacing() == ForgeDirection.EAST)
+			else if(((TileEntityFactory)te).getDirectionFacing() == EnumFacing.EAST)
 			{
 				setBlockBounds(0.75F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 			}
-			else if(((TileEntityFactory)te).getDirectionFacing() == ForgeDirection.WEST)
+			else if(((TileEntityFactory)te).getDirectionFacing() == EnumFacing.WEST)
 			{
 				setBlockBounds(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
 			}
@@ -92,7 +92,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 		TileEntity te = getTile(world, x, y, z);
 		if (MFRUtil.isHoldingUsableTool(player, x, y, z) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
-			((TileEntityFactory)te).rotate(ForgeDirection.getOrientation(side));
+			((TileEntityFactory)te).rotate(EnumFacing.getOrientation(side));
 			world.markBlockForUpdate(x, y, z);
 			MFRUtil.usedWrench(player, x, y, z);
 			return true;
@@ -124,7 +124,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side)
 	{
 		return false;
 	}
@@ -148,7 +148,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
@@ -159,7 +159,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, ForgeDirection side, int[] inputValues)
+	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetHistorian)
@@ -169,7 +169,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, ForgeDirection side, int inputValue)
+	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue)
 	{
 	}
 

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -111,7 +111,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		onDisassembled();
 	}
 
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 
 		IFluidTank[] tanks = getTanks();
 		if (tanks.length == 0)
@@ -377,9 +377,9 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 
-		int start = getStartInventorySide(ForgeDirection.UNKNOWN);
+		int start = getStartInventorySide(EnumFacing.UNKNOWN);
 		if (slot < start ||
-				slot > (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
+				slot > (start + getSizeInventorySide(EnumFacing.UNKNOWN)))
 			return false;
 		if (itemstack == null)
 			return true;
@@ -518,8 +518,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
 
-		int start = getStartInventorySide(ForgeDirection.getOrientation(side));
-		int size = getSizeInventorySide(ForgeDirection.getOrientation(side));
+		int start = getStartInventorySide(EnumFacing.getOrientation(side));
+		int size = getSizeInventorySide(EnumFacing.getOrientation(side));
 
 		int[] slots = new int[size];
 		for (int i = 0; i < size; i++) {
@@ -528,12 +528,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return slots;
 	}
 
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 0;
 	}
 
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return getSizeInventory();
 	}

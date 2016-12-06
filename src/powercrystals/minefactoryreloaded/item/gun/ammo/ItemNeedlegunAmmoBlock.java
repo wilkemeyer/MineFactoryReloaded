@@ -10,7 +10,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmoStandard {
 
@@ -30,7 +30,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmoStandard {
 
 	@Override
 	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, int x, int y, int z, int side, double distance) {
-		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side));
+		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.getOrientation(side));
 		bp.moveForwards(1);
 		placeBlockAt(world, bp.x, bp.y, bp.z, distance);
 	}

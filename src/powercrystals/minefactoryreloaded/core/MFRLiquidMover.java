@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,9 +36,9 @@ public abstract class MFRLiquidMover
 		if(liquid != null)
 		{
 			Item item = ci.getItem();
-			if(itcb.fill(ForgeDirection.UNKNOWN, liquid, false) == liquid.amount)
+			if(itcb.fill(EnumFacing.UNKNOWN, liquid, false) == liquid.amount)
 			{
-				itcb.fill(ForgeDirection.UNKNOWN, liquid, true);
+				itcb.fill(EnumFacing.UNKNOWN, liquid, true);
 				if(!entityplayer.capabilities.isCreativeMode)
 				{
 					if (item.hasContainerItem(ci)) {
@@ -61,8 +61,8 @@ public abstract class MFRLiquidMover
 			Item item = ci.getItem();
 			IFluidContainerItem fluidContainer = (IFluidContainerItem)item;
 			liquid = fluidContainer.getFluid(ci);
-			if (itcb.fill(ForgeDirection.UNKNOWN, liquid, false) > 0) {
-				int amount = itcb.fill(ForgeDirection.UNKNOWN, liquid, true);
+			if (itcb.fill(EnumFacing.UNKNOWN, liquid, false) > 0) {
+				int amount = itcb.fill(EnumFacing.UNKNOWN, liquid, true);
 				ItemStack drop = ci.splitStack(1);
 				ci.stackSize++;
 				fluidContainer.drain(drop, amount, true);
@@ -98,7 +98,7 @@ public abstract class MFRLiquidMover
 		if(ci != null && (FluidContainerRegistry.isEmptyContainer(ci) ||
 				(isSmartContainer = ci.getItem() instanceof IFluidContainerItem)))
 		{
-			for(FluidTankInfo tank : itcb.getTankInfo(ForgeDirection.UNKNOWN))
+			for(FluidTankInfo tank : itcb.getTankInfo(EnumFacing.UNKNOWN))
 			{
 				FluidStack tankLiquid = tank.fluid;
 				if (tankLiquid == null || tankLiquid.amount == 0)
@@ -113,7 +113,7 @@ public abstract class MFRLiquidMover
 					if (fluidContainer.fill(filledBucket, tankLiquid, false) > 0) {
 						int amount = fluidContainer.fill(filledBucket, tankLiquid, true);
 						bucketLiquid = new FluidStack(tankLiquid, amount);
-						FluidStack l = itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, false);
+						FluidStack l = itcb.drain(EnumFacing.UNKNOWN, bucketLiquid, false);
 						if (l == null || l.amount < amount)
 							filledBucket = null;
 					}
@@ -126,7 +126,7 @@ public abstract class MFRLiquidMover
 					if(FluidContainerRegistry.isFilledContainer(filledBucket))
 					{
 						bucketLiquid = FluidContainerRegistry.getFluidForFilledItem(filledBucket);
-						FluidStack l = itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, false);
+						FluidStack l = itcb.drain(EnumFacing.UNKNOWN, bucketLiquid, false);
 						if (l == null || l.amount < bucketLiquid.amount)
 							filledBucket = null;
 					}
@@ -141,7 +141,7 @@ public abstract class MFRLiquidMover
 							entityplayer.openContainer.detectAndSendChanges();
 							((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 						}
-						itcb.drain(ForgeDirection.UNKNOWN, bucketLiquid, true);
+						itcb.drain(EnumFacing.UNKNOWN, bucketLiquid, true);
 						return true;
 					}
 				}

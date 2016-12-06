@@ -18,7 +18,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.FishingHooks;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -69,9 +69,9 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public ForgeDirection getDirectionFacing() {
+	public EnumFacing getDirectionFacing() {
 
-		return ForgeDirection.DOWN;
+		return EnumFacing.DOWN;
 	}
 
 	@Override
@@ -149,9 +149,9 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public ForgeDirection getDropDirection() {
+	public EnumFacing getDropDirection() {
 
-		return ForgeDirection.UP;
+		return EnumFacing.UP;
 	}
 
 	@Override

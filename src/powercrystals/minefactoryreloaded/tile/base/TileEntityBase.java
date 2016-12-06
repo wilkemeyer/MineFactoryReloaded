@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 {
@@ -75,7 +75,7 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 
 	public void onMatchedNeighborBlockChange() {}
 
-	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {}
+	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {}
 
 	@Override
 	@SideOnly(Side.CLIENT)

@@ -9,7 +9,7 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
@@ -28,9 +28,9 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create(entity, ForgeDirection.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, EnumFacing.UNKNOWN);
 
-		for (Entry<ForgeDirection, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
+		for (Entry<EnumFacing, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
 		{
 			IInventoryManager chest = InventoryManager.create(inventory.getValue(), inventory.getKey().getOpposite()); 
 			for (Entry<Integer, ItemStack> contents : chest.getContents().entrySet())

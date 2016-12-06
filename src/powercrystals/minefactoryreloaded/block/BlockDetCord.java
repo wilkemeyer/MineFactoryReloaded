@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -45,7 +45,7 @@ public class BlockDetCord extends BlockFactory implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 
 		return false;
 	}
@@ -73,7 +73,7 @@ public class BlockDetCord extends BlockFactory implements ITileEntityProvider {
 
 		if (!canPlaceBlockAt(world, x, y, z))
 			return false;
-		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.getOrientation(side)).moveBackwards(1);
+		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.getOrientation(side)).moveBackwards(1);
 		return bp.getBlock(world).isSideSolid(world, bp.x, bp.y, bp.z, bp.orientation);
 	}
 

@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
@@ -75,13 +75,13 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public boolean canFormBeamWith(ForgeDirection from) {
+	public boolean canFormBeamWith(EnumFacing from) {
 
 		return from.ordinal() > 1 && from.ordinal() < 6;
 	}
 
 	@Override
-	public int addEnergy(ForgeDirection from, int energy, boolean simulate) {
+	public int addEnergy(EnumFacing from, int energy, boolean simulate) {
 
 		if (!canFormBeamWith(from))
 			return energy;

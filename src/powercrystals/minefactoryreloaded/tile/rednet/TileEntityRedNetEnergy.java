@@ -33,7 +33,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IGridController;
@@ -118,7 +118,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void reCache() {
 
 		if (deadCache) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
 				if (BlockPosition.blockExists(this, dir))
 					addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
@@ -146,7 +146,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void incorporateTiles() {
 
 		if (_grid == null) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityRedNetEnergy pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
@@ -160,7 +160,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 	}
 
-	public boolean canInterface(TileEntityRedNetEnergy with, ForgeDirection dir) {
+	public boolean canInterface(TileEntityRedNetEnergy with, EnumFacing dir) {
 
 		return (sideMode[dir.ordinal()] & 1) != 0;
 	}
@@ -218,7 +218,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (tile instanceof TileEntityRedNetEnergy) {
 			TileEntityRedNetEnergy cable = ((TileEntityRedNetEnergy) tile);
 			sideMode[side] |= (4 << 1);
-			if (cable.canInterface(this, ForgeDirection.getOrientation(side ^ 1))) {
+			if (cable.canInterface(this, EnumFacing.getOrientation(side ^ 1))) {
 				if (_grid == null && cable._grid != null) {
 					cable._grid.addConduit(this);
 				}
@@ -229,10 +229,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				sideMode[side] &= ~1;
 			}
 		} else if (tile instanceof IEnergyConnection) {
-			if (((IEnergyConnection) tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
+			if (((IEnergyConnection) tile).canConnectEnergy(EnumFacing.VALID_DIRECTIONS[side])) {
 				if (tile instanceof IEnergyTransport) {
 					IEnergyTransport transport = (IEnergyTransport) tile;
-					InterfaceType type = transport.getTransportState(ForgeDirection.getOrientation(side)).getOpposite();
+					InterfaceType type = transport.getTransportState(EnumFacing.getOrientation(side)).getOpposite();
 					if (type != InterfaceType.BALANCE) {
 						createTransportTypes();
 						transportTypes[side] = type;
@@ -330,47 +330,47 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	// IEnergyHandler
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
-		if (from == ForgeDirection.UNKNOWN) return 0;
+		if (from == EnumFacing.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.receiveEnergy(maxReceive, simulate);
 		return 0;
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 
 		return 0;
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 
-		if (from == ForgeDirection.UNKNOWN) return false;
+		if (from == EnumFacing.UNKNOWN) return false;
 		return (sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null;
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 
-		if (from == ForgeDirection.UNKNOWN) return 0;
+		if (from == EnumFacing.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getEnergyStored();
 		return 0;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 
-		if (from == ForgeDirection.UNKNOWN) return 0;
+		if (from == EnumFacing.UNKNOWN) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getMaxEnergyStored();
 		return 0;
 	}
 
 	@Override
-	public InterfaceType getTransportState(ForgeDirection from) {
+	public InterfaceType getTransportState(EnumFacing from) {
 
 		if (transportTypes != null) {
 			return transportTypes[from.ordinal() ^ 1];
@@ -379,7 +379,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public boolean setTransportState(InterfaceType state, ForgeDirection from) {
+	public boolean setTransportState(InterfaceType state, EnumFacing from) {
 
 		if ((sideMode[from.ordinal() ^ 1] >> 1) == 1 || !isInterfacing(from)) {
 			return false;
@@ -406,21 +406,21 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public boolean canCrankAttach(ForgeDirection directionToCrank) {
+	public boolean canCrankAttach(EnumFacing directionToCrank) {
 
 		return true;
 	}
 
 	// internal
 
-	public boolean isInterfacing(ForgeDirection to) {
+	public boolean isInterfacing(EnumFacing to) {
 
 		int bSide = to.getOpposite().ordinal();
 		int mode = sideMode[bSide] >> 1;
 		return (sideMode[bSide] & 1) != 0 & mode != 0;
 	}
 
-	public int interfaceMode(ForgeDirection to) {
+	public int interfaceMode(EnumFacing to) {
 
 		int bSide = to.getOpposite().ordinal();
 		int mode = sideMode[bSide] >> 1;
@@ -454,7 +454,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			energyForGrid = 0;
 	}
 
-	void extract(ForgeDirection side, EnergyStorage storage) {
+	void extract(EnumFacing side, EnergyStorage storage) {
 
 		if (deadCache) return;
 		int bSide = side.ordinal();
@@ -494,7 +494,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 	}
 
-	int transfer(ForgeDirection side, int energy) {
+	int transfer(EnumFacing side, int energy) {
 
 		if (deadCache) return 0;
 		int bSide = side.ordinal();
@@ -546,7 +546,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 			boolean r = false;
 			if (tile instanceof IEnergyTile) {
-				ForgeDirection fSide = ForgeDirection.VALID_DIRECTIONS[side];
+				EnumFacing fSide = EnumFacing.VALID_DIRECTIONS[side];
 				if (tile instanceof IEnergySource && ((IEnergySource) tile).emitsEnergyTo(TileEntityRedNetEnergy.this, fSide)) {
 					if (sourceCache == null) sourceCache = new IEnergySource[6];
 					sourceCache[side] = (IEnergySource) tile;
@@ -578,7 +578,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			return;
 		}
 
-		int transmit(int energy, ForgeDirection side, int bSide) {
+		int transmit(int energy, EnumFacing side, int bSide) {
 
 			if (sinkCache != null) {
 				IEnergySink sink = sinkCache[bSide];
@@ -656,7 +656,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 6)) {
 			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
 				if (!player.worldObj.isRemote) {
-					int dir = ForgeDirection.OPPOSITES[side];
+					int dir = EnumFacing.OPPOSITES[side];
 					if (sideMode[dir] == 9) {
 						removeFromGrid();
 					}
@@ -686,8 +686,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[1]); // main body
 		list.add(main);
 
-		ForgeDirection[] side = ForgeDirection.VALID_DIRECTIONS;
-		int[] opposite = ForgeDirection.OPPOSITES;
+		EnumFacing[] side = EnumFacing.VALID_DIRECTIONS;
+		int[] opposite = EnumFacing.OPPOSITES;
 		for (int i = side.length; i-- > 0;) {
 			RedNetConnectionType c = getConnectionState(side[i], true);
 			int mode = sideMode[opposite[i]];
@@ -732,7 +732,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		info.add(text("-Redstone-"));
 		super.getTileInfo(info, side, player, debug && player.isSneaking());

@@ -10,7 +10,7 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
@@ -28,7 +28,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create(entity, ForgeDirection.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, EnumFacing.UNKNOWN);
 
 		for (Entry<Integer, ItemStack> contents : minecart.getContents().entrySet())
 		{
@@ -38,7 +38,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 			}
 
 			ItemStack stackToAdd = contents.getValue().copy();
-			ItemStack remaining = UtilInventory.dropStack(world, new BlockPosition(x, y, z), contents.getValue(), ForgeDirection.VALID_DIRECTIONS, ForgeDirection.UNKNOWN);
+			ItemStack remaining = UtilInventory.dropStack(world, new BlockPosition(x, y, z), contents.getValue(), EnumFacing.VALID_DIRECTIONS, EnumFacing.UNKNOWN);
 
 			if (remaining != null)
 			{

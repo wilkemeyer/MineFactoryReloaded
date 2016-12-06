@@ -17,7 +17,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
@@ -323,7 +323,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 				bp.x = xCoord;
 				bp.y = yCoord;
 				bp.z = zCoord;
-				ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i];
+				EnumFacing o = EnumFacing.VALID_DIRECTIONS[i];
 				bp.step(o);
 				Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
 				if (b instanceof IRedNetNetworkContainer) {
@@ -343,25 +343,25 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		markChunkDirty();
 	}
 
-	public int getOutputValue(ForgeDirection side, int subnet) {
+	public int getOutputValue(EnumFacing side, int subnet) {
 
-		if (side == ForgeDirection.UNKNOWN) {
+		if (side == EnumFacing.UNKNOWN) {
 			return 0;
 		}
 		return _buffers[side.ordinal() + 6][subnet];
 	}
 
-	public int[] getOutputValues(ForgeDirection side) {
+	public int[] getOutputValues(EnumFacing side) {
 
-		if (side == ForgeDirection.UNKNOWN) {
+		if (side == EnumFacing.UNKNOWN) {
 			return new int[16];
 		}
 		return _buffers[side.ordinal() + 6];
 	}
 
-	public void onInputsChanged(ForgeDirection side, int[] values) {
+	public void onInputsChanged(EnumFacing side, int[] values) {
 
-		if (side != ForgeDirection.UNKNOWN) {
+		if (side != EnumFacing.UNKNOWN) {
 			_buffers[side.ordinal()] = values;
 		}
 	}
@@ -650,13 +650,13 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
-	public boolean canRotate(ForgeDirection axis) {
+	public boolean canRotate(EnumFacing axis) {
 
 		return crafters == 0;
 	}
 
 	@Override
-	public void rotate(ForgeDirection axis) {
+	public void rotate(EnumFacing axis) {
 
 		if (canRotate(axis)) {
 			int currentMeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
@@ -688,10 +688,10 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
-	public ForgeDirection getDirectionFacing() {
+	public EnumFacing getDirectionFacing() {
 
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
-		return ForgeDirection.getOrientation(meta + 2);
+		return EnumFacing.getOrientation(meta + 2);
 	}
 
 	private static boolean areEqual(int[] a, int[] b) {

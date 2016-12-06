@@ -16,7 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -99,7 +99,7 @@ public class GuiFactoryInventory extends GuiBase {
 
 		if (_renderTanks) {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			FluidTankInfo[] tanks = _tileEntity.getTankInfo(ForgeDirection.UNKNOWN);
+			FluidTankInfo[] tanks = _tileEntity.getTankInfo(EnumFacing.UNKNOWN);
 			int n = tanks.length > 3 ? 3 : tanks.length;
 			if (n > 0) {
 				for (int i = 0; i < n; ++i) {

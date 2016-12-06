@@ -23,7 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import org.lwjgl.opengl.GL11;
 
@@ -129,7 +129,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IS
 		tess.draw();
 	}
 
-	private ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+	private EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double rx, double ry, double rz, float partialTick)
@@ -203,10 +203,10 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IS
 			_cond = (TileEntityRedNetEnergy)_cable;
 		}
 
-		ForgeDirection[] dirs = this.dirs;
+		EnumFacing[] dirs = this.dirs;
 
 		for (int i = dirs.length; i --> 0; ) {
-			ForgeDirection f = dirs[i];
+			EnumFacing f = dirs[i];
 			int side = f.ordinal();
 			RedNetConnectionType state = _cable.getCachedConnectionState(f);
 			switch (state.flags & 31) {

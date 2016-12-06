@@ -17,7 +17,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -353,13 +353,13 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side)
+	public int getStartInventorySide(EnumFacing side)
 	{
 		return 10;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side)
+	public int getSizeInventorySide(EnumFacing side)
 	{
 		return 19;
 	}
@@ -403,7 +403,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		int quantity;
 		int match = findFirstMatchingTank(resource);
@@ -430,7 +430,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		int match = findFirstNonEmptyTank();
 		if (match >= 0) return _tanks[match].drain(maxDrain, doDrain);
@@ -438,7 +438,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		int match = findFirstMatchingTank(resource);
 		if (match >= 0) return _tanks[match].drain(resource.amount, doDrain);
@@ -446,7 +446,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{
 		FluidTankInfo[] r = new FluidTankInfo[_tanks.length];
 		for (int i = _tanks.length; i --> 0; )
@@ -575,13 +575,13 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
+	public boolean canFill(EnumFacing from, Fluid fluid)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	public boolean canDrain(EnumFacing from, Fluid fluid)
 	{
 		return true;
 	}

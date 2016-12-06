@@ -38,7 +38,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -100,7 +100,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
+	public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis)
 	{
 		if (world.isRemote)
 		{
@@ -214,7 +214,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		return drops;
 	}
 
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side,
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z, EnumFacing side,
 			EntityPlayer player, List<IChatComponent> info, boolean debug)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
@@ -385,7 +385,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side)
 	{
 		return true;
 	}
@@ -416,7 +416,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side)
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side)
 	{
 		if (providesPower)
 			return RedNetConnectionType.DecorativeSingle;

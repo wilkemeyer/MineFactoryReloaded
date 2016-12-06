@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +21,7 @@ public class LaserRendererBase {
 
 	private static int r = 255, g = 255, b = 255;
 
-	public static void renderLaser(TileEntity host, double x, double y, double z, int length, ForgeDirection orientation, float partialTicks) {
+	public static void renderLaser(TileEntity host, double x, double y, double z, int length, EnumFacing orientation, float partialTicks) {
 
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();

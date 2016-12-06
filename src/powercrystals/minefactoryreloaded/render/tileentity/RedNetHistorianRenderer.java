@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler
 {
@@ -46,17 +46,17 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 
 		GL11.glTranslatef((float)x, (float)y, (float)z);
 		
-		if(historian.getDirectionFacing() == ForgeDirection.EAST)
+		if(historian.getDirectionFacing() == EnumFacing.EAST)
 		{
 			GL11.glTranslatef(1, 0, 0);
 			GL11.glRotatef(270, 0, 1, 0);
 		}
-		else if(historian.getDirectionFacing() == ForgeDirection.SOUTH)
+		else if(historian.getDirectionFacing() == EnumFacing.SOUTH)
 		{
 			GL11.glTranslatef(1, 0, 1);
 			GL11.glRotatef(180, 0, 1, 0);
 		}
-		else if(historian.getDirectionFacing() == ForgeDirection.WEST)
+		else if(historian.getDirectionFacing() == EnumFacing.WEST)
 		{
 			GL11.glTranslatef(0, 0, 1);
 			GL11.glRotatef(90, 0, 1, 0);

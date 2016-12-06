@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.api;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Defines a target for the Laser Drill Precharger
@@ -17,7 +17,7 @@ public interface IFactoryLaserTarget {
 	 *
 	 * @return True if the precharger can form a beam from this side
 	 */
-	public boolean canFormBeamWith(ForgeDirection from);
+	public boolean canFormBeamWith(EnumFacing from);
 
 	/**
 	 * Used to add energy to the tile.
@@ -31,6 +31,6 @@ public interface IFactoryLaserTarget {
 	 *
 	 * @return The amount of energy not consumed
 	 */
-	public int addEnergy(ForgeDirection from, int energy, boolean simulate);
+	public int addEnergy(EnumFacing from, int energy, boolean simulate);
 
 }

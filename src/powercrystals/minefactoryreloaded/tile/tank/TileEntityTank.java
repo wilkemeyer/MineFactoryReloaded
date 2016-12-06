@@ -16,7 +16,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -51,7 +51,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	public void invalidate() {
 
 		if (grid != null) {
-			for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing to : EnumFacing.VALID_DIRECTIONS) {
 				if ((sides & (1 << to.ordinal())) == 0)
 					continue;
 				TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
@@ -76,7 +76,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	public void firstTick() {
 
 		if (!inWorld) return;
-		for (ForgeDirection to : ForgeDirection.VALID_DIRECTIONS) {
+		for (EnumFacing to : EnumFacing.VALID_DIRECTIONS) {
 			if (to.offsetY != 0 || !BlockPosition.blockExists(this, to))
 				continue;
 			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
@@ -101,21 +101,21 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		firstTick();
 	}
 
-	public void join(ForgeDirection from) {
+	public void join(EnumFacing from) {
 
 		sides |= (1 << from.ordinal());
 		markChunkDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public void part(ForgeDirection from) {
+	public void part(EnumFacing from) {
 
 		sides &= ~(1 << from.ordinal());
 		markChunkDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public boolean isInterfacing(ForgeDirection to) {
+	public boolean isInterfacing(EnumFacing to) {
 
 		return 0 != (sides & (1 << to.ordinal()));
 	}
@@ -184,7 +184,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 
 		if (grid == null)
 			return 0;
@@ -192,7 +192,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
 
 		if (grid == null)
 			return null;
@@ -200,7 +200,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 
 		if (grid == null)
 			return worldObj.isRemote ? _tank.drain(maxDrain, false) : null;
@@ -208,19 +208,19 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 
 		return grid != null;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 
 		return grid != null;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 
 		if (grid == null)
 			return FluidHelper.NULL_TANK_INFO;
@@ -240,7 +240,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		if (debug) {
 			info.add(new ChatComponentText("Grid: " + grid));

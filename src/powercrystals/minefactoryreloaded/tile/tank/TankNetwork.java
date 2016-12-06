@@ -6,7 +6,7 @@ import cofh.lib.util.position.BlockPosition;
 import java.util.LinkedHashSet;
 
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.IDelayedValidate;
 import powercrystals.minefactoryreloaded.net.ConnectionHandler;
@@ -67,7 +67,7 @@ public class TankNetwork implements IDelayedValidate {
 		LinkedHashSet<TileEntityTank> toCheck = new LinkedHashSet<TileEntityTank>();
 		LinkedHashSet<TileEntityTank> checked = new LinkedHashSet<TileEntityTank>();
 		BlockPosition bp = new BlockPosition(0, 0, 0);
-		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {

@@ -24,7 +24,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
@@ -172,18 +172,18 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 					if (!world.isRemote) {
 						int nextColor;
 						if (!player.isSneaking()) {
-							nextColor = cable.getSideColor(ForgeDirection.getOrientation(side)) + 1;
+							nextColor = cable.getSideColor(EnumFacing.getOrientation(side)) + 1;
 							if (nextColor > 15) nextColor = 0;
 						} else {
-							nextColor = cable.getSideColor(ForgeDirection.getOrientation(side)) - 1;
+							nextColor = cable.getSideColor(EnumFacing.getOrientation(side)) - 1;
 							if (nextColor < 0) nextColor = 15;
 						}
-						cable.setSideColor(ForgeDirection.getOrientation(side), nextColor);
+						cable.setSideColor(EnumFacing.getOrientation(side), nextColor);
 						return true;
 					}
 				} else if (s != null && s.getItem().equals(Items.dye)) {
 					if (!world.isRemote) {
-						cable.setSideColor(ForgeDirection.getOrientation(side), 15 - s.getItemDamage());
+						cable.setSideColor(EnumFacing.getOrientation(side), 15 - s.getItemDamage());
 						return true;
 					}
 				}
@@ -191,7 +191,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				l: if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
 					if (!world.isRemote) {
 						if (side > 6) {
-							ForgeDirection dir = ForgeDirection.getOrientation(side - 7);
+							EnumFacing dir = EnumFacing.getOrientation(side - 7);
 							TileEntityRedNetCable cable2 = new BlockPosition(x, y, z).step(dir).getTileEntity(world, TileEntityRedNetCable.class);
 							cable.toggleSide(side - 7);
 							if (cable2 != null) {
@@ -243,7 +243,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 					MFRUtil.usedWrench(player, x, y, z);
 				} else if (s != null && s.getItem().equals(Items.dye)) {
 					if (!world.isRemote) {
-						cable.setSideColor(ForgeDirection.getOrientation(side), 15 - s.getItemDamage());
+						cable.setSideColor(EnumFacing.getOrientation(side), 15 - s.getItemDamage());
 						world.markBlockForUpdate(x, y, z);
 						return true;
 					}
@@ -301,7 +301,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		int power = 0;
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable) {
-			power = ((TileEntityRedNetCable) te).getWeakPower(ForgeDirection.getOrientation(side).getOpposite());
+			power = ((TileEntityRedNetCable) te).getWeakPower(EnumFacing.getOrientation(side).getOpposite());
 		}
 		return power;
 	}
@@ -312,13 +312,13 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		int power = 0;
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable) {
-			power = ((TileEntityRedNetCable) te).getStrongPower(ForgeDirection.getOrientation(side).getOpposite());
+			power = ((TileEntityRedNetCable) te).getStrongPower(EnumFacing.getOrientation(side).getOpposite());
 		}
 		return power;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable)
@@ -354,7 +354,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public void updateNetwork(World world, int x, int y, int z, ForgeDirection from) {
+	public void updateNetwork(World world, int x, int y, int z, EnumFacing from) {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable) {
@@ -363,7 +363,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public void updateNetwork(World world, int x, int y, int z, int subnet, ForgeDirection from) {
+	public void updateNetwork(World world, int x, int y, int z, int subnet, EnumFacing from) {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetCable) {
@@ -372,13 +372,13 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, ForgeDirection side) {
+	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
 
 		return RedNetConnectionType.CableAll;
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side, EntityPlayer player, List<IChatComponent> info, boolean debug) {
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z, EnumFacing side, EntityPlayer player, List<IChatComponent> info, boolean debug) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityRedNetCable) {
@@ -387,13 +387,13 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				return;
 
 			int subHit = part.subHit;
-			side = ForgeDirection.getOrientation(_subSideMappings[subHit]);
+			side = EnumFacing.getOrientation(_subSideMappings[subHit]);
 			((TileEntityRedNetCable) tile).getTileInfo(info, side, player, debug);
 		}
 	}
 
 	@Override
-	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, ForgeDirection side, EntityPlayer player, List<IChatComponent> info) {
+	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, EnumFacing side, EntityPlayer player, List<IChatComponent> info) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityRedNetCable) {
@@ -402,7 +402,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				return;
 
 			int subHit = part.subHit;
-			side = ForgeDirection.getOrientation(_subSideMappings[subHit]);
+			side = EnumFacing.getOrientation(_subSideMappings[subHit]);
 			info.add(new ChatComponentText(((TileEntityRedNetCable) tile).getRedNetInfo(side, player)));
 
 			int value;

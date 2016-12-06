@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import org.lwjgl.opengl.GL11;
 
@@ -95,7 +95,7 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 		tess.draw();
 	}
 
-	private ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
+	private EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
@@ -113,10 +113,10 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 		tess.addTranslation(x, y, z);
 
 		base.render(uvt);
-		ForgeDirection[] dirs = this.dirs;
+		EnumFacing[] dirs = this.dirs;
 
 		for (int i = dirs.length; i --> 0; ) {
-			ForgeDirection f = dirs[i];
+			EnumFacing f = dirs[i];
 			if (_cable.isInterfacing(f))
 			{
 				int side = f.ordinal();

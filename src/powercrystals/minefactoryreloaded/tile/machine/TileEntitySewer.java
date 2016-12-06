@@ -18,7 +18,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -41,7 +41,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 
 		super(Machine.Sewer);
 		createHAM(this, 0, 1, 0, false);
-		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		_areaManager.setOverrideDirection(EnumFacing.UP);
 		_tanks[0].setLock(FluidRegistry.getFluid("sewage"));
 	}
 
@@ -146,7 +146,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 
 		return 0;
 	}
@@ -158,13 +158,13 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 
 		return drain(maxDrain, doDrain);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
 
 		return drain(resource, doDrain);
 	}
@@ -183,13 +183,13 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 
 		return false;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 
 		return true;
 	}

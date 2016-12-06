@@ -11,7 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
@@ -54,7 +54,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	public boolean recolourBlock(World world, int x, int y, int z, EnumFacing side, int colour)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
 		if (meta != colour)
@@ -94,7 +94,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	{
 		boolean r = super.shouldSideBeRendered(world, x, y, z, side);
 		if (!r) {
-			ForgeDirection f = ForgeDirection.getOrientation(side);
+			EnumFacing f = EnumFacing.getOrientation(side);
 			return world.getBlockMetadata(x, y, z) != world.getBlockMetadata(x - f.offsetX, y - f.offsetY, z - f.offsetZ);
 		}
 		return r;
@@ -106,7 +106,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		boolean[] sides = new boolean[8];
 		if (side <= 1)
 		{
-			bp = new BlockPosition(x, y, z, ForgeDirection.NORTH);
+			bp = new BlockPosition(x, y, z, EnumFacing.NORTH);
 			bp.moveRight(1);
 			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveBackwards(1);
@@ -126,7 +126,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		}
 		else
 		{
-			bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
+			bp = new BlockPosition(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
 			bp.moveRight(1);
 			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveDown(1);

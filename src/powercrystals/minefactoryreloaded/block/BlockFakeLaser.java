@@ -15,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
@@ -102,7 +102,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 
 		int meta = world.getBlockMetadata(x, y, z);
 		l: if (meta != 0) {
-			ForgeDirection dir = ForgeDirection.getOrientation(meta - 1);
+			EnumFacing dir = EnumFacing.getOrientation(meta - 1);
 			if (world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).equals(this))
 				if (world.getBlockMetadata(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == meta)
 					return;

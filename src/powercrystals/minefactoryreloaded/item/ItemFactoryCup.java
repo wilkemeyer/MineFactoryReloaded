@@ -23,7 +23,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -338,7 +338,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
 		MovingObjectPosition ret = world.func_147447_a(vec3, vec31, adjacent, !adjacent, false);
 		if (ret != null && adjacent) {
-			ForgeDirection side = ForgeDirection.getOrientation(ret.sideHit);
+			EnumFacing side = EnumFacing.getOrientation(ret.sideHit);
 			ret.blockX += side.offsetX;
 			ret.blockY += side.offsetY;
 			ret.blockZ += side.offsetZ;

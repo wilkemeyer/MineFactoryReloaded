@@ -8,7 +8,7 @@ import cofh.lib.util.helpers.EnergyHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -85,7 +85,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 				if (tile == null)
 					continue;
 
-				ForgeDirection from = ForgeDirection.VALID_DIRECTIONS[i];
+				EnumFacing from = EnumFacing.VALID_DIRECTIONS[i];
 				if (tile.receiveEnergy(from, energy, true) > 0)
 					energy -= tile.receiveEnergy(from, energy, false);
 				if (energy <= 0)
@@ -124,7 +124,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 
 	private void reCache() {
 		if (deadCache) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
 				onNeighborTileChange(xCoord + dir.offsetX,
 						yCoord + dir.offsetY, zCoord + dir.offsetZ);
 			deadCache = false;
@@ -154,7 +154,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 			receiverCache[side] = null;
 
 		if (tile instanceof IEnergyReceiver) {
-			if (((IEnergyReceiver)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
+			if (((IEnergyReceiver)tile).canConnectEnergy(EnumFacing.VALID_DIRECTIONS[side])) {
 				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
 				receiverCache[side] = (IEnergyReceiver)tile;
 			}
@@ -187,12 +187,12 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	// TE methods
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 		return true;
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		maxExtract = Math.min(_energy, Math.min(_outputPulseSize, maxExtract));
 		if (maxExtract <= 0) return 0;
 
@@ -202,12 +202,12 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return _energy;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return _energyMax;
 	}
 }

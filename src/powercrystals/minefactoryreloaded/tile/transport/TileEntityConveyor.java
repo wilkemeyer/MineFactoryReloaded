@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
-import static net.minecraftforge.common.util.ForgeDirection.*;
+import static net.minecraftforge.common.util.EnumFacing.*;
 
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
@@ -20,7 +20,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
@@ -81,7 +81,7 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public void rotate(ForgeDirection axis)
+	public void rotate(EnumFacing axis)
 	{
 		int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		if (md == 0)
@@ -212,7 +212,7 @@ public class TileEntityConveyor extends TileEntityBase
 		}
 	}
 
-	private boolean isSideSolid(int x, int z, ForgeDirection dir)
+	private boolean isSideSolid(int x, int z, EnumFacing dir)
 	{
 		return worldObj.isSideSolid(xCoord + x, yCoord, zCoord + z, dir) &&
 				((!worldObj.isSideSolid(xCoord + x, yCoord + 1, zCoord + z, dir) ||
@@ -238,15 +238,15 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public boolean canRotate(ForgeDirection axis)
+	public boolean canRotate(EnumFacing axis)
 	{
 		return true;
 	}
 
 	@Override
-	public ForgeDirection getDirectionFacing()
+	public EnumFacing getDirectionFacing()
 	{
-		return ForgeDirection.UNKNOWN;
+		return EnumFacing.UNKNOWN;
 	}
 
 	@Override
@@ -342,7 +342,7 @@ public class TileEntityConveyor extends TileEntityBase
 		double motionY = 0.0D;
 		double motionZ = 0.0D;
 
-		//because of the setup, slot is also the ForgeDirection ordinal from which the item is being inserted
+		//because of the setup, slot is also the EnumFacing ordinal from which the item is being inserted
 		switch(slot)
 		{
 			case 0: //DOWN
@@ -444,7 +444,7 @@ public class TileEntityConveyor extends TileEntityBase
     	if (!_conveyorActive)
     		return false;
     	int blockmeta;
-    	switch (ForgeDirection.getOrientation(side))
+    	switch (EnumFacing.getOrientation(side))
     	{
     	case UP:
     		return (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 0x04) == 0;
@@ -559,17 +559,17 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public ConnectionType canConnectInventory(ForgeDirection from)
+	public ConnectionType canConnectInventory(EnumFacing from)
 	{
 		return ConnectionType.FORCE;
 	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+	public ConnectOverride overridePipeConnection(PipeType type, EnumFacing with) {
 		if (type == PipeType.ITEM)
 			return ConnectOverride.CONNECT;
-		if (with == ForgeDirection.DOWN & type == PipeType.STRUCTURE)
+		if (with == EnumFacing.DOWN & type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
 	}

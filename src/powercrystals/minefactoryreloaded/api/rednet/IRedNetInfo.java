@@ -3,9 +3,9 @@ package powercrystals.minefactoryreloaded.api.rednet;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Defines a Block that can print information about itself using the RedNet Meter. This must be implemented on your Block class.
@@ -24,5 +24,5 @@ public interface IRedNetInfo
 	 * @param info The list that the information should be appended to.
 	 */
 	public void getRedNetInfo(IBlockAccess world, int x, int y, int z,
-			ForgeDirection side, EntityPlayer player, List<IChatComponent> info);
+			EnumFacing side, EntityPlayer player, List<ITextComponent> info);
 }

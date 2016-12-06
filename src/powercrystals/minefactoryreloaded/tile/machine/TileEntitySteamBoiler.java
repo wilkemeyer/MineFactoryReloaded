@@ -10,7 +10,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -270,7 +270,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		if (resource != null && resource.getFluid() == FluidRegistry.WATER)
 		{
@@ -285,7 +285,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		FluidTankAdv _tank = _tanks[0];
 		if (_tank.getFluidAmount() > 0)
@@ -294,7 +294,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		if (resource != null)
 		{
@@ -306,13 +306,13 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
+	public boolean canFill(EnumFacing from, Fluid fluid)
 	{
 		return fluid == null || fluid == FluidRegistry.WATER;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	public boolean canDrain(EnumFacing from, Fluid fluid)
 	{
 		return true;
 	}

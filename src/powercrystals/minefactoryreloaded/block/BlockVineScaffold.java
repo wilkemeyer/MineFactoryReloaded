@@ -18,7 +18,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
@@ -29,8 +29,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	private IIcon _sideIcon;
 	private IIcon _topIcon;
 
-	private static final ForgeDirection[] _attachDirections = new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH,
-			ForgeDirection.EAST, ForgeDirection.WEST };
+	private static final EnumFacing[] _attachDirections = new EnumFacing[] { EnumFacing.NORTH, EnumFacing.SOUTH,
+			EnumFacing.EAST, EnumFacing.WEST };
 	private static final int _attachDistance = 11;
 
 	public BlockVineScaffold() {
@@ -182,15 +182,15 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z) {
 
-		if (world.isSideSolid(x, y - 1, z, ForgeDirection.UP)) {
+		if (world.isSideSolid(x, y - 1, z, EnumFacing.UP)) {
 			return true;
 		}
-		for (ForgeDirection d : _attachDirections) {
+		for (EnumFacing d : _attachDirections) {
 			BlockPosition bp = new BlockPosition(x, y, z, d);
 			for (int i = 0; i < _attachDistance; i++) {
 				bp.moveForwards(1);
 				if (world.getBlock(bp.x, bp.y, bp.z).equals(this)) {
-					if (world.isSideSolid(bp.x, bp.y - 1, bp.z, ForgeDirection.UP)) {
+					if (world.isSideSolid(bp.x, bp.y - 1, bp.z, EnumFacing.UP)) {
 						return true;
 					}
 				} else
@@ -216,7 +216,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 					break;
 				dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 				world.setBlock(x, y, z, Blocks.air, 0, 2);
-				for (ForgeDirection d : _attachDirections) {
+				for (EnumFacing d : _attachDirections) {
 					BlockPosition bp = new BlockPosition(x, y, z, d);
 					for (int i = 0; i < _attachDistance; i++) {
 						bp.moveForwards(1);
@@ -232,8 +232,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
 
-		return side == ForgeDirection.UP || side == ForgeDirection.DOWN;
+		return side == EnumFacing.UP || side == EnumFacing.DOWN;
 	}
 }

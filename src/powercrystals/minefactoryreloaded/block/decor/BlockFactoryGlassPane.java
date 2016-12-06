@@ -16,7 +16,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
@@ -73,7 +73,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
+	public boolean recolourBlock(World world, int x, int y, int z, EnumFacing side, int colour)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
 		if (meta != colour)
@@ -102,7 +102,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
+		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
 		boolean[] sides = new boolean[8];
 		bp.moveRight(1);
 		sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
@@ -132,12 +132,12 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return !(canPaneConnectTo(world, x, y, z, ForgeDirection.getOrientation(side)) ||
+		return !(canPaneConnectTo(world, x, y, z, EnumFacing.getOrientation(side)) ||
 				!super.shouldSideBeRendered(world, x, y, z, side));
 	}
 
 	@Override
-	public boolean canPaneConnectTo(IBlockAccess world, int x, int y, int z, ForgeDirection dir)
+	public boolean canPaneConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir)
 	{
 		Block block = world.getBlock(x, y, z);
 		return block.func_149730_j() ||
@@ -153,10 +153,10 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		float zStart = 0.5625F;
 		float xStop = 0.4375F;
 		float zStop = 0.5625F;
-		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, ForgeDirection.NORTH);
-		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, ForgeDirection.SOUTH);
-		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, ForgeDirection.WEST);
-		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, ForgeDirection.EAST);
+		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, EnumFacing.NORTH);
+		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, EnumFacing.SOUTH);
+		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, EnumFacing.WEST);
+		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, EnumFacing.EAST);
 
 		if ((!connectedWest || !connectedEast) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
 		{
@@ -199,10 +199,10 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List blockList, Entity e)
 	{
-		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, ForgeDirection.NORTH);
-		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, ForgeDirection.SOUTH);
-		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, ForgeDirection.WEST);
-		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, ForgeDirection.EAST);
+		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, EnumFacing.NORTH);
+		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, EnumFacing.SOUTH);
+		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, EnumFacing.WEST);
+		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, EnumFacing.EAST);
 
 		if ((!connectedWest || !connectedEast) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
 		{

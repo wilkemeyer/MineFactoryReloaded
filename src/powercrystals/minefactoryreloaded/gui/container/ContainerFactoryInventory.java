@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -52,7 +52,7 @@ public class ContainerFactoryInventory extends ContainerBase {
 
 		super.detectAndSendChanges();
 
-		FluidTankInfo[] tank = _te.getTankInfo(ForgeDirection.UNKNOWN);
+		FluidTankInfo[] tank = _te.getTankInfo(EnumFacing.UNKNOWN);
 		int n = tank.length;
 		for (int i = 0; i < crafters.size(); i++) {
 			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 33, (_te.hasDrops() ? 1 : 0) |

@@ -26,7 +26,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -121,7 +121,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	private void reCache() {
 
 		if (deadCache) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
 				if (BlockPosition.blockExists(this, dir))
 					addCache(BlockPosition.getAdjacentTileEntity(this, dir));
 			deadCache = false;
@@ -207,7 +207,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			TileEntityPlasticPipe cable = (TileEntityPlasticPipe) tile;
 			sideMode[side] &= ~2;
 			sideMode[side] |= (2 << 2);
-			if (cable.isInterfacing(ForgeDirection.getOrientation(side))) {
+			if (cable.isInterfacing(EnumFacing.getOrientation(side))) {
 				if (_grid == null && cable._grid != null) {
 					cable._grid.addConduit(this);
 				}
@@ -218,7 +218,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 				sideMode[side] &= ~3;
 			}
 		} else if (tile instanceof IFluidHandler) {
-			//if (((IFluidHandler)tile).canFill(ForgeDirection.VALID_DIRECTIONS[side]))
+			//if (((IFluidHandler)tile).canFill(EnumFacing.VALID_DIRECTIONS[side]))
 			{
 				if (handlerCache == null) handlerCache = new IFluidHandler[6];
 				handlerCache[side] = (IFluidHandler) tile;
@@ -236,7 +236,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		if (_grid == null) {
 			boolean hasGrid = false;
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
 				if (BlockPosition.blockExists(this, dir)) {
 					TileEntityPlasticPipe pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
@@ -258,7 +258,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		}
 	}
 
-	public boolean canInterface(TileEntityPlasticPipe te, ForgeDirection dir) {
+	public boolean canInterface(TileEntityPlasticPipe te, EnumFacing dir) {
 
 		if ((sideMode[dir.ordinal()] & 1) == 0) return false;
 		return canInterface(te);
@@ -351,12 +351,12 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	public byte getMode(int side) {
 
-		return (byte) (sideMode[ForgeDirection.OPPOSITES[side]] & 3);
+		return (byte) (sideMode[EnumFacing.OPPOSITES[side]] & 3);
 	}
 
 	public void setMode(int side, byte mode) {
 
-		side = ForgeDirection.OPPOSITES[side];
+		side = EnumFacing.OPPOSITES[side];
 		mode &= 3;
 		int t = sideMode[side];
 		boolean mustUpdate = (mode != (t & 3));
@@ -370,7 +370,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	// IFluidHandler
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 
 		if (_grid == null | sideMode[6] == 1) return 0;
 		int t = sideMode[from.getOpposite().ordinal()];
@@ -382,7 +382,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
 
 		if (_grid == null | sideMode[6] == 1) return null;
 		int t = sideMode[from.getOpposite().ordinal()];
@@ -394,7 +394,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 
 		if (_grid == null | sideMode[6] == 1) return null;
 		int t = sideMode[from.getOpposite().ordinal()];
@@ -404,7 +404,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 
 		if (sideMode[6] == 1) return false;
 		int t = sideMode[from.getOpposite().ordinal()];
@@ -412,7 +412,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 
 		if (sideMode[6] == 1) return false;
 		int t = sideMode[from.getOpposite().ordinal()];
@@ -420,7 +420,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{
 
 		if (_grid == null)
@@ -430,14 +430,14 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	// internal
 
-	public boolean isInterfacing(ForgeDirection to) {
+	public boolean isInterfacing(EnumFacing to) {
 
 		int bSide = to.ordinal() ^ 1;
 		int mode = sideMode[bSide] >> 2;
 		return ((sideMode[bSide] & 1) != 0) & (sideMode[6] == 1 ? mode == 2 : mode != 0);
 	}
 
-	public int interfaceMode(ForgeDirection to) {
+	public int interfaceMode(EnumFacing to) {
 
 		int bSide = to.ordinal() ^ 1;
 		int mode = sideMode[bSide] >> 2;
@@ -482,7 +482,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
 	}
 
-	void extract(ForgeDirection side, IFluidTank tank) {
+	void extract(EnumFacing side, IFluidTank tank) {
 
 		if (deadCache) return;
 		int bSide = side.ordinal();
@@ -509,7 +509,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		}
 	}
 
-	int transfer(ForgeDirection side, FluidStack fluid, Fluid f) {
+	int transfer(EnumFacing side, FluidStack fluid, Fluid f) {
 
 		if (deadCache) return 0;
 		int bSide = side.ordinal();
@@ -606,13 +606,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		if (subHit >= 0 && subHit < (2 + 6 * 2)) {
 			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
 				if (!worldObj.isRemote) {
-					int data = sideMode[ForgeDirection.OPPOSITES[side]] >> 2;
+					int data = sideMode[EnumFacing.OPPOSITES[side]] >> 2;
 					byte mode = getMode(side);
 					if (++mode == 2) ++mode;
 					if (data == 2) {
 						if (mode > 1)
 							mode = 0;
-						ForgeDirection dir = ForgeDirection.getOrientation(side);
+						EnumFacing dir = EnumFacing.getOrientation(side);
 						TileEntityPlasticPipe cable = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
 						if (!isInterfacing(dir)) {
 							if (couldInterface(cable)) {
@@ -679,8 +679,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
 
-		ForgeDirection[] side = ForgeDirection.VALID_DIRECTIONS;
-		int[] opposite = ForgeDirection.OPPOSITES;
+		EnumFacing[] side = EnumFacing.VALID_DIRECTIONS;
+		int[] opposite = EnumFacing.OPPOSITES;
 		boolean cableMode = sideMode[6] == 1;
 		for (int i = side.length; i-- > 0;) {
 			int mode = sideMode[opposite[i]] >> 2;
@@ -713,7 +713,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, ForgeDirection side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		if (_grid != null) {
 			info.add(text("Powered: " + isPowered));

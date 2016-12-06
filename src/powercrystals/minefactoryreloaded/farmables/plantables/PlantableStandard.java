@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.oredict.OreDictionary;
 
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
@@ -88,7 +88,7 @@ public class PlantableStandard implements IFactoryPlantable
 		Block groundId = world.getBlock(x, y - 1, z);
 		return (_block.canPlaceBlockAt(world, x, y, z) && _block.canReplace(world, x, y, z, 0, stack)) ||
 				(_block instanceof IPlantable && groundId != null &&
-				groundId.canSustainPlant(world, x, y, z, ForgeDirection.UP, (IPlantable)_block));
+				groundId.canSustainPlant(world, x, y, z, EnumFacing.UP, (IPlantable)_block));
 	}
 
 	@Override

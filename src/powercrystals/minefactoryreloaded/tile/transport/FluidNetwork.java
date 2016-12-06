@@ -7,7 +7,7 @@ import cofh.lib.util.position.BlockPosition;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -109,7 +109,7 @@ public class FluidNetwork implements IGrid {
 		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<TileEntityPlasticPipe>();
 		LinkedHashList<TileEntityPlasticPipe> checked = new LinkedHashList<TileEntityPlasticPipe>();
 		BlockPosition bp = new BlockPosition(0,0,0);
-		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
@@ -174,7 +174,7 @@ public class FluidNetwork implements IGrid {
 		FluidTankAdv tank = storage;
 		if (tank.getSpace() <= 0)
 			return;
-		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
 
 		for (TileEntityPlasticPipe cond : nodeSet)
 			for (int i = 6; i --> 0; )
@@ -192,7 +192,7 @@ public class FluidNetwork implements IGrid {
 		FluidTankAdv storage = this.storage;
 		if (storage.getFluidAmount() <= 0)
 			return;
-		ForgeDirection[] directions = ForgeDirection.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
 		int size = nodeSet.size();
 		int toDistribute = storage.getFluidAmount() / size;
 		int sideDistribute = toDistribute / 6;

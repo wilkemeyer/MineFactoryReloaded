@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -45,9 +45,9 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, int x, int y, int z, ForgeDirection direction, IPlantable plantable)
+	public boolean canSustainPlant(IBlockAccess world, int x, int y, int z, EnumFacing direction, IPlantable plantable)
 	{
-		if (direction != ForgeDirection.UP)
+		if (direction != EnumFacing.UP)
 			return false;
 		EnumPlantType plantType = plantable.getPlantType(world, x, y + 1, z);
 
@@ -194,9 +194,9 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side)
 	{
-		return side != ForgeDirection.UP;
+		return side != EnumFacing.UP;
 	}
 
 	@Override
