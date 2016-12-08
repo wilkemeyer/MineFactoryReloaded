@@ -65,7 +65,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 		super(Material.circuits);
 		setHardness(0.5F);
-		setBlockName("mfr.conveyor");
+		setUnlocalizedName("mfr.conveyor");
 		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.01F, 0.1F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}

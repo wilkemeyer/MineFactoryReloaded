@@ -30,7 +30,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	public BlockTank() {
 
 		super(0.5f);
-		setBlockName("mfr.tank");
+		setUnlocalizedName("mfr.tank");
 		setLightOpacity(1);
 	}
 

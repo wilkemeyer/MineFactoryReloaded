@@ -20,7 +20,7 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 	public BlockRailPassengerDropoff() {
 
 		super(true, false);
-		setBlockName("mfr.rail.passenger.dropoff");
+		setUnlocalizedName("mfr.rail.passenger.dropoff");
 	}
 
 	@Override

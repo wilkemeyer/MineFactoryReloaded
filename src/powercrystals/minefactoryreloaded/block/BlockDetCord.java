@@ -27,8 +27,8 @@ public class BlockDetCord extends BlockFactory implements ITileEntityProvider {
 		super(Machine.MATERIAL);
 		setHardness(2.0F);
 		setResistance(10.0F);
-		setStepSound(soundTypeSnow);
-		setBlockName("mfr.detcord");
+		setSoundType(soundTypeSnow);
+		setUnlocalizedName("mfr.detcord");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 

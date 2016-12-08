@@ -34,7 +34,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileE
 	public BlockPlasticPipe() {
 
 		super(0.8F);
-		setBlockName("mfr.cable.plastic");
+		setUnlocalizedName("mfr.cable.plastic");
 		providesPower = true;
 	}
 

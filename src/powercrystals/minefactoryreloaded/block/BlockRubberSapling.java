@@ -26,8 +26,8 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	public BlockRubberSapling() {
 
 		setHardness(0.0F);
-		setStepSound(soundTypeGrass);
-		setBlockName("mfr.rubberwood.sapling");
+		setSoundType(soundTypeGrass);
+		setUnlocalizedName("mfr.rubberwood.sapling");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 

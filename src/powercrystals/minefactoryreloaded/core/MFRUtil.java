@@ -192,7 +192,7 @@ public class MFRUtil {
 
 	public static final List<EnumFacing> VALID_DIRECTIONS = Arrays.asList(EnumFacing.VALID_DIRECTIONS);
 
-	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z) {
+	public static boolean isHoldingUsableTool(EntityPlayer player, BlockPos pos) {
 
 		if (player == null) {
 			return false;
@@ -202,12 +202,12 @@ public class MFRUtil {
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammer) {
-			return ((IToolHammer) currentItem).isUsable(player.inventory.getCurrentItem(), player, x, y, z);
+			return ((IToolHammer) currentItem).isUsable(player.inventory.getCurrentItem(), player, pos.getX(), pos.getY(), pos.getZ());
 		}
 		else if (currentItem instanceof IMFRHammer) {
 			return true;
 		}
-		else if (bcWrenchExists && canHandleBCWrench(currentItem, player, x, y, z)) {
+		else if (bcWrenchExists && canHandleBCWrench(currentItem, player, pos)) {
 			return true;
 		}
 
@@ -243,14 +243,14 @@ public class MFRUtil {
 		}
 	}
 
-	private static boolean canHandleBCWrench(Item item, EntityPlayer p, int x, int y, int z) {
+	private static boolean canHandleBCWrench(Item item, EntityPlayer p, BlockPos pos) {
 
-		return item instanceof IToolWrench && ((IToolWrench) item).canWrench(p, x, y, z);
+		return item instanceof IToolWrench && ((IToolWrench) item).canWrench(p, pos);
 	}
 
-	private static void bcWrenchUsed(Item item, EntityPlayer p, int x, int y, int z) {
+	private static void bcWrenchUsed(Item item, EntityPlayer p, BlockPos pos) {
 
-		if (item instanceof IToolWrench) ((IToolWrench) item).wrenchUsed(p, x, y, z);
+		if (item instanceof IToolWrench) ((IToolWrench) item).wrenchUsed(p, pos);
 	}
 
 	public static boolean isHoldingHammer(EntityPlayer player) {

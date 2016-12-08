@@ -2,28 +2,17 @@ package powercrystals.minefactoryreloaded.block.decor;
 
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
-
 public class BlockFactoryDecoration extends BlockFactory
 {
 	public static String[] _names = new String [] { null, "prc" };
-	@SideOnly(Side.CLIENT)
-	private IIcon topIcon;
-	@SideOnly(Side.CLIENT)
-	private IIcon bottomIcon;
-	@SideOnly(Side.CLIENT)
-	private IIcon[] icons;
 	
 	public BlockFactoryDecoration()
 	{
 		super(0.5f);
-		setBlockName("mfr.machineblock");
+		setUnlocalizedName("mfr.machineblock");
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
@@ -53,4 +42,5 @@ public class BlockFactoryDecoration extends BlockFactory
 			return blockIcon;
 		}
 	}
+*/
 }

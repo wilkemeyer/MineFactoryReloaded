@@ -11,6 +11,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 public class TileEntityBase extends net.minecraft.tileentity.TileEntity
@@ -70,7 +71,7 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		}
 	}
 
-	public void onNeighborTileChange(int x, int y, int z) {}
+	public void onNeighborTileChange(BlockPos pos) {}
 
 	public void onNeighborBlockChange() {}
 

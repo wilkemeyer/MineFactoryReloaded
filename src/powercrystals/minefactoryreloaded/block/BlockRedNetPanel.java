@@ -24,7 +24,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	public BlockRedNetPanel()
 	{
 		super(0.8F);
-		setBlockName("mfr.rednet.panel");
+		setUnlocalizedName("mfr.rednet.panel");
 	}
 
 	@Override

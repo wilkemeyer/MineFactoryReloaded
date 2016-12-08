@@ -37,11 +37,11 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	{
 		super("", "", Material.glass, false);
 		setHardness(0.3F);
-		setStepSound(soundTypeGlass);
+		setSoundType(soundTypeGlass);
 		if (mfr)
 		{
 			setCreativeTab(MFRCreativeTab.tab);
-			setBlockName("mfr.stainedglass.pane");
+			setUnlocalizedName("mfr.stainedglass.pane");
 		}
 		else
 			setCreativeTab(CreativeTabs.tabDecorations);

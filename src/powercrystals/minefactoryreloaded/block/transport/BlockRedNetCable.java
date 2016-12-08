@@ -138,7 +138,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	public BlockRedNetCable() {
 
 		super(0.8F);
-		setBlockName("mfr.cable.redstone");
+		setUnlocalizedName("mfr.cable.redstone");
 		providesPower = true;
 	}
 

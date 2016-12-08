@@ -36,8 +36,8 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	public BlockVineScaffold() {
 
 		super(Material.leaves);
-		setBlockName("mfr.vinescaffold");
-		setStepSound(soundTypeGrass);
+		setUnlocalizedName("mfr.vinescaffold");
+		setSoundType(soundTypeGrass);
 		setHardness(0.1F);
 		setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
 		setTickRandomly(true);

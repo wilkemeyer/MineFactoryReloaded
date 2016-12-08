@@ -20,7 +20,7 @@ public class BlockFactoryRail extends BlockRailBase {
 
 		super(par2);
 		setHardness(0.5F);
-		setStepSound(soundTypeMetal);
+		setSoundType(soundTypeMetal);
 		setCreativeTab(MFRCreativeTab.tab);
 		canSlope = slopes;
 	}

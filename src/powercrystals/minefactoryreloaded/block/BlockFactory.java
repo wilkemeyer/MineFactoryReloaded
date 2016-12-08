@@ -1,13 +1,11 @@
 package powercrystals.minefactoryreloaded.block;
 
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IDismantleable;
 import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.render.hitbox.RenderHitbox;
 import cofh.lib.util.position.IRotateableTile;
-import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
-import cofh.repack.codechicken.lib.raytracer.RayTracer;
-import cofh.repack.codechicken.lib.vec.BlockCoord;
-import cofh.repack.codechicken.lib.vec.Vector3;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,7 +27,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
@@ -42,6 +42,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -58,6 +62,9 @@ import javax.annotation.Nullable;
 
 public class BlockFactory extends Block implements IRedNetConnection, IDismantleable
 {
+	private static final float SHRINK_AMOUNT = 0.125F;
+	private static final AxisAlignedBB SHRUNK_AABB = new AxisAlignedBB(SHRINK_AMOUNT, SHRINK_AMOUNT, SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT);
+	
 	protected boolean providesPower;
 
 	protected BlockFactory(float hardness)
@@ -234,13 +241,13 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
-		onNeighborChange(world, pos, pos);
+		neighborChanged(state, world, pos, this);
 	}
 
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
-		super.onNeighborChange(world, pos, neighbor);
+		super.neighborChanged(state, world, pos, block);
 		if (world.isRemote)
 		{
 			return;
@@ -249,7 +256,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		TileEntity te = getTile(world, pos);
 		if (te instanceof TileEntityBase)
 		{
-			if (blockId != this)
+			if (block != this)
 				((TileEntityBase)te).onNeighborBlockChange();
 			else
 				((TileEntityBase)te).onMatchedNeighborBlockChange();
@@ -257,113 +264,109 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
     {
-		TileEntity te = world instanceof World ? getTile((World)world, x, y, z) : world.getTileEntity(x, y, z);
+		TileEntity te = getTile(world, pos);
 
 		if (te instanceof TileEntityBase)
 		{
-			((TileEntityBase)te).onNeighborTileChange(tileX, tileY, tileZ);
+			((TileEntityBase)te).onNeighborTileChange(neighbor);
 		}
     }
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos)
 	{
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof IEntityCollidable)
 		{
-			float shrinkAmount = 0.125F;
-			return AxisAlignedBB.getBoundingBox(x + shrinkAmount, y + shrinkAmount, z + shrinkAmount,
-					x + 1 - shrinkAmount, y + 1 - shrinkAmount, z + 1 - shrinkAmount);
+			return SHRUNK_AABB;
 		}
 		else
 		{
-			return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+			return super.getCollisionBoundingBox(state, world, pos);
 		}
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		if (world.isRemote)
 			return;
 
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof IEntityCollidable)
 			((IEntityCollidable)te).onEntityCollided(entity);
 
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+		super.onEntityCollidedWithBlock(world, pos, state, entity);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB collisionTest, List collisionBoxList,
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB collisionTest, List collisionBoxList,
 			Entity entity)
 	{
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
 			((ITraceable)te).addTraceableCuboids(cuboids, false, false);
 			for (IndexedCuboid6 c : cuboids)
 			{
-				AxisAlignedBB aabb = c.toAABB();
+				AxisAlignedBB aabb = c.aabb();
 				if (collisionTest.intersectsWith(aabb))
 					collisionBoxList.add(aabb);
 			}
 		}
 		else
 		{
-			super.addCollisionBoxesToList(world, x, y, z, collisionTest, collisionBoxList, entity);
+			super.addCollisionBoxToList(state, world, pos, collisionTest, collisionBoxList, entity);
 		}
 	}
 
 	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end)
+	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end)
 	{
 		if (world.isRemote) {
 			harvesters.set(MineFactoryReloadedCore.proxy.getPlayer());
 		}
-		MovingObjectPosition r = collisionRayTrace((IBlockAccess)world, x, y, z, start, end);
+		RayTraceResult r = collisionRayTrace(state, (IBlockAccess) world, pos, start, end);
 		if (world.isRemote) {
 			harvesters.set(null);
 		}
 		return r;
 	}
 
-	public MovingObjectPosition collisionRayTrace(IBlockAccess world, int x, int y, int z, Vec3 start, Vec3 end)
+	public RayTraceResult collisionRayTrace(IBlockState state, IBlockAccess world, BlockPos pos, Vec3d start, Vec3d end)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingUsableTool(harvesters.get(), x, y, z));
-			return RayTracer.instance().rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids,
-				new BlockCoord(x, y, z), this);
+			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingUsableTool(harvesters.get(), pos));
+			return RayTracer.rayTraceCuboidsClosest(start, end, cuboids, pos);
 		}
 		else if (world instanceof World)
 		{
-			return super.collisionRayTrace((World)world, x, y, z, start, end);
+			return super.collisionRayTrace(state, (World) world, pos, start, end);
 		}
 		return null;
 	}
 
 	@SideOnly(Side.CLIENT)
-	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	@SubscribeEvent(priority= EventPriority.HIGHEST)
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
-		EntityPlayer player = event.player;
+		EntityPlayer player = event.getPlayer();
 		World world = player.worldObj;
-		MovingObjectPosition omop = event.target;
+		RayTraceResult rayTraceResult = event.getTarget();
 		harvesters.set(player);
-		MovingObjectPosition mop = omop;//RayTracer.reTrace(world, player);
+		RayTraceResult mop = rayTraceResult;//RayTracer.reTrace(world, player);
 		harvesters.set(null);
 		if (mop == null)
 			return;
-		if (mop.typeOfHit != MovingObjectType.BLOCK || omop.typeOfHit != MovingObjectType.BLOCK)
+		if (mop.typeOfHit != RayTraceResult.Type.BLOCK || rayTraceResult.typeOfHit != RayTraceResult.Type.BLOCK)
 			return;
-		int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, mop.getBlockPos());
 		if (te instanceof ITraceable) {
 			int subHit = mop.subHit;
 			if (te instanceof ICustomHitBox)
@@ -372,41 +375,41 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 				if (tile.shouldRenderCustomHitBox(subHit, player))
 				{
 					event.setCanceled(true);
-					RenderHitbox.drawSelectionBox(player, mop, event.partialTicks, tile.getCustomHitBox(subHit, player));
+					RenderHitbox.drawSelectionBox(player, mop, event.getPartialTicks(), tile.getCustomHitBox(subHit, player));
 					return;
 				}
 			}
-			event.context.drawSelectionBox(player, mop, 0, event.partialTicks);
+			event.getContext().drawSelectionBox(player, mop, 0, event.getPartialTicks());
 			event.setCanceled(true);
 		}
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
+	public int getWeakPower(IBlockState state, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		return 0;
 	}
 
 	@Override
-	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
+	public int getStrongPower(IBlockState state, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		return isProvidingWeakPower(world, x, y, z, side);
+		return getWeakPower(state, blockAccess, pos, side);
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side)
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean isNormalCube()
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return !providesPower;
 	}
 
 	@Override
-	public boolean canProvidePower()
+	public boolean canProvidePower(IBlockState state)
 	{
 		return providesPower;
 	}
@@ -414,14 +417,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		return meta;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		return this.getMetaFromState(state);
 	}
 
 	@Override

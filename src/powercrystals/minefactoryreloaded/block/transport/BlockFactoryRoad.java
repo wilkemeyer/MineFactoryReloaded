@@ -28,9 +28,9 @@ public class BlockFactoryRoad extends Block {
 
 		super(Material.rock);
 		setHardness(2.0F);
-		setBlockName("mfr.road");
+		setUnlocalizedName("mfr.road");
 		setResistance(25.0F);
-		setStepSound(Blocks.stone.stepSound);
+		setSoundType(Blocks.stone.stepSound);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 

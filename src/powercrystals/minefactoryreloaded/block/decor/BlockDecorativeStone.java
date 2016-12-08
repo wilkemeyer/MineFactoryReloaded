@@ -1,54 +1,53 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockSand;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 
 public class BlockDecorativeStone extends BlockFactory {
 
-	public static final String[] _names = new String[] { "black.smooth", "white.smooth", "black.cobble",
+/*	public static final String[] _names = new String[] { "black.smooth", "white.smooth", "black.cobble",
 			"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
 			"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
-	private IIcon[] _icons = new IIcon[_names.length];
+	private IIcon[] _icons = new IIcon[_names.length];*/
 
 	public BlockDecorativeStone() {
 
-		super(Material.rock);
+		super(Material.ROCK);
 		setHardness(2.0F);
 		setResistance(10.0F);
-		setStepSound(Blocks.stone.stepSound);
-		setBlockName("mfr.decorative.stone");
+		setSoundType(SoundType.STONE);
+		setUnlocalizedName("mfr.decorative.stone");
 		providesPower = false;
 	}
 
-	@Override
+/*	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
 
 		for (int i = 0; i < _icons.length; i++) {
 			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
 		}
-	}
+	}*/
 
 	@Override
-	public int damageDropped(int meta) {
+	public int damageDropped(IBlockState state) {
 
+		int meta = getMetaFromState(state);
 		if (meta == 0 | meta == 1) {
 			meta += 2; // smooth -> cobble
 		}
@@ -56,74 +55,86 @@ public class BlockDecorativeStone extends BlockFactory {
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnBlock) {
 
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-		int meta = world.getBlockMetadata(x, y, z);
-		list.add(new ItemStack(getItemDropped(meta, world.rand, 0), quantityDropped(world.rand), meta)); // persist metadata
+		IBlockState state = world.getBlockState(pos);
+		int meta = getMetaFromState(state);
+		list.add(new ItemStack(getItemDropped(state, world.rand, 0), quantityDropped(world.rand), meta)); // persist metadata
 
-		world.setBlockToAir(x, y, z);
+		world.setBlockToAir(pos);
 		if (!returnBlock)
-			for (ItemStack item : list)
-				dropBlockAsItem(world, x, y, z, item);
+			for (ItemStack item : list) {
+				float f = 0.3F;
+				double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+				double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+				double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+				EntityItem itemEntity = new EntityItem(world, pos.getX() + x2, pos.getY() + y2, pos.getZ() + z2, item);
+				itemEntity.setPickupDelay(10);
+				world.spawnEntityInWorld(itemEntity);
+			}
 		return list;
 	}
 
-	@Override
+/*	@Override
 	public IIcon getIcon(int side, int meta) {
 
 		return _icons[Math.min(meta, _icons.length)];
+	}*/
+
+	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+
+		world.scheduleBlockUpdate(pos, this, tickRate(world), 1);
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onNeighborChange(IBlockAccess blockAccess, BlockPos pos, BlockPos neighbor) {
 
-		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-
-		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
-	}
-
-	@Override
-	public void updateTick(World world, int x, int y, int z, Random random) {
-
-		if (!world.isRemote) {
-			tryToFall(world, x, y, z);
+		if (blockAccess instanceof World)
+		{
+			World world = (World) blockAccess;
+			world.scheduleBlockUpdate(pos, this, tickRate(world), 1);
 		}
 	}
 
-	private void tryToFall(World world, int x, int y, int z) {
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random random) {
 
-		int meta = world.getBlockMetadata(x, y, z);
+		if (!world.isRemote) {
+			tryToFall(world, pos, state);
+		}
+	}
+
+	private void tryToFall(World world, BlockPos pos, IBlockState state) {
+
+		int meta = getMetaFromState(state);
 		if (meta != 8 & meta != 9)
 			return;
-		if (BlockFalling.func_149831_e(world, x, y - 1, z) && y >= 0) {
-			byte b0 = 32;
-
-			if (!BlockSand.fallInstantly && world.checkChunksExist(x - b0, y - b0, z - b0, x + b0, y + b0, z + b0)) {
+		if (BlockFalling.canFallThrough(world.getBlockState(new BlockPos(pos.down()))) && pos.getY() >= 0) {
+			if (!BlockSand.fallInstantly && world.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
 				if (!world.isRemote) {
-					EntityFallingBlock entityfallingsand = new EntityFallingBlock(world, x + 0.5d, y + 0.5d, z + 0.5d, this, meta);
+					EntityFallingBlock entityfallingsand = new EntityFallingBlock(world, (double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, state);
 					world.spawnEntityInWorld(entityfallingsand);
 				}
 			} else {
-				world.setBlockToAir(x, y, z);
+				world.setBlockToAir(pos);
+				BlockPos blockpos;
 
-				while (BlockFalling.func_149831_e(world, x, y - 1, z) && y > 0) {
-					--y;
+				for (blockpos = pos.down(); (world.isAirBlock(blockpos) || BlockFalling.canFallThrough(world.getBlockState(blockpos))) && blockpos.getY() > 0; blockpos = blockpos.down())
+				{
 				}
 
-				if (y > 0) {
-					world.setBlock(x, y, z, this, meta, 3);
+				if (blockpos.getY() > 0)
+				{
+					world.setBlockState(blockpos.up(), state); //Forge: Fix loss of state information during world gen.
 				}
 			}
 		}
 	}
 
 	@Override
-	public int tickRate(World par1World) {
+	public int tickRate(World world) {
 
 		return 2;
 	}

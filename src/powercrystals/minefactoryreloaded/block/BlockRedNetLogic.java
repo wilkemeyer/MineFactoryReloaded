@@ -37,7 +37,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	public BlockRedNetLogic() {
 
 		super(0.8F);
-		setBlockName("mfr.rednet.logic");
+		setUnlocalizedName("mfr.rednet.logic");
 	}
 
 	@Override

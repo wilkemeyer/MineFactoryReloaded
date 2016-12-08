@@ -33,7 +33,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
 		setBlockBounds(0F, 0F, 0F, 0F, 0F, 0F);
-		setBlockName("mfr.laserair");
+		setUnlocalizedName("mfr.laserair");
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 
 	public BlockRubberWood()
 	{
-		setBlockName("mfr.rubberwood.log");
+		setUnlocalizedName("mfr.rubberwood.log");
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("axe", 0);
 	}

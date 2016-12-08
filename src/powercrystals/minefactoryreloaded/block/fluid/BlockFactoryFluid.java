@@ -67,7 +67,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	public BlockFactoryFluid(String liquidName, Material material) {
 
 		super(ensureFluid(liquidName), material, liquidName);
-		setBlockName("mfr." + liquidName + ".still");
+		setUnlocalizedName("mfr." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
 		setDisplaceFluids(true);

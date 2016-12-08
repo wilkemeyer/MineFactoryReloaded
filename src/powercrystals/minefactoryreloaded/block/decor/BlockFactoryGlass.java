@@ -8,7 +8,9 @@ import net.minecraft.block.BlockGlass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -21,17 +23,17 @@ import powercrystals.minefactoryreloaded.render.IconOverlay;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
-	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
+/*	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
 		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" };
-	static IIcon _texture;
+	static IIcon _texture;*/
 
 	public BlockFactoryGlass()
 	{
-		super(Material.glass, false);
-		this.setCreativeTab(CreativeTabs.tabDecorations);
-		setBlockName("mfr.stainedglass.block");
+		super(Material.GLASS, false);
+		this.setCreativeTab(CreativeTabs.DECORATIONS);
+		setUnlocalizedName("mfr.stainedglass.block");
 		setHardness(0.3F);
-		setStepSound(soundTypeGlass);
+		setSoundType(soundTypeGlass);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
@@ -54,9 +56,9 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, EnumFacing side, int colour)
+	public boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color)
 	{
-		int meta = world.getBlockMetadata(x, y, z);
+		int meta = getBlockMetadata(x, y, z);
 		if (meta != colour)
 		{
 			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
@@ -64,7 +66,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		return false;
 	}
 
-	@Override
+/*	@Override
 	public int getRenderColor(int meta)
 	{
 		return MFRUtil.COLORS[Math.min(Math.max(meta, 0), 15)];
@@ -86,7 +88,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	public IIcon getBlockOverlayTexture()
 	{
 		return new IconOverlay(_texture, 8, 8, 0, 0);
-	}
+	}*/
 
 	@Override
 	@SideOnly(Side.CLIENT)

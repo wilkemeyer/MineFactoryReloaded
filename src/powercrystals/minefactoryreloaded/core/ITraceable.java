@@ -1,9 +1,8 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
-
 import java.util.List;
 
+import codechicken.lib.raytracer.IndexedCuboid6;
 import net.minecraft.entity.player.EntityPlayer;
 
 public interface ITraceable

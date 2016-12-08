@@ -34,7 +34,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	public BlockRubberLeaves()
 	{
-		setBlockName("mfr.rubberwood.leaves");
+		setUnlocalizedName("mfr.rubberwood.leaves");
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 

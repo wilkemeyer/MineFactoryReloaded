@@ -19,7 +19,7 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 	public BlockRailCargoPickup()
 	{
 		super(true, false);
-		setBlockName("mfr.rail.cargo.pickup");
+		setUnlocalizedName("mfr.rail.cargo.pickup");
 	}
 
 	@Override
