@@ -6,8 +6,8 @@ public class BlockFactoryDecoration extends BlockFactory
 {
 	public static String[] _names = new String [] { null, "prc" };
 	
-	public BlockFactoryDecoration()
-	{
+	public BlockFactoryDecoration() {
+		
 		super(0.5f);
 		setUnlocalizedName("mfr.machineblock");
 	}

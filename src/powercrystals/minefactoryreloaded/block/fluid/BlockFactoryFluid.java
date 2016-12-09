@@ -1,39 +1,35 @@
 package powercrystals.minefactoryreloaded.block.fluid;
 
 import cofh.core.fluid.BlockFluidCoFHBase;
-import cofh.lib.util.RegistryUtils;
 import cofh.lib.util.WeightedRandomItemStack;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
+
+import java.util.Random;
 
 public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDecorative { // TODO: convert to BlockFluidFinite
 
@@ -41,13 +37,8 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 		steam.setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
 		steam.setDamageIsAbsolute();
 	}
-	public static final Material material = new MaterialLiquid(MapColor.waterColor);
+	public static final Material material = new MaterialLiquid(MapColor.WATER);
 
-	@SideOnly(Side.CLIENT)
-	protected IIcon _iconFlowing;
-	@SideOnly(Side.CLIENT)
-	protected IIcon _iconStill;
-	@SideOnly(Side.CLIENT)
 	public int color;
 	protected String fluidName;
 
@@ -61,7 +52,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 	public BlockFactoryFluid(String liquidName) {
 
-		this(liquidName, Material.water);
+		this(liquidName, Material.WATER);
 	}
 
 	public BlockFactoryFluid(String liquidName, Material material) {
@@ -75,9 +66,9 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+		super.onEntityCollidedWithBlock(world, pos, state, entity);
 
 		if (entity instanceof EntityLivingBase) {
 			NBTTagCompound data = entity.getEntityData();
@@ -88,23 +79,23 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 			EntityLivingBase ent = (EntityLivingBase) entity;
 			if (this == MFRThings.milkLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 6 * 20, 0, true));
+				ent.addPotionEffect(new PotionEffect(MobEffects.HASTE, 6 * 20, 0, true, false));
 			}
 			else if (this == MFRThings.sludgeLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.wither.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0, true));
-				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 16 * 20, 0, true));
+				ent.addPotionEffect(new PotionEffect(MobEffects.WITHER, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 12 * 20, 0, true, false));
+				ent.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 16 * 20, 0, true, false));
 			}
 			else if (this == MFRThings.sewageLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 12 * 20, 0, true));
-				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 12 * 20, 0, true));
+				ent.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 12 * 20, 0, true, false));
+				ent.addPotionEffect(new PotionEffect(MobEffects.POISON, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 12 * 20, 0, true, false));
 			}
 			else if (this == MFRThings.essenceLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.nightVision.id, 60 * 20, 0, true));
+				ent.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 60 * 20, 0, true, false));
 			}
 			else if (this == MFRThings.biofuelLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0, true));
+				ent.addPotionEffect(new PotionEffect(MobEffects.SPEED, 12 * 20, 0, true, false));
 			}
 			else if (this == MFRThings.steamFluid) {
 				ent.attackEntityFrom(steam, 6);
@@ -113,44 +104,44 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		int light = super.getLightValue(world, x, y, z);
+		int light = super.getLightValue(state, world, pos);
 		if (maxScaledLight != 0)
 			light = Math.max(light, 2);
 		return light;
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		super.onBlockAdded(world, x, y, z);
-		checkCanStay(world, x, y, z, world.rand);
+		super.onBlockAdded(world, pos, state);
+		checkCanStay(world, pos, world.rand);
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) {
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
-		checkCanStay(world, x, y, z, rand);
-		super.updateTick(world, x, y, z, rand);
+		checkCanStay(world, pos, rand);
+		super.updateTick(world, pos, state, rand);
 	}
 
-	protected void checkCanStay(World world, int x, int y, int z, Random rand) {
+	protected void checkCanStay(World world, BlockPos pos, Random rand) {
 
 		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
-		l: if (world.provider.isHellWorld)
+		l: if (world.getBiome(pos) == Biomes.HELL)
 		{
-			if (!isSourceBlock(world, x, y, z)) {
-				if (world.setBlockToAir(x, y, z))
+			if (!isSourceBlock(world, pos)) {
+				if (world.setBlockToAir(pos))
 					return;
 				break l;
 			}
 			ItemStack drop = null;
-			Block block = Blocks.air;
+			Block block = Blocks.AIR;
 			if (this == MFRThings.milkLiquid) {
 				if (rand.nextInt(50) == 0)
-					drop = new ItemStack(Items.dye, rand.nextInt(2), 15);
+					drop = new ItemStack(Items.DYE, rand.nextInt(2), 15);
 			}
 			else if (this == MFRThings.sludgeLiquid) {
 				drop = ((WeightedRandomItemStack) WeightedRandom.
@@ -160,15 +151,15 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 				drop = new ItemStack(MFRThings.fertilizerItem, 1 + rand.nextInt(2));
 			}
 			else if (this == MFRThings.essenceLiquid) {
-				if (world.setBlockToAir(x, y, z)) {
+				if (world.setBlockToAir(pos)) {
 					int i = rand.nextInt(5) + 10;
 					while (i > 0) {
 						int j = EntityXPOrb.getXPSplit(i);
 						i -= j;
 						world.spawnEntityInWorld(new EntityXPOrb(world,
-								x + rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(), j));
+								pos.getX() + rand.nextDouble(), pos.getY() + rand.nextDouble(), pos.getZ() + rand.nextDouble(), j));
 					}
-					fizz(world, x, y, z, rand);
+					fizz(world, pos, rand);
 					return;
 				}
 				break l;
@@ -189,33 +180,39 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			}
 			else if (this == MFRThings.chocolateMilkLiquid) {
 				if (rand.nextBoolean())
-					drop = new ItemStack(Items.dye, rand.nextInt(2), 3);
+					drop = new ItemStack(Items.DYE, rand.nextInt(2), 3);
 			}
 			else if (this == MFRThings.mushroomSoupLiquid) {
 				if (rand.nextInt(5) == 0)
-					block = (rand.nextBoolean() ? Blocks.brown_mushroom : Blocks.red_mushroom);
+					block = (rand.nextBoolean() ? Blocks.BROWN_MUSHROOM : Blocks.RED_MUSHROOM);
 				else if (rand.nextBoolean())
-					drop = new ItemStack(Blocks.brown_mushroom, rand.nextInt(2));
+					drop = new ItemStack(Blocks.BROWN_MUSHROOM, rand.nextInt(2));
 				else
-					drop = new ItemStack(Blocks.red_mushroom, rand.nextInt(2));
+					drop = new ItemStack(Blocks.RED_MUSHROOM, rand.nextInt(2));
 			}
-			if (world.setBlock(x, y, z, block, 0, 3)) {
-				if (drop != null && drop.stackSize > 0)
-					this.dropBlockAsItem(world, x, y, z, drop);
+			if (world.setBlockState(pos, block.getDefaultState(), 3)) {
+				if (drop != null && drop.stackSize > 0) {
+					float f = 0.3F;
+					double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+					double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+					double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+					EntityItem itemEntity = new EntityItem(world, pos.getX() + x2, pos.getY() + y2, pos.getZ() + z2, drop);
+					itemEntity.setPickupDelay(10);
+					world.spawnEntityInWorld(itemEntity);
+				}
 
-				fizz(world, x, y, z, rand);
+				fizz(world, pos, rand);
 				return;
 			}
 		}
 	}
 
-	protected void fizz(World world, int x, int y, int z, Random rand) {
+	protected void fizz(World world, BlockPos pos, Random rand) {
 
-		world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D,
-			"random.fizz", 0.5F, 2.6F + (rand.nextFloat() - rand.nextFloat()) * 0.8F);
+		world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (rand.nextFloat() - rand.nextFloat()) * 0.8F);
 		for (int l = 0; l < 8; ++l) {
-			world.spawnParticle("largesmoke",
-				x + rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(),
+			world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
+				pos.getX() + rand.nextDouble(), pos.getY() + rand.nextDouble(), pos.getZ() + rand.nextDouble(),
 				0.0D, 0.0D, 0.0D);
 		}
 	}
@@ -223,9 +220,10 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	@Override
 	public String getUnlocalizedName() {
 
-		return "fluid." + this.unlocalizedName;
+		return "fluid." + fluidName;
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -251,5 +249,5 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 		return side <= 1 ? _iconStill : _iconFlowing;
 	}
-
+*/
 }

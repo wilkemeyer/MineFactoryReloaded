@@ -1,28 +1,20 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.BlockGlass;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import powercrystals.minefactoryreloaded.render.IconOverlay;
 
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
-{
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative {
 /*	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
 		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" };
 	static IIcon _texture;*/
@@ -33,27 +25,29 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		this.setCreativeTab(CreativeTabs.DECORATIONS);
 		setUnlocalizedName("mfr.stainedglass.block");
 		setHardness(0.3F);
-		setSoundType(soundTypeGlass);
+		setSoundType(SoundType.GLASS);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
 	@Override
-	public int damageDropped(int par1)
+	public int damageDropped(IBlockState state)
 	{
-		return par1;
+		return getMetaFromState(state);
 	}
 
+	@Override
+	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return true;
+	}
+
+/*	
 	@Override
 	public int getRenderBlockPass()
 	{
 		return 1;
 	}
 
-	@Override
-	public boolean canPlaceTorchOnTop(World world, int x, int y, int z)
-	{
-		return true;
-	}
 
 	@Override
 	public boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color)
@@ -64,7 +58,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
 		}
 		return false;
-	}
+	}*/
 
 /*	@Override
 	public int getRenderColor(int meta)
@@ -92,17 +86,18 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		boolean r = super.shouldSideBeRendered(world, x, y, z, side);
+		boolean r = super.shouldSideBeRendered(state, world, pos, side);
+		
+		IBlockState neighborState = world.getBlockState(pos.offset(side));
 		if (!r) {
-			EnumFacing f = EnumFacing.getOrientation(side);
-			return world.getBlockMetadata(x, y, z) != world.getBlockMetadata(x - f.offsetX, y - f.offsetY, z - f.offsetZ);
+			return getMetaFromState(state) != neighborState.getBlock().getMetaFromState(neighborState);
 		}
 		return r;
 	}
 
-	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
+/*	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		BlockPosition bp;
 		boolean[] sides = new boolean[8];
@@ -153,5 +148,5 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	public int getRenderType()
 	{
 		return MineFactoryReloadedCore.renderIdFactoryGlass;
-	}
+	}*/
 }

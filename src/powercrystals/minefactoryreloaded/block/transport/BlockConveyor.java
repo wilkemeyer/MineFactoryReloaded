@@ -2,8 +2,6 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.position.IRotateableTile;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,10 +9,9 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityDiggingFX;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -26,15 +23,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
@@ -49,6 +46,7 @@ import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITileEntityProvider {
 
+/*
 	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
 			"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default" };
 	private static final int[] colors = new int[17];
@@ -57,38 +55,31 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 			colors[i] = MFRUtil.COLORS[i];
 		colors[16] = 0xf6a82c;
 	};
-	@SideOnly(Side.CLIENT)
-	private IIcon base, overlay, overlayFast, overlayStopped;
+*/
+	private static final AxisAlignedBB CONVEYOR_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1D, 0.01D, 0.1D);
 	private int renderPass;
 
 	public BlockConveyor() {
 
-		super(Material.circuits);
+		super(Material.CIRCUITS);
 		setHardness(0.5F);
 		setUnlocalizedName("mfr.conveyor");
-		setBlockBounds(0.0F, 0.0F, 0.0F, 0.1F, 0.01F, 0.1F);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		
+		return CONVEYOR_AABB;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return false;
 	}
 
-	@Override
-	public boolean canRenderInPass(int pass) {
-
-		renderPass = pass;
-		return true;
-	}
-
-	@Override
-	public int getRenderBlockPass() {
-
-		return 1;
-	}
-
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -98,13 +89,15 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		overlayFast = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".overlay.fast");
 		overlayStopped = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".overlay.stopped");
 	}
+*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer) {
+	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager) {
 
-		int x = target.blockX, y = target.blockY, z = target.blockZ;
-		TileEntity tile = world.getTileEntity(x, y, z);
+		BlockPos targetPos = target.getBlockPos();
+		int x = targetPos.getX(), y = targetPos.getY(), z = targetPos.getZ();
+		TileEntity tile = world.getTileEntity(targetPos);
 
 		if (tile instanceof TileEntityConveyor) {
 			float f = 0.1F;

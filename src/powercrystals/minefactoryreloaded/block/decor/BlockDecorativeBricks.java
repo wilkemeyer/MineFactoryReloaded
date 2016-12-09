@@ -12,15 +12,15 @@ import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 
-public class BlockDecorativeBricks extends BlockFactory
-{
-/*	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
+public class BlockDecorativeBricks extends BlockFactory {
+
+	/*	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
 		"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
 		"meat.raw", "meat.cooked", "brick_large", "sugar_charcoal" };
 	private IIcon[] _icons = new IIcon[_names.length];*/
 
-	public BlockDecorativeBricks()
-	{
+	public BlockDecorativeBricks() {
+		
 		super(Material.ROCK);
 		setHardness(2.0F);
 		setResistance(10.0F);
@@ -31,15 +31,15 @@ public class BlockDecorativeBricks extends BlockFactory
 
 	//TODO likely replace with something better than meta checks - properties
 	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		
 		int meta = getMetaFromState(world.getBlockState(pos));
 		return meta == 1 | meta == 7 ? 15 : 0;
 	}
 
 	@Override
-	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
-	{
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
+		
 		int meta = getMetaFromState(world.getBlockState(pos));
 		return meta == 3 | meta == 9 ? Blocks.OBSIDIAN.getExplosionResistance(exploder) : getExplosionResistance(exploder);
 	}

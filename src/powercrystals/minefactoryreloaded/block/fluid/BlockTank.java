@@ -1,31 +1,31 @@
 package powercrystals.minefactoryreloaded.block.fluid;
 
 import cofh.api.block.IBlockInfo;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.render.IconOverlay;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
+import java.util.List;
+
 public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityProvider {
 
+/*
 	protected IIcon[] icons = new IIcon[3];
+*/
 
 	public BlockTank() {
 
@@ -34,6 +34,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 		setLightOpacity(1);
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -48,34 +49,29 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 
 		return MineFactoryReloadedCore.renderIdFluidTank;
 	}
+*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		Block block = world.getBlock(x, y, z);
-		if (side > 1 && block.equals(this)) {
+		Block block = state.getBlock();
+		if (side.getAxis().isHorizontal() && block.equals(this)) {
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public int getRenderBlockPass() {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		return 1;
-	}
-
-	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
-
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityTank) {
 			TileEntityTank tank = (TileEntityTank) tile;
 			FluidStack fluid = tank.getFluid();
@@ -85,6 +81,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 		return 0;
 	}
 
+/*
 	@Override
 	public IIcon getIcon(int side, int meta) {
 
@@ -143,11 +140,12 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 		}
 		return 0xFFFFFF;
 	}
+*/
 
 	@Override
-	protected boolean activated(World world, int x, int y, int z, EntityPlayer player, int side) {
+	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 
-		super.activated(world, x, y, z, player, side);
+		super.activated(world, pos, player, side);
 		return true;
 	}
 
@@ -158,9 +156,9 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z, EnumFacing side, EntityPlayer player, List<IChatComponent> info, boolean debug) {
+	public void getBlockInfo(IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, List<ITextComponent> info, boolean debug) {
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityTank) {
 			((TileEntityTank) tile).getTileInfo(info, side, player, debug);
 		}
