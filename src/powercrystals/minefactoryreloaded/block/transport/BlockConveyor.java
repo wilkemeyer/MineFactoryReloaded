@@ -6,12 +6,10 @@ import cofh.lib.util.position.IRotateableTile;
 import java.util.ArrayList;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -19,19 +17,21 @@ import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
@@ -43,6 +43,10 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
+
+import javax.annotation.Nullable;
+
+import static codechicken.nei.NEIClientConfig.world;
 
 public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITileEntityProvider {
 
@@ -56,7 +60,12 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		colors[16] = 0xf6a82c;
 	};
 */
-	private static final AxisAlignedBB CONVEYOR_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1D, 0.01D, 0.1D);
+	public static final PropertyEnum<ConveyorDirection> DIRECTION = PropertyEnum.create("direction", ConveyorDirection.class);
+	private static final AxisAlignedBB CONVEYOR_COLLISION_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.01D, 0.875D);
+	private static final AxisAlignedBB CONVEYOR_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
+	private static final AxisAlignedBB HILL_CONVEYOR_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
+	private static final AxisAlignedBB CONVEYOR_SELECTION_AABB = new AxisAlignedBB(0.05D, 0.0D, 0.05D, 0.95D, 0.1D, 0.95D);
+	private static final AxisAlignedBB HILL_CONVEYOR_SELECTION_AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.1D, 0.9D);
 	private int renderPass;
 
 	public BlockConveyor() {
@@ -69,8 +78,9 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		
-		return CONVEYOR_AABB;
+
+		ConveyorDirection direction = state.getValue(DIRECTION);
+		return direction.isUphill() || direction.isDownhill() ? HILL_CONVEYOR_AABB : CONVEYOR_AABB;
 	}
 
 	@Override
@@ -91,7 +101,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 */
 
-	@Override
+/*	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager) {
 
@@ -100,37 +110,38 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		TileEntity tile = world.getTileEntity(targetPos);
 
 		if (tile instanceof TileEntityConveyor) {
+			AxisAlignedBB boundingBox = state.getBoundingBox(world, targetPos);
 			float f = 0.1F;
 			Random rand = new Random();
-			double d0 = x + rand.nextDouble() * (getBlockBoundsMaxX() - getBlockBoundsMinX() - (f * 2.0F)) + f +
-					getBlockBoundsMinX();
-			double d1 = y + rand.nextDouble() * (getBlockBoundsMaxY() - getBlockBoundsMinY() - (f * 2.0F)) + f +
-					getBlockBoundsMinY();
-			double d2 = z + rand.nextDouble() * (getBlockBoundsMaxZ() - getBlockBoundsMinZ() - (f * 2.0F)) + f +
-					getBlockBoundsMinZ();
+			double d0 = x + rand.nextDouble() * (boundingBox.maxX - boundingBox.minX - (f * 2.0F)) + f +
+					boundingBox.minX;
+			double d1 = y + rand.nextDouble() * (boundingBox.maxY - boundingBox.minY - (f * 2.0F)) + f +
+					boundingBox.minY;
+			double d2 = z + rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ - (f * 2.0F)) + f +
+					boundingBox.minZ;
 
 			switch (target.sideHit) {
-			case 0:
-				d1 = y + getBlockBoundsMinY() - f;
+			case DOWN:
+				d1 = y + boundingBox.minY - f;
 				break;
-			case 1:
-				d1 = y + getBlockBoundsMaxY() + f;
+			case UP:
+				d1 = y + boundingBox.maxY + f;
 				break;
-			case 2:
-				d2 = z + getBlockBoundsMinZ() - f;
+			case NORTH:
+				d2 = z + boundingBox.minZ - f;
 				break;
-			case 3:
-				d2 = z + getBlockBoundsMaxZ() + f;
+			case SOUTH:
+				d2 = z + boundingBox.maxZ + f;
 				break;
-			case 4:
-				d0 = x + getBlockBoundsMinX() - f;
+			case WEST:
+				d0 = x + boundingBox.minX - f;
 				break;
-			case 5:
-				d0 = x + getBlockBoundsMaxX() + f;
+			case EAST:
+				d0 = x + boundingBox.maxX + f;
 				break;
 			}
 
-			effectRenderer.addEffect((new EntityDiggingFX(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this,
+			manager.addEffect((new ParticleDigging(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, this,
 					getDamageValue(world, x, y, z))).applyColourMultiplier(x, y, z).
 					multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
 			return true;
@@ -231,175 +242,166 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 			}
 		}
 		return getIcon(side, meta);
-	}
+	}*/
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
 
-		super.onBlockPlacedBy(world, x, y, z, entity, stack);
+		super.onBlockPlacedBy(world, pos, state, entity, stack);
 		if (entity == null) {
 			return;
 		}
-		int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
-		world.setBlockMetadataWithNotify(x, y, z, (facing + 1) & 3, 2);
-		/*if(facing == 0) {
-			world.setBlockMetadataWithNotify(x, y, z, 1, 2);
-		}
-		if(facing == 1) {
-			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-		}
-		if(facing == 2) {
-			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-		}
-		if(facing == 3) {
-			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-		}//*/
+		state.withProperty(DIRECTION, ConveyorDirection.byFacing(entity.getHorizontalFacing()));
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityConveyor) {
 			((TileEntityConveyor) te).setDyeColor(stack.getItemDamage() == 16 ? -1 : stack.getItemDamage());
 		}
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		onNeighborBlockChange(world, x, y, z, this);
+		neighborChanged(state, world, pos, this);
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity ent) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
-		boolean isItem = ent instanceof EntityItem || ent instanceof EntityXPOrb;
-		if (!isItem)
-			for (Class<?> blacklist : MFRRegistry.getConveyerBlacklist())
-				if (blacklist.isInstance(ent))
+		boolean isItem = entity instanceof EntityItem || entity instanceof EntityXPOrb;
+		if(!isItem)
+			for(Class<?> blacklist : MFRRegistry.getConveyerBlacklist())
+				if(blacklist.isInstance(entity))
 					return;
 
-		if (!(isItem || ent instanceof EntityLivingBase || ent instanceof EntityTNTPrimed))
+		if(!(isItem || entity instanceof EntityLivingBase || entity instanceof EntityTNTPrimed))
 			return;
 
-		TileEntity conveyor = world.getTileEntity(x, y, z);
-		if (!(conveyor instanceof TileEntityConveyor && ((TileEntityConveyor) conveyor).getConveyorActive()))
+		TileEntity conveyor = world.getTileEntity(pos);
+		if(!(conveyor instanceof TileEntityConveyor && ((TileEntityConveyor) conveyor).getConveyorActive()))
 			return;
 
-		if (!world.isRemote) {
-			if (ent instanceof EntityItem)
-				specialRoute(world, x, y, z, (EntityItem) ent);
-			else if (ent instanceof EntityPlayer)
+		if(!world.isRemote) {
+			if(entity instanceof EntityItem)
+				specialRoute(world, pos, (EntityItem) entity);
+			else if(entity instanceof EntityPlayer)
 				return;
 		}
 
-		if (ent instanceof EntityLivingBase)
-			l: {
-				ItemStack item = ((EntityLivingBase) ent).getEquipmentInSlot(1);
-				if (item == null) break l;
-				if (item.getItem() instanceof ItemPlasticBoots)
+		if(entity instanceof EntityLivingBase)
+			l:{
+				ItemStack item = ((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET);
+				if(item == null)
+					break l;
+				if(item.getItem() instanceof ItemPlasticBoots)
 					return;
 			}
 
-		if (ent.getEntityData().getLong("mfr:conveyor") == world.getTotalWorldTime()) {
+		if(entity.getEntityData().getLong("mfr:conveyor") == world.getTotalWorldTime()) {
 			return;
 		}
-		ent.getEntityData().setLong("mfr:conveyor", world.getTotalWorldTime());
+		entity.getEntityData().setLong("mfr:conveyor", world.getTotalWorldTime());
 
 		double mult = ((TileEntityConveyor) conveyor).isFast() ? 2.1 : 1.05;
-		mult *= world.getBlock(x, y-1, z).slipperiness;
+		mult *= world.getBlockState(pos.down()).getBlock().slipperiness;
 
 		double xVelocity = 0;
 		double yVelocity = 0;
 		double zVelocity = 0;
 
-		int md = world.getBlockMetadata(x, y, z);
+		ConveyorDirection direction = state.getValue(DIRECTION);
 
-		int horizDirection = md & 0x03;
-		boolean isUphill = (md & 0x04) != 0;
-		boolean isDownhill = (md & 0x08) != 0;
-
-		EnumFacing dir = null;
-		switch (horizDirection) {
-		case 0:
-			xVelocity = 0.1D * mult;
-			dir = EnumFacing.EAST;
-			break;
-		case 1:
-			zVelocity = 0.1D * mult;
-			dir = EnumFacing.SOUTH;
-			break;
-		case 2:
-			xVelocity = -0.1D * mult;
-			dir = EnumFacing.WEST;
-			break;
-		case 3:
-			zVelocity = -0.1D * mult;
-			dir = EnumFacing.NORTH;
-			break;
+		switch(direction.getFacing()) {
+			case EAST:
+				xVelocity = 0.1D * mult;
+				break;
+			case SOUTH:
+				zVelocity = 0.1D * mult;
+				break;
+			case WEST:
+				xVelocity = -0.1D * mult;
+				break;
+			case NORTH:
+				zVelocity = -0.1D * mult;
+				break;
 		}
 
-		if (isUphill) {
+		if(direction.isUphill()) {
 			yVelocity = 0.152D * mult;
 			double yO;
-			if (xVelocity != 0) {
-				yO = Math.abs(ent.boundingBox.maxX - ent.boundingBox.minX) / 2;
-				yO = MathHelper.clamp_double(Math.abs(ent.posX - x) + Math.abs(xVelocity) - yO, 0, 1);
+			if(xVelocity != 0) {
+				yO = Math.abs(entity.getEntityBoundingBox().maxX - entity.getEntityBoundingBox().minX) / 2;
+				yO = MathHelper.clamp_double(Math.abs(entity.posX - pos.getX()) + Math.abs(xVelocity) - yO, 0, 1);
 			} else {
-				yO = Math.abs(ent.boundingBox.maxZ - ent.boundingBox.minZ) / 2;
-				yO = MathHelper.clamp_double(ent.posZ - z + Math.abs(zVelocity) + yO, 0, 1);
+				yO = Math.abs(entity.getEntityBoundingBox().maxZ - entity.getEntityBoundingBox().minZ) / 2;
+				yO = MathHelper.clamp_double(entity.posZ - pos.getZ() + Math.abs(zVelocity) + yO, 0, 1);
 			}
+
+			//TODO figure out if we really need to do y - 1 for south and east
+/*
 			if ((dir.ordinal() & 1) == 0) {
 				yO = 1 - yO;
 			}
-			setYPos(ent, y + yO + .1);
-		} else if ((ent.posY - y - ent.yOffset < 0.1) && ent.posY - y - ent.yOffset > -0.1) {
-			setYPos(ent, y + .1);
-		} else if (isDownhill) {
+*/
+
+			setYPos(entity, pos.getY() + yO + .1);
+		} else if((entity.posY - pos.getY() - entity.getYOffset() < 0.1) && entity.posY - pos.getY() - entity.getYOffset() > -0.1) {
+			setYPos(entity, pos.getY() + .1);
+		} else if(direction.isDownhill()) {
 			yVelocity = -0.11 * mult;
-			ent.fallDistance -= .13;
+			entity.fallDistance -= .13;
 		}
 
-		if (isUphill | isDownhill) {
-			ent.onGround = false;
-			ent.motionY = yVelocity / 2;
+		if(direction.isUphill() | direction.isDownhill()) {
+			entity.onGround = false;
+			entity.motionY = yVelocity / 2;
 		}
 
-		repositionEntity(world, x, y, z, ent, xVelocity, yVelocity, zVelocity);
+		repositionEntity(world, pos, entity, xVelocity, yVelocity, zVelocity);
 
-		l: {
-			if (isUphill) {
-				if (ent.posY - ent.yOffset < y + 1) break l;
-			} else switch (horizDirection) {
-			case 0:
-				if (ent.posX < x + 1) break l;
-				break;
-			case 2:
-				if (ent.posX > x) break l;
-				break;
-			case 1:
-				if (ent.posZ < z + 1) break l;
-				break;
-			case 3:
-				if (ent.posZ > z) break l;
-				break;
-			}
-			if (!BlockHelper.getAdjacentBlock(world, x, y, z, dir).equals(MFRThings.conveyorBlock)) {
-				if (isUphill | isDownhill) {
+		l:
+		{
+			if(direction.isUphill()) {
+				if(entity.posY - entity.getYOffset() < pos.getY() + 1)
+					break l;
+			} else
+				switch(direction) {
+					case EAST:
+						if(entity.posX < pos.getX() + 1)
+							break l;
+						break;
+					case WEST:
+						if(entity.posX > pos.getX())
+							break l;
+						break;
+					case SOUTH:
+						if(entity.posZ < pos.getZ() + 1)
+							break l;
+						break;
+					case NORTH:
+						if(entity.posZ > pos.getZ())
+							break l;
+						break;
+				}
+			if(!BlockHelper.getAdjacentBlock(world, pos, direction.getFacing()).getBlock().equals(MFRThings.conveyorBlock)) {
+				if(direction.isUphill() | direction.isDownhill()) {
 					double d = .25;
-					if (!BlockHelper.getAdjacentBlock(world, x, y + (isUphill ? 1 : -1), z, dir).equals(MFRThings.conveyorBlock)) {
+					if(!BlockHelper.getAdjacentBlock(world, pos.add(0, direction.getYOffset(), 0), direction.getFacing()).equals(MFRThings.conveyorBlock)) {
 						d = 1;
 					}
-					ent.motionY = yVelocity * d;
-					ent.motionX = xVelocity * d;
-					ent.motionZ = zVelocity * d;
+					entity.motionY = yVelocity * d;
+					entity.motionX = xVelocity * d;
+					entity.motionZ = zVelocity * d;
 				} else {
-					ent.motionX = xVelocity;
-					ent.motionZ = zVelocity;
+					entity.motionX = xVelocity;
+					entity.motionZ = zVelocity;
 				}
 			}
 		}
 
-		ent.fallDistance *= 0.9;
-		if (ent instanceof EntityItem) {
-			((EntityItem) ent).delayBeforeCanPickup = 40;
+		entity.fallDistance *= 0.9;
+		if(entity instanceof EntityItem) {
+			((EntityItem) entity).setPickupDelay(40);
 		}
 	}
 
@@ -407,7 +409,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 		double xT = ent.lastTickPosX, yT = ent.lastTickPosY, zT = ent.lastTickPosZ;
 		if (ent instanceof EntityLivingBase) {
-			((EntityLivingBase) ent).setPositionAndUpdate(ent.posX, y, ent.posZ);
+			ent.setPositionAndUpdate(ent.posX, y, ent.posZ);
 		} else {
 			ent.setLocationAndAngles(ent.posX, y, ent.posZ, ent.rotationYaw, ent.rotationPitch);
 		}
@@ -416,16 +418,16 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		ent.lastTickPosZ = zT;
 	}
 
-	private void repositionEntity(World world, int x, int y, int z, Entity ent, double xO, double yO, double zO) {
+	private void repositionEntity(World world, BlockPos pos, Entity ent, double xO, double yO, double zO) {
 
-			if (!world.func_147461_a(ent.boundingBox).isEmpty() || !world.func_147461_a(ent.boundingBox.getOffsetBoundingBox(xO, yO, zO)).isEmpty()) {
+			if (!world.getCollisionBoxes(ent.getEntityBoundingBox()).isEmpty() || !world.getCollisionBoxes(ent.getEntityBoundingBox().offset(xO, yO, zO)).isEmpty()) {
 				return;
 			}
 			if (isZero(ent.motionX) && isZero(ent.motionZ)) {
 				if (xO == 0)
-					xO += (x - (ent.posX - .5)) / 20;
+					xO += (pos.getX() - (ent.posX - .5)) / 20;
 				if (zO == 0)
-					zO += (z - (ent.posZ - .5)) / 20;
+					zO += (pos.getZ() - (ent.posZ - .5)) / 20;
 			} else {
 				xO += ent.motionX;
 				zO += ent.motionZ;
@@ -433,9 +435,9 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 			double eY = yO != 0 ? ent.prevPosY : ent.posY;
 			double xT = ent.lastTickPosX, yT = ent.lastTickPosY, zT = ent.lastTickPosZ;
 			if (ent instanceof EntityLivingBase) {
-				((EntityLivingBase) ent).setPositionAndUpdate(ent.prevPosX + xO, eY - ent.yOffset + yO, ent.prevPosZ + zO);
+				((EntityLivingBase) ent).setPositionAndUpdate(ent.prevPosX + xO, eY - ent.getYOffset() + yO, ent.prevPosZ + zO);
 			} else {
-				ent.setLocationAndAngles(ent.prevPosX + xO, eY - ent.yOffset + yO, ent.prevPosZ + zO, ent.rotationYaw, ent.rotationPitch);
+				ent.setLocationAndAngles(ent.prevPosX + xO, eY - ent.getYOffset() + yO, ent.prevPosZ + zO, ent.rotationYaw, ent.rotationPitch);
 			}
 			ent.lastTickPosX = xT;
 			ent.lastTickPosY = yT;
@@ -453,109 +455,65 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
 
-		int md = world.getBlockMetadata(x, y, z);
-		float shrink = 0.125f;
-
-		if ((md & 0x0C) == 0) {
-			return AxisAlignedBB.getBoundingBox(x + shrink, y, z + shrink,
-				x + 1 - shrink, y + 0.01F, z + 1 - shrink);
-		} else {
-			return AxisAlignedBB.getBoundingBox(x + shrink, y, z + shrink,
-				x + 1 - shrink, y + 0.01F, z + 1 - shrink);
-		}
+		return CONVEYOR_COLLISION_AABB;
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
 
-		int md = world.getBlockMetadata(x, y, z);
-
-		if ((md & 0x0C) == 0) {
-			return AxisAlignedBB.getBoundingBox(x + 0.05F, y, z + 0.05F, x + 1 - 0.05F, y + 0.1F, z + 1 - 0.05F);
-		} else {
-			return AxisAlignedBB.getBoundingBox(x + 0.1F, y, z + 0.1F, x + 1 - 0.1F, y + 0.1F, z + 1 - 0.1F);
-		}
+		ConveyorDirection direction = state.getValue(DIRECTION);
+		return direction.isUphill() || direction.isDownhill() ? HILL_CONVEYOR_SELECTION_AABB : CONVEYOR_SELECTION_AABB;
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean isNormalCube() {
+	public boolean isNormalCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3 vec3d, Vec3 vec3d1) {
-
-		setBlockBoundsBasedOnState(world, i, j, k);
-		return super.collisionRayTrace(world, i, j, k, vec3d, vec3d1);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k) {
-
-		int l = iblockaccess.getBlockMetadata(i, j, k);
-		if (l >= 4 && l <= 11) {
-			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-		} else {
-			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
-		}
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
+	public boolean isFullCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public int getRenderType() {
+	public boolean canPlaceBlockAt(World world, BlockPos pos) {
 
-		return MineFactoryReloadedCore.renderIdConveyor;
+		return canBlockStay(world, pos);
+	}
+
+	public boolean canBlockStay(World world, BlockPos pos) {
+
+		return world.isSideSolid(pos.down(), EnumFacing.UP);
 	}
 
 	@Override
-	public int quantityDropped(Random random) {
+	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 
-		return 1;
-	}
+		ItemStack item = player.getActiveItemStack();
 
-	@Override
-	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-
-		return canBlockStay(world, x, y, z);
-	}
-
-	@Override
-	public boolean canBlockStay(World world, int x, int y, int z) {
-
-		return world.isSideSolid(x, y - 1, z, EnumFacing.UP);
-	}
-
-	@Override
-	protected boolean activated(World world, int x, int y, int z, EntityPlayer player, int side) {
-
-		ItemStack item = player.getHeldItem();
-
-		if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		if (MFRUtil.isHoldingUsableTool(player, pos)) {
+			TileEntity te = world.getTileEntity(pos);
 			if (te instanceof IRotateableTile) {
-				((IRotateableTile) te).rotate(EnumFacing.getOrientation(side));
+				((IRotateableTile) te).rotate(side);
 			}
-			MFRUtil.usedWrench(player, x, y, z);
+			MFRUtil.usedWrench(player, pos);
 			return true;
-		} else if (item != null && item.getItem().equals(Items.glowstone_dust)) {
-			TileEntity te = world.getTileEntity(x, y, z);
+		} else if (item != null && item.getItem().equals(Items.GLOWSTONE_DUST)) {
+			TileEntity te = world.getTileEntity(pos);
 			if (te instanceof TileEntityConveyor && !((TileEntityConveyor) te).isFast()) {
 				((TileEntityConveyor) te).setFast(true);
-				world.markBlockForUpdate(x, y, z);
+				IBlockState state = world.getBlockState(pos);
+				world.notifyBlockUpdate(pos, state, state, 3);
 				if (!player.capabilities.isCreativeMode)
 					item.stackSize--;
 				return true;
@@ -565,15 +523,20 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborId) {
+	public void onNeighborChange(IBlockAccess blockAccess, BlockPos pos, BlockPos neighbor) {
 
-		if (!canBlockStay(world, x, y, z)) {
-			dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-			world.setBlockToAir(x, y, z);
+		if (!(blockAccess instanceof World)) {
 			return;
 		}
 
-		TileEntity tec = world.getTileEntity(x, y, z);
+		World world = (World) blockAccess;
+		if (!canBlockStay(world, pos)) {
+			dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
+			world.setBlockToAir(pos);
+			return;
+		}
+
+		TileEntity tec = world.getTileEntity(pos);
 		if (tec instanceof TileEntityConveyor) {
 			((TileEntityConveyor) tec).updateConveyorActive();
 		}
@@ -586,25 +549,30 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public int getDamageValue(World world, int x, int y, int z) {
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		return getItemFromBlock(world, pos);
+	}
+
+	private ItemStack getItemFromBlock(IBlockAccess world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
 		int dyeColor = 16;
 		if (te instanceof TileEntityConveyor) {
 			dyeColor = ((TileEntityConveyor) te).getDyeColor();
 			if (dyeColor == -1) dyeColor = 16;
 		}
-		return dyeColor;
+
+		return new ItemStack(this, 1, dyeColor);
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-		if (world.getBlock(x, y, z).equals(this)) {
-			ret.add(new ItemStack(this, 1, getDamageValue(world, x, y, z)));
-			if (((TileEntityConveyor) world.getTileEntity(x, y, z)).isFast())
-				ret.add(new ItemStack(Items.glowstone_dust, 1));
+		if (world.getBlockState(pos).getBlock().equals(this)) {
+			ret.add(getItemFromBlock(world, pos));
+			if (((TileEntityConveyor) world.getTileEntity(pos)).isFast())
+				ret.add(new ItemStack(Items.GLOWSTONE_DUST, 1));
 		}
 		return ret;
 	}
@@ -648,26 +616,114 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		}
 	}
 
-	private void specialRoute(World world, int x, int y, int z, EntityItem entityitem) {
+	private void specialRoute(World world, BlockPos pos, EntityItem entityitem) {
 
-		TileEntity teBelow = world.getTileEntity(x, y - 1, z);
+		TileEntity teBelow = world.getTileEntity(pos.down());
 		if (teBelow == null || entityitem.isDead) {
 			return;
 		} else if (teBelow instanceof IEntityCollidable) {
 			((IEntityCollidable) teBelow).onEntityCollided(entityitem);
 		} else if (teBelow instanceof TileEntityHopper) {
-			if (!((TileEntityHopper) teBelow).func_145888_j()) {
+			if (!((TileEntityHopper) teBelow).isOnTransferCooldown()) {
 				ItemStack toInsert = entityitem.getEntityItem().copy();
 				toInsert.stackSize = 1;
-				toInsert = TileEntityHopper.func_145889_a((IInventory) teBelow, toInsert, EnumFacing.UP.ordinal());
+				toInsert = TileEntityHopper.putStackInInventoryAllSlots((IInventory) teBelow, toInsert, EnumFacing.UP);
 				if (toInsert == null) {
 					entityitem.getEntityItem().stackSize--;
-					((TileEntityHopper) teBelow).func_145896_c(8);
+					((TileEntityHopper) teBelow).setTransferCooldown(8);
 				}
 			}
 		}
 		if (entityitem.getEntityItem().stackSize <= 0) {
 			entityitem.setDead();
+		}
+	}
+
+	public enum ConveyorDirection implements IStringSerializable {
+
+		EAST(0, "east", EnumFacing.EAST, 0),
+		SOUTH(1, "south", EnumFacing.SOUTH, 0),
+		WEST(2, "west", EnumFacing.WEST, 0),
+		NORTH(3, "north", EnumFacing.NORTH, 0),
+		ASCENDING_EAST(4, "ascending_east", EnumFacing.EAST, 1),
+		ASCENDING_SOUTH(5, "ascending_south", EnumFacing.SOUTH, 1),
+		ASCENDING_WEST(6, "ascending_west", EnumFacing.WEST, 1),
+		ASCENDING_NORTH(7, "ascending_north", EnumFacing.NORTH, 1),
+		DESCENDING_EAST(8, "descending_east", EnumFacing.EAST, -1),
+		DESCENDING_SOUTH(9, "descending_south", EnumFacing.SOUTH, -1),
+		DESCENDING_WEST(10, "descending_west", EnumFacing.WEST, -1),
+		DESCENDING_NORTH(11, "descending_north", EnumFacing.NORTH, -1);
+
+		private final int meta;
+		private final String name;
+		private final EnumFacing facing;
+		private int yOffset;
+
+		private static final ConveyorDirection[] META_LOOKUP = new ConveyorDirection[values().length];
+		private int YOffset;
+
+		ConveyorDirection(int meta, String name, EnumFacing facing, int yOffset) {
+
+			this.meta = meta;
+			this.name = name;
+			this.facing = facing;
+			this.yOffset = yOffset;
+		}
+
+		@Override
+		public String getName() {
+
+			return name;
+		}
+
+		public EnumFacing getFacing() {
+
+			return facing;
+		}
+
+		public boolean isUphill() {
+
+			return yOffset > 0;
+		}
+
+		public boolean isDownhill() {
+
+			return yOffset < 0;
+		}
+
+		public int getMetadata() {
+
+			return this.meta;
+		}
+
+		public static ConveyorDirection byMetadata(int meta) {
+
+			if (meta < 0 || meta >= META_LOOKUP.length)
+			{
+				meta = 0;
+			}
+
+			return META_LOOKUP[meta];
+		}
+
+		public static ConveyorDirection byFacing(EnumFacing facing) {
+
+			for (ConveyorDirection conveyorDirection : values()) {
+				if (conveyorDirection.yOffset == 0 && conveyorDirection.facing == facing) {
+					return conveyorDirection;
+				}
+			}
+			return EAST;
+		}
+
+		static {
+			for (ConveyorDirection conveyorDirection : values()) {
+				META_LOOKUP[conveyorDirection.getMetadata()] = conveyorDirection;
+			}
+		}
+
+		public int getYOffset() {
+			return YOffset;
 		}
 	}
 }

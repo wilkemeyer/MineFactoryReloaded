@@ -214,7 +214,7 @@ public class MFRUtil {
 		return false;
 	}
 
-	public static void usedWrench(EntityPlayer player, int x, int y, int z) {
+	public static void usedWrench(EntityPlayer player, BlockPos pos) {
 
 		if (player == null) {
 			return;
@@ -224,13 +224,13 @@ public class MFRUtil {
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammer) {
-			((IToolHammer) currentItem).toolUsed(player.inventory.getCurrentItem(), player, x, y, z);
+			((IToolHammer) currentItem).toolUsed(player.inventory.getCurrentItem(), player, pos.getX(), pos.getY(), pos.getZ());
 		}
 		else if (currentItem instanceof IMFRHammer) {
 			;
 		}
 		else if (bcWrenchExists) {
-			bcWrenchUsed(currentItem, player, x, y, z);
+			bcWrenchUsed(currentItem, player, pos);
 		}
 	}
 
