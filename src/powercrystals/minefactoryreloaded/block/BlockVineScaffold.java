@@ -101,7 +101,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public boolean renderAsNormalBlock() {
+	public boolean isFullCube() {
 
 		return false;
 	}

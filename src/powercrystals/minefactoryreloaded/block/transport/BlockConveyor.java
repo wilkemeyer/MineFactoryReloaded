@@ -578,19 +578,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
-
-		return false;
-	}
-
-	@Override
-	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int meta) {
-
-		return false;
-	}
-
-	@Override
-	public boolean canProvidePower() {
+	public boolean canProvidePower(IBlockState state) {
 
 		return false;
 	}
@@ -603,14 +591,14 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues) {
+	public void onInputsChanged(World world, BlockPos pos, EnumFacing side, int[] inputValues) {
 
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue) {
+	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityConveyor) {
 			((TileEntityConveyor) te).onRedNetChanged(inputValue);
 		}
@@ -660,7 +648,6 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		private int yOffset;
 
 		private static final ConveyorDirection[] META_LOOKUP = new ConveyorDirection[values().length];
-		private int YOffset;
 
 		ConveyorDirection(int meta, String name, EnumFacing facing, int yOffset) {
 
@@ -723,7 +710,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 		}
 
 		public int getYOffset() {
-			return YOffset;
+			return yOffset;
 		}
 	}
 }

@@ -112,7 +112,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public boolean renderAsNormalBlock()
+	public boolean isFullCube()
 	{
 		return false;
 	}

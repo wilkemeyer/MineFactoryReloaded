@@ -308,7 +308,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
+	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
 
 		markChunkDirty();
 		return false;

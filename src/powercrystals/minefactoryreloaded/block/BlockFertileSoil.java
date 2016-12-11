@@ -218,7 +218,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean renderAsNormalBlock()
+	public boolean isFullCube()
 	{
 		return false;
 	}

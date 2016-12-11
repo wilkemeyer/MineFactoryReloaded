@@ -72,7 +72,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 	}
 
 	@Override
-	public boolean renderAsNormalBlock() {
+	public boolean isFullCube() {
 
 		return false;
 	}

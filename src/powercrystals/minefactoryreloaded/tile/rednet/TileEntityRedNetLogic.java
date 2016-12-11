@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
@@ -378,9 +378,9 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		writeCricuitsOnly(tag, false);
 		if (tag.hasKey("circuits", 9)) {
 			tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
+			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
 		} else {
-			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.empty"));
+			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.empty"));
 		}
 	}
 
@@ -388,15 +388,15 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
 
 		if (!canRotate()) {
-			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error2"));
+			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.error2"));
 			return;
 		}
 		int circuitCount = tag.getTagList("circuits", 10).tagCount();
 		if (circuitCount > getCircuitCount()) {
-			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
+			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.error"));
 		} else {
 			readCircuitsOnly(tag);
-			player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
+			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.downloaded"));
 		}
 	}
 

@@ -2,14 +2,16 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -24,40 +26,38 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 	}
 
 	@Override
-	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z) {
+	public void onMinecartPass(World world, EntityMinecart minecart, BlockPos pos) {
 
 		if (world.isRemote)
 			return;
 
-		Class<? extends EntityLivingBase> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
-		if (!target.isInstance(minecart.riddenByEntity))
+		Class<? extends EntityLivingBase> target = isPowered(world, pos) ? EntityLiving.class : EntityPlayer.class;
+		if (!target.isInstance(minecart.getPassengers().get(0)))
 			return;
 
-		Entity player = minecart.riddenByEntity;
-		AxisAlignedBB dropCoords = findSpaceForPlayer(player, x, y, z, world);
+		Entity player = minecart.getPassengers().get(0);
+		AxisAlignedBB dropCoords = findSpaceForPlayer(player, pos, world);
 		if (dropCoords == null)
 			return;
 
-		player.mountEntity(null);
+		player.dismountRidingEntity();
 		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityLivingBase) player,
 			dropCoords.minX + (dropCoords.maxX - dropCoords.minX) / 2,
 			dropCoords.minY,
 			dropCoords.minZ + (dropCoords.maxZ - dropCoords.minZ) / 2);
 	}
 
-	private AxisAlignedBB findSpaceForPlayer(Entity entity, int x, int y, int z, World world) {
+	private AxisAlignedBB findSpaceForPlayer(Entity entity, BlockPos pos, World world) {
 
 		final int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
 		final int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt() * 2;
 
-		AxisAlignedBB bb = entity.boundingBox.getOffsetBoundingBox(0, 0, 0);
+		AxisAlignedBB bb = entity.getEntityBoundingBox();
 
 		final double halfX = (bb.maxX - bb.minX) / 2;
 		final double halfZ = (bb.maxZ - bb.minZ) / 2;
 
-		bb.offset(x - bb.minX + .5 - halfX, y - bb.minY + 0.05, z - bb.minZ + .5 - halfZ);
-
-		AxisAlignedBB home = bb.copy();
+		bb.offset(pos.getX() - bb.minX + .5 - halfX, pos.getY() - bb.minY + 0.05, pos.getZ() - bb.minZ + .5 - halfZ);
 
 		bb.offset(0, -(searchY >> 1), 0);
 		for (int offsetY = -searchY; offsetY <= searchY; offsetY++) {
@@ -66,14 +66,14 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 				bb.offset(0, 0, -searchX);
 				for (int offsetZ = -searchX; offsetZ <= searchX; offsetZ++) {
 
-					if (world.func_147461_a(bb).isEmpty()
+					if (world.getCollisionBoxes(bb).isEmpty()
 							&& !isBadBlockToStandIn(world, bb)
-							&& !world.isAnyLiquid(bb)) {
+							&& !world.containsAnyLiquid(bb)) {
 						int targetX = MathHelper.floor_double(bb.minX + halfX);
 						int targetY = MathHelper.floor_double(bb.minY);
 						int targetZ = MathHelper.floor_double(bb.minZ + halfZ);
 
-						if (!isBadBlockToStandOn(world, targetX, targetY - 1, targetZ))
+						if (!isBadBlockToStandOn(world, new BlockPos(targetX, targetY - 1, targetZ)))
 							return bb;
 					}
 					bb.offset(0, 0, 1);
@@ -86,11 +86,12 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 		return null;
 	}
 
-	private boolean isBadBlockToStandOn(World world, int x, int y, int z) {
+	private boolean isBadBlockToStandOn(World world, BlockPos pos) {
 
-		Block block = world.getBlock(x, y, z);
-		if (block.isAir(world, x, y, z)
-				|| null == block.getCollisionBoundingBoxFromPool(world, x, y, z)) {
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		if (world.isAirBlock(pos)
+				|| null == block.getCollisionBoundingBox(state, world, pos)) {
 			return true;
 		}
 		return false;
@@ -120,12 +121,14 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 		for (int k1 = i; k1 < j; ++k1) {
 			for (int l1 = k; l1 < l; ++l1) {
 				for (int i2 = i1; i2 < j1; ++i2) {
-					Block block = world.getBlock(k1, l1, i2);
+					BlockPos pos = new BlockPos(k1, l1, i2);
+					IBlockState state = world.getBlockState(pos);
+					Block block = state.getBlock();
 
-					if (block == Blocks.fire ||
-							block.getMaterial().isLiquid() ||
-							block.isBurning(world, k1, l1, i2) ||
-							BlockRailBase.func_150051_a(block)) {
+					if (block == Blocks.FIRE ||
+							state.getMaterial().isLiquid() ||
+							block.isBurning(world, pos) ||
+							BlockRailBase.isRailBlock(state)) {
 
 						return true;
 					}

@@ -16,7 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -126,7 +126,7 @@ public class ItemRedNetMeter extends ItemMulti {
 			}
 			info = new ArrayList<IChatComponent>();
 			if (block.equals(Blocks.redstone_wire)) {
-				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
+				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
 						.appendText(": " + world.getBlockMetadata(x, y, z)));
 			}
 			else if (block instanceof IRedNetInfo) {

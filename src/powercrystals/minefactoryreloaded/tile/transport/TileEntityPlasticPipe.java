@@ -24,7 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
@@ -601,7 +601,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
+	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
 
 		if (subHit >= 0 && subHit < (2 + 6 * 2)) {
 			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
@@ -638,10 +638,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 						markDirty();
 						switch (mode) {
 						case 0:
-							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.tile.standard"));
+							player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.tile.standard"));
 							break;
 						case 1:
-							player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.rednet.tile.cableonly"));
+							player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.tile.cableonly"));
 							break;
 						default:
 						}
@@ -654,13 +654,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 					markDirty();
 					switch (mode) {
 					case 0:
-						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.fluid.connection.disabled"));
+						player.addChatMessage(new TextComponentTranslation("chat.info.mfr.fluid.connection.disabled"));
 						break;
 					case 1:
-						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.fluid.connection.output"));
+						player.addChatMessage(new TextComponentTranslation("chat.info.mfr.fluid.connection.output"));
 						break;
 					case 3:
-						player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.fluid.connection.extract"));
+						player.addChatMessage(new TextComponentTranslation("chat.info.mfr.fluid.connection.extract"));
 						break;
 					default:
 					}

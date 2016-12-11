@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.api.rednet;
 
+import net.minecraft.util.math.BlockPos;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 
 import net.minecraft.world.World;
@@ -28,13 +29,11 @@ public interface IRedNetInputNode extends IRedNetConnection
 	 * on the next tick.
 	 * 
 	 * @param world The world this block is in.
-	 * @param x This block's X coordinate.
-	 * @param y This block's Y coordinate.
-	 * @param z This block's Z coordinate.
+	 * @param pos This block's position.
 	 * @param side The side the input values are being changed on.
 	 * @param inputValues The new set of input values. This array will be 16 elements long. Do not alter or cache.
 	 */
-	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues);
+	public void onInputsChanged(World world, BlockPos pos, EnumFacing side, int[] inputValues);
 
 	/**
 	 * Called when the input value to this block changes. Only called if your block is connected in "Single" mode.
@@ -42,11 +41,9 @@ public interface IRedNetInputNode extends IRedNetConnection
 	 * on the next tick.
 	 * 
 	 * @param world The world this block is in.
-	 * @param x This block's X coordinate.
-	 * @param y This block's Y coordinate.
-	 * @param z This block's Z coordinate.
+	 * @param pos This block's position.
 	 * @param side The side the input values are being changed on.
 	 * @param inputValue The new input value
 	 */
-	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue);
+	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue);
 }

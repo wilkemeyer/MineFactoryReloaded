@@ -9,7 +9,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -58,7 +58,7 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 
 		if (stack.stackSize != 1) {
 			if (!world.isRemote)
-				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.bag.stacksize"));
+				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.bag.stacksize"));
 			return stack;
 		}
 		stack.setTagInfo("Accessible", new NBTTagCompound());

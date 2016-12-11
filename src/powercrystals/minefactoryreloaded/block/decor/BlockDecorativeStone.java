@@ -9,7 +9,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockDecorativeStone extends BlockFactory {
 
@@ -65,13 +65,7 @@ public class BlockDecorativeStone extends BlockFactory {
 		world.setBlockToAir(pos);
 		if (!returnBlock)
 			for (ItemStack item : list) {
-				float f = 0.3F;
-				double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-				double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-				double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-				EntityItem itemEntity = new EntityItem(world, pos.getX() + x2, pos.getY() + y2, pos.getZ() + z2, item);
-				itemEntity.setPickupDelay(10);
-				world.spawnEntityInWorld(itemEntity);
+				UtilInventory.dropStackInAir(world, pos, item);	
 			}
 		return list;
 	}

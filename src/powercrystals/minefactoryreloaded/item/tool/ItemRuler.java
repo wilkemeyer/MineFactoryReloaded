@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.StatCollector;
@@ -20,9 +20,9 @@ public class ItemRuler extends ItemFactoryTool {
 		if (world.isRemote) {
 			MovingObjectPosition mop = player.rayTrace(MFRConfig.spyglassRange.getInt(), 1.0F);
 			if (mop == null || (mop.typeOfHit == MovingObjectType.ENTITY && mop.entityHit == null)) {
-				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.ruler.nosight"));
+				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.ruler.nosight"));
 			} else if (mop.typeOfHit == MovingObjectType.ENTITY) {
-				player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.ruler.hitentity"));
+				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.ruler.hitentity"));
 			} else {
 				NBTTagCompound data = player.getEntityData();
 				NBTTagCompound tag = data.getCompoundTag("ruler");
@@ -31,7 +31,7 @@ public class ItemRuler extends ItemFactoryTool {
 					tag.setInteger("y", mop.blockY);
 					tag.setInteger("z", mop.blockZ);
 					data.setTag("ruler", tag);
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.ruler.startposition"));
+					player.addChatMessage(new TextComponentTranslation("chat.info.mfr.ruler.startposition"));
 				} else {
 					int x = tag.getInteger("x");
 					int y = tag.getInteger("y");

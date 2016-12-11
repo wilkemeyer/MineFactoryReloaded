@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
@@ -23,14 +24,14 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 	}
 
 	@Override
-	public void onMinecartPass(World world, EntityMinecart entity, int x, int y, int z)
+	public void onMinecartPass(World world, EntityMinecart entity, BlockPos pos)
 	{
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create(entity, EnumFacing.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, null);
 
-		for (Entry<EnumFacing, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
+		for (Entry<EnumFacing, IInventory> inventory : UtilInventory.findChests(world, pos).entrySet())
 		{
 			IInventoryManager chest = InventoryManager.create(inventory.getValue(), inventory.getKey().getOpposite()); 
 			for (Entry<Integer, ItemStack> contents : chest.getContents().entrySet())

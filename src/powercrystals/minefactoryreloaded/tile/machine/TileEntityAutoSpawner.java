@@ -195,7 +195,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 			if (!worldObj.checkNoEntityCollision(spawnedLiving.boundingBox) ||
 					!worldObj.getCollidingBoundingBoxes(spawnedLiving, spawnedLiving.boundingBox).isEmpty() ||
-					(worldObj.isAnyLiquid(spawnedLiving.boundingBox) != (spawnedLiving instanceof EntityWaterMob))) {
+					(worldObj.containsAnyLiquid(spawnedLiving.boundingBox) != (spawnedLiving instanceof EntityWaterMob))) {
 				setIdleTicks(10);
 				return false;
 			}

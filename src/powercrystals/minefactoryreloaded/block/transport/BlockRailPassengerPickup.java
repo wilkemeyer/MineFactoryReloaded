@@ -6,7 +6,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -20,22 +21,22 @@ public class BlockRailPassengerPickup extends BlockFactoryRail {
 	}
 
 	@Override
-	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z) {
+	public void onMinecartPass(World world, EntityMinecart minecart, BlockPos pos) {
 
-		if (world.isRemote | minecart.riddenByEntity != null || !minecart.canBeRidden())
+		if (world.isRemote | minecart.isBeingRidden() || !minecart.canBeRidden())
 			return;
 
 		int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
 		int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt();
-		AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(x - searchX, y - searchY, z - searchX,
-			x + searchX + 1, y + searchY + 1, z + searchX + 1);
+		AxisAlignedBB bb = new AxisAlignedBB(pos.getX() - searchX, pos.getY() - searchY, pos.getZ() - searchX,
+			pos.getX() + searchX + 1, pos.getY() + searchY + 1, pos.getZ() + searchX + 1);
 
-		Class<? extends EntityLivingBase> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
+		Class<? extends EntityLivingBase> target = isPowered(world, pos) ? EntityLiving.class : EntityPlayer.class;
 		List<? extends EntityLivingBase> entities = world.getEntitiesWithinAABB(target, bb);
 
 		for (EntityLivingBase o : entities)
-			if (!o.isDead & o.ridingEntity == null && o.getHealth() > 0) {
-				o.mountEntity(minecart);
+			if (!o.isDead & !o.isRiding() && o.getHealth() > 0) {
+				o.startRiding(minecart);
 				return;
 			}
 	}

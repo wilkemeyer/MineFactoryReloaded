@@ -345,21 +345,18 @@ public class MFRUtil {
 		}
 	}
 
-	public static void wideNotifyNearbyBlocksExcept(World world, int X, int Y, int Z, Block block) {
+	public static void wideNotifyNearbyBlocksExcept(World world, BlockPos pos, Block block) {
 
-		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
-		for (int i = 0; i < 6; ++i) {
-			EnumFacing d = dirs[i];
-			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
-			if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {
-				world.notifyBlockOfNeighborChange(x, y, z, block);
-				for (int j = 0; j < 6; ++j) {
-					if ((j ^ 1) == i)
+		for (EnumFacing d : EnumFacing.VALUES) {
+			BlockPos firstPos = pos.offset(d);
+			if (world.isBlockLoaded(firstPos) && world.getBlockState(firstPos).getBlock() != block) {
+				world.notifyNeighborsOfStateChange(firstPos, block);
+				for (EnumFacing d2 : EnumFacing.VALUES) {
+					if (d2.getOpposite() == d)
 						continue;
-					EnumFacing d2 = dirs[j];
-					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-					if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
-						world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+					BlockPos secondPos = firstPos.offset(d2);
+					if (world.isBlockLoaded(secondPos) && world.getBlockState(secondPos).getBlock() != block)
+						world.notifyNeighborsOfStateChange(secondPos, block);
 				}
 			}
 		}

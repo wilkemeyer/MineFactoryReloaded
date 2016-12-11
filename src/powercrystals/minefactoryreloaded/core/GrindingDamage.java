@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.core;
 import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
@@ -46,7 +46,7 @@ public class GrindingDamage extends DamageSource {
 		}
 		String s1 = s + ".player";
 		if (entityliving1 != null && StatCollector.canTranslate(s1))
-			return new ChatComponentTranslation(s1, entity.getCommandSenderName(), entityliving1.getCommandSenderName());
-		return new ChatComponentTranslation(s, entity.getCommandSenderName());
+			return new TextComponentTranslation(s1, entity.getCommandSenderName(), entityliving1.getCommandSenderName());
+		return new TextComponentTranslation(s, entity.getCommandSenderName());
 	}
 }

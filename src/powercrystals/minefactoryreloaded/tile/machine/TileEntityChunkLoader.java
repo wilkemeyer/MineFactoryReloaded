@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -81,7 +81,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (unableToRequestTicket &&
 				inventoryPlayer.player.getCommandSenderName().equals(_owner)) {
 			inventoryPlayer.player.addChatMessage(
-					new ChatComponentTranslation("chat.info.mfr.chunkloader.noticket"));
+					new TextComponentTranslation("chat.info.mfr.chunkloader.noticket"));
 		}
 		return new ContainerChunkLoader(this, inventoryPlayer);
 	}

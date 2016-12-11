@@ -12,7 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -182,16 +182,16 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 				value = ((TileEntityRedNetLogic) te).getVariableValue(i);
 
 				if (value != 0) {
-					info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.varprefix")
+					info.add(new TextComponentTranslation("chat.info.mfr.rednet.meter.varprefix")
 							.appendText(" " + i + ": " + value));
 					++foundNonZero;
 				}
 			}
 
 			if (foundNonZero == 0) {
-				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.allzero"));
+				info.add(new TextComponentTranslation("chat.info.mfr.rednet.meter.var.allzero"));
 			} else if (foundNonZero < 16) {
-				info.add(new ChatComponentTranslation("chat.info.mfr.rednet.meter.var.restzero"));
+				info.add(new TextComponentTranslation("chat.info.mfr.rednet.meter.var.restzero"));
 			}
 		}
 	}

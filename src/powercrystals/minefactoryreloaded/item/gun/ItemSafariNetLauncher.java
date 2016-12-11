@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -37,9 +37,9 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 			stack.setItemDamage(stack.getItemDamage() == 0 ? 1 : 0);
 			if (world.isRemote) {
 				if (isCaptureMode(stack)) {
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.safarinet.capture"));
+					player.addChatMessage(new TextComponentTranslation("chat.info.mfr.safarinet.capture"));
 				} else {
-					player.addChatMessage(new ChatComponentTranslation("chat.info.mfr.safarinet.release"));
+					player.addChatMessage(new TextComponentTranslation("chat.info.mfr.safarinet.release"));
 				}
 			}
 			return false;

@@ -1,48 +1,44 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.core.util.CoreUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockFactoryRoad extends Block {
 
-	private IIcon _iconRoad;
-	private IIcon _iconRoadOff;
-	private IIcon _iconRoadOn;
-
+	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D - 1/128D, 1D);
+	private static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
+	
 	public BlockFactoryRoad() {
 
-		super(Material.rock);
+		super(Material.ROCK);
 		setHardness(2.0F);
 		setUnlocalizedName("mfr.road");
 		setResistance(25.0F);
-		setSoundType(Blocks.stone.stepSound);
+		setSoundType(SoundType.STONE);
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
-    @Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
 
-        final float f = 1 / 128f;
-        return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1 - f, z + 1);
+        return COLLISION_AABB;
     }
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity e) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity e) {
 
 		if (!e.canTriggerWalking())
 			return;
@@ -59,6 +55,7 @@ public class BlockFactoryRoad extends Block {
 		}
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
@@ -82,75 +79,117 @@ public class BlockFactoryRoad extends Block {
 			return _iconRoad;
 		}
 	}
+*/
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 
 		if (!world.isRemote) {
-			int meta = world.getBlockMetadata(x, y, z);
-			boolean isPowered = CoreUtils.isRedstonePowered(world, x, y, z);
-			int newMeta = -1;
+			Type type = state.getValue(TYPE);
+			boolean isPowered = CoreUtils.isRedstonePowered(world, pos);
+			Type newType = null;
 
-			if (meta == 1 && isPowered) {
-				newMeta = 2;
+			if (type == Type.LIGHT_OFF && isPowered) {
+				newType = Type.LIGHT_ON;
 			}
-			else if (meta == 2 && !isPowered) {
-				newMeta = 1;
+			else if (type == Type.LIGHT_ON && !isPowered) {
+				newType = Type.LIGHT_OFF;
 			}
-			else if (meta == 3 && !isPowered) {
-				newMeta = 4;
+			else if (type == Type.LIGHT_INVERTED_OFF && !isPowered) {
+				newType = Type.LIGHT_INVERTED_ON;
 			}
-			else if (meta == 4 && isPowered) {
-				newMeta = 3;
+			else if (type == Type.LIGHT_INVERTED_ON && isPowered) {
+				newType = Type.LIGHT_INVERTED_OFF;
 			}
 
-			if (newMeta >= 0) {
-				world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+			if (newType != null) {
+				world.setBlockState(pos, state.withProperty(TYPE, newType));
 			}
 		}
 	}
 
 	@Override
-	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {
-
+	public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type) {
 		return false;
 	}
 
 	@Override
-	public int damageDropped(int meta) {
+	public int damageDropped(IBlockState state) {
 
-		switch (meta) {
-		case 1:
-		case 2:
-			return 1;
-		case 3:
-		case 4:
-			return 4;
-		default:
-			return 0;
+		Type type = state.getValue(TYPE);
+
+		switch (type) {
+			case LIGHT_OFF:
+			case LIGHT_ON:
+				return Type.LIGHT_OFF.getMetadata();
+			case LIGHT_INVERTED_ON:
+			case LIGHT_INVERTED_OFF:
+				return Type.LIGHT_INVERTED_ON.getMetadata();
+			default:
+				return Type.DEFAULT.getMetadata();
 		}
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		int meta = world.getBlockMetadata(x, y, z);
-		return meta == 2 | meta == 4 ? 15 : 0;
+		Type type = state.getValue(TYPE);
+		return type == Type.LIGHT_ON || type == Type.LIGHT_INVERTED_ON ? 15 : 0;
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		onNeighborBlockChange(world, x, y, z, this);
+		neighborChanged(state, world, pos, this);
 	}
 
 	@Override
-	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
 
 		if (entity instanceof EntityDragon) {
 			return false;
 		}
 
 		return true;
+	}
+	
+	public enum Type implements IStringSerializable {
+		
+		DEFAULT(0, "default"),
+		LIGHT_OFF(1, "light_off"),
+		LIGHT_ON(2, "light_on"),
+		LIGHT_INVERTED_OFF(3, "light_inverted_off"),
+		LIGHT_INVERTED_ON(4, "light_inverted_on");
+
+		private final int meta;
+		private final String name;
+
+		private static final Type[] META_LOOKUP = new Type[values().length];
+		
+		Type(int meta, String name) {
+
+			this.meta = meta;
+			this.name = name;
+		}
+
+		public Type byMetadata(int meta) {
+			return META_LOOKUP[meta];
+		}
+		
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		private int getMetadata() {
+			
+			return meta;
+		}
+
+		static {
+			for (Type type : values()) {
+				META_LOOKUP[type.getMetadata()] = type;
+			}
+		}
 	}
 }

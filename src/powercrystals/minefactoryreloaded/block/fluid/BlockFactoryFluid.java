@@ -27,6 +27,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.Random;
@@ -192,13 +193,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			}
 			if (world.setBlockState(pos, block.getDefaultState(), 3)) {
 				if (drop != null && drop.stackSize > 0) {
-					float f = 0.3F;
-					double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-					double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-					double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-					EntityItem itemEntity = new EntityItem(world, pos.getX() + x2, pos.getY() + y2, pos.getZ() + z2, drop);
-					itemEntity.setPickupDelay(10);
-					world.spawnEntityInWorld(itemEntity);
+					UtilInventory.dropStackInAir(world, pos, drop);
 				}
 
 				fizz(world, pos, rand);

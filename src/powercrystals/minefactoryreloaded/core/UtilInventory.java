@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +23,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
@@ -100,9 +103,9 @@ public abstract class UtilInventory
 	 *
 	 * @return Map<EnumFacing, IInventory> specifying all found inventories and their directions.
 	 */
-	public static Map<EnumFacing, IInventory> findChests(World world, int x, int y, int z)
+	public static Map<EnumFacing, IInventory> findChests(World world, BlockPos pos)
 	{
-		return findChests(world, x, y, z, EnumFacing.VALID_DIRECTIONS);
+		return findChests(world, pos, EnumFacing.VALUES);
 	}
 
 	/**
@@ -110,46 +113,27 @@ public abstract class UtilInventory
 	 *
 	 * @return Map<EnumFacing, IInventory> specifying all found inventories and their directions.
 	 */
-	public static Map<EnumFacing, IInventory> findChests(World world, int x, int y, int z,
+	public static Map<EnumFacing, IInventory> findChests(World world, BlockPos pos,
 			EnumFacing[] directionstocheck)
 	{
 		Map<EnumFacing, IInventory> chests = new LinkedHashMap<EnumFacing, IInventory>();
-		BlockPosition bp = new BlockPosition(x, y, z);
 		for (EnumFacing direction : directionstocheck)
 		{
-			bp.x = x; bp.y = y; bp.z = z;
-			bp.step(direction, 1);
-			TileEntity te = world.getTileEntity(bp.x, bp.y, bp.z);
+			BlockPos chestPos = pos.offset(direction);
+			TileEntity te = world.getTileEntity(chestPos);
 			if (te != null && te instanceof IInventory)
 			{
-				chests.put(direction, checkForDoubleChest(world, te, bp));
+				chests.put(direction, checkForDoubleChest(world, te, chestPos));
 			}
 		}
 		return chests;
 	}
 
-	private static IInventory checkForDoubleChest(World world, TileEntity te, BlockPosition chestloc)
+	private static IInventory checkForDoubleChest(World world, TileEntity te, BlockPos chestloc)
 	{
-		Block block = world.getBlock(chestloc.x, chestloc.y, chestloc.z);
-		if (block == Blocks.chest)
-		{
-			for (BlockPosition bp : chestloc.getAdjacent(false))
-			{
-				if (world.getBlock(bp.x, bp.y, bp.z) == Blocks.chest)
-				{
-					return new InventoryLargeChest("", ((IInventory)te), ((IInventory)world.getTileEntity(bp.x, bp.y, bp.z)));
-				}
-			}
-		}
-		else if (block == Blocks.trapped_chest)
-		{
-			for (BlockPosition bp : chestloc.getAdjacent(false))
-			{
-				if (world.getBlock(bp.x, bp.y, bp.z) == Blocks.trapped_chest)
-				{
-					return new InventoryLargeChest("", ((IInventory)te), ((IInventory)world.getTileEntity(bp.x, bp.y, bp.z)));
-				}
-			}
+		Block block = world.getBlockState(chestloc).getBlock();
+		if (block instanceof BlockChest && te instanceof TileEntityChest) {
+			return ((BlockChest) block).getContainer(world, chestloc, true);
 		}
 		return ((IInventory)te);
 	}
@@ -225,7 +209,7 @@ public abstract class UtilInventory
 	 *
 	 * @param world
 	 *            the worldObj
-	 * @param bp
+	 * @param pos
 	 *            the BlockPosition to drop from
 	 * @param stack
 	 *            the ItemStack being dropped
@@ -237,7 +221,7 @@ public abstract class UtilInventory
 	 *            dropped into the world.
 	 * @return The remainder of the ItemStack. Whatever -wasn't- successfully dropped.
 	 */
-	public static ItemStack dropStack(World world, BlockPosition bp, ItemStack stack,
+	public static ItemStack dropStack(World world, BlockPos pos, ItemStack stack,
 			EnumFacing[] dropdirections, EnumFacing airdropdirection)
 	{
 		// (0) Sanity check. Don't bother dropping if there's nothing to drop, and never try to drop items on the client.
@@ -246,7 +230,7 @@ public abstract class UtilInventory
 
 		stack = stack.copy();
 		// (0.5) Try to put stack in conduits that are in valid directions
-		for (Entry<EnumFacing, IItemDuct> pipe : findConduits(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
+		for (Entry<EnumFacing, IItemDuct> pipe : findConduits(world, pos.x, pos.y, pos.z, dropdirections).entrySet())
 		{
 			EnumFacing from = pipe.getKey().getOpposite();
 			stack = pipe.getValue().insertItem(from, stack);
@@ -257,14 +241,14 @@ public abstract class UtilInventory
 		}
 		// (1) Try to put stack in pipes that are in valid directions
 		if (handlePipeTiles) {
-			stack = handleIPipeTile(world, bp, dropdirections, stack);
+			stack = handleIPipeTile(world, pos, dropdirections, stack);
 			if (stack == null || stack.stackSize <= 0)
 			{
 				return null;
 			}
 		}
 		// (2) Try to put stack in chests that are in valid directions
-		for (Entry<EnumFacing, IInventory> chest : findChests(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
+		for (Entry<EnumFacing, IInventory> chest : findChests(world, pos.x, pos.y, pos.z, dropdirections).entrySet())
 		{
 			IInventoryManager manager = InventoryManager.create(chest.getValue(), chest.getKey().getOpposite());
 			stack = manager.addItem(stack);
@@ -274,12 +258,12 @@ public abstract class UtilInventory
 			}
 		}
 		// (3) Having failed to put it in a chest or a pipe, drop it in the air if airdropdirection is a valid direction.
-		bp.orientation = airdropdirection;
-		bp.moveForwards(1);
-		if (MFRUtil.VALID_DIRECTIONS.contains(airdropdirection) && isAirDrop(world, bp.x, bp.y, bp.z))
+		if (airdropdirection != null)
+			pos.offset(airdropdirection);
+		if (MFRUtil.VALID_DIRECTIONS.contains(airdropdirection) && isAirDrop(world, pos))
 		{
-			bp.moveBackwards(1);
-			dropStackInAir(world, bp, stack, airdropdirection);
+			pos.offset(airdropdirection.getOpposite());
+			dropStackInAir(world, pos, stack, airdropdirection);
 			return null;
 		}
 		// (4) Is the stack still here? :( Better give it back.
@@ -316,89 +300,93 @@ public abstract class UtilInventory
 		return stack;
 	}
 
-	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack) {
-		dropStackInAir(world, bp, stack, EnumFacing.UNKNOWN);
+	public static void dropStackInAir(World world, BlockPos pos, ItemStack stack) {
+		dropStackInAir(world, pos, stack, null);
 	}
 
-	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack, int delay) {
-		dropStackInAir(world, bp, stack, delay, EnumFacing.UNKNOWN);
+	public static void dropStackInAir(World world, BlockPos pos, ItemStack stack, int delay) {
+		dropStackInAir(world, pos, stack, delay, null);
 	}
 
-	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack, EnumFacing towards) {
-		dropStackInAir(world, bp, stack, 20, towards);
+	public static void dropStackInAir(World world, BlockPos pos, ItemStack stack, EnumFacing towards) {
+		dropStackInAir(world, pos, stack, 20, towards);
 	}
 
-	public static void dropStackInAir(World world, BlockPosition bp, ItemStack stack, int delay, EnumFacing towards) {
-		dropStackInAir(world, bp.x, bp.y, bp.z, stack, delay, towards);
+	public static void dropStackInAir(World world, Entity entity, ItemStack stack) {
+		dropStackInAir(world, entity, stack, null);
 	}
 
-	public static void dropStackInAir(World world, Entity bp, ItemStack stack) {
-		dropStackInAir(world, bp, stack, EnumFacing.UNKNOWN);
+	public static void dropStackInAir(World world, Entity entity, ItemStack stack, int delay) {
+		dropStackInAir(world, entity, stack, delay, null);
 	}
 
-	public static void dropStackInAir(World world, Entity bp, ItemStack stack, int delay) {
-		dropStackInAir(world, bp, stack, delay, EnumFacing.UNKNOWN);
+	public static void dropStackInAir(World world, Entity entity, ItemStack stack, EnumFacing towards) {
+		dropStackInAir(world, entity, stack, 20, towards);
 	}
 
-	public static void dropStackInAir(World world, Entity bp, ItemStack stack, EnumFacing towards) {
-		dropStackInAir(world, bp, stack, 20, towards);
+	public static void dropStackInAir(World world, Entity entity, ItemStack stack, int delay, EnumFacing towards) {
+		dropStackInAir(world, entity.getPosition(), stack, delay, towards);
 	}
 
-	public static void dropStackInAir(World world, Entity bp, ItemStack stack, int delay, EnumFacing towards) {
-		dropStackInAir(world, bp.posX, bp.posY, bp.posZ, stack, delay, towards);
-	}
-
-	public static void dropStackInAir(World world, double x, double y, double z, ItemStack stack,
+	public static void dropStackInAir(World world, BlockPos pos, ItemStack stack,
 			int delay, EnumFacing towards)
 	{
 		if (stack == null) return;
 
-		float dropOffsetX = 0.0F;
-		float dropOffsetY = 0.0F;
-		float dropOffsetZ = 0.0F;
+		double dropOffsetX = 0.0F;
+		double dropOffsetY = 0.0F;
+		double dropOffsetZ = 0.0F;
 
-		switch (towards)
-		{
-		case UP:
-			dropOffsetX = 0.5F;
-			dropOffsetY = 1.5F;
-			dropOffsetZ = 0.5F;
-			break;
-		case DOWN:
-			dropOffsetX = 0.5F;
-			dropOffsetY = -0.75F;
-			dropOffsetZ = 0.5F;
-			break;
-		case NORTH:
-			dropOffsetX = 0.5F;
-			dropOffsetY = 0.5F;
-			dropOffsetZ = -0.5F;
-			break;
-		case SOUTH:
-			dropOffsetX = 0.5F;
-			dropOffsetY = 0.5F;
-			dropOffsetZ = 1.5F;
-			break;
-		case EAST:
-			dropOffsetX = 1.5F;
-			dropOffsetY = 0.5F;
-			dropOffsetZ = 0.5F;
-			break;
-		case WEST:
-			dropOffsetX = -0.5F;
-			dropOffsetY = 0.5F;
-			dropOffsetZ = 0.5F;
-			break;
-		case UNKNOWN:
-			break;
+		if (towards == null) {
+			float f = 0.3F;
+			dropOffsetX = world.rand.nextFloat() * f + (1.0D - f) * 0.5D;
+			dropOffsetY = world.rand.nextFloat() * f + (1.0D - f) * 0.5D;
+			dropOffsetZ = world.rand.nextFloat() * f + (1.0D - f) * 0.5D;
+		} else {
+			switch (towards)
+			{
+				case UP:
+					dropOffsetX = 0.5F;
+					dropOffsetY = 1.5F;
+					dropOffsetZ = 0.5F;
+					break;
+				case DOWN:
+					dropOffsetX = 0.5F;
+					dropOffsetY = -0.75F;
+					dropOffsetZ = 0.5F;
+					break;
+				case NORTH:
+					dropOffsetX = 0.5F;
+					dropOffsetY = 0.5F;
+					dropOffsetZ = -0.5F;
+					break;
+				case SOUTH:
+					dropOffsetX = 0.5F;
+					dropOffsetY = 0.5F;
+					dropOffsetZ = 1.5F;
+					break;
+				case EAST:
+					dropOffsetX = 1.5F;
+					dropOffsetY = 0.5F;
+					dropOffsetZ = 0.5F;
+					break;
+				case WEST:
+					dropOffsetX = -0.5F;
+					dropOffsetY = 0.5F;
+					dropOffsetZ = 0.5F;
+					break;
+			}
 		}
 
-		EntityItem entityitem = new EntityItem(world, x + dropOffsetX, y + dropOffsetY, z + dropOffsetZ, stack.copy());
-		entityitem.motionX = 0.0D;
-		if (towards != EnumFacing.DOWN)
-			entityitem.motionY = 0.3D;
-		entityitem.motionZ = 0.0D;
-		entityitem.delayBeforeCanPickup = delay;
+
+		EntityItem entityitem = new EntityItem(world, pos.getX() + dropOffsetX, pos.getY() + dropOffsetY, pos.getZ() + dropOffsetZ, stack.copy());
+		if (towards != null) {
+			entityitem.motionX = 0.0D;
+			if (towards != EnumFacing.DOWN)
+				entityitem.motionY = 0.3D;
+			entityitem.motionZ = 0.0D;
+		}
+		entityitem.setPickupDelay(delay);
 		world.spawnEntityInWorld(entityitem);
 	}
 

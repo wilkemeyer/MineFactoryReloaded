@@ -49,11 +49,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
-import powercrystals.minefactoryreloaded.core.IEntityCollidable;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
-import powercrystals.minefactoryreloaded.core.ITraceable;
-import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.*;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
@@ -196,13 +192,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		world.setBlockToAir(pos);
 		if (!returnBlock)
             for (ItemStack item : list) {
-				float f = 0.3F;
-				double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-				double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-				double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-				EntityItem itemEntity = new EntityItem(world, pos.getX() + x2, pos.getY() + y2, pos.getZ() + z2, item);
-				itemEntity.setPickupDelay(10);
-				world.spawnEntityInWorld(itemEntity);
+				UtilInventory.dropStackInAir(world, pos, item);	
 			}
 		return list;
 	}
