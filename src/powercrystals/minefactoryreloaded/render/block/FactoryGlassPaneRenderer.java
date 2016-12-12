@@ -131,7 +131,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockRenderingHandler {
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block tile, int modelId, RenderBlocks renderer) {
+	public boolean renderWorldBlock(IBlockAccess blockAccess, BlockPos pos, Block tile, int modelId, RenderBlocks renderer) {
 
 		BlockPane block = (BlockPane) tile;
 

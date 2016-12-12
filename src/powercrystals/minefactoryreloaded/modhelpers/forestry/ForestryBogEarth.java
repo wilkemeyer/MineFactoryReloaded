@@ -50,43 +50,43 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	}
 
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return fertilizerType == FertilizerType.GrowPlant && (world.getBlockMetadata(x, y, z) & 3) == 1;
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
 		return world.getBlockMetadata(x, y, z) == 13;
 	}
 
 	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> settings, int x, int y, int z)
+	public boolean canBeHarvested(World world, Map<String, Boolean> settings, BlockPos pos)
 	{
 		return world.getBlockMetadata(x, y, z) == 13;
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return world.setBlockMetadataWithNotify(x, y, z, 13, 3);
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
 		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return repl;
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		List<ItemStack> list = world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 		for (ItemStack a : list)
@@ -98,22 +98,22 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	}
 
 	@Override
-	public void preHarvest(World world, int x, int y, int z)
+	public void preHarvest(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z)
+	public void postHarvest(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void prePick(World world, int x, int y, int z)
+	public void prePick(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void postPick(World world, int x, int y, int z)
+	public void postPick(World world, BlockPos pos)
 	{
 	}
 }

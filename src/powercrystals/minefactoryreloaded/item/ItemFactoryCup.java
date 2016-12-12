@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.RayTraceResult;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -320,7 +320,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public MovingObjectPosition rayTrace(World world, EntityLivingBase entity, boolean adjacent) {
+	public RayTraceResult rayTrace(World world, EntityLivingBase entity, boolean adjacent) {
 		float f1 = entity.rotationPitch;
 		float f2 = entity.rotationYaw;
 		double y = entity.posY + entity.getEyeHeight() - entity.yOffset;
@@ -336,7 +336,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			d3 = ((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance();
 		}
 		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-		MovingObjectPosition ret = world.func_147447_a(vec3, vec31, adjacent, !adjacent, false);
+		RayTraceResult ret = world.func_147447_a(vec3, vec31, adjacent, !adjacent, false);
 		if (ret != null && adjacent) {
 			EnumFacing side = EnumFacing.getOrientation(ret.sideHit);
 			ret.blockX += side.offsetX;

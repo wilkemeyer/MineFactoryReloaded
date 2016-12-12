@@ -32,7 +32,7 @@ import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
-public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileEntityProvider {
+public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 
 	public BlockPlasticPipe() {
 
@@ -164,7 +164,13 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, ITileE
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+	public boolean hasTileEntity(IBlockState state) {
+
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 
 		return new TileEntityPlasticPipe();
 	}

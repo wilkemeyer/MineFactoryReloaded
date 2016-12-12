@@ -14,7 +14,7 @@ public class PlantableThaumcraftTree extends PlantableSapling
 	}
 	
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
 		int saplingMeta = world.getBlockMetadata(x, y, z);
 		if(!super.canBePlantedHere(world, x, y, z, stack))

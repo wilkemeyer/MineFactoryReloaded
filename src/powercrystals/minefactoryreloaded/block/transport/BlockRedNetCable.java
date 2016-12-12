@@ -16,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -34,7 +36,9 @@ import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
-public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, ITileEntityProvider {
+import java.util.List;
+
+public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo {
 
 	public static final String[] _names = { null, "glass", "energy", "energyglass" };
 
@@ -282,13 +286,13 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 
 		super.breakBlock(world, pos, state);
-		MFRUtil.wideNotifyNearbyBlocksExcept(world, x, y, z, id);
+		MFRUtil.wideNotifyNearbyBlocksExcept(world, pos, world.getBlockState(pos).getBlock());
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos) {
 
-		MovingObjectPosition part = collisionRayTrace(world, x, y, z,
+		RayTraceResult part = collisionRayTrace(world.getBlockState(pos), world, pos,
 			RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 		if (part == null)
 			return false;
@@ -297,31 +301,31 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		int power = 0;
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable) {
-			power = ((TileEntityRedNetCable) te).getWeakPower(EnumFacing.getOrientation(side).getOpposite());
+			power = ((TileEntityRedNetCable) te).getWeakPower(side.getOpposite());
 		}
 		return power;
 	}
 
 	@Override
-	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+	public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		int power = 0;
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable) {
-			power = ((TileEntityRedNetCable) te).getStrongPower(EnumFacing.getOrientation(side).getOpposite());
+			power = ((TileEntityRedNetCable) te).getStrongPower(side.getOpposite());
 		}
 		return power;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable)
 			return ((TileEntityRedNetCable) te).isSolidOnSide(side.ordinal());
 
@@ -329,9 +333,16 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public boolean hasTileEntity(IBlockState state) {
 
-		switch (meta) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+
+		//TODO refactor to IProperty
+		switch (getMetaFromState(state)) {
 		default:
 		case 0:
 			return new TileEntityRedNetCable();
@@ -340,12 +351,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		}
 	}
 
-	@Override
-	public int getRenderType() {
-
-		return renderIdRedNet;
-	}
-
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -353,58 +359,59 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		RedNetCableRenderer.updateUVT(blockIcon);
 	}
+*/
 
 	@Override
-	public void updateNetwork(World world, int x, int y, int z, EnumFacing from) {
+	public void updateNetwork(World world, BlockPos pos, EnumFacing from) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable) {
 			((TileEntityRedNetCable) te).updateNearbyNode(from);
 		}
 	}
 
 	@Override
-	public void updateNetwork(World world, int x, int y, int z, int subnet, EnumFacing from) {
+	public void updateNetwork(World world, BlockPos pos, int subnet, EnumFacing from) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable) {
 			((TileEntityRedNetCable) te).updateNearbyNode(subnet, from);
 		}
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side) {
 
 		return RedNetConnectionType.CableAll;
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, int x, int y, int z, EnumFacing side, EntityPlayer player, List<IChatComponent> info, boolean debug) {
+	public void getBlockInfo(IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, List<ITextComponent> info, boolean debug) {
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityRedNetCable) {
-			MovingObjectPosition part = collisionRayTrace(world, x, y, z, RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+			RayTraceResult part = collisionRayTrace(world.getBlockState(pos), world, pos, RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			if (part == null)
 				return;
 
 			int subHit = part.subHit;
-			side = EnumFacing.getOrientation(_subSideMappings[subHit]);
+			side = EnumFacing.VALUES[_subSideMappings[subHit]];
 			((TileEntityRedNetCable) tile).getTileInfo(info, side, player, debug);
 		}
 	}
 
 	@Override
-	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, EnumFacing side, EntityPlayer player, List<IChatComponent> info) {
+	public void getRedNetInfo(IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, List<ITextComponent> info) {
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityRedNetCable) {
-			MovingObjectPosition part = collisionRayTrace(world, x, y, z, RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+			RayTraceResult part = collisionRayTrace(world.getBlockState(pos), world, pos, RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			if (part == null)
 				return;
 
 			int subHit = part.subHit;
-			side = EnumFacing.getOrientation(_subSideMappings[subHit]);
-			info.add(new ChatComponentText(((TileEntityRedNetCable) tile).getRedNetInfo(side, player)));
+			side = EnumFacing.VALUES[_subSideMappings[subHit]];
+			info.add(new TextComponentString(((TileEntityRedNetCable) tile).getRedNetInfo(side, player)));
 
 			int value;
 			int foundNonZero = 0;
@@ -414,7 +421,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 
 				if (value != 0) {
 					// TODO: localize color names v
-					info.add(new ChatComponentText(ItemRedNetMeter._colorNames[i]).appendText(": " + value));
+					info.add(new TextComponentString(ItemRedNetMeter._colorNames[i]).appendText(": " + value));
 					++foundNonZero;
 				}
 			}

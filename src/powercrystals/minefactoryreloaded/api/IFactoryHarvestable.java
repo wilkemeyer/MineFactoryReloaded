@@ -51,7 +51,7 @@ public interface IFactoryHarvestable {
 	 *
 	 * @return True if this block can be harvested.
 	 */
-	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z);
+	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, BlockPos pos);
 
 	/**
 	 * @param world
@@ -71,7 +71,7 @@ public interface IFactoryHarvestable {
 	 *         implementation, calling Block.getDrops() is usually
 	 *         sufficient.
 	 */
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z);
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos);
 
 	/**
 	 * Called before the block is going to be harvested, after getDrops. Usually
@@ -86,7 +86,7 @@ public interface IFactoryHarvestable {
 	 * @param z
 	 *            The Z coordinate of the block being harvested.
 	 */
-	public void preHarvest(World world, int x, int y, int z);
+	public void preHarvest(World world, BlockPos pos);
 
 	/**
 	 * Called after the block is going to be harvested. Used to re-till soil,
@@ -101,6 +101,6 @@ public interface IFactoryHarvestable {
 	 * @param z
 	 *            The Z coordinate of the block being harvested.
 	 */
-	public void postHarvest(World world, int x, int y, int z);
+	public void postHarvest(World world, BlockPos pos);
 
 }

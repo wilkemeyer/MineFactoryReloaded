@@ -304,7 +304,7 @@ public class MFRUtil {
 		return world.getTileEntity(pos);
 	}
 
-	public static EnumFacing[] directionsWithoutConveyors(World world, int x, int y, int z) {
+	public static EnumFacing[] directionsWithoutConveyors(World world, BlockPos pos) {
 
 		ArrayList<EnumFacing> nonConveyors = new ArrayList<EnumFacing>();
 		Block id = MFRThings.conveyorBlock;
@@ -318,7 +318,7 @@ public class MFRUtil {
 		return nonConveyors.toArray(new EnumFacing[nonConveyors.size()]);
 	}
 
-	public static void notifyNearbyBlocks(World world, int x, int y, int z, Block block) {
+	public static void notifyNearbyBlocks(World world, BlockPos pos, Block block) {
 
 		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 		if (world.blockExists(x, y, z)) {
@@ -331,7 +331,7 @@ public class MFRUtil {
 		}
 	}
 
-	public static void notifyNearbyBlocksExcept(World world, int x, int y, int z, Block block) {
+	public static void notifyNearbyBlocksExcept(World world, BlockPos pos, Block block) {
 
 		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 		if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {

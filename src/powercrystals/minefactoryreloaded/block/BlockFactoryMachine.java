@@ -1,24 +1,21 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.lib.util.position.IRotateableTile;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -33,7 +30,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode, ITileEntityProvider {
+public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode {
 
 	private int _mfrMachineBlockIndex;
 
@@ -51,6 +48,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		return _mfrMachineBlockIndex;
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -59,7 +57,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public IIcon getIcon(IBlockAccess iblockaccess, int x, int y, int z, int side) {
+	public IIcon getIcon(IBlockAccess iblockaccess, BlockPos pos, EnumFacing side) {
 
 		int md = iblockaccess.getBlockMetadata(x, y, z);
 		boolean isActive = false;
@@ -74,35 +72,36 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	private static int[] itemRotation = { 0, 1, 3, 2, 5, 4 };
 
 	@Override
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		side = itemRotation[side];
 		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getIcon(side, false);
 	}
+*/
 
 	@Override
-	public int getLightOpacity(IBlockAccess world, int x, int y, int z) {
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		if (world.getTileEntity(x, y, z) instanceof TileEntityLaserDrill) {
+		if (world.getTileEntity(pos) instanceof TileEntityLaserDrill) {
 			return 0;
 		}
-		return super.getLightOpacity(world, x, y, z);
+		return super.getLightOpacity(state, world, pos);
 	}
 
 	@Override
-	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighborPos) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 
 		if (te instanceof TileEntityFactory) {
-			((TileEntityFactory) te).onNeighborTileChange(tileX, tileY, tileZ);
+			((TileEntityFactory) te).onNeighborTileChange(neighborPos);
 		}
 	}
 
 	private void dropContents(TileEntity te, ArrayList<ItemStack> list) {
 
 		if (te instanceof IInventory) {
-			World world = te.getWorldObj();
+			World world = te.getWorld();
 			IInventory inventory = ((IInventory) te);
 			TileEntityFactoryInventory factoryInv = null;
 			if (te instanceof TileEntityFactoryInventory)
@@ -120,12 +119,12 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 				if (list != null) {
 					list.add(itemstack);
 				} else
-					dropStack(world, te.xCoord, te.yCoord, te.zCoord, itemstack);
+					dropStack(world, te.getPos(), itemstack);
 			}
 		}
 	}
 
-	private void dropStack(World world, int x, int y, int z, ItemStack itemstack) {
+	private void dropStack(World world, BlockPos pos, ItemStack itemstack) {
 
 		do {
 			if (itemstack.stackSize <= 0)
@@ -138,7 +137,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 			int amountToDrop = Math.min(world.rand.nextInt(21) + 10, itemstack.stackSize);
 
 			EntityItem entityitem = new EntityItem(world,
-					x + xOffset, y + yOffset, z + zOffset,
+					pos.getX() + xOffset, pos.getY() + yOffset, pos.getZ() + zOffset,
 					itemstack.splitStack(amountToDrop));
 
 			float motionMultiplier = 0.05F;
@@ -151,26 +150,26 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block blockId, int meta) {
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te != null) {
 			dropContents(te, null); // TODO: rewrite drop logic
 
 			if (te instanceof TileEntityFactoryInventory)
 				((TileEntityFactoryInventory) te).onBlockBroken();
 		}
-		super.breakBlock(world, x, y, z, blockId, meta);
+		super.breakBlock(world, pos, state);
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnBlock) {
 
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
-		ItemStack machine = new ItemStack(getItemDropped(world.getBlockMetadata(x, y, z), world.rand, 0),
-				1, damageDropped(world.getBlockMetadata(x, y, z)));
+		IBlockState state = world.getBlockState(pos);
+		ItemStack machine = new ItemStack(getItemDropped(state, world.rand, 0),	1, damageDropped(state));
 		list.add(machine);
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof TileEntityBase) {
 			dropContents(te, list);
 
@@ -182,25 +181,25 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 			if (!tag.hasNoTags())
 				machine.setTagCompound(tag);
 		}
-		world.setBlockToAir(x, y, z);
+		world.setBlockToAir(pos);
 		if (!returnBlock)
 			for (ItemStack stack : list)
-				dropStack(world, x, y, z, stack);
+				dropStack(world, pos, stack);
 		return list;
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos) {
 
-		return getTile(world, x, y, z) instanceof TileEntityFactory;
+		return getTile(world, pos) instanceof TileEntityFactory;
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
 
-		super.onBlockPlacedBy(world, x, y, z, entity, stack);
+		super.onBlockPlacedBy(world, pos, state, entity, stack);
 		if (entity != null) {
-			TileEntity te = getTile(world, x, y, z);
+			TileEntity te = getTile(world, pos);
 			if (te instanceof IRotateableTile)
 				if (((IRotateableTile) te).canRotate())
 					switch (MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3) {
@@ -219,8 +218,8 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 					}
 
 			if (te instanceof TileEntityFactory) {
-				if (entity instanceof ICommandSender && entity.addedToChunk)
-					((TileEntityFactory) te).setOwner(((ICommandSender) entity).getCommandSenderName());
+				if (entity.addedToChunk)
+					((TileEntityFactory) te).setOwner(entity.getName());
 				else
 					((TileEntityFactory) te).setOwner(null);
 			}
@@ -228,43 +227,48 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-
-		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getNewTileEntity();
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride() {
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, getMetaFromState(state)).getNewTileEntity();
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state) {
 
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te instanceof TileEntityFactoryInventory)
-			return ((TileEntityFactoryInventory) te).getComparatorOutput(side);
+			return ((TileEntityFactoryInventory) te).getComparatorOutput();
 		return 0;
 	}
 
 	@Override
-	public boolean activated(World world, int x, int y, int z, EntityPlayer entityplayer, int side) {
+	public boolean activated(World world, BlockPos pos, EntityPlayer entityplayer, EnumFacing side) {
 
-		if (super.activated(world, x, y, z, entityplayer, side))
+		if (super.activated(world, pos, entityplayer, side))
 			return true;
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = getTile(world, pos);
 		if (te == null) {
 			return false;
 		}
 
 		if (te instanceof TileEntityFactoryInventory) {
-			if (((TileEntityFactoryInventory)te).acceptUpgrade(entityplayer.getHeldItem())) {
+			if (((TileEntityFactoryInventory)te).acceptUpgrade(entityplayer.getActiveItemStack())) {
 				if (entityplayer.capabilities.isCreativeMode) {
-					++entityplayer.getHeldItem().stackSize;
+					++entityplayer.getActiveItemStack().stackSize;
 				}
-				if (entityplayer.getHeldItem().stackSize <= 0) {
-					entityplayer.setCurrentItemOrArmor(0, null);
+				if (entityplayer.getActiveItemStack().stackSize <= 0) {
+					EntityEquipmentSlot slot = entityplayer.getActiveHand() == EnumHand.OFF_HAND ? EntityEquipmentSlot.OFFHAND : EntityEquipmentSlot.MAINHAND;
+					entityplayer.setItemStackToSlot(slot, null);
 				}
 				return true;
 			}
@@ -273,7 +277,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		if (te instanceof TileEntityFactory &&
 				((TileEntityFactory) te).getContainer(entityplayer.inventory) != null) {
 			if (!world.isRemote) {
-				entityplayer.openGui(MineFactoryReloadedCore.instance(), 0, world, x, y, z);
+				entityplayer.openGui(MineFactoryReloadedCore.instance(), 0, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;
 		}
@@ -281,48 +285,15 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return true;
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileEntityFactory) {
-			return ((TileEntityFactory) te).getRedNetOutput(EnumFacing.getOrientation(side));
-		}
-		return 0;
-	}
-
-	@Override
-	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-
-		return isProvidingWeakPower(world, x, y, z, side);
-	}
-
-	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
-
-		return RedNetConnectionType.DecorativeSingle;
-	}
-
-	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, EnumFacing side) {
-
-		return null;
-	}
-
-	@Override
-	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues) {
-
-	}
-
-	@Override
-	public int getOutputValue(World world, int x, int y, int z, EnumFacing side, int subnet) {
-
-		TileEntity te = getTile(world, x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityFactory) {
 			return ((TileEntityFactory) te).getRedNetOutput(side);
 		}
@@ -330,12 +301,45 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue) {
+	public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		TileEntity te = getTile(world, x, y, z);
+		return getWeakPower(state, world, pos, side);
+	}
+
+	@Override
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side) {
+
+		return RedNetConnectionType.DecorativeSingle;
+	}
+
+	@Override
+	public int[] getOutputValues(World world, BlockPos pos, EnumFacing side) {
+
+		return null;
+	}
+
+	@Override
+	public void onInputsChanged(World world, BlockPos pos, EnumFacing side, int[] inputValues) {
+
+	}
+
+	@Override
+	public int getOutputValue(World world, BlockPos pos, EnumFacing side, int subnet) {
+
+		TileEntity te = getTile(world, pos);
+		if (te instanceof TileEntityFactory) {
+			return ((TileEntityFactory) te).getRedNetOutput(side);
+		}
+		return 0;
+	}
+
+	@Override
+	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue) {
+
+		TileEntity te = getTile(world, pos);
 		if (te instanceof TileEntityFactory) {
 			((TileEntityFactory) te).onRedNetChanged(side, inputValue);
-			onNeighborBlockChange(world, x, y, z, MFRThings.rednetCableBlock);
+			neighborChanged(world.getBlockState(pos), world, pos, MFRThings.rednetCableBlock);
 		}
 	}
 }

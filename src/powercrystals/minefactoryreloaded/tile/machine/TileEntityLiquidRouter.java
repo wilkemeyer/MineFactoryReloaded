@@ -241,13 +241,13 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
 	{
 		return false;
 	}

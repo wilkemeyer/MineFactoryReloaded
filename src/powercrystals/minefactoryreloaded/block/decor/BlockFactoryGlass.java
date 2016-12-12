@@ -74,7 +74,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative {
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(EnumFacing side, int meta)
 	{
 		return new IconOverlay(_texture, 8, 8, meta > 15 ? 6 : 7, 7);
 	}
@@ -97,7 +97,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative {
 		return r;
 	}
 
-/*	public IIcon getBlockOverlayTexture(IBlockAccess world, int x, int y, int z, int side)
+/*	public IIcon getBlockOverlayTexture(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		BlockPosition bp;
 		boolean[] sides = new boolean[8];

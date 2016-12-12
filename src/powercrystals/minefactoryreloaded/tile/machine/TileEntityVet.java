@@ -93,7 +93,7 @@ public class TileEntityVet extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public boolean canInsertItem(int slot, ItemStack s, int side)
+	public boolean canInsertItem(int slot, ItemStack s, EnumFacing side)
 	{
 		if (s != null && s.getItem() instanceof ISyringe)
 		{
@@ -104,7 +104,7 @@ public class TileEntityVet extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
 	{
 		ItemStack s = getStackInSlot(slot);
 		if (s != null && s.getItem() instanceof ISyringe)

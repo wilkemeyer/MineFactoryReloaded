@@ -49,7 +49,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 
 	private Random _rand;
 
-	public static boolean canReplaceBlock(Block block, World world, int x, int y, int z) {
+	public static boolean canReplaceBlock(Block block, World world, BlockPos pos) {
 
 		return block == null || block.getBlockHardness(world, x, y, z) == 0 || block.isAir(world, x, y, z);
 	}
@@ -335,13 +335,13 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}

@@ -5,7 +5,7 @@ import java.util.Random;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.util.StatCollector;
 
 public class GrindingDamage extends DamageSource {
@@ -34,7 +34,7 @@ public class GrindingDamage extends DamageSource {
 	}
 
 	@Override
-	public IChatComponent func_151519_b(EntityLivingBase entity) {
+	public ITextComponent func_151519_b(EntityLivingBase entity) {
 
 		EntityLivingBase entityliving1 = entity.func_94060_bK();
 		String s = "death.attack." + this.damageType;

@@ -75,7 +75,7 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public boolean shouldRefresh(Block oldID, Block newID, int oldMeta, int newMeta, World world, int x, int y, int z)
+	public boolean shouldRefresh(Block oldID, Block newID, int oldMeta, int newMeta, World world, BlockPos pos)
 	{
 		return oldID != newID;
 	}
@@ -439,7 +439,7 @@ public class TileEntityConveyor extends TileEntityBase
      * From below/unknown: returns true
      */
     @Override
-	public boolean canInsertItem(int slot, ItemStack stack, int side)
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side)
     {
     	if (!_conveyorActive)
     		return false;
@@ -466,7 +466,7 @@ public class TileEntityConveyor extends TileEntityBase
     }
 
     @Override
-	public boolean canExtractItem(int slot, ItemStack stack, int side)
+	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side)
     {
     	return false;
     }

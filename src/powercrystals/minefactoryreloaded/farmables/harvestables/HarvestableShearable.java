@@ -27,7 +27,7 @@ public class HarvestableShearable extends HarvestableStandard
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (settings.get("silkTouch") == Boolean.TRUE)

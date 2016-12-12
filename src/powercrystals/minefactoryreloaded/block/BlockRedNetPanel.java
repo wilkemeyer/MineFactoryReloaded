@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
@@ -53,7 +54,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+	public void onBlockPlacedBy(World world, BlockPos pos, EntityLivingBase entity, ItemStack stack)
 	{
 		super.onBlockPlacedBy(world, x, y, z, entity, stack);
 		if(entity == null)
@@ -85,7 +86,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public boolean activated(World world, int x, int y, int z, EntityPlayer player, int side)
+	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side)
 	{
 		ItemStack s = player.inventory.getCurrentItem();
 
@@ -112,7 +113,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
@@ -124,31 +125,35 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side)
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isNormalCube()
+	public boolean isNormalCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World var1, int var2)
-	{
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityRedNetHistorian();
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side)
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityFactory)
@@ -159,7 +164,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues)
+	public void onInputsChanged(World world, BlockPos pos, EnumFacing side, int[] inputValues)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof TileEntityRedNetHistorian)
@@ -169,7 +174,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode, 
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue)
+	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue)
 	{
 	}
 

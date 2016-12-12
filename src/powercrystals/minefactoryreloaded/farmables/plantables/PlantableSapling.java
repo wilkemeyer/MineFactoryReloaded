@@ -22,7 +22,7 @@ public class PlantableSapling extends PlantableStandard
 	}
 	
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
 		Block ground = world.getBlock(x, y - 1, z);
 		if(!world.isAirBlock(x, y, z))

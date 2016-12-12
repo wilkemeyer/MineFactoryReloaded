@@ -159,7 +159,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 		leafNodesLength = var4;
 	}
 
-	private void genLeafLayer(int x, int y, int z, final int size) {
+	private void genLeafLayer(BlockPos pos, final int size) {
 
 		int t;
 		final int X = x;
@@ -515,7 +515,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 	}
 
 	@Override
-	public boolean generate(World world, Random par2Random, int x, int y, int z) {
+	public boolean generate(World world, Random par2Random, BlockPos pos) {
 
 		//long time = System.nanoTime();
 		worldObj = world;
@@ -565,7 +565,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 	private TLongObjectHashMap<Chunk> chunkMap;
 
 	@Override
-	public void setBlockAndNotifyAdequately(World world, int x, int y, int z, Block block, int meta) {
+	public void setBlockAndNotifyAdequately(World world, BlockPos pos, Block block, int meta) {
 
 		if ((y < 0) | y > 255)
 			return;

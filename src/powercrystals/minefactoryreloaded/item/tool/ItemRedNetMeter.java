@@ -15,9 +15,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.TextComponentString;
 import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
@@ -41,13 +41,13 @@ public class ItemRedNetMeter extends ItemMulti {
 		player.swingItem();
 		if (player.worldObj.isRemote)
 			return true;
-		player.addChatMessage(new ChatComponentText("ID: " + EntityList.getEntityString(entity)));
+		player.addChatMessage(new TextComponentString("ID: " + EntityList.getEntityString(entity)));
 		return true;
 	}
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-			int x, int y, int z, int hitSide, float hitX, float hitY, float hitZ) {
+			BlockPos pos, int hitSide, float hitX, float hitY, float hitZ) {
 		boolean r = doItemThing(stack, player, world, x, y, z, hitSide, hitX, hitY, hitZ);
 		if (r) // HACK: forge is fucking stupid with this method
 			ServerHelper.sendItemUsePacket(stack, player, world, x, y, z, hitSide, hitX, hitY, hitZ);
@@ -55,19 +55,19 @@ public class ItemRedNetMeter extends ItemMulti {
 	}
 
 	public boolean doItemThing(ItemStack stack, EntityPlayer player, World world,
-			int x, int y, int z, int hitSide, float hitX, float hitY, float hitZ) {
+			BlockPos pos, int hitSide, float hitX, float hitY, float hitZ) {
 		switch (stack.getItemDamage()) {
 		case 2:
 			Block block = world.getBlock(x, y, z);
-			ArrayList<IChatComponent> info = new ArrayList<IChatComponent>();
+			ArrayList<ITextComponent> info = new ArrayList<ITextComponent>();
 			if (player.isSneaking() && block instanceof IBlockDebug) {
 				((IBlockDebug) (block)).debugBlock(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player);
 				return true;
 			} else if (block instanceof IBlockInfo) {
 				if (ServerHelper.isClientWorld(world)) {
-					info.add(new ChatComponentText("-Client-"));
+					info.add(new TextComponentString("-Client-"));
 				} else {
-					info.add(new ChatComponentText("-Server-"));
+					info.add(new TextComponentString("-Server-"));
 				}
 				((IBlockInfo) (block)).getBlockInfo(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player, info, true);
 				for (int i = 0; i < info.size(); i++) {
@@ -95,7 +95,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(x, y, z);
 				return theTile instanceof ITileInfo;
 			}
-			info = new ArrayList<IChatComponent>();
+			info = new ArrayList<ITextComponent>();
 			if (player.isSneaking() && block instanceof IBlockConfigGui) {
 				if (((IBlockConfigGui)block).openConfigGui(world, x, y, z, EnumFacing.VALID_DIRECTIONS[hitSide], player))
 					return true;
@@ -124,7 +124,7 @@ public class ItemRedNetMeter extends ItemMulti {
 			if (ServerHelper.isClientWorld(world)) {
 				return block instanceof IRedNetInfo || block.equals(Blocks.redstone_wire);
 			}
-			info = new ArrayList<IChatComponent>();
+			info = new ArrayList<ITextComponent>();
 			if (block.equals(Blocks.redstone_wire)) {
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
 						.appendText(": " + world.getBlockMetadata(x, y, z)));

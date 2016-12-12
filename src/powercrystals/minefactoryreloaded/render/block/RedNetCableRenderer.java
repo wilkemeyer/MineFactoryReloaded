@@ -170,7 +170,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IS
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
+	public boolean renderWorldBlock(IBlockAccess world, BlockPos pos,
 			Block block, int modelId, RenderBlocks renderer) {
 		TileEntityRedNetCable _cable = (TileEntityRedNetCable)world.getTileEntity(x, y, z);
 
@@ -182,7 +182,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IS
 		return renderCable(world, x, y, z, brightness, _cable);
 	}
 
-	private boolean renderCable(IBlockAccess world, int x, int y, int z, int brightness,
+	private boolean renderCable(IBlockAccess world, BlockPos pos, int brightness,
 			TileEntityRedNetCable _cable)
 	{
 		CCRenderState.reset();
@@ -207,7 +207,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IS
 
 		for (int i = dirs.length; i --> 0; ) {
 			EnumFacing f = dirs[i];
-			int side = f.ordinal();
+			EnumFacing side = f.ordinal();
 			RedNetConnectionType state = _cable.getCachedConnectionState(f);
 			switch (state.flags & 31) {
 			case 11: // isCable, isSingleSubnet

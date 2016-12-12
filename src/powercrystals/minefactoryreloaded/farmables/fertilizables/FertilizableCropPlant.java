@@ -36,7 +36,7 @@ public class FertilizableCropPlant extends FertilizableStandard
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		Block block = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);

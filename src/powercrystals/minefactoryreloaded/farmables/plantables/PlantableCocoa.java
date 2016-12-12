@@ -22,7 +22,7 @@ public class PlantableCocoa extends PlantableStandard
 		super(source, plantedBlock, validMeta);
 		_plantedBlock = new ReplacementBlock(_block) {
 			@Override
-			public int getMeta(World world, int x, int y, int z, ItemStack stack)
+			public int getMeta(World world, BlockPos pos, ItemStack stack)
 			{
 				int meta = 3; // NORTH
 				if (isGoodLog(world, x-1, y, z))
@@ -38,7 +38,7 @@ public class PlantableCocoa extends PlantableStandard
 	}
 
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
 		if (!world.isAirBlock(x, y, z))
 			return false;
@@ -46,7 +46,7 @@ public class PlantableCocoa extends PlantableStandard
 		return isNextToAcceptableLog(world, x, y, z);
 	}
 
-	protected boolean isNextToAcceptableLog(World world, int x, int y, int z)
+	protected boolean isNextToAcceptableLog(World world, BlockPos pos)
 	{
 		return isGoodLog(world, x+1, y, z) ||
 				isGoodLog(world, x-1, y, z) ||
@@ -54,7 +54,7 @@ public class PlantableCocoa extends PlantableStandard
 				isGoodLog(world, x, y, z-1);
 	}
 
-	protected boolean isGoodLog(World world, int x, int y, int z)
+	protected boolean isGoodLog(World world, BlockPos pos)
 	{
 		return world.getBlock(x, y, z).equals(Blocks.log) &&
 				BlockLog.func_150165_c(world.getBlockMetadata(x, y, z)) == 3;

@@ -14,8 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.TextComponentString;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -240,31 +240,31 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		if (debug) {
-			info.add(new ChatComponentText("Grid: " + grid));
+			info.add(new TextComponentString("Grid: " + grid));
 			if (grid != null)
-				info.add(new ChatComponentText(Arrays.toString(grid.getStorage().tanks)));
+				info.add(new TextComponentString(Arrays.toString(grid.getStorage().tanks)));
 		}
 		if (grid == null) {
-			info.add(new ChatComponentText("Null Grid!!"));
+			info.add(new TextComponentString("Null Grid!!"));
 			if (debug)
-				info.add(new ChatComponentText("FluidForGrid: " +
+				info.add(new TextComponentString("FluidForGrid: " +
 						StringHelper.getFluidName(_tank.getFluid(), "") + "@" + _tank.getFluidAmount()));
 			return;
 		}
 		if (grid.getStorage().getFluidAmount() == 0)
-			info.add(new ChatComponentText(MFRUtil.empty()));
+			info.add(new TextComponentString(MFRUtil.empty()));
 		else
-			info.add(new ChatComponentText(MFRUtil.getFluidName(grid.getStorage().getFluid())));
-		info.add(new ChatComponentText((grid.getStorage().getFluidAmount() / (float) grid.getStorage().getCapacity() * 100f) + "%"));
+			info.add(new TextComponentString(MFRUtil.getFluidName(grid.getStorage().getFluid())));
+		info.add(new TextComponentString((grid.getStorage().getFluidAmount() / (float) grid.getStorage().getCapacity() * 100f) + "%"));
 		if (debug) {
-			info.add(new ChatComponentText("Sides: " + Integer.toBinaryString(sides)));
-			info.add(new ChatComponentText(grid.getStorage().getFluidAmount() + " / " + grid.getStorage().getCapacity()));
-			info.add(new ChatComponentText("Size: " + grid.getSize() + " | FluidForGrid: " +
+			info.add(new TextComponentString("Sides: " + Integer.toBinaryString(sides)));
+			info.add(new TextComponentString(grid.getStorage().getFluidAmount() + " / " + grid.getStorage().getCapacity()));
+			info.add(new TextComponentString("Size: " + grid.getSize() + " | FluidForGrid: " +
 					StringHelper.getFluidName(_tank.getFluid(), "") + "@" + _tank.getFluidAmount()));
-			info.add(new ChatComponentText("Length: " + grid.getStorage().length + " | Index: " + grid.getStorage().index +
+			info.add(new TextComponentString("Length: " + grid.getStorage().length + " | Index: " + grid.getStorage().index +
 					" | Reserve: " + grid.getStorage().tanks.length));
 		}
 	}

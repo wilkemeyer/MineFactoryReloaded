@@ -94,7 +94,7 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return itemstack != null && itemstack.getItem() instanceof ItemBlock;
 	}

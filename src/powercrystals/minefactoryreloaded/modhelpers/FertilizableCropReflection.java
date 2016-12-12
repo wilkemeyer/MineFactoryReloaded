@@ -29,13 +29,13 @@ public class FertilizableCropReflection implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return world.getBlockMetadata(x, y, z) < _targetMeta && fertilizerType == FertilizerType.GrowPlant;
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		try
 		{

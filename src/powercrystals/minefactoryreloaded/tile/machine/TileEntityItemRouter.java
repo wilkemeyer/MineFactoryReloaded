@@ -275,7 +275,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return !_routing;
 	}
@@ -287,7 +287,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}

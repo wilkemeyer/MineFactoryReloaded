@@ -29,7 +29,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmoStandard {
 	}
 
 	@Override
-	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, int x, int y, int z, int side, double distance) {
+	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, BlockPos pos, EnumFacing side, double distance) {
 		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.getOrientation(side));
 		bp.moveForwards(1);
 		placeBlockAt(world, bp.x, bp.y, bp.z, distance);
@@ -58,7 +58,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmoStandard {
 		return 1.5F;
 	}
 
-	protected void placeBlockAt(World world, int x, int y, int z, double distance) {
+	protected void placeBlockAt(World world, BlockPos pos, double distance) {
 		Block block = world.getBlock(x, y, z);
 		if (!world.isRemote && (block == null || block.isAir(world, x, y, z) || block.isReplaceable(world, x, y, z))) {
 			world.setBlock(x, y, z, _block, _blockMeta, 3);

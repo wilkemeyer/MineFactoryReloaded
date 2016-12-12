@@ -32,7 +32,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -166,7 +166,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void onNeighborTileChange(int x, int y, int z) {
+	public void onNeighborTileChange(BlockPos pos) {
 
 		if (worldObj.isRemote | deadCache)
 			return;
@@ -205,7 +205,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			addCache(tile, 0);
 	}
 
-	private void addCache(TileEntity tile, int side) {
+	private void addCache(TileEntity tile, EnumFacing side) {
 
 		if (receiverCache != null)
 			receiverCache[side] = null;
@@ -272,7 +272,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 	}
 
-	private boolean checkIC2Tiles(TileEntity tile, int side) {
+	private boolean checkIC2Tiles(TileEntity tile, EnumFacing side) {
 
 		if (!IC2Classes)
 			return false;
@@ -534,7 +534,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		IEnergySource[] sourceCache = null;
 		IEnergySink[] sinkCache = null;
 
-		void erase(int side) {
+		void erase(EnumFacing side) {
 
 			if (sourceCache != null)
 				sourceCache[side] = null;
@@ -542,7 +542,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				sinkCache[side] = null;
 		}
 
-		public boolean add(TileEntity tile, int side) {
+		public boolean add(TileEntity tile, EnumFacing side) {
 
 			boolean r = false;
 			if (tile instanceof IEnergyTile) {
@@ -651,7 +651,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, int side, int subHit) {
+	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
 
 		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 6)) {
 			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
@@ -732,7 +732,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		info.add(text("-Redstone-"));
 		super.getTileInfo(info, side, player, debug && player.isSneaking());

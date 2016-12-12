@@ -18,8 +18,8 @@ public class ItemBlockDetCord extends ItemBlock
 	}
 
 	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
-			int side, float hitX, float hitY, float hitZ, int metadata)
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
+			EnumFacing side, float hitX, float hitY, float hitZ, int metadata)
 	{
 		return false; // temporary
 	}

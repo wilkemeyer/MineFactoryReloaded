@@ -27,7 +27,7 @@ public class BlockFactoryDecoration extends BlockFactory
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(EnumFacing side, int meta)
 	{
 		if (meta > 0)
 			return icons[Math.min(Math.max(meta, 1), 15)];

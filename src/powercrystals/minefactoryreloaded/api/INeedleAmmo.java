@@ -9,7 +9,7 @@ public interface INeedleAmmo {
 
 	public boolean onHitEntity(ItemStack stac, EntityPlayer owner, Entity hit, double distance);
 
-	public void onHitBlock(ItemStack stac, EntityPlayer owner, World world, int x, int y, int z, int side, double distance);
+	public void onHitBlock(ItemStack stac, EntityPlayer owner, World world, BlockPos pos, EnumFacing side, double distance);
 
 	public float getSpread(ItemStack stack);
 

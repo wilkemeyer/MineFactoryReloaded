@@ -25,14 +25,14 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 	private static boolean _regenSewage, _regenSludge, _regenTrees;
 	private static int _sludgeLakeRarity, _sewageLakeRarity;
 
-	public static boolean generateMegaRubberTree(World world, Random random, int x, int y, int z, boolean safe)
+	public static boolean generateMegaRubberTree(World world, Random random, BlockPos pos, boolean safe)
 	{
 		return new WorldGenMassiveTree(false).setTreeScale(4 + (random.nextInt(3)), 0.8f, 0.7f).
 				setLeafAttenuation(0.6f).setSloped(true).setSafe(safe).
 				generate(world, random, x, y, z);
 	}
 
-	public static boolean generateSacredSpringRubberTree(World world, Random random, int x, int y, int z)
+	public static boolean generateSacredSpringRubberTree(World world, Random random, BlockPos pos)
 	{
 		return new WorldGenMassiveTree(false).setTreeScale(6 + (random.nextInt(4)), 1f, 0.9f).
 				setLeafAttenuation(0.35f).setSloped(false).setMinTrunkSize(4).

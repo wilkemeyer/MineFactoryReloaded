@@ -26,7 +26,7 @@ public class FertilizableStandard extends FertilizableBase
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return fertilizerType == validFertilizer;
 	}
@@ -38,7 +38,7 @@ public class FertilizableStandard extends FertilizableBase
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		Block block = world.getBlock(x, y, z);
 		((IGrowable)block).func_149853_b(world, rand, x, y, z);

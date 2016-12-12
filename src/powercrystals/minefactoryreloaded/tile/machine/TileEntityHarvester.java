@@ -239,7 +239,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		return null;
 	}
 
-	private BlockPosition getNextAdjacent(int x, int y, int z, IFactoryHarvestable harvestable) {
+	private BlockPosition getNextAdjacent(BlockPos pos, IFactoryHarvestable harvestable) {
 
 		for (SideOffset side : SideOffset.SIDES) {
 			int X = x + side.offsetX, Y = y + side.offsetY, Z = z + side.offsetX;
@@ -249,7 +249,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		return null;
 	}
 
-	private BlockPosition getNextVertical(int x, int y, int z, int startOffset, IFactoryHarvestable harvestable) {
+	private BlockPosition getNextVertical(BlockPos pos, int startOffset, IFactoryHarvestable harvestable) {
 
 		int highestBlockOffset = -1;
 		int maxBlockOffset = MFRConfig.verticalHarvestSearchMaxVertical.getInt();
@@ -454,13 +454,13 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return slot == 0 && isUsableAugment(itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}

@@ -71,7 +71,7 @@ public class BlockDecorativeStone extends BlockFactory {
 	}
 
 /*	@Override
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		return _icons[Math.min(meta, _icons.length)];
 	}*/

@@ -189,7 +189,7 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z,
+	public boolean renderWorldBlock(IBlockAccess blockAccess, BlockPos pos,
 			Block tile, int modelId, RenderBlocks renderer)
 	{
 		if (renderer.hasOverrideBlockTexture())

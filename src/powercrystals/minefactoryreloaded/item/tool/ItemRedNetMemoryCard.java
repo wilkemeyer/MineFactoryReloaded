@@ -46,7 +46,7 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {

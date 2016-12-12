@@ -7,8 +7,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.RayTraceResult;
+import net.minecraft.util.RayTraceResult.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -41,7 +41,7 @@ public class DefaultUseHandler implements IUseHandler {
 			if (!container.canBeFilledFromWorld()) return bucket;
 			ItemStack bucket2 = bucket.stackSize > 1 ? bucket.copy() : bucket;
 			bucket2.stackSize = 1;
-			MovingObjectPosition objectPosition = ((IUseable)container).rayTrace(world, entity, false);
+			RayTraceResult objectPosition = ((IUseable)container).rayTrace(world, entity, false);
 			if (objectPosition != null && objectPosition.typeOfHit == MovingObjectType.BLOCK) {
 				int x = objectPosition.blockX;
 				int y = objectPosition.blockY;
@@ -75,7 +75,7 @@ public class DefaultUseHandler implements IUseHandler {
 			if (!liquid.getFluid().canBePlacedInWorld()) return bucket;
 			Block block = liquid.getFluid().getBlock();
 			if (!(block instanceof IFluidBlock)) return bucket;
-			MovingObjectPosition objectPosition = ((IUseable)container).rayTrace(world, entity, false);
+			RayTraceResult objectPosition = ((IUseable)container).rayTrace(world, entity, false);
 			if (objectPosition != null && objectPosition.typeOfHit == MovingObjectType.BLOCK) {
 				int x = objectPosition.blockX;
 				int y = objectPosition.blockY;
@@ -100,7 +100,7 @@ public class DefaultUseHandler implements IUseHandler {
 		return bucket;
 	}
 
-	private boolean canEntityAct(World world, EntityLivingBase entity, int x, int y, int z, int side,
+	private boolean canEntityAct(World world, EntityLivingBase entity, BlockPos pos, EnumFacing side,
 			ItemStack item, boolean isPlace) {
 		EntityPlayer player = (entity instanceof EntityPlayer) ? (EntityPlayer)entity : null;
 		return (player == null || (world.canMineBlock(player, x, y, z) &&

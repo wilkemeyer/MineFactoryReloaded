@@ -39,13 +39,13 @@ public class BlockRubberSapling extends BlockSapling implements IRedNetNoConnect
 	}
 
 	@Override
-	public IIcon getIcon(int side, int metadata) {
+	public IIcon getIcon(EnumFacing side, int metadata) {
 
 		return blockIcon;
 	}
 
 	@Override
-	public void func_149878_d(World world, int x, int y, int z, Random rand) {
+	public void func_149878_d(World world, BlockPos pos, Random rand) {
 
 		if (world.isRemote || !TerrainGen.saplingGrowTree(world, rand, x, y, z))
 			return;

@@ -1,18 +1,18 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialTransparent;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -24,7 +24,9 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 
-	public static Material laser = new MaterialTransparent(MapColor.airColor);
+	public static final PropertyDirection FACING = BlockDirectional.FACING;
+
+	public static Material laser = new MaterialTransparent(MapColor.AIR);
 	private static GrindingDamage laserDamage = new GrindingDamage("mfr.laser");
 
 	public BlockFakeLaser() {
@@ -32,18 +34,17 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 		super(laser);
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
-		setBlockBounds(0F, 0F, 0F, 0F, 0F, 0F);
 		setUnlocalizedName("mfr.laserair");
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 
-		return null;
+		return NULL_AABB;
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
 		if (world.isRemote)
 			return;
@@ -60,88 +61,70 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		return 15;
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube() {
+	public boolean isFullCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean isAir(IBlockAccess world, int x, int y, int z) {
+	public boolean isAir(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		return true;
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		world.scheduleBlockUpdate(x, y, z, this, 1);
+		world.scheduleBlockUpdate(pos, this, 1, 1);
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block id) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 
-		world.scheduleBlockUpdate(x, y, z, this, 1);
+		world.scheduleBlockUpdate(pos, this, 1, 1);
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) {
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
 		if (world.isRemote) return;
 
-		int meta = world.getBlockMetadata(x, y, z);
-		l: if (meta != 0) {
-			EnumFacing dir = EnumFacing.getOrientation(meta - 1);
-			if (world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).equals(this))
-				if (world.getBlockMetadata(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == meta)
+		EnumFacing facing = state.getValue(FACING);
+		l: if (facing != EnumFacing.DOWN) {
+			IBlockState neighborState = world.getBlockState(pos.offset(facing));
+			if (neighborState.getBlock().equals(this))
+				if (neighborState.getValue(FACING) == facing)
 					return;
 				else
 					break l;
-			TileEntity te = world.getTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-			if (te instanceof IFactoryLaserSource && ((IFactoryLaserSource) te).canFormBeamFrom(dir))
+			TileEntity te = world.getTileEntity(pos.offset(facing));
+			if (te instanceof IFactoryLaserSource && ((IFactoryLaserSource) te).canFormBeamFrom(facing))
 				return;
-			world.setBlockMetadataWithNotify(x, y, z, 0, 0);
+			state.withProperty(FACING, EnumFacing.DOWN);
 		}
 
-		Block upperId = world.getBlock(x, y + 1, z);
-		if (!upperId.equals(this) && !(world.getTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill)) {
-			world.setBlockToAir(x, y, z);
+		Block upperBlock = world.getBlockState(pos.up()).getBlock();
+		if (!upperBlock.equals(this) && !(world.getTileEntity(pos.up()) instanceof TileEntityLaserDrill)) {
+			world.setBlockToAir(pos);
 			return;
 		}
 
-		Block lowerId = world.getBlock(x, y - 1, z);
-		if ((!lowerId.equals(this) || world.getBlockMetadata(x, y - 1, z) != 0) &&
-				TileEntityLaserDrill.canReplaceBlock(lowerId, world, x, y - 1, z)) {
-			world.setBlock(x, y - 1, z, this);
+		Block lowerBlock = world.getBlockState(pos.down()).getBlock();
+		if ((!lowerBlock.equals(this) || world.getBlockState(pos.down()).getValue(FACING) != EnumFacing.DOWN) &&
+				TileEntityLaserDrill.canReplaceBlock(lowerBlock, world, pos.down())) {
+			world.setBlockState(pos.down(), this.getDefaultState());
 		}
-	}
-
-	@Override
-	public boolean canRenderInPass(int pass) {
-
-		return false;
-	}
-
-	@Override
-	public int getRenderType() {
-
-		return -1;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
 	}
 }

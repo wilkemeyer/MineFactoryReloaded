@@ -41,7 +41,7 @@ public interface IFactoryPlantable {
 	 *
 	 * @return The block that will be placed into the world.
 	 */
-	public ReplacementBlock getPlantedBlock(World world, int x, int y, int z, ItemStack stack);
+	public ReplacementBlock getPlantedBlock(World world, BlockPos pos, ItemStack stack);
 
 	/**
 	 * @param world
@@ -57,7 +57,7 @@ public interface IFactoryPlantable {
 	 *
 	 * @return True if this plantable can be placed at the provided coordinates.
 	 */
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack);
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack);
 
 	/**
 	 * Called before planting is performed. Used to till soil, for example.
@@ -73,7 +73,7 @@ public interface IFactoryPlantable {
 	 * @param stack
 	 *            The stack being planted.
 	 */
-	public void prePlant(World world, int x, int y, int z, ItemStack stack);
+	public void prePlant(World world, BlockPos pos, ItemStack stack);
 
 	/**
 	 * Called after planting is performed. Usually empty.
@@ -89,6 +89,6 @@ public interface IFactoryPlantable {
 	 * @param stack
 	 *            The stack being planted.
 	 */
-	public void postPlant(World world, int x, int y, int z, ItemStack stack);
+	public void postPlant(World world, BlockPos pos, ItemStack stack);
 
 }

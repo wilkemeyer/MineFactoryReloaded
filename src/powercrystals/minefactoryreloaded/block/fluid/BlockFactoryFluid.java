@@ -240,7 +240,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		return side <= 1 ? _iconStill : _iconFlowing;
 	}

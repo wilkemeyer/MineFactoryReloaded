@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.RayTraceResult;
+import net.minecraft.util.RayTraceResult.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
@@ -27,7 +27,7 @@ public class ItemStraw extends ItemFactoryTool {
 	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
 
 		if (!world.isRemote) {
-			MovingObjectPosition mop = getMovingObjectPositionFromPlayer(world, player, true);
+			RayTraceResult mop = getMovingObjectPositionFromPlayer(world, player, true);
 			Map<String, ILiquidDrinkHandler> map = MFRRegistry.getLiquidDrinkHandlers();
 			if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
 				int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
@@ -80,7 +80,7 @@ public class ItemStraw extends ItemFactoryTool {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 
-		MovingObjectPosition mop = getMovingObjectPositionFromPlayer(world, player, true);
+		RayTraceResult mop = getMovingObjectPositionFromPlayer(world, player, true);
 		Map<String, ?> map = MFRRegistry.getLiquidDrinkHandlers();
 		if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
 			int x = mop.blockX, y = mop.blockY, z = mop.blockZ;

@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.api.rednet.connectivity;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
@@ -16,11 +17,9 @@ public interface IRedNetConnection
 	 * see IRedNetInputNode, IRedNetOutputNode, and IRedNetOmniNode
 	 * 
 	 * @param world The world this block is in.
-	 * @param x This block's X coordinate.
-	 * @param y This block's Y coordinate.
-	 * @param z This block's Z coordinate.
+	 * @param pos This block's position.
 	 * @param side The side that connection information is required for.
 	 * @return The connection type.
 	 */
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side);
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side);
 }

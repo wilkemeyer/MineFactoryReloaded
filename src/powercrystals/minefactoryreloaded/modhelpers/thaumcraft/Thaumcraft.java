@@ -109,7 +109,7 @@ public class Thaumcraft {
 			MFRRegistry.registerHarvestable(new HarvestableStandard(tcPod) {
 
 				@Override
-				public boolean canBeHarvested(World world, java.util.Map<String, Boolean> settings, int x, int y, int z) {
+				public boolean canBeHarvested(World world, java.util.Map<String, Boolean> settings, BlockPos pos) {
 
 					if (settings.get("isHarvestingTree") == Boolean.TRUE)
 						return true;
@@ -121,7 +121,7 @@ public class Thaumcraft {
 			MFRRegistry.registerPlantable(new PlantableStandard(tcBean, tcPod) {
 
 				@Override
-				public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack) {
+				public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack) {
 
 					if (!world.isAirBlock(x, y, z))
 						return false;
@@ -129,7 +129,7 @@ public class Thaumcraft {
 					return isNextToAcceptableLog(world, x, y, z);
 				}
 
-				protected boolean isNextToAcceptableLog(World world, int x, int y, int z) {
+				protected boolean isNextToAcceptableLog(World world, BlockPos pos) {
 
 					boolean isMagic = false;
 					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
@@ -138,14 +138,14 @@ public class Thaumcraft {
 					return isMagic && isGoodLog(world, x, y + 1, z);
 				}
 
-				protected boolean isGoodLog(World world, int x, int y, int z) {
+				protected boolean isGoodLog(World world, BlockPos pos) {
 
 					Block id = world.getBlock(x, y, z);
 					return id == tcLog || id.equals(Blocks.log);
 				}
 
 				@Override
-				public void postPlant(World world, int x, int y, int z, ItemStack stack) {
+				public void postPlant(World world, BlockPos pos, ItemStack stack) {
 
 					NBTTagList aspects = stack.stackTagCompound.getTagList("Aspects", 10);
 					// System.out.println("Aspect_count:"+aspects.tagCount()); //should be one but who knows
@@ -174,7 +174,7 @@ public class Thaumcraft {
 			MFRRegistry.registerFruit(new FactoryFruitStandard(tcPod) {
 
 				@Override
-				public boolean canBePicked(World world, int x, int y, int z) {
+				public boolean canBePicked(World world, BlockPos pos) {
 
 					int blockMetadata = world.getBlockMetadata(x, y, z);
 					return blockMetadata >= 7;
@@ -184,7 +184,7 @@ public class Thaumcraft {
 			MFRRegistry.registerFertilizable(new FertilizableCropPlant(tcPod, FertilizerType.GrowMagicalCrop, 6) {
 
 				@Override
-				public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType) {
+				public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType) {
 
 					int meta = world.getBlockMetadata(x, y, z);
 					meta += rand.nextInt(3);
@@ -210,7 +210,7 @@ public class Thaumcraft {
 			MFRRegistry.registerPlantable(new PlantableCocoa(tcBean, tcPod) {
 
 				@Override
-				protected boolean isNextToAcceptableLog(World world, int x, int y, int z) {
+				protected boolean isNextToAcceptableLog(World world, BlockPos pos) {
 
 					boolean isMagic = false;
 					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
@@ -224,7 +224,7 @@ public class Thaumcraft {
 				}
 
 				@Override
-				protected boolean isGoodLog(World world, int x, int y, int z) {
+				protected boolean isGoodLog(World world, BlockPos pos) {
 
 					Block id = world.getBlock(x, y, z);
 					return id == tcLog || id.equals(Blocks.log);

@@ -38,12 +38,12 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	}
 
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return fertilizerType != FertilizerType.Grass && canFert(world, x, y, z);
 	}
 
-	private boolean canFert(World world, int x, int y, int z)
+	private boolean canFert(World world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te == null || !(te instanceof ICropTile))
@@ -54,7 +54,7 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
 		tec.setNutrientStorage(100);
@@ -75,18 +75,18 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	}
 
 	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		return canHarvest(world, x, y, z);
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
 		return canHarvest(world, x, y, z);
 	}
 
-	private boolean canHarvest(World world, int x, int y, int z)
+	private boolean canHarvest(World world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te == null || !(te instanceof ICropTile))
@@ -114,7 +114,7 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		getDrops(drops, world, rand, x, y, z);
@@ -122,14 +122,14 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		getDrops(drops, world, rand, x, y, z);
 		return drops;
 	}
 
-	private void getDrops(List<ItemStack> drops, World world, Random rand, int x, int y, int z)
+	private void getDrops(List<ItemStack> drops, World world, Random rand, BlockPos pos)
 	{
 		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
 		CropCard crop;
@@ -175,28 +175,28 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	}
 
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return EmptyReplacement.INSTANCE;
 	}
 
 	@Override
-	public void preHarvest(World world, int x, int y, int z)
+	public void preHarvest(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z)
+	public void postHarvest(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void prePick(World world, int x, int y, int z)
+	public void prePick(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void postPick(World world, int x, int y, int z)
+	public void postPick(World world, BlockPos pos)
 	{
 	}
 }

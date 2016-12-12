@@ -141,20 +141,20 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 
 	@Override public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer){}
 
-	private int max(int a, Block block, IBlockAccess blockAccess, int x, int y, int z)
+	private int max(int a, Block block, IBlockAccess blockAccess, BlockPos pos)
 	{
 		if (((a >> 4) & 15) == 15)
 			return a;
 		return Math.max(a, block.getMixedBrightnessForBlock(blockAccess, x, y, z));
 	}
 
-	private boolean isBlock(IBlockAccess blockAccess, int x, int y, int z, Block block)
+	private boolean isBlock(IBlockAccess blockAccess, BlockPos pos, Block block)
 	{
 		return blockAccess.getBlock(x, y, z) == block;
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	public boolean renderWorldBlock(IBlockAccess blockAccess, BlockPos pos, Block block, int modelId, RenderBlocks renderer)
 	{
 		if (renderer.hasOverrideBlockTexture())
 		{ // usually: block is being broken

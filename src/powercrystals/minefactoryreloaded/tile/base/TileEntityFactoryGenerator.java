@@ -113,12 +113,12 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 		return EnergyHelper.isEnergyContainerItem(itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 		return _inventory[0] != null && EnergyHelper.insertEnergyIntoContainer(_inventory[0], 2, true) < 2;
 	}
 
@@ -132,7 +132,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public void onNeighborTileChange(int x, int y, int z) {
+	public void onNeighborTileChange(BlockPos pos) {
 		TileEntity tile = worldObj.getTileEntity(x, y, z);
 
 		if (x < xCoord)
@@ -149,7 +149,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 			addCache(tile, 0);
 	}
 
-	private void addCache(TileEntity tile, int side) {
+	private void addCache(TileEntity tile, EnumFacing side) {
 		if (receiverCache != null)
 			receiverCache[side] = null;
 

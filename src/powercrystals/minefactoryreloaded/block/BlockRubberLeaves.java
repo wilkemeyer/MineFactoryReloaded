@@ -53,13 +53,13 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return getIcon(side, world.getBlockMetadata(x, y, z));
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(EnumFacing side, int meta)
 	{
 		meta %= 4; // bits 3 and 4 are state flags
 		// using mod instead of bitand to preserve sign just incase something is passing us a negative value
@@ -79,7 +79,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess iba, int x, int y, int z)
+	public int colorMultiplier(IBlockAccess iba, BlockPos pos)
 	{
 		int meta = iba.getBlockMetadata(x, y, z) & 3;
 		int r = 0;
@@ -105,7 +105,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return Blocks.leaves.isOpaqueCube();
 	}
@@ -125,7 +125,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
-	public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune)
+	public void dropBlockAsItemWithChance(World world, BlockPos pos, int meta, float chance, int fortune)
 	{
 		if (updating.get() != null)
 			return;
@@ -133,7 +133,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, BlockPos pos, int meta, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		if ((meta & 4) != 0)
@@ -152,7 +152,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand)
+	public void updateTick(World world, BlockPos pos, Random rand)
 	{
 		if (world.isRemote)
 			return;
@@ -196,7 +196,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block id, int meta)
+	public void breakBlock(World world, BlockPos pos, Block id, int meta)
 	{
 		if (updating.get() != null)
 		{
@@ -224,14 +224,14 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, EnumFacing face)
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) * 2 + 1);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side)
+	public boolean shouldSideBeRendered(IBlockAccess iba, BlockPos pos, EnumFacing side)
 	{
 		boolean cube = isOpaqueCube();
 		if (cube && iba.getBlock(x, y, z) == this)

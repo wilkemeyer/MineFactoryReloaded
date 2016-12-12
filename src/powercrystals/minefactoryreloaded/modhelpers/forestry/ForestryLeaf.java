@@ -45,7 +45,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IFruitBearer)
@@ -57,13 +57,13 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	}
 
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return !canBePicked(world, x, y, z);
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IFruitBearer)
@@ -76,18 +76,18 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	}
 
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return repl;
 	}
 
 	@Override
-	public void prePick(World world, int x, int y, int z)
+	public void prePick(World world, BlockPos pos)
 	{
 	}
 
 	@Override // HARVESTER
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
 		ITree tree = getTree(world, x, y, z);
 		if (tree == null)
@@ -123,18 +123,18 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	}
 
 	@Substitutable(value="mod:Forestry@[4.0,)", method="getSaplingsOld")
-	private static ITree[] getSaplings(ITree tree, World world, int x, int y, int z, float modifier) {
+	private static ITree[] getSaplings(ITree tree, World world, BlockPos pos, float modifier) {
 		return tree.getSaplings(world, null, x, y, z, modifier);
 	}
 
 	@Strippable("")
 	@SuppressWarnings("deprecation")
-	private static ITree[] getSaplingsOld(ITree tree, World world, int x, int y, int z, float modifier) {
+	private static ITree[] getSaplingsOld(ITree tree, World world, BlockPos pos, float modifier) {
 		return tree.getSaplings(world, x, y, z, modifier);
 	}
 
 	@Override // FRUIT PICKER
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		ITree tree = getTree(world, x, y, z);
 		if (tree == null)
@@ -145,7 +145,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		return prod;
 	}
 
-	private ITree getTree(World world, int x, int y, int z)
+	private ITree getTree(World world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IPollinatable) {
@@ -156,7 +156,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		return null;
 	}
 
-	private void getFruits(World world, int x, int y, int z, ITree tree, ArrayList<ItemStack> prod)
+	private void getFruits(World world, BlockPos pos, ITree tree, ArrayList<ItemStack> prod)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IFruitBearer)
@@ -172,7 +172,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 	}
 
 	@Override
-	public void postPick(World world, int x, int y, int z)
+	public void postPick(World world, BlockPos pos)
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof IFruitBearer)

@@ -9,8 +9,8 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.RayTraceResult;
+import net.minecraft.util.RayTraceResult.MovingObjectType;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
@@ -48,7 +48,7 @@ public class EntitySafariNet extends EntityThrowable {
 		dataWatcher.updateObject(13, s);
 	}
 
-	protected boolean onHitBlock(ItemStack storedEntity, MovingObjectPosition mop) {
+	protected boolean onHitBlock(ItemStack storedEntity, RayTraceResult mop) {
 
 		if (ItemSafariNet.isEmpty(storedEntity)) {
 			dropAsStack(storedEntity);
@@ -63,7 +63,7 @@ public class EntitySafariNet extends EntityThrowable {
 		return true;
 	}
 
-	protected boolean onHitEntity(ItemStack storedEntity, MovingObjectPosition mop) {
+	protected boolean onHitEntity(ItemStack storedEntity, RayTraceResult mop) {
 
 		if (ItemSafariNet.isEmpty(storedEntity) && mop.entityHit instanceof EntityLivingBase) {
 			ItemSafariNet.captureEntity(storedEntity, (EntityLivingBase) mop.entityHit);
@@ -95,18 +95,18 @@ public class EntitySafariNet extends EntityThrowable {
 		return true;
 	}
 
-	protected void impact(double x, double y, double z, int side) {
+	protected void impact(double x, double y, double z, EnumFacing side) {
 
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop) {
+	protected void onImpact(RayTraceResult mop) {
 
 		ItemStack storedEntity = dataWatcher.getWatchableObjectItemStack(13);
 
 		boolean r = false;
 		double x, y, z;
-		int side;
+		EnumFacing side;
 		if (mop.typeOfHit == MovingObjectType.ENTITY) {
 			r = onHitEntity(storedEntity, mop);
 			x = mop.entityHit.posX;

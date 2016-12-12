@@ -37,7 +37,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.RayTraceResult;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -539,7 +539,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			if (entity.canBeCollidedWith()) {
 				double entitySize = entity.getCollisionBorderSize();
 				AxisAlignedBB axisalignedbb = entity.boundingBox.expand(entitySize, entitySize, entitySize);
-				MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(playerPos, playerLookRel);
+				RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(playerPos, playerLookRel);
 
 				if (axisalignedbb.isVecInside(playerPos)) {
 					if (0.0D < entityDistTotal || entityDistTotal == 0.0D) {

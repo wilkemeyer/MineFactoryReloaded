@@ -9,10 +9,10 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.TextComponentString;
 import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.RayTraceResult;
+import net.minecraft.util.RayTraceResult.MovingObjectType;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -25,11 +25,11 @@ public class ItemSpyglass extends ItemFactoryTool {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		if (world.isRemote) {
-			MovingObjectPosition mop = rayTrace();
+			RayTraceResult mop = rayTrace();
 			if (mop == null || (mop.typeOfHit == MovingObjectType.ENTITY && mop.entityHit == null)) {
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.spyglass.nosight"));
 			} else if(mop.typeOfHit == MovingObjectType.ENTITY) {
-				player.addChatMessage(new ChatComponentText("")
+				player.addChatMessage(new TextComponentString("")
 						.appendText(StatCollector
 								.translateToLocalFormatted("chat.info.mfr.spyglass.hitentity",
 										getEntityName(mop.entityHit),
@@ -43,7 +43,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 					tempStack = new ItemStack(block, 1, world.getBlockMetadata(mop.blockX, mop.blockY,
 							mop.blockZ));
 				if (tempStack.getItem() != null) {
-					player.addChatMessage(new ChatComponentText("")
+					player.addChatMessage(new TextComponentString("")
 							.appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitblock",
 											tempStack.getDisplayName(),
@@ -51,7 +51,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 											world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ),
 											(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				} else {
-					player.addChatMessage(new ChatComponentText("")
+					player.addChatMessage(new TextComponentString("")
 							.appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitunknown",
 										(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
@@ -67,18 +67,18 @@ public class ItemSpyglass extends ItemFactoryTool {
 		return name != null ? StatCollector.translateToLocal("entity." + name + ".name") : "Unknown Entity";
 	}
 
-	private MovingObjectPosition rayTrace() {
+	private RayTraceResult rayTrace() {
 		if (Minecraft.getMinecraft().renderViewEntity == null || Minecraft.getMinecraft().theWorld == null) {
 			return null;
 		}
 
 		double range = MFRConfig.spyglassRange.getInt();
-		MovingObjectPosition objHit = Minecraft.getMinecraft().renderViewEntity.rayTrace(range, 1.0F);
+		RayTraceResult objHit = Minecraft.getMinecraft().renderViewEntity.rayTrace(range, 1.0F);
 		double blockDist = range;
 		Vec3 playerPos = Minecraft.getMinecraft().renderViewEntity.getPosition(1.0F);
 
 		if (objHit != null) {
-			if (objHit.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
+			if (objHit.typeOfHit == RayTraceResult.MovingObjectType.MISS) {
 				objHit = null;
 			} else {
 				blockDist = objHit.hitVec.distanceTo(playerPos);
@@ -99,7 +99,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 			if (entity.canBeCollidedWith()) {
 				double entitySize = entity.getCollisionBorderSize();
 				AxisAlignedBB axisalignedbb = entity.boundingBox.expand(entitySize, entitySize, entitySize);
-				MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(playerPos, playerLookRel);
+				RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(playerPos, playerLookRel);
 
 				if (axisalignedbb.isVecInside(playerPos)) {
 					if (0.0D < entityDistTotal || entityDistTotal == 0.0D) {
@@ -118,7 +118,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 		}
 
 		if (pointedEntity != null && (entityDistTotal < blockDist || objHit == null)) {
-			objHit = new MovingObjectPosition(pointedEntity);
+			objHit = new RayTraceResult(pointedEntity);
 		}
 		return objHit;
 	}

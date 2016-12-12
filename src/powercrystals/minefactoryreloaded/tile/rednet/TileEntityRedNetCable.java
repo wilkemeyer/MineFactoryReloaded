@@ -25,7 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.EnumFacing;
 
@@ -449,7 +449,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		if (!debug) {
 			info.add(text(getRedNetInfo(side, player)));
@@ -479,7 +479,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		return (MFRUtil.COLORS[getSideColor(side) & 15] << 8) | 0xFF;
 	}
 
-	public boolean toggleSide(int side) {
+	public boolean toggleSide(EnumFacing side) {
 
 		boolean oldMode = (_cableMode[side] & 1) == 1;
 		boolean removed = false;
@@ -500,14 +500,14 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		return oldMode;
 	}
 
-	public byte getMode(int side) {
+	public byte getMode(EnumFacing side) {
 
 		if (side == 6)
 			return _cableMode[side];
 		return (byte) (_cableMode[side] >> 1);
 	}
 
-	public void setMode(int side, byte mode) {
+	public void setMode(EnumFacing side, byte mode) {
 
 		boolean mustUpdate;
 		if (side != 6) {
@@ -692,7 +692,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		return _sideColors[side.ordinal()];
 	}
 
-	public boolean isSolidOnSide(int side) {
+	public boolean isSolidOnSide(EnumFacing side) {
 
 		if (_cableMode[6] == 1)
 			return false;

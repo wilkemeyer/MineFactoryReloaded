@@ -31,7 +31,7 @@ public class BlockFactoryPlastic extends BlockFactory {
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		if (side < 2 & meta == 2) {
 			--meta;

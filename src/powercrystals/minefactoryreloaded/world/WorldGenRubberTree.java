@@ -43,7 +43,7 @@ public class WorldGenRubberTree extends WorldGenerator {
 		return true;
 	}
 
-	public boolean growTree(World world, Random rand, int x, int y, int z) {
+	public boolean growTree(World world, Random rand, BlockPos pos) {
 
 		int treeHeight = rand.nextInt(3) + 5, worldHeight = world.getHeight();
 		Block block;
@@ -153,7 +153,7 @@ public class WorldGenRubberTree extends WorldGenerator {
 	}
 
 	@Override
-	protected void func_150515_a(World world, int x, int y, int z, Block block) {
+	protected void func_150515_a(World world, BlockPos pos, Block block) {
 
 		this.setBlockAndNotifyAdequately(world, x, y, z, block, 0);
 	}
@@ -162,7 +162,7 @@ public class WorldGenRubberTree extends WorldGenerator {
 	 * Local override provided to ensure immunity to ASM that may destructively interfere with our data
 	 */
 	@Override
-	protected void setBlockAndNotifyAdequately(World world, int x, int y, int z, Block block, int meta) {
+	protected void setBlockAndNotifyAdequately(World world, BlockPos pos, Block block, int meta) {
 
 		final int flag;
 		if (this.doBlockNotify) {

@@ -24,13 +24,13 @@ public class FertilizableChococraft implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return fertilizerType == FertilizerType.GrowPlant && world.getBlockMetadata(x, y, z) <= 4;
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		world.setBlockMetadataWithNotify(x, y, z, 4, 2);
 		return true;

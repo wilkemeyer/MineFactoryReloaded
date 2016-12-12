@@ -11,7 +11,7 @@ public class HarvestableWood extends HarvestableStandard
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z)
+	public void postHarvest(World world, BlockPos pos)
 	{
 		Block id = getPlant();
 
@@ -23,7 +23,7 @@ public class HarvestableWood extends HarvestableStandard
 		notifyBlock(world, x, y + 1, z, id);
 	}
 
-	protected void notifyBlock(World world, int x, int y, int z, Block id)
+	protected void notifyBlock(World world, BlockPos pos, Block id)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (!block.isLeaves(world, x, y, z))

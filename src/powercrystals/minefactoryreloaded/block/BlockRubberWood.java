@@ -55,7 +55,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, BlockPos pos, int metadata, int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 
@@ -68,13 +68,13 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, EnumFacing face)
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
 	}
 
 	@Override
-	public int getFlammability(IBlockAccess world, int x, int y, int z, EnumFacing face)
+	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return super.getFlammability(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
 	}

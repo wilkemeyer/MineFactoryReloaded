@@ -19,7 +19,7 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 public class MFRGUIHandler implements IGuiHandler
 {
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, BlockPos pos)
 	{
 		if(ID == 0)
 		{
@@ -53,7 +53,7 @@ public class MFRGUIHandler implements IGuiHandler
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, BlockPos pos)
 	{
 		if(ID == 0)
 		{

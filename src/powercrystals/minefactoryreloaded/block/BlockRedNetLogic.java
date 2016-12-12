@@ -7,13 +7,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -41,7 +42,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, EntityLivingBase entity, ItemStack stack) {
 
 		if (entity != null) {
 			TileEntity te = getTile(world, x, y, z);
@@ -54,8 +55,12 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public boolean hasTileEntity() {
+		return true;
+	}
 
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityRedNetLogic();
 	}
 
@@ -66,7 +71,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null && side.ordinal() > 1 && side.ordinal() < 6) {
@@ -78,7 +83,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public int getOutputValue(World world, int x, int y, int z, EnumFacing side, int subnet) {
+	public int getOutputValue(World world, BlockPos pos, EnumFacing side, int subnet) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null) {
@@ -89,7 +94,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public int[] getOutputValues(World world, int x, int y, int z, EnumFacing side) {
+	public int[] getOutputValues(World world, BlockPos pos, EnumFacing side) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null) {
@@ -100,7 +105,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public void onInputsChanged(World world, int x, int y, int z, EnumFacing side, int[] inputValues) {
+	public void onInputsChanged(World world, BlockPos pos, EnumFacing side, int[] inputValues) {
 
 		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
 		if (logic != null) {
@@ -109,12 +114,12 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public void onInputChanged(World world, int x, int y, int z, EnumFacing side, int inputValue) {
+	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue) {
 
 	}
 
 	@Override
-	public boolean activated(World world, int x, int y, int z, EntityPlayer player, int side) {
+	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 
 		if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
 			if (rotateBlock(world, x, y, z, EnumFacing.getOrientation(side))) {
@@ -159,20 +164,20 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return side.ordinal() <= 1 || side.ordinal() >= 6 || world.getBlockMetadata(x, y, z) != _sideRemap[side.ordinal() - 2];
 	}
 
 	@Override
-	public void getRedNetInfo(IBlockAccess world, int x, int y, int z, EnumFacing side,
-			EntityPlayer player, List<IChatComponent> info) {
+	public void getRedNetInfo(IBlockAccess world, BlockPos pos, EnumFacing side,
+			EntityPlayer player, List<ITextComponent> info) {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof TileEntityRedNetLogic) {

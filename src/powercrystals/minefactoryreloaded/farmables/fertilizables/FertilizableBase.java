@@ -31,7 +31,7 @@ public abstract class FertilizableBase implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return fertilizerType == validFertilizer && canFertilize(world.getBlockMetadata(x, y, z));
 	}
@@ -39,5 +39,5 @@ public abstract class FertilizableBase implements IFactoryFertilizable
 	protected abstract boolean canFertilize(int metadata);
 
 	@Override
-	public abstract boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType);
+	public abstract boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType);
 }

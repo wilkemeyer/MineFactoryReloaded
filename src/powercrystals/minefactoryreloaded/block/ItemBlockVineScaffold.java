@@ -19,7 +19,7 @@ public class ItemBlockVineScaffold extends ItemBlock
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-			int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
+			BlockPos pos, EnumFacing side, float xOffset, float yOffset, float zOffset)
 	{
 		if (world.isRemote && !player.isSneaking() &&
 				world.getBlock(x, y, z).equals(MFRThings.vineScaffoldBlock))
@@ -33,7 +33,7 @@ public class ItemBlockVineScaffold extends ItemBlock
 
     @Override
 	@SideOnly(Side.CLIENT)
-    public boolean func_150936_a(World world, int x, int y, int z, int side,
+    public boolean func_150936_a(World world, BlockPos pos, EnumFacing side,
     		EntityPlayer player, ItemStack stack)
     {
     	return (player.isSneaking() ||

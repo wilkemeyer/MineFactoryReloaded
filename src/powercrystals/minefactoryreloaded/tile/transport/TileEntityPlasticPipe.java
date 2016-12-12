@@ -25,7 +25,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITextComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -158,7 +158,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void onNeighborTileChange(int x, int y, int z) {
+	public void onNeighborTileChange(BlockPos pos) {
 
 		if (worldObj.isRemote | deadCache)
 			return;
@@ -197,7 +197,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			addCache(tile, 0);
 	}
 
-	private void addCache(TileEntity tile, int side) {
+	private void addCache(TileEntity tile, EnumFacing side) {
 
 		if (handlerCache != null)
 			handlerCache[side] = null;
@@ -284,7 +284,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		return fluidForGrid == te.fluidForGrid || FluidHelper.isFluidEqualOrNull(fluidForGrid, te.fluidForGrid);
 	}
 
-	private void mergeWith(TileEntityPlasticPipe te, int side) {
+	private void mergeWith(TileEntityPlasticPipe te, EnumFacing side) {
 
 		if (_grid != null && te._grid != null && couldInterface(te)) {
 			te._grid.mergeGrid(_grid);
@@ -349,12 +349,12 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		sideMode = modes;
 	}
 
-	public byte getMode(int side) {
+	public byte getMode(EnumFacing side) {
 
 		return (byte) (sideMode[EnumFacing.OPPOSITES[side]] & 3);
 	}
 
-	public void setMode(int side, byte mode) {
+	public void setMode(EnumFacing side, byte mode) {
 
 		side = EnumFacing.OPPOSITES[side];
 		mode &= 3;
@@ -713,7 +713,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void getTileInfo(List<IChatComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
+	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		if (_grid != null) {
 			info.add(text("Powered: " + isPowered));

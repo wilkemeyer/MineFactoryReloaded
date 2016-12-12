@@ -4,13 +4,16 @@ import cofh.lib.util.position.BlockPosition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraft.util.math.BlockPos;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
+import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -125,13 +128,13 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 			return;
 		}
 		stripTick = 20;
-		BlockPosition bp = new BlockPosition(this);
-		bp.orientation = getDirectionFacing();
-		bp.moveForwards(1);
-		if (set == worldObj.getBlock(bp.x, bp.y, bp.z).equals(MFRThings.fakeLaserBlock))
-			worldObj.setBlock(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, bp.orientation.getOpposite().ordinal() + 1, 3);
+
+		EnumFacing facing = getDirectionFacing();
+		BlockPos laserPos = pos.offset(facing);
+		if (set == worldObj.getBlockState(laserPos).getBlock().equals(MFRThings.fakeLaserBlock))
+			worldObj.setBlockState(laserPos, MFRThings.fakeLaserBlock.getDefaultState().withProperty(BlockFakeLaser.FACING, facing.getOpposite()), 3);
 		else if (set)
-			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, 1);
+			worldObj.scheduleBlockUpdate(laserPos, MFRThings.fakeLaserBlock, 1, 1);
 	}
 
 	@Override

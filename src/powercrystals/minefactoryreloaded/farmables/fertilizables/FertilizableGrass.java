@@ -20,7 +20,7 @@ public class FertilizableGrass implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		return (fertilizerType == FertilizerType.GrowPlant ||
 				fertilizerType == FertilizerType.Grass) &&
@@ -28,7 +28,7 @@ public class FertilizableGrass implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		((IGrowable)world.getBlock(x, y, z)).func_149853_b(world, rand, x, y, z);
 		return !world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z);

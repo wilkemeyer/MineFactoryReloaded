@@ -16,7 +16,7 @@ public class EmptyReplacement extends ReplacementBlock
 	}
 
 	@Override
-	public boolean replaceBlock(World world, int x, int y, int z, ItemStack stack) {
+	public boolean replaceBlock(World world, BlockPos pos, ItemStack stack) {
 		return true;
 	}
 }

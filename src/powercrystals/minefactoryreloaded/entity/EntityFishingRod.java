@@ -12,7 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.FishingHooks;
@@ -132,7 +132,7 @@ public class EntityFishingRod extends EntityThrowable {
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition movingobjectposition) { }
+	protected void onImpact(RayTraceResult movingobjectposition) { }
 
 	// TODO: override moveEntity, handle water movement
 

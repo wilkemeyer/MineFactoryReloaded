@@ -51,7 +51,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, Entity entity) {
 
 		float shrinkAmount = 1f / 45f;
 		if (entity.boundingBox.minY >= y + (1f - shrinkAmount) ||
@@ -71,7 +71,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, BlockPos pos) {
 
 		float shrinkAmount = 0.125F;
 		return AxisAlignedBB.getBoundingBox(x + this.minX + shrinkAmount, y + this.minY,
@@ -89,19 +89,19 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		return side < 2 ? _topIcon : _sideIcon;
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube() {
+	public boolean isFullCube(IBlockState state) {
 
 		return false;
 	}
@@ -114,7 +114,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean shouldSideBeRendered(IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return !world.getBlock(x, y, z).isOpaqueCube();
 	}
@@ -128,7 +128,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+	public int colorMultiplier(IBlockAccess world, BlockPos pos) {
 
 		int r = 0;
 		int g = 0;
@@ -147,7 +147,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset,
+	public boolean onBlockActivated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, float xOffset,
 			float yOffset, float zOffset) {
 
 		ItemStack ci = player.inventory.mainInventory[player.inventory.currentItem];
@@ -174,13 +174,13 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+	public boolean canPlaceBlockAt(World world, BlockPos pos) {
 
 		return canBlockStay(world, x, y, z);
 	}
 
 	@Override
-	public boolean canBlockStay(World world, int x, int y, int z) {
+	public boolean canBlockStay(World world, BlockPos pos) {
 
 		if (world.isSideSolid(x, y - 1, z, EnumFacing.UP)) {
 			return true;
@@ -201,13 +201,13 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) {
+	public void updateTick(World world, BlockPos pos, Random rand) {
 
 		onNeighborBlockChange(world, x, y, z, null);
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public void onNeighborBlockChange(World world, BlockPos pos, Block block) {
 
 		if (!canBlockStay(world, x, y, z)) {
 			for (int e = world.getActualHeight(); y < e; ++y) {
@@ -232,7 +232,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return side == EnumFacing.UP || side == EnumFacing.DOWN;
 	}

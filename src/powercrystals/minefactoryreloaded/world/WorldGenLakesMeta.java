@@ -22,7 +22,7 @@ public class WorldGenLakesMeta extends WorldGenerator
 	}
 	
 	@Override
-	public boolean generate(World world, Random random, int x, int y, int z)
+	public boolean generate(World world, Random random, BlockPos pos)
 	{
 		x -= 8;
 		

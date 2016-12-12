@@ -21,7 +21,7 @@ import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
 import java.util.List;
 
-public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityProvider {
+public class BlockTank extends BlockFactory implements IBlockInfo {
 
 /*
 	protected IIcon[] icons = new IIcon[3];
@@ -83,7 +83,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 
 /*
 	@Override
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		if (side == 0)
 			return icons[0];
@@ -94,7 +94,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	}
 
 	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		int meta = 0;
 		if (side == 6 || side == 7) {
@@ -129,7 +129,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	}
 
 	@Override
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+	public int colorMultiplier(IBlockAccess world, BlockPos pos) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityTank) {
@@ -150,7 +150,13 @@ public class BlockTank extends BlockFactory implements IBlockInfo, ITileEntityPr
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+	public boolean hasTileEntity(IBlockState state) {
+
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 
 		return new TileEntityTank();
 	}

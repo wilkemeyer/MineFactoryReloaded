@@ -80,7 +80,7 @@ public class PlantableStandard implements IFactoryPlantable
 	}
 
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
 		if (!world.isAirBlock(x, y, z))
 			return false;
@@ -92,19 +92,19 @@ public class PlantableStandard implements IFactoryPlantable
 	}
 
 	@Override
-	public void prePlant(World world, int x, int y, int z, ItemStack stack)
+	public void prePlant(World world, BlockPos pos, ItemStack stack)
 	{
 		return;
 	}
 
 	@Override
-	public void postPlant(World world, int x, int y, int z, ItemStack stack)
+	public void postPlant(World world, BlockPos pos, ItemStack stack)
 	{
 		return;
 	}
 
 	@Override
-	public ReplacementBlock getPlantedBlock(World world, int x, int y, int z, ItemStack stack)
+	public ReplacementBlock getPlantedBlock(World world, BlockPos pos, ItemStack stack)
 	{
 		return _plantedBlock;
 	}

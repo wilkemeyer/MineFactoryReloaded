@@ -75,7 +75,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	public boolean renderWorldBlock(IBlockAccess world, BlockPos pos, Block block, int modelId, RenderBlocks renderer)
 	{
 		if (renderer.hasOverrideBlockTexture())
 		{
@@ -106,7 +106,7 @@ public class ConveyorRenderer implements ISimpleBlockRenderingHandler
 	private float vert1z, vert2z, vert3z, vert4z;
 	private float vert1y, vert2y, vert3y, vert4y;
 
-	private void renderConveyorWorld(IBlockAccess world, int x, int y, int z, Block block)
+	private void renderConveyorWorld(IBlockAccess world, BlockPos pos, Block block)
 	{
 		Tessellator tessellator = Tessellator.instance;
 		int color = block.colorMultiplier(world, x, y, z);

@@ -3,10 +3,10 @@ package powercrystals.minefactoryreloaded.item.tool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.TextComponentString;
 import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.RayTraceResult;
+import net.minecraft.util.RayTraceResult.MovingObjectType;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -18,7 +18,7 @@ public class ItemRuler extends ItemFactoryTool {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		if (world.isRemote) {
-			MovingObjectPosition mop = player.rayTrace(MFRConfig.spyglassRange.getInt(), 1.0F);
+			RayTraceResult mop = player.rayTrace(MFRConfig.spyglassRange.getInt(), 1.0F);
 			if (mop == null || (mop.typeOfHit == MovingObjectType.ENTITY && mop.entityHit == null)) {
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.ruler.nosight"));
 			} else if (mop.typeOfHit == MovingObjectType.ENTITY) {
@@ -45,16 +45,16 @@ public class ItemRuler extends ItemFactoryTool {
 					double distAll = Math.sqrt(Math.pow(distX, 2) +
 							Math.pow(distY, 2) + Math.pow(distZ, 2));
 
-					player.addChatMessage(new ChatComponentText("X: ").appendText(StatCollector
+					player.addChatMessage(new TextComponentString("X: ").appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distX, distX + 1)));
-					player.addChatMessage(new ChatComponentText("Y: ").appendText(StatCollector
+					player.addChatMessage(new TextComponentString("Y: ").appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distY, distY + 1)));
-					player.addChatMessage(new ChatComponentText("Z: ").appendText(StatCollector
+					player.addChatMessage(new TextComponentString("Z: ").appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distZ, distZ + 1)));
-					player.addChatMessage(new ChatComponentText("")
+					player.addChatMessage(new TextComponentString("")
 							.appendText(StatCollector
 									.translateToLocalFormatted("chat.info.mfr.ruler.total",
 											distAll)));

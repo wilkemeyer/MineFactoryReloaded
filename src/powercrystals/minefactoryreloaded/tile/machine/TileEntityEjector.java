@@ -162,13 +162,13 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}

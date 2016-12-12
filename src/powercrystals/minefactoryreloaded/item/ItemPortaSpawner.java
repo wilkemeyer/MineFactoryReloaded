@@ -82,7 +82,7 @@ public class ItemPortaSpawner extends ItemFactory {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
@@ -109,7 +109,7 @@ public class ItemPortaSpawner extends ItemFactory {
 		}
 	}
 
-	private boolean placeBlock(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+	private boolean placeBlock(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		Block block = world.getBlock(x, y, z);
@@ -160,7 +160,7 @@ public class ItemPortaSpawner extends ItemFactory {
 		}
 	}
 
-	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata) {
+	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int metadata) {
 
 		// TODO: record and read the block that was consumed
 		if (!world.setBlock(x, y, z, _block, metadata, 3)) {

@@ -20,7 +20,7 @@ public class HarvestableShrub extends HarvestableStandard {
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z) {
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos) {
 
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 
@@ -57,7 +57,7 @@ public class HarvestableShrub extends HarvestableStandard {
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z) {
+	public void postHarvest(World world, BlockPos pos) {
 
 		super.postHarvest(world, x, y, z);
 		if (getPlant() == Blocks.double_plant) {

@@ -401,7 +401,7 @@ public class Machine {
 		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 
-	public IIcon getIcon(int side, boolean isActive) {
+	public IIcon getIcon(EnumFacing side, boolean isActive) {
 
 		return (isActive ? _iconsActive : _iconsIdle)[side];
 	}

@@ -50,24 +50,24 @@ public class HarvestableStandard implements IFactoryHarvestable
 	}
 
 	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 
 	@Override
-	public void preHarvest(World world, int x, int y, int z)
+	public void preHarvest(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z)
+	public void postHarvest(World world, BlockPos pos)
 	{
 		world.notifyBlocksOfNeighborChange(x, y, z, getPlant());
 	}

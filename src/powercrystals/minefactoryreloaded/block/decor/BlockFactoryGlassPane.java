@@ -62,7 +62,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, EnumFacing side, int colour)
+	public boolean recolourBlock(World world, BlockPos pos, EnumFacing side, int colour)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
 		if (meta != colour)
@@ -73,7 +73,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(EnumFacing side, int meta)
 	{
 		meta /= 16;
 		switch (meta)
@@ -89,7 +89,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	}
 
 	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
 		boolean[] sides = new boolean[8];

@@ -218,7 +218,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		}
 	}
 
-	public int getRotatedSide(int side) {
+	public int getRotatedSide(EnumFacing side) {
 
 		return _textureSelection[_forwardDirection.ordinal()][side];
 	}

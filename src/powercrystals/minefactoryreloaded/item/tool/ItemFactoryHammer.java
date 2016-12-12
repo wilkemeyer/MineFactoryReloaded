@@ -34,7 +34,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-			int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+			BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
 
 		Block block = world.getBlock(x, y, z);
 		if (block != null) {
@@ -72,29 +72,29 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	}
 
 	@Override
-	public boolean isUsable(ItemStack item, EntityLivingBase user, int x, int y, int z) {
+	public boolean isUsable(ItemStack item, EntityLivingBase user, BlockPos pos) {
 
 		return true;
 	}
 
 	@Override
-	public void toolUsed(ItemStack item, EntityLivingBase user, int x, int y, int z) {
+	public void toolUsed(ItemStack item, EntityLivingBase user, BlockPos pos) {
 
 	}
 
 	//@Override
-	public boolean canWrench(EntityPlayer player, int x, int y, int z) {
+	public boolean canWrench(EntityPlayer player, BlockPos pos) {
 
 		return true;
 	}
 
 	//@Override
-	public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
+	public void wrenchUsed(EntityPlayer player, BlockPos pos) {
 
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
+	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player) {
 
 		return true;
 	}
@@ -135,7 +135,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	}
 
 	@Override
-	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
+	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
 
 		Block block = player.worldObj.getBlock(x, y, z);
 		if (block.getBlockHardness(player.worldObj, x, y, z) > 2.9f) {

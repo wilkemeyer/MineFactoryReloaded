@@ -47,9 +47,9 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		markChunkDirty();
 	}
 
-	protected final IChatComponent text(String str)
+	protected final ITextComponent text(String str)
 	{
-		return new ChatComponentText(str);
+		return new TextComponentString(str);
 	}
 
 	public void markChunkDirty()

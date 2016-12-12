@@ -35,7 +35,7 @@ public abstract class UtilInventory
 	 *
 	 * @return Map<EnumFacing, IItemDuct> specifying all found pipes and their directions.
 	 */
-	public static Map<EnumFacing, IItemDuct> findConduits(World world, int x, int y, int z)
+	public static Map<EnumFacing, IItemDuct> findConduits(World world, BlockPos pos)
 	{
 		return findConduits(world, x, y, z, EnumFacing.VALID_DIRECTIONS);
 	}
@@ -45,7 +45,7 @@ public abstract class UtilInventory
 	 *
 	 * @return Map<EnumFacing, IItemDuct> specifying all found pipes and their directions.
 	 */
-	public static Map<EnumFacing, IItemDuct> findConduits(World world, int x, int y, int z,
+	public static Map<EnumFacing, IItemDuct> findConduits(World world, BlockPos pos,
 			EnumFacing[] directionstocheck)
 	{
 		Map<EnumFacing, IItemDuct> pipes = new LinkedHashMap<EnumFacing, IItemDuct>();
@@ -69,7 +69,7 @@ public abstract class UtilInventory
 	 * @return Map<EnumFacing, IPipeTile> specifying all found pipes and their directions.
 	 */
 	@Strippable(pipeClass)
-	public static Map<EnumFacing, IPipeTile> findPipes(World world, int x, int y, int z)
+	public static Map<EnumFacing, IPipeTile> findPipes(World world, BlockPos pos)
 	{
 		return findPipes(world, x, y, z, EnumFacing.VALID_DIRECTIONS);
 	}
@@ -80,7 +80,7 @@ public abstract class UtilInventory
 	 * @return Map<EnumFacing, IPipeTile> specifying all found pipes and their directions.
 	 */
 	@Strippable(pipeClass)
-	public static Map<EnumFacing, IPipeTile> findPipes(World world, int x, int y, int z,
+	public static Map<EnumFacing, IPipeTile> findPipes(World world, BlockPos pos,
 			EnumFacing[] directionstocheck)
 	{
 		Map<EnumFacing, IPipeTile> pipes = new LinkedHashMap<EnumFacing, IPipeTile>();
@@ -270,7 +270,7 @@ public abstract class UtilInventory
 		return stack;
 	}
 
-	public static boolean isAirDrop(World world, int x, int y, int z)
+	public static boolean isAirDrop(World world, BlockPos pos)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (block.isAir(world, x, y, z))

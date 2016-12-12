@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityFlyingItem extends EntitySafariNet {
@@ -51,7 +51,7 @@ public class EntityFlyingItem extends EntitySafariNet {
 	}
 
 	@Override
-	protected boolean onHitBlock(ItemStack storedEntity, MovingObjectPosition mop) {
+	protected boolean onHitBlock(ItemStack storedEntity, RayTraceResult mop) {
 
 		if (canBePickedUp == 0 && (pickupChance > 0 && (pickupChance == 1 || worldObj.rand.nextInt(pickupChance) == 0))) {
 			dropAsStack(this.getStoredEntity());
@@ -61,7 +61,7 @@ public class EntityFlyingItem extends EntitySafariNet {
 	}
 
 	@Override
-	protected boolean onHitEntity(ItemStack storedEntity, MovingObjectPosition mop) {
+	protected boolean onHitEntity(ItemStack storedEntity, RayTraceResult mop) {
 
 		DamageSource d = DamageSource.causeThrownDamage(this, getThrower() == null ? this : getThrower());
 		if (mop.entityHit.attackEntityFrom(d, damage)) {
@@ -78,7 +78,7 @@ public class EntityFlyingItem extends EntitySafariNet {
 	}
 
 	@Override
-	protected void impact(double x, double y, double z, int side) {
+	protected void impact(double x, double y, double z, EnumFacing side) {
 		ItemStack stack = dataWatcher.getWatchableObjectItemStack(13);
 		String impact;
 		if (stack == null)

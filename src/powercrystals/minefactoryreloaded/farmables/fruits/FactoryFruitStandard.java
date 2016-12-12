@@ -47,7 +47,7 @@ public abstract class FactoryFruitStandard implements IFactoryFruit
 	}
 	
 	@Override
-	public abstract boolean canBePicked(World world, int x, int y, int z);
+	public abstract boolean canBePicked(World world, BlockPos pos);
 
 	@Override
 	public boolean breakBlock()
@@ -56,24 +56,24 @@ public abstract class FactoryFruitStandard implements IFactoryFruit
 	}
 	
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return replBlock;
 	}
 	
 	@Override
-	public void prePick(World world, int x, int y, int z)
+	public void prePick(World world, BlockPos pos)
 	{
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
 	}
 	
 	@Override
-	public void postPick(World world, int x, int y, int z)
+	public void postPick(World world, BlockPos pos)
 	{
 	}
 }

@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
 
 import static codechicken.nei.NEIClientConfig.world;
 
-public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITileEntityProvider {
+public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 
 /*
 	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
@@ -151,7 +151,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+	public boolean addDestroyEffects(World world, BlockPos pos, int meta, EffectRenderer effectRenderer) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 
@@ -178,7 +178,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, EnumFacing side, int colour) {
+	public boolean recolourBlock(World world, BlockPos pos, EnumFacing side, int colour) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 
@@ -200,7 +200,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
+	public int colorMultiplier(IBlockAccess world, BlockPos pos) {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 		int dyeColor = 16;
@@ -213,7 +213,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(EnumFacing side, int meta) {
 
 		if (renderPass == 1)
 			switch (meta) {
@@ -229,7 +229,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		int meta = 0;
 		if (renderPass == 1) {
@@ -543,7 +543,13 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public boolean hasTileEntity(IBlockState state) {
+
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 
 		return new TileEntityConveyor();
 	}
@@ -585,7 +591,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ITi
 
 	// IRedNetOmniNode
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side) {
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side) {
 
 		return RedNetConnectionType.PlateSingle;
 	}

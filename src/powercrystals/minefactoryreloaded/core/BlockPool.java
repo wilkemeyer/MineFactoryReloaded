@@ -12,7 +12,7 @@ public class BlockPool
 		public BlockNode next;
 		public BlockNode prev;
 		BlockPool pool;
-		public BlockNode(BlockPool pool, int x, int y, int z)
+		public BlockNode(BlockPool pool, BlockPos pos)
 		{
 			reset(x, y, z);
 			this.pool = pool;
@@ -94,7 +94,7 @@ public class BlockPool
 		this(true);
 	}
 
-	public static BlockNode getNext(int x, int y, int z)
+	public static BlockNode getNext(BlockPos pos)
 	{
 		BlockNode r;
 		synchronized (pool)

@@ -151,7 +151,7 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	public boolean renderWorldBlock(IBlockAccess world, BlockPos pos, Block block, int modelId, RenderBlocks renderer)
 	{
 		return false;
 	}

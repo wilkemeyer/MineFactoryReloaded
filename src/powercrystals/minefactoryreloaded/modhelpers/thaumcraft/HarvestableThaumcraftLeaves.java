@@ -24,7 +24,7 @@ public class HarvestableThaumcraftLeaves extends HarvestableTreeLeaves
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		if(harvesterSettings.get("silkTouch") != null && harvesterSettings.get("silkTouch"))
 		{

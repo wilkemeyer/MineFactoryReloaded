@@ -190,7 +190,7 @@ public class ItemSafariNet extends ItemFactory {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
@@ -204,7 +204,7 @@ public class ItemSafariNet extends ItemFactory {
 		}
 	}
 
-	public static Entity releaseEntity(ItemStack itemstack, World world, int x, int y, int z, int side) {
+	public static Entity releaseEntity(ItemStack itemstack, World world, BlockPos pos, EnumFacing side) {
 
 		if (world.isRemote) {
 			return null;
@@ -251,7 +251,7 @@ public class ItemSafariNet extends ItemFactory {
 		return spawnedCreature;
 	}
 
-	private static Entity spawnCreature(World world, NBTTagCompound mobTag, double x, double y, double z, int side) {
+	private static Entity spawnCreature(World world, NBTTagCompound mobTag, double x, double y, double z, EnumFacing side) {
 
 		Entity e;
 		if (mobTag.getBoolean("hide")) {

@@ -42,7 +42,7 @@ public class PlantableSoil extends PlantableStandard
 	}
 
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
 		if (!world.isAirBlock(x, y, z))
 			if (FluidHelper.lookupFluidForBlock(world.getBlock(x, y, z)) == FluidHelper.WATER_FLUID) {

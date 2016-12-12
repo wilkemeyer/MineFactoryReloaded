@@ -516,10 +516,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
+	public int[] getSlotsForFace(EnumFacing side) {
 
-		int start = getStartInventorySide(EnumFacing.getOrientation(side));
-		int size = getSizeInventorySide(EnumFacing.getOrientation(side));
+		int start = getStartInventorySide(side);
+		int size = getSizeInventorySide(side);
 
 		int[] slots = new int[size];
 		for (int i = 0; i < size; i++) {
@@ -539,18 +539,18 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return itemstack == null || this.isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return true;
 	}
 
-	public int getComparatorOutput(int side) {
+	public int getComparatorOutput() {
 
 		IFluidTank[] tanks = getTanks();
 		IFluidTank tank = null;
@@ -564,15 +564,13 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				tankPercent = ((float) tank.getFluid().amount) / tank.getCapacity();
 			}
 		}
-		int[] accSlots = getAccessibleSlotsFromSide(side);
-		if (accSlots.length > 0) {
+		if (_inventory.length > 0) {
 			hasInventory = true;
-			int[] slots = accSlots;
 			int len = 0;
 			float ret = 0;
-			for (int i = slots.length; i-- > 0;) {
-				if (canInsertItem(slots[i], null, side)) {
-					ItemStack stack = getStackInSlot(slots[i]);
+			for (int slot = _inventory.length; slot-- > 0;) {
+				if (canInsertItem(slot, null, null)) {
+					ItemStack stack = getStackInSlot(slot);
 					if (stack != null) {
 						float maxStack = Math.min(stack.getMaxStackSize(), getInventoryStackLimit());
 						ret += Math.max(Math.min(stack.stackSize / maxStack, 1), 0);

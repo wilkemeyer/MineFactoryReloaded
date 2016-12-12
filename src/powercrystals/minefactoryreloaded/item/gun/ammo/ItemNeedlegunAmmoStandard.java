@@ -51,7 +51,7 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo {
 	}
 
 	@Override
-	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, int x, int y, int z, int side, double distance) {
+	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, BlockPos pos, EnumFacing side, double distance) {
 	}
 
 	@Override

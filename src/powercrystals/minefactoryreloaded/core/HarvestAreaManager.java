@@ -65,7 +65,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return String.format("%s-> %s:%s:%s:%s", _owner, _upgradeLevel, _usesBlocks, _upgradeVertical, _upgradeModifier);
 	}
 
-	public void setOriginOffset(int x, int y, int z)
+	public void setOriginOffset(BlockPos pos)
 	{
 		_originOffsetX = x;
 		_originOffsetY = y;

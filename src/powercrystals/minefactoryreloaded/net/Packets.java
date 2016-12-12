@@ -22,7 +22,7 @@ public final class Packets
 	{
 		MineFactoryReloadedCore.networkWrapper.sendToServer(message);
 	}
-	public static void sendToAllPlayersWatching(World world, int x, int y, int z, Packet packet)
+	public static void sendToAllPlayersWatching(World world, BlockPos pos, Packet packet)
 	{
 		if (packet == null)
 			return;
@@ -36,7 +36,7 @@ public final class Packets
 				watcher.sendToAllPlayersWatchingChunk(packet);
 		}
 	}
-	public static void sendToAllPlayersInRange(World world, int x, int y, int z, int range, Packet packet)
+	public static void sendToAllPlayersInRange(World world, BlockPos pos, int range, Packet packet)
 	{
 		if (packet == null)
 			return;

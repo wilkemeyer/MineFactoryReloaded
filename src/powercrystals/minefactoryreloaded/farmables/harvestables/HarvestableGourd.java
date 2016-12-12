@@ -16,7 +16,7 @@ public class HarvestableGourd extends HarvestableStandard
 	}
 
 	@Override
-	public void postHarvest(net.minecraft.world.World world, int x, int y, int z)
+	public void postHarvest(net.minecraft.world.World world, BlockPos pos)
 	{
 		Block ground = world.getBlock(x, y - 1, z);
 		if (world.isAirBlock(x, y, z) &&

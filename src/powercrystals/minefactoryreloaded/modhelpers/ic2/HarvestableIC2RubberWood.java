@@ -22,7 +22,7 @@ public class HarvestableIC2RubberWood extends HarvestableWood
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		List<ItemStack> drops = super.getDrops(world, rand, harvesterSettings, x, y, z);
 		int md = world.getBlockMetadata(x, y, z);

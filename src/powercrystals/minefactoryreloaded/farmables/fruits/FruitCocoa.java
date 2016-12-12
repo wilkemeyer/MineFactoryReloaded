@@ -10,7 +10,7 @@ public class FruitCocoa extends FactoryFruitStandard
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
 		int blockMetadata = world.getBlockMetadata(x, y, z);
 		return ((blockMetadata & 12) >> 2) >= 2;

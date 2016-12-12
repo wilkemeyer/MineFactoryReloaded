@@ -45,7 +45,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, int x, int y, int z, EnumFacing direction, IPlantable plantable)
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		if (direction != EnumFacing.UP)
 			return false;
@@ -72,7 +72,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
 	{
 		if (world.getBlock(x, y + 1, z).getMaterial().isSolid())
 		{
@@ -85,13 +85,13 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, BlockPos pos)
 	{
 		return AxisAlignedBB.getBoundingBox(x + 0, y + 0, z + 0, x + 1, y + 1, z + 1);
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta,
+	public boolean onBlockActivated(World world, BlockPos pos, EntityPlayer player, int meta,
 			float hitX, float hitY, float hitZ)
 	{
 		if (!func_149851_a(world, x, y, z, world.isRemote))
@@ -116,18 +116,18 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean isFertile(World world, int x, int y, int z)
+	public boolean isFertile(World world, BlockPos pos)
 	{
 		return world.getBlockMetadata(x, y, z) > 0;
 	}
 
-	protected void alterMetadata(World world, int x, int y, int z, int d)
+	protected void alterMetadata(World world, BlockPos pos, int d)
 	{
 		world.setBlockMetadataWithNotify(x, y, z, Math.min(15, Math.max(0, world.getBlockMetadata(x, y, z) + d)), 6);
 	}
 
 	@Override
-	public void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ)
+	public void onPlantGrow(World world, BlockPos pos, int sourceX, int sourceY, int sourceZ)
 	{
 		if (!isFertile(world, x, y, z))
 			world.setBlock(x, y, z, Blocks.sand);
@@ -137,7 +137,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 
 	@SuppressWarnings("unused")
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+	public void onNeighborBlockChange(World world, BlockPos pos, Block block)
 	{
 		super.onNeighborBlockChange(world, x, y, z, block);
 		if (true) return; // TODO: if neighborChange becomes sided, remove
@@ -158,10 +158,10 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) { ; }
+	public void updateTick(World world, BlockPos pos, Random rand) { ; }
 
 	@Override
-	public void onFallenUpon(World world, int x, int y, int z, Entity ent, float distance)
+	public void onFallenUpon(World world, BlockPos pos, Entity ent, float distance)
 	{
 		if (distance > 10)
 		{
@@ -188,19 +188,19 @@ public class BlockFertileSoil extends Block implements IGrowable
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta)
+	public IIcon getIcon(EnumFacing side, int meta)
 	{
 		return side == 1 ? blockIcon : Blocks.dirt.getIcon(side, 2);
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side)
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return side != EnumFacing.UP;
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, BlockPos pos, int metadata, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
@@ -212,31 +212,31 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean func_149851_a(World world, int x, int y, int z, boolean worthlessBoolean)
+	public boolean func_149851_a(World world, BlockPos pos, boolean worthlessBoolean)
 	{ // canFertilize
 		return world.getBlockMetadata(x, y, z) < 15;
 	}
 
 	@Override
-	public boolean func_149852_a(World world, Random rand, int x, int y, int z)
+	public boolean func_149852_a(World world, Random rand, BlockPos pos)
 	{ // shouldFertilize
 		return world.getBlockMetadata(x, y, z) < 15 && rand.nextInt(3) == 0;
 	}
 
 	@Override
-	public void func_149853_b(World world, Random rand, int x, int y, int z)
+	public void func_149853_b(World world, Random rand, BlockPos pos)
 	{ // fertilize
 		alterMetadata(world, x, y, z, 1 + (int)(rand.nextFloat() * 1.5f));
 	}

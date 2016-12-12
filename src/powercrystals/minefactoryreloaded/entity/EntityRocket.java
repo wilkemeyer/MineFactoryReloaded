@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.RayTraceResult;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -89,7 +89,7 @@ public class EntityRocket extends Entity
 		{
 			Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
 			Vec3 nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-			MovingObjectPosition hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
+			RayTraceResult hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
 			pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
 			nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			
@@ -112,7 +112,7 @@ public class EntityRocket extends Entity
 				if((e != owner | _ticksAlive > 5) && e.canBeCollidedWith())
 				{
 					AxisAlignedBB entitybb = e.boundingBox.expand(collisionRange, collisionRange, collisionRange);
-					MovingObjectPosition entityHitPos = entitybb.calculateIntercept(pos, nextPos);
+					RayTraceResult entityHitPos = entitybb.calculateIntercept(pos, nextPos);
 					
 					if(entityHitPos != null)
 					{
@@ -129,7 +129,7 @@ public class EntityRocket extends Entity
 			
 			if(entityHit != null)
 			{
-				hit = new MovingObjectPosition(entityHit);
+				hit = new RayTraceResult(entityHit);
 			}
 			
 			if(hit != null && hit.entityHit != null && hit.entityHit instanceof EntityPlayer)

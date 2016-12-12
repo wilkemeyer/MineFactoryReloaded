@@ -15,7 +15,7 @@ public class FertilizableNetherWart extends FertilizableBase
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		world.setBlockMetadataWithNotify(x, y, z, 3, 2);
 		return true;

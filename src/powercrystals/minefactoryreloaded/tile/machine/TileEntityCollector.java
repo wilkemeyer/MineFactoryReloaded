@@ -64,7 +64,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	}
 
 	@Override
-	public int getComparatorOutput(int side)
+	public int getComparatorOutput(EnumFacing side)
 	{
 		return failedDrops != null ? 15 : 0;
 	}

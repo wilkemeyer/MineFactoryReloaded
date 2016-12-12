@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.RayTraceResult;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -135,7 +135,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 		++ticksInAir;
 		Vec3 pos = Vec3.createVectorHelper(posX, posY, posZ);
 		Vec3 nextPos = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
-		MovingObjectPosition hit = worldObj.func_147447_a(pos, nextPos, false, true, false);
+		RayTraceResult hit = worldObj.func_147447_a(pos, nextPos, false, true, false);
 		pos = Vec3.createVectorHelper(posX, posY, posZ);
 		nextPos = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
@@ -155,7 +155,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 
 			if ((e != owner | ticksInAir >= 2) && e.canBeCollidedWith()) {
 				AxisAlignedBB entitybb = e.boundingBox.expand(collisionRange, collisionRange, collisionRange);
-				MovingObjectPosition entityHitPos = entitybb.calculateIntercept(pos, nextPos);
+				RayTraceResult entityHitPos = entitybb.calculateIntercept(pos, nextPos);
 
 				if (entityHitPos != null) {
 					double range = pos.distanceTo(entityHitPos.hitVec);
@@ -169,7 +169,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 		}
 
 		if (entityHit != null) {
-			hit = new MovingObjectPosition(entityHit);
+			hit = new RayTraceResult(entityHit);
 		}
 
 		if (hit != null && hit.entityHit != null && hit.entityHit instanceof EntityPlayer) {

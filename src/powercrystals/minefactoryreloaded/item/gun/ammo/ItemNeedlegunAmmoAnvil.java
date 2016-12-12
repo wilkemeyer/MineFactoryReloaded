@@ -18,7 +18,7 @@ public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock {
 	}
 
 	@Override
-	protected void placeBlockAt(World world, int x, int y, int z, double distance) {
+	protected void placeBlockAt(World world, BlockPos pos, double distance) {
 		if (!world.isRemote) {
 	        EntityFallingBlock anvil = new EntityFallingBlock(world, x + 0.5, y + 0.5, z + 0.5,
 	        		_block, _blockMeta);

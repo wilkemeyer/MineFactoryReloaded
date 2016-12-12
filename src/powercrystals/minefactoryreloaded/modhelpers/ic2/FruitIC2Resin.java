@@ -26,7 +26,7 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 		this._resin = resin;
 		_repl = new ReplacementBlock(_rubberWood) {
 			@Override
-			protected int getMeta(World world, int x, int y, int z, ItemStack stack)
+			protected int getMeta(World world, BlockPos pos, ItemStack stack)
 			{
 				return world.getBlockMetadata(x, y, z) + 6;
 			}
@@ -40,7 +40,7 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 	}
 
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		if (fertilizerType == FertilizerType.Grass)
 			return false;
@@ -50,14 +50,14 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		final int meta = world.getBlockMetadata(x, y, z);
 		return world.setBlockMetadataWithNotify(x, y, z, meta - 6, 2);
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
 		Block blockID = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
@@ -71,19 +71,19 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 	}
 
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return _repl;
 	}
 
 	@Override
-	public void prePick(World world, int x, int y, int z)
+	public void prePick(World world, BlockPos pos)
 	{
 
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 		ItemStack a = _resin.copy();
@@ -93,7 +93,7 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 	}
 
 	@Override
-	public void postPick(World world, int x, int y, int z)
+	public void postPick(World world, BlockPos pos)
 	{
 
 	}

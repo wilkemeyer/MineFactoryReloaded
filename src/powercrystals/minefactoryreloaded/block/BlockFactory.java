@@ -411,7 +411,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public RedNetConnectionType getConnectionType(World world, int x, int y, int z, EnumFacing side)
+	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side)
 	{
 		if (providesPower)
 			return RedNetConnectionType.DecorativeSingle;

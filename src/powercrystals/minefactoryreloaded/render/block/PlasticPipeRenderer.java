@@ -98,7 +98,7 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 	private EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
+	public boolean renderWorldBlock(IBlockAccess world, BlockPos pos,
 			Block block, int modelId, RenderBlocks renderer) {
 		CCRenderState.reset();
 		CCRenderState.useNormals = true;
@@ -119,7 +119,7 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 			EnumFacing f = dirs[i];
 			if (_cable.isInterfacing(f))
 			{
-				int side = f.ordinal();
+				EnumFacing side = f.ordinal();
 				switch (_cable.interfaceMode(f)) {
 				case 2: // cable
 					cable[side].render(uvt);

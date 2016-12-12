@@ -254,7 +254,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		int row = slot / 5;
 		int column = slot % 5;
@@ -270,7 +270,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		int row = slot / 5;
 		int column = slot % 5;

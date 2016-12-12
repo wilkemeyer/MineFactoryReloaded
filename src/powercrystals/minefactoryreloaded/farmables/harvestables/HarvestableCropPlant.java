@@ -11,7 +11,7 @@ public class HarvestableCropPlant extends HarvestableStandard
 	}
 
 	@Override
-	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> settings, int x, int y, int z)
+	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> settings, BlockPos pos)
 	{
 		return world.getBlockMetadata(x, y, z) >= _targetMeta;
 	}

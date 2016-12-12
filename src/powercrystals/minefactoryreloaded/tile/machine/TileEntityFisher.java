@@ -128,7 +128,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		_isJammed = false;
 	}
 
-	protected boolean isFisher(int x, int y, int z) {
+	protected boolean isFisher(BlockPos pos) {
 
 		if (y == yCoord - 1 && !(x == xCoord && z == zCoord)) {
 			if (worldObj.getBlockMetadata(x, yCoord, z) == _machine.getMeta() &&
@@ -138,7 +138,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		return false;
 	}
 
-	protected boolean isValidBlock(int x, int y, int z) {
+	protected boolean isValidBlock(BlockPos pos) {
 
 		if (!worldObj.blockExists(x, y, z) || isFisher(x, y, z))
 			return false;
