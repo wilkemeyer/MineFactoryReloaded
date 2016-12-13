@@ -8,14 +8,20 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -27,29 +33,42 @@ import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
+import javax.annotation.Nullable;
+
 public class BlockFertileSoil extends Block implements IGrowable
 {
+	public static final AxisAlignedBB SOIL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
+
 	public BlockFertileSoil()
 	{
-		super(Material.ground);
+		super(Material.GROUND);
 		setHardness(0.6F);
 		setLightOpacity(255);
 		setTickRandomly(false);
 		setHarvestLevel("hoe", 0);
 		setHarvestLevel("shovel", 0);
 		setUnlocalizedName("mfr.farmland");
-		setSoundType(soundTypeGravel);
-		setBlockBounds(0f,0f,0f, 1f,15f/16f,1f);
+		setSoundType(SoundType.GROUND);
 		setCreativeTab(MFRCreativeTab.tab);
 		useNeighborBrightness = true; // THIS IS SET IN THE DUMBEST DAMN WAY ON FARMLAND
 	}
 
 	@Override
-	public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		
+		if (source.getBlockState(pos.up()).getMaterial().isSolid()) {
+			return FULL_BLOCK_AABB;
+		} else {
+			return SOIL_AABB;
+		}
+	}
+
+	@Override
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		if (direction != EnumFacing.UP)
 			return false;
-		EnumPlantType plantType = plantable.getPlantType(world, x, y + 1, z);
+		EnumPlantType plantType = plantable.getPlantType(world, pos.up());
 
 		switch (plantType)
 		{
@@ -66,49 +85,31 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public void setBlockBoundsForItemRender()
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		setBlockBounds(0f,0f,0f, 1f,15f/16f,1f);
+		return FULL_BLOCK_AABB;
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
+			@Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (world.getBlock(x, y + 1, z).getMaterial().isSolid())
-		{
-			setBlockBounds(0f,0f,0f, 1f,1f,1f);
-		}
-		else
-		{
-			setBlockBounds(0f,0f,0f, 1f,15f/16f,1f);
-		}
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, BlockPos pos)
-	{
-		return AxisAlignedBB.getBoundingBox(x + 0, y + 0, z + 0, x + 1, y + 1, z + 1);
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, EntityPlayer player, int meta,
-			float hitX, float hitY, float hitZ)
-	{
-		if (!func_149851_a(world, x, y, z, world.isRemote))
+		if (!canGrow(world, pos, state, world.isRemote))
 			return false;
 
-		ItemStack stack = player.getCurrentEquippedItem();
-		if (stack != null)
+		if (heldItem != null)
 		{
-			if (MFRRegistry.getFertilizers().get(stack.getItem()) != null)
+			if (MFRRegistry.getFertilizers().get(heldItem.getItem()) != null)
 			{
-				if (func_149852_a(world, world.rand, x, y, z))
+				if (canUseBonemeal(world, world.rand, pos, state))
 				{
-					func_149853_b(world, world.rand, x, y, z);
-					world.playAuxSFXAtEntity(null, 2005, x, y, z, 0);
+					grow(world, world.rand, pos, state);
+					world.playEvent(null, 2005, pos, 0);
 				}
-				if (!player.capabilities.isCreativeMode)
-					player.setCurrentItemOrArmor(0, UtilInventory.consumeItem(stack, player));
+				if (!player.capabilities.isCreativeMode) {
+					EntityEquipmentSlot slot = hand == EnumHand.OFF_HAND ? EntityEquipmentSlot.OFFHAND : EntityEquipmentSlot.MAINHAND;
+					player.setItemStackToSlot(slot, UtilInventory.consumeItem(heldItem, player));
+				}
 				return true;
 			}
 		}
@@ -236,7 +237,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public void func_149853_b(World world, Random rand, BlockPos pos)
+	public void grow(World world, Random rand, BlockPos pos)
 	{ // fertilize
 		alterMetadata(world, x, y, z, 1 + (int)(rand.nextFloat() * 1.5f));
 	}

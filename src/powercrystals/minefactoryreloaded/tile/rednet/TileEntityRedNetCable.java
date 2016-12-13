@@ -500,14 +500,14 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		return oldMode;
 	}
 
-	public byte getMode(EnumFacing side) {
+	public byte getMode(int side) {
 
 		if (side == 6)
 			return _cableMode[side];
 		return (byte) (_cableMode[side] >> 1);
 	}
 
-	public void setMode(EnumFacing side, byte mode) {
+	public void setMode(int side, byte mode) {
 
 		boolean mustUpdate;
 		if (side != 6) {

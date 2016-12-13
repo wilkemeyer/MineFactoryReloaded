@@ -198,9 +198,9 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 								cable2 = (TileEntityRedNetCable) world.getTileEntity(pos.offset(dir));
 							}
 							
-							cable.toggleSide(subSide - 7);
+							cable.toggleSide(EnumFacing.VALUES[subSide - 7]);
 							if (cable2 != null) {
-								cable2.toggleSide(1 ^ subSide - 7);
+								cable2.toggleSide(EnumFacing.VALUES[1 ^ subSide - 7]);
 								if (cable.canInterface(cable2, dir)) {
 									cable.getNetwork().addConduit(cable2);
 								}
@@ -327,7 +327,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable)
-			return ((TileEntityRedNetCable) te).isSolidOnSide(side.ordinal());
+			return ((TileEntityRedNetCable) te).isSolidOnSide(side);
 
 		return false;
 	}
