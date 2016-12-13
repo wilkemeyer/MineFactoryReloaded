@@ -1,25 +1,19 @@
 package powercrystals.minefactoryreloaded.block;
 
-import static powercrystals.minefactoryreloaded.item.base.ItemMulti.getName;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
@@ -29,8 +23,6 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
 	static String[] _names = {null, "dry"};
-	private IIcon[] _iconOpaque = new IIcon[_names.length];
-	private IIcon[] _iconTransparent = new IIcon[_names.length];
 
 	public BlockRubberLeaves()
 	{
@@ -38,6 +30,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
@@ -103,15 +96,16 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 		return r << 16 | g << 8 | b;
 	}
+*/
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
-		return Blocks.leaves.isOpaqueCube();
+		return Blocks.LEAVES.isOpaqueCube(state);
 	}
 
 	@Override
-	public Item getItemDropped(int par1, Random par2Random, int par3)
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
 	}
@@ -125,17 +119,19 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
-	public void dropBlockAsItemWithChance(World world, BlockPos pos, int meta, float chance, int fortune)
+	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune)
 	{
 		if (updating.get() != null)
 			return;
-		super.dropBlockAsItemWithChance(world, x, y, z, meta, chance, fortune);
+		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, BlockPos pos, int meta, int fortune)
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
+
 		if ((meta & 4) != 0)
 			return ret;
 

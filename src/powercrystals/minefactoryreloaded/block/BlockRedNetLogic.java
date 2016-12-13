@@ -1,21 +1,15 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.lib.util.helpers.ItemHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.List;
-
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.ITextComponent;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -28,10 +22,13 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMemoryCard;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
-import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
-public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, IRedNetInfo, ITileEntityProvider {
+import java.util.List;
+
+public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, IRedNetInfo {
+
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
 
@@ -42,16 +39,9 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, EntityLivingBase entity, ItemStack stack) {
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 
-		if (entity != null) {
-			TileEntity te = getTile(world, x, y, z);
-			if (te instanceof TileEntityRedNetLogic) {
-				int facing = MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3;
-				world.setBlockMetadataWithNotify(x, y, z, (facing + 3) & 3, 3);
-			}
-		}
-		super.onBlockPlacedBy(world, x, y, z, entity, stack);
+		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
@@ -65,7 +55,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public int damageDropped(int meta) {
+	public int damageDropped(IBlockState state) {
 
 		return 0;
 	}
@@ -73,9 +63,9 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	@Override
 	public RedNetConnectionType getConnectionType(World world, BlockPos pos, EnumFacing side) {
 
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
-		if (logic != null && side.ordinal() > 1 && side.ordinal() < 6) {
-			if (world.getBlockMetadata(x, y, z) == _sideRemap[side.ordinal() - 2]) {
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
+		if (logic != null && side.getAxis().isHorizontal()) {
+			if (world.getBlockState(pos).getValue(FACING) == side) {
 				return RedNetConnectionType.None;
 			}
 		}
@@ -85,7 +75,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	@Override
 	public int getOutputValue(World world, BlockPos pos, EnumFacing side, int subnet) {
 
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
 		if (logic != null) {
 			return logic.getOutputValue(side, subnet);
 		} else {
@@ -96,7 +86,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	@Override
 	public int[] getOutputValues(World world, BlockPos pos, EnumFacing side) {
 
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
 		if (logic != null) {
 			return logic.getOutputValues(side);
 		} else {
@@ -107,7 +97,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	@Override
 	public void onInputsChanged(World world, BlockPos pos, EnumFacing side, int[] inputValues) {
 
-		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
+		TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
 		if (logic != null) {
 			logic.onInputsChanged(side, inputValues);
 		}
@@ -121,15 +111,15 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	@Override
 	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
 
-		if (MFRUtil.isHoldingUsableTool(player, x, y, z)) {
-			if (rotateBlock(world, x, y, z, EnumFacing.getOrientation(side))) {
-				MFRUtil.usedWrench(player, x, y, z);
+		if (MFRUtil.isHoldingUsableTool(player, pos)) {
+			if (rotateBlock(world, pos, side)) {
+				MFRUtil.usedWrench(player, pos);
 				return true;
 			}
 		}
 
 		if (MFRUtil.isHolding(player, ItemLogicUpgradeCard.class)) {
-			TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(x, y, z);
+			TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
 			if (logic != null) {
 				if (logic.insertUpgrade(player.inventory.getCurrentItem().getItemDamage() + 1)) {
 					if (!player.capabilities.isCreativeMode) {
@@ -142,13 +132,14 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 			return false;
 		} else if (!MFRUtil.isHolding(player, ItemRedNetMeter.class) && !MFRUtil.isHolding(player, ItemRedNetMemoryCard.class)) {
 			if (!world.isRemote) {
-				player.openGui(MineFactoryReloadedCore.instance(), 0, world, x, y, z);
+				player.openGui(MineFactoryReloadedCore.instance(), 0, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;
 		}
 		return false;
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -156,12 +147,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		RedNetLogicRenderer.updateUVT(blockIcon);
 	}
-
-	@Override
-	public int getRenderType() {
-
-		return MineFactoryReloadedCore.renderIdRedNetLogic;
-	}
+*/
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
@@ -170,16 +156,16 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		return side.ordinal() <= 1 || side.ordinal() >= 6 || world.getBlockMetadata(x, y, z) != _sideRemap[side.ordinal() - 2];
+		return !side.getAxis().isHorizontal() || side != state.getValue(FACING);
 	}
 
 	@Override
 	public void getRedNetInfo(IBlockAccess world, BlockPos pos, EnumFacing side,
 			EntityPlayer player, List<ITextComponent> info) {
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetLogic) {
 			int value;
 			int foundNonZero = 0;

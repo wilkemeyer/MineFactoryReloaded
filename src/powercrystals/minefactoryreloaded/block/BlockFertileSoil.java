@@ -1,8 +1,5 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,16 +7,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -37,6 +32,7 @@ import javax.annotation.Nullable;
 
 public class BlockFertileSoil extends Block implements IGrowable
 {
+	public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
 	public static final AxisAlignedBB SOIL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
 
 	public BlockFertileSoil()
@@ -51,6 +47,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 		setSoundType(SoundType.GROUND);
 		setCreativeTab(MFRCreativeTab.tab);
 		useNeighborBrightness = true; // THIS IS SET IN THE DUMBEST DAMN WAY ON FARMLAND
+		setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
 	}
 
 	@Override
@@ -119,47 +116,47 @@ public class BlockFertileSoil extends Block implements IGrowable
 	@Override
 	public boolean isFertile(World world, BlockPos pos)
 	{
-		return world.getBlockMetadata(x, y, z) > 0;
+		return world.getBlockState(pos).getValue(MOISTURE) > 0;
 	}
 
-	protected void alterMetadata(World world, BlockPos pos, int d)
+	protected void changeMoisture(World world, BlockPos pos, IBlockState state, int d)
 	{
-		world.setBlockMetadataWithNotify(x, y, z, Math.min(15, Math.max(0, world.getBlockMetadata(x, y, z) + d)), 6);
+		world.setBlockState(pos, state.withProperty(MOISTURE, Math.min(15, Math.max(0, state.getValue(MOISTURE) + d))));
 	}
 
 	@Override
-	public void onPlantGrow(World world, BlockPos pos, int sourceX, int sourceY, int sourceZ)
+	public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
 	{
-		if (!isFertile(world, x, y, z))
-			world.setBlock(x, y, z, Blocks.sand);
+		if (!isFertile(world, pos))
+			world.setBlockState(pos, Blocks.SAND.getDefaultState());
 		else
-			alterMetadata(world, x, y, z, -1);
+			changeMoisture(world, pos, state, -1);
 	}
 
-	@SuppressWarnings("unused")
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, Block block)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
-		super.onNeighborBlockChange(world, x, y, z, block);
+		super.neighborChanged(state, world, pos, block);
 		if (true) return; // TODO: if neighborChange becomes sided, remove
-		Block above = world.getBlock(x, y + 1, z);
+		IBlockState stateAbove = world.getBlockState(pos.up());
+		Block above = stateAbove.getBlock();
 		if (block != above)
 			return;
-		Material material = above.getMaterial();
-		boolean flag = material == Material.gourd || isFertile(world, x, y, z);
+		Material material = above.getMaterial(stateAbove);
+		boolean flag = material == Material.GOURD || isFertile(world, pos);
 
 		if (!flag && material.isSolid())
 		{
-			world.setBlock(x, y, z, Blocks.dirt);
+			world.setBlockState(pos, Blocks.DIRT.getDefaultState());
 		}
 		else
 		{
-			alterMetadata(world, x, y, z, -1);
+			changeMoisture(world, pos, state, -1);
 		}
 	}
 
 	@Override
-	public void updateTick(World world, BlockPos pos, Random rand) { ; }
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) { }
 
 	@Override
 	public void onFallenUpon(World world, BlockPos pos, Entity ent, float distance)
@@ -168,18 +165,19 @@ public class BlockFertileSoil extends Block implements IGrowable
 		{
 			if (!world.isRemote && world.rand.nextFloat() * 20 < distance)
 			{
-				if (!(ent instanceof EntityPlayer) && !world.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+				if (!(ent instanceof EntityPlayer) && !world.getGameRules().getBoolean("mobGriefing"))
 				{
 					return;
 				}
 
-				world.setBlock(x, y, z, Blocks.farmland);
+				world.setBlockState(pos, Blocks.FARMLAND.getDefaultState());
 				if (world.rand.nextFloat() >= 0.25)
-					dropBlockAsItem(world, x, y, z, new ItemStack(MFRThings.fertilizerItem));
+					UtilInventory.dropStackInAir(world, pos, new ItemStack(MFRThings.fertilizerItem));
 			}
 		}
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister)
@@ -193,20 +191,23 @@ public class BlockFertileSoil extends Block implements IGrowable
 	{
 		return side == 1 ? blockIcon : Blocks.dirt.getIcon(side, 2);
 	}
+*/
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return side != EnumFacing.UP;
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, BlockPos pos, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
-		ret.add(new ItemStack(Blocks.dirt));
-		if (world.rand.nextFloat() >= 0.5)
+		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
+
+		ret.add(new ItemStack(Blocks.DIRT));
+		if (rand.nextFloat() >= 0.5)
 			ret.add(new ItemStack(MFRThings.fertilizerItem));
 
 		return ret;
@@ -225,20 +226,20 @@ public class BlockFertileSoil extends Block implements IGrowable
 	}
 
 	@Override
-	public boolean func_149851_a(World world, BlockPos pos, boolean worthlessBoolean)
+	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient)
 	{ // canFertilize
-		return world.getBlockMetadata(x, y, z) < 15;
+		return state.getValue(MOISTURE) < 15;
 	}
 
 	@Override
-	public boolean func_149852_a(World world, Random rand, BlockPos pos)
+	public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state)
 	{ // shouldFertilize
-		return world.getBlockMetadata(x, y, z) < 15 && rand.nextInt(3) == 0;
+		return state.getValue(MOISTURE) < 15 && rand.nextInt(3) == 0;
 	}
 
 	@Override
-	public void grow(World world, Random rand, BlockPos pos)
+	public void grow(World world, Random rand, BlockPos pos, IBlockState state)
 	{ // fertilize
-		alterMetadata(world, x, y, z, 1 + (int)(rand.nextFloat() * 1.5f));
+		changeMoisture(world, pos, state, 1 + (int)(rand.nextFloat() * 1.5f));
 	}
 }
