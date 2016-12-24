@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 import java.util.Random;
@@ -85,7 +85,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 			if (fertilizable.fertilize(worldObj, _rand, bp.x, bp.y, bp.z, type)) {
 				fertilizer.consume(fertStack);
 				if (MFRConfig.playSounds.getBoolean(true)) // particles
-					worldObj.playAuxSFXAtEntity(null, 2005, bp.x, bp.y, bp.z, _rand.nextInt(10) + 5);
+					worldObj.playEvent(null, 2005, bp.x, bp.y, bp.z, _rand.nextInt(10) + 5);
 				if (fertStack.stackSize <= 0)
 					setInventorySlotContents(stackIndex, null);
 

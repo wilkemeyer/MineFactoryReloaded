@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Map.Entry;
 

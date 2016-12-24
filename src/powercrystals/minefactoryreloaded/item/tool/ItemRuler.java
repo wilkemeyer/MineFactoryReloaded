@@ -7,7 +7,7 @@ import net.minecraft.util.TextComponentString;
 import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.RayTraceResult;
 import net.minecraft.util.RayTraceResult.MovingObjectType;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
@@ -45,17 +45,17 @@ public class ItemRuler extends ItemFactoryTool {
 					double distAll = Math.sqrt(Math.pow(distX, 2) +
 							Math.pow(distY, 2) + Math.pow(distZ, 2));
 
-					player.addChatMessage(new TextComponentString("X: ").appendText(StatCollector
+					player.addChatMessage(new TextComponentString("X: ").appendText(I18n
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distX, distX + 1)));
-					player.addChatMessage(new TextComponentString("Y: ").appendText(StatCollector
+					player.addChatMessage(new TextComponentString("Y: ").appendText(I18n
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distY, distY + 1)));
-					player.addChatMessage(new TextComponentString("Z: ").appendText(StatCollector
+					player.addChatMessage(new TextComponentString("Z: ").appendText(I18n
 									.translateToLocalFormatted("chat.info.mfr.ruler.distance",
 											distZ, distZ + 1)));
 					player.addChatMessage(new TextComponentString("")
-							.appendText(StatCollector
+							.appendText(I18n
 									.translateToLocalFormatted("chat.info.mfr.ruler.total",
 											distAll)));
 				}

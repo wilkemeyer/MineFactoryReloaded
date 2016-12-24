@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.core;
 import gnu.trove.impl.unmodifiable.TUnmodifiableIntObjectMap;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import net.minecraft.util.math.Vec3i;
 
 public enum SideOffset
 {
@@ -118,26 +119,23 @@ public enum SideOffset
     	lookup = new TUnmodifiableIntObjectMap<SideOffset>(a);//ImmutableMap.copyOf(a);
     }
 
-	public final int offsetX;
-	public final int offsetY;
-	public final int offsetZ;
+	public final Vec3i offset;
     public final int flag;
 
-	private SideOffset(int x, int y, int z)
+	SideOffset(int x, int y, int z)
 	{
-		offsetX = x;
-		offsetY = y;
-		offsetZ = z;
+		offset = new Vec3i(x, y, z);
 		int f = ((y & 3) << 0) | ((z & 3) << 2) | ((x & 3) << 4);
 		f ^= (f & 21) & ((f & 42) >> 1); // unset low bits that also have a set high bit (negative values)
 		flag = f;
 	}
-
+	
+/* TODO remove if not used
     public SideOffset getOpposite()
     {
 		int f = ~flag & 0x3F;
 		int t = (f & 21) & ((f & 42) >> 1);
 		f &= ~(t | (t << 1)); // unset fields with high&low bits set (invalid state)
         return lookup.get(f);
-    }
+    }*/
 }

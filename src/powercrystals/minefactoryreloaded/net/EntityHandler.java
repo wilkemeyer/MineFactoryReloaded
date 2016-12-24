@@ -46,7 +46,7 @@ public class EntityHandler {
 						EntityMinecartMobSpawner ent = new EntityMinecartMobSpawner(e.minecart.worldObj);
 						ent.readFromNBT(tag);
 						ent.worldObj.spawnEntityInWorld(ent);
-						ent.worldObj.playAuxSFXAtEntity(null, 2004, // particles
+						ent.worldObj.playEvent(null, 2004, // particles
 							(int) ent.posX, (int) ent.posY, (int) ent.posZ, 0);
 					}
 				}

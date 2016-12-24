@@ -4,6 +4,7 @@ import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
@@ -32,7 +33,7 @@ public class ItemPlasticBoots extends ItemFactoryArmor {
 				break l;
 			}
 			player.removePotionEffect(Potion.poison.id);
-			player.removePotionEffect(Potion.confusion.id);
+			player.removePotionEffect(MobEffects.NAUSEA);
 		}
 	}
 

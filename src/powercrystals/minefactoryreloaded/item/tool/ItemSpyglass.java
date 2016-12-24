@@ -13,7 +13,7 @@ import net.minecraft.util.TextComponentString;
 import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.RayTraceResult;
 import net.minecraft.util.RayTraceResult.MovingObjectType;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -30,7 +30,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.spyglass.nosight"));
 			} else if(mop.typeOfHit == MovingObjectType.ENTITY) {
 				player.addChatMessage(new TextComponentString("")
-						.appendText(StatCollector
+						.appendText(I18n
 								.translateToLocalFormatted("chat.info.mfr.spyglass.hitentity",
 										getEntityName(mop.entityHit),
 										mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ)));
@@ -44,7 +44,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 							mop.blockZ));
 				if (tempStack.getItem() != null) {
 					player.addChatMessage(new TextComponentString("")
-							.appendText(StatCollector
+							.appendText(I18n
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitblock",
 											tempStack.getDisplayName(),
 						Block.blockRegistry.getNameForObject(world.getBlock(mop.blockX, mop.blockY, mop.blockZ)),
@@ -52,7 +52,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 											(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				} else {
 					player.addChatMessage(new TextComponentString("")
-							.appendText(StatCollector
+							.appendText(I18n
 									.translateToLocalFormatted("chat.info.mfr.spyglass.hitunknown",
 										(float)mop.blockX, (float)mop.blockY, (float)mop.blockZ)));
 				}
@@ -64,7 +64,7 @@ public class ItemSpyglass extends ItemFactoryTool {
 
 	private String getEntityName(Entity entity) {
 		String name = EntityList.getEntityString(entity);
-		return name != null ? StatCollector.translateToLocal("entity." + name + ".name") : "Unknown Entity";
+		return name != null ? I18n.translateToLocal("entity." + name + ".name") : "Unknown Entity";
 	}
 
 	private RayTraceResult rayTrace() {

@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 			{
 				doDrop(drops);
 				if (MFRConfig.playSounds.getBoolean(true))
-					worldObj.playAuxSFXAtEntity(null, 2001, x, y, z,
+					worldObj.playEvent(null, 2001, x, y, z,
 							Block.getIdFromBlock(block) + (blockMeta << 12));
 			}
 			return true;

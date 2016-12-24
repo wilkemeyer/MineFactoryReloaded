@@ -8,8 +8,8 @@ import cofh.api.tileentity.IPortableData;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.util.position.IRotateableTile;
 import com.google.common.base.Strings;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 

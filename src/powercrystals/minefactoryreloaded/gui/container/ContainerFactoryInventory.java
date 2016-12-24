@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.gui.container;
 import cofh.core.util.CoreUtils;
 import cofh.lib.gui.container.ContainerBase;
 import cofh.lib.gui.slot.SlotAcceptValid;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

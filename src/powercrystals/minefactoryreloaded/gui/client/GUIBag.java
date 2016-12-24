@@ -2,12 +2,12 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import static cofh.core.CoFHProps.PATH_GUI_STORAGE;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 
 import org.lwjgl.opengl.GL11;
 
@@ -34,7 +34,7 @@ public class GUIBag extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         fontRendererObj.drawString(this.bag.getInventoryName(), 8, 6, 4210752);
-        fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+        fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
     }
 
     /**

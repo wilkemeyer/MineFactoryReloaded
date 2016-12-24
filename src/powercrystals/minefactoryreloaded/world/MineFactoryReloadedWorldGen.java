@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -29,14 +30,14 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 	{
 		return new WorldGenMassiveTree(false).setTreeScale(4 + (random.nextInt(3)), 0.8f, 0.7f).
 				setLeafAttenuation(0.6f).setSloped(true).setSafe(safe).
-				generate(world, random, x, y, z);
+				generate(world, random, pos);
 	}
 
 	public static boolean generateSacredSpringRubberTree(World world, Random random, BlockPos pos)
 	{
 		return new WorldGenMassiveTree(false).setTreeScale(6 + (random.nextInt(4)), 1f, 0.9f).
 				setLeafAttenuation(0.35f).setSloped(false).setMinTrunkSize(4).
-				generate(world, random, x, y, z);
+				generate(world, random, pos);
 	}
 
 	private final String name = "MFR:WorldGen";
@@ -55,7 +56,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 			buildBlacklistedDimensions();
 		}
 
-		if (_blacklistedDimensions.contains(world.provider.dimensionId))
+		if (_blacklistedDimensions.contains(world.provider.getDimension()))
 		{
 			return false;
 		}
@@ -63,11 +64,12 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 		int x = chunkX * 16 + random.nextInt(16);
 		int z = chunkZ * 16 + random.nextInt(16);
 
-		BiomeGenBase b = world.getBiomeGenForCoords(x, z);
+		BlockPos pos = new BlockPos(x, 1, z);
+		Biome b = world.getBiome(pos);
 		if (b == null)
 			return false;
 
-		String biomeName = b.biomeName;
+		String biomeName = b.getBiomeName();
 
 		if (_rubberTreesEnabled & (newGen | _regenTrees))
 		{
@@ -79,9 +81,9 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 					{
 						String ln = biomeName.toLowerCase(Locale.US);
 						if (ln.contains("mega"))
-							generateMegaRubberTree(world, random, x, world.getHeightValue(x, z), z, false);
+							generateMegaRubberTree(world, random, world.getHeight(pos), false);
 						else if (ln.contains("sacred") && random.nextInt(20) == 0)
-							generateSacredSpringRubberTree(world, random, x, world.getHeightValue(x, z), z);
+							generateSacredSpringRubberTree(world, random, world.getHeight(pos));
 					}
 					new WorldGenRubberTree(false).generate(world, random, x, random.nextInt(3) + 4, z);
 				}
@@ -98,7 +100,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(world.getActualHeight());
 				int lakeZ = z - 8 + random.nextInt(16);
-				new WorldGenLakesMeta(sludgeLiquid, 0).generate(world, random, lakeX, lakeY, lakeZ);
+				new WorldGenLakesMeta(sludgeLiquid, 0).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 			}
 
 			rarity = _sewageLakeRarity;
@@ -112,11 +114,11 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				String ln = biomeName.toLowerCase(Locale.US);
 				if (ln.contains("mushroom"))
 				{
-					new WorldGenLakesMeta(mushroomSoupLiquid, 0).generate(world, random, lakeX, lakeY, lakeZ);
+					new WorldGenLakesMeta(mushroomSoupLiquid, 0).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 				}
 				else
 				{
-					new WorldGenLakesMeta(sewageLiquid, 0).generate(world, random, lakeX, lakeY, lakeZ);
+					new WorldGenLakesMeta(sewageLiquid, 0).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 				}
 			}
 		}

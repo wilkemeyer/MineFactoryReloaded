@@ -1,30 +1,25 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.BlockLog;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 {
-	private IIcon _iconLogTop;
-	private IIcon _iconLogSide;
-
 	public BlockRubberWood()
 	{
 		setUnlocalizedName("mfr.rubberwood.log");
@@ -32,6 +27,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		setHarvestLevel("axe", 0);
 	}
 
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
@@ -53,9 +49,10 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	{
 		return _iconLogTop;
 	}
+*/
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, BlockPos pos, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 

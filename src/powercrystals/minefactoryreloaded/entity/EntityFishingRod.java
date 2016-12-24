@@ -1,8 +1,14 @@
 package powercrystals.minefactoryreloaded.entity;
 
 import cofh.lib.util.helpers.MathHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.fml.relauncher.Side;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,12 +18,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.FishingHooks;
 
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+
+import java.util.Iterator;
 
 public class EntityFishingRod extends EntityThrowable {
 	public int fuse;
@@ -32,16 +39,6 @@ public class EntityFishingRod extends EntityThrowable {
 		setSize(0.10F, 0.25F);
 		setAir(0);
 		fuse = 40;
-	}
-
-	@Override
-	protected float func_70182_d() {
-		return 0.6F;
-	}
-
-	@Override
-	protected float func_70183_g() {
-		return 0.0F;
 	}
 
 	@Override
@@ -62,7 +59,7 @@ public class EntityFishingRod extends EntityThrowable {
 		}
 
 		if (worldObj.isRemote) {
-			worldObj.spawnParticle("smoke", posX, posY + 0.25, posZ, 0, 0, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.25, posZ, 0, 0, 0);
 		} else if (fuse-- <= 0) {
 			explode();
 			setDead();
@@ -75,12 +72,13 @@ public class EntityFishingRod extends EntityThrowable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void handleHealthUpdate(byte state) {
-		super.handleHealthUpdate(state);
-		if (state == 18) {
-			Block block = worldObj.getBlock((int)Math.floor(posX), (int)Math.floor(posY + 0.25), (int)Math.floor(posZ));
-			if (block.isAssociatedBlock(Blocks.water) || block.isAssociatedBlock(Blocks.flowing_water)) {
-				String p = "blockdust_" + Block.getIdFromBlock(Blocks.water) + "_" + (0xFFFFFF);
+	public void handleStatusUpdate(byte id) {
+		super.handleStatusUpdate(id);
+		if (id == 18) {
+			IBlockState state = worldObj.getBlockState(new BlockPos((int) Math.floor(posX), (int) Math.floor(posY + 0.25), (int) Math.floor(posZ)));
+			Block block = state.getBlock();
+			if (block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER)) {
+				String p = "blockdust_" + Block.getIdFromBlock(Blocks.WATER) + "_" + (0xFFFFFF);
 				double f = 0.75;
 				for (int j = 60; j --> 0; ) {
 					double y = MathHelper.cos(j * Math.PI / 180) * 0.70;
@@ -88,7 +86,7 @@ public class EntityFishingRod extends EntityThrowable {
 					for (int i = 60; i --> 0; ) {
 						double x = MathHelper.cos((i * 6) * Math.PI / 180) * m;
 						double z = MathHelper.sin((i * 6) * Math.PI / 180) * m;
-						worldObj.spawnParticle(p, posX, posY + 0.25, posZ, x * f, y * f, z * f);
+						worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, posX, posY + 0.25, posZ, x * f, y * f, z * f, Block.getStateId(Blocks.WATER.getDefaultState()));
 					}
 				}
 			}
@@ -102,19 +100,24 @@ public class EntityFishingRod extends EntityThrowable {
 		for (float x = (float)(posX - f); x < posX + f; ++x)
 			for (float y = (float)(posY - f); y < posY + f; ++y)
 				for (float z = (float)(posZ - f); z < posZ + f; ++z) {
-					Block block = worldObj.getBlock((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
-					if (block.isAssociatedBlock(Blocks.water) || block.isAssociatedBlock(Blocks.flowing_water))
+					Block block = worldObj.getBlockState(new BlockPos((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z))).getBlock();
+					if (block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER))
 						if (rand.nextInt(rate) == 0) {
-							EntityItem e = new EntityItem(worldObj, x, y, z);
-							e.motionX = rand.nextGaussian() / 2;
-							e.motionZ = rand.nextGaussian() / 2;
-							e.motionY = 0.4 + (rand.nextDouble() - 0.4) / 2;
-							ItemStack stack = FishingHooks.getRandomFishable(rand, 1), s;
-							if (rand.nextInt(30) == 0 && (s = FurnaceRecipes.smelting().getSmeltingResult(stack)) != null) {
-								stack = s;
+							LootContext.Builder builder = new LootContext.Builder((WorldServer)this.worldObj);
+							Iterator iterator = this.worldObj.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING).generateLootForPools(rand, builder.build()).iterator();
+
+							while (iterator.hasNext()) {
+								ItemStack stack = (ItemStack) iterator.next();
+								ItemStack smelted;
+								if (rand.nextInt(30) == 0 && ((smelted = FurnaceRecipes.instance().getSmeltingResult(stack)) != null)) {
+									stack = smelted;
+								}
+								EntityItem e = new EntityItem(worldObj, x, y, z, stack);
+								e.motionX = rand.nextGaussian() / 2;
+								e.motionZ = rand.nextGaussian() / 2;
+								e.motionY = 0.4 + (rand.nextDouble() - 0.4) / 2;
+								worldObj.spawnEntityInWorld(e);
 							}
-							e.setEntityItemStack(stack);
-							worldObj.spawnEntityInWorld(e);
 						}
 				}
 	}
@@ -132,7 +135,7 @@ public class EntityFishingRod extends EntityThrowable {
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult movingobjectposition) { }
+	protected void onImpact(RayTraceResult rayTraceResult) { }
 
 	// TODO: override moveEntity, handle water movement
 

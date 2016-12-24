@@ -1,21 +1,22 @@
 package powercrystals.minefactoryreloaded.entity;
 
+import net.minecraft.util.EnumParticleTypes;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.RayTraceResult;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityRocket extends Entity
@@ -28,7 +29,6 @@ public class EntityRocket extends Entity
 	public EntityRocket(World world)
 	{
 		super(world);
-		this.renderDistanceWeight = 10.0D;
 		_lostTarget = null;
 	}
 	
@@ -40,13 +40,23 @@ public class EntityRocket extends Entity
 		setPosition(posX, posY, posZ);
 		recalculateVelocity();
 		if (owner instanceof EntityPlayer)
-			_owner = ((EntityPlayer)owner).getCommandSenderName();
+			_owner = ((EntityPlayer)owner).getName();
 	}
 	
 	public EntityRocket(World world, EntityLivingBase owner, Entity target)
 	{
 		this(world, owner);
 		_target = target;
+	}
+
+	public boolean isInRangeToRenderDist(double distance) {
+		double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+		if(Double.isNaN(d0)) {
+			d0 = 1.0D;
+		}
+
+		d0 = d0 * 64.0D * getRenderDistanceWeight();
+		return distance < d0 * d0;
 	}
 	
 	private void recalculateVelocity()
@@ -80,27 +90,27 @@ public class EntityRocket extends Entity
 		{
 			for(int i = 0; i < 4; i++)
 			{
-				worldObj.spawnParticle("smoke", posX + motionX * i / 4.0D, posY + motionY * i / 4.0D, posZ + motionZ * i / 4.0D,
+				worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX + motionX * i / 4.0D, posY + motionY * i / 4.0D, posZ + motionZ * i / 4.0D,
 						-motionX, -motionY + 0.2D, -motionZ);
 			}
 		}
 		
 		if(!worldObj.isRemote)
 		{
-			Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-			Vec3 nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-			RayTraceResult hit = this.worldObj.func_147447_a(pos, nextPos, false, true, false);
-			pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-			nextPos = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			Vec3d pos = new Vec3d(this.posX, this.posY, this.posZ);
+			Vec3d nextPos = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			RayTraceResult hit = this.worldObj.rayTraceBlocks(pos, nextPos, false, true, false);
+			pos = new Vec3d(this.posX, this.posY, this.posZ);
+			nextPos = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			
 			if(hit != null)
 			{
-				nextPos = Vec3.createVectorHelper(hit.hitVec.xCoord, hit.hitVec.yCoord,	hit.hitVec.zCoord);
+				nextPos = new Vec3d(hit.hitVec.xCoord, hit.hitVec.yCoord,	hit.hitVec.zCoord);
 			}
 			
 			Entity entityHit = null;
 			List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, 
-					this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+					this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 			double closestRange = 0.0D;
 			double collisionRange = 0.3D;
 			EntityPlayer owner = _owner == null ? null : this.worldObj.getPlayerEntityByName(_owner);
@@ -111,7 +121,7 @@ public class EntityRocket extends Entity
 				
 				if((e != owner | _ticksAlive > 5) && e.canBeCollidedWith())
 				{
-					AxisAlignedBB entitybb = e.boundingBox.expand(collisionRange, collisionRange, collisionRange);
+					AxisAlignedBB entitybb = e.getEntityBoundingBox().expand(collisionRange, collisionRange, collisionRange);
 					RayTraceResult entityHitPos = entitybb.calculateIntercept(pos, nextPos);
 					
 					if(entityHitPos != null)
@@ -151,13 +161,13 @@ public class EntityRocket extends Entity
 				}
 				else
 				{ // spawn explosion at nextPos x/y/z?
-					worldObj.newExplosion(this, hit.blockX, hit.blockY, hit.blockZ, 4.0F, true, true);
+					worldObj.newExplosion(this, hit.getBlockPos().getX(), hit.getBlockPos().getY(), hit.getBlockPos().getZ(), 4.0F, true, true);
 				}
 				setDead();
 			}
 		}
 		
-		Vec3 targetVector = findTarget();
+		Vec3d targetVector = findTarget();
 		if (targetVector != null)
 		{
 			// At this point, I suspect literally no one on this project actually understands what this does or how it works
@@ -239,7 +249,7 @@ public class EntityRocket extends Entity
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private Vec3 findTarget()
+	private Vec3d findTarget()
 	{
 		findTarget: if (_lostTarget != null)
 		{
@@ -247,8 +257,7 @@ public class EntityRocket extends Entity
             double x = _lostTarget.getDouble("xTarget");
             double y = _lostTarget.getDouble("yTarget");
             double z = _lostTarget.getDouble("zTarget");
-            List list = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.
-            		getBoundingBox(x - 5, y - 5, z - 5, x + 5, y + 5, z + 5));
+            List list = this.worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(x - 5, y - 5, z - 5, x + 5, y + 5, z + 5));
             Iterator iterator = list.iterator();
 
             while (iterator.hasNext())
@@ -262,11 +271,11 @@ public class EntityRocket extends Entity
                     break findTarget;
                 }
             }
-            return Vec3.createVectorHelper(x - posX, y - posY, z - posZ);
+            return new Vec3d(x - posX, y - posY, z - posZ);
 		}
 		if (_target != null)
 		{
-			return Vec3.createVectorHelper(_target.posX - posX,
+			return new Vec3d(_target.posX - posX,
 					_target.posY - posY + _target.getEyeHeight(), _target.posZ - posZ);
 		}
 		return null;

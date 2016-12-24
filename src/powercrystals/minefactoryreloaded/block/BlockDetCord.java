@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 

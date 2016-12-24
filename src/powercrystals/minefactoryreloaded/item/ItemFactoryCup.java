@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +20,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.RayTraceResult;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -83,8 +83,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	public String getLocalizedName(String str) {
 		String name = getUnlocalizedName() + "." + str;
-		if (StatCollector.canTranslate(name))
-			return StatCollector.translateToLocal(name);
+		if (I18n.canTranslate(name))
+			return I18n.translateToLocal(name);
 		return null;
 	}
 

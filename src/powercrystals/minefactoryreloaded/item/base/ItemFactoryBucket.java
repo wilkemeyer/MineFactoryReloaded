@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded.item.base;
 
 import cofh.lib.render.IFluidOverlayItem;
 import cofh.lib.util.RegistryUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 

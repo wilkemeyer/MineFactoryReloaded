@@ -5,6 +5,7 @@ import cofh.lib.util.helpers.BlockHelper;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.util.EnumFacing;
@@ -25,6 +26,11 @@ public class WorldGenRubberTree extends WorldGenerator {
 
 		super(doNotify);
 		doBlockNotify = doNotify;
+	}
+
+	@Override
+	public boolean generate(World world, Random random, BlockPos blockPos) {
+		return false;
 	}
 
 	@Override

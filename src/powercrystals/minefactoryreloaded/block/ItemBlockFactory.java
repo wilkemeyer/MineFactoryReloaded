@@ -2,9 +2,6 @@ package powercrystals.minefactoryreloaded.block;
 
 import static powercrystals.minefactoryreloaded.item.base.ItemMulti.getName;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -13,8 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public class ItemBlockFactory extends ItemBlock
@@ -57,12 +55,14 @@ public class ItemBlockFactory extends ItemBlock
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
 	}
 
+/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIconFromDamage(int damage)
 	{
 		return field_150939_a.getIcon(2, damage);
 	}
+*/
 
 	@Override
 	public int getMetadata(int meta)

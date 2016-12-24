@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.item.syringe;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -44,8 +44,8 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	public String getLocalizedName(String str)
 	{
 		String name = getUnlocalizedName() + "." + str;
-		if (StatCollector.canTranslate(name))
-			return StatCollector.translateToLocal(name);
+		if (I18n.canTranslate(name))
+			return I18n.translateToLocal(name);
 		return null;
 	}
 	@Override

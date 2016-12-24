@@ -3,9 +3,10 @@ package powercrystals.minefactoryreloaded.farmables.drinkhandlers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
@@ -21,7 +22,7 @@ public class DrinkHandlerWater implements ILiquidDrinkHandler
 		if (tag.hasKey("drankLavaTime") && (world.getTotalWorldTime() - tag.getLong("drankLavaTime")) < 100)
 		{
 			//{
-			EntityItem entityitem = player.entityDropItem(new ItemStack(Blocks.obsidian), player.getEyeHeight());
+			EntityItem entityitem = player.entityDropItem(new ItemStack(Blocks.OBSIDIAN), player.getEyeHeight());
             float f = 0.3F;
             entityitem.motionX = -MathHelper.sin(player.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(player.rotationPitch / 180.0F * (float)Math.PI) * f;
             entityitem.motionZ = MathHelper.cos(player.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(player.rotationPitch / 180.0F * (float)Math.PI) * f;
@@ -34,7 +35,7 @@ public class DrinkHandlerWater implements ILiquidDrinkHandler
             entityitem.motionZ += Math.sin(f1) * f;
             //}
 			tag.setLong("drankLavaTime", -100);
-			world.playSoundAtEntity(player, "random.burp", 1.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+			player.playSound(SoundEvents.ENTITY_PLAYER_BURP, 1.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 		}
 	}
 }

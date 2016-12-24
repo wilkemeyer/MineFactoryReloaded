@@ -7,7 +7,7 @@ import cofh.lib.gui.element.ElementSlider;
 import cofh.lib.gui.element.listbox.IListBoxElement;
 import cofh.lib.gui.element.listbox.SliderHorizontal;
 import cofh.lib.gui.element.listbox.SliderVertical;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Collections;
 import java.util.Comparator;

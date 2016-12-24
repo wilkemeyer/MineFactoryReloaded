@@ -11,6 +11,6 @@ public class DrinkHandlerMilk implements ILiquidDrinkHandler
 	@Override
 	public void onDrink(EntityLivingBase player)
 	{
-		player.curePotionEffects(new ItemStack(Items.milk_bucket));
+		player.curePotionEffects(new ItemStack(Items.MILK_BUCKET));
 	}
 }

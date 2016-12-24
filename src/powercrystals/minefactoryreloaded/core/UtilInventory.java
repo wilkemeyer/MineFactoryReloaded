@@ -7,7 +7,8 @@ import cofh.asm.relauncher.Strippable;
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
 import cofh.lib.util.helpers.ItemHelper;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,13 +19,10 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
@@ -37,7 +35,7 @@ public abstract class UtilInventory
 	 */
 	public static Map<EnumFacing, IItemDuct> findConduits(World world, BlockPos pos)
 	{
-		return findConduits(world, x, y, z, EnumFacing.VALID_DIRECTIONS);
+	return findConduits(world, pos, EnumFacing.VALUES);
 	}
 
 	/**
@@ -49,12 +47,9 @@ public abstract class UtilInventory
 			EnumFacing[] directionstocheck)
 	{
 		Map<EnumFacing, IItemDuct> pipes = new LinkedHashMap<EnumFacing, IItemDuct>();
-		BlockPosition bp = new BlockPosition(x, y, z);
 		for (EnumFacing direction : directionstocheck)
 		{
-			bp.x = x; bp.y = y; bp.z = z;
-			bp.step(direction, 1);
-			TileEntity te = world.getTileEntity(bp.x, bp.y, bp.z);
+			TileEntity te = world.getTileEntity(pos.offset(direction));
 			if (te instanceof IItemDuct)
 			{
 				pipes.put(direction, (IItemDuct) te);
@@ -71,7 +66,7 @@ public abstract class UtilInventory
 	@Strippable(pipeClass)
 	public static Map<EnumFacing, IPipeTile> findPipes(World world, BlockPos pos)
 	{
-		return findPipes(world, x, y, z, EnumFacing.VALID_DIRECTIONS);
+		return findPipes(world, pos, EnumFacing.VALUES);
 	}
 
 	/**
@@ -84,12 +79,9 @@ public abstract class UtilInventory
 			EnumFacing[] directionstocheck)
 	{
 		Map<EnumFacing, IPipeTile> pipes = new LinkedHashMap<EnumFacing, IPipeTile>();
-		BlockPosition bp = new BlockPosition(x, y, z);
 		for (EnumFacing direction : directionstocheck)
 		{
-			bp.x = x; bp.y = y; bp.z = z;
-			bp.step(direction, 1);
-			TileEntity te = world.getTileEntity(bp.x, bp.y, bp.z);
+			TileEntity te = world.getTileEntity(pos.offset(direction));
 			if (te instanceof IPipeTile)
 			{
 				pipes.put(direction, (IPipeTile) te);
@@ -146,8 +138,8 @@ public abstract class UtilInventory
 	 */
 	public static ItemStack dropStack(TileEntity from, ItemStack stack)
 	{
-		return dropStack(from.getWorldObj(), new BlockPosition(from.xCoord, from.yCoord, from.zCoord),
-				stack, EnumFacing.VALID_DIRECTIONS, EnumFacing.UNKNOWN);
+		return dropStack(from.getWorld(), from.getPos(),
+				stack, EnumFacing.VALUES, null);
 	}
 
 	/**
@@ -160,8 +152,8 @@ public abstract class UtilInventory
 	 */
 	public static ItemStack dropStack(TileEntity from, ItemStack stack, EnumFacing airdropdirection)
 	{
-		return dropStack(from.getWorldObj(), new BlockPosition(from.xCoord, from.yCoord, from.zCoord),
-				stack, EnumFacing.VALID_DIRECTIONS, airdropdirection);
+		return dropStack(from.getWorld(), from.getPos(),
+				stack, EnumFacing.VALUES, airdropdirection);
 	}
 
 	/**
@@ -178,7 +170,7 @@ public abstract class UtilInventory
 			EnumFacing airdropdirection)
 	{
 		EnumFacing[] dropdirections = { dropdirection };
-		return dropStack(from.getWorldObj(), new BlockPosition(from.xCoord, from.yCoord, from.zCoord),
+		return dropStack(from.getWorld(), from.getPos(),
 				stack, dropdirections, airdropdirection);
 	}
 
@@ -200,7 +192,7 @@ public abstract class UtilInventory
 	public static ItemStack dropStack(TileEntity from, ItemStack stack, EnumFacing[] dropdirections,
 			EnumFacing airdropdirection)
 	{
-		return dropStack(from.getWorldObj(), new BlockPosition(from.xCoord, from.yCoord, from.zCoord),
+		return dropStack(from.getWorld(), from.getPos(),
 				stack, dropdirections, airdropdirection);
 	}
 
@@ -210,7 +202,7 @@ public abstract class UtilInventory
 	 * @param world
 	 *            the worldObj
 	 * @param pos
-	 *            the BlockPosition to drop from
+	 *            the BlockPos to drop from
 	 * @param stack
 	 *            the ItemStack being dropped
 	 * @param dropdirections
@@ -230,7 +222,7 @@ public abstract class UtilInventory
 
 		stack = stack.copy();
 		// (0.5) Try to put stack in conduits that are in valid directions
-		for (Entry<EnumFacing, IItemDuct> pipe : findConduits(world, pos.x, pos.y, pos.z, dropdirections).entrySet())
+		for (Entry<EnumFacing, IItemDuct> pipe : findConduits(world, pos, dropdirections).entrySet())
 		{
 			EnumFacing from = pipe.getKey().getOpposite();
 			stack = pipe.getValue().insertItem(from, stack);
@@ -248,7 +240,7 @@ public abstract class UtilInventory
 			}
 		}
 		// (2) Try to put stack in chests that are in valid directions
-		for (Entry<EnumFacing, IInventory> chest : findChests(world, pos.x, pos.y, pos.z, dropdirections).entrySet())
+		for (Entry<EnumFacing, IInventory> chest : findChests(world, pos, dropdirections).entrySet())
 		{
 			IInventoryManager manager = InventoryManager.create(chest.getValue(), chest.getKey().getOpposite());
 			stack = manager.addItem(stack);
@@ -272,25 +264,26 @@ public abstract class UtilInventory
 
 	public static boolean isAirDrop(World world, BlockPos pos)
 	{
-		Block block = world.getBlock(x, y, z);
-		if (block.isAir(world, x, y, z))
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		if (world.isAirBlock(pos))
 			return true;
-		block.setBlockBoundsBasedOnState(world, x, y, z);
-		return block.getCollisionBoundingBoxFromPool(world, x, y, z) == null;
+		return block.getCollisionBoundingBox(state, world, pos) == null;
 	}
 
 	@SuppressWarnings("deprecation")
-	private static ItemStack handleIPipeTile(World world, BlockPosition bp, EnumFacing[] dropdirections, ItemStack stack)
+	private static ItemStack handleIPipeTile(World world, BlockPos pos, EnumFacing[] dropdirections, ItemStack stack)
 	{
-		for (Entry<EnumFacing, IPipeTile> pipe : findPipes(world, bp.x, bp.y, bp.z, dropdirections).entrySet())
+		for (Entry<EnumFacing, IPipeTile> pipe : findPipes(world, pos, dropdirections).entrySet())
 		{
 			EnumFacing from = pipe.getKey().getOpposite();
 			if (pipe.getValue().isPipeConnected(from))
 			{
-				if (pipe.getValue().injectItem(stack.copy(), false, from) > 0)
+				ItemStack returnedStack = pipe.getValue().injectItem(stack.copy(), false, from, null, 0);
+				if (returnedStack == null || returnedStack.stackSize < stack.stackSize)
 				{
-					stack.stackSize -= pipe.getValue().injectItem(stack.copy(), true, from);
-					if (stack.stackSize <= 0)
+					stack = pipe.getValue().injectItem(stack.copy(), true, from, null, 0);
+					if (stack != null && stack.stackSize <= 0)
 					{
 						return null;
 					}

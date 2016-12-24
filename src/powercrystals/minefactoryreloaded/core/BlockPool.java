@@ -2,27 +2,28 @@ package powercrystals.minefactoryreloaded.core;
 
 import com.google.common.base.Objects;
 import com.google.common.primitives.Ints;
+import net.minecraft.util.math.BlockPos;
 
 public class BlockPool
 {
 	final public static class BlockNode
 	{
-		public int x, y, z;
+		//TODO encapsulate perhaps?
+		public BlockPos pos;
 
 		public BlockNode next;
 		public BlockNode prev;
 		BlockPool pool;
 		public BlockNode(BlockPool pool, BlockPos pos)
 		{
-			reset(x, y, z);
+			reset(pos);
 			this.pool = pool;
 		}
-		void reset(int _x, int _y, int _z)
+		void reset(BlockPos pos)
 		{
-			x = _x;
-			y = _y;
-			z = _z;
+			this.pos = pos;
 		}
+		
 		public void free()
 		{
 			synchronized(pool)
@@ -36,21 +37,21 @@ public class BlockPool
 			if (n == null || n.getClass() != BlockNode.class)
 				return false;
 			BlockNode bn = (BlockNode)n;
-			return bn.x == x && bn.y == y && bn.z == z && bn.pool == pool;
+			return bn.pos.equals(pos) && bn.pool == pool;
 		}
 		@Override
 		public String toString()
 		{
-			return "BlockNode[("+x+","+y+","+z+");"+pool+"]";
+			return "BlockNode[("+pos.toString()+");"+pool+"]";
 		}
 
 		private static final int HASH_A = 0x19660d;
 		private static final int HASH_C = 0x3c6ef35f;
 		@Override
 		public int hashCode() {
-			final int xTransform = HASH_A * (x ^ 0x5DDE) + HASH_C;
-			final int zTransform = HASH_A * (z ^ 0x03ED) + HASH_C;
-			final int yTransform = HASH_A * (y ^ 0x06FA) + HASH_C;
+			final int xTransform = HASH_A * (pos.getX() ^ 0x5DDE) + HASH_C;
+			final int zTransform = HASH_A * (pos.getZ() ^ 0x03ED) + HASH_C;
+			final int yTransform = HASH_A * (pos.getY() ^ 0x06FA) + HASH_C;
 			return xTransform ^ zTransform ^ yTransform;
 		}
 	}
@@ -101,12 +102,12 @@ public class BlockPool
 		{
 			if (pool.head == null)
 			{
-				r = new BlockNode(pool, x, y, z);
+				r = new BlockNode(pool, pos);
 				return r;
 			}
 			r = pool.shift();
 		}
-		r.reset(x, y, z);
+		r.reset(pos);
 		r.next = null;
 		r.prev = null;
 		return r;

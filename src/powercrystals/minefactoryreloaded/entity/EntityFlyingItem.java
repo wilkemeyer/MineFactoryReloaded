@@ -1,11 +1,14 @@
 package powercrystals.minefactoryreloaded.entity;
 
+import com.google.common.base.Optional;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.RayTraceResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityFlyingItem extends EntitySafariNet {
@@ -45,13 +48,13 @@ public class EntityFlyingItem extends EntitySafariNet {
 	}
 
 	@Override
-	public boolean canAttackWithItem() {
+	public boolean canBeAttackedWithItem() {
 
 		return false;
 	}
 
 	@Override
-	protected boolean onHitBlock(ItemStack storedEntity, RayTraceResult mop) {
+	protected boolean onHitBlock(ItemStack storedEntity, RayTraceResult result) {
 
 		if (canBePickedUp == 0 && (pickupChance > 0 && (pickupChance == 1 || worldObj.rand.nextInt(pickupChance) == 0))) {
 			dropAsStack(this.getStoredEntity());
@@ -61,15 +64,15 @@ public class EntityFlyingItem extends EntitySafariNet {
 	}
 
 	@Override
-	protected boolean onHitEntity(ItemStack storedEntity, RayTraceResult mop) {
+	protected boolean onHitEntity(ItemStack storedEntity, RayTraceResult result) {
 
 		DamageSource d = DamageSource.causeThrownDamage(this, getThrower() == null ? this : getThrower());
-		if (mop.entityHit.attackEntityFrom(d, damage)) {
+		if (result.entityHit.attackEntityFrom(d, damage)) {
 			if (this.knockbackStrength > 0) {
 				float f4 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 
 				if (f4 > 0.0F) {
-					mop.entityHit.addVelocity(this.motionX * this.knockbackStrength * 0.6D /
+					result.entityHit.addVelocity(this.motionX * this.knockbackStrength * 0.6D /
 							f4, 0.1D, this.motionZ * this.knockbackStrength * 0.6D / f4);
 				}
 			}
@@ -79,36 +82,32 @@ public class EntityFlyingItem extends EntitySafariNet {
 
 	@Override
 	protected void impact(double x, double y, double z, EnumFacing side) {
-		ItemStack stack = dataWatcher.getWatchableObjectItemStack(13);
-		String impact;
-		if (stack == null)
-			impact = "snowballpoof";
-		else
-			impact = "iconcrack_" + Item.getIdFromItem(stack.getItem()) + "_" + stack.getItemDamage();
+		Optional<ItemStack> entity = dataManager.get(STORED_ENTITY);
+		ItemStack stack = entity.isPresent() ? entity.get() : null;
 
 		float X = 0, Y = 0.14f, Z = 0;
 		switch (side) {
-		case 1:
+		case UP:
 			y += 1;
-		case 0:
+		case DOWN:
 			x += 0.5;
 			z += 0.5;
-			if (side == 0)
+			if (side == EnumFacing.DOWN)
 				Y = 0;
 			break;
-		case 3:
+		case SOUTH:
 			z += 1;
-		case 2:
+		case NORTH:
 			x += 0.5;
 			y += 0.5;
-			Z = side == 3 ? 1 : -1;
+			Z = side == EnumFacing.SOUTH ? 1 : -1;
 			break;
-		case 5:
+		case EAST:
 			x += 1;
-		case 4:
+		case WEST:
 			y += 0.5;
 			z += 0.5;
-			X = side == 5 ? 1 : -1;
+			X = side == EnumFacing.EAST ? 1 : -1;
 			break;
 		}
 		for (int j = 0; j < 8; ++j) {
@@ -116,7 +115,11 @@ public class EntityFlyingItem extends EntitySafariNet {
 			if (X != 0) f = Math.copySign(f, X);
 			float f2 = (worldObj.rand.nextFloat() - 0.5f) * 0.37f;
 			if (Z != 0) f2 = Math.copySign(f2, Z);
-			worldObj.spawnParticle(impact, x, y, z, f, Y, f2);
+			if (stack == null) {
+				worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, x, y, z, f, Y, f2);
+			} else {
+				worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, x, y, z, f, Y, f2, Item.getIdFromItem(stack.getItem()));
+			}
 		}
 		if (!worldObj.isRemote)
 			setDead();

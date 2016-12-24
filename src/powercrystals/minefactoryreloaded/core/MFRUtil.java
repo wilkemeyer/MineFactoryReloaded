@@ -1,14 +1,15 @@
 package powercrystals.minefactoryreloaded.core;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 import static org.lwjgl.input.Keyboard.*;
 
 import buildcraft.api.tools.IToolWrench;
 
 import cofh.api.item.IToolHammer;
 import cofh.lib.util.helpers.StringHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -46,7 +46,7 @@ public class MFRUtil {
 	@SideOnly(Side.CLIENT)
 	public static boolean isCtrlKeyDown() { // logic lifted from net.minecraft.client.gui.GuiScreen.isCtrlKeyDown()
 
-		if (Minecraft.isRunningOnMac)
+		if (Minecraft.IS_RUNNING_ON_MAC)
 			return Keyboard.isKeyDown(KEY_LMETA) || Keyboard.isKeyDown(KEY_RMETA);
 		return Keyboard.isKeyDown(KEY_LCONTROL) || Keyboard.isKeyDown(KEY_RCONTROL);
 	}
@@ -133,17 +133,17 @@ public class MFRUtil {
 
 	public static String localize(String s, boolean exists, String def) {
 
-		if (!StatCollector.canTranslate(s))
+		if (!I18n.canTranslate(s))
 			return exists ? def :
-					StatCollector.canTranslate(def) ? localize(StatCollector.translateToLocal(def), true) : def;
-		return StatCollector.translateToLocal(s);
+					I18n.canTranslate(def) ? localize(I18n.translateToLocal(def), true) : def;
+		return I18n.translateToLocal(s);
 	}
 
 	public static String localize(String s, Object... data) {
 
-		if (!StatCollector.canTranslate(s))
+		if (!I18n.canTranslate(s))
 			return s;
-		return StatCollector.translateToLocalFormatted(s, data);
+		return I18n.translateToLocalFormatted(s, data);
 	}
 
 	private static enum Numeral {
@@ -175,8 +175,8 @@ public class MFRUtil {
 	public static String toNumerals(short i) {
 
 		String s = "potion.potency." + i;
-		if (StatCollector.canTranslate(s))
-			return StatCollector.translateToLocal(s);
+		if (I18n.canTranslate(s))
+			return I18n.translateToLocal(s);
 		StringBuilder r = new StringBuilder();
 		if (i < 0) {
 			i = (short) -i;
@@ -190,7 +190,7 @@ public class MFRUtil {
 		return r.toString();
 	}
 
-	public static final List<EnumFacing> VALID_DIRECTIONS = Arrays.asList(EnumFacing.VALID_DIRECTIONS);
+	public static final List<EnumFacing> VALID_DIRECTIONS = Arrays.asList(EnumFacing.VALUES);
 
 	public static boolean isHoldingUsableTool(EntityPlayer player, BlockPos pos) {
 
@@ -309,9 +309,8 @@ public class MFRUtil {
 		ArrayList<EnumFacing> nonConveyors = new ArrayList<EnumFacing>();
 		Block id = MFRThings.conveyorBlock;
 
-		for (int i = 0, e = EnumFacing.VALID_DIRECTIONS.length; i < e; ++i) {
-			EnumFacing direction = EnumFacing.VALID_DIRECTIONS[i];
-			if (!world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ).equals(id))
+		for (EnumFacing direction : EnumFacing.VALUES) {
+			if (!world.getBlockState(pos.offset(direction)).getBlock().equals(id))
 				nonConveyors.add(direction);
 		}
 
@@ -320,27 +319,22 @@ public class MFRUtil {
 
 	public static void notifyNearbyBlocks(World world, BlockPos pos, Block block) {
 
-		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
-		if (world.blockExists(x, y, z)) {
-			for (int j = 0; j < 6; ++j) {
-				EnumFacing d2 = dirs[j];
-				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-				if (world.blockExists(x2, y2, z2))
-					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+		if (world.isBlockLoaded(pos)) {
+			for (EnumFacing facing : EnumFacing.VALUES) {
+				if (world.isBlockLoaded(pos.offset(facing)))
+					world.notifyBlockOfStateChange(pos.offset(facing), block);
 			}
 		}
 	}
 
 	public static void notifyNearbyBlocksExcept(World world, BlockPos pos, Block block) {
 
-		EnumFacing[] dirs = EnumFacing.VALID_DIRECTIONS;
-		if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {
-			world.notifyBlockOfNeighborChange(x, y, z, block);
-			for (int j = 0; j < 6; ++j) {
-				EnumFacing d2 = dirs[j];
-				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-				if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
-					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+		if (world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() != block) {
+			world.notifyBlockOfStateChange(pos, block);
+			for (EnumFacing d2 : EnumFacing.VALUES) {
+				BlockPos neighborPos = pos.offset(d2);
+				if (world.isBlockLoaded(neighborPos) && world.getBlockState(neighborPos).getBlock() != block)
+					world.notifyBlockOfStateChange(neighborPos, block);
 			}
 		}
 	}

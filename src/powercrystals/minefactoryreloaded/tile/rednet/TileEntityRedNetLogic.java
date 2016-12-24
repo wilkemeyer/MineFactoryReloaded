@@ -1,10 +1,10 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import cofh.api.tileentity.IPortableData;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 import cofh.lib.util.position.IRotateableTile;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 

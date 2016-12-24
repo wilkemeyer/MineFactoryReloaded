@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
@@ -23,7 +23,7 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
 		super.addInfo(stack, player, infoList, advancedTooltips);
-		infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.mode"));
+		infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.mode"));
 	}
 
 	@Override

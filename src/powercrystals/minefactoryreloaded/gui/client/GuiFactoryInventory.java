@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -95,7 +95,7 @@ public class GuiFactoryInventory extends GuiBase {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		GL11.glColor4f(1f, 1f, 1f, 1f);
 		fontRendererObj.drawString(_tileEntity.getInventoryName(), _xOffset, 6, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 3, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 3, 4210752);
 
 		if (_renderTanks) {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

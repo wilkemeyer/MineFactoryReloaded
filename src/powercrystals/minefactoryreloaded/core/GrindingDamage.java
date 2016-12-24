@@ -3,10 +3,10 @@ package powercrystals.minefactoryreloaded.core;
 import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.TextComponentTranslation;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ITextComponent;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 
 public class GrindingDamage extends DamageSource {
 
@@ -34,9 +34,9 @@ public class GrindingDamage extends DamageSource {
 	}
 
 	@Override
-	public ITextComponent func_151519_b(EntityLivingBase entity) {
+	public ITextComponent getDeathMessage(EntityLivingBase entity) {
 
-		EntityLivingBase entityliving1 = entity.func_94060_bK();
+		EntityLivingBase entityliving1 = entity.getAttackingEntity();
 		String s = "death.attack." + this.damageType;
 		if (_msgCount > 1) {
 			int msg = _rand.nextInt(_msgCount);
@@ -45,8 +45,8 @@ public class GrindingDamage extends DamageSource {
 			}
 		}
 		String s1 = s + ".player";
-		if (entityliving1 != null && StatCollector.canTranslate(s1))
-			return new TextComponentTranslation(s1, entity.getCommandSenderName(), entityliving1.getCommandSenderName());
-		return new TextComponentTranslation(s, entity.getCommandSenderName());
+		if (entityliving1 != null && I18n.canTranslate(s1))
+			return new TextComponentTranslation(s1, entity.getName(), entityliving1.getName());
+		return new TextComponentTranslation(s, entity.getName());
 	}
 }

@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.tile.transport;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.helpers.FluidHelper;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

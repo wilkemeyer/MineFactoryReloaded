@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.asm.relauncher.Strippable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;

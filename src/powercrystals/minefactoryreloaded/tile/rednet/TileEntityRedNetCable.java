@@ -6,12 +6,12 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock
 
 import cofh.core.render.hitbox.CustomHitBox;
 import cofh.core.render.hitbox.ICustomHitBox;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import gnu.trove.set.hash.THashSet;
 

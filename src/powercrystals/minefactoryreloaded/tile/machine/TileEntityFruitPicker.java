@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Map;
@@ -99,7 +99,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 			if (!worldObj.setBlockToAir(targetCoords.x, targetCoords.y, targetCoords.z))
 				return false;
 			if (MFRConfig.playSounds.getBoolean(true)) {
-				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x, targetCoords.y, targetCoords.z,
+				worldObj.playEvent(null, 2001, targetCoords.x, targetCoords.y, targetCoords.z,
 					Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
 			}
 		} else {

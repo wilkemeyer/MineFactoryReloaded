@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,8 +36,8 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("info.cofh.template"), 67 + 27, 27, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("info.cofh.output"), 128 + 27, 26, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("info.cofh.template"), 67 + 27, 27, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("info.cofh.output"), 128 + 27, 26, 4210752);
 
 		FluidTankInfo[] tanks = _crafter.getTankInfo(EnumFacing.UNKNOWN);
 

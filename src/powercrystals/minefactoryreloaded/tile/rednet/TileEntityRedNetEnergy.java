@@ -12,11 +12,11 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyTransport;
 import cofh.asm.relauncher.Strippable;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergySink;

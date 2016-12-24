@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,14 +18,18 @@ public class ItemFishingRod extends ItemFactoryTool {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if (!par3EntityPlayer.capabilities.isCreativeMode)
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World world, EntityPlayer player) {
+		if (!player.capabilities.isCreativeMode)
 			--par1ItemStack.stackSize;
 
-		par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-		if (!par2World.isRemote)
-			par2World.spawnEntityInWorld(new EntityFishingRod(par2World, par3EntityPlayer));
+		if (!world.isRemote) {
+			EntityFishingRod entity = new EntityFishingRod(world, player);
+			entity.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, 0.6F, 1.0F);
+			world.spawnEntityInWorld();
+			
+		}
 
 		return par1ItemStack;
 	}

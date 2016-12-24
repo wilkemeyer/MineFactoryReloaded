@@ -2,8 +2,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.lib.util.WeightedRandomItemStack;
 import cofh.lib.util.helpers.MathHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
 import java.util.List;

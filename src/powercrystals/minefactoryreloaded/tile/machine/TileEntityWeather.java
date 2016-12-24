@@ -5,8 +5,8 @@ import static net.minecraftforge.fluids.FluidRegistry.WATER;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;

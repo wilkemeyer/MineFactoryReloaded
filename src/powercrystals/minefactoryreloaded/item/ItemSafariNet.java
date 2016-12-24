@@ -1,7 +1,9 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
@@ -76,11 +78,11 @@ public class ItemSafariNet extends ItemFactory {
 
 		int type = ((ItemSafariNet) stack.getItem()).type;
 		if (1 == (type & 1)) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.persistent"));
+			infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.persistent"));
 		}
 
 		if (2 == (type & 2)) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.nametag"));
+			infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.nametag"));
 		}
 
 		if (stack.getTagCompound() == null) {
@@ -88,7 +90,7 @@ public class ItemSafariNet extends ItemFactory {
 		}
 
 		if (stack.getTagCompound().getBoolean("hide")) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.mystery"));
+			infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.mystery"));
 		} else {
 			infoList.add(MFRUtil.localize("entity.", stack.getTagCompound().getString("id")));
 			// See Entity.getEntityName()

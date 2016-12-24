@@ -26,7 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -288,7 +288,7 @@ public class Machine {
 		if (stack.stackTagCompound != null)
 			if (_energyStoredMax > 0 && stack.stackTagCompound.hasKey("energyStored"))
 				return true;
-		return _activationEnergy > 0 || StatCollector.canTranslate(getTooltipText());
+		return _activationEnergy > 0 || I18n.canTranslate(getTooltipText());
 	}
 
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {
@@ -309,8 +309,8 @@ public class Machine {
 				info.add(MFRUtil.localize("info.cofh.energyConsume", true) + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
 		}
 		String s = getTooltipText();
-		if (StatCollector.canTranslate(s)) {
-			s = StatCollector.translateToLocal(s);
+		if (I18n.canTranslate(s)) {
+			s = I18n.translateToLocal(s);
 			if (s.contains("\n"))
 				info.addAll(Arrays.asList(s.split("\n")));
 			else

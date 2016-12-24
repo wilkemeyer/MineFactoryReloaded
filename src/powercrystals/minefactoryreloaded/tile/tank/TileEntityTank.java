@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.tile.tank;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
 import java.util.List;

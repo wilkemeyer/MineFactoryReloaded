@@ -3,9 +3,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.MathHelper;
 import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 
 public class GuiNeedlegun extends GuiContainer
 {
@@ -23,7 +23,7 @@ public class GuiNeedlegun extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		fontRendererObj.drawString(name, 8, 6, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 4, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), 8, ySize - 96 + 4, 4210752);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}

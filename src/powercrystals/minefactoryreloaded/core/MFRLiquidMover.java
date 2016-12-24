@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.core;
 
 import cofh.core.util.fluid.FluidTankAdv;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,9 +36,9 @@ public abstract class MFRLiquidMover
 		if(liquid != null)
 		{
 			Item item = ci.getItem();
-			if(itcb.fill(EnumFacing.UNKNOWN, liquid, false) == liquid.amount)
+			if(itcb.fill(null, liquid, false) == liquid.amount)
 			{
-				itcb.fill(EnumFacing.UNKNOWN, liquid, true);
+				itcb.fill(null, liquid, true);
 				if(!entityplayer.capabilities.isCreativeMode)
 				{
 					if (item.hasContainerItem(ci)) {
@@ -50,7 +50,7 @@ public abstract class MFRLiquidMover
 						entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, UtilInventory.consumeItem(ci, entityplayer));
 					if (!entityplayer.worldObj.isRemote) {
 						entityplayer.openContainer.detectAndSendChanges();
-						((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
+						((EntityPlayerMP)entityplayer).updateCraftingInventory(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 					}
 				}
 				return true;
@@ -61,8 +61,8 @@ public abstract class MFRLiquidMover
 			Item item = ci.getItem();
 			IFluidContainerItem fluidContainer = (IFluidContainerItem)item;
 			liquid = fluidContainer.getFluid(ci);
-			if (itcb.fill(EnumFacing.UNKNOWN, liquid, false) > 0) {
-				int amount = itcb.fill(EnumFacing.UNKNOWN, liquid, true);
+			if (itcb.fill(null, liquid, false) > 0) {
+				int amount = itcb.fill(null, liquid, true);
 				ItemStack drop = ci.splitStack(1);
 				ci.stackSize++;
 				fluidContainer.drain(drop, amount, true);
@@ -75,7 +75,7 @@ public abstract class MFRLiquidMover
 					disposePlayerItem(ci, drop, entityplayer, true);
 					if (!entityplayer.worldObj.isRemote) {
 						entityplayer.openContainer.detectAndSendChanges();
-						((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
+						((EntityPlayerMP)entityplayer).updateCraftingInventory(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 					}
 				}
 				return true;
@@ -98,7 +98,7 @@ public abstract class MFRLiquidMover
 		if(ci != null && (FluidContainerRegistry.isEmptyContainer(ci) ||
 				(isSmartContainer = ci.getItem() instanceof IFluidContainerItem)))
 		{
-			for(FluidTankInfo tank : itcb.getTankInfo(EnumFacing.UNKNOWN))
+			for(FluidTankInfo tank : itcb.getTankInfo(null))
 			{
 				FluidStack tankLiquid = tank.fluid;
 				if (tankLiquid == null || tankLiquid.amount == 0)
@@ -113,7 +113,7 @@ public abstract class MFRLiquidMover
 					if (fluidContainer.fill(filledBucket, tankLiquid, false) > 0) {
 						int amount = fluidContainer.fill(filledBucket, tankLiquid, true);
 						bucketLiquid = new FluidStack(tankLiquid, amount);
-						FluidStack l = itcb.drain(EnumFacing.UNKNOWN, bucketLiquid, false);
+						FluidStack l = itcb.drain(null, bucketLiquid, false);
 						if (l == null || l.amount < amount)
 							filledBucket = null;
 					}
@@ -126,7 +126,7 @@ public abstract class MFRLiquidMover
 					if(FluidContainerRegistry.isFilledContainer(filledBucket))
 					{
 						bucketLiquid = FluidContainerRegistry.getFluidForFilledItem(filledBucket);
-						FluidStack l = itcb.drain(EnumFacing.UNKNOWN, bucketLiquid, false);
+						FluidStack l = itcb.drain(null, bucketLiquid, false);
 						if (l == null || l.amount < bucketLiquid.amount)
 							filledBucket = null;
 					}
@@ -139,9 +139,9 @@ public abstract class MFRLiquidMover
 					{
 						if (!entityplayer.worldObj.isRemote) {
 							entityplayer.openContainer.detectAndSendChanges();
-							((EntityPlayerMP)entityplayer).sendContainerAndContentsToPlayer(entityplayer.openContainer, entityplayer.openContainer.getInventory());
+							((EntityPlayerMP)entityplayer).updateCraftingInventory(entityplayer.openContainer, entityplayer.openContainer.getInventory());
 						}
-						itcb.drain(EnumFacing.UNKNOWN, bucketLiquid, true);
+						itcb.drain(null, bucketLiquid, true);
 						return true;
 					}
 				}
@@ -170,7 +170,7 @@ public abstract class MFRLiquidMover
 			stack.stackSize -= 1;
 			if (dropStack != null && !entityplayer.inventory.addItemStackToInventory(dropStack))
 			{
-				entityplayer.func_146097_a(dropStack, false, true);
+				entityplayer.dropItem(dropStack, false, true);
 			}
 			return true;
 		}
@@ -206,14 +206,16 @@ public abstract class MFRLiquidMover
 		{
 			FluidStack l = iFluidTank.getFluid().copy();
 			l.amount = Math.min(l.amount, FluidContainerRegistry.BUCKET_VOLUME);
-			for (BlockPosition adj : new BlockPosition(from).getAdjacent(true))
+			for (EnumFacing facing : EnumFacing.VALUES)
 			{
-				TileEntity tile = from.getWorldObj().getTileEntity(adj.x, adj.y, adj.z);
+				BlockPos adj = from.getPos().offset(facing);
+				EnumFacing front = from.getDirectionFacing();
+				TileEntity tile = from.getWorld().getTileEntity(adj);
 				if (tile instanceof IFluidHandler)
 				{
-					if (!((IFluidHandler)tile).canFill(adj.orientation.getOpposite(), l.getFluid()))
+					if (!((IFluidHandler)tile).canFill(front.getOpposite(), l.getFluid()))
 						continue;
-					int filled = ((IFluidHandler)tile).fill(adj.orientation.getOpposite(), l, true);
+					int filled = ((IFluidHandler)tile).fill(front.getOpposite(), l, true);
 					iFluidTank.drain(filled, true);
 					l.amount -= filled;
 					if(l.amount <= 0)

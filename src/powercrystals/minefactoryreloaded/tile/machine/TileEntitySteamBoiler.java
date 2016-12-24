@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cofh.core.util.CoreUtils;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.ItemHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;

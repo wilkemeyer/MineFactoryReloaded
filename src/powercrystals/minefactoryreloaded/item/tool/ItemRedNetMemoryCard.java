@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
 import cofh.api.tileentity.IPortableData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 import java.util.List;

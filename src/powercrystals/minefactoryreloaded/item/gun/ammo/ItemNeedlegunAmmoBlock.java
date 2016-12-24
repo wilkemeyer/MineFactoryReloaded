@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.item.gun.ammo;
 
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

@@ -2,9 +2,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -179,7 +179,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 			if (!worldObj.setBlock(target.x, target.y, target.z, Blocks.air, 0, 2))
 				return false;
 			if (_settings.get("playSounds") == Boolean.TRUE) {
-				worldObj.playAuxSFXAtEntity(null, 2001, target.x, target.y, target.z,
+				worldObj.playEvent(null, 2001, target.x, target.y, target.z,
 					Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
 			}
 		}

@@ -8,11 +8,11 @@ import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.util.CoreUtils;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import cofh.repack.codechicken.lib.vec.Vector3;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,17 +1,17 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class FruitHarvestManager implements IHarvestManager
 {
-	private List<BlockPosition> _treeBlocks;
+	private List<BlockPos> _treeBlocks;
 	private int _currentBlock;
 	private boolean _isDone;
 	
@@ -25,7 +25,7 @@ public class FruitHarvestManager implements IHarvestManager
 	}
 	
 	@Override
-	public BlockPosition getNextBlock()
+	public BlockPos getNextBlock()
 	{
 		return _treeBlocks.get(_currentBlock);
 	}
@@ -60,7 +60,7 @@ public class FruitHarvestManager implements IHarvestManager
 	}
 
 	@Override
-	public BlockPosition getOrigin()
+	public BlockPos getOrigin()
 	{
 		return _area.getOrigin();
 	}
@@ -72,9 +72,9 @@ public class FruitHarvestManager implements IHarvestManager
 		data.setBoolean("done", _isDone);
 		data.setInteger("curPos", _currentBlock);
 		data.setInteger("mode", _harvestMode.ordinal());
-		BlockPosition o = getOrigin();
-		data.setIntArray("area", new int[] {o.x - _area.xMin, o.y - _area.yMin, _area.yMax - o.y});
-		data.setIntArray("origin", new int[] {o.x, o.y, o.z});
+		BlockPos o = getOrigin();
+		data.setIntArray("area", new int[] {o.getX() - _area.xMin, o.getY() - _area.yMin, _area.yMax - o.getY()});
+		data.setIntArray("origin", new int[] {o.getX(), o.getY(), o.getZ()});
 		tag.setTag("harvestManager", data);
 	}
 
@@ -91,7 +91,7 @@ public class FruitHarvestManager implements IHarvestManager
 			_isDone = true;
 			return;
 		}
-		_area = new Area(new BlockPosition(o[0], o[1], o[2]), area[0], area[1], area[2]);
+		_area = new Area(new BlockPos(o[0], o[1], o[2]), area[0], area[1], area[2]);
 	}
 
 	@Override
