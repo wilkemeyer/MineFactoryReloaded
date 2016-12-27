@@ -4,7 +4,9 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -13,7 +15,7 @@ import powercrystals.minefactoryreloaded.api.IFactoryFertilizable;
 public class FertilizableGrass implements IFactoryFertilizable
 {
 	protected Block grass;
-	public FertilizableGrass() { this(Blocks.grass); }
+	public FertilizableGrass() { this(Blocks.GRASS); }
 	public FertilizableGrass(Block grass)
 	{
 		this.grass = grass;
@@ -24,14 +26,16 @@ public class FertilizableGrass implements IFactoryFertilizable
 	{
 		return (fertilizerType == FertilizerType.GrowPlant ||
 				fertilizerType == FertilizerType.Grass) &&
-				world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z);
+				world.isAirBlock(pos.up());
 	}
 	
 	@Override
 	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		((IGrowable)world.getBlock(x, y, z)).func_149853_b(world, rand, x, y, z);
-		return !world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z);
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		((IGrowable)block).grow(world, rand, pos, state);
+		return !world.isAirBlock(pos.up());
 	}
 	
 	@Override

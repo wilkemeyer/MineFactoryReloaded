@@ -10,6 +10,6 @@ public class VanillaEggHandler implements IMobEggHandler
 	@Override
 	public EntityEggInfo getEgg(ItemStack safariNet)
 	{
-		return (EntityEggInfo)EntityList.entityEggs.get(EntityList.stringToIDMapping.get(safariNet.getTagCompound().getString("id")));
+		return EntityList.ENTITY_EGGS.get(safariNet.getTagCompound().getString("id"));
 	}
 }

@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.farmables.harvestables;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 
 public class HarvestableGourd extends HarvestableStandard
 {
@@ -18,12 +19,12 @@ public class HarvestableGourd extends HarvestableStandard
 	@Override
 	public void postHarvest(net.minecraft.world.World world, BlockPos pos)
 	{
-		Block ground = world.getBlock(x, y - 1, z);
-		if (world.isAirBlock(x, y, z) &&
-				(ground.equals(Blocks.dirt) || ground.equals(Blocks.grass)))
+		Block ground = world.getBlockState(pos.down()).getBlock();
+		if (world.isAirBlock(pos) &&
+				(ground.equals(Blocks.DIRT) || ground.equals(Blocks.GRASS)))
 		{
-			world.setBlock(x, y - 1, z, Blocks.farmland);
+			world.setBlockState(pos.down(), Blocks.FARMLAND.getDefaultState());
 		}
-		super.postHarvest(world, x, y, z);
+		super.postHarvest(world, pos);
 	}
 }

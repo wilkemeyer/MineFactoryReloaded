@@ -5,6 +5,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -25,12 +26,8 @@ public interface IFactoryFruit {
 	 *
 	 * @param world
 	 *            The world where the fruit is being picked
-	 * @param x
-	 *            The x-coordinate of the fruit
-	 * @param y
-	 *            The y-coordinate of the fruit
-	 * @param z
-	 *            The z-coordinate of the fruit
+	 * @param pos
+	 *            The position of the fruit
 	 *
 	 * @return True if the fruit can be picked
 	 */
@@ -49,12 +46,8 @@ public interface IFactoryFruit {
 	 *
 	 * @param world
 	 *            The world where the fruit is being picked
-	 * @param x
-	 *            The x-coordinate of the fruit
-	 * @param y
-	 *            The y-coordinate of the fruit
-	 * @param z
-	 *            The z-coordinate of the fruit
+	 * @param pos
+	 *            The position of the fruit
 	 *
 	 * @return The block to replace the fruit block with, or null for air.
 	 */
@@ -66,12 +59,8 @@ public interface IFactoryFruit {
 	 *
 	 * @param world
 	 *            The world where the fruit is being picked
-	 * @param x
-	 *            The x-coordinate of the fruit
-	 * @param y
-	 *            The y-coordinate of the fruit
-	 * @param z
-	 *            The z-coordinate of the fruit
+	 * @param pos
+	 *            The position of the fruit
 	 */
 	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos);
 
@@ -81,12 +70,8 @@ public interface IFactoryFruit {
 	 *
 	 * @param world
 	 *            The world where the fruit is being picked
-	 * @param x
-	 *            The x-coordinate of the fruit
-	 * @param y
-	 *            The y-coordinate of the fruit
-	 * @param z
-	 *            The z-coordinate of the fruit
+	 * @param pos
+	 *            The position of the fruit
 	 */
 	public void prePick(World world, BlockPos pos);
 
@@ -95,12 +80,8 @@ public interface IFactoryFruit {
 	 *
 	 * @param world
 	 *            The world where the fruit is being picked
-	 * @param x
-	 *            The x-coordinate of the fruit
-	 * @param y
-	 *            The y-coordinate of the fruit
-	 * @param z
-	 *            The z-coordinate of the fruit
+	 * @param pos
+	 *            The position of the fruit
 	 */
 	public void postPick(World world, BlockPos pos);
 }

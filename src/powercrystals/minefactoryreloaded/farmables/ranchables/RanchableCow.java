@@ -40,9 +40,9 @@ public class RanchableCow implements IFactoryRanchable {
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		IInventoryManager manager = InventoryManager.create(rancher, EnumFacing.UP);
 
-		int bucketIndex = manager.findItem(new ItemStack(Items.bucket));
+		int bucketIndex = manager.findItem(new ItemStack(Items.BUCKET));
 		if (bucketIndex >= 0) {
-			drops.add(new RanchedItem(Items.milk_bucket));
+			drops.add(new RanchedItem(Items.MILK_BUCKET));
 			rancher.decrStackSize(bucketIndex, 1);
 		} else {
 			FluidStack milk = FluidRegistry.getFluidStack("milk", FluidContainerRegistry.BUCKET_VOLUME);

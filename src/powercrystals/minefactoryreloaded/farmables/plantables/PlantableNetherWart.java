@@ -7,6 +7,6 @@ public class PlantableNetherWart extends PlantableStandard
 {
 	public PlantableNetherWart()
 	{
-		super(Items.nether_wart, Blocks.nether_wart);
+		super(Items.NETHER_WART, Blocks.NETHER_WART);
 	}
 }

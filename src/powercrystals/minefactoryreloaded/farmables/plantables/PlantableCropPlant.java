@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PlantableCropPlant extends PlantableStandard
@@ -21,23 +22,23 @@ public class PlantableCropPlant extends PlantableStandard
 	@Override
 	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
-		if(!world.isAirBlock(x, y, z))
+		if(!world.isAirBlock(pos))
 			return false;
 		
-		Block ground = world.getBlock(x, y - 1, z);
-		return ground.equals(Blocks.farmland) ||
-				ground.equals(Blocks.grass) ||
-				ground.equals(Blocks.dirt) ||
-				super.canBePlantedHere(world, x, y, z, stack);
+		Block ground = world.getBlockState(pos.down()).getBlock();
+		return ground.equals(Blocks.FARMLAND) ||
+				ground.equals(Blocks.GRASS) ||
+				ground.equals(Blocks.DIRT) ||
+				super.canBePlantedHere(world, pos, stack);
 	}
 	
 	@Override
 	public void prePlant(World world, BlockPos pos, ItemStack stack)
 	{
-		Block ground = world.getBlock(x, y - 1, z);
-		if (ground.equals(Blocks.grass) || ground.equals(Blocks.dirt))
+		Block ground = world.getBlockState(pos.down()).getBlock();
+		if (ground.equals(Blocks.GRASS) || ground.equals(Blocks.DIRT))
 		{
-			world.setBlock(x, y - 1, z, Blocks.farmland);
+			world.setBlockState(pos.down(), Blocks.FARMLAND.getDefaultState());
 		}
 	}
 }

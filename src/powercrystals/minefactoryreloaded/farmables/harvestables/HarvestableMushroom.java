@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.farmables.harvestables;
 
+import net.minecraft.util.math.BlockPos;
+
 public class HarvestableMushroom extends HarvestableStandard
 {
 	public HarvestableMushroom(net.minecraft.block.Block block)

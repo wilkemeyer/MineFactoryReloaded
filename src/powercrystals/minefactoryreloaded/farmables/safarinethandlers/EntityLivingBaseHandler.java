@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.farmables.safarinethandlers;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -51,14 +51,14 @@ public class EntityLivingBaseHandler implements ISafariNetHandler
 					{
 						NBTTagCompound t = l.getCompoundTagAt(i);
 						PotionEffect f = PotionEffect.readCustomPotionEffectFromNBT(t);
-						Potion p = Potion.potionTypes[f.getPotionID()];
+						Potion p = f.getPotion();
 						String s = MFRUtil.localize(f.getEffectName(), true).trim();
 
 						int a = f.getAmplifier();
 						if (a > 0)
 							s = (s + " " + MFRUtil.localize("potion.potency." + a, true, "x" + (a + 1))).trim();
 
-						s += RESET + " - " + Potion.getDurationString(f).trim();
+						s += RESET + " - " + Potion.getPotionDurationString(f, 1.0F).trim();
 						infoList.add("    " + (p.isBadEffect() ? RED : DARK_BLUE) + s + RESET);
 					}
 				}

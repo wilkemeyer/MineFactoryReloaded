@@ -21,7 +21,6 @@ public class SpawnableEnderman implements IMobSpawnHandler
 
 	@Override
 	public void onMobExactSpawn(EntityLivingBase entity) {
-		((EntityEnderman)entity).func_146081_a(Blocks.air);
-		((EntityEnderman)entity).setCarryingData(0);
+		((EntityEnderman)entity).setHeldBlockState(Blocks.AIR.getDefaultState());
 	}
 }

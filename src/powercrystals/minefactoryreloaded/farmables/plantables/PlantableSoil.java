@@ -3,10 +3,13 @@ package powercrystals.minefactoryreloaded.farmables.plantables;
 import cofh.lib.util.helpers.FluidHelper;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fluids.BlockFluidBase;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
 public class PlantableSoil extends PlantableStandard
@@ -44,15 +47,17 @@ public class PlantableSoil extends PlantableStandard
 	@Override
 	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
-		if (!world.isAirBlock(x, y, z))
-			if (FluidHelper.lookupFluidForBlock(world.getBlock(x, y, z)) == FluidHelper.WATER_FLUID) {
-				if (FluidHelper.lookupFluidForBlock(world.getBlock(x, y + 1, z)) == FluidHelper.WATER_FLUID)
+		if (!world.isAirBlock(pos))
+			if (FluidHelper.lookupFluidForBlock(world.getBlockState(pos).getBlock()) == FluidHelper.WATER_FLUID) {
+				IBlockState stateUp = world.getBlockState(pos.up());
+				if (FluidHelper.lookupFluidForBlock(stateUp.getBlock()) == FluidHelper.WATER_FLUID)
 					return false;
 				else
-					return world.getBlockMetadata(x, y, z) != 0;
+					return stateUp.getValue(BlockFluidBase.LEVEL) != 0;
 			} else {
-				Block block = world.getBlock(x, y, z);
-				return !block.getMaterial().isLiquid() && block.isReplaceable(world, x, y, z);
+				IBlockState state = world.getBlockState(pos);
+				Block block = state.getBlock();
+				return !state.getMaterial().isLiquid() && block.isReplaceable(world, pos);
 			}
 
 		return true;

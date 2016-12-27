@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.farmables.plantables;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraft.util.EnumFacing;
@@ -82,13 +83,13 @@ public class PlantableStandard implements IFactoryPlantable
 	@Override
 	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
-		if (!world.isAirBlock(x, y, z))
+		if (!world.isAirBlock(pos))
 			return false;
 
-		Block groundId = world.getBlock(x, y - 1, z);
-		return (_block.canPlaceBlockAt(world, x, y, z) && _block.canReplace(world, x, y, z, 0, stack)) ||
+		Block groundId = world.getBlockState(pos.down()).getBlock();
+		return (_block.canPlaceBlockAt(world, pos) && _block.canReplace(world, pos, EnumFacing.DOWN, stack)) ||
 				(_block instanceof IPlantable && groundId != null &&
-				groundId.canSustainPlant(world, x, y, z, EnumFacing.UP, (IPlantable)_block));
+				groundId.canSustainPlant(world.getBlockState(pos), world, pos, EnumFacing.UP, (IPlantable)_block));
 	}
 
 	@Override

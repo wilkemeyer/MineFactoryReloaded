@@ -5,8 +5,10 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -19,7 +21,7 @@ public class HarvestableStandard implements IFactoryHarvestable
 
 	public HarvestableStandard(Block block, HarvestType harvestType)
 	{
-		if (block == Blocks.air)
+		if (block == Blocks.AIR)
 			throw new IllegalArgumentException("Passed air FactoryHarvestableStandard");
 
 		_block = block;
@@ -58,7 +60,8 @@ public class HarvestableStandard implements IFactoryHarvestable
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
-		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().getDrops(world, pos, state, 0);
 	}
 
 	@Override
@@ -69,6 +72,6 @@ public class HarvestableStandard implements IFactoryHarvestable
 	@Override
 	public void postHarvest(World world, BlockPos pos)
 	{
-		world.notifyBlocksOfNeighborChange(x, y, z, getPlant());
+		world.notifyNeighborsOfStateChange(pos, getPlant());
 	}
 }

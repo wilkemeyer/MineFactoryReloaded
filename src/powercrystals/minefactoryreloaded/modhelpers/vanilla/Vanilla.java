@@ -101,10 +101,10 @@ public class Vanilla {
 		MFRRegistry.registerHarvestable(new HarvestableStemPlant(Blocks.melon_stem, Blocks.melon_block));
 		MFRRegistry.registerHarvestable(new HarvestableGourd(Blocks.pumpkin));
 		MFRRegistry.registerHarvestable(new HarvestableGourd(Blocks.melon_block));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.wheat, 7));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.carrots, 7));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.potatoes, 7));
-		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.nether_wart, 3));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.WHEAT, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.CARROTS, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.POTATOES, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.NETHER_WART, 3));
 		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.vine));
 		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.cocoa));
 

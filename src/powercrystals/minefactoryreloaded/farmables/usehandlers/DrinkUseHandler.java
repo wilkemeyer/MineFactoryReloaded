@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,14 +15,14 @@ import powercrystals.minefactoryreloaded.core.IUseHandler;
 
 public class DrinkUseHandler implements IUseHandler {
 	@Override
-	public boolean canUse(ItemStack item, EntityLivingBase entity) {
+	public boolean canUse(ItemStack item, EntityLivingBase entity, EnumHand hand) {
 		return entity instanceof EntityPlayer && isUsable(item);
 	}
 
 	@Override
-	public ItemStack onTryUse(ItemStack item, World world, EntityLivingBase entity) {
-		if (canUse(item, entity))
-			((EntityPlayer)entity).setItemInUse(item, item.getMaxItemUseDuration());
+	public ItemStack onTryUse(ItemStack item, World world, EntityLivingBase entity, EnumHand hand) {
+		if (canUse(item, entity, hand))
+			entity.setActiveHand(hand);
 		return item;
 	}
 
@@ -37,11 +38,11 @@ public class DrinkUseHandler implements IUseHandler {
 
 	@Override
 	public EnumAction useAction(ItemStack item) {
-		return isUsable(item) ? EnumAction.drink : EnumAction.none;
+		return isUsable(item) ? EnumAction.DRINK : EnumAction.NONE;
 	}
 
 	@Override
-	public ItemStack onUse(ItemStack item, EntityLivingBase entity) {
+	public ItemStack onUse(ItemStack item, EntityLivingBase entity, EnumHand hand) {
 		String liquid = getFluidName(item);
 		ItemStack r = item;
 		if (item.stackSize == 1 && liquid != null &&
@@ -58,7 +59,7 @@ public class DrinkUseHandler implements IUseHandler {
 				if (item.stackSize < 1)
 					item = drop;
 				else if (drop != null && !player.inventory.addItemStackToInventory(drop))
-					player.func_146097_a(drop, false, true);
+					player.dropItem(drop, false, true);
 			}
 			MFRRegistry.getLiquidDrinkHandlers().get(liquid).onDrink(player);
 		}

@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.api;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -30,12 +31,8 @@ public interface IFactoryPlantable {
 	/**
 	 * @param world
 	 *            The world instance this block or item will be placed into.
-	 * @param x
-	 *            The destination X coordinate.
-	 * @param y
-	 *            The destination Y coordinate.
-	 * @param z
-	 *            The destination Z coordinate.
+	 * @param pos
+	 *            The position.
 	 * @param stack
 	 *            The stack being planted.
 	 *
@@ -46,12 +43,8 @@ public interface IFactoryPlantable {
 	/**
 	 * @param world
 	 *            The world instance this block or item will be placed into.
-	 * @param x
-	 *            The destination X coordinate.
-	 * @param y
-	 *            The destination Y coordinate.
-	 * @param z
-	 *            The destination Z coordinate.
+	 * @param pos
+	 *            The position.
 	 * @param stack
 	 *            The stack being planted.
 	 *
@@ -64,12 +57,8 @@ public interface IFactoryPlantable {
 	 *
 	 * @param world
 	 *            The world instance this block or item will be placed into.
-	 * @param x
-	 *            The destination X coordinate.
-	 * @param y
-	 *            The destination Y coordinate.
-	 * @param z
-	 *            The destination Z coordinate.
+	 * @param pos
+	 *            The position.
 	 * @param stack
 	 *            The stack being planted.
 	 */
@@ -80,12 +69,8 @@ public interface IFactoryPlantable {
 	 *
 	 * @param world
 	 *            The world instance this block or item will be placed into.
-	 * @param x
-	 *            The destination X coordinate.
-	 * @param y
-	 *            The destination Y coordinate.
-	 * @param z
-	 *            The destination Z coordinate.
+	 * @param pos
+	 *            The position.
 	 * @param stack
 	 *            The stack being planted.
 	 */

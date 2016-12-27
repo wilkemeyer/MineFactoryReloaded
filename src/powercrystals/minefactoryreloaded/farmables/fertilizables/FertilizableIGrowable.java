@@ -4,6 +4,8 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -36,15 +38,17 @@ public class FertilizableIGrowable implements IFactoryFertilizable
 	@Override
 	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
-		return fertilizerType == validFertilizer && fertilizable.func_149851_a(world, x, y, z, world.isRemote);
+		return fertilizerType == validFertilizer && fertilizable.canGrow(world, pos, world.getBlockState(pos), world.isRemote);
 	}
 
 	@Override
 	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		Block block = world.getBlock(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z);
-		fertilizable.func_149853_b(world, rand, x, y, z);
-		return block != world.getBlock(x, y, z) || meta != world.getBlockMetadata(x, y, z);
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		int meta = block.getMetaFromState(state);
+		fertilizable.grow(world, rand, pos, state);
+		state = world.getBlockState(pos);
+		return block != state.getBlock() || meta != state.getBlock().getMetaFromState(state);
 	}
 }

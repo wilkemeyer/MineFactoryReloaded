@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.farmables.safarinethandlers;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 
 import java.util.List;
 

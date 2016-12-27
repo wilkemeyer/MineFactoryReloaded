@@ -30,7 +30,7 @@ public class RanchableSheep implements IFactoryRanchable {
 		}
 
 		List<RanchedItem> stacks = new LinkedList<RanchedItem>();
-		stacks.add(new RanchedItem(Blocks.wool, 1, s.getFleeceColor()));
+		stacks.add(new RanchedItem(Blocks.WOOL, 1, s.getFleeceColor().getMetadata()));
 		s.setSheared(true);
 
 		return stacks;
