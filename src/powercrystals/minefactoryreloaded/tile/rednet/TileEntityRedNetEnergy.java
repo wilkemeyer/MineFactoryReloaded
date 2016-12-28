@@ -119,8 +119,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 		if (deadCache) {
 			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
-				if (BlockPosition.blockExists(this, dir))
-					addCache(BlockPosition.getAdjacentTileEntity(this, dir));
+				if (BlockPos.blockExists(this, dir))
+					addCache(BlockPos.getAdjacentTileEntity(this, dir));
 			deadCache = false;
 			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 		}
@@ -148,8 +148,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		if (_grid == null) {
 			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
-				if (BlockPosition.blockExists(this, dir)) {
-					TileEntityRedNetEnergy pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
+				if (BlockPos.blockExists(this, dir)) {
+					TileEntityRedNetEnergy pipe = BlockPos.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
 					if (pipe != null) {
 						if (pipe._grid != null && pipe.canInterface(this, dir)) {
 							pipe._grid.addConduit(this);
@@ -332,7 +332,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
-		if (from == EnumFacing.UNKNOWN) return 0;
+		if (from == null) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.receiveEnergy(maxReceive, simulate);
 		return 0;
@@ -347,14 +347,14 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
 
-		if (from == EnumFacing.UNKNOWN) return false;
+		if (from == null) return false;
 		return (sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null;
 	}
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
 
-		if (from == EnumFacing.UNKNOWN) return 0;
+		if (from == null) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getEnergyStored();
 		return 0;
@@ -363,7 +363,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
 
-		if (from == EnumFacing.UNKNOWN) return 0;
+		if (from == null) return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getMaxEnergyStored();
 		return 0;

@@ -41,17 +41,17 @@ public class RedstoneNetwork implements IGrid {
 
 	@SuppressWarnings("unchecked")
 	// cast is a warning too. using a generic type is an error?
-	private Set<BlockPosition>[] _singleNodes = new Set[16];
-	private Set<BlockPosition> _omniNodes = new LinkedHashSet<BlockPosition>();
+	private Set<BlockPos>[] _singleNodes = new Set[16];
+	private Set<BlockPos> _omniNodes = new LinkedHashSet<BlockPos>();
 
-	private Set<BlockPosition> _weakNodes = new LinkedHashSet<BlockPosition>();
+	private Set<BlockPos> _weakNodes = new LinkedHashSet<BlockPos>();
 
 	private boolean regenerating;
 	private ArrayHashList<TileEntityRedNetCable> nodeSet = new ArrayHashList<TileEntityRedNetCable>();
 	private LinkedHashList<TileEntityRedNetCable> conduitSet;
 
 	private int[] _powerLevelOutput = new int[16];
-	private BlockPosition[] _powerProviders = new BlockPosition[16];
+	private BlockPos[] _powerProviders = new BlockPos[16];
 
 	private World _world;
 
@@ -71,7 +71,7 @@ public class RedstoneNetwork implements IGrid {
 		log = MFRConfig.redNetDebug.getBoolean(false);
 
 		for (int i = 0; i < 16; i++)
-			_singleNodes[i] = new LinkedHashSet<BlockPosition>();
+			_singleNodes[i] = new LinkedHashSet<BlockPos>();
 	}
 
 	public RedstoneNetwork(TileEntityRedNetCable base) {
@@ -141,7 +141,7 @@ public class RedstoneNetwork implements IGrid {
 		//{ clearing nodes
 		_omniNodes.clear();
 		_weakNodes.clear();
-		for (Set<BlockPosition> a : _singleNodes)
+		for (Set<BlockPos> a : _singleNodes)
 			a.clear();
 		//}
 		LinkedHashList<TileEntityRedNetCable> oldSet = conduitSet;
@@ -149,7 +149,7 @@ public class RedstoneNetwork implements IGrid {
 
 		LinkedHashList<TileEntityRedNetCable> toCheck = new LinkedHashList<TileEntityRedNetCable>();
 		LinkedHashList<TileEntityRedNetCable> checked = new LinkedHashList<TileEntityRedNetCable>();
-		BlockPosition bp = new BlockPosition(0, 0, 0);
+		BlockPos bp = new BlockPos(0, 0, 0);
 		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);
@@ -290,7 +290,7 @@ public class RedstoneNetwork implements IGrid {
 		return _powerLevelOutput[subnet];
 	}
 
-	boolean isPowerProvider(int subnet, BlockPosition node)
+	boolean isPowerProvider(int subnet, BlockPos node)
 	{
 
 		return node.equals(_powerProviders[subnet]);
@@ -304,12 +304,12 @@ public class RedstoneNetwork implements IGrid {
 
 	/// OLD CODE
 
-	public boolean isWeakNode(BlockPosition node) {
+	public boolean isWeakNode(BlockPos node) {
 
 		return _weakNodes.contains(node);
 	}
 
-	public void addOrUpdateNode(BlockPosition node) {
+	public void addOrUpdateNode(BlockPos node) {
 
 		Block block = _world.getBlock(node.x, node.y, node.z);
 		if (block == rednetCableBlock) {
@@ -346,7 +346,7 @@ public class RedstoneNetwork implements IGrid {
 				_updateSubnets[i] = _mustUpdate = true;
 	}
 
-	public void addOrUpdateNode(BlockPosition node, int subnet, boolean allowWeak) {
+	public void addOrUpdateNode(BlockPos node, int subnet, boolean allowWeak) {
 
 		Block block = _world.getBlock(node.x, node.y, node.z);
 		if (block == rednetCableBlock) {
@@ -385,7 +385,7 @@ public class RedstoneNetwork implements IGrid {
 			_updateSubnets[subnet] = _mustUpdate = true;
 	}
 
-	public void removeNode(BlockPosition node, boolean unloading) {
+	public void removeNode(BlockPos node, boolean unloading) {
 
 		boolean omniNode = _omniNodes.remove(node);
 		boolean notify = omniNode;
@@ -438,7 +438,7 @@ public class RedstoneNetwork implements IGrid {
 
 		log("Network with ID %d:%d recalculating power levels for %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
 
-		for (BlockPosition node : _singleNodes[subnet]) {
+		for (BlockPos node : _singleNodes[subnet]) {
 			if (!isNodeLoaded(node)) {
 				continue;
 			}
@@ -449,7 +449,7 @@ public class RedstoneNetwork implements IGrid {
 			}
 		}
 
-		for (BlockPosition node : _omniNodes) {
+		for (BlockPos node : _omniNodes) {
 			if (!isNodeLoaded(node)) {
 				continue;
 			}
@@ -477,23 +477,23 @@ public class RedstoneNetwork implements IGrid {
 		_updateSubnets[subnet] = false;
 		_ignoreUpdates = true;
 		log("Network with ID %d:%d notifying %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
-		for (BlockPosition bp : _singleNodes[subnet]) {
+		for (BlockPos bp : _singleNodes[subnet]) {
 			log("Network with ID %d:%d notifying node %s of power state change to %d", hashCode(), subnet, bp, _powerLevelOutput[subnet]);
 			notifySingleNode(bp, subnet);
 		}
-		for (BlockPosition bp : _omniNodes) {
+		for (BlockPos bp : _omniNodes) {
 			log("Network with ID %d:%d notifying omni node %s of power state change to %d", hashCode(), subnet, bp, _powerLevelOutput[subnet]);
 			notifyOmniNode(bp);
 		}
 		_ignoreUpdates = false;
 	}
 
-	private boolean isNodeLoaded(BlockPosition node) {
+	private boolean isNodeLoaded(BlockPos node) {
 
 		return _world.getChunkProvider().chunkExists(node.x >> 4, node.z >> 4);
 	}
 
-	private void notifySingleNode(BlockPosition node, int subnet) {
+	private void notifySingleNode(BlockPos node, int subnet) {
 
 		if (isNodeLoaded(node)) {
 			Block block = _world.getBlock(node.x, node.y, node.z);
@@ -507,7 +507,7 @@ public class RedstoneNetwork implements IGrid {
 		}
 	}
 
-	private void notifyOmniNode(BlockPosition node) {
+	private void notifyOmniNode(BlockPos node) {
 
 		if (isNodeLoaded(node)) {
 			Block block = _world.getBlock(node.x, node.y, node.z);
@@ -517,7 +517,7 @@ public class RedstoneNetwork implements IGrid {
 		}
 	}
 
-	private int getOmniNodePowerLevel(BlockPosition node, int subnet) {
+	private int getOmniNodePowerLevel(BlockPos node, int subnet) {
 
 		if (!isNodeLoaded(node)) {
 			return 0;
@@ -526,7 +526,7 @@ public class RedstoneNetwork implements IGrid {
 		return levels == null ? 0 : levels[subnet];
 	}
 
-	private int[] getOmniNodePowerLevel(BlockPosition node) {
+	private int[] getOmniNodePowerLevel(BlockPos node) {
 
 		if (!isNodeLoaded(node)) {
 			return null;
@@ -539,7 +539,7 @@ public class RedstoneNetwork implements IGrid {
 		}
 	}
 
-	private int getSingleNodePowerLevel(BlockPosition node, int subnet) {
+	private int getSingleNodePowerLevel(BlockPos node, int subnet) {
 
 		if (!isNodeLoaded(node)) {
 			return 0;

@@ -1,18 +1,18 @@
 package powercrystals.minefactoryreloaded.gui.slot;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 
 public class SlotAcceptReusableSafariNet extends Slot
 {
-	public static IIcon background;
+	public static ResourceLocation background;
 
 	public SlotAcceptReusableSafariNet(IInventory inv, int index, int x, int y)
 	{
@@ -27,7 +27,8 @@ public class SlotAcceptReusableSafariNet extends Slot
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getBackgroundIconIndex() {
+	public ResourceLocation getBackgroundLocation() {
+		
 		return background;
 	}
 }

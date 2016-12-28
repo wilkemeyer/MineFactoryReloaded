@@ -377,9 +377,9 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 
-		int start = getStartInventorySide(EnumFacing.UNKNOWN);
+		int start = getStartInventorySide(null);
 		if (slot < start ||
-				slot > (start + getSizeInventorySide(EnumFacing.UNKNOWN)))
+				slot > (start + getSizeInventorySide(null)))
 			return false;
 		if (itemstack == null)
 			return true;

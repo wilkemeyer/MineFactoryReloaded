@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
 
 public class ContainerChronotyper extends ContainerFactoryPowered
@@ -18,9 +17,9 @@ public class ContainerChronotyper extends ContainerFactoryPowered
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, _chronotyper.getMoveOld() ? 1 : 0);
+			listeners.get(i).sendProgressBarUpdate(this, 100, _chronotyper.getMoveOld() ? 1 : 0);
 		}
 	}
 	

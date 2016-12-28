@@ -5,7 +5,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBioReactor;
 
@@ -20,8 +19,8 @@ public class ContainerBioReactor extends ContainerFactoryInventory {
 	public void detectAndSendChanges() {
 
 		super.detectAndSendChanges();
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 100, ((TileEntityBioReactor) _te).getBurnTime());
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).sendProgressBarUpdate(this, 100, ((TileEntityBioReactor) _te).getBurnTime());
 		}
 	}
 

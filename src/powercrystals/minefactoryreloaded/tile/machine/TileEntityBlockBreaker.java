@@ -20,7 +20,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 {
-	protected BlockPosition bp;
+	protected BlockPos bp;
 	public TileEntityBlockBreaker()
 	{
 		super(Machine.BlockBreaker);
@@ -31,7 +31,7 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	protected void onRotate()
 	{
-		bp = BlockPosition.fromRotateableTile(this).moveForwards(1);
+		bp = BlockPos.fromRotateableTile(this).moveForwards(1);
 		super.onRotate();
 	}
 

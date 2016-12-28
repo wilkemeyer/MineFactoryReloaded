@@ -66,7 +66,7 @@ public class TankNetwork implements IDelayedValidate {
 
 		LinkedHashSet<TileEntityTank> toCheck = new LinkedHashSet<TileEntityTank>();
 		LinkedHashSet<TileEntityTank> checked = new LinkedHashSet<TileEntityTank>();
-		BlockPosition bp = new BlockPosition(0, 0, 0);
+		BlockPos bp = new BlockPos(0, 0, 0);
 		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);

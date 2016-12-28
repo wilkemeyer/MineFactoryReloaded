@@ -49,7 +49,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	@Override
 	public boolean activateMachine() {
 
-		BlockPosition bp = _areaManager.getNextBlock();
+		BlockPos bp = _areaManager.getNextBlock();
 		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
@@ -141,7 +141,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 
 	//assumes a 3x3 grid in inventory slots 0-8
 	//slot 0 is northwest, slot 2 is northeast, etc
-	protected int getPlanterSlotIdFromBp(BlockPosition bp) {
+	protected int getPlanterSlotIdFromBp(BlockPos bp) {
 
 		int radius = _areaManager.getRadius();
 		int xAdjusted = Math.round(1.49F * (bp.x - this.xCoord) / radius);

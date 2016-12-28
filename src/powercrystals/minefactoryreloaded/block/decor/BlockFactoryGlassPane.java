@@ -91,7 +91,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
+		BlockPos bp = new BlockPos(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
 		boolean[] sides = new boolean[8];
 		bp.moveRight(1);
 		sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);

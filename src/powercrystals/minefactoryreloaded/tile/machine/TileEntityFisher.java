@@ -103,7 +103,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 
 		Area fishingHole = _areaManager.getHarvestArea();
 		int extraBlocks = 0;
-		for (BlockPosition bp : fishingHole.getPositionsBottomFirst()) {
+		for (BlockPos bp : fishingHole.getPositionsBottomFirst()) {
 			if (!isValidBlock(bp.x, bp.y, bp.z)) {
 				_isJammed = true;
 				setIdleTicks(getIdleTicksMax());

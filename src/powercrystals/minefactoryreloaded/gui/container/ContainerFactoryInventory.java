@@ -8,8 +8,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -52,19 +50,19 @@ public class ContainerFactoryInventory extends ContainerBase {
 
 		super.detectAndSendChanges();
 
-		FluidTankInfo[] tank = _te.getTankInfo(EnumFacing.UNKNOWN);
+		FluidTankInfo[] tank = _te.getTankInfo(null);
 		int n = tank.length;
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 33, (_te.hasDrops() ? 1 : 0) |
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).sendProgressBarUpdate(this, 33, (_te.hasDrops() ? 1 : 0) |
 					(CoreUtils.isRedstonePowered(_te) ? 2 : 0));
 			for (int j = n; j-- > 0;) {
-				((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 30, j);
+				listeners.get(i).sendProgressBarUpdate(this, 30, j);
 				if (tank[j] != null && tank[j].fluid != null) {
-					((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 31, tank[j].fluid.amount);
-					((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 32, tank[j].fluid.getFluid().getID());
+					listeners.get(i).sendProgressBarUpdate(this, 31, tank[j].fluid.amount);
+					listeners.get(i).sendProgressBarUpdate(this, 32, FluidRegistry.getFluidID(tank[j].fluid.getFluid()));
 				} else if (tank[j] != null) {
-					((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 31, 0);
-					((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 32, 0);
+					listeners.get(i).sendProgressBarUpdate(this, 31, 0);
+					listeners.get(i).sendProgressBarUpdate(this, 32, 0);
 				}
 			}
 		}

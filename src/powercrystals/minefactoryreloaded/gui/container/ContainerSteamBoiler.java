@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
@@ -26,14 +25,14 @@ public class ContainerSteamBoiler extends ContainerFactoryInventory
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 0, ((TileEntitySteamBoiler)_te).getWorkDone() & 65535);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 1, ((TileEntitySteamBoiler)_te).getWorkDone() >> 16);
+			listeners.get(i).sendProgressBarUpdate(this, 0, ((TileEntitySteamBoiler)_te).getWorkDone() & 65535);
+			listeners.get(i).sendProgressBarUpdate(this, 1, ((TileEntitySteamBoiler)_te).getWorkDone() >> 16);
 			int temp = (int)(((TileEntitySteamBoiler)_te).getTemp() * 10);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 2, temp);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 3, ((TileEntitySteamBoiler)_te).getWorkMax() & 65535);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 4, ((TileEntitySteamBoiler)_te).getWorkMax() >> 16);
+			listeners.get(i).sendProgressBarUpdate(this, 2, temp);
+			listeners.get(i).sendProgressBarUpdate(this, 3, ((TileEntitySteamBoiler)_te).getWorkMax() & 65535);
+			listeners.get(i).sendProgressBarUpdate(this, 4, ((TileEntitySteamBoiler)_te).getWorkMax() >> 16);
 		}
 	}
 	

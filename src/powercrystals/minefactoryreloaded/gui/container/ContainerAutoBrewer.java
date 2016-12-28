@@ -8,8 +8,9 @@ import cofh.lib.gui.slot.SlotRemoveOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.potion.PotionUtils;
 
+import net.minecraft.util.ResourceLocation;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -30,14 +31,14 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered {
 
 			if (super.isItemValid(stack)) {
 				ItemStack slot = getSlot(slotIndex).getStack();
-				return slot == null || stack.getItem().getPotionEffect(stack).equals(slot.getItem().getPotionEffect(slot));
+				return slot == null || PotionUtils.getEffectsFromStack(stack).equals(PotionUtils.getEffectsFromStack(slot));
 			}
 			return false;
 		}
 	}
 
-	public static IIcon ingredient;
-	public static IIcon bottle;
+	public static ResourceLocation ingredient;
+	public static ResourceLocation bottle;
 
 	public ContainerAutoBrewer(TileEntityFactoryPowered te, InventoryPlayer inv) {
 
@@ -59,8 +60,8 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered {
 		addSlotToContainer(new SlotAcceptInsertable(_te, 31, 146, 141));
 
 		for (int row = 0; row < 6; row++)
-			getSlot(row * 5 + 1).setBackgroundIcon(ingredient);
-		getSlot(31).setBackgroundIcon(bottle);
+			getSlot(row * 5 + 1).setBackgroundLocation(ingredient);
+		getSlot(31).setBackgroundLocation(bottle);
 	}
 
 	@Override

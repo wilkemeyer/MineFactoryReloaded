@@ -30,7 +30,7 @@ public class ItemNeedlegunAmmoBlock extends ItemNeedlegunAmmoStandard {
 
 	@Override
 	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, BlockPos pos, EnumFacing side, double distance) {
-		BlockPosition bp = new BlockPosition(x, y, z, EnumFacing.getOrientation(side));
+		BlockPos bp = new BlockPos(x, y, z, EnumFacing.getOrientation(side));
 		bp.moveForwards(1);
 		placeBlockAt(world, bp.x, bp.y, bp.z, distance);
 	}

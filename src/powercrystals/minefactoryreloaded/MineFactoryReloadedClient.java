@@ -119,7 +119,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@SuppressWarnings("unused")
 	private static boolean gl14 = false;
 
-	public static HashMap<BlockPosition, Integer> prcPages = new HashMap<BlockPosition, Integer>();
+	public static HashMap<BlockPos, Integer> prcPages = new HashMap<BlockPos, Integer>();
 
 	public static Set<IHarvestAreaContainer> _areaTileEntities = new LinkedHashSet<IHarvestAreaContainer>();
 

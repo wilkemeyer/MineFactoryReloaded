@@ -99,11 +99,11 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative {
 
 /*	public IIcon getBlockOverlayTexture(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		BlockPosition bp;
+		BlockPos bp;
 		boolean[] sides = new boolean[8];
 		if (side <= 1)
 		{
-			bp = new BlockPosition(x, y, z, EnumFacing.NORTH);
+			bp = new BlockPos(x, y, z, EnumFacing.NORTH);
 			bp.moveRight(1);
 			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveBackwards(1);
@@ -123,7 +123,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative {
 		}
 		else
 		{
-			bp = new BlockPosition(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
+			bp = new BlockPos(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
 			bp.moveRight(1);
 			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
 			bp.moveDown(1);

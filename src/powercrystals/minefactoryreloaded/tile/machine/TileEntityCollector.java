@@ -48,7 +48,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	protected ItemStack addToChests(ItemStack s)
 	{
 		s = UtilInventory.dropStack(this, s,
-				MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), EnumFacing.UNKNOWN);
+				MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), null);
 		if (canStuff & failedDrops == null & s != null)
 		{
 			doDrop(s);
@@ -72,7 +72,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	@Override
 	public EnumFacing getDropDirection()
 	{
-		return EnumFacing.UNKNOWN;
+		return null;
 	}
 
 	@Override

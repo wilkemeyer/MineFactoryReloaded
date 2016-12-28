@@ -14,7 +14,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 public class BlockFactoryRoad extends Block {
 
@@ -40,7 +45,7 @@ public class BlockFactoryRoad extends Block {
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity e) {
 
-		if (!e.canTriggerWalking())
+		if (!canTriggerWalking(e))
 			return;
 		if (e.getEntityData().getInteger("mfr:r") == e.ticksExisted)
 			return;
@@ -55,6 +60,23 @@ public class BlockFactoryRoad extends Block {
 		}
 	}
 
+	private static final Method TRIGGER_WALKING;
+	static {
+		TRIGGER_WALKING = ReflectionHelper.findMethod(Entity.class, null, new String[]{"func_70041_e_", "canTriggerWalking"}, Entity.class);
+	}
+	
+	private boolean canTriggerWalking(Entity e) {
+		try {
+			return (Boolean) TRIGGER_WALKING.invoke(e);
+		}
+		catch(IllegalAccessException ex) {
+			throw new RuntimeException(ex);
+		}
+		catch(InvocationTargetException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
 /*
 	@Override
 	@SideOnly(Side.CLIENT)

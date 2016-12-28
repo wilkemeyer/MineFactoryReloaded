@@ -2,12 +2,12 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import static cofh.core.CoFHProps.PATH_GUI_STORAGE;
 
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.I18n;
 
 import org.lwjgl.opengl.GL11;
 

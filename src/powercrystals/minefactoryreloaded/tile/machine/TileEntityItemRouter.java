@@ -192,7 +192,7 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 
 	private boolean isSideEmpty(EnumFacing side) {
 
-		if (side == EnumFacing.UNKNOWN || side == EnumFacing.UP) {
+		if (side == null || side == EnumFacing.UP) {
 			return false;
 		}
 
@@ -254,8 +254,8 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	public void setInventorySlotContents(int i, ItemStack stack) {
 
 		if (worldObj != null && !worldObj.isRemote) {
-			int start = getStartInventorySide(EnumFacing.UNKNOWN);
-			if (i >= start && i <= (start + getSizeInventorySide(EnumFacing.UNKNOWN))) {
+			int start = getStartInventorySide(null);
+			if (i >= start && i <= (start + getSizeInventorySide(null))) {
 				l: if (stack != null) {
 					if (stack.stackSize <= 0) {
 						stack = null;

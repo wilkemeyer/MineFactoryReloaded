@@ -63,7 +63,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	public void validate()
 	{
 		super.validate();
-		_area = new Area(new BlockPosition(this), 3, 3, 3);
+		_area = new Area(new BlockPos(this), 3, 3, 3);
 	}
 
 	@Override

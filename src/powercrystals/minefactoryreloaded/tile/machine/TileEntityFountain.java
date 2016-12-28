@@ -67,7 +67,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				if (_fillingManager != null) {
 					if (_fillingManager.getIsDone())
 						onFactoryInventoryChanged();
-					BlockPosition bp = _fillingManager.getNextBlock();
+					BlockPos bp = _fillingManager.getNextBlock();
 					x = bp.x;
 					y = bp.y;
 					z = bp.z;
@@ -150,7 +150,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 			int r = upgrade.getAugmentLevel(_inventory[0], "radius");
 			if (r > 0) {
 				_areaManager.setUpgradeLevel(r);
-				Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+				Area area = new Area(new BlockPos(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
 				if (_fillingManager == null)
 					_fillingManager = new FluidFillingManager(worldObj, area);
 				else
@@ -160,7 +160,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				r = -r;
 				if (r > 1) {
 					_areaManager.setUpgradeLevel(r - 1);
-					Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+					Area area = new Area(new BlockPos(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
 					if (_fillingManager == null)
 						_fillingManager = new FluidFillingManager(worldObj, area);
 					else

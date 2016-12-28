@@ -122,8 +122,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		if (deadCache) {
 			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
-				if (BlockPosition.blockExists(this, dir))
-					addCache(BlockPosition.getAdjacentTileEntity(this, dir));
+				if (BlockPos.blockExists(this, dir))
+					addCache(BlockPos.getAdjacentTileEntity(this, dir));
 			deadCache = false;
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
 		}
@@ -238,8 +238,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			boolean hasGrid = false;
 			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
-				if (BlockPosition.blockExists(this, dir)) {
-					TileEntityPlasticPipe pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
+				if (BlockPos.blockExists(this, dir)) {
+					TileEntityPlasticPipe pipe = BlockPos.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
 					if (pipe != null) {
 						if (pipe._grid != null &&
 								(readFromNBT ? pipe.couldInterface(this) : pipe.canInterface(this))) {
@@ -613,7 +613,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 						if (mode > 1)
 							mode = 0;
 						EnumFacing dir = EnumFacing.getOrientation(side);
-						TileEntityPlasticPipe cable = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
+						TileEntityPlasticPipe cable = BlockPos.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
 						if (!isInterfacing(dir)) {
 							if (couldInterface(cable)) {
 								mergeWith(cable, side);

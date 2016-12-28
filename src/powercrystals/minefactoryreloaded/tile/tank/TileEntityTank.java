@@ -54,7 +54,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 			for (EnumFacing to : EnumFacing.VALID_DIRECTIONS) {
 				if ((sides & (1 << to.ordinal())) == 0)
 					continue;
-				TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
+				TileEntityTank tank = BlockPos.getAdjacentTileEntity(this, to, TileEntityTank.class);
 				if (tank != null)
 					tank.part(to.getOpposite());
 			}
@@ -77,9 +77,9 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 		if (!inWorld) return;
 		for (EnumFacing to : EnumFacing.VALID_DIRECTIONS) {
-			if (to.offsetY != 0 || !BlockPosition.blockExists(this, to))
+			if (to.offsetY != 0 || !BlockPos.blockExists(this, to))
 				continue;
-			TileEntityTank tank = BlockPosition.getAdjacentTileEntity(this, to, TileEntityTank.class);
+			TileEntityTank tank = BlockPos.getAdjacentTileEntity(this, to, TileEntityTank.class);
 			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.getStorage().getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
 					if (tank.grid == grid || tank.grid.addNode(this)) {

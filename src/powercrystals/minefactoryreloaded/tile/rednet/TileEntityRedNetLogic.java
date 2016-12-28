@@ -56,7 +56,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	private int[][] _buffers = new int[15][];
 	private int[][] _backBuffer = new int[6][];
 
-	private BlockPosition bp = new BlockPosition(0, 0, 0);
+	private BlockPos bp = new BlockPos(0, 0, 0);
 
 	private PinMapping[][] _pinMappingInputs = new PinMapping[_circuitCount][];
 	private PinMapping[][] _pinMappingOutputs = new PinMapping[_circuitCount][];
@@ -317,7 +317,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 			}
 		}
 
-		BlockPosition bp = this.bp;
+		BlockPos bp = this.bp;
 		for (int i = 0; i < 6; i++) {
 			if (!areEqual(_backBuffer[i], _buffers[i + 6])) {
 				bp.x = xCoord;
@@ -345,7 +345,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 	public int getOutputValue(EnumFacing side, int subnet) {
 
-		if (side == EnumFacing.UNKNOWN) {
+		if (side == null) {
 			return 0;
 		}
 		return _buffers[side.ordinal() + 6][subnet];
@@ -353,7 +353,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 	public int[] getOutputValues(EnumFacing side) {
 
-		if (side == EnumFacing.UNKNOWN) {
+		if (side == null) {
 			return new int[16];
 		}
 		return _buffers[side.ordinal() + 6];
@@ -361,7 +361,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 	public void onInputsChanged(EnumFacing side, int[] values) {
 
-		if (side != EnumFacing.UNKNOWN) {
+		if (side != null) {
 			_buffers[side.ordinal()] = values;
 		}
 	}

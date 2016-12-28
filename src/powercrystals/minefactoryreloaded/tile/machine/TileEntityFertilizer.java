@@ -53,7 +53,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 	@Override
 	public boolean activateMachine() {
 
-		BlockPosition bp = _areaManager.getNextBlock();
+		BlockPos bp = _areaManager.getNextBlock();
 		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;

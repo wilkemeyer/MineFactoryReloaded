@@ -5,19 +5,24 @@ import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.util.RegistryUtils;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.I18n;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
@@ -62,13 +67,8 @@ public class GuiFactoryInventory extends GuiBase {
 		}
 	}
 
-	protected boolean isPointInRegion(int x, int y, int w, int h, int a, int b) {
-
-		return func_146978_c(x, y, w, h, a, b);
-	}
-
 	@Override
-	protected void mouseClicked(int x, int y, int button) {
+	protected void mouseClicked(int x, int y, int button) throws IOException {
 
 		super.mouseClicked(x, y, button);
 
@@ -99,7 +99,7 @@ public class GuiFactoryInventory extends GuiBase {
 
 		if (_renderTanks) {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			FluidTankInfo[] tanks = _tileEntity.getTankInfo(EnumFacing.UNKNOWN);
+			FluidTankInfo[] tanks = _tileEntity.getTankInfo(null);
 			int n = tanks.length > 3 ? 3 : tanks.length;
 			if (n > 0) {
 				for (int i = 0; i < n; ++i) {
@@ -151,13 +151,13 @@ public class GuiFactoryInventory extends GuiBase {
 		Fluid fluid = stack.getFluid();
 		if (fluid == null) return;
 
-		IIcon icon = fluid.getIcon(stack);
-		if (icon == null)
-			icon = Blocks.flowing_lava.getIcon(0, 0);
+		texture = fluid.getStill();
+		if (texture == null)
+			texture = FluidRegistry.LAVA.getFlowing();
 
 		int vertOffset = 0;
 
-		bindTexture(fluid);
+		bindTexture();
 
 		while (level > 0) {
 			int texHeight = 0;
@@ -170,20 +170,17 @@ public class GuiFactoryInventory extends GuiBase {
 				level = 0;
 			}
 
-			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
+			drawTexturedModalRect(xOffset, yOffset - texHeight - vertOffset, mc.getTextureMapBlocks().getAtlasSprite(texture.toString()), 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
 
-		bindTexture(texture);
+		bindTexture(this.texture);
 		this.drawTexturedModalRect(xOffset, yOffset - 60, 176, 0, 16, 60);
 	}
 
-	protected void bindTexture(Fluid fluid) {
-
-		if (fluid.getSpriteNumber() == 0)
-			this.mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-		else
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, fluid.getSpriteNumber());
+	protected void bindTexture() {
+		
+		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
 	protected void drawTankTooltip(FluidTankAdv tank, int x, int y) {
@@ -309,14 +306,15 @@ public class GuiFactoryInventory extends GuiBase {
 	}
 
 	@Override
-	public void drawTexturedModelRectFromIcon(int x, int y, IIcon icon, int w, int h) {
+	public void drawTexturedModalRect(int x, int y, TextureAtlasSprite icon, int w, int h) {
 
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, this.zLevel, icon.getMinU(), icon.getInterpolatedV(h));
-		tessellator.addVertexWithUV(x + w, y + h, this.zLevel, icon.getInterpolatedU(w), icon.getInterpolatedV(h));
-		tessellator.addVertexWithUV(x + w, y + 0, this.zLevel, icon.getInterpolatedU(w), icon.getMinV());
-		tessellator.addVertexWithUV(x + 0, y + 0, this.zLevel, icon.getMinU(), icon.getMinV());
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos(x + 0, y + h, this.zLevel).tex(icon.getMinU(), icon.getInterpolatedV(h)).endVertex();
+		vertexbuffer.pos(x + w, y + h, this.zLevel).tex(icon.getInterpolatedU(w), icon.getInterpolatedV(h)).endVertex();
+		vertexbuffer.pos(x + w, y + 0, this.zLevel).tex(icon.getInterpolatedU(w), icon.getMinV()).endVertex();
+		vertexbuffer.pos(x + 0, y + 0, this.zLevel).tex(icon.getMinU(), icon.getMinV()).endVertex();
 		tessellator.draw();
 	}
 }

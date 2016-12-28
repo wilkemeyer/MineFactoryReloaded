@@ -4,12 +4,12 @@ import cofh.lib.gui.slot.SlotAcceptValid;
 import cofh.lib.gui.slot.SlotInvisible;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.gui.slot.SlotViewOnly;
+import net.minecraft.inventory.ClickType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
@@ -68,7 +68,7 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory {
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int mouseButton, int modifier, EntityPlayer player) {
+	public ItemStack slotClick(int slotId, int mouseButton, ClickType modifier, EntityPlayer player) {
 
 		ItemStack r = super.slotClick(slotId, mouseButton, modifier, player);
 		if (slotId < 4) {
@@ -89,9 +89,9 @@ public class ContainerDeepStorageUnit extends ContainerFactoryInventory {
 		super.detectAndSendChanges();
 
 		int v = _dsu.getQuantity();
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 200, v);
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 201, v >> 16);
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).sendProgressBarUpdate(this, 200, v);
+			listeners.get(i).sendProgressBarUpdate(this, 201, v >> 16);
 		}
 	}
 

@@ -246,7 +246,7 @@ public class TileEntityConveyor extends TileEntityBase
 	@Override
 	public EnumFacing getDirectionFacing()
 	{
-		return EnumFacing.UNKNOWN;
+		return null;
 	}
 
 	@Override

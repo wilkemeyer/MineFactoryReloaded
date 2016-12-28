@@ -3,10 +3,11 @@ package powercrystals.minefactoryreloaded.gui.client;
 import java.util.Arrays;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.I18n;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
@@ -39,7 +40,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 		fontRendererObj.drawString(I18n.translateToLocal("info.cofh.template"), 67 + 27, 27, 4210752);
 		fontRendererObj.drawString(I18n.translateToLocal("info.cofh.output"), 128 + 27, 26, 4210752);
 
-		FluidTankInfo[] tanks = _crafter.getTankInfo(EnumFacing.UNKNOWN);
+		FluidTankInfo[] tanks = _crafter.getTankInfo(null);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		for (int i = 0; i < 9; i++) {
@@ -91,9 +92,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 
 		int vertOffset = 0;
 
-		IIcon icon = fluid.getIcon(stack);
+		ResourceLocation icon = fluid.getStill();
 		if (icon == null)
-			icon = Blocks.flowing_lava.getIcon(0, 0);
+			icon = FluidRegistry.LAVA.getFlowing();
 
 		while (level > 0) {
 			int texHeight = 0;
@@ -106,9 +107,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 				level = 0;
 			}
 
-			bindTexture(fluid);
+			bindTexture();
 
-			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
+			drawTexturedModalRect(xOffset, yOffset - texHeight - vertOffset, mc.getTextureMapBlocks().getAtlasSprite(icon.toString()), 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
 

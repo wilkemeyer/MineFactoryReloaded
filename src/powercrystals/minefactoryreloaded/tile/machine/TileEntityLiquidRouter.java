@@ -77,7 +77,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			int startingAmount = amountRemaining;
 			for(int i = 0; i < routes.length; i++)
 			{
-				TileEntity te = BlockPosition.getAdjacentTileEntity(this, _outputDirections[i]);
+				TileEntity te = BlockPos.getAdjacentTileEntity(this, _outputDirections[i]);
 				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
 				if(te instanceof IFluidHandler && amountForThisRoute > 0)
 				{
@@ -94,7 +94,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		if(0 < amountRemaining && amountRemaining < totalWeight(routes))
 		{
 			int outdir = weightedRandomSide(routes);
-			TileEntity te = BlockPosition.getAdjacentTileEntity(this, _outputDirections[outdir]);
+			TileEntity te = BlockPos.getAdjacentTileEntity(this, _outputDirections[outdir]);
 			if(te instanceof IFluidHandler)
 			{
 				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(),

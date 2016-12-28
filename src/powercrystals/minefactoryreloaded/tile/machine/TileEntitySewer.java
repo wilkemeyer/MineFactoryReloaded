@@ -74,9 +74,9 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		_tick++;
 
 		if (_nextSewerCheckTick <= worldObj.getTotalWorldTime()) {
-			Area a = new Area(BlockPosition.fromRotateableTile(this), _areaManager.getRadius(), 2, 2);
+			Area a = new Area(BlockPos.fromRotateableTile(this), _areaManager.getRadius(), 2, 2);
 			_jammed = false;
-			for (BlockPosition bp : a.getPositionsBottomFirst()) {
+			for (BlockPos bp : a.getPositionsBottomFirst()) {
 				if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(_machine.getBlock()) &&
 						worldObj.getBlockMetadata(bp.x, bp.y, bp.z) == _machine.getMeta() &&
 						!(bp.x == xCoord && bp.y == yCoord && bp.z == zCoord)) {

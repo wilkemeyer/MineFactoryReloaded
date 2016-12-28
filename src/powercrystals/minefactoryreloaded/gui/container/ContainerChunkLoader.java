@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
@@ -22,11 +21,11 @@ public class ContainerChunkLoader extends ContainerFactoryPowered
 
 		short radius = _cl.getRadius();
 		short empty = _cl.getEmpty();
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, radius);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, empty);;
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 102, _cl.useAltPower ? 1 : 0);
+			listeners.get(i).sendProgressBarUpdate(this, 100, radius);
+			listeners.get(i).sendProgressBarUpdate(this, 101, empty);;
+			listeners.get(i).sendProgressBarUpdate(this, 102, _cl.useAltPower ? 1 : 0);
 		}
 	}
 

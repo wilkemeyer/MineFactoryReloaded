@@ -112,7 +112,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		markForRegen();
 		for (EnumFacing d : EnumFacing.VALID_DIRECTIONS)
-			_network.removeNode(new BlockPosition(xCoord, yCoord, zCoord, d).step(d), true);
+			_network.removeNode(new BlockPos(xCoord, yCoord, zCoord, d).step(d), true);
 		_network.removeConduit(this);
 		_network = null;
 	}
@@ -173,8 +173,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		if (_network == null) {
 			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
 				if (readFromNBT && (_cableMode[dir.ordinal()] & 1) == 0) continue;
-				if (BlockPosition.blockExists(this, dir)) {
-					TileEntityRedNetCable pipe = BlockPosition.getAdjacentTileEntity(this, dir, TileEntityRedNetCable.class);
+				if (BlockPos.blockExists(this, dir)) {
+					TileEntityRedNetCable pipe = BlockPos.getAdjacentTileEntity(this, dir, TileEntityRedNetCable.class);
 					if (pipe != null) {
 						boolean canInterface = pipe.canInterface(this, dir.getOpposite());
 						if (canInterface && pipe._network != null) {
@@ -229,12 +229,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	public void updateNearbyNode(int subnet, EnumFacing from) {
 
-		BlockPosition bp = new BlockPosition(xCoord, yCoord, zCoord, from);
+		BlockPos bp = new BlockPos(xCoord, yCoord, zCoord, from);
 		bp.step(from);
 		updateNearbyNode(bp, subnet);
 	}
 
-	private void updateNearbyNode(BlockPosition bp, int subnet) {
+	private void updateNearbyNode(BlockPos bp, int subnet) {
 
 		if (_network == null)
 			return;
@@ -260,7 +260,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return 0;
 		}
 
-		BlockPosition nodebp = new BlockPosition(xCoord, yCoord, zCoord, to);
+		BlockPos nodebp = new BlockPos(xCoord, yCoord, zCoord, to);
 		nodebp.step(to);
 
 		int subnet = getSideColor(to), power;
@@ -285,7 +285,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 			return 0;
 		}
 
-		BlockPosition nodebp = new BlockPosition(xCoord, yCoord, zCoord, to);
+		BlockPos nodebp = new BlockPos(xCoord, yCoord, zCoord, to);
 		nodebp.step(to);
 
 		int subnet = getSideColor(nodebp.orientation);
@@ -438,7 +438,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		// TODO: localize
 		String o;
-		if (side != EnumFacing.UNKNOWN)
+		if (side != null)
 			o = "Side " + side + " is " + ItemRedNetMeter._colorNames[getSideColor(side)];
 		else {
 			o = "Sides are: ";
@@ -674,7 +674,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	public void setSideColor(EnumFacing side, int color) {
 
-		if (side == EnumFacing.UNKNOWN) {
+		if (side == null) {
 			return;
 		}
 		_sideColors[side.ordinal()] = color;
@@ -686,7 +686,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	public int getSideColor(EnumFacing side) {
 
-		if (side == EnumFacing.UNKNOWN) {
+		if (side == null) {
 			return 0;
 		}
 		return _sideColors[side.ordinal()];

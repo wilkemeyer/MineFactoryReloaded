@@ -58,7 +58,7 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered {
 			}
 			EntityAgeable a = (EntityAgeable) o;
 			if ((a.getGrowingAge() < 0 && !_moveOld) || (a.getGrowingAge() >= 0 && _moveOld)) {
-				BlockPosition bp = BlockPosition.fromRotateableTile(this);
+				BlockPos bp = BlockPos.fromRotateableTile(this);
 				bp.moveBackwards(1);
 				a.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
 

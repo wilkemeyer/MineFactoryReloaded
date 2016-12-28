@@ -185,7 +185,7 @@ public abstract class UtilInventory
 	 *            directions in which stack may be dropped into chests or pipes
 	 * @param airdropdirection
 	 *            the direction that the stack may be dropped into air.
-	 *            EnumFacing.UNKNOWN or other invalid directions indicate that stack shouldn't be
+	 *            null or other invalid directions indicate that stack shouldn't be
 	 *            dropped into the world.
 	 * @return The remainder of the ItemStack. Whatever -wasn't- successfully dropped.
 	 */
@@ -209,7 +209,7 @@ public abstract class UtilInventory
 	 *            directions in which stack may be dropped into chests or pipes
 	 * @param airdropdirection
 	 *            the direction that the stack may be dropped into air.
-	 *             EnumFacing.UNKNOWN or other invalid directions indicate that stack shouldn't be
+	 *             null or other invalid directions indicate that stack shouldn't be
 	 *            dropped into the world.
 	 * @return The remainder of the ItemStack. Whatever -wasn't- successfully dropped.
 	 */

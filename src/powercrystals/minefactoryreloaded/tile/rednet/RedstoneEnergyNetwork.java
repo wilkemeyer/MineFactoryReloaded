@@ -100,7 +100,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 
 		LinkedHashList<TileEntityRedNetEnergy> toCheck = new LinkedHashList<TileEntityRedNetEnergy>();
 		LinkedHashList<TileEntityRedNetEnergy> checked = new LinkedHashList<TileEntityRedNetEnergy>();
-		BlockPosition bp = new BlockPosition(0,0,0);
+		BlockPos bp = new BlockPos(0,0,0);
 		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);

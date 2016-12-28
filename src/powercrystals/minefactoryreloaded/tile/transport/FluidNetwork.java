@@ -108,7 +108,7 @@ public class FluidNetwork implements IGrid {
 
 		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<TileEntityPlasticPipe>();
 		LinkedHashList<TileEntityPlasticPipe> checked = new LinkedHashList<TileEntityPlasticPipe>();
-		BlockPosition bp = new BlockPosition(0,0,0);
+		BlockPos bp = new BlockPos(0,0,0);
 		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
 		toCheck.add(main);
 		checked.add(main);

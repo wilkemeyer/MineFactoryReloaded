@@ -48,7 +48,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 		super.validate();
 		if (!worldObj.isRemote) {
 			_treeManager = new FruitHarvestManager(worldObj,
-					new Area(new BlockPosition(this), 0, 0, 0),
+					new Area(new BlockPos(this), 0, 0, 0),
 					HarvestMode.FruitTree);
 		}
 	}
@@ -75,7 +75,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 	@Override
 	protected boolean activateMachine() {
 
-		BlockPosition targetCoords = getNextTree();
+		BlockPos targetCoords = getNextTree();
 
 		if (targetCoords == null) {
 			setIdleTicks(getIdleTicksMax());
@@ -116,9 +116,9 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 		return true;
 	}
 
-	private BlockPosition getNextTree() {
+	private BlockPos getNextTree() {
 
-		BlockPosition bp = _areaManager.getNextBlock();
+		BlockPos bp = _areaManager.getNextBlock();
 		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
 			return null;
 		}
@@ -130,14 +130,14 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 			return f != null && f.canBePicked(worldObj, bp.x, bp.y, bp.z) ? bp : null;
 		}
 
-		BlockPosition temp = getNextTreeSegment(bp);
+		BlockPos temp = getNextTreeSegment(bp);
 		if (temp != null)
 			_areaManager.rewindBlock();
 
 		return temp;
 	}
 
-	private BlockPosition getNextTreeSegment(BlockPosition pos) {
+	private BlockPos getNextTreeSegment(BlockPos pos) {
 
 		Block block;
 
@@ -152,7 +152,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 		Map<Block, IFactoryFruit> fruits = MFRRegistry.getFruits();
 		while (!_treeManager.getIsDone()) {
-			BlockPosition bp = _treeManager.getNextBlock();
+			BlockPos bp = _treeManager.getNextBlock();
 			block = worldObj.getBlock(bp.x, bp.y, bp.z);
 			IFactoryFruit fruit = fruits.containsKey(block) ? fruits.get(block) : null;
 

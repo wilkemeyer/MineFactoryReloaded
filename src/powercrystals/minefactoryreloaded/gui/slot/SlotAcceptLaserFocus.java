@@ -1,18 +1,18 @@
 package powercrystals.minefactoryreloaded.gui.slot;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ResourceLocation;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class SlotAcceptLaserFocus extends Slot {
 
-	public static IIcon background;
+	public static ResourceLocation background;
 
 	public SlotAcceptLaserFocus(IInventory inv, int index, int x, int y) {
 
@@ -27,9 +27,8 @@ public class SlotAcceptLaserFocus extends Slot {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getBackgroundIconIndex() {
+	public ResourceLocation getBackgroundLocation() {
 
 		return background;
 	}
-
 }

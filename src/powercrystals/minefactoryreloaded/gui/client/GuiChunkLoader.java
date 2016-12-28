@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.I18n;
 
+import net.minecraft.util.text.translation.I18n;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;

@@ -7,6 +7,9 @@ import cofh.lib.gui.element.ElementSlider;
 import cofh.lib.gui.element.listbox.IListBoxElement;
 import cofh.lib.gui.element.listbox.SliderHorizontal;
 import cofh.lib.gui.element.listbox.SliderVertical;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Collections;
@@ -26,6 +29,7 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
+import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.font.PrcFontRenderer;
@@ -193,7 +197,7 @@ public class GuiRedNetLogic extends GuiBase {
 				if (_selectedCircuit < 0) {
 					_selectedCircuit = _logic.getCircuitCount() - 1;
 				}
-				MineFactoryReloadedClient.prcPages.put(new BlockPosition(_logic), _selectedCircuit);
+				MineFactoryReloadedClient.prcPages.put(_logic.getPos(), _selectedCircuit);
 				requestCircuit();
 				_listNeedsUpdated = true;
 			}
@@ -208,7 +212,7 @@ public class GuiRedNetLogic extends GuiBase {
 				if (_selectedCircuit >= _logic.getCircuitCount()) {
 					_selectedCircuit = 0;
 				}
-				MineFactoryReloadedClient.prcPages.put(new BlockPosition(_logic), _selectedCircuit);
+				MineFactoryReloadedClient.prcPages.put(_logic.getPos(), _selectedCircuit);
 				requestCircuit();
 				_listNeedsUpdated = true;
 			}
@@ -249,7 +253,7 @@ public class GuiRedNetLogic extends GuiBase {
 
 		_reinitConfirm.setVisible(false);
 
-		int rotation = _logic.getWorldObj().getBlockMetadata(_logic.xCoord, _logic.yCoord, _logic.zCoord);
+		EnumFacing rotation = _logic.getWorld().getBlockState(_logic.getPos()).getValue(BlockRedNetLogic.FACING);
 
 		for (int i = 0; i < _inputIOPinButtons.length; i++) {
 			_inputIOBufferButtons[i] = new ButtonLogicBufferSelect(this, 25, 16 + i * pinOffset, i, LogicButtonType.Input,
@@ -266,7 +270,7 @@ public class GuiRedNetLogic extends GuiBase {
 			addElement(_outputIOPinButtons[i].setVisible(false));
 		}
 
-		Integer lastPage = MineFactoryReloadedClient.prcPages.get(new BlockPosition(_logic));
+		Integer lastPage = MineFactoryReloadedClient.prcPages.get(_logic.getPos());
 		if (lastPage != null && lastPage < _logic.getCircuitCount()) {
 			_selectedCircuit = lastPage;
 		}
@@ -376,12 +380,13 @@ public class GuiRedNetLogic extends GuiBase {
 
 		float uScale = 1.0F / 384.0F;
 		float vScale = 1.0F / 256.0F;
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + ySize, this.zLevel, (u + 0) * uScale, (v + ySize) * vScale);
-		tessellator.addVertexWithUV(x + xSize, y + ySize, this.zLevel, (u + xSize) * uScale, (v + ySize) * vScale);
-		tessellator.addVertexWithUV(x + xSize, y + 0, this.zLevel, (u + xSize) * uScale, (v + 0) * vScale);
-		tessellator.addVertexWithUV(x + 0, y + 0, this.zLevel, (u + 0) * uScale, (v + 0) * vScale);
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.pos(x + 0, y + ySize, this.zLevel).tex((u + 0) * uScale, (v + ySize) * vScale).endVertex();
+		vertexbuffer.pos(x + xSize, y + ySize, this.zLevel).tex((u + xSize) * uScale, (v + ySize) * vScale).endVertex();
+		vertexbuffer.pos(x + xSize, y + 0, this.zLevel).tex((u + xSize) * uScale, (v + 0) * vScale).endVertex();
+		vertexbuffer.pos(x + 0, y + 0, this.zLevel).tex((u + 0) * uScale, (v + 0) * vScale).endVertex();
 		tessellator.draw();
 	}
 

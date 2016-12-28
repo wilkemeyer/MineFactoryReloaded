@@ -4,7 +4,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
@@ -32,9 +31,9 @@ public class ContainerPlanter extends ContainerUpgradeable
 		{
 			consumeAll = _planter.getConsumeAll();
 			int data = (consumeAll ? 1 : 0);
-			for(int i = 0; i < crafters.size(); i++)
+			for(int i = 0; i < listeners.size(); i++)
 			{
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, data);
+				listeners.get(i).sendProgressBarUpdate(this, 100, data);
 			}
 		}
 	}
