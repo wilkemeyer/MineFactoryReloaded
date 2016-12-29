@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
-import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.item.syringe;
 
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.item.ItemStack;

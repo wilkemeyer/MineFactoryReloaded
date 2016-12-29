@@ -3,12 +3,18 @@ package powercrystals.minefactoryreloaded.item.tool;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.RayTraceResult;
-import net.minecraft.util.RayTraceResult.MovingObjectType;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
@@ -24,23 +30,25 @@ import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 public class ItemStraw extends ItemFactoryTool {
 
 	@Override
-	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
 
-		if (!world.isRemote) {
-			RayTraceResult mop = getMovingObjectPositionFromPlayer(world, player, true);
+		if (!world.isRemote || !(entity instanceof EntityPlayer)) {
+			EntityPlayer player = (EntityPlayer) entity;
+			RayTraceResult result = rayTrace(world, player, true);
 			Map<String, ILiquidDrinkHandler> map = MFRRegistry.getLiquidDrinkHandlers();
-			if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
-				int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
-				Block block = world.getBlock(x, y, z);
+			if (result != null && result.typeOfHit == Type.BLOCK) {
+				BlockPos pos = result.getBlockPos();
+				IBlockState state = world.getBlockState(pos);
+				Block block = state.getBlock();
 				Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
 				if (fluid != null && map.containsKey(fluid.getName())) {
 					map.get(fluid.getName()).onDrink(player);
-					world.setBlockToAir(mop.blockX, mop.blockY, mop.blockZ);
-				} else if (block.hasTileEntity(world.getBlockMetadata(x, y, z))) {
-					TileEntity tile = world.getTileEntity(x, y, z);
+					world.setBlockToAir(pos);
+				} else if (block.hasTileEntity(state)) {
+					TileEntity tile = world.getTileEntity(pos);
 					if (tile instanceof IFluidHandler) {
 						IFluidHandler handler = (IFluidHandler) tile;
-						FluidTankInfo[] info = handler.getTankInfo(EnumFacing.getOrientation(mop.sideHit));
+						FluidTankInfo[] info = handler.getTankInfo(result.sideHit);
 						for (int i = info.length; i-- > 0;) {
 							FluidStack fstack = info[i].fluid;
 							if (fstack != null) {
@@ -48,10 +56,10 @@ public class ItemStraw extends ItemFactoryTool {
 								if (fluid != null && map.containsKey(fluid.getName()) && fstack.amount >= 1000) {
 									fstack = fstack.copy();
 									fstack.amount = 1000;
-									FluidStack r = handler.drain(EnumFacing.getOrientation(mop.sideHit), fstack.copy(), false);
+									FluidStack r = handler.drain(result.sideHit, fstack.copy(), false);
 									if (r != null && r.amount >= 1000) {
 										map.get(fluid.getName()).onDrink(player);
-										handler.drain(EnumFacing.getOrientation(mop.sideHit), fstack, true);
+										handler.drain(result.sideHit, fstack, true);
 										break;
 									}
 								}
@@ -74,33 +82,34 @@ public class ItemStraw extends ItemFactoryTool {
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
 
-		return EnumAction.drink;
+		return EnumAction.DRINK;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 
-		RayTraceResult mop = getMovingObjectPositionFromPlayer(world, player, true);
+		RayTraceResult result = rayTrace(world, player, true);
 		Map<String, ?> map = MFRRegistry.getLiquidDrinkHandlers();
-		if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
-			int x = mop.blockX, y = mop.blockY, z = mop.blockZ;
-			Block block = world.getBlock(x, y, z);
+		if (result != null && result.typeOfHit == Type.BLOCK) {
+			BlockPos pos = result.getBlockPos();
+			IBlockState state = world.getBlockState(pos);
+			Block block = state.getBlock();
 			Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
 			if (fluid != null && map.containsKey(fluid.getName())) {
-				player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-			} else if (block.hasTileEntity(world.getBlockMetadata(x, y, z))) {
-				TileEntity tile = world.getTileEntity(x, y, z);
+				player.setActiveHand(hand);
+			} else if (block.hasTileEntity(state)) {
+				TileEntity tile = world.getTileEntity(pos);
 				if (tile instanceof IFluidHandler) {
 					IFluidHandler handler = (IFluidHandler) tile;
-					FluidTankInfo[] info = handler.getTankInfo(EnumFacing.getOrientation(mop.sideHit));
+					FluidTankInfo[] info = handler.getTankInfo(result.sideHit);
 					for (int i = info.length; i-- > 0;) {
 						FluidStack fstack = info[i].fluid;
 						if (fstack != null) {
 							fluid = fstack.getFluid();
 							if (fluid != null && map.containsKey(fluid.getName()) && fstack.amount >= 1000) {
-								FluidStack r = handler.drain(EnumFacing.getOrientation(mop.sideHit), fstack, false);
+								FluidStack r = handler.drain(result.sideHit, fstack, false);
 								if (r != null && r.amount >= 1000) {
-									player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+									player.setActiveHand(hand);
 									break;
 								}
 							}
@@ -109,7 +118,7 @@ public class ItemStraw extends ItemFactoryTool {
 				}
 			}
 		}
-		return stack;
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
 }

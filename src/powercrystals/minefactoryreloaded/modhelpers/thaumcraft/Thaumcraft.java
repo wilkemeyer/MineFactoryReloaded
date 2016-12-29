@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import static cofh.api.modhelpers.ThaumcraftHelper.parseAspects;
@@ -5,14 +6,14 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.asm.relauncher.Strippable;
 import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Random;
 
@@ -429,3 +430,4 @@ public class Thaumcraft {
 	}
 
 }
+*/

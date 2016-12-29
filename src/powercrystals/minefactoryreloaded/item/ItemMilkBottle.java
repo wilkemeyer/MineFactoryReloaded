@@ -1,34 +1,46 @@
 package powercrystals.minefactoryreloaded.item;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+
+import javax.annotation.Nullable;
 
 public class ItemMilkBottle extends ItemFactory {
 
 	public ItemMilkBottle() {
 
-		setContainerItem(Items.glass_bottle);
+		setContainerItem(Items.GLASS_BOTTLE);
 	}
 
+	@Nullable
 	@Override
-	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
+
+		if (!(entity instanceof EntityPlayer))
+			return stack;
+
+		EntityPlayer player = (EntityPlayer) entity;
 
 		if (!world.isRemote) {
-			player.curePotionEffects(new ItemStack(Items.milk_bucket));
+			player.curePotionEffects(new ItemStack(Items.MILK_BUCKET));
 		}
 
 		if (!player.capabilities.isCreativeMode) {
 			stack.stackSize--;
 
 			if (stack.stackSize <= 0) {
-				return new ItemStack(Items.glass_bottle);
-			} else if (!player.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle))) {
-				player.func_146097_a(new ItemStack(Items.glass_bottle), false, true);
+				return new ItemStack(Items.GLASS_BOTTLE);
+			} else if (!player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE))) {
+				player.dropItem(new ItemStack(Items.GLASS_BOTTLE), false, true);
 			}
 		}
 
@@ -48,14 +60,14 @@ public class ItemMilkBottle extends ItemFactory {
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
 
-		return EnumAction.drink;
+		return EnumAction.DRINK;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 
-		player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-		return stack;
+		player.setActiveHand(hand);
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
 }

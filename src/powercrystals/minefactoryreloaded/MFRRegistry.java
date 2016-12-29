@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
 import cofh.lib.util.WeightedRandomItemStack;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 

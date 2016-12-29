@@ -8,13 +8,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -99,7 +97,7 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 		//b.append(", b:").append(this.isFull);
 		FluidStack stack = FluidContainerRegistry.getFluidForFilledItem(new ItemStack(this, 1, 0));
 		Fluid fluid = stack == null ? null : stack.getFluid();
-		b.append(", f:").append(fluid).append(", i:").append(fluid == null ? null : fluid.getIcon());
+		b.append(", f:").append(fluid).append(", i:").append(fluid == null ? null : fluid.getStill());
 		b.append(", c:").append(fluid == null ? null : fluid.getClass());
 		b.append('}');
 		return b.toString();

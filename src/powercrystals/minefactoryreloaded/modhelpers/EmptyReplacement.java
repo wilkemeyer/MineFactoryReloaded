@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.modhelpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;

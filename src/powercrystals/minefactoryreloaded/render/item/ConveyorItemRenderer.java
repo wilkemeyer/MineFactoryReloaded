@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.render.item;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.OpenGlHelper;

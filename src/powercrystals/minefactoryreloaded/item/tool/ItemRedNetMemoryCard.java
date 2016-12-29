@@ -1,6 +1,10 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
 import cofh.api.tileentity.IPortableData;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,14 +50,14 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		NBTTagCompound tag = stack.getTagCompound();
 		boolean read = tag == null || !tag.hasKey("Type"), special = false;
 		if (tag == null)
@@ -79,16 +83,16 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 			}
 			stack.setTagCompound(tag);
 
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 		else if (te instanceof TileEntityRedNetLogic) {
 			if (special)
 				((IPortableData) te).readPortableData(player, tag);
 
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 	@Override

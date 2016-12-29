@@ -1,15 +1,11 @@
 package powercrystals.minefactoryreloaded.item.syringe;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.TextFormatting;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.I18n;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,7 +18,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerItem
 {
 	private boolean _prefix = false;
-    @SideOnly(Side.CLIENT)
+/*    @SideOnly(Side.CLIENT)
     protected IIcon fillIcon;
 
 	@SideOnly(Side.CLIENT)
@@ -31,7 +27,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	{
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
-	}
+	}*/
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
@@ -61,7 +57,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	{
 		String ret = getFluidName(item), t = getLocalizedName(ret);
 		if (t != null && !t.isEmpty())
-			return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
+			return TextFormatting.RESET + t + TextFormatting.RESET;
 		if (ret == null)
 		{
 			return super.getItemStackDisplayName(item);
@@ -82,7 +78,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		return ret;
 	}
 
-	@Override
+/*	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass) {
 		switch (pass)
@@ -93,7 +89,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		default:
 			return this.itemIcon;
 		}
-	}
+	}*/
 
 	public String getFluidName(ItemStack container)
 	{
@@ -156,7 +152,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
-		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
 				(fluidTag = tag.getCompoundTag("fluid")) == null ||
@@ -177,8 +173,10 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		fillAmount = Math.max(fillAmount, 0);
 		if (doFill)
 		{
-			if (tag == null)
-				tag = stack.stackTagCompound = new NBTTagCompound();
+			if (tag == null) {
+				stack.setTagCompound(new NBTTagCompound());
+				tag = stack.getTagCompound();
+			}
 			fluid.amount += fillAmount;
 			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
 			tag.setString("fluidName", fluid.getFluid().getName());
@@ -189,7 +187,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	@Override
 	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
 	{
-		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
 			(fluidTag = tag.getCompoundTag("fluid")) == null ||

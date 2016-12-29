@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.render;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import net.minecraft.util.IIcon;
 
 public class IconOverlay implements IIcon {
 

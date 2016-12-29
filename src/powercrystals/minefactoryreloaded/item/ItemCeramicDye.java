@@ -3,7 +3,11 @@ package powercrystals.minefactoryreloaded.item;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
@@ -13,31 +17,31 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 public class ItemCeramicDye extends ItemFactoryColored {
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 
-		Block block = world.getBlock(x, y, z);
+		Block block = world.getBlockState(pos).getBlock();
 		if (!world.isRemote & block != null) {
-			if (Blocks.glass.equals(block)) {
-				if (world.setBlock(x, y, z, MFRThings.factoryGlassBlock, stack.getItemDamage(), 3)) {
+			if (Blocks.GLASS.equals(block)) {
+				if (world.setBlockState(pos, MFRThings.factoryGlassBlock.getStateFromMeta(stack.getItemDamage()), 3)) {
 					if (!player.capabilities.isCreativeMode)
 						stack.stackSize--;
-					return true;
+					return EnumActionResult.SUCCESS;
 				}
 			}
-			if (Blocks.glass_pane.equals(block)) {
-				if (world.setBlock(x, y, z, MFRThings.factoryGlassPaneBlock, stack.getItemDamage(), 3)) {
+			if (Blocks.GLASS_PANE.equals(block)) {
+				if (world.setBlockState(pos, MFRThings.factoryGlassPaneBlock.getStateFromMeta(stack.getItemDamage()), 3)) {
 					if (!player.capabilities.isCreativeMode)
 						stack.stackSize--;
-					return true;
+					return EnumActionResult.SUCCESS;
 				}
 			}
-			if (block.recolourBlock(world, x, y, z, EnumFacing.getOrientation(side), stack.getItemDamage())) {
+			if (block.recolorBlock(world, pos, side, EnumDyeColor.byMetadata(stack.getItemDamage()))) {
 				if (!player.capabilities.isCreativeMode)
 					stack.stackSize--;
-				return true;
+				return EnumActionResult.SUCCESS;
 			}
 		}
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 }

@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -27,8 +28,8 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	{
 		super(block);
 		_plantedBlock.setMeta(true);
-		repl = new ReplacementBlock(Blocks.dirt);
-		dirt = Item.getItemFromBlock(Blocks.dirt);
+		repl = new ReplacementBlock(Blocks.DIRT);
+		dirt = Item.getItemFromBlock(Blocks.DIRT);
 	}
 
 	@Override

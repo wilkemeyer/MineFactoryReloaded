@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import powercrystals.minefactoryreloaded.render.RenderBlocksInverted;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class VineScaffoldRenderer implements ISimpleBlockRenderingHandler
 {

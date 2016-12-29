@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import java.util.List;
@@ -61,3 +62,4 @@ public class HarvestableThaumcraftPlant implements IFactoryHarvestable
 		world.notifyBlocksOfNeighborChange(x, y, z, _block);
 	}
 }
+*/

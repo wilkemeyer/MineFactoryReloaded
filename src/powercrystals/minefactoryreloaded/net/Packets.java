@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -10,9 +8,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.server.management.PlayerManager;
 import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 

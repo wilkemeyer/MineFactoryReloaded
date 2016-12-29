@@ -3,14 +3,14 @@ package powercrystals.minefactoryreloaded.modhelpers.tinkersconstruct;
 import static cofh.lib.util.helpers.ItemHelper.stack;
 
 import cofh.mod.ChildMod;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -38,7 +38,7 @@ public class TConstruct {
 		tag.setInteger("Bow_DrawSpeed", 20);
 		tag.setFloat("Projectile_Mass", 0.25f);
 		tag.setFloat("Projectile_Fragility", 0.5f);
-		tag.setString("Style", EnumChatFormatting.GRAY.toString());
+		tag.setString("Style", TextFormatting.GRAY.toString());
 		tag.setInteger("Color", 0xFFADADAD);
 		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tag);
 
@@ -62,7 +62,7 @@ public class TConstruct {
 		tag.setInteger("Bow_DrawSpeed", 15);
 		tag.setFloat("Projectile_Mass", 0.20f);
 		tag.setFloat("Projectile_Fragility", 0.0f);
-		tag.setString("Style", EnumChatFormatting.LIGHT_PURPLE.toString());
+		tag.setString("Style", TextFormatting.LIGHT_PURPLE.toString());
 		tag.setInteger("Color", 0xFFF3AEC6);
 		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tag);
 

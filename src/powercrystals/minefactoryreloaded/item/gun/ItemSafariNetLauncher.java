@@ -5,9 +5,11 @@ import cofh.lib.util.helpers.ItemHelper;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.TextComponentTranslation;
-import net.minecraft.util.I18n;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
@@ -58,7 +60,7 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 						EntitySafariNet esn = new EntitySafariNet(world, player, ammo);
 						world.spawnEntityInWorld(esn);
 
-						world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS,  0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 					}
 					return true;
 				}

@@ -1,5 +1,10 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,20 +23,20 @@ public class ItemFishingRod extends ItemFactoryTool {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		if (!player.capabilities.isCreativeMode)
-			--par1ItemStack.stackSize;
+			--stack.stackSize;
 
-		world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if (!world.isRemote) {
 			EntityFishingRod entity = new EntityFishingRod(world, player);
 			entity.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, 0.6F, 1.0F);
-			world.spawnEntityInWorld();
+			world.spawnEntityInWorld(entity);
 			
 		}
 
-		return par1ItemStack;
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
 	@Override

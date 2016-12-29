@@ -1,12 +1,12 @@
 package powercrystals.minefactoryreloaded.item.base;
 
 import cofh.core.item.ItemArmorAdv;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.common.util.EnumHelper;
@@ -26,7 +26,7 @@ public class ItemFactoryArmor extends ItemArmorAdv {
 		return i > 0 ? r.substring(i, r.length()) : r;
 	}
 
-	public ItemFactoryArmor(ItemArmor.ArmorMaterial mat, int type) {
+	public ItemFactoryArmor(ItemArmor.ArmorMaterial mat, EntityEquipmentSlot type) {
 
 		super(mat, type);
 		setMaxStackSize(1);
@@ -42,12 +42,14 @@ public class ItemFactoryArmor extends ItemArmorAdv {
 		return this;
 	}
 
+/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister par1IconRegister) {
 
 		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
+*/
 
 	@Override
 	public String toString() {

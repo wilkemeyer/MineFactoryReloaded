@@ -24,7 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.TextComponentTranslation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.ITextComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;

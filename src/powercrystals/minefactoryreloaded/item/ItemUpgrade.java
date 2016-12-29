@@ -2,16 +2,15 @@ package powercrystals.minefactoryreloaded.item;
 
 import cofh.api.item.IAugmentItem;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemMulti;
@@ -19,13 +18,14 @@ import powercrystals.minefactoryreloaded.item.base.ItemMulti;
 public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
 	private static Set<String> types = ImmutableSet.of("radius");
-	public static IIcon background;
+	public static ResourceLocation background;
 
 	public ItemUpgrade() {
 
 		setNames(new String[] { "lapis", "tin", "iron", "copper", "bronze", "silver", "gold", "quartz", "diamond", "platinum", "emerald", "cobble" });
 	}
 
+/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister ir) {
@@ -33,6 +33,7 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 		super.registerIcons(ir);
 		background = ir.registerIcon("minefactoryreloaded:gui/" + getUnlocalizedName());
 	}
+*/
 
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {

@@ -5,14 +5,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 public class ItemMulti extends ItemFactory {
 
 	protected String[] _names;
-	private IIcon[] _icons;
 
 	public ItemMulti() {
 
@@ -23,10 +20,11 @@ public class ItemMulti extends ItemFactory {
 	protected void setNames(String... names) {
 
 		_names = names;
-		_icons = new IIcon[_names.length];
+//		_icons = new IIcon[_names.length];
 		setMetaMax(_names.length - 1);
 	}
 
+/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIconFromDamage(int damage) {
@@ -36,6 +34,7 @@ public class ItemMulti extends ItemFactory {
 		return _icons[Math.min(damage, _metaMax)];
 	}
 
+*/
 	@Override
 	public int getMetadata(int meta) {
 
@@ -48,6 +47,7 @@ public class ItemMulti extends ItemFactory {
 		return getName(getUnlocalizedName(), _names[Math.min(stack.getItemDamage(), _metaMax)]);
 	}
 
+/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister ir) {
@@ -59,6 +59,7 @@ public class ItemMulti extends ItemFactory {
 			_icons[i] = ir.registerIcon(getName(str, _names[i]));
 		}
 	}
+*/
 
 	public static String getName(String name, String postfix) {
 

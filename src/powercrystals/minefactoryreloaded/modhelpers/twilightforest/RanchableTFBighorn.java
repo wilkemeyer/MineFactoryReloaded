@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.twilightforest;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -20,3 +21,4 @@ public class RanchableTFBighorn extends RanchableSheep
 		return _tfBighornClass;
 	}
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.extrabiomes;
 
 import java.lang.reflect.Method;
@@ -46,3 +47,4 @@ public class FertilizableExtraBiomesTree implements IFactoryFertilizable
 		return world.getBlock(x, y, z) != _blockId;
 	}
 }
+*/

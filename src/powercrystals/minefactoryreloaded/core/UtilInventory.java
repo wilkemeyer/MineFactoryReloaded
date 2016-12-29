@@ -8,6 +8,8 @@ import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.LinkedHashMap;
@@ -421,5 +423,40 @@ public abstract class UtilInventory
 			Class.forName(pipeClass);
 			handlePipeTiles = true;
 		} catch(Throwable _) {}
+	}
+
+	public static boolean playerHasItem(EntityPlayer player, Item item) {
+		for (int i = 0; i < player.inventory.getSizeInventory(); ++i)
+		{
+			if (player.inventory.getStackInSlot(i).getItem() == item)
+				return true;
+		}
+		return false;
+	}
+
+	public static ItemStack findItem(EntityPlayer player, Item item)
+	{
+		if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == item)
+		{
+			return player.getHeldItem(EnumHand.OFF_HAND);
+		}
+		else if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == item)
+		{
+			return player.getHeldItem(EnumHand.MAIN_HAND);
+		}
+		else
+		{
+			for (int i = 0; i < player.inventory.getSizeInventory(); ++i)
+			{
+				ItemStack itemstack = player.inventory.getStackInSlot(i);
+
+				if (itemstack.getItem() == item)
+				{
+					return itemstack;
+				}
+			}
+
+			return null;
+		}
 	}
 }

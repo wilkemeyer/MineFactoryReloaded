@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.render.model.RedNetHistorianModel;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;

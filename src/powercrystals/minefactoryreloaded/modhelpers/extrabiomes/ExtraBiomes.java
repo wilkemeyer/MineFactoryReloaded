@@ -1,12 +1,13 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.extrabiomes;
 
 import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,8 @@ public class ExtraBiomes {
 		_harvestRegistries.put("QUARTERLOG3", HarvestType.Tree);
 
 		try {
-			/*
+			*/
+/*
 			Class<?> xbbs = Class.forName("extrabiomes.lib.BlockSettings");
 
 			for(String s : new String[] { "AUTUMNLEAVES", "GREENLEAVES" }) {
@@ -73,7 +75,9 @@ public class ExtraBiomes {
 
 			MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("QUICKSAND").get(null)), 1, 0));
 			MFRRegistry.registerSludgeDrop(15, new ItemStack((Integer)xbbs.getMethod("getID").invoke(xbbs.getField("CRACKEDSAND").get(null)), 1, 0));
-			//*/
+			/*/
+/*//*
+
 
 			MFRRegistry.registerRubberTreeBiome("Autumn Woods");
 			MFRRegistry.registerRubberTreeBiome("Birch Forest");
@@ -99,3 +103,4 @@ public class ExtraBiomes {
 	}
 
 }
+*/

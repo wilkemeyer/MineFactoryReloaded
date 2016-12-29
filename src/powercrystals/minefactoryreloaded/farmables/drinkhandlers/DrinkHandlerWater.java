@@ -6,6 +6,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -35,7 +36,7 @@ public class DrinkHandlerWater implements ILiquidDrinkHandler
             entityitem.motionZ += Math.sin(f1) * f;
             //}
 			tag.setLong("drankLavaTime", -100);
-			player.playSound(SoundEvents.ENTITY_PLAYER_BURP, 1.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 1.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 		}
 	}
 }

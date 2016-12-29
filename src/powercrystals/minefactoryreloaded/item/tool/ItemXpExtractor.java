@@ -1,27 +1,32 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
+
+import javax.annotation.Nullable;
 
 public class ItemXpExtractor extends ItemFactoryTool {
 
 	public static DamageSource damage = new DamageSource("mfr.xpsuck").setDamageBypassesArmor().setDamageIsAbsolute();
-	private IIcon _icon1;
-	private IIcon _icon2;
-	private IIcon _icon3;
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 
 	@Override
@@ -30,40 +35,45 @@ public class ItemXpExtractor extends ItemFactoryTool {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		if (player.experienceLevel > 0 && player.inventory.hasItem(Items.bucket)) {
-			player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+		if (player.experienceLevel > 0 && UtilInventory.playerHasItem(player, Items.BUCKET)) {
+			player.setActiveHand(hand);
 		}
 
-		return stack;
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
+	@Nullable
 	@Override
-	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
-		if (world.isRemote)
+	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
+		if (world.isRemote || !(entity instanceof EntityPlayer))
 			return stack;
+		EntityPlayer player = (EntityPlayer) entity;
 		suckExperience(player, player);
 		return stack;
 	}
 
-	private void suckExperience(EntityPlayer target, EntityPlayer source) {
-		if (target.capabilities.isCreativeMode && !source.capabilities.isCreativeMode)
+	private void suckExperience(EntityPlayer target, EntityPlayer player) {
+		if (target.capabilities.isCreativeMode && !player.capabilities.isCreativeMode)
 			return;
 
-		if (target.experienceLevel > 0 && source.inventory.hasItem(Items.bucket)) {
-			if (source.inventory.consumeInventoryItem(Items.bucket)) {
+		if (target.experienceLevel > 0) {
+			ItemStack bucketStack = UtilInventory.findItem(player, Items.BUCKET);
+			if (bucketStack != null) {
+				UtilInventory.consumeItem(bucketStack, player);
 				if (!target.capabilities.isCreativeMode) {
 					target.addExperienceLevel(-1);
 					target.attackEntityFrom(damage, 0.25f);
-					target.worldObj.playSoundAtEntity(target, "random.levelup", 0.15f, 0.25f);
+					target.worldObj.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 0.15f, 0.25f);
 				}
-				if (!source.inventory.addItemStackToInventory(new ItemStack(MFRThings.mobEssenceBucketItem))) {
-					source.dropItem(MFRThings.mobEssenceBucketItem, 1);
+				if (!player.inventory.addItemStackToInventory(new ItemStack(MFRThings.mobEssenceBucketItem))) {
+					player.dropItem(MFRThings.mobEssenceBucketItem, 1);
 				}
 			}
 		}
 	}
 
+/*
 	@Override
 	public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining) {
 		if (usingItem != null && usingItem.getItem().equals(this)) {
@@ -82,5 +92,6 @@ public class ItemXpExtractor extends ItemFactoryTool {
 
 		itemIcon = _icon1;
 	}
+*/
 
 }

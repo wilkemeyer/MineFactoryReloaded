@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.util.EnumHand;
 import powercrystals.minefactoryreloaded.api.ISyringe;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -22,13 +23,13 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack s, EntityPlayer player, EntityLivingBase e)
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
 	{
-		if (!e.worldObj.isRemote && canInject(e.worldObj, e, s))
+		if (!entity.worldObj.isRemote && canInject(entity.worldObj, entity, stack))
 		{
-			if (inject(e.worldObj, e, s))
+			if (inject(entity.worldObj, entity, stack))
 			{
-				s.func_150996_a(MFRThings.syringeEmptyItem);
+				stack.setItem(MFRThings.syringeEmptyItem);
 				return true;
 			}
 		}

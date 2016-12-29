@@ -4,11 +4,11 @@ import buildcraft.api.fuels.BuildcraftFuelRegistry;
 
 import cofh.asm.relauncher.Strippable;
 import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import net.minecraftforge.fluids.FluidRegistry;
 

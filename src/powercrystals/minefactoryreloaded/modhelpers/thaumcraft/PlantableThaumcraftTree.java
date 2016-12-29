@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import net.minecraft.block.Block;
@@ -24,3 +25,4 @@ public class PlantableThaumcraftTree extends PlantableSapling
 		return saplingMeta != 0 || (world.isAirBlock(x + 1, y, z) && world.isAirBlock(x + 1, y, z + 1) && world.isAirBlock(x, y, z + 1));
 	}
 }
+*/

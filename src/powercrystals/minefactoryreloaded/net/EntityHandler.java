@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.net;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import net.minecraft.entity.ai.EntityMinecartMobSpawner;
 import net.minecraft.entity.monster.EntitySkeleton;

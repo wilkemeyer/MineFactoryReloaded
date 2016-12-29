@@ -181,7 +181,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 							enchantmentMap = new HashMap<Integer, EnchantmentData>();
 						}
 
-						enchantmentMap.put(Integer.valueOf(enchantment.effectId),
+						enchantmentMap.put(Integer.valueOf(enchantment),
 								new EnchantmentData(enchantment, enchLevel));
 					}
 				}

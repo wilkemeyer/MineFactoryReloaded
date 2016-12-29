@@ -1,5 +1,13 @@
 package powercrystals.minefactoryreloaded.item;
 
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,7 +29,7 @@ import powercrystals.minefactoryreloaded.net.Packets;
 
 public class ItemPortaSpawner extends ItemFactory {
 
-	private static Block _block = Blocks.mob_spawner;
+	private static Block _block = Blocks.MOB_SPAWNER;
 	public static final String spawnerTag = "spawner";
 	private static final String placeTag = "placeDelay";
 
@@ -82,75 +90,58 @@ public class ItemPortaSpawner extends ItemFactory {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
+	public EnumActionResult onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 		if (getEntityId(itemstack) == null) {
-			if (world.getBlock(x, y, z).equals(_block)) {
-				TileEntity te = world.getTileEntity(x, y, z);
+			if (world.getBlockState(pos).getBlock().equals(_block)) {
+				TileEntity te = world.getTileEntity(pos);
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setTag(spawnerTag, new NBTTagCompound());
 				te.writeToNBT(tag.getCompoundTag(spawnerTag));
 				tag.setInteger(placeTag, 40 * 20);
 				itemstack.setTagCompound(tag);
-				world.setBlockToAir(x, y, z);
-				return true;
+				world.setBlockToAir(pos);
+				return EnumActionResult.SUCCESS;
 			} else
-				return false;
+				return EnumActionResult.PASS;
 		} else {
 			if (getDelay(itemstack) <= 0 &&
-					placeBlock(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset)) {
-				return true;
+					placeBlock(itemstack, player, world, pos, side, xOffset, yOffset, zOffset)) {
+				return EnumActionResult.SUCCESS;
 			}
-			return false;
+			return EnumActionResult.PASS;
 		}
 	}
 
 	private boolean placeBlock(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
-		Block block = world.getBlock(x, y, z);
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
 
-		if (block == Blocks.snow_layer) {
-			side = 1;
-		} else if (!block.isReplaceable(world, x, y, z)) {
-			switch (side) {
-			case 0:
-				--y;
-				break;
-			case 1:
-				++y;
-				break;
-			case 2:
-				--z;
-				break;
-			case 3:
-				++z;
-				break;
-			case 4:
-				--x;
-				break;
-			case 5:
-				++x;
-				break;
-			}
+		if (block == Blocks.SNOW_LAYER) {
+			side = EnumFacing.UP;
+		} else if (!block.isReplaceable(world, pos)) {
+			pos.offset(side);
 		}
 
 		if (itemstack.stackSize == 0) {
 			return false;
-		} else if (!player.canPlayerEdit(x, y, z, side, itemstack)) {
+		} else if (!player.canPlayerEdit(pos, side, itemstack)) {
 			return false;
-		} else if (y == 255 && block.getMaterial().isSolid()) {
+		} else if (pos.getY() == 255 && state.getMaterial().isSolid()) {
 			return false;
-		} else if (world.canPlaceEntityOnSide(_block, x, y, z, false, side, player, itemstack)) {
-			int meta = block.onBlockPlaced(world, x, y, z, side, xOffset, yOffset, zOffset, 0);
+		} else if (world.canBlockBePlaced(_block, pos, false, side, player, itemstack)) {
+			IBlockState placedState = block.getStateForPlacement(world, pos, side, xOffset, yOffset, zOffset, 0, player, itemstack);
 
-			if (placeBlockAt(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset, meta)) {
-				world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.func_150496_b(),
-					(block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+			if (placeBlockAt(itemstack, player, world, pos, side, xOffset, yOffset, zOffset, placedState)) {
+				SoundType soundType = block.getSoundType(state, world, pos, null);
+				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, soundType.getStepSound(), SoundCategory.BLOCKS,
+					(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 				--itemstack.stackSize;
 			}
 
@@ -160,26 +151,26 @@ public class ItemPortaSpawner extends ItemFactory {
 		}
 	}
 
-	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, int metadata) {
+	private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState state) {
 
 		// TODO: record and read the block that was consumed
-		if (!world.setBlock(x, y, z, _block, metadata, 3)) {
+		if (!world.setBlockState(pos, state, 3)) {
 			return false;
 		}
 
-		Block block = world.getBlock(x, y, z);
+		Block block = world.getBlockState(pos).getBlock();
 		if (block.equals(_block)) {
-			block.onBlockPlacedBy(world, x, y, z, player, stack);
-			block.onPostBlockPlaced(world, x, y, z, metadata);
-			TileEntity te = world.getTileEntity(x, y, z);
+			block.onBlockPlacedBy(world, pos, state, player, stack);
+			block.onBlockPlacedBy(world, pos, state, player, stack);
+			TileEntity te = world.getTileEntity(pos);
 			NBTTagCompound tag = stack.getTagCompound();
 			if (tag.hasKey(spawnerTag))
 				tag = tag.getCompoundTag(spawnerTag);
-			tag.setInteger("x", x);
-			tag.setInteger("y", y);
-			tag.setInteger("z", z);
+			tag.setInteger("x", pos.getX());
+			tag.setInteger("y", pos.getY());
+			tag.setInteger("z", pos.getZ());
 			te.readFromNBT(tag);
-			Packets.sendToAllPlayersWatching(world, x, y, z, te.getDescriptionPacket());
+			Packets.sendToAllPlayersWatching(world, pos, te.getUpdatePacket());
 		}
 		return true;
 	}
@@ -193,9 +184,9 @@ public class ItemPortaSpawner extends ItemFactory {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumRarity getRarity(ItemStack par1ItemStack) {
+	public EnumRarity getRarity(ItemStack stack) {
 
-		return hasData(par1ItemStack) ? EnumRarity.epic : EnumRarity.rare;
+		return hasData(stack) ? EnumRarity.EPIC : EnumRarity.RARE;
 	}
 
 }

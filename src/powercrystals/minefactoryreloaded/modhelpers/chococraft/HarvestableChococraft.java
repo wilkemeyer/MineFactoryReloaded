@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.chococraft;
 
 import java.util.List;
@@ -6,6 +7,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -66,3 +68,4 @@ public class HarvestableChococraft implements IFactoryHarvestable
 		world.notifyBlocksOfNeighborChange(x, y, z, _block);
 	}
 }
+*/

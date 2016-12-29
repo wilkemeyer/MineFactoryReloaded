@@ -4,6 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+
+import javax.annotation.Nullable;
 
 public class NeedlegunContainerWrapper implements IInventory
 {
@@ -62,8 +65,9 @@ public class NeedlegunContainerWrapper implements IInventory
 		return r;
 	}
 
+	@Nullable
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
+	public ItemStack removeStackFromSlot(int index)
 	{
 		return null;
 	}
@@ -84,15 +88,20 @@ public class NeedlegunContainerWrapper implements IInventory
 	}
 
 	@Override
-	public String getInventoryName()
+	public String getName()
 	{
 		return "Needlegun";
 	}
 
 	@Override
-	public boolean hasCustomInventoryName()
+	public boolean hasCustomName()
 	{
 		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return null;
 	}
 
 	@Override
@@ -113,12 +122,12 @@ public class NeedlegunContainerWrapper implements IInventory
 	}
 
 	@Override
-	public void openInventory()
+	public void openInventory(EntityPlayer player)
 	{
 	}
 
 	@Override
-	public void closeInventory()
+	public void closeInventory(EntityPlayer player)
 	{
 	}
 
@@ -126,5 +135,25 @@ public class NeedlegunContainerWrapper implements IInventory
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return true;
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		_stack = null;
 	}
 }

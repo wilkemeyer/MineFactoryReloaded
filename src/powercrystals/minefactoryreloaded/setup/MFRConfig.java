@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.setup;
 
 import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
 
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 
 import java.io.File;
 

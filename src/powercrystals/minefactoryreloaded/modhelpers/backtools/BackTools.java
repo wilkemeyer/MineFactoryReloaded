@@ -1,12 +1,13 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.backtools;
 
 import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import java.lang.reflect.Method;
 
@@ -31,11 +32,13 @@ public class BackTools {
 
 		try {
 			Class modBackTools = Class.forName("mod_BackTools");
-			/*
+			*/
+/*
 			 *  addBackItem(Class itemClass, int orientation, boolean flipped)
 			 *  orientation is 0-3, and rotates counterclockwise by 90 deg * orientation
 			 *  flipped true for vertical flipping of the texture
-			 */
+			 *//*
+
 			Method addBackItem = modBackTools.getMethod("addBackItem", Class.class, int.class, boolean.class);
 			if (addBackItem != null) {
 				addBackItem.invoke(modBackTools, ItemSafariNetLauncher.class, 2, true);
@@ -49,3 +52,4 @@ public class BackTools {
 	}
 
 }
+*/

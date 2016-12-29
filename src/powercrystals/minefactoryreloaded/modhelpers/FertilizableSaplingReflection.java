@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -37,12 +38,12 @@ public class FertilizableSaplingReflection implements IFactoryFertilizable
 	{
 		try
 		{
-			_fertilize.invoke(_blockId, world, x, y, z);
+			_fertilize.invoke(_blockId, world, pos);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return world.getBlock(x, y, z) != _blockId;
+		return world.getBlockState(pos).getBlock() != _blockId;
 	}
 }

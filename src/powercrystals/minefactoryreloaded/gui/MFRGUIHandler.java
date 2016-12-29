@@ -35,18 +35,18 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 1)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.needlegunItem))
+			if(player.getActiveItemStack() != null &&
+					player.getActiveItemStack().getItem() == MFRThings.needlegunItem)
 			{
-				return new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
+				return new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getActiveItemStack()), player.inventory);
 			}
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
+			if(player.getActiveItemStack() != null &&
+					player.getActiveItemStack().getItem() == MFRThings.plasticBagItem)
 			{
-				return new ContainerBag(player.getCurrentEquippedItem(), player.inventory);
+				return new ContainerBag(player.getActiveItemStack(), player.inventory);
 			}
 		}
 		return null;
@@ -69,18 +69,18 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 1)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.needlegunItem))
+			if(player.getActiveItemStack() != null &&
+					player.getActiveItemStack().getItem() == MFRThings.needlegunItem)
 			{
-				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory), player.getCurrentEquippedItem());
+				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getActiveItemStack()), player.inventory), player.getActiveItemStack());
 			}
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
+			if(player.getActiveItemStack() != null &&
+					player.getActiveItemStack().getItem() == MFRThings.plasticBagItem)
 			{
-				return new GUIBag(new ContainerBag(player.getCurrentEquippedItem(), player.inventory));
+				return new GUIBag(new ContainerBag(player.getActiveItemStack(), player.inventory));
 			}
 		}
 		return null;

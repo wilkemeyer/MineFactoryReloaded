@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import java.lang.reflect.Field;
@@ -49,3 +50,4 @@ public class SpawnablePech implements IMobSpawnHandler
 		}
 	}
 }
+*/

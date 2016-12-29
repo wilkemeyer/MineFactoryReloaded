@@ -13,7 +13,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.render.model.RedNetCardsModel;
 import powercrystals.minefactoryreloaded.render.model.RedNetLogicModel;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RedNetLogicRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler
 {

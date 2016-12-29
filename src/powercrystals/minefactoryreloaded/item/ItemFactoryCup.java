@@ -1,5 +1,9 @@
 package powercrystals.minefactoryreloaded.item;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -7,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,12 +19,11 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.RayTraceResult;
-import net.minecraft.util.I18n;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -36,6 +38,8 @@ import powercrystals.minefactoryreloaded.farmables.usehandlers.DefaultUseHandler
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 
+import javax.annotation.Nullable;
+
 public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable {
 
 	public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
@@ -44,7 +48,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	private boolean _prefix = false;
 	@SideOnly(Side.CLIENT)
-	protected IIcon fillIcon;
 	protected List<IUseHandler> useHandlers;
 
 	public ItemFactoryCup(int stackSize, int maxUses) {
@@ -92,7 +95,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public String getItemStackDisplayName(ItemStack item) {
 		String ret = getFluidName(item), t = getLocalizedName(ret);
 		if (t != null && !t.isEmpty())
-			return EnumChatFormatting.RESET + t + EnumChatFormatting.RESET;
+			return TextFormatting.RESET + t + TextFormatting.RESET;
 		if (ret == null) {
 			return super.getItemStackDisplayName(item);
 		}
@@ -112,13 +115,13 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	public String getFluidName(ItemStack stack) {
-		NBTTagCompound tag = stack.stackTagCompound;
+		NBTTagCompound tag = stack.getTagCompound();
 		return tag == null || !tag.hasKey("fluid") ? null : tag.getCompoundTag("fluid").getString("FluidName");
 	}
 
 	@Override
 	public FluidStack getFluid(ItemStack stack) {
-		NBTTagCompound tag = stack.stackTagCompound;
+		NBTTagCompound tag = stack.getTagCompound();
 		FluidStack fluid = null;
 		if (tag != null && tag.hasKey("fluid")) {
 			fluid = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
@@ -139,7 +142,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
-		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
 				(fluidTag = tag.getCompoundTag("fluid")) == null ||
@@ -156,8 +159,10 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			fillAmount = Math.min(capacity - fluid.amount, resource.amount);
 		fillAmount = Math.max(fillAmount, 0);
 		if (doFill) {
-			if (tag == null)
-				tag = stack.stackTagCompound = new NBTTagCompound();
+			if (tag == null) {
+				stack.setTagCompound(new NBTTagCompound());
+				tag = stack.getTagCompound();
+			}
 			fluid.amount += fillAmount;
 			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
 		}
@@ -166,7 +171,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 	@Override
 	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain) {
-		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("fluid") ||
 				(fluidTag = tag.getCompoundTag("fluid")) == null ||
@@ -229,12 +234,13 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 				getFluid(stack).amount == getCapacity(stack);
 	}
 
+	@Nullable
 	@Override
-	public ItemStack onEaten(ItemStack item, World world, EntityPlayer entity) {
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entity) {
 		for (IUseHandler handler : useHandlers)
-			if (handler.isUsable(item))
-				return handler.onUse(item, entity);
-		return item;
+			if (handler.isUsable(stack))
+				return handler.onUse(stack, entity, entity.getActiveHand());
+		return stack;
 	}
 
 	@Override
@@ -242,7 +248,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		for (IUseHandler handler : useHandlers)
 			if (handler.isUsable(item))
 				return handler.useAction(item);
-		return EnumAction.none;
+		return EnumAction.NONE;
 	}
 
 	@Override
@@ -254,13 +260,14 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer entity) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack item, World world, EntityPlayer entity, EnumHand hand) {
 		for (IUseHandler handler : useHandlers)
-			if (handler.canUse(item, entity))
-				return handler.onTryUse(item, world, entity);
-		return item;
+			if (handler.canUse(item, entity, hand))
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, handler.onTryUse(item, world, entity, hand));
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, item);
 	}
 
+/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister par1IconRegister) {
@@ -279,26 +286,27 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 			return this.itemIcon;
 		}
 	}
+*/
 
 	@Override
-	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity) {
-		if (armorType == 0)
+	public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
+		if (armorType == EntityEquipmentSlot.HEAD)
 			if (entity instanceof EntityPlayer &&
-					((EntityPlayer)entity).getCommandSenderName().equalsIgnoreCase("Eyamaz"))
+					entity.getName().equalsIgnoreCase("Eyamaz"))
 				return true;
 
 		return false;
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
+	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
 		return MineFactoryReloadedCore.textureFolder + "armor/plastic_layer_1.png";
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
-		if (armorSlot == 0) {
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
+		if (armorSlot == EntityEquipmentSlot.HEAD) {
 			return null; // TODO
 		}
 		return null;
@@ -323,8 +331,8 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public RayTraceResult rayTrace(World world, EntityLivingBase entity, boolean adjacent) {
 		float f1 = entity.rotationPitch;
 		float f2 = entity.rotationYaw;
-		double y = entity.posY + entity.getEyeHeight() - entity.yOffset;
-		Vec3 vec3 = Vec3.createVectorHelper(entity.posX, y, entity.posZ);
+		double y = entity.posY + entity.getEyeHeight() - entity.getYOffset();
+		Vec3d vec3 = new Vec3d(entity.posX, y, entity.posZ);
 		float f3 = MathHelper.cos(-f2 * 0.017453292F - (float)Math.PI);
 		float f4 = MathHelper.sin(-f2 * 0.017453292F - (float)Math.PI);
 		float f5 = -MathHelper.cos(-f1 * 0.017453292F);
@@ -333,15 +341,12 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		float f8 = f3 * f5;
 		double d3 = 5.0D;
 		if (entity instanceof EntityPlayerMP) {
-			d3 = ((EntityPlayerMP)entity).theItemInWorldManager.getBlockReachDistance();
+			d3 = ((EntityPlayerMP)entity).interactionManager.getBlockReachDistance();
 		}
-		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-		RayTraceResult ret = world.func_147447_a(vec3, vec31, adjacent, !adjacent, false);
+		Vec3d vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
+		RayTraceResult ret = world.rayTraceBlocks(vec3, vec31, adjacent, !adjacent, false);
 		if (ret != null && adjacent) {
-			EnumFacing side = EnumFacing.getOrientation(ret.sideHit);
-			ret.blockX += side.offsetX;
-			ret.blockY += side.offsetY;
-			ret.blockZ += side.offsetZ;
+			ret = new RayTraceResult(ret.typeOfHit, ret.hitVec, ret.sideHit, ret.getBlockPos().offset(ret.sideHit));
 		}
 		return ret;
 	}

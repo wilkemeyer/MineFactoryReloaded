@@ -1,7 +1,8 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.twilightforest;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList.EntityEggInfo;
@@ -30,3 +31,4 @@ public class TwilightForestEggHandler implements IMobEggHandler
 		return null;
 	}
 }
+*/

@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.setup.village;
 
-import cpw.mods.fml.common.registry.VillagerRegistry.IVillageTradeHandler;
+import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageTradeHandler;
 
 import java.util.Random;
 

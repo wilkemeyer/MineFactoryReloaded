@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.modhelpers.railcraft;
 
 import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import java.lang.reflect.Method;
 
@@ -32,7 +32,7 @@ public class Railcraft {
 	public void load(FMLInitializationEvent evt) {
 
 		try {
-			String id = Block.blockRegistry.getNameForObject(MFRThings.factoryDecorativeStoneBlock);
+			String id = Block.REGISTRY.getNameForObject(MFRThings.factoryDecorativeStoneBlock).toString();
 			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 8));
 			FMLInterModComms.sendMessage("Railcraft", "balast", String.format("%s@%s", id, 9));
 			// white sand? black sand?
@@ -60,11 +60,11 @@ public class Railcraft {
 
 			recipe = createNewRecipe.invoke(rockCrusher, new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 2), true, false);
 			addOutput.invoke(recipe, new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 8), 1.0f); // Cobble Blackstone -> Gravel + flint
-			addOutput.invoke(recipe, new ItemStack(Items.flint, 1, 0), 0.05f);
+			addOutput.invoke(recipe, new ItemStack(Items.FLINT, 1, 0), 0.05f);
 
 			recipe = createNewRecipe.invoke(rockCrusher, new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 3), true, false);
 			addOutput.invoke(recipe, new ItemStack(MFRThings.factoryDecorativeStoneBlock, 1, 9), 1.0f); // Cobble Whitestone -> Gravel + flint
-			addOutput.invoke(recipe, new ItemStack(Items.flint, 1, 0), 0.05f);
+			addOutput.invoke(recipe, new ItemStack(Items.FLINT, 1, 0), 0.05f);
 		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);

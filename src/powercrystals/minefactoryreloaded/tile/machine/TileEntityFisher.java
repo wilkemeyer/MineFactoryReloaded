@@ -173,8 +173,8 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		boost = 0;
 		_needItem = false;
 		if (!client && _inventory[0] != null) {
-			_luck = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantment.field_151370_z.effectId, _inventory[0]);
-			_speed = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantment.field_151369_A.effectId, _inventory[0]);
+			_luck = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantment.field_151370_z, _inventory[0]);
+			_speed = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantment.field_151369_A, _inventory[0]);
 			boost = 75 * _speed + 75;
 		} else {
 			_needItem = MFRConfig.fisherNeedsRod.getBoolean(false);

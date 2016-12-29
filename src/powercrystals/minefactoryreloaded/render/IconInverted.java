@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.render;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import net.minecraft.util.IIcon;
 
 	@SideOnly(Side.CLIENT)
 public class IconInverted implements IIcon

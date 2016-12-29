@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.Arrays;
 import java.util.LinkedList;

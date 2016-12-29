@@ -8,6 +8,7 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -33,13 +34,13 @@ public class ItemSyringeZombie extends ItemSyringe
 			else if (entity instanceof EntityHorse)
 			{
 				EntityHorse ent = (EntityHorse)entity;
-				switch (ent.getHorseType())
+				switch (ent.getType())
 				{
-				case 0:
-					ent.setHorseType(3);
+				case HORSE:
+					ent.setType(HorseType.ZOMBIE);
 					break;
-				case 3:
-					ent.setHorseType(4);
+				case ZOMBIE:
+					ent.setType(HorseType.SKELETON);
 					break;
 				}
 			}

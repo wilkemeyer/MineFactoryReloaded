@@ -3,8 +3,10 @@ package powercrystals.minefactoryreloaded.item.gun;
 import cofh.lib.util.helpers.ItemHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -42,7 +44,7 @@ public class ItemNeedleGun extends ItemFactoryGun {
 				spread = MFRRegistry.getNeedleAmmoTypes().get(ammo.getItem()).getSpread(ammo);
 			EntityNeedle needle = new EntityNeedle(world, player, ammo, spread);
 			world.spawnEntityInWorld(needle);
-			world.playSoundAtEntity(player, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 2.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 2.0F);
 		}
 
 		NBTTagCompound t = new NBTTagCompound();

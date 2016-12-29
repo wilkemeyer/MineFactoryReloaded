@@ -4,22 +4,31 @@ import cofh.api.block.IDismantleable;
 import cofh.api.item.IToolHammer;
 import cofh.asm.relauncher.Implementable;
 import cofh.lib.util.helpers.BlockHelper;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFire;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import powercrystals.minefactoryreloaded.api.IMFRHammer;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -33,42 +42,43 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	}
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-			BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
+			BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 
-		Block block = world.getBlock(x, y, z);
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
 		if (block != null) {
-			PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, x, y, z, side, world);
+			PlayerInteractEvent.RightClickBlock e = new PlayerInteractEvent.RightClickBlock(player, hand, stack, pos, side, new Vec3d(hitX, hitY, hitZ));
 			if (MinecraftForge.EVENT_BUS.post(e) || e.getResult() == Result.DENY
-					|| e.useBlock == Result.DENY || e.useItem == Result.DENY) {
-				return false;
+					|| e.getUseBlock() == Result.DENY || e.getUseItem() == Result.DENY) {
+				return EnumActionResult.PASS;
 			}
 
 			if (player.isSneaking() && block instanceof IDismantleable &&
-					((IDismantleable) block).canDismantle(player, world, x, y, z)) {
+					((IDismantleable) block).canDismantle(player, world, pos)) {
 				if (!world.isRemote)
-					((IDismantleable) block).dismantleBlock(player, world, x, y, z, false);
-				player.swingItem();
-				return !world.isRemote;
+					((IDismantleable) block).dismantleBlock(player, world, pos, false);
+				player.swingArm(hand);
+				return EnumActionResult.PASS;
 			}
 
 			if (BlockHelper.canRotate(block)) {
-				player.swingItem();
+				player.swingArm(hand);
 				if (player.isSneaking()) {
-					world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotateVanillaBlockAlt(world, block, x, y, z), 3);
-					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), 1.0F, 0.6F);
+					world.setBlockState(pos, BlockHelper.rotateVanillaBlockAlt(world, state, pos), 3);
+					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, block.getSoundType(state, world, pos, player).getBreakSound(), SoundCategory.PLAYERS, 1.0F, 0.6F);
 				} else {
-					world.setBlockMetadataWithNotify(x, y, z, BlockHelper.rotateVanillaBlock(world, block, x, y, z), 3);
-					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), 1.0F, 0.8F);
+					world.setBlockState(pos, BlockHelper.rotateVanillaBlock(world, state, pos), 3);
+					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, block.getSoundType(state, world, pos, player).getBreakSound(), SoundCategory.PLAYERS, 1.0F, 0.8F);
 				}
-				return !world.isRemote;
-			} else if (!player.isSneaking() && block.rotateBlock(world, x, y, z, EnumFacing.getOrientation(side))) {
-				player.swingItem();
-				world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, block.stepSound.getBreakSound(), 1.0F, 0.8F);
-				return !world.isRemote;
+				return !world.isRemote ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
+			} else if (!player.isSneaking() && block.rotateBlock(world, pos, side)) {
+				player.swingArm(hand);
+				world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, block.getSoundType(state, world, pos, null).getBreakSound(), SoundCategory.PLAYERS, 1.0F, 0.8F);
+				return !world.isRemote ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 			}
 		}
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 	@Override
@@ -94,64 +104,65 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player) {
+	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
 
 		return true;
 	}
 
 	@Override
-	public boolean canHarvestBlock(Block block, ItemStack stack) {
+	public boolean canHarvestBlock(IBlockState state, ItemStack stack) {
 
-		if (block == null)
+		if (state == null)
 			return false;
-		Material mat = block.getMaterial();
-		return mat == Material.ice |
-				mat == Material.cake |
-				mat == Material.iron |
-				mat == Material.rock |
-				mat == Material.wood |
-				mat == Material.gourd |
-				mat == Material.anvil |
-				mat == Material.glass |
-				mat == Material.piston |
-				mat == Material.plants |
+		Material mat = state.getMaterial();
+		return mat == Material.ICE |
+				mat == Material.CAKE |
+				mat == Material.IRON |
+				mat == Material.ROCK |
+				mat == Material.WOOD |
+				mat == Material.GOURD |
+				mat == Material.ANVIL |
+				mat == Material.GLASS |
+				mat == Material.PISTON |
+				mat == Material.PLANTS |
 				mat == Machine.MATERIAL |
-				mat == Material.circuits |
-				mat == Material.packedIce;
+				mat == Material.CIRCUITS |
+				mat == Material.PACKED_ICE;
 	}
 
 	@Override
-	public float func_150893_a(ItemStack stack, Block block) {
+	public float getStrVsBlock(ItemStack stack, IBlockState state) {
 
-		if (block == null)
+		if (state == null)
 			return 0;
-		Material mat = block.getMaterial();
-		if (mat == Material.ice |
-				mat == Material.cake |
-				mat == Material.gourd |
-				mat == Material.glass)
+		Material mat = state.getMaterial();
+		if (mat == Material.ICE |
+				mat == Material.CAKE |
+				mat == Material.GOURD |
+				mat == Material.GLASS)
 			return 15f;
-		return canHarvestBlock(block, stack) ? 1.35f : 0.15f;
+		return canHarvestBlock(state, stack) ? 1.35f : 0.15f;
 	}
 
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
 
-		Block block = player.worldObj.getBlock(x, y, z);
-		if (block.getBlockHardness(player.worldObj, x, y, z) > 2.9f) {
+		IBlockState state = player.worldObj.getBlockState(pos);
+		Block block = state.getBlock();
+		if (block.getBlockHardness(state, player.worldObj, pos) > 2.9f) {
 			Random rnd = player.getRNG();
-			player.playSound("random.break", 0.8F + rnd.nextFloat() * 0.4F, 0.4F);
+			player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.8F + rnd.nextFloat() * 0.4F, 0.4F);
 
 			for (int i = 0, e = 10 + rnd.nextInt(5); i < e; ++i) {
-				Vec3 vec3 = Vec3.createVectorHelper((rnd.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-				vec3.rotateAroundX(-player.rotationPitch * (float) Math.PI / 180.0F);
-				vec3.rotateAroundY(-player.rotationYaw * (float) Math.PI / 180.0F);
-				Vec3 vec31 = Vec3.createVectorHelper((rnd.nextFloat() - 0.5D) * 0.3D, rnd.nextFloat(), 0.6D);
-				vec31.rotateAroundX(-player.rotationPitch * (float) Math.PI / 180.0F);
-				vec31.rotateAroundY(-player.rotationYaw * (float) Math.PI / 180.0F);
+				Vec3d vec3 = new Vec3d((rnd.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+				vec3.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
+				vec3.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
+				Vec3d vec31 = new Vec3d((rnd.nextFloat() - 0.5D) * 0.3D, rnd.nextFloat(), 0.6D);
+				vec31.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
+				vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
 				vec31 = vec31.addVector(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-				player.worldObj.spawnParticle("tilecrack_51_0", vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord,
-					vec3.yCoord + 0.05D, vec3.zCoord);
+				player.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord,
+					vec3.yCoord + 0.05D, vec3.zCoord, Block.getStateId(Blocks.FIRE.getDefaultState()));
 			}
 			return true;
 		}

@@ -9,7 +9,10 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.TextComponentTranslation;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -54,19 +57,19 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 
 		if (stack.stackSize != 1) {
 			if (!world.isRemote)
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.bag.stacksize"));
-			return stack;
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 		}
 		stack.setTagInfo("Accessible", new NBTTagCompound());
 		stack.getTagCompound().removeTag("loot");
 
 		if (!world.isRemote)
 			player.openGui(MineFactoryReloadedCore.instance(), 2, world, 0, 0, 0);
-		return stack;
+		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
 }

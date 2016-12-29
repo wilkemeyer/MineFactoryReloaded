@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import java.lang.reflect.Method;
@@ -59,3 +60,4 @@ public class FertilizableTCSapling extends FertilizableBase
 		return world.getBlock(x, y, z) != getPlant();
 	}
 }
+*/
