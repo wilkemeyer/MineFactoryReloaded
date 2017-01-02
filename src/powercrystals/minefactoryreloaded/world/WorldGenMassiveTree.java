@@ -184,7 +184,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 						if (safeGrowth ? (block.isAir(worldObj, x, y, z) ||
 								block.isLeaves(worldObj, x, y, z) ||
 								block.canBeReplacedByLeaves(worldObj, x, y, z)) :
-								block != Blocks.bedrock) {
+								block != Blocks.BEDROCK) {
 							this.setBlockAndNotifyAdequately(worldObj, x, y, z, leaves, 0);
 						}
 
@@ -390,7 +390,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 						var16.isLeaves(worldObj, x, y, z) ||
 						var16.isWood(worldObj, x, y, z) ||
 						var16 instanceof BlockSapling) :
-						var16 == Blocks.bedrock)
+						var16 == Blocks.BEDROCK)
 					break;
 			}
 

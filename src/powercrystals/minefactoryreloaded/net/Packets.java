@@ -1,12 +1,9 @@
 package powercrystals.minefactoryreloaded.net;
 
-import java.util.List;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
-import net.minecraft.server.management.PlayerManager;
-import net.minecraft.server.management.PlayerManager.PlayerInstance;
+import net.minecraft.server.management.PlayerChunkMap;
+import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,12 +25,12 @@ public final class Packets
 			return;
 		if (world instanceof WorldServer)
 		{
-			PlayerManager manager = ((WorldServer)world).getPlayerManager();
-			if (manager == null)
+			PlayerChunkMap map = ((WorldServer)world).getPlayerChunkMap();
+			if (map == null)
 				return;
-			PlayerInstance watcher = manager.getOrCreateChunkWatcher(x >> 4, x >> 4, false);
-			if (watcher != null)
-				watcher.sendToAllPlayersWatchingChunk(packet);
+			PlayerChunkMapEntry entry = map.getEntry(pos.getX() >> 4, pos.getZ() >> 4);
+			if (entry != null)
+				entry.sendPacket(packet);
 		}
 	}
 	public static void sendToAllPlayersInRange(World world, BlockPos pos, int range, Packet packet)
@@ -42,26 +39,28 @@ public final class Packets
 			return;
 		if (world instanceof WorldServer)
 		{
-			PlayerManager manager = ((WorldServer)world).getPlayerManager();
-			if (manager == null)
+			PlayerChunkMap map = ((WorldServer)world).getPlayerChunkMap();
+			if (map == null)
 				return;
-			int xS = (x - range) >> 4, zS = (z - range) >> 4;
-			int xE = (x + range) >> 4, zE = (z + range) >> 4;
+			int xS = (pos.getX() - range) >> 4, zS = (pos.getZ() - range) >> 4;
+			int xE = (pos.getX() + range) >> 4, zE = (pos.getZ() + range) >> 4;
 			for (; xS < xE; ++xS) for (; zS < zE; ++zS)
 			{
-				PlayerInstance watcher = manager.getOrCreateChunkWatcher(xS, zS, false);
-				if (watcher != null)
+				PlayerChunkMapEntry entry = map.getEntry(xS, zS);
+				if (entry != null)
 				{
-					@SuppressWarnings("unchecked")
-					List<EntityPlayerMP> players = watcher.playersWatchingChunk;
+					entry.sendPacket(packet);
+					/*
+					List<EntityPlayerMP> players = entry.playersWatchingChunk;
 					for (int i = players.size(); i --> 0; )
 					{
 						EntityPlayerMP player = players.get(i);
 						if (Math.abs(x - player.posX) < range)
 							if (Math.abs(y - player.posY) < range)
 								if (Math.abs(z - player.posZ) < range)
-									player.playerNetServerHandler.sendPacket(packet);
+									player.connection.sendPacket(packet);
 					}
+*/
 				}
 			}
 		}
@@ -91,10 +90,10 @@ public final class Packets
 	}
 	public static void sendToAllPlayersWatching(TileEntity te, Packet packet)
 	{
-		sendToAllPlayersWatching(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord, packet);
+		sendToAllPlayersWatching(te.getWorld(), te.getPos(), packet);
 	}
 	public static void sendToAllPlayersWatching(TileEntity te)
 	{
-		sendToAllPlayersWatching(te, te.getDescriptionPacket());
+		sendToAllPlayersWatching(te, te.getUpdatePacket());
 	}
 }

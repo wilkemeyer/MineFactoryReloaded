@@ -27,7 +27,7 @@ public interface IFactoryRanchable {
 	 *            The rancher instance doing the ranching. Used to access the
 	 *            Rancher's inventory when milking cows, for example.
 	 *
-	 * @return A list of drops. All Items be dropped, fluids not matching the tank's contents will be discarded.
+	 * @return A list of drops. All Items BE dropped, fluids not matching the tank's contents will be discarded.
 	 */
 	public List<RanchedItem> ranch(World world, EntityLivingBase entity, IInventory rancher);
 

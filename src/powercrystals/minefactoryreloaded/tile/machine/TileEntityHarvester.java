@@ -176,7 +176,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 		}
 
 		if (harvestable.breakBlock()) {
-			if (!worldObj.setBlock(target.x, target.y, target.z, Blocks.air, 0, 2))
+			if (!worldObj.setBlock(target.x, target.y, target.z, Blocks.AIR, 0, 2))
 				return false;
 			if (_settings.get("playSounds") == Boolean.TRUE) {
 				worldObj.playEvent(null, 2001, target.x, target.y, target.z,

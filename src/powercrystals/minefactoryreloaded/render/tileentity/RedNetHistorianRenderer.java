@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
@@ -168,3 +169,4 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 		return MineFactoryReloadedCore.renderIdRedNetPanel;
 	}
 }
+*/

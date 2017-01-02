@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.item;
 
 import cofh.repack.codechicken.lib.lighting.LightModel;
@@ -113,3 +114,4 @@ public class NeedleGunItemRenderer implements IItemRenderer
 		RenderHelper.enableStandardItemLighting();
 	}
 }
+*/

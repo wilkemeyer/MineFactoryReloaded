@@ -107,7 +107,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 				}
 				else
 				{
-					doDrop(new ItemStack(Items.snowball, 3));
+					doDrop(new ItemStack(Items.SNOWBALL, 3));
 					setWorkDone(0);
 					setIdleTicks(1);
 				}

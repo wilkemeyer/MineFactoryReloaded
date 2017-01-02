@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.render.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -12,6 +13,10 @@ import org.lwjgl.opengl.GL11;
 import powercrystals.minefactoryreloaded.entity.DebugTracker;
 
 public class EntityDebugTrackerRenderer extends Render {
+
+	protected EntityDebugTrackerRenderer(RenderManager renderManager) {
+		super(renderManager);
+	}
 
 	@Override
 	public void doRender(Entity p_76986_1_, double x, double y, double z, float yaw, float partialTicks) {
@@ -46,11 +51,11 @@ public class EntityDebugTrackerRenderer extends Render {
 			GL11.glColor4f(r, g, b, 0.4F);
 			GL11.glTranslatef(playerOffsetX, playerOffsetY, playerOffsetZ);
 			AxisAlignedBB bb = ent.getPrjBB();
-			float q = ent.getDataWatcher().getWatchableObjectFloat(14);
-			float w = ent.getDataWatcher().getWatchableObjectFloat(15);
-			float e = ent.getDataWatcher().getWatchableObjectFloat(16);
+			float q = ent.getDataManager().get(DebugTracker.PROJECTILE_MOTION_X);
+			float w = ent.getDataManager().get(DebugTracker.PROJECTILE_MOTION_Y);
+			float e = ent.getDataManager().get(DebugTracker.PROJECTILE_MOTION_Z);
 			for (int i = 3; i --> 0; ) {
-				renderAABB(bb);
+				renderOffsetAABB(bb, 0, 0, 0);
 				bb.offset(q, w, e);
 			}
 			GL11.glPopMatrix();
@@ -65,11 +70,11 @@ public class EntityDebugTrackerRenderer extends Render {
 			GL11.glColor4f(r, g, b, 0.4F);
 			GL11.glTranslatef(playerOffsetX, playerOffsetY, playerOffsetZ);
 			AxisAlignedBB bb = ent.getSrcBB();
-			renderAABB(bb);
-			float e = ent.getDataWatcher().getWatchableObjectFloat(17);
-			bb.minY += e;
-			bb.maxY = bb.minY + (1/8f);
-			renderAABB(bb.expand(0.006, 0, 0.006));
+			renderOffsetAABB(bb, 0, 0, 0);
+			float e = ent.getDataManager().get(DebugTracker.ENTITY_EYE_HEIGHT);
+			double minY = bb.minY + e;
+			bb = new AxisAlignedBB(bb.minX, minY, bb.minZ, bb.maxX, minY + (1/8D), bb.maxZ);
+			renderOffsetAABB(bb.expand(0.006, 0, 0.006), 0, 0, 0);
 			GL11.glPopMatrix();
 		}
 

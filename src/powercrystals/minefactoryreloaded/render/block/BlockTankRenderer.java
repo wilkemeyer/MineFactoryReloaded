@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.block;
 
 import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -334,3 +335,4 @@ public class BlockTankRenderer implements ISimpleBlockRenderingHandler, IItemRen
 	}
 
 }
+*/

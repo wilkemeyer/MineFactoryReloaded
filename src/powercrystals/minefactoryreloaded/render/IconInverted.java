@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -66,3 +67,4 @@ public class IconInverted implements IIcon
 	}
 
 }
+*/

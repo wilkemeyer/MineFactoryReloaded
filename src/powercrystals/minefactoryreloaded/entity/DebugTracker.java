@@ -11,23 +11,23 @@ import net.minecraft.world.World;
 
 public class DebugTracker extends Entity {
 
-	private static final DataParameter<Float> ENTITY_BB_MIN_X;
-	private static final DataParameter<Float> ENTITY_BB_MIN_Y;
-	private static final DataParameter<Float> ENTITY_BB_MIN_Z;
-	private static final DataParameter<Float> ENTITY_BB_MAX_X;
-	private static final DataParameter<Float> ENTITY_BB_MAX_Y;
-	private static final DataParameter<Float> ENTITY_BB_MAX_Z;
-	private static final DataParameter<Float> ENTITY_EYE_HEIGHT;
-	
-	private static final DataParameter<Float> PROJECTILE_BB_MIN_X;
-	private static final DataParameter<Float> PROJECTILE_BB_MIN_Y;
-	private static final DataParameter<Float> PROJECTILE_BB_MIN_Z;
-	private static final DataParameter<Float> PROJECTILE_BB_MAX_X;
-	private static final DataParameter<Float> PROJECTILE_BB_MAX_Y;
-	private static final DataParameter<Float> PROJECTILE_BB_MAX_Z;
-	private static final DataParameter<Float> PROJECTILE_MOTION_X;
-	private static final DataParameter<Float> PROJECTILE_MOTION_Y;
-	private static final DataParameter<Float> PROJECTILE_MOTION_Z;
+	public static final DataParameter<Float> ENTITY_BB_MIN_X;
+	public static final DataParameter<Float> ENTITY_BB_MIN_Y;
+	public static final DataParameter<Float> ENTITY_BB_MIN_Z;
+	public static final DataParameter<Float> ENTITY_BB_MAX_X;
+	public static final DataParameter<Float> ENTITY_BB_MAX_Y;
+	public static final DataParameter<Float> ENTITY_BB_MAX_Z;
+	public static final DataParameter<Float> ENTITY_EYE_HEIGHT;
+
+	public static final DataParameter<Float> PROJECTILE_BB_MIN_X;
+	public static final DataParameter<Float> PROJECTILE_BB_MIN_Y;
+	public static final DataParameter<Float> PROJECTILE_BB_MIN_Z;
+	public static final DataParameter<Float> PROJECTILE_BB_MAX_X;
+	public static final DataParameter<Float> PROJECTILE_BB_MAX_Y;
+	public static final DataParameter<Float> PROJECTILE_BB_MAX_Z;
+	public static final DataParameter<Float> PROJECTILE_MOTION_X;
+	public static final DataParameter<Float> PROJECTILE_MOTION_Y;
+	public static final DataParameter<Float> PROJECTILE_MOTION_Z;
 
 	public DebugTracker(World world) {
 

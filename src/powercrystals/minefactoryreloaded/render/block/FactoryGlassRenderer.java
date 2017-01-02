@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.block;
 
 import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -406,3 +407,4 @@ public class FactoryGlassRenderer implements ISimpleBlockRenderingHandler
 		return MineFactoryReloadedCore.renderIdFactoryGlass;
 	}
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.block;
 
 import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -92,3 +93,4 @@ public class DetCordRenderer implements ISimpleBlockRenderingHandler {
 		return MineFactoryReloadedCore.renderIdDetCord;
 	}
 }
+*/

@@ -61,9 +61,9 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				return _inventory[0].getItem().equals(item);
 			return false;
 		}
-		if (slot == 0) return (item.isItemTool(stack) || item.equals(Items.enchanted_book)) || item.isRepairable();
+		if (slot == 0) return (item.isItemTool(stack) || item.equals(Items.ENCHANTED_BOOK)) || item.isRepairable();
 		if (slot == 1 && _inventory[0] != null) {
-			if (item.equals(Items.enchanted_book) && Items.enchanted_book.func_92110_g(stack).tagCount() > 0)
+			if (item.equals(Items.ENCHANTED_BOOK) && Items.ENCHANTED_BOOK.func_92110_g(stack).tagCount() > 0)
 				return true;
 			return (item.equals(_inventory[0].getItem()) &&
 					stack.isItemStackDamageable() && item.isRepairable()) ||
@@ -202,8 +202,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 			@SuppressWarnings("unchecked")
 			Map<Integer, Integer> existingEnchantments = EnchantmentHelper.getEnchantments(outputItem);
 
-			if (outputItem.getItem().equals(Items.book))
-				outputItem = new ItemStack(Items.enchanted_book);
+			if (outputItem.getItem().equals(Items.BOOK))
+				outputItem = new ItemStack(Items.ENCHANTED_BOOK);
 
 			boolean enchantingWithBook = false;
 			int repairCost = outputItem.getRepairCost() + (addedItem == null ? 0 : addedItem.getRepairCost());
@@ -219,8 +219,8 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 					}
 				}
 				{ // eclipse is indenting weird again
-					enchantingWithBook = addedItem.getItem().equals(Items.enchanted_book) &&
-							Items.enchanted_book.func_92110_g(addedItem).tagCount() > 0;
+					enchantingWithBook = addedItem.getItem().equals(Items.ENCHANTED_BOOK) &&
+							Items.ENCHANTED_BOOK.func_92110_g(addedItem).tagCount() > 0;
 				}
 				int addedEnchants = 0;
 
@@ -288,7 +288,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 						int levelDifference = addedEnchLevel - existingEnchLevel;
 						boolean canEnchantmentBeAdded = enchantment.canApply(outputItem);
 
-						if (outputItem.getItem().equals(Items.enchanted_book)) {
+						if (outputItem.getItem().equals(Items.ENCHANTED_BOOK)) {
 							canEnchantmentBeAdded = true;
 						}
 

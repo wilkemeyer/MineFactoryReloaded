@@ -418,7 +418,7 @@ public class RedstoneNetwork implements IGrid {
 				else
 					((IRedNetInputNode) block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
 			}
-			MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, Blocks.air);
+			MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, Blocks.AIR);
 		}
 	}
 
@@ -551,7 +551,7 @@ public class RedstoneNetwork implements IGrid {
 		}
 
 		int offset = 0;
-		if (block == Blocks.redstone_wire || block instanceof IRedstoneAlike) {
+		if (block == Blocks.REDSTONE_WIRE || block instanceof IRedstoneAlike) {
 			offset = -1;
 		}
 

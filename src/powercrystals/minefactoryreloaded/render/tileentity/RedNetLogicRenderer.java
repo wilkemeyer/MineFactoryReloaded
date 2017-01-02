@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.tileentity;
 
 import net.minecraft.block.Block;
@@ -112,3 +113,4 @@ public class RedNetLogicRenderer extends TileEntitySpecialRenderer implements IS
 		}
 	}
 }
+*/

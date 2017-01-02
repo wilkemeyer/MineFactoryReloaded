@@ -1,7 +1,9 @@
+/*
 package powercrystals.minefactoryreloaded.render.entity;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -14,6 +16,10 @@ import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 
 public class EntitySafariNetRenderer extends Render
 {
+	protected EntitySafariNetRenderer(RenderManager renderManager) {
+		super(renderManager);
+	}
+
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float par8, float par9)
 	{
@@ -66,3 +72,4 @@ public class EntitySafariNetRenderer extends Render
 		return null;
 	}
 }
+*/

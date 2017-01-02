@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.block;
 
 import cofh.lib.render.RenderHelper;
@@ -156,3 +157,4 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 	}
 
 }
+*/

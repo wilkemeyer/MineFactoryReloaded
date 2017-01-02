@@ -112,7 +112,7 @@ public class WorldGenLakesMeta extends WorldGenerator
 					{
 						if(aboolean[(i1 * 16 + j2) * 8 + i2])
 						{
-							world.setBlock(x + i1, y + i2, z + j2, i2 >= 4 ? Blocks.air : _block, _blockMeta, 2);
+							world.setBlock(x + i1, y + i2, z + j2, i2 >= 4 ? Blocks.AIR : _block, _blockMeta, 2);
 						}
 					}
 				}
@@ -124,7 +124,7 @@ public class WorldGenLakesMeta extends WorldGenerator
 				{
 					for(i2 = 4; i2 < 8; ++i2)
 					{
-						if(aboolean[(i1 * 16 + j2) * 8 + i2] && world.getBlock(x + i1, y + i2 - 1, z + j2).equals(Blocks.dirt)
+						if(aboolean[(i1 * 16 + j2) * 8 + i2] && world.getBlock(x + i1, y + i2 - 1, z + j2).equals(Blocks.DIRT)
 								&& world.getSavedLightValue(EnumSkyBlock.Sky, x + i1, y + i2, z + j2) > 0)
 						{
 							BiomeGenBase biomegenbase = world.getBiomeGenForCoords(x + i1, z + j2);

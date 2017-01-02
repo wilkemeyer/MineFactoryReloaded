@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.tileentity;
 
 import net.minecraft.client.Minecraft;
@@ -75,4 +76,4 @@ public class RedNetCardItemRenderer implements IItemRenderer
 		
 		GL11.glPopMatrix();
 	}
-}
+}*/

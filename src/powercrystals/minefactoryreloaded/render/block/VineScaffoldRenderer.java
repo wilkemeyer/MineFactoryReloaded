@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.block;
 
 import net.minecraft.block.Block;
@@ -78,3 +79,4 @@ public class VineScaffoldRenderer implements ISimpleBlockRenderingHandler
 		return 0;
 	}
 }
+*/

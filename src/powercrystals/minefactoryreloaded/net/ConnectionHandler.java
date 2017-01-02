@@ -52,7 +52,7 @@ public class ConnectionHandler
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent player)
 	{
-		String name = player.player.getCommandSenderName();
+		String name = player.player.getName();
 		onlinePlayerMap.put(name, Boolean.TRUE);
 		Iterator<Ticket> i = CommonProxy.ticketsInLimbo.iterator();
 		while (i.hasNext())
@@ -66,14 +66,14 @@ public class ConnectionHandler
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent player)
 	{
-		onlinePlayerMap.remove(player.player.getCommandSenderName());
+		onlinePlayerMap.remove(player.player.getName());
 	}
 
 	@SubscribeEvent
 	public void onItemPickUp(ItemPickupEvent evt) {
 		if (evt.pickedUp.getEntityItem().getItem() == MFRThings.rubberWoodItem) {
 			// TODO: give player a book
-			evt.player.triggerAchievement(AchievementList.mineWood);
+			evt.player.addStat(AchievementList.MINE_WOOD);
 		}
 	}
 }

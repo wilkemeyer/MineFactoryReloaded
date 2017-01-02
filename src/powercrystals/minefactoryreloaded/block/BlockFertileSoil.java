@@ -189,7 +189,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(EnumFacing side, int meta)
 	{
-		return side == 1 ? blockIcon : Blocks.dirt.getIcon(side, 2);
+		return side == 1 ? blockIcon : Blocks.DIRT.getIcon(side, 2);
 	}
 */
 

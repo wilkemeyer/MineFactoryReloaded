@@ -142,7 +142,7 @@ public class Thaumcraft {
 				protected boolean isGoodLog(World world, BlockPos pos) {
 
 					Block id = world.getBlock(x, y, z);
-					return id == tcLog || id.equals(Blocks.log);
+					return id == tcLog || id.equals(Blocks.LOG);
 				}
 
 				@Override
@@ -228,7 +228,7 @@ public class Thaumcraft {
 				protected boolean isGoodLog(World world, BlockPos pos) {
 
 					Block id = world.getBlock(x, y, z);
-					return id == tcLog || id.equals(Blocks.log);
+					return id == tcLog || id.equals(Blocks.LOG);
 				}
 			});
 

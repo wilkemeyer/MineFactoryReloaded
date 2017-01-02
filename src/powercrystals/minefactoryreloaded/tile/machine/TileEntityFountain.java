@@ -94,10 +94,10 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 							if (worldObj.getBlockMetadata(x, y, z) != 0)
 								break l;
 							boolean drained = false;
-							if (block.equals(Blocks.water) || block.equals(Blocks.flowing_water)) {
+							if (block.equals(Blocks.WATER) || block.equals(Blocks.FLOWING_WATER)) {
 								if (_tanks[0].fill(new FluidStack(FluidRegistry.WATER, BUCKET_VOLUME), true) != 0)
 									drained = true;
-							} else if (block.equals(Blocks.lava) || block.equals(Blocks.flowing_lava))
+							} else if (block.equals(Blocks.LAVA) || block.equals(Blocks.FLOWING_LAVA))
 								if (_tanks[0].fill(new FluidStack(FluidRegistry.LAVA, BUCKET_VOLUME), true) != 0)
 									drained = true;
 							if (drained) {

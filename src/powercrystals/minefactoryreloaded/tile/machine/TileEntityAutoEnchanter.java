@@ -58,7 +58,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	@Override
 	public int getWorkMax()
 	{
-		if(_inventory[0] != null && _inventory[0].getItem().equals(Items.glass_bottle))
+		if(_inventory[0] != null && _inventory[0].getItem().equals(Items.GLASS_BOTTLE))
 		{
 			return 250;
 		}
@@ -139,8 +139,8 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			}
 		}
 		if ((input.getItem().getItemEnchantability(input) == 0 &&
-				!input.getItem().equals(Items.glass_bottle)) ||
-				input.getItem().equals(Items.enchanted_book))
+				!input.getItem().equals(Items.GLASS_BOTTLE)) ||
+				input.getItem().equals(Items.ENCHANTED_BOOK))
 		{
 			if (output == null)
 			{
@@ -173,13 +173,13 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		}
 		else if (getWorkDone() >= getWorkMax())
 		{
-			if (input.getItem().equals(Items.glass_bottle))
+			if (input.getItem().equals(Items.GLASS_BOTTLE))
 			{
 				if (output == null)
 				{
-					output = new ItemStack(Items.experience_bottle, 0, 0);
+					output = new ItemStack(Items.EXPERIENCE_BOTTLE, 0, 0);
 				}
-				if (!output.getItem().equals(Items.experience_bottle))
+				if (!output.getItem().equals(Items.EXPERIENCE_BOTTLE))
 				{
 					setWorkDone(0);
 					return false;

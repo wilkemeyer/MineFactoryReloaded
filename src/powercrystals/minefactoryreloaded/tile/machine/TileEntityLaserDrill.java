@@ -181,7 +181,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 					if (worldObj.func_147480_a(xCoord, y, zCoord, true))
 						continue;
 
-				if (block.isAssociatedBlock(Blocks.bedrock)) {
+				if (block.isAssociatedBlock(Blocks.BEDROCK)) {
 					_bedrockLevel = y;
 					return;
 				} else if (!worldObj.isAirBlock(xCoord, y, zCoord)) {

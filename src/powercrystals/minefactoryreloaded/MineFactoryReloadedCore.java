@@ -11,6 +11,7 @@ import cofh.lib.gui.container.InventoryContainerItemWrapper;
 import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -214,7 +215,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public static int renderIdRedNet = 1009;
 	public static int renderIdPPipe = 1009;
 
-	public static final String CHEST_GEN = "mfr:villageZoolologist";
+	public static final ResourceLocation CHEST_GEN = new ResourceLocation("mfr:villageZoolologist");
 
 	private static MineFactoryReloadedCore instance;
 	private LinkedList<Vanilla> recipeSets = new LinkedList<Vanilla>();
@@ -411,7 +412,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		needlegunAmmoEmptyItem = (new ItemFactory()).setUnlocalizedName("mfr.needlegun.ammo.empty");
 		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard()).setUnlocalizedName("mfr.needlegun.ammo.standard");
 		needlegunAmmoPierceItem = (new ItemNeedlegunAmmoStandard(16, 2f, 8)).setUnlocalizedName("mfr.needlegun.ammo.pierce");
-		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.flowing_lava, 3))
+		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.FLOWING_LAVA, 3))
 				.setUnlocalizedName("mfr.needlegun.ammo.lava");
 		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid, 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
 		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid, 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
@@ -486,15 +487,15 @@ public class MineFactoryReloadedCore extends BaseMod {
 		registerBlock(mushroomSoupLiquid, ItemBlock.class);
 		registerBlock(steamFluid, ItemBlock.class);
 
-		Blocks.fire.setFireInfo(rubberWoodBlock, 50, 15);
-		Blocks.fire.setFireInfo(rubberLeavesBlock, 80, 25);
-		Blocks.fire.setFireInfo(rubberSaplingBlock, 30, 20);
-		Blocks.fire.setFireInfo(detCordBlock, 100, 20);
-		Blocks.fire.setFireInfo(biofuelLiquid, 300, 30);
+		Blocks.FIRE.setFireInfo(rubberWoodBlock, 50, 15);
+		Blocks.FIRE.setFireInfo(rubberLeavesBlock, 80, 25);
+		Blocks.FIRE.setFireInfo(rubberSaplingBlock, 30, 20);
+		Blocks.FIRE.setFireInfo(detCordBlock, 100, 20);
+		Blocks.FIRE.setFireInfo(biofuelLiquid, 300, 30);
 
 		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true)) {
-			final Item milkBucket = Items.milk_bucket;
-			Items.milk_bucket = new ItemFactoryBucket(milkLiquid, false) {
+			final Item milkBucket = Items.MILK_BUCKET;
+			Items.MILK_BUCKET = new ItemFactoryBucket(milkLiquid, false) {
 
 				@Override
 				public int hashCode() {
@@ -509,7 +510,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 				}
 			}.setUnlocalizedName("mfr.bucket.milk").setTextureName("minecraft:bucket_milk").
 					setCreativeTab(CreativeTabs.tabMisc);
-			RegistryUtils.overwriteEntry(Item.itemRegistry, "minecraft:milk_bucket", Items.milk_bucket);
+			RegistryUtils.overwriteEntry(Item.itemRegistry, "minecraft:milk_bucket", Items.MILK_BUCKET);
 		}
 
 		if (MFRConfig.vanillaRecipes.getBoolean(true))
@@ -542,32 +543,32 @@ public class MineFactoryReloadedCore extends BaseMod {
 		for (Vanilla e : recipeSets)
 			e.registerOredictEntries();
 
-		Items.wooden_door.setMaxStackSize(8);
-		Items.iron_door.setMaxStackSize(8);
+		Items.WOODEN_DOOR.setMaxStackSize(8);
+		Items.IRON_DOOR.setMaxStackSize(8);
 
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("milk",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(milkBottleItem), new ItemStack(Items.glass_bottle)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(milkBottleItem), new ItemStack(Items.GLASS_BOTTLE)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("sludge",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(sludgeBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(sludgeBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("sewage",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(sewageBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(sewageBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("mobessence",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(mobEssenceBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(mobEssenceBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("biofuel",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bioFuelBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bioFuelBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("meat",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(meatBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(meatBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("pinkslime",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(pinkSlimeBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(pinkSlimeBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("chocolatemilk",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(chocolateMilkBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(chocolateMilkBucketItem), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("mushroomsoup",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(mushroomSoupBucketItem), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(mushroomSoupBucketItem), new ItemStack(Items.BUCKET)));
 
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("milk",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.milk_bucket), new ItemStack(Items.bucket)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.MILK_BUCKET), new ItemStack(Items.BUCKET)));
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("mushroomsoup",
-			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.mushroom_stew), new ItemStack(Items.bowl)));
+			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.MUSHROOM_STEW), new ItemStack(Items.BOWL)));
 
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
 	}
@@ -643,7 +644,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetSingleItem, behavior);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetJailerItem, behavior);
 
-		behavior = (IBehaviorDispenseItem) BlockDispenser.dispenseBehaviorRegistry.getObject(Items.water_bucket);
+		behavior = (IBehaviorDispenseItem) BlockDispenser.dispenseBehaviorRegistry.getObject(Items.WATER_BUCKET);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(sewageBucketItem, behavior);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(sludgeBucketItem, behavior);
 		BlockDispenser.dispenseBehaviorRegistry.putObject(mobEssenceBucketItem, behavior);
@@ -679,7 +680,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		}
 		//}
 
-		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.sapling, 2), 1, 16, 7) {
+		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.SAPLING, 2), 1, 16, 7) {
 
 			@Override
 			public ItemStack[] generateChestContent(Random random, IInventory newInventory) {
@@ -698,19 +699,19 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 			WeightedRandomChestContent[] loot = {
 					new WeightedRandomChestContent(new ItemStack(safariNetSingleItem, 1), 1, 1, 35),
-					new WeightedRandomChestContent(new ItemStack(Blocks.sand, 4), 1, 16, 20),
+					new WeightedRandomChestContent(new ItemStack(Blocks.SAND, 4), 1, 16, 20),
 					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 16), 1, 16, 16),
 					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 23), 1, 23, 16),
 					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 6), 1, 6, 16),
-					new WeightedRandomChestContent(new ItemStack(Items.paper), 1, 16, 14),
+					new WeightedRandomChestContent(new ItemStack(Items.PAPER), 1, 16, 14),
 					new WeightedRandomChestContent(new ItemStack(spyglassItem, 1), 1, 1, 7),
 					saplings,
 					new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5),
-					new WeightedRandomChestContent(new ItemStack(Items.reeds, 3), 1, 3, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds, 1), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.melon_seeds, 1), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.dye, 1, 4), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.netherbrick, 1), 1, 1, 1),
+					new WeightedRandomChestContent(new ItemStack(Items.REEDS, 3), 1, 3, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.PUMPKIN_SEEDS, 1), 1, 1, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.MELON_SEEDS, 1), 1, 1, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.DYE, 1, 4), 1, 1, 2),
+					new WeightedRandomChestContent(new ItemStack(Items.NETHERBRICK, 1), 1, 1, 1),
 			};
 
 			@Override
@@ -749,14 +750,14 @@ public class MineFactoryReloadedCore extends BaseMod {
 			new WeightedRandomChestContent(ItemSafariNet.makeMysteryNet(new ItemStack(safariNetJailerItem)), 1, 1, 10));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(
 			new WeightedRandomChestContent(ItemSafariNet.makeMysteryNet(new ItemStack(safariNetItem)), 1, 1, 2));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.lead), 1, 17, 10));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.name_tag), 1, 14, 10));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.LEAD), 1, 17, 10));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.NAME_TAG), 1, 14, 10));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(safariNetLauncherItem), 1, 1, 8));
 
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.paper), 1, 16, 14));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.coal, 1, 1), 1, 16, 14));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.PAPER), 1, 16, 14));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.COAL, 1, 1), 1, 16, 14));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(blankRecordItem), 1, 1, 14));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.book), 1, 5, 7));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.BOOK), 1, 5, 7));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(spyglassItem), 1, 1, 7));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(rulerItem), 1, 1, 7));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(mobEssenceBucketItem), 1, 1, 6));
@@ -770,9 +771,9 @@ public class MineFactoryReloadedCore extends BaseMod {
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(vineScaffoldBlock), 1, 32, 20));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(plasticSheetItem), 1, 64, 16));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(plasticBagItem), 1, 24, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.reeds), 1, 16, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.pumpkin_seeds), 1, 16, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.snowball), 1, 16, 7));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.REEDS), 1, 16, 7));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.PUMPKIN_SEEDS), 1, 16, 7));
+		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.SNOWBALL), 1, 16, 7));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(saplings);
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(portaSpawnerItem), 1, 1, 1));

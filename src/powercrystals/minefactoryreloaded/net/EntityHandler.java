@@ -2,9 +2,10 @@ package powercrystals.minefactoryreloaded.net;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import net.minecraft.entity.ai.EntityMinecartMobSpawner;
+import net.minecraft.entity.item.EntityMinecartMobSpawner;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,37 +21,36 @@ public class EntityHandler {
 	@SubscribeEvent
 	public void onEntityJoinWorldEvent(EntityJoinWorldEvent evt) {
 
-		if (evt.world.isRemote || !(evt.entity instanceof EntitySkeleton))
+		if (evt.getWorld().isRemote || !(evt.getEntity() instanceof EntitySkeleton))
 			return;
 	}
 
 	@SubscribeEvent
 	public void onMinecartInteract(MinecartInteractEvent e) {
 
-		if (e.player.worldObj.isRemote)
+		if (e.getPlayer().worldObj.isRemote)
 			return;
 		if (!MFRConfig.enableSpawnerCarts.getBoolean(true))
 			return;
-		if (e.minecart != null && !e.minecart.isDead) {
-			ItemStack item = e.player.getCurrentEquippedItem();
+		if (e.getMinecart() != null && !e.getMinecart().isDead) {
+			ItemStack item = e.getPlayer().getHeldItem(e.getHand());
 			if (item != null && item.getItem().equals(portaSpawnerItem) &
-					e.minecart.ridingEntity == null &
-					e.minecart.riddenByEntity == null) {
-				if (e.minecart.getMinecartType() == 0) {
+					e.getMinecart().getRidingEntity() == null &
+					!e.getMinecart().isBeingRidden()) {
+				if (e.getMinecart().getType() == EntityMinecart.Type.RIDEABLE) {
 					if (ItemPortaSpawner.hasData(item)) {
 						e.setCanceled(true);
 						NBTTagCompound tag = ItemPortaSpawner.getSpawnerTag(item);
-						e.player.destroyCurrentEquippedItem();
-						e.minecart.writeToNBT(tag);
-						e.minecart.setDead();
-						EntityMinecartMobSpawner ent = new EntityMinecartMobSpawner(e.minecart.worldObj);
+						e.getPlayer().setHeldItem(e.getHand(), null);
+						e.getMinecart().writeToNBT(tag);
+						e.getMinecart().setDead();
+						EntityMinecartMobSpawner ent = new EntityMinecartMobSpawner(e.getMinecart().worldObj);
 						ent.readFromNBT(tag);
 						ent.worldObj.spawnEntityInWorld(ent);
-						ent.worldObj.playEvent(null, 2004, // particles
-							(int) ent.posX, (int) ent.posY, (int) ent.posZ, 0);
+						ent.worldObj.playEvent(null, 2004, ent.getPosition(), 0); // particles
 					}
 				}
-				else if (e.minecart.getMinecartType() == 4) {
+				else if (e.getMinecart().getType() == EntityMinecart.Type.SPAWNER) {
 					// maybe
 				}
 			}
@@ -60,12 +60,11 @@ public class EntityHandler {
 	@SubscribeEvent
 	public void onItemExpire(ItemExpireEvent e) {
 
-		ItemStack stack = e.entityItem.getEntityItem();
+		ItemStack stack = e.getEntityItem().getEntityItem();
 		if (stack.getItem().equals(rubberLeavesItem) && stack.getItemDamage() == 0) {
 			e.setCanceled(true);
-			e.extraLife = 0;
-			e.entityItem.age = 0;
-			e.entityItem.setEntityItemStack(new ItemStack(stack.getItem(), stack.stackSize, 1));
+			e.setExtraLife(e.getEntityItem().lifespan);
+			e.getEntityItem().setEntityItemStack(new ItemStack(stack.getItem(), stack.stackSize, 1));
 		}
 	}
 

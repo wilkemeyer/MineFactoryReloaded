@@ -68,9 +68,9 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 		if (stack == null)
 			return false;
 		if (slot == 0) {
-			return stack.getEnchantmentTagList() != null || stack.getItem().equals(Items.enchanted_book);
+			return stack.getEnchantmentTagList() != null || stack.getItem().equals(Items.ENCHANTED_BOOK);
 		} else if (slot == 1) {
-			return stack.getItem().equals(Items.book);
+			return stack.getItem().equals(Items.BOOK);
 		}
 		return false;
 	}
@@ -95,13 +95,13 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 		}
 
 		ItemStack stack = _inventory[4];
-		boolean isBook = stack.getItem().equals(Items.enchanted_book);
-		NBTTagList list = isBook ? Items.enchanted_book.func_92110_g(stack) : stack.getEnchantmentTagList();
+		boolean isBook = stack.getItem().equals(Items.ENCHANTED_BOOK);
+		NBTTagList list = isBook ? Items.ENCHANTED_BOOK.func_92110_g(stack) : stack.getEnchantmentTagList();
 		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null) {
 			_inventory[2] = stack;
 			setInventorySlotContents(4, null);
 		} else if ((list != null && list.tagCount() > 0) &&
-				(_inventory[1] != null && _inventory[1].getItem().equals(Items.book)) &
+				(_inventory[1] != null && _inventory[1].getItem().equals(Items.BOOK)) &
 				_inventory[2] == null &
 				_inventory[3] == null) {
 			if (getWorkDone() >= getWorkMax()) {
@@ -112,7 +112,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 					enchTag = list.getCompoundTagAt(0);
 					list.removeTag(0);
 					if (list.tagCount() == 0) {
-						_inventory[4] = new ItemStack(Items.book, 1);
+						_inventory[4] = new ItemStack(Items.BOOK, 1);
 					}
 				} else {
 					int enchIndex = worldObj.rand.nextInt(list.tagCount());
@@ -141,7 +141,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 					_inventory[4] = null;
 				}
 
-				setInventorySlotContents(3, new ItemStack(Items.enchanted_book, 1));
+				setInventorySlotContents(3, new ItemStack(Items.ENCHANTED_BOOK, 1));
 
 				NBTTagCompound baseTag = new NBTTagCompound();
 				NBTTagList enchList = new NBTTagList();

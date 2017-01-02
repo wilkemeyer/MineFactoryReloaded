@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.render.entity;
 
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,13 +18,18 @@ import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 public class EntityNeedleRenderer extends Render
 {
 	private static final ResourceLocation needle = new ResourceLocation("textures/entity/arrow.png");
+
+	protected EntityNeedleRenderer(RenderManager renderManager) {
+		super(renderManager);
+	}
+
 	public void renderNeedle(EntityNeedle needle, double par2, double par4, double par6, float par8, float par9)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)par2, (float)par4, (float)par6);
 		GL11.glRotatef(needle.prevRotationYaw + (needle.rotationYaw - needle.prevRotationYaw) * par9 - 90.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(needle.prevRotationPitch + (needle.rotationPitch - needle.prevRotationPitch) * par9, 0.0F, 0.0F, 1.0F);
-		Tessellator tessellator = Tessellator.instance;
+		Tessellator tessellator = Tessellator.getInstance();
 		byte b0 = 0;
 		
 		double f2 = 0.0D;
@@ -40,29 +48,30 @@ public class EntityNeedleRenderer extends Render
 		GL11.glScalef(f10, f10, f10);
 		GL11.glTranslatef(-4.0F, 0.0F, 0.0F);
 		GL11.glNormal3f(f10, 0.0F, 0.0F);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(-7.0D, -2.0D, -2.0D, f6, f8);
-		tessellator.addVertexWithUV(-7.0D, -2.0D, 2.0D, f7, f8);
-		tessellator.addVertexWithUV(-7.0D, 2.0D, 2.0D, f7, f9);
-		tessellator.addVertexWithUV(-7.0D, 2.0D, -2.0D, f6, f9);
+		VertexBuffer buffer = tessellator.getBuffer();
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+		buffer.pos(-7.0D, -2.0D, -2.0D).tex(f6, f8).endVertex();
+		buffer.pos(-7.0D, -2.0D, 2.0D).tex(f7, f8).endVertex();
+		buffer.pos(-7.0D, 2.0D, 2.0D).tex(f7, f9).endVertex();
+		buffer.pos(-7.0D, 2.0D, -2.0D).tex(f6, f9).endVertex();
 		tessellator.draw();
 		GL11.glNormal3f(-f10, 0.0F, 0.0F);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(-7.0D, 2.0D, -2.0D, f6, f8);
-		tessellator.addVertexWithUV(-7.0D, 2.0D, 2.0D, f7, f8);
-		tessellator.addVertexWithUV(-7.0D, -2.0D, 2.0D, f7, f9);
-		tessellator.addVertexWithUV(-7.0D, -2.0D, -2.0D, f6, f9);
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+		buffer.pos(-7.0D, 2.0D, -2.0D).tex(f6, f8).endVertex();
+		buffer.pos(-7.0D, 2.0D, 2.0D).tex(f7, f8).endVertex();
+		buffer.pos(-7.0D, -2.0D, 2.0D).tex(f7, f9).endVertex();
+		buffer.pos(-7.0D, -2.0D, -2.0D).tex(f6, f9).endVertex();
 		tessellator.draw();
 		
 		for(int i = 0; i < 4; ++i)
 		{
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glNormal3f(0.0F, 0.0F, f10);
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(-8.0D, -2.0D, 0.0D, f2, f4);
-			tessellator.addVertexWithUV(8.0D, -2.0D, 0.0D, f3, f4);
-			tessellator.addVertexWithUV(8.0D, 2.0D, 0.0D, f3, f5);
-			tessellator.addVertexWithUV(-8.0D, 2.0D, 0.0D, f2, f5);
+			buffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+			buffer.pos(-8.0D, -2.0D, 0.0D).tex(f2, f4).endVertex();
+			buffer.pos(8.0D, -2.0D, 0.0D).tex(f3, f4).endVertex();
+			buffer.pos(8.0D, 2.0D, 0.0D).tex(f3, f5).endVertex();
+			buffer.pos(-8.0D, 2.0D, 0.0D).tex(f2, f5).endVertex();
 			tessellator.draw();
 		}
 		

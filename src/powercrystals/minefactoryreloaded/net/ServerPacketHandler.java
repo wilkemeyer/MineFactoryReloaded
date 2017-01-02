@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -62,7 +63,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 			if (te instanceof TileEntityFactory && ((TileEntityFactory) te).hasHAM()) {
 				return ((TileEntityFactory) te).getHAM().getUpgradePacket();
 			}
@@ -71,7 +72,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			amt = data.readByte();
 			if (te instanceof TileEntityAutoEnchanter) {
@@ -86,7 +87,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			if (te instanceof TileEntityHarvester) {
 				((TileEntityHarvester) te).getSettings().put(ByteBufUtils.readUTF8String(data), data.readBoolean());
@@ -96,7 +97,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			if (te instanceof TileEntityChronotyper) {
 				((TileEntityChronotyper) te).setMoveOld(!((TileEntityChronotyper) te).getMoveOld());
@@ -110,7 +111,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			if (te instanceof TileEntityAutoJukebox) {
 				TileEntityAutoJukebox j = ((TileEntityAutoJukebox) te);
@@ -126,7 +127,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			if (te instanceof TileEntityAutoSpawner) {
 				((TileEntityAutoSpawner) te).setSpawnExact(!((TileEntityAutoSpawner) te).getSpawnExact());
@@ -136,7 +137,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			if (te instanceof TileEntityRedNetLogic) {
 				((TileEntityRedNetLogic) te).sendCircuitDefinition(data.readInt());
@@ -146,7 +147,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			int circuit = data.readInt();
 			if (te instanceof TileEntityRedNetLogic) {
@@ -158,7 +159,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			amt = data.readByte();
 			int circuitIndex = data.readInt(),
@@ -178,7 +179,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 			player = (EntityPlayer) world.getEntityByID(data.readInt());
 
 			if (te instanceof TileEntityRedNetLogic) {
@@ -189,7 +190,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 
 			a = data.readInt();
 			if (te instanceof TileEntityEnchantmentRouter) {
@@ -239,7 +240,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 			x = data.readInt();
 			y = data.readInt();
 			z = data.readInt();
-			te = world.getTileEntity(x, y, z);
+			te = world.getTileEntity(new BlockPos(x, y, z));
 			player = (EntityPlayer) world.getEntityByID(data.readInt());
 
 			ItemStack playerStack = player.inventory.getItemStack();
@@ -289,11 +290,11 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		public MFRMessage(short packet, TileEntity te, Object... args) {
 
 			ByteBuf buff = Unpooled.buffer();
-			buff.writeInt(te.getWorldObj().provider.dimensionId);
+			buff.writeInt(te.getWorld().provider.getDimension());
 			buff.writeShort(packet);
-			buff.writeInt(te.xCoord);
-			buff.writeInt(te.yCoord);
-			buff.writeInt(te.zCoord);
+			buff.writeInt(te.getPos().getX());
+			buff.writeInt(te.getPos().getY());
+			buff.writeInt(te.getPos().getZ());
 			handleObjects(buff, args);
 			buf = buff;
 		}
@@ -301,7 +302,7 @@ public class ServerPacketHandler implements IMessageHandler<MFRMessage, IMessage
 		public MFRMessage(short packet, Entity e, Object... args) {
 
 			ByteBuf buff = Unpooled.buffer();
-			buff.writeInt(e.worldObj.provider.dimensionId);
+			buff.writeInt(e.worldObj.provider.getDimension());
 			buff.writeShort(packet);
 			buff.writeInt(e.getEntityId());
 			handleObjects(buff, args);

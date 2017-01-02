@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
 import net.minecraft.block.BlockLog;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -17,9 +19,12 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 {
+	public static final PropertyBool RUBBER_FILLED = PropertyBool.create("rubber");
+
 	public BlockRubberWood()
 	{
 		setUnlocalizedName("mfr.rubberwood.log");
@@ -52,14 +57,26 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 */
 
 	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return super.getStateFromMeta(meta).withProperty(RUBBER_FILLED, (meta & 3) == 1);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return super.getMetaFromState(state) | (state.getValue(RUBBER_FILLED) ? 1 : 0);
+	}
+
+	@Override
 	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 
 		drops.add(new ItemStack(this, 1, 0));
-		if((metadata & 3) == 1)
+		if(state.getValue(RUBBER_FILLED)) {
+			Random rand = world instanceof World ? ((World)world).rand : RANDOM;
 			drops.add(new ItemStack(MFRThings.rawRubberItem,
-					fortune <= 0 ? 1 : 1 + world.rand.nextInt(fortune)));
+					fortune <= 0 ? 1 : 1 + rand.nextInt(fortune)));
+		}
 
 		return drops;
 	}
@@ -67,13 +84,13 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
+		return super.getFireSpreadSpeed(world, pos, face) * (world.getBlockState(pos).getValue(RUBBER_FILLED) ? 2 : 1);
 	}
 
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return super.getFlammability(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) + 1);
+		return super.getFlammability(world, pos, face) * (world.getBlockState(pos).getValue(RUBBER_FILLED) ? 2 : 1);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

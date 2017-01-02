@@ -145,7 +145,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		int meta = worldObj.getBlockMetadata(x, y, z);
 		if (meta != 0) return false;
 		Block block = worldObj.getBlock(x, y, z);
-		return block.isAssociatedBlock(Blocks.water) || block.isAssociatedBlock(Blocks.flowing_water);
+		return block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER);
 	}
 
 	@Override

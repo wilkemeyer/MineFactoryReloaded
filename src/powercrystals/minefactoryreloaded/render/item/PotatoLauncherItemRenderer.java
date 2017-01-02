@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.item;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,3 +85,4 @@ public class PotatoLauncherItemRenderer implements IItemRenderer
 		GL11.glPopMatrix();
 	}
 }
+*/

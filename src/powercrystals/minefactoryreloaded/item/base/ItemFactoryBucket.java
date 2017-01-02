@@ -36,7 +36,7 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 		super(liquidBlock);
 		setCreativeTab(MFRCreativeTab.tab);
 		setMaxStackSize(1);
-		setContainerItem(Items.bucket);
+		setContainerItem(Items.BUCKET);
 		_register = reg;
 	}
 

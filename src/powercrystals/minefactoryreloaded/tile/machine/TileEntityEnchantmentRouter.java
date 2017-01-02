@@ -60,7 +60,7 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter {
 							}
 						}
 					}
-				} else if (_inventory[j].getItem().equals(Items.book)) {
+				} else if (_inventory[j].getItem().equals(Items.BOOK)) {
 					routeWeights[i] += (1 + _inventory[j].stackSize) / 2;
 				}
 			}

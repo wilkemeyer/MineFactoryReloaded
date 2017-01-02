@@ -20,14 +20,14 @@ public class VillageTradeHandler implements IVillageTradeHandler
 	@Override
 	public void manipulateTradesForVillager(EntityVillager villager, MerchantRecipeList recipeList, Random random)
 	{
-		recipeList.add(new MerchantRecipe(new ItemStack(Items.emerald, 1), new ItemStack(MFRThings.safariNetSingleItem)));
-		recipeList.add(new MerchantRecipe(new ItemStack(Items.emerald, 3), new ItemStack(MFRThings.safariNetItem)));
+		recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 1), new ItemStack(MFRThings.safariNetSingleItem)));
+		recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 3), new ItemStack(MFRThings.safariNetItem)));
 
-		recipeList.add(new MerchantRecipe(new ItemStack(Items.emerald, 1),
+		recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 1),
 				new ItemStack(MFRThings.safariNetSingleItem), getHiddenNetStack()));
 
-		recipeList.add(new MerchantRecipe(new ItemStack(Items.emerald, 1),
-				new ItemStack(Blocks.sapling, 8, random.nextInt(6)), new ItemStack(MFRThings.rubberSaplingBlock, 8, 0)));
+		recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, 1),
+				new ItemStack(Blocks.SAPLING, 8, random.nextInt(6)), new ItemStack(MFRThings.rubberSaplingBlock, 8, 0)));
 	}
 
 	public static ItemStack getHiddenNetStack()

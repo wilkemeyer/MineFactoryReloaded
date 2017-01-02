@@ -75,7 +75,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 			ItemStack item = _inventory[i];
 			if (item != null)
 			{
-				if (item.getItem().equals(Items.wooden_door))
+				if (item.getItem().equals(Items.WOODEN_DOOR))
 				{
 					doors.add(i);
 				}

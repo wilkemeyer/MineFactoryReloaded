@@ -130,9 +130,9 @@ public class Vanilla {
 		registerOre("cobblestone", stack(factoryDecorativeStoneBlock, 1, 3));
 
 		// vanilla items
-		registerOre("listAllmilk", milk_bucket);
-		registerOre("listAllwater", water_bucket);
-		registerOre("listAllwater", stack(potionitem, 1, 0));
+		registerOre("listAllmilk", MILK_BUCKET);
+		registerOre("listAllwater", WATER_BUCKET);
+		registerOre("listAllwater", stack(POTIONITEM, 1, 0));
 	}
 
 	public void registerOredictEntries() {
@@ -157,8 +157,8 @@ public class Vanilla {
 				"CPC",
 				" M ",
 				'G', "sheetPlastic",
-				'P', piston,
-				'C', Items.flower_pot,
+				'P', PISTON,
+				'C', Items.FLOWER_POT,
 				'M', machineBaseItem,
 		});
 
@@ -167,8 +167,8 @@ public class Vanilla {
 				"RRR",
 				"BMB",
 				'G', "sheetPlastic",
-				'R', fishing_rod,
-				'B', bucket,
+				'R', FISHING_ROD,
+				'B', BUCKET,
 				'M', machineBaseItem,
 		});
 
@@ -177,8 +177,8 @@ public class Vanilla {
 				"XSX",
 				" M ",
 				'G', "sheetPlastic",
-				'X', golden_axe,
-				'S', shears,
+				'X', GOLDEN_AXE,
+				'S', SHEARS,
 				'M', machineBaseItem,
 		});
 
@@ -187,8 +187,8 @@ public class Vanilla {
 				"SBS",
 				"PMP",
 				'G', "sheetPlastic",
-				'B', bucket,
-				'S', shears,
+				'B', BUCKET,
+				'S', SHEARS,
 				'P', plasticPipeBlock,
 				'M', machineBaseItem,
 		});
@@ -198,8 +198,8 @@ public class Vanilla {
 				"LBL",
 				" M ",
 				'G', "sheetPlastic",
-				'L', leather,
-				'B', glass_bottle,
+				'L',LEATHER,
+				'B',GLASS_BOTTLE,
 				'M', machineBaseItem,
 		});
 
@@ -208,7 +208,7 @@ public class Vanilla {
 				"SSS",
 				"EME",
 				'G', "sheetPlastic",
-				'E', spider_eye,
+				'E',SPIDER_EYE,
 				'S', syringeEmptyItem,
 				'M', machineBaseItem,
 		});
@@ -218,7 +218,7 @@ public class Vanilla {
 				" C ",
 				" M ",
 				'G', "sheetPlastic",
-				'C', chest,
+				'C',CHEST,
 				'M', machineBaseItem,
 		});
 
@@ -227,9 +227,9 @@ public class Vanilla {
 				"PHS",
 				" M ",
 				'G', "sheetPlastic",
-				'P', golden_pickaxe,
+				'P',GOLDEN_PICKAXE,
 				'H', factoryHammerItem,
-				'S', golden_shovel,
+				'S', GOLDEN_SHOVEL,
 				'M', machineBaseItem,
 		});
 
@@ -238,8 +238,8 @@ public class Vanilla {
 				"BBB",
 				"UMU",
 				'G', "sheetPlastic",
-				'B', iron_bars,
-				'U', bucket,
+				'B', IRON_BARS,
+				'U', BUCKET,
 				'M', machineBaseItem,
 		});
 
@@ -248,7 +248,7 @@ public class Vanilla {
 				"FFF",
 				" M ",
 				'G', "sheetPlastic",
-				'F', furnace,
+				'F', FURNACE,
 				'M', machineBaseItem,
 		});
 
@@ -257,8 +257,8 @@ public class Vanilla {
 				"BUB",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', brick,
-				'U', bucket,
+				'B', BRICK,
+				'U', BUCKET,
 				'M', machineBaseItem,
 		});
 
@@ -267,8 +267,8 @@ public class Vanilla {
 				"PFP",
 				" M ",
 				'G', "sheetPlastic",
-				'P', piston,
-				'F', furnace,
+				'P', PISTON,
+				'F', FURNACE,
 				'M', machineBaseItem,
 		});
 
@@ -278,8 +278,8 @@ public class Vanilla {
 				"PMP",
 				'G', "sheetPlastic",
 				'P', "dyePurple",
-				'C', golden_carrot,
-				'A', golden_apple,
+				'C', GOLDEN_CARROT,
+				'A', GOLDEN_APPLE,
 				'M', machineBaseItem,
 		});
 
@@ -288,9 +288,9 @@ public class Vanilla {
 				"BSP",
 				" M ",
 				'G', "sheetPlastic",
-				'P', piston,
-				'B', book,
-				'S', golden_sword,
+				'P', PISTON,
+				'B', BOOK,
+				'S', GOLDEN_SWORD,
 				'M', machineBaseItem,
 		});
 
@@ -299,8 +299,8 @@ public class Vanilla {
 				"BBB",
 				"DMD",
 				'G', "sheetPlastic",
-				'B', book,
-				'D', diamond,
+				'B', BOOK,
+				'D', DIAMOND,
 				'M', machineBaseItem,
 		});
 
@@ -309,7 +309,7 @@ public class Vanilla {
 				"EEE",
 				"PMP",
 				'G', "sheetPlastic",
-				'E', emerald,
+				'E', EMERALD,
 				'P', "dyePurple",
 				'M', machineBaseItem,
 		});
@@ -319,7 +319,7 @@ public class Vanilla {
 				" D ",
 				"RMR",
 				'G', "sheetPlastic",
-				'D', dropper,
+				'D', DROPPER,
 				'R', "dustRedstone",
 				'M', machineBaseItem,
 		});
@@ -329,8 +329,8 @@ public class Vanilla {
 				"RCR",
 				" M ",
 				'G', "sheetPlastic",
-				'C', chest,
-				'R', repeater,
+				'C', CHEST,
+				'R', REPEATER,
 				'M', machineBaseItem,
 		});
 
@@ -339,8 +339,8 @@ public class Vanilla {
 				"RBR",
 				"PMP",
 				'G', "sheetPlastic",
-				'R', repeater,
-				'B', bucket,
+				'R', REPEATER,
+				'B', BUCKET,
 				'P', plasticPipeBlock,
 				'M', machineBaseItem,
 		});
@@ -351,8 +351,8 @@ public class Vanilla {
 				"PPP",
 				"EME",
 				'G', "sheetPlastic",
-				'P', ender_pearl,
-				'E', ender_eye,
+				'P', ENDER_PEARL,
+				'E', ENDER_EYE,
 				'M', machineBaseItem,
 		});
 
@@ -362,7 +362,7 @@ public class Vanilla {
 					"CCC",
 					"CMC",
 					'G', "sheetPlastic",
-					'C', chest,
+					'C', CHEST,
 					'M', machineBaseItem,
 			});
 		}
@@ -372,9 +372,9 @@ public class Vanilla {
 				"BWB",
 				"FMF",
 				'G', "sheetPlastic",
-				'B', bucket,
-				'W', crafting_table,
-				'F', item_frame,
+				'B', BUCKET,
+				'W', CRAFTING_TABLE,
+				'F', ITEM_FRAME,
 				'M', machineBaseItem,
 		});
 
@@ -383,9 +383,9 @@ public class Vanilla {
 				"OBO",
 				"CMC",
 				'G', "sheetPlastic",
-				'O', obsidian,
-				'B', blaze_rod,
-				'C', magma_cream,
+				'O', OBSIDIAN,
+				'B', BLAZE_ROD,
+				'C', MAGMA_CREAM,
 				'M', machineBaseItem,
 		});
 
@@ -394,9 +394,9 @@ public class Vanilla {
 				"OTO",
 				"NBN",
 				'G', "sheetPlastic",
-				'T', Items.cauldron,
-				'O', obsidian,
-				'N', nether_brick_stairs,
+				'T', Items.CAULDRON,
+				'O', OBSIDIAN,
+				'N', NETHER_BRICK_STAIRS,
 				'B', SludgeBoiler,
 		});
 
@@ -405,7 +405,7 @@ public class Vanilla {
 				" J ",
 				" M ",
 				'G', "sheetPlastic",
-				'J', jukebox,
+				'J', JUKEBOX,
 				'M', machineBaseItem,
 		});
 
@@ -414,8 +414,8 @@ public class Vanilla {
 				"CBC",
 				" M ",
 				'G', "sheetPlastic",
-				'B', book,
-				'C', comparator,
+				'B', BOOK,
+				'C', COMPARATOR,
 				'M', machineBaseItem,
 		});
 
@@ -424,9 +424,9 @@ public class Vanilla {
 				"NCS",
 				"EME",
 				'G', "sheetPlastic",
-				'C', magma_cream,
-				'N', Items.nether_wart,
-				'S', sugar,
+				'C', MAGMA_CREAM,
+				'N', Items.NETHER_WART,
+				'S', SUGAR,
 				'E', "gemEmerald",
 				'M', machineBaseItem,
 		});
@@ -436,8 +436,8 @@ public class Vanilla {
 				"UEU",
 				"SMS",
 				'G', "sheetPlastic",
-				'U', sugar,
-				'E', fermented_spider_eye,
+				'U', SUGAR,
+				'E', FERMENTED_SPIDER_EYE,
 				'S', "slimeball",
 				'M', machineBaseItem,
 		});
@@ -447,9 +447,9 @@ public class Vanilla {
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', furnace,
-				'P', piston,
-				'R', blaze_rod,
+				'F', FURNACE,
+				'P', PISTON,
+				'R', BLAZE_ROD,
 				'M', machineBaseItem,
 		});
 
@@ -458,9 +458,9 @@ public class Vanilla {
 				"RDR",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', book,
-				'D', diamond,
-				'R', nether_brick,
+				'B', BOOK,
+				'D', DIAMOND,
+				'R', NETHER_BRICK,
 				'M', machineBaseItem,
 		});
 
@@ -469,8 +469,8 @@ public class Vanilla {
 				"SSS",
 				"XMX",
 				'G', "sheetPlastic",
-				'S', golden_sword,
-				'X', golden_axe,
+				'S', GOLDEN_SWORD,
+				'X', GOLDEN_AXE,
 				'M', machineBaseItem,
 		});
 
@@ -479,8 +479,8 @@ public class Vanilla {
 				"BFB",
 				"BMB",
 				'G', "sheetPlastic",
-				'B', brick_block,
-				'F', flint_and_steel,
+				'B', BRICK_BLOCK,
+				'F', FLINT_AND_STEEL,
 				'M', machineBaseItem,
 		});
 
@@ -489,8 +489,8 @@ public class Vanilla {
 				"RBR",
 				" M ",
 				'G', "sheetPlastic",
-				'B', book,
-				'R', repeater,
+				'B', BOOK,
+				'R', REPEATER,
 				'M', machineBaseItem,
 		});
 
@@ -499,7 +499,7 @@ public class Vanilla {
 				"LLL",
 				"DMD",
 				'G', "sheetPlastic",
-				'L', glowstone,
+				'L', GLOWSTONE,
 				'D', "gemDiamond",
 				'M', machineBaseItem,
 		});
@@ -509,7 +509,7 @@ public class Vanilla {
 				"LSL",
 				"DMD",
 				'G', "sheetPlastic",
-				'L', glowstone,
+				'L', GLOWSTONE,
 				'D', "gemDiamond",
 				'S', stack(pinkSlimeItem, 1, 1),
 				'M', machineBaseItem,
@@ -520,7 +520,7 @@ public class Vanilla {
 				"AAA",
 				" M ",
 				'G', "sheetPlastic",
-				'A', anvil,
+				'A', ANVIL,
 				'M', machineBaseItem,
 		});
 
@@ -530,7 +530,7 @@ public class Vanilla {
 				"BMB",
 				'G', "sheetPlastic",
 				'H', factoryHammerItem,
-				'B', book,
+				'B', BOOK,
 				'M', machineBaseItem,
 		});
 
@@ -540,7 +540,7 @@ public class Vanilla {
 				" M ",
 				'G', "sheetPlastic",
 				'C', "cableRedNet",
-				'N', noteblock,
+				'N', NOTEBLOCK,
 				'M', machineBaseItem,
 		});
 
@@ -550,8 +550,8 @@ public class Vanilla {
 				"RMR",
 				'G', "sheetPlastic",
 				'C', plasticPipeBlock,
-				'B', Items.brewing_stand,
-				'R', comparator,
+				'B', Items.BREWING_STAND,
+				'R', COMPARATOR,
 				'M', machineBaseItem,
 		});
 
@@ -560,8 +560,8 @@ public class Vanilla {
 				"SXS",
 				" M ",
 				'G', "sheetPlastic",
-				'S', shears,
-				'X', golden_axe,
+				'S', SHEARS,
+				'X', GOLDEN_AXE,
 				'M', machineBaseItem,
 		});
 
@@ -570,7 +570,7 @@ public class Vanilla {
 				"DDD",
 				" M ",
 				'G', "sheetPlastic",
-				'D', dispenser,
+				'D', DISPENSER,
 				'M', machineBaseItem,
 		});
 
@@ -579,8 +579,8 @@ public class Vanilla {
 				"RCR",
 				"SMS",
 				'G', "sheetPlastic",
-				'R', repeater,
-				'C', comparator,
+				'R', REPEATER,
+				'C', COMPARATOR,
 				'S', spyglassItem,
 				'M', machineBaseItem,
 		});
@@ -590,9 +590,9 @@ public class Vanilla {
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', furnace,
-				'P', piston,
-				'R', netherbrick,
+				'F', FURNACE,
+				'P', PISTON,
+				'R', NETHERBRICK,
 				'M', machineBaseItem,
 		});
 
@@ -601,7 +601,7 @@ public class Vanilla {
 				"PFP",
 				"RMR",
 				'G', "sheetPlastic",
-				'F', nether_star,
+				'F', NETHER_STAR,
 				'P', DeepStorageUnit,
 				'R', "blockRedstone",
 				'M', machineBaseItem,
@@ -613,7 +613,7 @@ public class Vanilla {
 					"RMR",
 					'G', "sheetPlastic",
 					'F', "blockGold",
-					'P', ender_eye,
+					'P', ENDER_EYE,
 					'R', "blockRedstone",
 					'M', machineBaseItem,
 			});
@@ -624,8 +624,8 @@ public class Vanilla {
 				"GBG",
 				"UMU",
 				'G', "sheetPlastic",
-				'B', iron_bars,
-				'U', bucket,
+				'B', IRON_BARS,
+				'U', BUCKET,
 				'M', machineBaseItem,
 		});
 
@@ -634,7 +634,7 @@ public class Vanilla {
 				"BRB",
 				"PCP",
 				'G', "sheetPlastic",
-				'B', iron_bars,
+				'B', IRON_BARS,
 				'R', ItemRouter,
 				'P', "dyeOrange",
 				'C', Chronotyper,
@@ -720,7 +720,7 @@ public class Vanilla {
 		_registeredMachineTinkers = true;
 
 		addRecipe(new ShapelessMachineTinker(Machine.ItemCollector, "Emits comparator signal",
-				stack(gold_nugget)) {
+				stack(GOLD_NUGGET)) {
 
 			@Override
 			protected boolean isMachineTinkerable(ItemStack machine) {
@@ -769,8 +769,8 @@ public class Vanilla {
 		}
 		_registeredDecorative = true;
 
-		addSurroundRecipe(stack(factoryRoadBlock, 16), "sheetPlastic", stack(stonebrick, 1, 0));
-		addRotatedGearRecipe(stack(factoryRoadBlock, 4, 1), stack(factoryRoadBlock, 1, 0), stack(redstone_lamp));
+		addSurroundRecipe(stack(factoryRoadBlock, 16), "sheetPlastic", stack(STONEBRICK, 1, 0));
+		addRotatedGearRecipe(stack(factoryRoadBlock, 4, 1), stack(factoryRoadBlock, 1, 0), stack(REDSTONE_LAMP));
 		addTwoWayConversionRecipe(stack(factoryRoadBlock, 1, 4), stack(factoryRoadBlock, 1, 1));
 		{ // GLASS
 			String pane = "paneGlass", glass = "blockGlass";
@@ -781,8 +781,8 @@ public class Vanilla {
 				String dye = DYES[15 - i];
 				String dye2 = "dyeCeramic" + dye;
 				String dye3 = "dye" + dye;
-				addRecipe(ShapelessRecipe(cloneStack(ceramicDye, 4), stack(clay_ball), dye3));
-				addRecipe(ShapelessRecipe(cloneStack(ceramicDye, 8), stack(clay_ball), stack(clay_ball), dye3, dye3));
+				addRecipe(ShapelessRecipe(cloneStack(ceramicDye, 4), stack(CLAY_BALL), dye3));
+				addRecipe(ShapelessRecipe(cloneStack(ceramicDye, 8), stack(CLAY_BALL), stack(CLAY_BALL), dye3, dye3));
 				addRecipe(ShapelessRecipe(cloneStack(glassStack, 1), dye2, glass));
 				addRecipe(ShapelessRecipe(cloneStack(glassStack, 3), dye2, glass, glass, glass));
 				addRecipe(ShapelessRecipe(cloneStack(glassStack, 6), dye2, dye2, glass, glass, glass, glass, glass, glass));
@@ -809,28 +809,28 @@ public class Vanilla {
 		});
 		addSmallStorageRecipe(stack(factoryPlasticBlock, 4, 6), stack(factoryPlasticBlock, 1, 3));
 
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 0), stack2(ice), stack2(brick_block));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 1), stack2(glowstone), stack2(brick_block));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 2), "blockLapis", stack2(brick_block));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 3), stack2(obsidian), stack2(brick_block));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 4), stack(stone_slab, 1, 0), stack2(brick_block));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 5), stack2(snow), stack2(brick_block));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 0), stack2(ICE), stack2(BRICK_BLOCK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 1), stack2(GLOWSTONE), stack2(BRICK_BLOCK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 2), "blockLapis", stack2(BRICK_BLOCK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 3), stack2(OBSIDIAN), stack2(BRICK_BLOCK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 4), stack(STONE_SLAB, 1, 0), stack2(BRICK_BLOCK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 5), stack2(SNOW), stack2(BRICK_BLOCK));
 
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 6), stack2(ice), stack(stonebrick));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 7), stack2(glowstone), stack(stonebrick));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 8), "blockLapis", stack(stonebrick));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 9), stack2(obsidian), stack(stonebrick));
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 4, 10), stack(stone_slab, 1, 0), stack(stonebrick));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 6), stack2(ICE), stack(STONEBRICK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 7), stack2(GLOWSTONE), stack(STONEBRICK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 8), "blockLapis", stack(STONEBRICK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 9), stack2(OBSIDIAN), stack(STONEBRICK));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 4, 10), stack(STONE_SLAB, 1, 0), stack(STONEBRICK));
 		if (enableSmoothSlabRecipe.getBoolean(true)) {
 			addRecipe(stack(factoryDecorativeBrickBlock, 8, 10), new Object[] {
 				"VV",
 				"VV",
-				'V', stack(double_stone_slab, 1, 8)
+				'V', stack(DOUBLE_STONE_SLAB, 1, 8)
 			});
 		}
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 11), stack2(snow), stack(stonebrick));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 11), stack2(SNOW), stack(STONEBRICK));
 		// 12 & 13 are special blocks
-		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 14), stack(brick_block, 1, 0), stack(stonebrick));
+		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 14), stack(BRICK_BLOCK, 1, 0), stack(STONEBRICK));
 		// 15 is special
 
 		addSmallStorageRecipe(stack(factoryDecorativeBrickBlock, 4, 0), stack(factoryDecorativeBrickBlock, 1, 6));
@@ -839,25 +839,25 @@ public class Vanilla {
 		addSmallStorageRecipe(stack(factoryDecorativeBrickBlock, 4, 3), stack(factoryDecorativeBrickBlock, 1, 9));
 		addSmallStorageRecipe(stack(factoryDecorativeBrickBlock, 4, 4), stack(factoryDecorativeBrickBlock, 1, 10));
 		addSmallStorageRecipe(stack(factoryDecorativeBrickBlock, 4, 5), stack(factoryDecorativeBrickBlock, 1, 11));
-		addSmallStorageRecipe(stack(brick_block, 2, 0), stack(factoryDecorativeBrickBlock, 1, 14));
+		addSmallStorageRecipe(stack(BRICK_BLOCK, 2, 0), stack(factoryDecorativeBrickBlock, 1, 14));
 
 		/**
 		 * Smooth:
 		 **/
 		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 0), "dyeBlack", "stone");
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 1), stack2(sugar), "stone");
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 1), stack2(SUGAR), "stone");
 
 		/**
 		 * Cobble:
 		 **/
 		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 2), "dyeBlack", "cobblestone");
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 3), stack2(sugar), "cobblestone");
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 3), stack2(SUGAR), "cobblestone");
 
 		/**
 		 * Large brick:
 		 **/
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 4), "dyeBlack", stack(stonebrick));
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 5), stack2(sugar), stack(stonebrick));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 4), "dyeBlack", stack(STONEBRICK));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 5), stack2(SUGAR), stack(STONEBRICK));
 		// smooth->large brick
 		addSmallStorageRecipe(stack(factoryDecorativeStoneBlock, 4, 4), stack(factoryDecorativeStoneBlock, 1, 0));
 		addSmallStorageRecipe(stack(factoryDecorativeStoneBlock, 4, 5), stack(factoryDecorativeStoneBlock, 1, 1));
@@ -867,8 +867,8 @@ public class Vanilla {
 		/**
 		 * Small brick:
 		 **/
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 6), "dyeBlack", stack2(brick_block));
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 7), stack2(sugar), stack2(brick_block));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 6), "dyeBlack", stack2(BRICK_BLOCK));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 7), stack2(SUGAR), stack2(BRICK_BLOCK));
 		// large brick->small brick
 		addSmallStorageRecipe(stack(factoryDecorativeStoneBlock, 4, 6), stack(factoryDecorativeStoneBlock, 1, 4));
 		addSmallStorageRecipe(stack(factoryDecorativeStoneBlock, 4, 7), stack(factoryDecorativeStoneBlock, 1, 5));
@@ -876,14 +876,14 @@ public class Vanilla {
 		/**
 		 * Gravel:
 		 **/
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 8), "dyeBlack", stack2(gravel));
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 9), stack2(sugar), stack2(gravel));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 8), "dyeBlack", stack2(GRAVEL));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 8, 9), stack2(SUGAR), stack2(GRAVEL));
 
 		/**
 		 * Paved:
 		 **/
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 4, 10), "dyeBlack", stack(stone_slab, 1, 0));
-		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 4, 11), stack2(sugar), stack(stone_slab, 1, 0));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 4, 10), "dyeBlack", stack(STONE_SLAB, 1, 0));
+		addSurroundRecipe(stack(factoryDecorativeStoneBlock, 4, 11), stack2(SUGAR), stack(STONE_SLAB, 1, 0));
 		// smooth<->paved
 		addShapelessRecipe(stack(factoryDecorativeStoneBlock, 1, 0), stack(factoryDecorativeStoneBlock, 1, 10));
 		addShapelessRecipe(stack(factoryDecorativeStoneBlock, 1, 1), stack(factoryDecorativeStoneBlock, 1, 11));
@@ -928,10 +928,10 @@ public class Vanilla {
 				'I', "ingotIron",
 		}));
 
-		addShapelessRecipe(stack(syringeHealthItem), new Object[] { syringeEmptyItem, apple });
-		addShapelessRecipe(stack(syringeGrowthItem), new Object[] { syringeEmptyItem, golden_carrot });
+		addShapelessRecipe(stack(syringeHealthItem), new Object[] { syringeEmptyItem, APPLE });
+		addShapelessRecipe(stack(syringeGrowthItem), new Object[] { syringeEmptyItem, GOLDEN_CARROT });
 
-		addSurroundRecipe(stack(syringeZombieItem, 1), stack(syringeEmptyItem), stack2(rotten_flesh));
+		addSurroundRecipe(stack(syringeZombieItem, 1), stack(syringeEmptyItem), stack2(ROTTEN_FLESH));
 
 		addRecipe(ShapedRecipe(stack(syringeSlimeItem, 1), new Object[] {
 				" S ",
@@ -941,7 +941,7 @@ public class Vanilla {
 				'S', syringeEmptyItem,
 		}));
 
-		addShapelessRecipe(stack(syringeCureItem), new Object[] { syringeEmptyItem, golden_apple });
+		addShapelessRecipe(stack(syringeCureItem), new Object[] { syringeEmptyItem, GOLDEN_APPLE });
 	}
 
 	protected void registerPlastics() {
@@ -983,7 +983,7 @@ public class Vanilla {
 				"A",
 				"P",
 				'P', "sheetPlastic",
-				'A', paper,
+				'A', PAPER,
 		}));
 
 		addRecipe(ShapedRecipe(stack(plasticCupItem, 16), new Object[] {
@@ -1005,7 +1005,7 @@ public class Vanilla {
 				"P P",
 				"PPP",
 				'P', "sheetPlastic",
-				'S', string
+				'S', STRING
 		}));
 
 		addShapelessRecipe(stack(plasticBagItem), plasticBagItem);
@@ -1070,9 +1070,9 @@ public class Vanilla {
 				"WBW",
 				"STS",
 				"WBW",
-				'W', Items.wheat,
-				'B', stack(dye, 1, 15),
-				'S', string,
+				'W', Items.WHEAT,
+				'B', stack(DYE, 1, 15),
+				'S', STRING,
 				'T', "stickWood",
 		}));
 
@@ -1094,18 +1094,18 @@ public class Vanilla {
 					'G', "ingotGold",
 					'L', "blockGlass",
 					'D', "gemDiamond",
-					'N', nether_star
+					'N', NETHER_STAR
 			}));
 
-		addSurroundRecipe(stack(detCordBlock, 12), stack2(tnt), "itemRubber");
+		addSurroundRecipe(stack(detCordBlock, 12), stack2(TNT), "itemRubber");
 
 		addRecipe(ShapedRecipe(stack(fishingRodItem, 1), new Object[] {
 				"DD ",
 				"DFD",
 				"TDD",
 				'D', "wireExplosive",
-				'F', fishing_rod,
-				'T', redstone_torch
+				'F', FISHING_ROD,
+				'T', REDSTONE_TORCH
 		}));
 	}
 
@@ -1121,32 +1121,32 @@ public class Vanilla {
 					"SLS",
 					"PBP",
 					"SPS",
-					'S', string,
-					'L', leather,
-					'P', ender_pearl,
+					'S', STRING,
+					'L', LEATHER,
+					'P', ENDER_PEARL,
 					'B', portaSpawnerItem,
 			}));
 		} else {
-			addGearRecipe(stack(safariNetItem, 1), stack2(ender_pearl), stack2(ghast_tear));
+			addGearRecipe(stack(safariNetItem, 1), stack2(ENDER_PEARL), stack2(GHAST_TEAR));
 		}
 
 		addRecipe(ShapedRecipe(stack(safariNetSingleItem, 3), new Object[] {
 				"SPS",
 				" B ",
 				"S S",
-				'S', string,
+				'S', STRING,
 				'P', "sheetPlastic",
 				'B', "slimeball",
 		}));
 
-		addGearRecipe(stack(safariNetJailerItem, 1), stack2(iron_bars), stack(safariNetSingleItem));
+		addGearRecipe(stack(safariNetJailerItem, 1), stack2(IRON_BARS), stack(safariNetSingleItem));
 
 		if (enableFancySafariNet.getBoolean(true))
 			addRecipe(ShapedRecipe(stack(safariNetFancyJailerItem, 1), new Object[] {
 					"GGG",
 					"GBG",
 					"GGG",
-					'G', gold_nugget,
+					'G', GOLD_NUGGET,
 					'B', safariNetJailerItem,
 			}));
 
@@ -1156,8 +1156,8 @@ public class Vanilla {
 					"LGL",
 					"IRI",
 					'P', "sheetPlastic",
-					'L', glowstone_dust,
-					'G', gunpowder,
+					'L', GLOWSTONE_DUST,
+					'G', GUNPOWDER,
 					'I', "ingotIron",
 					'R', "dustRedstone",
 			}));
@@ -1183,10 +1183,10 @@ public class Vanilla {
 
 		addSmelting(stack(meatIngotCookedItem), meatIngotRawItem, 0.5f);
 		addSmelting(stack(meatNuggetCookedItem), meatNuggetRawItem, 0.3f);
-		addWeakSmelting(stack(sugarCharcoalItem), sugar);
+		addWeakSmelting(stack(sugarCharcoalItem), SUGAR);
 		// cooked meat block -> charcoal
-		addWeakSmelting(stack(coal, 3, 1), stack(factoryDecorativeBrickBlock, 1, 13));
-		addWeakSmelting(stack(coal, 1, 1), stack(rubberWoodBlock));
+		addWeakSmelting(stack(COAL, 3, 1), stack(factoryDecorativeBrickBlock, 1, 13));
+		addWeakSmelting(stack(COAL, 1, 1), stack(rubberWoodBlock));
 
 		addSmelting(stack(pinkSlimeItem, 1, 1), pinkSlimeBlock, 0.5f);
 
@@ -1205,50 +1205,50 @@ public class Vanilla {
 		}
 		_registeredVanillaImprovements = true;
 
-		addShapelessRecipe(stack(planks, 3, 3), stack(rubberWoodBlock));
+		addShapelessRecipe(stack(PLANKS, 3, 3), stack(rubberWoodBlock));
 
-		addRecipe(ShapelessRecipe(stack(piston, 1, 0), stack(sticky_piston, 1, 0), "listAllmilk"));
+		addRecipe(ShapelessRecipe(stack(PISTON, 1, 0), stack(STICKY_PISTON, 1, 0), "listAllmilk"));
 
-		addRecipe(ShapedRecipe(stack(sticky_piston), new Object[] {
+		addRecipe(ShapedRecipe(stack(STICKY_PISTON), new Object[] {
 				"R",
 				"P",
 				'R', "itemRawRubber",
-				'P', piston
+				'P', PISTON
 		}));
 
-		addSurroundRecipe(stack(blankRecordItem, 1), stack2(paper), "dustPlastic");
+		addSurroundRecipe(stack(blankRecordItem, 1), stack2(PAPER), "dustPlastic");
 
 		if (enableMossyCobbleRecipe.getBoolean(true)) {
-			addRecipe(ShapelessRecipe(stack(mossy_cobblestone), new Object[] {
-					cobblestone, cobblestone, cobblestone,
-					cobblestone, cobblestone, cobblestone,
-					cobblestone,
+			addRecipe(ShapelessRecipe(stack(MOSSY_COBBLESTONE), new Object[] {
+					COBBLESTONE, COBBLESTONE, COBBLESTONE,
+					COBBLESTONE, COBBLESTONE, COBBLESTONE,
+					COBBLESTONE,
 					"listAllwater",
-					Items.wheat,
+					Items.WHEAT,
 			}));
-			addRecipe(ShapelessRecipe(stack(stonebrick, 1, 1), new Object[] {
-					stack(stonebrick, 1, 0), stack(stonebrick, 1, 0),
-					stack(stonebrick, 1, 0), stack(stonebrick, 1, 0),
-					stack(stonebrick, 1, 0), stack(stonebrick, 1, 0),
-					stack(stonebrick, 1, 0),
+			addRecipe(ShapelessRecipe(stack(STONEBRICK, 1, 1), new Object[] {
+					stack(STONEBRICK, 1, 0), stack(STONEBRICK, 1, 0),
+					stack(STONEBRICK, 1, 0), stack(STONEBRICK, 1, 0),
+					stack(STONEBRICK, 1, 0), stack(STONEBRICK, 1, 0),
+					stack(STONEBRICK, 1, 0),
 					"listAllwater",
-					Items.wheat,
+					Items.WHEAT,
 			}));
 		}
 
 		if (enableSmoothSlabRecipe.getBoolean(true)) {
-			addRecipe(stack(double_stone_slab, 3, 0), new Object[] {
+			addRecipe(stack(DOUBLE_STONE_SLAB, 3, 0), new Object[] {
 				"VVV",
-				'V', stack(double_stone_slab, 1, 8)
+				'V', stack(DOUBLE_STONE_SLAB, 1, 8)
 			});
 
-			addRecipe(stack(double_stone_slab, 1, 8), new Object[] {
+			addRecipe(stack(DOUBLE_STONE_SLAB, 1, 8), new Object[] {
 					"VV",
-					'V', stack(stone_slab, 1, 0)
+					'V', stack(STONE_SLAB, 1, 0)
 			});
-			addRecipe(stack(double_stone_slab, 1, 9), new Object[] {
+			addRecipe(stack(DOUBLE_STONE_SLAB, 1, 9), new Object[] {
 				"VV",
-				'V', stack(stone_slab, 1, 1)
+				'V', stack(STONE_SLAB, 1, 1)
 			});
 		}
 
@@ -1256,30 +1256,30 @@ public class Vanilla {
 				"VV",
 				"VV",
 				"VV",
-				'V', vine,
+				'V', VINE,
 		});
 
 		addShapelessRecipe(stack(milkBottleItem), new Object[] {
-				milk_bucket,
-				glass_bottle
+				MILK_BUCKET,
+				GLASS_BOTTLE
 		});
 
-		addSurroundRecipe(stack(dirt, 1, 2), stack(dirt), stack(leaves, 1, 1));
+		addSurroundRecipe(stack(DIRT, 1, 2), stack(DIRT), stack(LEAVES, 1, 1));
 
-		addRecipe(ShapelessRecipe(stack(fertileSoil), stack(dirt, 1, 2), stack(fertilizerItem), "listAllmilk"));
+		addRecipe(ShapelessRecipe(stack(fertileSoil), stack(DIRT, 1, 2), stack(fertilizerItem), "listAllmilk"));
 
-		addRecipe(ShapelessRecipe(stack(chocolateMilkBucketItem), "listAllmilk", bucket, stack(dye, 1, 3)));
+		addRecipe(ShapelessRecipe(stack(chocolateMilkBucketItem), "listAllmilk", BUCKET, stack(DYE, 1, 3)));
 
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
-		addRecipe(ShapedRecipe(stack(torch, 3), new Object[] {
+		addRecipe(ShapedRecipe(stack(TORCH, 3), new Object[] {
 				"R",
 				"S",
 				'R', "itemRawRubber",
 				'S', "stickWood",
 		}));
 
-		addRecipe(ShapedRecipe(stack(torch, 2), new Object[] {
+		addRecipe(ShapedRecipe(stack(TORCH, 2), new Object[] {
 				"C",
 				"S",
 				'C', "itemCharcoalSugar",
@@ -1317,36 +1317,36 @@ public class Vanilla {
 				" C ",
 				"SDS",
 				"SSS",
-				'C', chest,
+				'C', CHEST,
 				'S', "sheetPlastic",
-				'D', detector_rail
+				'D', DETECTOR_RAIL
 		}));
 
 		addRecipe(ShapedRecipe(stack(railDropoffCargoBlock, 2), new Object[] {
 				"SSS",
 				"SDS",
 				" C ",
-				'C', chest,
+				'C', CHEST,
 				'S', "sheetPlastic",
-				'D', detector_rail
+				'D', DETECTOR_RAIL
 		}));
 
 		addRecipe(ShapedRecipe(stack(railPickupPassengerBlock, 3), new Object[] {
 				" L ",
 				"SDS",
 				"SSS",
-				'L', lapis_block,
+				'L', LAPIS_BLOCK,
 				'S', "sheetPlastic",
-				'D', detector_rail
+				'D', DETECTOR_RAIL
 		}));
 
 		addRecipe(ShapedRecipe(stack(railDropoffPassengerBlock, 3), new Object[] {
 				"SSS",
 				"SDS",
 				" L ",
-				'L', lapis_block,
+				'L', LAPIS_BLOCK,
 				'S', "sheetPlastic",
-				'D', detector_rail
+				'D', DETECTOR_RAIL
 		}));
 	}
 
@@ -1363,7 +1363,7 @@ public class Vanilla {
 				"SIS",
 				'P', "sheetPlastic",
 				'I', "ingotIron",
-				'S', magma_cream,
+				'S', MAGMA_CREAM,
 				'L', safariNetLauncherItem,
 				'G', spyglassItem
 		}));
@@ -1382,7 +1382,7 @@ public class Vanilla {
 				"PRP",
 				"ILI",
 				'P', "sheetPlastic",
-				'I', minecart,
+				'I', MINECART,
 				'L', needlegunItem,
 				'R', stack(logicCardItem, 1, 1),
 				'C', stack(logicCardItem, 1, 2)
@@ -1403,8 +1403,8 @@ public class Vanilla {
 				'C', stack(logicCardItem, 1, 0),
 				'M', needlegunAmmoEmptyItem,
 				'P', "sheetPlastic",
-				'T', tnt,
-				'I', fireworks
+				'T', TNT,
+				'I', FIREWORKS
 		}));
 
 		addRecipe(ShapedRecipe(stack(rocketItem, 2, 1), new Object[] {
@@ -1413,8 +1413,8 @@ public class Vanilla {
 				"IMI",
 				'M', needlegunAmmoEmptyItem,
 				'P', "sheetPlastic",
-				'T', tnt,
-				'I', fireworks
+				'T', TNT,
+				'I', FIREWORKS
 		}));
 
 		addRecipe(ShapelessRecipe(stack(rocketItem, 2, 0), new Object[] {
@@ -1427,36 +1427,36 @@ public class Vanilla {
 				"AAA",
 				"AAA",
 				"GMG",
-				'A', arrow,
+				'A', ARROW,
 				'M', needlegunAmmoEmptyItem,
-				'G', gunpowder
+				'G', GUNPOWDER
 		}));
 
 		addRecipe(ShapedRecipe(stack(needlegunAmmoPierceItem), new Object[] {
 				"AAA",
 				"AAA",
 				"GMG",
-				'A', flint,
+				'A', FLINT,
 				'M', needlegunAmmoEmptyItem,
-				'G', gunpowder
+				'G', GUNPOWDER
 		}));
 
 		addRecipe(ShapedRecipe(stack(needlegunAmmoAnvilItem), new Object[] {
 				"SAS",
 				"STS",
 				"SMS",
-				'S', string,
-				'A', stack(anvil, 1, 0),
-				'T', tnt,
+				'S', STRING,
+				'A', stack(ANVIL, 1, 0),
+				'T', TNT,
 				'M', needlegunAmmoEmptyItem,
 		}));
 
 		addShapelessRecipe(stack(needlegunAmmoFireItem),
-			needlegunAmmoPierceItem, flint_and_steel);
+			needlegunAmmoPierceItem, FLINT_AND_STEEL);
 
 		addShapelessRecipe(stack(needlegunAmmoLavaItem),
 			needlegunAmmoStandardItem, plasticCupItem,
-			lava_bucket);
+			LAVA_BUCKET);
 
 		addShapelessRecipe(stack(needlegunAmmoSludgeItem),
 			needlegunAmmoStandardItem, plasticCupItem,
@@ -1600,7 +1600,7 @@ public class Vanilla {
 				"KPK",
 				'P', "sheetPlastic",
 				'C', rednetCableBlock,
-				'B', bookshelf,
+				'B', BOOKSHELF,
 				'K', "dyeBlack"
 		}));
 
@@ -1614,6 +1614,6 @@ public class Vanilla {
 		}
 		_registeredRedNetManual = true;
 
-		addRecipe(ShapelessRecipe(ItemBlockRedNetLogic.manual, plasticSheetItem, "dustRedstone", book));
+		addRecipe(ShapelessRecipe(ItemBlockRedNetLogic.manual, plasticSheetItem, "dustRedstone", BOOK));
 	}
 }

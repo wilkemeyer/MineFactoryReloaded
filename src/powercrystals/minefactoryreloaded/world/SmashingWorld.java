@@ -66,7 +66,7 @@ public class SmashingWorld extends WorldProxy
 	{
 		if (x == X & y == Y & z == Z)
 			return block;
-		return Blocks.air;
+		return Blocks.AIR;
 	}
 
 	@Override

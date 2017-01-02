@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.item;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -82,3 +83,4 @@ public class RocketItemRenderer implements IItemRenderer
 		GL11.glPopMatrix();
 	}
 }
+*/

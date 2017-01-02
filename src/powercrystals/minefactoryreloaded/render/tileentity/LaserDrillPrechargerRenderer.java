@@ -7,7 +7,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecha
 public class LaserDrillPrechargerRenderer extends TileEntitySpecialRenderer
 {
 	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks)
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage)
 	{
 		TileEntityLaserDrillPrecharger laserDrillPrecharger = (TileEntityLaserDrillPrecharger)tileEntity;
 		if(laserDrillPrecharger.shouldDrawBeam())

@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.item;
 
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -78,3 +79,4 @@ public class ConveyorItemRenderer implements IItemRenderer
 		GL11.glPopMatrix();
 	}
 }
+*/

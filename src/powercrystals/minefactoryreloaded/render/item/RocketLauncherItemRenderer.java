@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.item;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -82,3 +83,4 @@ public class RocketLauncherItemRenderer implements IItemRenderer
 		GL11.glPopMatrix();
 	}
 }
+*/

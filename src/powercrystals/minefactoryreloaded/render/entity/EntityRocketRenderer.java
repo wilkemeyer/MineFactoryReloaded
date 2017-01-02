@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render.entity;
 
 import org.lwjgl.opengl.GL11;
@@ -60,3 +61,4 @@ public class EntityRocketRenderer extends Render
 		return rocket;
 	}
 }
+*/
