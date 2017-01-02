@@ -36,7 +36,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
-import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
+import powercrystals.minefactoryreloaded.setup.village.Zoologist;
 
 public class ItemSafariNet extends ItemFactory {
 
@@ -429,7 +429,7 @@ public class ItemSafariNet extends ItemFactory {
 
 		super.getSubItems(item, subTypes);
 		if (item.equals(MFRThings.safariNetSingleItem)) {
-			subTypes.add(VillageTradeHandler.getHiddenNetStack());
+			subTypes.add(Zoologist.getHiddenNetStack());
 		}
 	}
 

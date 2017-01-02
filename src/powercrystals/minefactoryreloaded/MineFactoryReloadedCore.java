@@ -162,7 +162,7 @@ import powercrystals.minefactoryreloaded.setup.recipe.EnderIO;
 import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
 import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
-import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
+import powercrystals.minefactoryreloaded.setup.village.Zoologist;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
@@ -628,9 +628,9 @@ public class MineFactoryReloadedCore extends BaseMod {
 		addChestGenItems();
 
 		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
-		VillagerRegistry.instance().registerVillagerId(MFRConfig.zoolologistEntityId.getInt());
-		VillagerRegistry.instance().registerVillageTradeHandler(MFRConfig.zoolologistEntityId.getInt(),
-			new VillageTradeHandler());
+		VillagerRegistry.instance().register(); registerVillagerId(MFRConfig.zoologist.getInt());
+		VillagerRegistry.instance().registerVillageTradeHandler(MFRConfig.zoologist.getInt(),
+			new Zoologist());
 
 		WorldHandler.instance.registerFeature(new MineFactoryReloadedWorldGen());
 
@@ -667,7 +667,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_DISPENSER).addItem(
-			new WeightedRandomChestContent(VillageTradeHandler.getHiddenNetStack(), 1, 1, 25));
+			new WeightedRandomChestContent(Zoologist.getHiddenNetStack(), 1, 1, 25));
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
@@ -694,7 +694,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		//{ Fishing
 		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(rubberSaplingBlock, 1, 0), 5));
 		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(plasticSheetItem, 1, 0), 10));
-		FishingHooks.addTreasure(new WeightedRandomFishable(VillageTradeHandler.getHiddenNetStack(), 1));
+		FishingHooks.addTreasure(new WeightedRandomFishable(Zoologist.getHiddenNetStack(), 1));
 		FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(plasticBagItem, 1, 0), 1) {
 
 			WeightedRandomChestContent[] loot = {

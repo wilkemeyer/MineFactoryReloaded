@@ -57,14 +57,14 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 
 		return _invName != null ? _invName : I18n.
 				translateToLocal(_machine.getInternalName() + ".name");
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 
 		return _invName != null;
 	}
@@ -90,7 +90,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 					}
 					itemstack.stackSize -= amountToDrop;
 					EntityItem entityitem = new EntityItem(worldObj,
-							xCoord + xOffset, yCoord + yOffset, zCoord + zOffset,
+							pos.getX() + xOffset, pos.getY() + yOffset, pos.getZ() + zOffset,
 							new ItemStack(itemstack.getItem(), amountToDrop, itemstack.getItemDamage()));
 					if (itemstack.getTagCompound() != null) {
 						entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
@@ -134,7 +134,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return emptyIFluidTank;
 	}
 
-	public int drain(FluidTankAdv _tank, int maxDrain, boolean doDrain) {
+	public int drain(int maxDrain, boolean doDrain, FluidTankAdv _tank) {
 
 		if (_tank.getFluidAmount() > 0) {
 			FluidStack drained = _tank.drain(maxDrain, doDrain);
@@ -197,9 +197,9 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 
 		if (!worldObj.isRemote && shouldPumpLiquid()) {
 			for (IFluidTank tank : getTanks())
@@ -308,12 +308,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 
 	}
 
@@ -392,10 +392,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 
-		if (isInvalid() || worldObj.getTileEntity(xCoord, yCoord, zCoord) != this) {
+		if (isInvalid() || worldObj.getTileEntity(pos) != this) {
 			return false;
 		}
-		return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+		return entityplayer.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64D;
 	}
 
 	@Override
@@ -451,7 +451,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 		if (_inventory.length > 0) {
@@ -478,6 +478,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			if (dropItems.tagCount() > 0)
 				tag.setTag("DropItems", dropItems);
 		}
+
+		return tag;
 	}
 
 	@Override
@@ -505,7 +507,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int var1) {
+	public ItemStack removeStackFromSlot(int slot) {
 
 		return null;
 	}
@@ -582,5 +584,27 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 		float mult = hasTank & hasInventory ? (tankPercent + invPercent) / 2 : hasTank ? tankPercent : hasInventory ? invPercent : 0f;
 		return (int) Math.ceil(15 * mult);
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for(int slot=0; slot < getSizeInventory(); slot++) {
+			removeStackFromSlot(slot);
+		}
 	}
 }

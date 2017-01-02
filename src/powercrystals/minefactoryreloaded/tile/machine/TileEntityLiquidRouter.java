@@ -41,9 +41,9 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		for(int i = 0; i < 6; i++)
 		{
 			_filledDirection[i] = false;

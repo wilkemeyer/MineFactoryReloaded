@@ -25,9 +25,9 @@ public class TileEntityMobCounter extends TileEntityFactory
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
 		if (worldObj == null)
 		{

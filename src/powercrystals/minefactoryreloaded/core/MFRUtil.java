@@ -7,6 +7,7 @@ import buildcraft.api.tools.IToolWrench;
 
 import cofh.api.item.IToolHammer;
 import cofh.lib.util.helpers.StringHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -315,6 +316,17 @@ public class MFRUtil {
 		}
 
 		return nonConveyors.toArray(new EnumFacing[nonConveyors.size()]);
+	}
+
+	public static void notifyBlockUpdate(World world, BlockPos pos) {
+
+		IBlockState state = world.getBlockState(pos);
+		notifyBlockUpdate(world, pos, state);
+	}
+
+	public static void notifyBlockUpdate(World world, BlockPos pos, IBlockState state) {
+
+		world.notifyBlockUpdate(pos, state, state, 3);
 	}
 
 	public static void notifyNearbyBlocks(World world, BlockPos pos, Block block) {

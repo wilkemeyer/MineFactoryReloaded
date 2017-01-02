@@ -93,13 +93,13 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
 		if (isInvalid() || worldObj.isRemote) {
 			return;
 		}
 
-		super.updateEntity();
+		super.update();
 
 		if (hasDrops())
 			return;

@@ -249,7 +249,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				} else if (s != null && s.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
 						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - s.getItemDamage());
-						world.notifyBlockUpdate(pos, state, state, 3);
+						MFRUtil.notifyBlockUpdate(world, pos, state);
 						return true;
 					}
 				}

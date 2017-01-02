@@ -103,9 +103,9 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		if (!worldObj.isRemote)
 		{
 			boolean active = _ticksSinceLastConsumption < _ticksUntilConsumption;

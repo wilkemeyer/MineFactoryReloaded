@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.setup;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
 import cofh.core.CoFHProps;
@@ -124,8 +124,8 @@ public class Machine {
 				if (storedItem != null & storedQuantity > 0) {
 					info.add(String.format(MFRUtil.localize("tip.info.mfr.dsu.contains", true),
 						storedQuantity + " " + storedItem.getDisplayName() +
-								(adv ? " (" + Item.itemRegistry.getIDForObject(storedItem.getItem()) + ":" +
-										storedItem.getItemDamageForDisplay() + ")" : "")));
+								(adv ? " (" + storedItem.getItem().getRegistryName() + ":" +
+										storedItem.getItemDamage() + ")" : "")));
 				}
 			}
 			super.addInformation(stack, player, info, adv);
@@ -181,9 +181,6 @@ public class Machine {
 	protected final int _blockIndex;
 	protected final int _meta;
 	protected final int _machineIndex;
-
-	protected IIcon[] _iconsActive = new IIcon[6];
-	protected IIcon[] _iconsIdle = new IIcon[6];
 
 	protected final String _name;
 	protected final String _internalName;
@@ -267,15 +264,6 @@ public class Machine {
 		return _machines;
 	}
 
-	public static void LoadTextures(int blockIndex, IIconRegister ir) {
-
-		for (Machine m : _machines) {
-			if (m.getBlockIndex() == blockIndex) {
-				m.loadIcons(ir);
-			}
-		}
-	}
-
 	private String getTooltipText() {
 
 		return "tip.info.mfr." + _name.toLowerCase(Locale.US);
@@ -283,16 +271,16 @@ public class Machine {
 
 	public boolean hasTooltip(ItemStack stack) {
 
-		if (stack.stackTagCompound != null)
-			if (_energyStoredMax > 0 && stack.stackTagCompound.hasKey("energyStored"))
+		if (stack.getTagCompound() != null)
+			if (_energyStoredMax > 0 && stack.getTagCompound().hasKey("energyStored"))
 				return true;
 		return _activationEnergy > 0 || I18n.canTranslate(getTooltipText());
 	}
 
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {
 
-		if (stack.stackTagCompound != null) {
-			NBTTagCompound tag = stack.stackTagCompound;
+		if (stack.getTagCompound() != null) {
+			NBTTagCompound tag = stack.getTagCompound();
 			if (_energyStoredMax > 0 && tag.hasKey("energyStored")) {
 				String max = StringHelper.getScaledNumber(_energyStoredMax);
 				String cur = StringHelper.getScaledNumber(Math.min(_energyStoredMax, tag.getInteger("energyStored")));
@@ -394,11 +382,14 @@ public class Machine {
 				_activationEnergy = c.get("Machine." + _name, "ActivationCostRF", getActivationEnergy(),
 					comment + ", in units of **1** RF").setRequiresMcRestart(true).getInt();
 		}
+		Block machineBlock = MFRThings.machineBlocks.get(_blockIndex);
 
-		MFRThings.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);
+		//TODO look into replacing the meta in here with state or at least enum
+		machineBlock.setHarvestLevel("pickaxe", 0, machineBlock.getStateFromMeta(_meta));
 		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 
+/* TODO remove when not needed
 	public IIcon getIcon(EnumFacing side, boolean isActive) {
 
 		return (isActive ? _iconsActive : _iconsIdle)[side];
@@ -419,6 +410,7 @@ public class Machine {
 		_iconsIdle[4] = ir.registerIcon(loadIcon(left, false));
 		_iconsIdle[5] = ir.registerIcon(loadIcon(right, false));
 	}
+*/
 
 	protected String loadIcon(Side side, boolean active) {
 

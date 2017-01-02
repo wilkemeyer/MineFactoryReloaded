@@ -283,7 +283,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
 		if (worldObj.isRemote) {
 			return;

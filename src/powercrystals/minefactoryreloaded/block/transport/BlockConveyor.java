@@ -512,8 +512,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 			TileEntity te = world.getTileEntity(pos);
 			if (te instanceof TileEntityConveyor && !((TileEntityConveyor) te).isFast()) {
 				((TileEntityConveyor) te).setFast(true);
-				IBlockState state = world.getBlockState(pos);
-				world.notifyBlockUpdate(pos, state, state, 3);
+				MFRUtil.notifyBlockUpdate(world, pos);
 				if (!player.capabilities.isCreativeMode)
 					item.stackSize--;
 				return true;

@@ -55,9 +55,9 @@ public class TileEntityItemRouter extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 		if (!worldObj.isRemote) {
 			for (int i = 45; i < getSizeInventory(); i++) {
 				if (_inventory[i] != null) {

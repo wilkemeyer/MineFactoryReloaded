@@ -70,9 +70,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 
 		_energyStored = Math.min(_energyStored, getEnergyStoredMax());
 
@@ -216,7 +216,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 
@@ -225,6 +225,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 
 		if (_idleTicks > 0)
 			tag.setInteger("idleDone", _idleTicks);
+
+		return tag;
 	}
 
 	@Override

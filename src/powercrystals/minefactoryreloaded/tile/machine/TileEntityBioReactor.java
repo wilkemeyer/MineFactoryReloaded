@@ -75,9 +75,9 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 
 		if (!worldObj.isRemote) {
 			Map<Item, IFactoryPlantable> plantables = MFRRegistry.getPlantables();

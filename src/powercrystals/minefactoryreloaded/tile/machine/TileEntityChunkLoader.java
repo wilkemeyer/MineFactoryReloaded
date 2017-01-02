@@ -134,7 +134,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
 		if (_owner.isEmpty())
 			return;
@@ -148,7 +148,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 				!ConnectionHandler.onlinePlayerMap.containsKey(_owner)) {
 			setIdleTicks(getIdleTicksMax());
 		}
-		super.updateEntity();
+		super.update();
 		if (worldObj.isRemote)
 			return;
 		if (getIdleTicks() > 0) {

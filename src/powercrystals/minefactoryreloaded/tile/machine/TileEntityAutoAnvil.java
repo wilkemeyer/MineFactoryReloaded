@@ -51,7 +51,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing sideordinal) {
 
 		if (stack == null) return false;
 		Item item = stack.getItem();

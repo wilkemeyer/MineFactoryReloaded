@@ -97,7 +97,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 		if (MFRUtil.isHoldingUsableTool(player, pos) && te instanceof TileEntityFactory && ((TileEntityFactory)te).canRotate())
 		{
 			((TileEntityFactory)te).rotate(side);
-			world.notifyBlockUpdate(pos, state, state, 3);
+			MFRUtil.notifyBlockUpdate(world, pos, state);
 			MFRUtil.usedWrench(player, pos);
 			return true;
 		}
@@ -109,7 +109,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 		else if(te instanceof TileEntityRedNetHistorian && s != null && s.getItem().equals(Items.DYE))
 		{
 			((TileEntityRedNetHistorian)te).setSelectedSubnet(15 - s.getItemDamage());
-			world.notifyBlockUpdate(pos, state, state, 3);
+			MFRUtil.notifyBlockUpdate(world, pos, state);
 			return true;
 		}
 		return false;

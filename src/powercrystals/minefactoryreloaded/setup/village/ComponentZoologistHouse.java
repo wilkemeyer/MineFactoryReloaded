@@ -264,6 +264,6 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 	@Override
 	protected int chooseProfession(int villagersSpawnedIn, int currentVillagerProfession)
 	{
-		return MFRConfig.zoolologistEntityId.getInt();
+		return MFRConfig.zoologist.getInt();
 	}
 }

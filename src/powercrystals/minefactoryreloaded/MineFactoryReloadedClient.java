@@ -219,7 +219,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			new RenderSnowball(fishingRodItem));
 
 		// Handlers
-		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoolologistEntityId.getInt(),
+		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoologist.getInt(),
 			new ResourceLocation(villagerFolder + "zoologist.png"));
 
 		MinecraftForge.EVENT_BUS.register(instance);

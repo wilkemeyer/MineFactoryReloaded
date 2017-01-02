@@ -65,9 +65,9 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 		if (worldObj.isRemote) {
 			return;
 		}

@@ -10,6 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInventory
@@ -41,8 +43,8 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if (!worldObj.isRemote) {
 			if (deadCache) reCache();
 
@@ -85,7 +87,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 				if (tile == null)
 					continue;
 
-				EnumFacing from = EnumFacing.VALID_DIRECTIONS[i];
+				EnumFacing from = EnumFacing.VALUES[i];
 				if (tile.receiveEnergy(from, energy, true) > 0)
 					energy -= tile.receiveEnergy(from, energy, false);
 				if (energy <= 0)
@@ -124,48 +126,41 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 
 	private void reCache() {
 		if (deadCache) {
-			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
-				onNeighborTileChange(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			for (EnumFacing dir : EnumFacing.VALUES)
+				onNeighborTileChange(pos.offset(dir));
 			deadCache = false;
 		}
 	}
 
 	@Override
 	public void onNeighborTileChange(BlockPos pos) {
-		TileEntity tile = worldObj.getTileEntity(x, y, z);
+		TileEntity tile = worldObj.getTileEntity(pos);
 
-		if (x < xCoord)
-			addCache(tile, 5);
-		else if (x > xCoord)
-			addCache(tile, 4);
-		else if (z < zCoord)
-			addCache(tile, 3);
-		else if (z > zCoord)
-			addCache(tile, 2);
-		else if (y < yCoord)
-			addCache(tile, 1);
-		else if (y > yCoord)
-			addCache(tile, 0);
+		Vec3i vec = pos.subtract(this.pos);
+		EnumFacing side = EnumFacing.getFacingFromVector(vec.getX(), vec.getY(), vec.getZ());
+
+		addCache(tile, side);
 	}
 
 	private void addCache(TileEntity tile, EnumFacing side) {
 		if (receiverCache != null)
-			receiverCache[side] = null;
+			receiverCache[side.ordinal()] = null;
 
 		if (tile instanceof IEnergyReceiver) {
-			if (((IEnergyReceiver)tile).canConnectEnergy(EnumFacing.VALID_DIRECTIONS[side])) {
+			if (((IEnergyReceiver)tile).canConnectEnergy(side)) {
 				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
-				receiverCache[side] = (IEnergyReceiver)tile;
+				receiverCache[side.ordinal()] = (IEnergyReceiver)tile;
 			}
 		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		if (_ticksSinceLastConsumption > 0)
 			tag.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
+
+		return tag;
 	}
 
 	@Override
