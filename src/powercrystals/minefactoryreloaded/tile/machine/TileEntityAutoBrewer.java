@@ -2,6 +2,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.ItemHelper;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionUtils;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -92,14 +95,16 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 			for (int row = 0; row < 6; row++) {
 				int processSlot = getProcessSlot(row), templateSlot = getTemplateSlot(row);
 				if (_inventory[31] != null && _inventory[processSlot] == null && _inventory[templateSlot] != null) {
-					if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null)
-						if (getPotionResult(0, _inventory[templateSlot]) != 0)
-							if (drain(_tanks[0], waterCost, false) == waterCost) {
-								drain(_tanks[0], waterCost, true);
+					if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null) {
+						ItemStack waterBottle = new ItemStack(Items.POTIONITEM);
+						if (getPotionResult(waterBottle, _inventory[templateSlot]) != waterBottle)
+							if (drain(waterCost, false, _tanks[0]) == waterCost) {
+								drain(waterCost, true, _tanks[0]);
 								_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
-								_inventory[processSlot] = new ItemStack(Items.POTIONITEM, 1, 0);
+								_inventory[processSlot] = new ItemStack(Items.POTIONITEM);
 								didWork = true;
 							}
+					}
 				}
 				if (_inventory[processSlot] != null) {
 					if (_inventory[getProcessSlot(row + 1)] == null && canBrew(row))
@@ -143,26 +148,17 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 						continue;
 					}
 
-					int existingPotion = current.getItemDamage();
-					int newPotion = this.getPotionResult(existingPotion, ingredient);
-					@SuppressWarnings("unchecked")
-					List<Integer> existingEffects = Items.POTIONITEM.getEffects(existingPotion);
-					@SuppressWarnings("unchecked")
-					List<Integer> newEffects = Items.POTIONITEM.getEffects(newPotion);
+					ItemStack newPotion = this.getPotionResult(current, ingredient);
 
-					if ((existingPotion <= 0 || existingEffects != newEffects) &&
-							(existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null)) {
-						if (existingPotion != newPotion) {
-							current.setItemDamage(newPotion);
-						}
-					} else if (!ItemPotion.isSplash(existingPotion) && ItemPotion.isSplash(newPotion)) {
-						current.setItemDamage(newPotion);
+					if (newPotion != null && current != newPotion) {
+						_inventory[getProcessSlot(row + 1)] = newPotion;
+					} else {
+						_inventory[getProcessSlot(row + 1)] = current;
 					}
 
-					_inventory[getProcessSlot(row + 1)] = current;
 					_inventory[getProcessSlot(row)] = null;
 
-					if (existingPotion == newPotion)
+					if (current == newPotion)
 						break;
 
 					if (ingredient.stackSize > 0) {
@@ -205,26 +201,15 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 
 		ItemStack ingredient = _inventory[getTemplateSlot(row)];
 
-		if (!ingredient.getItem().isPotionIngredient(ingredient)) {
+		if (!BrewingRecipeRegistry.isValidIngredient(ingredient)) {
 			return false;
 		}
 
 		if (_inventory[getProcessSlot(row)] != null &&
 				_inventory[getProcessSlot(row)].getItem() instanceof ItemPotion) {
-			int existingPotion = _inventory[getProcessSlot(row)].getItemDamage();
-			int newPotion = this.getPotionResult(existingPotion, ingredient);
+			ItemStack newPotion = this.getPotionResult(_inventory[getProcessSlot(row)], ingredient);
 
-			if (!ItemPotion.isSplash(existingPotion) && ItemPotion.isSplash(newPotion)) {
-				return true;
-			}
-
-			@SuppressWarnings("unchecked")
-			List<Integer> existingEffects = Items.POTIONITEM.getEffects(existingPotion);
-			@SuppressWarnings("unchecked")
-			List<Integer> newEffects = Items.POTIONITEM.getEffects(newPotion);
-
-			if ((existingPotion <= 0 || existingEffects != newEffects) &&
-					(existingEffects == null || !existingEffects.equals(newEffects) && newEffects != null)) {
+			if (newPotion != null && _inventory[getProcessSlot(row)] != newPotion) {
 				return true; //existingPotion != newPotion;
 				// push potions without effects that have been previously brewed on through
 			}
@@ -233,12 +218,12 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 		return false;
 	}
 
-	private int getPotionResult(int existingPotion, ItemStack ingredient) {
+	private ItemStack getPotionResult(ItemStack existingPotion, ItemStack ingredient) {
 
-		if (ingredient == null || !ingredient.getItem().isPotionIngredient(ingredient)) {
+		if (ingredient == null || !BrewingRecipeRegistry.isValidIngredient(ingredient)) {
 			return existingPotion;
 		}
-		return PotionHelper.applyIngredient(existingPotion, ingredient.getItem().getPotionEffect(ingredient));
+		return BrewingRecipeRegistry.getOutput(existingPotion, ingredient);
 	}
 
 	@Override
@@ -283,10 +268,10 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 
 	private boolean ingredientsEqual(ItemStack template, ItemStack ingredient) {
 
-		if (template == null | ingredient == null || !template.getItem().isPotionIngredient(template)) {
+		if (template == null | ingredient == null || !BrewingRecipeRegistry.isValidIngredient(template)) {
 			return false;
 		}
-		return template.getItem().getPotionEffect(template).equals(ingredient.getItem().getPotionEffect(ingredient));
+		return PotionUtils.getEffectsFromStack(template).equals(PotionUtils.getEffectsFromStack(ingredient));
 	}
 
 	@Override

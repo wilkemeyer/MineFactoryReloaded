@@ -63,7 +63,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack == null)
 			return false;
@@ -76,7 +76,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		if (slot == 2 || slot == 3) return true;
 		return false;
@@ -96,7 +96,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 
 		ItemStack stack = _inventory[4];
 		boolean isBook = stack.getItem().equals(Items.ENCHANTED_BOOK);
-		NBTTagList list = isBook ? Items.ENCHANTED_BOOK.func_92110_g(stack) : stack.getEnchantmentTagList();
+		NBTTagList list = isBook ? Items.ENCHANTED_BOOK.getEnchantments(stack) : stack.getEnchantmentTagList();
 		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null) {
 			_inventory[2] = stack;
 			setInventorySlotContents(4, null);

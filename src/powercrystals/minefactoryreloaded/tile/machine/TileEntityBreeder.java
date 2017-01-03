@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import net.minecraft.item.ItemDoor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +76,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 			ItemStack item = _inventory[i];
 			if (item != null)
 			{
-				if (item.getItem().equals(Items.WOODEN_DOOR))
+				if (item.getItem() instanceof ItemDoor)
 				{
 					doors.add(i);
 				}
@@ -90,7 +91,7 @@ public class TileEntityBreeder extends TileEntityFactoryPowered
 					{
 						if (a.isBreedingItem(_inventory[i]))
 						{
-							a.func_146082_f(null);
+							a.setInLove(null);
 							decrStackSize(i, 1);
 							iter.remove();
 							return true;

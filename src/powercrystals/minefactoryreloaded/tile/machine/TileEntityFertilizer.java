@@ -54,14 +54,14 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 	public boolean activateMachine() {
 
 		BlockPos bp = _areaManager.getNextBlock();
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
+		if (!worldObj.isBlockLoaded(bp)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 
 		Map<Block, IFactoryFertilizable> fertalizables = MFRRegistry.getFertilizables();
 
-		Block target = worldObj.getBlock(bp.x, bp.y, bp.z);
+		Block target = worldObj.getBlockState(bp).getBlock();
 		if (!fertalizables.containsKey(target)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
@@ -79,13 +79,13 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 
 			if (type == FertilizerType.None)
 				continue;
-			if (!fertilizable.canFertilize(worldObj, bp.x, bp.y, bp.z, type))
+			if (!fertilizable.canFertilize(worldObj, bp, type))
 				continue;
 
-			if (fertilizable.fertilize(worldObj, _rand, bp.x, bp.y, bp.z, type)) {
+			if (fertilizable.fertilize(worldObj, _rand, bp, type)) {
 				fertilizer.consume(fertStack);
 				if (MFRConfig.playSounds.getBoolean(true)) // particles
-					worldObj.playEvent(null, 2005, bp.x, bp.y, bp.z, _rand.nextInt(10) + 5);
+					worldObj.playEvent(null, 2005, bp, _rand.nextInt(10) + 5);
 				if (fertStack.stackSize <= 0)
 					setInventorySlotContents(stackIndex, null);
 
@@ -134,7 +134,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack != null) {
 			if (slot < 9) {

@@ -1,6 +1,11 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -55,22 +60,20 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered {
 				continue;
 
 			ItemBlock item = (ItemBlock) stack.getItem();
-			Block block = item.field_150939_a;
+			Block block = item.getBlock();
 
-			BlockPos bp = BlockPos.fromRotateableTile(this);
-			bp.moveForwards(1);
-			if (worldObj.isAirBlock(bp.x, bp.y, bp.z) &&
-					block.canPlaceBlockOnSide(worldObj, bp.x, bp.y, bp.z, 0)) {
+			BlockPos bp = pos.offset(getDirectionFacing());
+			if (worldObj.isAirBlock(bp) &&
+					block.canPlaceBlockOnSide(worldObj, bp, EnumFacing.DOWN)) {
 				int j1 = item.getMetadata(stack.getItemDamage());
-				int meta = block.onBlockPlaced(worldObj, bp.x, bp.y, bp.z, 0, bp.x, bp.y, bp.z, j1);
-				if (worldObj.setBlock(bp.x, bp.y, bp.z, block, meta, 3)) {
-					block.onBlockPlacedBy(worldObj, bp.x, bp.y, bp.z, FakePlayerFactory.getMinecraft((WorldServer) worldObj), stack);
-					block.onPostBlockPlaced(worldObj, bp.x, bp.y, bp.z, meta);
+				FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((WorldServer) worldObj);
+				IBlockState placementState = block.getStateForPlacement(worldObj, bp, EnumFacing.DOWN, 0, 0, 0, j1, fakePlayer, stack);
+				if (worldObj.setBlockState(bp, placementState, 3)) {
+					block.onBlockPlacedBy(worldObj, bp, placementState, fakePlayer, stack);
 					if (MFRConfig.playSounds.getBoolean(true)) {
-						worldObj.playSoundEffect(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5,
-							block.stepSound.func_150496_b(),
-							(block.stepSound.getVolume() + 1.0F) / 2.0F,
-							block.stepSound.getPitch() * 0.8F);
+						SoundType soundType = block.getSoundType(placementState, worldObj, bp, null);
+						worldObj.playSound(null, bp, soundType.getStepSound(), SoundCategory.BLOCKS,
+							(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 					}
 					decrStackSize(i, 1);
 					return true;

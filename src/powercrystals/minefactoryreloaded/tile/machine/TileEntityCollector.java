@@ -48,7 +48,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	protected ItemStack addToChests(ItemStack s)
 	{
 		s = UtilInventory.dropStack(this, s,
-				MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord), null);
+				MFRUtil.directionsWithoutConveyors(worldObj, pos), null);
 		if (canStuff & failedDrops == null & s != null)
 		{
 			doDrop(s);
@@ -64,7 +64,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	}
 
 	@Override
-	public int getComparatorOutput(EnumFacing side)
+	public int getComparatorOutput()
 	{
 		return failedDrops != null ? 15 : 0;
 	}
@@ -78,7 +78,7 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	@Override
 	public EnumFacing[] getDropDirections()
 	{
-		return MFRUtil.directionsWithoutConveyors(worldObj, xCoord, yCoord, zCoord);
+		return MFRUtil.directionsWithoutConveyors(worldObj, pos);
 	}
 
 	@Override

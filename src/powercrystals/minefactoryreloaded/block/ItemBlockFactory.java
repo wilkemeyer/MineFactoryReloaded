@@ -60,7 +60,7 @@ public class ItemBlockFactory extends ItemBlock
 	@Override
 	public IIcon getIconFromDamage(int damage)
 	{
-		return field_150939_a.getIcon(2, damage);
+		return getBlock().getIcon(2, damage);
 	}
 */
 

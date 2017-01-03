@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -89,13 +90,24 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 		if (e instanceof EntityLiving) {
 			EntityLiving el = (EntityLiving) e;
+
 			int t = Math.abs(el.experienceValue) + 1;
 			r += t + t / 3;
 
-			ItemStack[] aitemstack = el.getLastActiveItems();
-			for (int j = 0; j < aitemstack.length; ++j)
-				if (aitemstack[j] != null && el.equipmentDropChances[j] <= 1.0F)
-					r += 1 + 4;
+			for (int j = 0; j < el.inventoryArmor.length; ++j) {
+				if (el.inventoryArmor[j] != null && el.inventoryArmorDropChances[j] <= 1.0F)
+				{
+					r += 1+ 4;
+				}
+			}
+
+			for (int k = 0; k < el.inventoryHands.length; ++k)
+			{
+				if (el.inventoryHands[k] != null && el.inventoryHandsDropChances[k] <= 1.0F)
+				{
+					r += 1+ 4;
+				}
+			}
 
 			r = Math.max(r, 4);
 		}
@@ -107,7 +119,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	protected boolean activateMachine() {
 
 		ItemStack item = getStackInSlot(0);
-		if (item == null || !canInsertItem(0, item, 6)) {
+		if (item == null || !canInsertItem(0, item, null)) {
 			setWorkDone(0);
 			setIdleTicks(getIdleTicksMax());
 			return false;
@@ -118,7 +130,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 			String entityID = itemTag.getString("id");
 			boolean isBlackListed = MFRRegistry.getAutoSpawnerBlacklist().contains(entityID);
 			blackList: if (!isBlackListed) {
-				Class<?> e = (Class<?>) EntityList.stringToClassMapping.get(entityID);
+				Class<?> e = (Class<?>) EntityList.NAME_TO_CLASS.get(entityID);
 				if (e == null) {
 					isBlackListed = true;
 					break blackList;
@@ -145,11 +157,11 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 			EntityLivingBase spawnedLiving = (EntityLivingBase) spawnedEntity;
 
 			if (_spawnExact) {
-				NBTTagCompound tag = (NBTTagCompound) itemTag.copy();
+				NBTTagCompound tag = itemTag.copy();
 				spawnedLiving.readEntityFromNBT(tag);
-				for (int i = 0; i < 5; ++i) {
+				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 					if (spawnedLiving instanceof EntityLiving)
-						((EntityLiving) spawnedLiving).setEquipmentDropChance(i, Float.NEGATIVE_INFINITY);
+						((EntityLiving) spawnedLiving).setDropChance(slot, Float.NEGATIVE_INFINITY);
 				}
 			}
 
@@ -157,7 +169,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 			if (!_spawnExact) {
 				if (spawnedLiving instanceof EntityLiving)
-					((EntityLiving) spawnedLiving).onSpawnWithEgg(null);
+					((EntityLiving) spawnedLiving).onInitialSpawn(worldObj.getDifficultyForLocation(pos), null);
 				if (handler != null)
 					handler.onMobSpawn(spawnedLiving);
 			} else {
@@ -169,8 +181,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		}
 
 		if (getWorkDone() < getWorkMax()) {
-			if (drain(_tanks[0], 10, false) == 10) {
-				drain(_tanks[0], 10, true);
+			if (drain(10, false, _tanks[0]) == 10) {
+				drain(10, true, _tanks[0]);
 				setWorkDone(getWorkDone() + 1);
 				return true;
 			} else {
@@ -187,21 +199,21 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 			EntityLivingBase spawnedLiving = (EntityLivingBase) spawnedEntity;
 
-			double x = xCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
-			double y = yCoord + worldObj.rand.nextInt(3) - 1;
-			double z = zCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
+			double x = pos.getX() + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
+			double y = pos.getY() + worldObj.rand.nextInt(3) - 1;
+			double z = pos.getZ() + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
 
 			spawnedLiving.setLocationAndAngles(x, y, z, worldObj.rand.nextFloat() * 360.0F, 0.0F);
 
-			if (!worldObj.checkNoEntityCollision(spawnedLiving.boundingBox) ||
-					!worldObj.getCollidingBoundingBoxes(spawnedLiving, spawnedLiving.boundingBox).isEmpty() ||
-					(worldObj.containsAnyLiquid(spawnedLiving.boundingBox) != (spawnedLiving instanceof EntityWaterMob))) {
+			if (!worldObj.checkNoEntityCollision(spawnedLiving.getEntityBoundingBox()) ||
+					!worldObj.getCollisionBoxes(spawnedLiving, spawnedLiving.getEntityBoundingBox()).isEmpty() ||
+					(worldObj.containsAnyLiquid(spawnedLiving.getEntityBoundingBox()) != (spawnedLiving instanceof EntityWaterMob))) {
 				setIdleTicks(10);
 				return false;
 			}
 
 			worldObj.spawnEntityInWorld(spawnedLiving);
-			worldObj.playAuxSFX(2004, this.xCoord, this.yCoord, this.zCoord, 0);
+			worldObj.playEvent(2004, pos, 0);
 
 			if (spawnedLiving instanceof EntityLiving) {
 				((EntityLiving) spawnedLiving).spawnExplosionParticle();

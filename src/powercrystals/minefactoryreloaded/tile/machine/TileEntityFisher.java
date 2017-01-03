@@ -1,8 +1,13 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.lib.util.helpers.ItemHelper;
-import cofh.lib.util.position.Area;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Enchantments;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,9 +22,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.FishingHooks;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
@@ -34,7 +40,6 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	protected boolean _isJammed = true, _needItem = false;
 	protected byte _speed, _luck;
 	protected int _workNeeded = workBase, boost;
-	protected float _next = Float.NaN;
 	protected Random _rand = null;
 
 	public TileEntityFisher() {
@@ -50,7 +55,6 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		super.cofh_validate();
 		if (_rand == null) {
 			_rand = new Random(worldObj.getSeed() ^ worldObj.rand.nextLong());
-			_next = _rand.nextFloat();
 		}
 		validateLocation();
 	}
@@ -87,13 +91,15 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 
 		if (getWorkDone() > getWorkMax()) {
 			setInventorySlotContents(0, ItemHelper.damageItem(_inventory[0], 1, _rand));
-			ItemStack stack = FishingHooks.getRandomFishable(_rand, _next, _luck, _speed);
-			if (_inventory[0] == null && isItemValidForSlot(0, stack)) {
-				setInventorySlotContents(0, stack);
-			} else {
-				doDrop(stack);
+			LootContext.Builder context = new LootContext.Builder((WorldServer)this.worldObj);
+			context.withLuck(_luck);
+			for (ItemStack stack : this.worldObj.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING).generateLootForPools(_rand, context.build())) {
+				if (_inventory[0] == null && isItemValidForSlot(0, stack)) {
+					setInventorySlotContents(0, stack);
+				} else {
+					doDrop(stack);
+				}
 			}
-			_next = _rand.nextFloat();
 			setWorkDone(0);
 		}
 		return true;
@@ -104,23 +110,24 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		Area fishingHole = _areaManager.getHarvestArea();
 		int extraBlocks = 0;
 		for (BlockPos bp : fishingHole.getPositionsBottomFirst()) {
-			if (!isValidBlock(bp.x, bp.y, bp.z)) {
+			if (!isValidBlock(bp)) {
 				_isJammed = true;
 				setIdleTicks(getIdleTicksMax());
 				return;
-			} else if (isValidBlock(bp.x, bp.y - 1, bp.z)) {
+			} else if (isValidBlock(bp.down())) {
 				++extraBlocks;
 			}
-			if ((bp.x != xCoord) | bp.z != zCoord) {
-				if (isValidBlock(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z))) {
+			//TODO clean up this BlockPos mess
+			if ((bp.getX() != pos.getX()) | bp.getZ() != pos.getZ()) {
+				if (isValidBlock(new BlockPos(bp.getX() - (pos.getX() - bp.getX()), bp.getY(), bp.getZ() - (pos.getZ() - bp.getZ())))) {
 					++extraBlocks;
-				} else if (isFisher(bp.x - (xCoord - bp.x), bp.y, bp.z - (zCoord - bp.z)))
+				} else if (isFisher(new BlockPos(bp.getX() - (pos.getX() - bp.getX()), bp.getY(), bp.getZ() - (pos.getZ() - bp.getZ()))))
 					extraBlocks -= 18;
-				if (isFisher(bp.x - (xCoord - bp.x), bp.y, bp.z))
+				if (isFisher(new BlockPos(bp.getX() - (pos.getX() - bp.getX()), bp.getY(), bp.getZ())))
 					extraBlocks -= 18;
-				if (isFisher(bp.x, bp.y, bp.z - (zCoord - bp.z)))
+				if (isFisher(new BlockPos(bp.getX(), bp.getY(), bp.getZ() - (pos.getZ() - bp.getZ()))))
 					extraBlocks -= 18;
-			} else if (isValidBlock(bp.x, bp.y - 2, bp.z)) {
+			} else if (isValidBlock(new BlockPos(bp.getX(), bp.getY() - 2, bp.getZ()))) {
 				++extraBlocks;
 			}
 		}
@@ -128,11 +135,12 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		_isJammed = false;
 	}
 
-	protected boolean isFisher(BlockPos pos) {
+	protected boolean isFisher(BlockPos fisherPos) {
 
-		if (y == yCoord - 1 && !(x == xCoord && z == zCoord)) {
-			if (worldObj.getBlockMetadata(x, yCoord, z) == _machine.getMeta() &&
-					worldObj.getBlock(x, yCoord, z) == _machine.getBlock())
+		if (fisherPos.getY() == pos.getY() - 1 && !(fisherPos.getX() == pos.getX() && fisherPos.getZ() == pos.getZ())) {
+			BlockPos posToCheck = new BlockPos(fisherPos.getX(), pos.getY(), fisherPos.getZ());
+			if (worldObj.getBlockState(posToCheck).getValue(BlockFactoryMachine.TYPE).getMeta() == _machine.getMeta() &&
+					worldObj.getBlockState(posToCheck).getBlock() == _machine.getBlock())
 				return true;
 		}
 		return false;
@@ -140,11 +148,11 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 
 	protected boolean isValidBlock(BlockPos pos) {
 
-		if (!worldObj.blockExists(x, y, z) || isFisher(x, y, z))
+		if (!worldObj.isBlockLoaded(pos) || isFisher(pos))
 			return false;
-		int meta = worldObj.getBlockMetadata(x, y, z);
-		if (meta != 0) return false;
-		Block block = worldObj.getBlock(x, y, z);
+		IBlockState state = worldObj.getBlockState(pos);
+		if (state.getValue(BlockFluidBase.LEVEL) != 0) return false;
+		Block block = state.getBlock();
 		return block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER);
 	}
 
@@ -173,8 +181,8 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		boost = 0;
 		_needItem = false;
 		if (!client && _inventory[0] != null) {
-			_luck = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantment.field_151370_z, _inventory[0]);
-			_speed = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantment.field_151369_A, _inventory[0]);
+			_luck = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, _inventory[0]);
+			_speed = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantments.LURE, _inventory[0]);
 			boost = 75 * _speed + 75;
 		} else {
 			_needItem = MFRConfig.fisherNeedsRod.getBoolean(false);
@@ -194,8 +202,6 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 			_isJammed = tag.getBoolean("jam");
 		if (tag.hasKey("seed"))
 			_rand = new Random(tag.getLong("seed"));
-		if (tag.hasKey("next"))
-			_next = tag.getFloat("next");
 	}
 
 	private static Field _Random_seed = null;
@@ -209,17 +215,17 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 		tag.setInteger("workNeeded", _workNeeded);
 		tag.setBoolean("jam", _isJammed);
-		tag.setFloat("next", _next);
 		if (_Random_seed != null)
 			try {
 				tag.setLong("seed", ((AtomicLong) _Random_seed.get(_rand)).get());
 			} catch (Throwable e) {
 			}
+		return tag;
 	}
 
 	@Override
@@ -231,7 +237,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 
-		return stack == null || (stack.isItemStackDamageable() && stack.getItem().isItemTool(stack) && Enchantment.field_151369_A.canApply(stack));
+		return stack == null || (stack.isItemStackDamageable() && stack.getItem().isItemTool(stack) && Enchantments.LURE.canApply(stack));
 	}
 
 	@Override

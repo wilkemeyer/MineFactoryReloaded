@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,36 +32,34 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	protected void onRotate()
 	{
-		bp = BlockPos.fromRotateableTile(this).moveForwards(1);
+		bp = pos.offset(getDirectionFacing());
 		super.onRotate();
 	}
 
 	@Override
 	public void onNeighborBlockChange()
 	{
-		if (bp != null && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
+		if (bp != null && !worldObj.isAirBlock(bp))
 			setIdleTicks(0);
 	}
 
 	@Override
 	public boolean activateMachine()
 	{
-		int x = bp.x, y = bp.y, z = bp.z;
 		World worldObj = this.worldObj;
-		Block block = worldObj.getBlock(x, y, z);
-		int blockMeta = worldObj.getBlockMetadata(x, y, z);
+		IBlockState state = worldObj.getBlockState(pos);
+		Block block = state.getBlock();
 
-		if (!block.isAir(worldObj, x, y, z) &&
-				!block.getMaterial().isLiquid() &&
-				block.getBlockHardness(worldObj, x, y, z) >= 0)
+		if (!block.isAir(state, worldObj, pos) &&
+				!state.getMaterial().isLiquid() &&
+				state.getBlockHardness(worldObj, pos) >= 0)
 		{
-			List<ItemStack> drops = block.getDrops(worldObj, x, y, z, blockMeta, 0);
-			if (worldObj.setBlockToAir(x, y, z))
+			List<ItemStack> drops = block.getDrops(worldObj, pos, state, 0);
+			if (worldObj.setBlockToAir(pos))
 			{
 				doDrop(drops);
 				if (MFRConfig.playSounds.getBoolean(true))
-					worldObj.playEvent(null, 2001, x, y, z,
-							Block.getIdFromBlock(block) + (blockMeta << 12));
+					worldObj.playEvent(null, 2001, pos, Block.getStateId(state));
 			}
 			return true;
 		}

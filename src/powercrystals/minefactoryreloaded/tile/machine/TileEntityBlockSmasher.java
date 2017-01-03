@@ -88,7 +88,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			setWorkDone(0);
 			return false;
 		}
-		if (_shouldWork && _fortune > 0 && (drain(_tanks[0], _fortune, false) != _fortune)) {
+		if (_shouldWork && _fortune > 0 && (drain(_fortune, false, _tanks[0]) != _fortune)) {
 			return false;
 		}
 		ItemStack outSlot = _inventory[1];
@@ -125,7 +125,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			}
 		} else {
 			if (!incrementWorkDone()) return false;
-			drain(_tanks[0], _fortune, true);
+			drain(_fortune, true, _tanks[0]);
 		}
 		return true;
 	}
@@ -145,7 +145,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			return null;
 		}
 		ItemBlock block = (ItemBlock) input.getItem();
-		Block b = block.field_150939_a;
+		Block b = block.getBlock();
 		if (b == null) {
 			return null;
 		}
@@ -186,14 +186,14 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (slot == 0) return true;
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		if (slot == 1) return true;
 		return false;
@@ -250,7 +250,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 		tag.setBoolean("shouldWork", _shouldWork);
@@ -266,6 +266,8 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			}
 			tag.setTag("SmashedItems", nbttaglist);
 		}
+
+		return tag;
 	}
 
 	@Override

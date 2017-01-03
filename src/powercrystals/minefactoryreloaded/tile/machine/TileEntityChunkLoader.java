@@ -14,7 +14,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
@@ -79,7 +79,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
 
 		if (unableToRequestTicket &&
-				inventoryPlayer.player.getCommandSenderName().equals(_owner)) {
+				inventoryPlayer.player.getName().equals(_owner)) {
 			inventoryPlayer.player.addChatMessage(
 					new TextComponentTranslation("chat.info.mfr.chunkloader.noticket"));
 		}
@@ -125,7 +125,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		else {
 			emptyTicks = Math.min(65535, emptyTicks + 1);
 			FluidStack s = _tanks[0].getFluid();
-			if (drain(_tanks[0], 1, true) == 1) {
+			if (drain(1, true, _tanks[0]) == 1) {
 				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 				emptyTicks = Math.max(-65535, emptyTicks - 2);
 			}
@@ -160,7 +160,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		if (!activated)
 			l: {
 				if (_ticket != null) {
-					Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
+					Set<ChunkPos> chunks = _ticket.getChunkList();
 					if (chunks.size() == 0)
 						break l;
 
@@ -170,8 +170,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					else {
 						emptyTicks = Math.min(65535, emptyTicks + 1);
 						FluidStack s = _tanks[0].getFluid();
-						if (drain(_tanks[0], Math.min(unactivatedTicks,
-							_tanks[0].getFluidAmount()), true) == unactivatedTicks) {
+						if (drain(Math.min(unactivatedTicks,
+							_tanks[0].getFluidAmount()), true, _tanks[0]) == unactivatedTicks) {
 							consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 							consumptionTicks = Math.max(0, consumptionTicks - unactivatedTicks);
 							activated = emptyTicks == 1 && unactivatedTicks < _tanks[0].getCapacity();
@@ -181,7 +181,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 						}
 					}
 
-					for (ChunkCoordIntPair c : chunks)
+					for (ChunkPos c : chunks)
 						ForgeChunkManager.unforceChunk(_ticket, c);
 				}
 			}
@@ -194,9 +194,9 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					unableToRequestTicket = true;
 					return;
 				}
-				_ticket.getModData().setInteger("X", xCoord);
-				_ticket.getModData().setInteger("Y", yCoord);
-				_ticket.getModData().setInteger("Z", zCoord);
+				_ticket.getModData().setInteger("X", pos.getX());
+				_ticket.getModData().setInteger("Y", pos.getY());
+				_ticket.getModData().setInteger("Z", pos.getZ());
 
 			}
 			forceChunks();
@@ -212,11 +212,11 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 
 	protected void unforceChunks() {
 
-		Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
+		Set<ChunkPos> chunks = _ticket.getChunkList();
 		if (chunks.size() == 0)
 			return;
 
-		for (ChunkCoordIntPair c : chunks)
+		for (ChunkPos c : chunks)
 			ForgeChunkManager.unforceChunk(_ticket, c);
 	}
 
@@ -226,11 +226,11 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			return;
 		if (MFRConfig.enableChunkLimitBypassing.getBoolean(false))
 			bypassLimit(_ticket);
-		Set<ChunkCoordIntPair> chunks = _ticket.getChunkList();
-		int x = xCoord >> 4;
-		int z = zCoord >> 4;
+		Set<ChunkPos> chunks = _ticket.getChunkList();
+		int x = pos.getX() >> 4;
+		int z = pos.getZ() >> 4;
 		int r = _radius * _radius;
-		for (ChunkCoordIntPair c : chunks) {
+		for (ChunkPos c : chunks) {
 			int xS = c.chunkXPos - x;
 			int zS = c.chunkZPos - z;
 			if ((xS * xS + zS * zS) > r)
@@ -240,7 +240,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			int xS = xO * xO;
 			for (int zO = -_radius; zO <= _radius; ++zO)
 				if (xS + zO * zO <= r) {
-					ChunkCoordIntPair p = new ChunkCoordIntPair(x + xO, z + zO);
+					ChunkPos p = new ChunkPos(x + xO, z + zO);
 					if (!chunks.contains(p))
 						ForgeChunkManager.forceChunk(_ticket, p);
 				}
@@ -302,9 +302,9 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					unableToRequestTicket = true;
 					return true;
 				}
-				_ticket.getModData().setInteger("X", xCoord);
-				_ticket.getModData().setInteger("Y", yCoord);
-				_ticket.getModData().setInteger("Z", zCoord);
+				_ticket.getModData().setInteger("X", pos.getX());
+				_ticket.getModData().setInteger("Y", pos.getY());
+				_ticket.getModData().setInteger("Z", pos.getZ());
 			}
 			return true;
 		}
@@ -329,7 +329,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 
@@ -337,6 +337,8 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		tag.setInteger("empty", emptyTicks);
 		tag.setInteger("inactive", unactivatedTicks);
 		tag.setInteger("consumed", consumptionTicks);
+
+		return tag;
 	}
 
 	@Override

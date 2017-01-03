@@ -22,9 +22,9 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 	@Override
 	protected boolean incrementWorkDone()
 	{
-		if (drain(_tanks[0], 4, false) != 4)
+		if (drain(4, false, _tanks[0]) != 4)
 			return false;
-		drain(_tanks[0], 4, true);
+		drain(4, true, _tanks[0]);
 		return super.incrementWorkDone();
 	}
 

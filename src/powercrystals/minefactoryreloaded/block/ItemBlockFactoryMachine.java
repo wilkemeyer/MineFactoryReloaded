@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.lib.util.helpers.StringHelper;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

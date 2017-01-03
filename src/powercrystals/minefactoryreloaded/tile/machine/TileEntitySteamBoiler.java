@@ -222,7 +222,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal)
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side)
 	{
 		if (stack != null)
 			return getItemBurnTime(stack) > 0;
@@ -231,7 +231,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
 	{
 		return getItemBurnTime(_inventory[slot]) <= 0;
 	}

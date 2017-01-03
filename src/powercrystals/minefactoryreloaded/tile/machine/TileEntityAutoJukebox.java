@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoJukebox;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
@@ -91,14 +92,14 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	public void playRecord()
 	{
 		if(_inventory[0] != null && _inventory[0].getItem() instanceof ItemRecord)
-			worldObj.playAuxSFX(1005, xCoord, yCoord, zCoord, Item.getIdFromItem(_inventory[0].getItem()));
-		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
+			worldObj.playEvent(1005, pos, Item.getIdFromItem(_inventory[0].getItem()));
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public void stopRecord()
 	{
-		worldObj.playAuxSFX(1005, xCoord, yCoord, zCoord, 0);
-		worldObj.notifyBlockChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
+		worldObj.playEvent(1005, pos, 0);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	@Override

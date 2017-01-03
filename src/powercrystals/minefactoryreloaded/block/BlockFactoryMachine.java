@@ -4,6 +4,7 @@ import cofh.lib.util.position.IRotateableTile;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -31,6 +33,8 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode {
+
+	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
 
 	private int _mfrMachineBlockIndex;
 
@@ -340,6 +344,54 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		if (te instanceof TileEntityFactory) {
 			((TileEntityFactory) te).onRedNetChanged(side, inputValue);
 			neighborChanged(world.getBlockState(pos), world, pos, MFRThings.rednetCableBlock);
+		}
+	}
+
+	public enum Type implements IStringSerializable {
+		PLANTER(0, 0, "Planter"),
+		FISHER(0, 1, "Fisher"),
+		HARVESTER(0, 2, "Harvester"),
+		RANCHER(0, 3, "Rancher"),
+		FERTILIZER(0, 4, "Fertilizer"),
+		VET(0, 5, "Vet"),
+		ITEMCOLLECTOR(0, 6, "ItemCollector"),
+		BLOCKBREAKER(0, 7, "BlockBreaker"),
+		WEATHERCOLLECTOR(0, 8, "WeatherCollector"),
+		SLUDGEBOILER(0, 9, "SludgeBoiler"),
+		SEWER(0, 10, "Sewer"),
+		COMPOSTER(0, 11, "Composter"),
+		BREEDER(0, 12, "Breeder"),
+		GRINDER(0, 13, "Grinder"),
+		AUTOENCHANTER(0, 14, "AutoEnchanter"),
+		CHRONOTYPER(0, 15, "Chronotyper"),
+
+		EJECTOR(1, 0, "Ejector"),
+		ITEMROUTER(1, 1, "ItemRouter"),
+		LIQUIDROUTER(1, 2, "LiquidRouter"),
+		DEEPSTORAGEUNIT(1, 3, "DeepStorageUnit");
+
+		private final int group;
+		private final int meta;
+		private final String name;
+
+		Type(int group, int meta, String name) {
+
+			this.group = group;
+			this.meta = meta;
+			this.name = name;
+		}
+
+		public int getGroup() {
+			return group;
+		}
+
+		public int getMeta() {
+			return meta;
+		}
+
+		@Override
+		public String getName() {
+			return name;
 		}
 	}
 }

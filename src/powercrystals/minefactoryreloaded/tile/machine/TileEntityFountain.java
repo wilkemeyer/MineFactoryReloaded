@@ -243,7 +243,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack != null) {
 			if (slot == 0) {

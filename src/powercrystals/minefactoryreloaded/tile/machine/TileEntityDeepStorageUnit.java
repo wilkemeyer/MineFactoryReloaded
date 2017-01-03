@@ -187,7 +187,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
 
-		return player.getDistanceSq(xCoord, yCoord, zCoord) <= 64D;
+		return player.getDistanceSq(pos) <= 64D;
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	 * Should only allow matching items to be inserted in the "in" slots. Nothing goes in the "out" slot.
 	 */
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (_passingItem)
 			return false;
@@ -230,11 +230,11 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 
-		return canInsertItem(slot, itemstack, -1);
+		return canInsertItem(slot, itemstack, null);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return true;
 	}
@@ -259,13 +259,15 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		ItemStack o = _inventory[2];
 		_inventory[2] = null;
 		super.writeToNBT(tag);
 		_inventory[2] = o;
 		writeItemNBT(tag);
+
+		return tag;
 	}
 
 	@Override

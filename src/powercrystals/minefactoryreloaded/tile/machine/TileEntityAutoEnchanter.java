@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,7 +66,6 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 		return (_targetLevel + (int)(Math.pow((_targetLevel) / 7.5, 4) * 10 * getEnchantmentMultiplier()));
 	}
 
-	@SuppressWarnings("unchecked")
 	private double getEnchantmentMultiplier()
 	{
 		ItemStack s = _inventory[0];
@@ -74,7 +74,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			return 1;
 		}
 
-		Map<Integer, EnchantmentData> enchantments = AutoEnchantmentHelper.getEnchantments(s);
+		Map<Enchantment, Integer> enchantments = AutoEnchantmentHelper.getEnchantments(s);
 		if(enchantments == null || enchantments.size() == 0)
 		{
 			return 1;
@@ -208,10 +208,10 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			}
 			return true;
 		}
-		else if (drain(_tanks[0], 4, false) == 4)
+		else if (drain(4, false, _tanks[0]) == 4)
 		{
 			if (!incrementWorkDone()) return false;
-			drain(_tanks[0], 4, true);
+			drain(4, true, _tanks[0]);
 			return true;
 		}
 		else
@@ -239,7 +239,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack input, int sideordinal)
+	public boolean canInsertItem(int slot, ItemStack input, EnumFacing side)
 	{
 		if(slot == 0)
 		{
@@ -252,7 +252,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal)
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
 	{
 		if(slot == 1) return true;
 		return false;

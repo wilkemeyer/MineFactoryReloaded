@@ -68,7 +68,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems))) {
 			final EnumFacing facing = getDirectionFacing();
 			Map<EnumFacing, IInventory> chests = UtilInventory.
-					findChests(worldObj, xCoord, yCoord, zCoord, _pullDirections);
+					findChests(worldObj, pos, _pullDirections);
 			inv: for (Entry<EnumFacing, IInventory> chest : chests.entrySet()) {
 				if (chest.getKey() == facing) {
 					continue;
@@ -222,10 +222,12 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 		tag.setBoolean("redstone", _lastRedstoneState);
+
+		return tag;
 	}
 
 	@Override

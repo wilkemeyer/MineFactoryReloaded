@@ -22,7 +22,7 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 
 	public FruitIC2Resin(ItemStack rubberWood, ItemStack resin)
 	{
-		this._rubberWood = ((ItemBlock)rubberWood.getItem()).field_150939_a;
+		this._rubberWood = ((ItemBlock)rubberWood.getItem()).getBlock();
 		this._resin = resin;
 		_repl = new ReplacementBlock(_rubberWood) {
 			@Override
