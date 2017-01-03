@@ -127,7 +127,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		entityList: for(Object o : entities)
 		{
 			EntityLivingBase e = (EntityLivingBase)o;
-			if(e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0 || e.isEntityInvulnerable() || e.getHealth() <= 0)
+			if(e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0 || e.isEntityInvulnerable(_damageSource) || e.getHealth() <= 0)
 			{
 				continue;
 			}
@@ -140,7 +140,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 					List<MobDrop> drops = r.grind(e.worldObj, e, getRandom());
 					if(drops != null && drops.size() > 0 && WeightedRandom.getTotalWeight(drops) > 0)
 					{
-						ItemStack drop = ((MobDrop)WeightedRandom.getRandomItem(_rand, drops)).getStack();
+						ItemStack drop = WeightedRandom.getRandomItem(_rand, drops).getStack();
 						doDrop(drop);
 					}
 					if(r.processEntity(e))

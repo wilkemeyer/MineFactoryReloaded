@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.api.item.IAugmentItem;
 import cofh.core.util.fluid.FluidTankAdv;
-import cofh.lib.util.position.Area;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
@@ -63,35 +64,33 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 			if (_reverse ? _tanks[0].getSpace() >= BUCKET_VOLUME :
 					(_tanks[0].getFluidAmount() >= BUCKET_VOLUME &&
 					_tanks[0].getFluid().getFluid().canBePlacedInWorld())) {
-				int x = xCoord, y = yCoord + 1, z = zCoord;
+				BlockPos fillPos = pos.up();
 				if (_fillingManager != null) {
 					if (_fillingManager.getIsDone())
 						onFactoryInventoryChanged();
-					BlockPos bp = _fillingManager.getNextBlock();
-					x = bp.x;
-					y = bp.y;
-					z = bp.z;
+					fillPos = _fillingManager.getNextBlock();
 					_fillingManager.moveNext();
 				}
-				if (!worldObj.blockExists(x, y, z)) break l;
+				if (!worldObj.isBlockLoaded(fillPos)) break l;
 
-				Block block = worldObj.getBlock(x, y, z);
+				IBlockState state = worldObj.getBlockState(fillPos);
+				Block block = state.getBlock();
 				if (_reverse) {
 					idleTicks = 10;
-					l2: if (block != null && block.getMaterial().isLiquid())
+					l2: if (block != null && state.getMaterial().isLiquid())
 						if (block instanceof IFluidBlock) {
 							IFluidBlock fluidBlock = ((IFluidBlock) block);
-							if (!fluidBlock.canDrain(worldObj, x, y, z))
+							if (!fluidBlock.canDrain(worldObj, fillPos))
 								break l;
-							FluidStack fluid = fluidBlock.drain(worldObj, x, y, z, false);
+							FluidStack fluid = fluidBlock.drain(worldObj, fillPos, false);
 							int amt = _tanks[0].fill(fluid, false);
 							if (amt != fluid.amount) break l2;
-							_tanks[0].fill(fluidBlock.drain(worldObj, x, y, z, true), true);
+							_tanks[0].fill(fluidBlock.drain(worldObj, fillPos, true), true);
 							setIdleTicks(5);
 							return true;
 						}
 						else if (block instanceof BlockLiquid) {
-							if (worldObj.getBlockMetadata(x, y, z) != 0)
+							if (state.getValue(BlockLiquid.LEVEL) != 0)
 								break l;
 							boolean drained = false;
 							if (block.equals(Blocks.WATER) || block.equals(Blocks.FLOWING_WATER)) {
@@ -101,26 +100,26 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 								if (_tanks[0].fill(new FluidStack(FluidRegistry.LAVA, BUCKET_VOLUME), true) != 0)
 									drained = true;
 							if (drained) {
-								worldObj.setBlockToAir(x, y, z);
+								worldObj.setBlockToAir(fillPos);
 								setIdleTicks(5);
 								return true;
 							}
 						}
 				}
-				else if (block == null || block.isReplaceable(worldObj, x, y, z)) {
-					if (block != null && block.getMaterial().isLiquid())
+				else if (block == null || block.isReplaceable(worldObj, fillPos)) {
+					if (block != null && state.getMaterial().isLiquid())
 						if (block instanceof BlockFluidClassic) {
-							if (((BlockFluidClassic) block).isSourceBlock(worldObj, x, y, z))
+							if (((BlockFluidClassic) block).isSourceBlock(worldObj, fillPos))
 								break l;
 						}
 						else if (block instanceof BlockLiquid) {
-							if (worldObj.getBlockMetadata(x, y, z) == 0)
+							if (state.getValue(BlockLiquid.LEVEL) == 0)
 								break l;
 						}
 					block = _tanks[0].getFluid().getFluid().getBlock();
-					if (worldObj.setBlock(x, y, z, block)) {// TODO: when forge supports NBT fluid blocks, adapt this
-						worldObj.notifyBlockOfNeighborChange(x, y, z, block);
-						drain(_tanks[0], BUCKET_VOLUME, true);
+					if (worldObj.setBlockState(fillPos, block.getDefaultState())) {// TODO: when forge supports NBT fluid blocks, adapt this
+						worldObj.notifyNeighborsOfStateChange(fillPos, block);
+						drain(BUCKET_VOLUME, true, _tanks[0]);
 						setIdleTicks(1);
 						return true;
 					}
@@ -150,7 +149,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 			int r = upgrade.getAugmentLevel(_inventory[0], "radius");
 			if (r > 0) {
 				_areaManager.setUpgradeLevel(r);
-				Area area = new Area(new BlockPos(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+				Area area = new Area(pos.up(), r, 0, r * 2);
 				if (_fillingManager == null)
 					_fillingManager = new FluidFillingManager(worldObj, area);
 				else
@@ -160,7 +159,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				r = -r;
 				if (r > 1) {
 					_areaManager.setUpgradeLevel(r - 1);
-					Area area = new Area(new BlockPos(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+					Area area = new Area(pos.up(), r, 0, r * 2);
 					if (_fillingManager == null)
 						_fillingManager = new FluidFillingManager(worldObj, area);
 					else
