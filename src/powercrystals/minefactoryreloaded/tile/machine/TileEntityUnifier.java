@@ -63,9 +63,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public boolean canUpdate() {
-
-		return false;
+	public void update() {
+		//TODO again this TE isn't supposed to be tickable so needs a non tickable base to inherit from
 	}
 
 	private void unifyInventory() {

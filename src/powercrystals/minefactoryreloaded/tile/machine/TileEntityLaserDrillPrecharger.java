@@ -102,17 +102,15 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 
 	protected IFactoryLaserTarget getDrill()
 	{
-		BlockPos bp = new BlockPos(this);
-		bp.orientation = getDirectionFacing();
-		bp.moveForwards(1);
+		BlockPos bp = pos.offset(getDirectionFacing());
 
-		if (!TileEntityLaserDrill.canReplaceBlock(worldObj.getBlock(bp.x, bp.y, bp.z),
-				worldObj, bp.x, bp.y, bp.z))
+		if (!TileEntityLaserDrill.canReplaceBlock(worldObj.getBlockState(bp).getBlock(),
+				worldObj, bp))
 			return null;
 
-		bp.moveForwards(1);
+		bp = bp.offset(getDirectionFacing());
 
-		TileEntity te = worldObj.getTileEntity(bp.x, bp.y, bp.z);
+		TileEntity te = worldObj.getTileEntity(bp);
 		if (te instanceof IFactoryLaserTarget)
 			return ((IFactoryLaserTarget)te);
 

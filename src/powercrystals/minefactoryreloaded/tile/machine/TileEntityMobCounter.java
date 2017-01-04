@@ -19,12 +19,6 @@ public class TileEntityMobCounter extends TileEntityFactory
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
-
-	@Override
 	public void update()
 	{
 		super.update();
@@ -40,7 +34,7 @@ public class TileEntityMobCounter extends TileEntityFactory
 			_lastMobCount = mobCount;
 			if (!worldObj.isRemote)
 			{
-				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MFRThings.machineBlocks.get(Machine.MobCounter.getBlockIndex()));
+				worldObj.notifyNeighborsOfStateChange(pos, MFRThings.machineBlocks.get(Machine.MobCounter.getBlockIndex()));
 			}
 		}
 	}

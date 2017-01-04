@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.lib.util.WeightedRandomItemStack;
 import cofh.lib.util.helpers.MathHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,9 +51,10 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 
 	private Random _rand;
 
-	public static boolean canReplaceBlock(Block block, World world, BlockPos pos) {
+	public static boolean canReplaceBlock(Block block, World world, BlockPos replacePos) {
 
-		return block == null || block.getBlockHardness(world, x, y, z) == 0 || block.isAir(world, x, y, z);
+		IBlockState state = world.getBlockState(replacePos);
+		return block == null || state.getBlockHardness(world, replacePos) == 0 || world.isAirBlock(replacePos);
 	}
 
 	public TileEntityLaserDrill() {
@@ -108,22 +110,23 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 			updateDrill();
 		}
 
-		Block lowerId = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
+		BlockPos downPos = pos.offset(EnumFacing.DOWN);
+		Block lowerId = worldObj.getBlockState(downPos).getBlock();
 
 		if (_bedrockLevel < 0) {
 			if (lowerId.equals(MFRThings.fakeLaserBlock)) {
-				worldObj.setBlockToAir(xCoord, yCoord - 1, zCoord);
+				worldObj.setBlockToAir(downPos);
 			}
 			return;
 		}
 
 		if (!lowerId.equals(MFRThings.fakeLaserBlock) &&
-				canReplaceBlock(lowerId, worldObj, xCoord, yCoord - 1, zCoord)) {
-			worldObj.setBlock(xCoord, yCoord - 1, zCoord, MFRThings.fakeLaserBlock);
+				canReplaceBlock(lowerId, worldObj, downPos)) {
+			worldObj.setBlockState(downPos, MFRThings.fakeLaserBlock.getDefaultState());
 		}
 
 		int energyToDraw = Math.min(_energyPerWork, _energyStored);
-		float energyPerWorkHere = _energyPerWork * (1.2f - 0.4f * Math.min(yCoord - _bedrockLevel, 128f) / 128f);
+		float energyPerWorkHere = _energyPerWork * (1.2f - 0.4f * Math.min(pos.getY() - _bedrockLevel, 128f) / 128f);
 
 		float workDone = energyToDraw / energyPerWorkHere;
 		_workStored += workDone;
@@ -173,18 +176,19 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	private void updateDrill() {
 
 		int y = Integer.MAX_VALUE;
-		for (y = yCoord; y-- > 0;) {
-			Block block = worldObj.getBlock(xCoord, y, zCoord);
+		for (y = pos.getY(); y-- > 0;) {
+			BlockPos offsetPos = new BlockPos(pos.getX(), y, pos.getZ());
+			Block block = worldObj.getBlockState(offsetPos).getBlock();
 			if (!block.equals(MFRThings.fakeLaserBlock)) {
-				if (!block.isAir(worldObj, xCoord, y, zCoord) &&
-						canReplaceBlock(block, worldObj, xCoord, y, zCoord))
-					if (worldObj.func_147480_a(xCoord, y, zCoord, true))
+				if (!worldObj.isAirBlock(offsetPos) &&
+						canReplaceBlock(block, worldObj, offsetPos))
+					if (worldObj.destroyBlock(offsetPos, true))
 						continue;
 
 				if (block.isAssociatedBlock(Blocks.BEDROCK)) {
 					_bedrockLevel = y;
 					return;
-				} else if (!worldObj.isAirBlock(xCoord, y, zCoord)) {
+				} else if (!worldObj.isAirBlock(offsetPos)) {
 					_bedrockLevel = -1;
 					return;
 				}
@@ -222,7 +226,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 		b /= d;
 		color = (r << 16) | (g << 8) | b;
 		if (worldObj != null) {
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
 		}
 	}
 
@@ -300,7 +304,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 
 	public int getBeamHeight() {
 
-		return yCoord - _bedrockLevel;
+		return pos.getY() - _bedrockLevel;
 	}
 
 	@Override
@@ -350,7 +354,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 
-		return entityplayer.getDistanceSq(xCoord, yCoord, zCoord) <= 64;
+		return entityplayer.getDistanceSq(pos) <= 64;
 	}
 
 	@Override

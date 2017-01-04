@@ -5,6 +5,9 @@ import static net.minecraftforge.fluids.FluidRegistry.WATER;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,7 +15,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,7 +30,7 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 {
 	protected int _canSeeSky = 0;
 	protected boolean _canWeather = false, _willSnow = false, _openSky = false;
-	protected BiomeGenBase _biome = null;
+	protected Biome _biome = null;
 
 	public TileEntityWeather()
 	{
@@ -68,18 +70,18 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 		if (worldObj.getWorldInfo().isRaining())
 		{
 			l: {
-				BiomeGenBase bgb = worldObj.getBiomeGenForCoords(xCoord, zCoord);
+				Biome bgb = worldObj.getBiome(pos);
 
 				if (_canWeather && _biome == bgb) break l;
 				_biome = bgb;
-				if (!bgb.canSpawnLightningBolt() && !bgb.getEnableSnow())
+				if (!bgb.canRain() && !bgb.getEnableSnow())
 				{
 					_canWeather = false;
 					setIdleTicks(getIdleTicksMax());
 					return false;
 				}
 				_canWeather = true;
-				_willSnow = bgb.getFloatTemperature(xCoord, yCoord, zCoord) < 0.15F;
+				_willSnow = bgb.getFloatTemperature(pos) < 0.15F;
 			}
 			if (!canSeeSky())
 			{
@@ -128,12 +130,14 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	{
 		if (--_canSeeSky > 0) return _openSky;
 		_canSeeSky = 70;
-		int h = BlockHelper.getHighestY(worldObj, xCoord, zCoord);
+		int h = BlockHelper.getHighestY(worldObj, pos.getX(), pos.getZ());
 		_openSky = true;
-		for (int y = yCoord + 1; y < h; y++)
+		for (int y = pos.getY() + 1; y < h; y++)
 		{
-			Block block = worldObj.getBlock(xCoord, y, zCoord);
-			if (block.getCollisionBoundingBoxFromPool(worldObj, xCoord, y, zCoord) == null)
+			BlockPos offsetPos = new BlockPos(pos.getX(), y, pos.getZ());
+			IBlockState state = worldObj.getBlockState(offsetPos);
+			Block block = state.getBlock();
+			if (block.getCollisionBoundingBox(state, worldObj, offsetPos) == null)
 				continue;
 			_openSky = false;
 			break;

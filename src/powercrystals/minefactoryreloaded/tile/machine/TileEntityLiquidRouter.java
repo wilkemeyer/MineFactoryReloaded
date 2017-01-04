@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquidRouter;
 import powercrystals.minefactoryreloaded.gui.container.ContainerLiquidRouter;
@@ -75,13 +76,13 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		if(amountRemaining >= totalWeight(routes))
 		{
 			int startingAmount = amountRemaining;
-			for(int i = 0; i < routes.length; i++)
+			for(EnumFacing side : _outputDirections)
 			{
-				TileEntity te = BlockPos.getAdjacentTileEntity(this, _outputDirections[i]);
-				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
+				TileEntity te = MFRUtil.getTile(worldObj, pos.offset(side));
+				int amountForThisRoute = startingAmount * routes[side.ordinal()] / totalWeight(routes);
 				if(te instanceof IFluidHandler && amountForThisRoute > 0)
 				{
-					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),
+					amountRemaining -= ((IFluidHandler)te).fill(side.getOpposite(),
 							new FluidStack(resource, amountForThisRoute), doFill);
 					if(amountRemaining <= 0)
 					{
@@ -94,7 +95,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		if(0 < amountRemaining && amountRemaining < totalWeight(routes))
 		{
 			int outdir = weightedRandomSide(routes);
-			TileEntity te = BlockPos.getAdjacentTileEntity(this, _outputDirections[outdir]);
+			TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[outdir]));
 			if(te instanceof IFluidHandler)
 			{
 				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(),

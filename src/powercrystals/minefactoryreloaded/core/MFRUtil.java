@@ -305,6 +305,16 @@ public class MFRUtil {
 		return world.getTileEntity(pos);
 	}
 
+	public static <T extends TileEntity> T getTile(IBlockAccess world, BlockPos pos, Class<T> type) {
+
+		TileEntity te = getTile(world, pos);
+
+		if (type.isInstance(te))
+			return (T) te;
+
+		return null;
+	}
+
 	public static EnumFacing[] directionsWithoutConveyors(World world, BlockPos pos) {
 
 		ArrayList<EnumFacing> nonConveyors = new ArrayList<EnumFacing>();

@@ -3,13 +3,12 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.asm.relauncher.Strippable;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.ArrayQueue;
@@ -32,21 +31,21 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound data = new NBTTagCompound();
 		data.setInteger("facing", getDirectionFacing().ordinal());
 		data.setInteger("subnet", _currentSubnet);
 		data.setInteger("current", _lastValues[_currentSubnet]);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
+		NBTTagCompound data = pkt.getNbtCompound();
+		switch (pkt.getTileEntityType())
 		{
 		case 0:
 			_currentSubnet = data.getInteger("subnet");
@@ -73,12 +72,14 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		}
 	}
 
+/* TODO to update or not to update that is the question (especially with update method that actually seems to do something)
 	@Override
 	@SideOnly(Side.SERVER)
 	public boolean canUpdate()
 	{
 		return false;
 	}
+*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -137,8 +138,8 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	{
 		NBTTagCompound data = new NBTTagCompound();
 		data.setInteger("value", value);
-		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 50,
-				new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
+		Packets.sendToAllPlayersInRange(worldObj, pos, 50,
+				new SPacketUpdateTileEntity(pos, 1, data));
 	}
 
 	public int getSelectedSubnet()
@@ -165,10 +166,12 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound)
 	{
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("subnet", _currentSubnet);
+
+		return nbttagcompound;
 	}
 
 	@Override

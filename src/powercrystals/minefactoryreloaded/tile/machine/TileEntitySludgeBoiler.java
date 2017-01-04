@@ -2,7 +2,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.WeightedRandomItemStack;
-import cofh.lib.util.position.Area;
+import net.minecraft.init.MobEffects;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,6 +24,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -63,7 +65,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	public void validate()
 	{
 		super.validate();
-		_area = new Area(new BlockPos(this), 3, 3, 3);
+		_area = new Area(pos, 3, 3, 3);
 	}
 
 	@Override
@@ -81,10 +83,10 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean activateMachine()
 	{
-		if (drain(_tanks[0], 10, false) == 10)
+		if (drain(10, false, _tanks[0]) == 10)
 		{
 			if (!incrementWorkDone()) return false;
-			drain(_tanks[0], 10, true);
+			drain(10, true, _tanks[0]);
 			_tick++;
 
 			if (getWorkDone() >= getWorkMax())
@@ -101,8 +103,8 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 				List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _area.toAxisAlignedBB());
 				for (EntityLivingBase ent : entities)
 				{
-					ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 20 * 20, 0));
-					ent.addPotionEffect(new PotionEffect(Potion.poison.id, 6 * 20, 0));
+					ent.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 20 * 20, 0));
+					ent.addPotionEffect(new PotionEffect(MobEffects.POISON, 6 * 20, 0));
 				}
 				_tick = 0;
 			}
@@ -114,7 +116,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean updateIsActive(boolean failedDrops)
 	{
-		return super.updateIsActive(failedDrops) && drain(_tanks[0], 10, false) == 10;
+		return super.updateIsActive(failedDrops) && drain(10, false, _tanks[0]) == 10;
 	}
 
 	@Override
@@ -127,7 +129,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 			int color = MFRThings.sludgeLiquid.color;
 			for (int a = 8 >> s, i = 4 >> s;
 					i --> 0; )
-				worldObj.spawnParticle(_rand.nextInt(a) == 0 ? "mobSpell" : "mobSpellAmbient",
+				worldObj.spawnParticle(_rand.nextInt(a) == 0 ? EnumParticleTypes.SPELL_MOB : EnumParticleTypes.SPELL_MOB_AMBIENT,
 						_area.xMin + _rand.nextFloat() * (_area.xMax - _area.xMin),
 						_area.yMin + _rand.nextFloat() * (_area.yMax - _area.yMin),
 						_area.zMin + _rand.nextFloat() * (_area.zMax - _area.zMin),

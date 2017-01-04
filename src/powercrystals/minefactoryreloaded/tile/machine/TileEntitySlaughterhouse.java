@@ -56,12 +56,12 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 					continue entityList;
 				}
 			}
-			if((e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0) || e.isEntityInvulnerable() ||
+			if((e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0) || e.isEntityInvulnerable(_damageSource) ||
 					e.getHealth() <= 0 || !_grindingWorld.addEntityForGrinding(e))
 			{
 				continue;
 			}
-			float massFound = (float)Math.pow(e.boundingBox.getAverageEdgeLength(), 2);
+			float massFound = (float)Math.pow(e.getEntityBoundingBox().getAverageEdgeLength(), 2);
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{

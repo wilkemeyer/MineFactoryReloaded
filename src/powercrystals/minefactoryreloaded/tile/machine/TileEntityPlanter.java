@@ -29,7 +29,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 		super(Machine.Planter);
 		createHAM(this, 1);
 		_areaManager.setOverrideDirection(EnumFacing.UP);
-		_areaManager.setOriginOffset(0, 1, 0);
+		_areaManager.setOriginOffset(new BlockPos(0, 1, 0));
 		setManageSolids(true);
 	}
 
@@ -50,7 +50,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	public boolean activateMachine() {
 
 		BlockPos bp = _areaManager.getNextBlock();
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
+		if (!worldObj.isBlockLoaded(bp)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
@@ -75,14 +75,14 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(availableStack.getItem());
 
 			if (!plantable.canBePlanted(availableStack, false) ||
-					!plantable.canBePlantedHere(worldObj, bp.x, bp.y, bp.z, availableStack))
+					!plantable.canBePlantedHere(worldObj, bp, availableStack))
 				continue;
 
-			plantable.prePlant(worldObj, bp.x, bp.y, bp.z, availableStack);
-			ReplacementBlock block = plantable.getPlantedBlock(worldObj, bp.x, bp.y, bp.z, availableStack);
-			if (block == null || !block.replaceBlock(worldObj, bp.x, bp.y, bp.z, availableStack))
+			plantable.prePlant(worldObj, bp, availableStack);
+			ReplacementBlock block = plantable.getPlantedBlock(worldObj, bp, availableStack);
+			if (block == null || !block.replaceBlock(worldObj, bp, availableStack))
 				continue;
-			plantable.postPlant(worldObj, bp.x, bp.y, bp.z, availableStack);
+			plantable.postPlant(worldObj, bp, availableStack);
 			decrStackSize(stackIndex, 1);
 			return true;
 		}
@@ -129,7 +129,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 		if (!a.hasTagCompound()) {
 			return true;
 		}
-		NBTTagCompound tagA = (NBTTagCompound) a.getTagCompound().copy(), tagB = (NBTTagCompound) b.getTagCompound().copy();
+		NBTTagCompound tagA = a.getTagCompound().copy(), tagB = b.getTagCompound().copy();
 		tagA.removeTag("display");
 		tagB.removeTag("display");
 		tagA.removeTag("ench");
@@ -144,8 +144,8 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	protected int getPlanterSlotIdFromBp(BlockPos bp) {
 
 		int radius = _areaManager.getRadius();
-		int xAdjusted = Math.round(1.49F * (bp.x - this.xCoord) / radius);
-		int zAdjusted = Math.round(1.49F * (bp.z - this.zCoord) / radius);
+		int xAdjusted = Math.round(1.49F * (bp.getX() - pos.getX()) / radius);
+		int zAdjusted = Math.round(1.49F * (bp.getZ() - pos.getZ()) / radius);
 		return 4 + xAdjusted + 3 * zAdjusted;
 	}
 

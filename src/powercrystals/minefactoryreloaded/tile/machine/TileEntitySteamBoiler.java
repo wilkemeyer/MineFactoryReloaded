@@ -143,7 +143,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 			if (_temp > 80)
 			{
-				int i = drain(_tanks[1], 100, true);
+				int i = drain(100, true, _tanks[1]);
 				_tanks[0].fill(new FluidStack(_liquid, i * 4), true);
 			}
 
@@ -193,7 +193,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
@@ -201,6 +201,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		tag.setInteger("ticksUntilConsumption", _ticksUntilConsumption);
 		tag.setInteger("buffer", _totalBurningTime);
 		tag.setFloat("temp", _temp);
+
+		return tag;
 	}
 
 	@Override
@@ -276,7 +278,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		{
 			if (MFRConfig.steamBoilerExplodes.getBoolean(false)) {
 				if (_temp > 80 && _tanks[1].getFluidAmount() == 0) {
-					worldObj.createExplosion(null, xCoord + 0.5d, yCoord + 0.5d, zCoord + 0.5d, 3, true);
+					worldObj.createExplosion(null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, 3, true);
 				}
 			}
 			return _tanks[1].fill(resource, doFill);

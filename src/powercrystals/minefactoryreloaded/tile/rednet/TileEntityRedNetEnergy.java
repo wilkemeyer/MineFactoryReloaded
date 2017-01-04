@@ -6,15 +6,18 @@ import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwor
 
 import appeng.api.implementations.tiles.ICrankable;
 
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.vec.Vector3;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyTransport;
 import cofh.asm.relauncher.Strippable;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
-import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
-import cofh.repack.codechicken.lib.vec.Vector3;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,10 +32,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITextComponent;
 import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -118,9 +118,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void reCache() {
 
 		if (deadCache) {
-			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
-				if (BlockPos.blockExists(this, dir))
-					addCache(BlockPos.getAdjacentTileEntity(this, dir));
+			for (EnumFacing dir : EnumFacing.VALUES)
+				if (worldObj.isBlockLoaded(this.getPos().offset(dir)))
+					addCache(MFRUtil.getTile(worldObj, this.getPos().offset(dir)));
 			deadCache = false;
 			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 		}
@@ -146,10 +146,11 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void incorporateTiles() {
 
 		if (_grid == null) {
-			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
+			for (EnumFacing dir : EnumFacing.VALUES) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
-				if (BlockPos.blockExists(this, dir)) {
-					TileEntityRedNetEnergy pipe = BlockPos.getAdjacentTileEntity(this, dir, TileEntityRedNetEnergy.class);
+				BlockPos offsetPos = pos.offset(dir);
+				if (worldObj.isBlockLoaded(offsetPos)) {
+					TileEntityRedNetEnergy pipe = MFRUtil.getTile(worldObj, pos.offset(dir), TileEntityRedNetEnergy.class);
 					if (pipe != null) {
 						if (pipe._grid != null && pipe.canInterface(this, dir)) {
 							pipe._grid.addConduit(this);
@@ -166,100 +167,78 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void onNeighborTileChange(BlockPos pos) {
+	public void onNeighborTileChange(BlockPos neighborPos) {
 
 		if (worldObj.isRemote | deadCache)
 			return;
-		TileEntity tile = worldObj.blockExists(x, y, z) ? worldObj.getTileEntity(x, y, z) : null;
+		TileEntity tile = worldObj.isBlockLoaded(neighborPos) ? worldObj.getTileEntity(neighborPos) : null;
 
-		if (x < xCoord)
-			addCache(tile, 5);
-		else if (x > xCoord)
-			addCache(tile, 4);
-		else if (z < zCoord)
-			addCache(tile, 3);
-		else if (z > zCoord)
-			addCache(tile, 2);
-		else if (y < yCoord)
-			addCache(tile, 1);
-		else if (y > yCoord)
-			addCache(tile, 0);
+		Vec3i diff = neighborPos.subtract(pos);
+		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
 
 	private void addCache(TileEntity tile) {
 
 		if (tile == null) return;
-		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
-
-		if (x < xCoord)
-			addCache(tile, 5);
-		else if (x > xCoord)
-			addCache(tile, 4);
-		else if (z < zCoord)
-			addCache(tile, 3);
-		else if (z > zCoord)
-			addCache(tile, 2);
-		else if (y < yCoord)
-			addCache(tile, 1);
-		else if (y > yCoord)
-			addCache(tile, 0);
+		Vec3i diff = tile.getPos().subtract(pos);
+		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
 
 	private void addCache(TileEntity tile, EnumFacing side) {
 
 		if (receiverCache != null)
-			receiverCache[side] = null;
+			receiverCache[side.ordinal()] = null;
 		if (providerCache != null)
-			providerCache[side] = null;
+			providerCache[side.ordinal()] = null;
 		if (ic2Cache != null)
 			ic2Cache.erase(side);
-		int lastMode = sideMode[side];
-		sideMode[side] &= 1;
+		int lastMode = sideMode[side.ordinal()];
+		sideMode[side.ordinal()] &= 1;
 		if (tile instanceof TileEntityRedNetEnergy) {
 			TileEntityRedNetEnergy cable = ((TileEntityRedNetEnergy) tile);
-			sideMode[side] |= (4 << 1);
-			if (cable.canInterface(this, EnumFacing.getOrientation(side ^ 1))) {
+			sideMode[side.ordinal()] |= (4 << 1);
+			if (cable.canInterface(this, side.getOpposite())) {
 				if (_grid == null && cable._grid != null) {
 					cable._grid.addConduit(this);
 				}
 				if (cable._grid == _grid || _grid.addConduit(cable)) {
-					sideMode[side] |= 1; // always enable
+					sideMode[side.ordinal()] |= 1; // always enable
 				}
 			} else {
-				sideMode[side] &= ~1;
+				sideMode[side.ordinal()] &= ~1;
 			}
 		} else if (tile instanceof IEnergyConnection) {
-			if (((IEnergyConnection) tile).canConnectEnergy(EnumFacing.VALID_DIRECTIONS[side])) {
+			if (((IEnergyConnection) tile).canConnectEnergy(side)) {
 				if (tile instanceof IEnergyTransport) {
 					IEnergyTransport transport = (IEnergyTransport) tile;
-					InterfaceType type = transport.getTransportState(EnumFacing.getOrientation(side)).getOpposite();
+					InterfaceType type = transport.getTransportState(side).getOpposite();
 					if (type != InterfaceType.BALANCE) {
 						createTransportTypes();
-						transportTypes[side] = type;
+						transportTypes[side.ordinal()] = type;
 					}
-					sideMode[side] |= 2 << 1;
+					sideMode[side.ordinal()] |= 2 << 1;
 				} else {
-					sideMode[side] |= 1 << 1;
+					sideMode[side.ordinal()] |= 1 << 1;
 					if (transportTypes != null) {
-						transportTypes[side] = InterfaceType.BALANCE;
+						transportTypes[side.ordinal()] = InterfaceType.BALANCE;
 					}
 				}
 				if (tile instanceof IEnergyReceiver) {
 					if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
-					receiverCache[side] = (IEnergyReceiver) tile;
+					receiverCache[side.ordinal()] = (IEnergyReceiver) tile;
 				}
 				if (tile instanceof IEnergyProvider) {
 					if (providerCache == null) providerCache = new IEnergyProvider[6];
-					providerCache[side] = (IEnergyProvider) tile;
+					providerCache[side.ordinal()] = (IEnergyProvider) tile;
 				}
 			}
 		} else if (checkIC2Tiles(tile, side)) {
 			;
 		}
 		if (!deadCache) {
-			if (lastMode != sideMode[side]) {
+			if (lastMode != sideMode[side.ordinal()]) {
 				RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				MFRUtil.notifyBlockUpdate(worldObj, pos);
 			}
 		}
 	}
@@ -281,7 +260,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (deadCache)
 			return null;
@@ -296,16 +275,16 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		data.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
 				(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
 				(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
 		super.onDataPacket(net, pkt);
-		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f()) {
+		NBTTagCompound data = pkt.getNbtCompound();
+		switch (pkt.getTileEntityType()) {
 		case 0:
 			int mode = data.getInteger("mode[2]");
 			sideMode[0] = (byte) (mode & 0xFF);
@@ -318,7 +297,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			sideMode[6] = (byte) ((mode >> 16) & 0xFF);
 			break;
 		}
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -439,7 +418,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 		nbt.setByteArray("SideMode", sideMode);
@@ -452,6 +431,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			nbt.setInteger("Energy", energyForGrid);
 		else
 			energyForGrid = 0;
+		return nbt;
 	}
 
 	void extract(EnumFacing side, EnergyStorage storage) {
@@ -537,26 +517,25 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		void erase(EnumFacing side) {
 
 			if (sourceCache != null)
-				sourceCache[side] = null;
+				sourceCache[side.ordinal()] = null;
 			if (sinkCache != null)
-				sinkCache[side] = null;
+				sinkCache[side.ordinal()] = null;
 		}
 
 		public boolean add(TileEntity tile, EnumFacing side) {
 
 			boolean r = false;
 			if (tile instanceof IEnergyTile) {
-				EnumFacing fSide = EnumFacing.VALID_DIRECTIONS[side];
-				if (tile instanceof IEnergySource && ((IEnergySource) tile).emitsEnergyTo(TileEntityRedNetEnergy.this, fSide)) {
+				if (tile instanceof IEnergySource && ((IEnergySource) tile).emitsEnergyTo(TileEntityRedNetEnergy.this, side)) {
 					if (sourceCache == null) sourceCache = new IEnergySource[6];
-					sourceCache[side] = (IEnergySource) tile;
-					sideMode[side] |= 3 << 1;
+					sourceCache[side.ordinal()] = (IEnergySource) tile;
+					sideMode[side.ordinal()] |= 3 << 1;
 					r = true;
 				}
-				if (tile instanceof IEnergySink && ((IEnergySink) tile).acceptsEnergyFrom(TileEntityRedNetEnergy.this, fSide)) {
+				if (tile instanceof IEnergySink && ((IEnergySink) tile).acceptsEnergyFrom(TileEntityRedNetEnergy.this, side)) {
 					if (sinkCache == null) sinkCache = new IEnergySink[6];
-					sinkCache[side] = (IEnergySink) tile;
-					sideMode[side] |= 3 << 1;
+					sinkCache[side.ordinal()] = (IEnergySink) tile;
+					sideMode[side.ordinal()] |= 3 << 1;
 					r = true;
 				}
 			}
@@ -654,9 +633,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
 
 		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 6)) {
-			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
+			if (MFRUtil.isHoldingUsableTool(player, pos)) {
 				if (!player.worldObj.isRemote) {
-					int dir = EnumFacing.OPPOSITES[side];
+					int dir = side.getOpposite().ordinal();
 					if (sideMode[dir] == 9) {
 						removeFromGrid();
 					}
@@ -670,7 +649,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					}
 					RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 					Packets.sendToAllPlayersWatching(this);
-					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+					MFRUtil.notifyBlockUpdate(worldObj, pos);
 				}
 				return true;
 			}
@@ -681,16 +660,15 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
 
-		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
+		Vector3 offset = Vector3.fromBlockPos(pos);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[1]); // main body
 		list.add(main);
 
-		EnumFacing[] side = EnumFacing.VALID_DIRECTIONS;
-		int[] opposite = EnumFacing.OPPOSITES;
+		EnumFacing[] side = EnumFacing.VALUES;
 		for (int i = side.length; i-- > 0;) {
 			RedNetConnectionType c = getConnectionState(side[i], true);
-			int mode = sideMode[opposite[i]];
+			int mode = sideMode[EnumFacing.VALUES[i].getOpposite().ordinal()];
 			boolean iface = mode > 1 & ((mode & 1) == 1 | hasTool);
 			int o = 2 + i, k = o;
 			l: if (c.isConnected) {

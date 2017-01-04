@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.Area;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,6 +23,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -74,12 +76,13 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 		_tick++;
 
 		if (_nextSewerCheckTick <= worldObj.getTotalWorldTime()) {
-			Area a = new Area(BlockPos.fromRotateableTile(this), _areaManager.getRadius(), 2, 2);
+			Area a = new Area(pos, _areaManager.getRadius(), 2, 2);
 			_jammed = false;
 			for (BlockPos bp : a.getPositionsBottomFirst()) {
-				if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(_machine.getBlock()) &&
-						worldObj.getBlockMetadata(bp.x, bp.y, bp.z) == _machine.getMeta() &&
-						!(bp.x == xCoord && bp.y == yCoord && bp.z == zCoord)) {
+				IBlockState state = worldObj.getBlockState(bp);
+				if (state.getBlock().equals(_machine.getBlock()) &&
+						state.getValue(BlockFactoryMachine.TYPE).getMeta() == _machine.getMeta() &&
+						!(bp.equals(pos))) {
 					_jammed = true;
 					break;
 				}
@@ -115,7 +118,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 						continue;
 					}
 					o.getEntityData().setLong("mfr:sewerTime", worldTime + 30);
-					massFound += Math.pow(o.boundingBox.getAverageEdgeLength(), 2);
+					massFound += Math.pow(o.getEntityBoundingBox().getAverageEdgeLength(), 2);
 				}
 			}
 
@@ -126,13 +129,15 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 
 		tag.setBoolean("jammed", _jammed);
 		tag.setByte("tick", (byte) _tick);
 		tag.setLong("next", _nextSewerCheckTick);
+
+		return tag;
 	}
 
 	@Override

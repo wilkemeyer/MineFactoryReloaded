@@ -222,12 +222,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 								if (!container.isItemStackDamageable() ||
 										container.getItemDamage() <= container.getMaxDamage())
 								{
-									if (item.getItem().doesContainerItemLeaveCraftingGrid(item))
-										this.outputs.add(container);
-									else {
-										_inventory[i] = container;
-										nul = false;
-									}
+									_inventory[i] = container;
+									nul = false;
 								}
 							}
 							if (nul)
@@ -349,7 +345,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
-		return player.getDistanceSq(xCoord, yCoord, zCoord) <= 64D;
+		return player.getDistanceSq(pos) <= 64D;
 	}
 
 	@Override
@@ -533,7 +529,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
@@ -549,6 +545,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 			if (dropItems.tagCount() > 0)
 				tag.setTag("OutItems", dropItems);
 		}
+
+		return tag;
 	}
 
 	@Override

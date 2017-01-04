@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.EnumFacing;
 
@@ -23,7 +23,9 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.circuits.Noop;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -219,7 +221,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 			initCircuit(i, new Noop());
 			sendCircuitDefinition(i);
 		}
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public void setCircuitFromPacket(NBTTagCompound packet) {
@@ -278,8 +280,8 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 		data.setIntArray("outputs", l);
 
-		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 10,
-			new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
+		Packets.sendToAllPlayersInRange(worldObj, pos, 10,
+			new SPacketUpdateTileEntity(pos, 1, data));
 	}
 
 	@Override
@@ -318,24 +320,20 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		}
 
 		BlockPos bp = this.bp;
-		for (int i = 0; i < 6; i++) {
-			if (!areEqual(_backBuffer[i], _buffers[i + 6])) {
-				bp.x = xCoord;
-				bp.y = yCoord;
-				bp.z = zCoord;
-				EnumFacing o = EnumFacing.VALID_DIRECTIONS[i];
-				bp.step(o);
-				Block b = worldObj.getBlock(bp.x, bp.y, bp.z);
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			if (!areEqual(_backBuffer[facing.ordinal()], _buffers[facing.ordinal() + 6])) {
+				bp = pos.offset(facing);
+				Block b = worldObj.getBlockState(bp).getBlock();
 				if (b instanceof IRedNetNetworkContainer) {
-					((IRedNetNetworkContainer) b).updateNetwork(worldObj, bp.x, bp.y, bp.z, o.getOpposite());
+					((IRedNetNetworkContainer) b).updateNetwork(worldObj, bp, facing.getOpposite());
 				} else if (b instanceof IRedNetInputNode) {
 					IRedNetInputNode n = ((IRedNetInputNode) b);
-					RedNetConnectionType type = n.getConnectionType(worldObj, bp.x, bp.y, bp.z, o.getOpposite());
+					RedNetConnectionType type = n.getConnectionType(worldObj, bp, facing.getOpposite());
 					if (type.isConnected) {
 						if (type.isAllSubnets)
-							n.onInputsChanged(worldObj, bp.x, bp.y, bp.z, o.getOpposite(), _buffers[i + 6]);
+							n.onInputsChanged(worldObj, bp, facing.getOpposite(), _buffers[facing.ordinal() + 6]);
 						else if (type.isSingleSubnet)
-							n.onInputChanged(worldObj, bp.x, bp.y, bp.z, o.getOpposite(), _buffers[i + 6][0]);
+							n.onInputChanged(worldObj, bp, facing.getOpposite(), _buffers[facing.ordinal() + 6][0]);
 					}
 				}
 			}
@@ -377,7 +375,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 		writeCricuitsOnly(tag, false);
 		if (tag.hasKey("circuits", 9)) {
-			tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+			tag.setByte("p_rot", (byte) worldObj.getBlockState(pos).getValue(BlockRedNetLogic.FACING).ordinal());
 			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.uploaded"));
 		} else {
 			player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.memorycard.empty"));
@@ -406,7 +404,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		super.writeItemNBT(tag);
 		writeCricuitsOnly(tag, true);
 		if (tag.hasKey("circuits", 9))
-			tag.setByte("p_rot", (byte) worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+			tag.setByte("p_rot", (byte) worldObj.getBlockState(pos).getValue(BlockRedNetLogic.FACING).ordinal());
 		l: for (int v : _upgradeLevel)
 			if (v != 0) {
 				tag.setIntArray("upgrades", _upgradeLevel);
@@ -415,12 +413,14 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		super.writeToNBT(tag);
 
 		tag.setByte("p_rot", (byte) -1);
 		tag.setIntArray("vars", _buffers[13]);
+
+		return tag;
 	}
 
 	public void writeCricuitsOnly(NBTTagCompound tag, boolean includeNoop) {
@@ -495,7 +495,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 		int rot = tag.hasKey("p_rot") ? tag.getByte("p_rot") : -1, worldRot = 0;
 		int[] map = {0, 1, 2, 3};
 		if (rot != -1) {
-			worldRot = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
+			worldRot = worldObj.getBlockState(pos).getValue(BlockRedNetLogic.FACING).ordinal();
 			int[][] data = {{0,1,2,3},{3,2,0,1},{1,0,3,2},{2,3,1,0}};
 			int i = worldRot - rot;
 			if (i < 0) i += 4;
@@ -552,25 +552,25 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		NBTTagCompound data = new NBTTagCompound();
 		data.setIntArray("upgrades", _upgradeLevel);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
-		switch (pkt.func_148853_f()) {
+		switch (pkt.getTileEntityType()) {
 		case 0:
-			_upgradeLevel = pkt.func_148857_g().getIntArray("upgrades");
+			_upgradeLevel = pkt.getNbtCompound().getIntArray("upgrades");
 			updateUpgradeLevels();
 			_prevCircuits = Arrays.copyOf(_prevCircuits, _circuitCount);
 			break;
 		case 1:
-			setCircuitFromPacket(pkt.func_148857_g());
+			setCircuitFromPacket(pkt.getNbtCompound());
 			break;
 		}
 	}
@@ -583,7 +583,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 					_upgradeLevel[i] = level;
 					updateUpgradeLevels();
 				}
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				MFRUtil.notifyBlockUpdate(worldObj, pos);
 				return true;
 			}
 		}
@@ -659,7 +659,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void rotate(EnumFacing axis) {
 
 		if (canRotate(axis)) {
-			int currentMeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			int currentMeta = worldObj.getBlockState(pos).getValue(BlockRedNetLogic.FACING).ordinal();
 			int nextMeta = (currentMeta + 1) & 3; // % 4
 			int[] map = {0, 1, 2, 3};
 			{
@@ -675,7 +675,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 					}
 				}
 			}
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, nextMeta, 3);
+			worldObj.setBlockState(pos, MFRThings.rednetLogicBlock.getDefaultState().withProperty(BlockRedNetLogic.FACING, EnumFacing.VALUES[nextMeta]));
 		}
 	}
 
@@ -683,14 +683,14 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void rotateDirectlyTo(int facing) {
 
 		if (canRotate() && facing >= 2 && facing < 6) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, facing - 2, 3);
+			worldObj.setBlockMetadataWithNotify(pos, facing - 2, 3);
 		}
 	}
 
 	@Override
 	public EnumFacing getDirectionFacing() {
 
-		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 3;
+		int meta = worldObj.getBlockMetadata(pos) & 3;
 		return EnumFacing.getOrientation(meta + 2);
 	}
 

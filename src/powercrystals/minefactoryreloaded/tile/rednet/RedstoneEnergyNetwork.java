@@ -19,7 +19,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 	static final GridTickHandler<RedstoneEnergyNetwork, TileEntityRedNetEnergy> HANDLER =
 			GridTickHandler.energy;
 
-	private ArrayHashList<TileEntityRedNetEnergy> nodeSet = new ArrayHashList<TileEntityRedNetEnergy>();
+	private ArrayHashList<TileEntityRedNetEnergy> nodeSet = new ArrayHashList<>();
 	private LinkedHashList<TileEntityRedNetEnergy> conduitSet;
 	private TileEntityRedNetEnergy master;
 	private int overflowSelector;
@@ -35,7 +35,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 	}
 
 	public RedstoneEnergyNetwork(TileEntityRedNetEnergy base) { this();
-		conduitSet = new LinkedHashList<TileEntityRedNetEnergy>();
+		conduitSet = new LinkedHashList<>();
 		regenerating = true;
 		addConduit(base);
 		regenerating = false;
@@ -96,26 +96,25 @@ public class RedstoneEnergyNetwork implements IGrid {
 		TileEntityRedNetEnergy main = conduitSet.poke();
 		LinkedHashList<TileEntityRedNetEnergy> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashList<TileEntityRedNetEnergy>(Math.min(oldSet.size() / 6, 5));
+		conduitSet = new LinkedHashList<>(Math.min(oldSet.size() / 6, 5));
 
 		LinkedHashList<TileEntityRedNetEnergy> toCheck = new LinkedHashList<TileEntityRedNetEnergy>();
 		LinkedHashList<TileEntityRedNetEnergy> checked = new LinkedHashList<TileEntityRedNetEnergy>();
 		BlockPos bp = new BlockPos(0,0,0);
-		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
+		EnumFacing[] dir = EnumFacing.VALUES;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.shift();
 			addConduit(main);
-			World world = main.getWorldObj();
+			World world = main.getWorld();
 			for (int i = 6; i --> 0; ) {
-				bp.x = main.xCoord; bp.y = main.yCoord; bp.z = main.zCoord;
-				bp.step(dir[i]);
-				if (world.blockExists(bp.x, bp.y, bp.z)) {
-					TileEntity te = bp.getTileEntity(world);
+				bp = main.getPos().offset(dir[i]);
+				if (world.isBlockLoaded(bp)) {
+					TileEntity te = world.getTileEntity(bp);
 					if (te instanceof TileEntityRedNetEnergy) {
 						TileEntityRedNetEnergy ter = (TileEntityRedNetEnergy)te;
-						if (main.canInterface(ter, dir[i^1]) && checked.add(ter))
+						if (main.canInterface(ter, dir[i].getOpposite()) && checked.add(ter))
 							toCheck.add(ter);
 					}
 				}
@@ -166,7 +165,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 		EnergyStorage tank = storage;
 		if (tank.getEnergyStored() >= tank.getMaxEnergyStored())
 			return;
-		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALUES;
 
 		for (TileEntityRedNetEnergy cond : nodeSet)
 			for (int i = 6; i --> 0; )
@@ -184,7 +183,7 @@ public class RedstoneEnergyNetwork implements IGrid {
 		EnergyStorage storage = this.storage;
 		if (storage.getEnergyStored() <= 0)
 			return;
-		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALUES;
 		int size = nodeSet.size();
 		int toDistribute = storage.getEnergyStored() / size;
 		int sideDistribute = toDistribute / 6;

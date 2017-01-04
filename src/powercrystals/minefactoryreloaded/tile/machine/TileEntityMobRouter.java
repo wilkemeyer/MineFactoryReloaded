@@ -87,9 +87,8 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered {
 				match = false;
 			}
 			if (match ^ _blacklist) {
-				BlockPos bp = BlockPos.fromRotateableTile(this);
-				bp.moveBackwards(1);
-				entity.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
+				BlockPos bp = pos.offset(getDirectionFacing().getOpposite());
+				entity.setPosition(bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5);
 
 				return true;
 			}
