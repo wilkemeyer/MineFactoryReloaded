@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.GridTickHandler;
 
 public class FluidNetwork implements IGrid {
@@ -109,18 +110,17 @@ public class FluidNetwork implements IGrid {
 		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<TileEntityPlasticPipe>();
 		LinkedHashList<TileEntityPlasticPipe> checked = new LinkedHashList<TileEntityPlasticPipe>();
 		BlockPos bp = new BlockPos(0,0,0);
-		EnumFacing[] dir = EnumFacing.VALID_DIRECTIONS;
+		EnumFacing[] dir = EnumFacing.VALUES;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.shift();
 			addConduit(main);
-			World world = main.getWorldObj();
+			World world = main.getWorld();
 			for (int i = 6; i --> 0; ) {
-				bp.x = main.xCoord; bp.y = main.yCoord; bp.z = main.zCoord;
-				bp.step(dir[i]);
-				if (world.blockExists(bp.x, bp.y, bp.z)) {
-					TileEntity te = bp.getTileEntity(world);
+				bp = main.getPos().offset(dir[i]);
+				if (world.isBlockLoaded(bp)) {
+					TileEntity te = MFRUtil.getTile(world, bp);
 					if (te instanceof TileEntityPlasticPipe) {
 						TileEntityPlasticPipe tep = (TileEntityPlasticPipe)te;
 						if (main.canInterface(tep, dir[i^1]) && checked.add(tep))
@@ -174,7 +174,7 @@ public class FluidNetwork implements IGrid {
 		FluidTankAdv tank = storage;
 		if (tank.getSpace() <= 0)
 			return;
-		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALUES;
 
 		for (TileEntityPlasticPipe cond : nodeSet)
 			for (int i = 6; i --> 0; )
@@ -192,7 +192,7 @@ public class FluidNetwork implements IGrid {
 		FluidTankAdv storage = this.storage;
 		if (storage.getFluidAmount() <= 0)
 			return;
-		EnumFacing[] directions = EnumFacing.VALID_DIRECTIONS;
+		EnumFacing[] directions = EnumFacing.VALUES;
 		int size = nodeSet.size();
 		int toDistribute = storage.getFluidAmount() / size;
 		int sideDistribute = toDistribute / 6;

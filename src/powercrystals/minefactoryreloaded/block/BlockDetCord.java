@@ -4,18 +4,15 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityDetCord;
@@ -39,6 +36,7 @@ public class BlockDetCord extends BlockFactory {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
+		//TODO does this really need a tile?
 		return new TileEntityDetCord();
 	}
 

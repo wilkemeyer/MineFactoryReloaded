@@ -647,10 +647,27 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		DESCENDING_WEST(10, "descending_west", EnumFacing.WEST, -1),
 		DESCENDING_NORTH(11, "descending_north", EnumFacing.NORTH, -1);
 
+		static {
+
+			EAST.reverse = WEST;
+			SOUTH.reverse = NORTH;
+			WEST.reverse = EAST;
+			NORTH.reverse = SOUTH;
+			ASCENDING_EAST.reverse = DESCENDING_WEST;
+			ASCENDING_SOUTH.reverse = DESCENDING_NORTH;
+			ASCENDING_WEST.reverse = DESCENDING_EAST;
+			ASCENDING_NORTH.reverse = DESCENDING_SOUTH;
+			DESCENDING_EAST.reverse = ASCENDING_WEST;
+			DESCENDING_SOUTH.reverse = ASCENDING_NORTH;
+			DESCENDING_WEST.reverse = ASCENDING_EAST;
+			DESCENDING_NORTH.reverse = ASCENDING_SOUTH;
+		}
+
 		private final int meta;
 		private final String name;
 		private final EnumFacing facing;
 		private int yOffset;
+		private ConveyorDirection reverse;
 
 		private static final ConveyorDirection[] META_LOOKUP = new ConveyorDirection[values().length];
 
@@ -696,6 +713,10 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 			}
 
 			return META_LOOKUP[meta];
+		}
+
+		public ConveyorDirection getReverse() {
+			return reverse;
 		}
 
 		public static ConveyorDirection byFacing(EnumFacing facing) {

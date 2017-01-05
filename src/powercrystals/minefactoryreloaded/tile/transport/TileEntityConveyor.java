@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
-import static net.minecraftforge.common.util.EnumFacing.*;
-
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
@@ -10,18 +8,21 @@ import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
 import cofh.lib.util.position.IRotateableTile;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
+import static powercrystals.minefactoryreloaded.block.transport.BlockConveyor.ConveyorDirection.*;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
@@ -49,186 +50,188 @@ public class TileEntityConveyor extends TileEntityBase
 	{
 		if(worldObj != null && !worldObj.isRemote && _dye != dye)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
 		}
 		_dye = dye;
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound data = new NBTTagCompound();
 		data.setInteger("dye", _dye);
 		data.setBoolean("conveyorActive", _conveyorActive);
 		data.setBoolean("isFast", _isFast);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		NBTTagCompound data = pkt.func_148857_g();
+		NBTTagCompound data = pkt.getNbtCompound();
 		_dye = data.getInteger("dye");
 		_conveyorActive = data.getBoolean("conveyorActive");
 		_isFast = data.getBoolean("isFast");
 	}
 
 	@Override
-	public boolean shouldRefresh(Block oldID, Block newID, int oldMeta, int newMeta, World world, BlockPos pos)
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 	{
-		return oldID != newID;
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
 	public void rotate(EnumFacing axis)
 	{
-		int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		if (md == 0)
+		BlockConveyor.ConveyorDirection dir = worldObj.getBlockState(pos).getValue(BlockConveyor.DIRECTION);
+		if (dir == EAST)
 		{
-			if (isSideSolid(1, 0, WEST))
+			if (isSideSolid(EnumFacing.EAST, EnumFacing.WEST))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 4);
+				rotateTo(worldObj, pos, ASCENDING_EAST);
 			}
-			else if (isSideSolid(-1, 0, EAST))
+			else if (isSideSolid(EnumFacing.WEST, EnumFacing.EAST))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 8);
+				rotateTo(worldObj, pos, DESCENDING_EAST);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 1);
+				rotateTo(worldObj, pos, SOUTH);
 			}
 		}
-		else if (md == 4)
+		else if (dir == ASCENDING_EAST)
 		{
-			if (isSideSolid(-1, 0, EAST))
+			if (isSideSolid(EnumFacing.WEST, EnumFacing.EAST))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 8);
+				rotateTo(worldObj, pos, DESCENDING_EAST);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 1);
+				rotateTo(worldObj, pos, SOUTH);
 			}
 		}
-		else if (md == 8)
+		else if (dir == DESCENDING_EAST)
 		{
-			rotateTo(worldObj, xCoord, yCoord, zCoord, 1);
+			rotateTo(worldObj, pos, SOUTH);
 		}
 		else
 
-		if (md == 1)
+		if (dir == SOUTH)
 		{
-			if (isSideSolid(0, 1, NORTH))
+			if (isSideSolid(EnumFacing.SOUTH, EnumFacing.NORTH))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 5);
+				rotateTo(worldObj, pos, ASCENDING_SOUTH);
 			}
-			else if (isSideSolid(0, -1, SOUTH))
+			else if (isSideSolid(EnumFacing.NORTH, EnumFacing.SOUTH))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 9);
+				rotateTo(worldObj, pos, DESCENDING_SOUTH);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 2);
+				rotateTo(worldObj, pos, WEST);
 			}
 		}
-		else if (md == 5)
+		else if (dir == ASCENDING_SOUTH)
 		{
-			if (isSideSolid(0, -1, SOUTH))
+			if (isSideSolid(EnumFacing.NORTH, EnumFacing.SOUTH))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 9);
+				rotateTo(worldObj, pos, DESCENDING_SOUTH);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 2);
+				rotateTo(worldObj, pos, WEST);
 			}
 		}
-		else if (md == 9)
+		else if (dir == DESCENDING_SOUTH)
 		{
-			rotateTo(worldObj, xCoord, yCoord, zCoord, 2);
+			rotateTo(worldObj, pos, WEST);
 		}
 		else
 
-		if (md == 2)
+		if (dir == WEST)
 		{
-			if (isSideSolid(-1, 0, EAST))
+			if (isSideSolid(EnumFacing.WEST, EnumFacing.EAST))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 6);
+				rotateTo(worldObj, pos, ASCENDING_WEST);
 			}
-			else if (isSideSolid(1, 0, WEST) )
+			else if (isSideSolid(EnumFacing.EAST, EnumFacing.WEST) )
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 10);
+				rotateTo(worldObj, pos, DESCENDING_WEST);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 3);
+				rotateTo(worldObj, pos, NORTH);
 			}
 		}
-		else if (md == 6)
+		else if (dir == ASCENDING_WEST)
 		{
-			if (isSideSolid(1, 0, WEST))
+			if (isSideSolid(EnumFacing.EAST, EnumFacing.WEST))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 10);
+				rotateTo(worldObj, pos, DESCENDING_WEST);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 3);
+				rotateTo(worldObj, pos, NORTH);
 			}
 		}
-		else if (md == 10)
+		else if (dir == DESCENDING_WEST)
 		{
-			rotateTo(worldObj, xCoord, yCoord, zCoord, 3);
+			rotateTo(worldObj, pos, NORTH);
 		}
 		else
 
-		if (md == 3)
+		if (dir == NORTH)
 		{
-			if (isSideSolid(0, -1, SOUTH))
+			if (isSideSolid(EnumFacing.NORTH, EnumFacing.SOUTH))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 7);
+				rotateTo(worldObj, pos, ASCENDING_NORTH);
 			}
-			else if (isSideSolid(0, 1, NORTH))
+			else if (isSideSolid(EnumFacing.SOUTH, EnumFacing.NORTH))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 11);
+				rotateTo(worldObj, pos, DESCENDING_NORTH);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 0);
+				rotateTo(worldObj, pos, EAST);
 			}
 		}
-		else if (md == 7)
+		else if (dir == ASCENDING_NORTH)
 		{
-			if (isSideSolid(0, 1, NORTH))
+			if (isSideSolid(EnumFacing.SOUTH, EnumFacing.NORTH))
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 11);
+				rotateTo(worldObj, pos, DESCENDING_NORTH);
 			}
 			else
 			{
-				rotateTo(worldObj, xCoord, yCoord, zCoord, 0);
+				rotateTo(worldObj, pos, EAST);
 			}
 		}
-		else if (md == 11)
+		else if (dir == DESCENDING_NORTH)
 		{
-			rotateTo(worldObj, xCoord, yCoord, zCoord, 0);
+			rotateTo(worldObj, pos, EAST);
 		}
 	}
 
-	private boolean isSideSolid(int x, int z, EnumFacing dir)
+	private boolean isSideSolid(EnumFacing offset, EnumFacing dir)
 	{
-		return worldObj.isSideSolid(xCoord + x, yCoord, zCoord + z, dir) &&
-				((!worldObj.isSideSolid(xCoord + x, yCoord + 1, zCoord + z, dir) ||
-						!worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) ||
-							!worldObj.isSideSolid(xCoord - x, yCoord - 1, zCoord - z, UP));
+		return worldObj.isSideSolid(pos.offset(offset), dir) &&
+				((!worldObj.isSideSolid(pos.offset(offset).up(), dir) ||
+						!worldObj.isAirBlock(pos.up())) ||
+							!worldObj.isSideSolid(pos.offset(offset.getOpposite()), EnumFacing.UP));
 	}
 
-	private void rotateTo(World world, int xCoord, int yCoord, int zCoord, int newmd)
+	private void rotateTo(World world, BlockPos pos, BlockConveyor.ConveyorDirection newDir)
 	{
-		world.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newmd, 2);
+		world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockConveyor.DIRECTION, newDir), 2);
 	}
 
 	@Override
-	public void rotateDirectlyTo(int facing) {
-		if (facing >= 2 && facing < 6)
-			rotateTo(worldObj, xCoord, yCoord, zCoord, facing - 2);
+	public void rotateDirectlyTo(int facing)
+	{
+		//TODO rotateDirectlyTo in cofhcore needs to be changed to EnumFacing
+		if (facing >= 2 && facing <= 5)
+			rotateTo(worldObj, pos, byFacing(EnumFacing.VALUES[facing]));
 	}
 
 	@Override
@@ -249,12 +252,6 @@ public class TileEntityConveyor extends TileEntityBase
 		return null;
 	}
 
-	@Override
-	public boolean canUpdate()
-	{
-		return false;
-	}
-
 	public boolean isFast()
 	{
 		return _isFast;
@@ -266,7 +263,7 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
@@ -277,6 +274,8 @@ public class TileEntityConveyor extends TileEntityBase
 		tag.setBoolean("redNetReversed", _rednetReversed);
 		tag.setBoolean("gateReversed", _gateReversed);
 		tag.setBoolean("glowstone", _isFast);
+
+		return tag;
 	}
 
 	@Override
@@ -322,7 +321,7 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public ItemStack removeStackFromSlot(int slot)
 	{
 		return null;
 	}
@@ -372,22 +371,22 @@ public class TileEntityConveyor extends TileEntityBase
 			case 6: //UNKNOWN
 		}
 
-		EntityItem entityitem = new EntityItem(worldObj, xCoord + dropOffsetX, yCoord + dropOffsetY, zCoord + dropOffsetZ, stack.copy());
+		EntityItem entityitem = new EntityItem(worldObj, pos.getX() + dropOffsetX, pos.getY() + dropOffsetY, pos.getZ() + dropOffsetZ, stack.copy());
 		entityitem.motionX = motionX;
 		entityitem.motionY = motionY;
 		entityitem.motionZ = motionZ;
-		entityitem.delayBeforeCanPickup = 20;
+		entityitem.setPickupDelay(20);
 		worldObj.spawnEntityInWorld(entityitem);
 	}
 
 	@Override
-	public String getInventoryName()
+	public String getName()
 	{
 		return "Conveyor Belt";
 	}
 
 	@Override
-	public boolean hasCustomInventoryName()
+	public boolean hasCustomName()
 	{
 		return false;
 	}
@@ -410,12 +409,12 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
     @Override
-	public void openInventory()
+	public void openInventory(EntityPlayer player)
     {
     }
 
     @Override
-	public void closeInventory()
+	public void closeInventory(EntityPlayer player)
     {
     }
 
@@ -425,11 +424,33 @@ public class TileEntityConveyor extends TileEntityBase
     	return _conveyorActive;
     }
 
-    //ISidedInventory
+	@Override
+	public int getField(int id)
+	{
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		return 0;
+	}
+
+	@Override
+	public void clear()
+	{
+	}
+
+	//ISidedInventory
     @Override
-	public int[] getAccessibleSlotsFromSide(int sideOrdinal)
+	public int[] getSlotsForFace(EnumFacing side)
     {
-    	int[] accessibleSlot = {sideOrdinal};
+    	int[] accessibleSlot = {side.ordinal()};
     	return accessibleSlot;
     }
 
@@ -443,26 +464,17 @@ public class TileEntityConveyor extends TileEntityBase
     {
     	if (!_conveyorActive)
     		return false;
-    	int blockmeta;
-    	switch (EnumFacing.getOrientation(side))
-    	{
-    	case UP:
-    		return (worldObj.getBlockMetadata(xCoord, yCoord, zCoord) & 0x04) == 0;
-    	case EAST:
-    		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 0;
-    	case SOUTH:
-    		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 1;
-    	case WEST:
-    		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 2;
-    	case NORTH:
-    		blockmeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-    		return (blockmeta & 0x04) != 0 | (blockmeta & 0x03) != 3;
-    	default:
-    		return true;
-    	}
+
+    	IBlockState state = worldObj.getBlockState(pos);
+		BlockConveyor.ConveyorDirection dir = state.getValue(BlockConveyor.DIRECTION);
+
+		if (side == EnumFacing.UP)
+			return !dir.isUphill();
+
+		if (side != EnumFacing.DOWN)
+			return dir.isUphill() || dir.getFacing() != side;
+
+		return true;
     }
 
     @Override
@@ -480,7 +492,7 @@ public class TileEntityConveyor extends TileEntityBase
 			updateConveyorActive();
 		}
 		setReversed(_gateReversed | (_rednetReversed = value < 0));
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public void updateConveyorActive()
@@ -500,7 +512,7 @@ public class TileEntityConveyor extends TileEntityBase
 
 		if(wasActive ^ _conveyorActive)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
 		}
 	}
 
@@ -527,7 +539,8 @@ public class TileEntityConveyor extends TileEntityBase
 
 		if(wasReversed ^ _isReversed)
 		{
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getReversedMeta(worldObj.getBlockMetadata(xCoord, yCoord, zCoord)), 3);
+			IBlockState state = worldObj.getBlockState(pos);
+			worldObj.setBlockState(pos, state.withProperty(BlockConveyor.DIRECTION, state.getValue(BlockConveyor.DIRECTION).getReverse()));
 		}
 	}
 
@@ -535,27 +548,6 @@ public class TileEntityConveyor extends TileEntityBase
 	private void reverseConveyor()
 	{
 		setReversed(_rednetReversed | (_gateReversed = !_isReversed));
-	}
-
-	private int getReversedMeta(int meta)
-	{
-		int directionComponent = ( meta + 2 ) % 4;
-		int slopeComponent;
-
-		if(meta / 4 == 1)
-		{
-			slopeComponent = 2;
-		}
-		else if(meta / 4 == 2)
-		{
-			slopeComponent = 1;
-		}
-		else
-		{
-			slopeComponent = 0;
-		}
-
-		return slopeComponent * 4 + directionComponent;
 	}
 
 	@Override

@@ -3,14 +3,17 @@ package powercrystals.minefactoryreloaded.tile.transport;
 import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
 import static powercrystals.minefactoryreloaded.tile.transport.FluidNetwork.TRANSFER_RATE;
 
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.vec.Vector3;
 import cofh.core.render.hitbox.CustomHitBox;
 import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.util.CoreUtils;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
-import cofh.repack.codechicken.lib.raytracer.IndexedCuboid6;
-import cofh.repack.codechicken.lib.vec.Vector3;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,11 +24,8 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.ITextComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -95,9 +95,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean canUpdate() {
-
-		return false;
+	public void update() {
+		//TODO yet again needs a non tickable base TE
 	}
 
 	@Override
@@ -115,15 +114,15 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			isPowered = true;
 		}
 		if (last != isPowered)
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	private void reCache() {
 
 		if (deadCache) {
-			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS)
-				if (BlockPos.blockExists(this, dir))
-					addCache(BlockPos.getAdjacentTileEntity(this, dir));
+			for (EnumFacing dir : EnumFacing.VALUES)
+				if (worldObj.isBlockLoaded(pos.offset(dir)))
+					addCache(MFRUtil.getTile(worldObj, pos.offset(dir)));
 			deadCache = false;
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
 		}
@@ -135,7 +134,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		notifyNeighborTileChange();
 		deadCache = true;
 		reCache();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	@Override
@@ -154,81 +153,59 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		readFromNBT = true;
 		reCache();
 		markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	@Override
-	public void onNeighborTileChange(BlockPos pos) {
+	public void onNeighborTileChange(BlockPos neighborPos) {
 
 		if (worldObj.isRemote | deadCache)
 			return;
-		TileEntity tile = worldObj.blockExists(x, y, z) ? worldObj.getTileEntity(x, y, z) : null;
+		TileEntity tile = worldObj.isBlockLoaded(neighborPos) ? worldObj.getTileEntity(neighborPos) : null;
 
-		if (x < xCoord)
-			addCache(tile, 5);
-		else if (x > xCoord)
-			addCache(tile, 4);
-		else if (z < zCoord)
-			addCache(tile, 3);
-		else if (z > zCoord)
-			addCache(tile, 2);
-		else if (y < yCoord)
-			addCache(tile, 1);
-		else if (y > yCoord)
-			addCache(tile, 0);
+		Vec3i diff = neighborPos.subtract(pos);
+		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
 
 	private void addCache(TileEntity tile) {
 
 		if (tile == null) return;
-		int x = tile.xCoord, y = tile.yCoord, z = tile.zCoord;
-
-		if (x < xCoord)
-			addCache(tile, 5);
-		else if (x > xCoord)
-			addCache(tile, 4);
-		else if (z < zCoord)
-			addCache(tile, 3);
-		else if (z > zCoord)
-			addCache(tile, 2);
-		else if (y < yCoord)
-			addCache(tile, 1);
-		else if (y > yCoord)
-			addCache(tile, 0);
+		Vec3i diff = tile.getPos().subtract(pos);
+		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
 
 	private void addCache(TileEntity tile, EnumFacing side) {
 
 		if (handlerCache != null)
-			handlerCache[side] = null;
-		int lastMode = sideMode[side];
-		sideMode[side] &= 3;
+			handlerCache[side.ordinal()] = null;
+		int lastMode = sideMode[side.ordinal()];
+		sideMode[side.ordinal()] &= 3;
 		if (tile instanceof TileEntityPlasticPipe) {
 			TileEntityPlasticPipe cable = (TileEntityPlasticPipe) tile;
-			sideMode[side] &= ~2;
-			sideMode[side] |= (2 << 2);
-			if (cable.isInterfacing(EnumFacing.getOrientation(side))) {
+			sideMode[side.ordinal()] &= ~2;
+			sideMode[side.ordinal()] |= (2 << 2);
+			if (cable.isInterfacing(side)) {
 				if (_grid == null && cable._grid != null) {
 					cable._grid.addConduit(this);
 				}
 				if (cable._grid == _grid) {
-					sideMode[side] |= 1; // always enable
+					sideMode[side.ordinal()] |= 1; // always enable
 				}
 			} else {
-				sideMode[side] &= ~3;
+				sideMode[side.ordinal()] &= ~3;
 			}
 		} else if (tile instanceof IFluidHandler) {
 			//if (((IFluidHandler)tile).canFill(EnumFacing.VALID_DIRECTIONS[side]))
 			{
 				if (handlerCache == null) handlerCache = new IFluidHandler[6];
-				handlerCache[side] = (IFluidHandler) tile;
-				sideMode[side] |= 1 << 2;
+				handlerCache[side.ordinal()] = (IFluidHandler) tile;
+				sideMode[side.ordinal()] |= 1 << 2;
 			}
 		}
 		if (!deadCache) {
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
-			if (lastMode != sideMode[side])
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			if (lastMode != sideMode[side.ordinal()])
+				MFRUtil.notifyBlockUpdate(worldObj, pos);
 		}
 	}
 
@@ -236,10 +213,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		if (_grid == null) {
 			boolean hasGrid = false;
-			for (EnumFacing dir : EnumFacing.VALID_DIRECTIONS) {
+			for (EnumFacing dir : EnumFacing.VALUES) {
 				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
-				if (BlockPos.blockExists(this, dir)) {
-					TileEntityPlasticPipe pipe = BlockPos.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
+				if (worldObj.isBlockLoaded(pos.offset(dir))) {
+					TileEntityPlasticPipe pipe = MFRUtil.getTile(worldObj, pos.offset(dir), TileEntityPlasticPipe.class);
 					if (pipe != null) {
 						if (pipe._grid != null &&
 								(readFromNBT ? pipe.couldInterface(this) : pipe.canInterface(this))) {
@@ -248,7 +225,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 							} else {
 								if (pipe._grid.addConduit(this)) {
 									hasGrid = true;
-									mergeWith(pipe, dir.ordinal());
+									mergeWith(pipe, dir);
 								}
 							}
 						}
@@ -290,12 +267,12 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			te._grid.mergeGrid(_grid);
 			final byte one = 1;
 			setMode(side, one);
-			te.setMode(side ^ 1, one);
+			te.setMode(side.getOpposite(), one);
 		}
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (deadCache)
 			return null;
@@ -305,16 +282,16 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		data.setInteger("mode[1]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16) |
 				(isPowered ? 1 << 24 : 0));
 		data.setByte("upgrade", upgradeItem);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
 		super.onDataPacket(net, pkt);
-		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
+		NBTTagCompound data = pkt.getNbtCompound();
+		switch (pkt.getTileEntityType())
 		{
 		case 0:
 			int mode = data.getInteger("mode[0]");
@@ -330,7 +307,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			upgradeItem = data.getByte("upgrade");
 			break;
 		}
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public void setUpgrade(int i) {
@@ -351,16 +328,16 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	public byte getMode(EnumFacing side) {
 
-		return (byte) (sideMode[EnumFacing.OPPOSITES[side]] & 3);
+		return (byte) (sideMode[side.getOpposite().ordinal()] & 3);
 	}
 
 	public void setMode(EnumFacing side, byte mode) {
 
-		side = EnumFacing.OPPOSITES[side];
+		side = side.getOpposite();
 		mode &= 3;
-		int t = sideMode[side];
+		int t = sideMode[side.ordinal()];
 		boolean mustUpdate = (mode != (t & 3));
-		sideMode[side] = (byte) ((t & ~3) | mode);
+		sideMode[side.ordinal()] = (byte) ((t & ~3) | mode);
 		if (mustUpdate)
 		{
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
@@ -464,7 +441,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
 		super.writeToNBT(nbt);
 		nbt.setByte("Upgrade", upgradeItem);
@@ -480,6 +457,8 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 				nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
 		} else if (fluidForGrid != null)
 			nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
+
+		return nbt;
 	}
 
 	void extract(EnumFacing side, IFluidTank tank) {
@@ -570,23 +549,23 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public CustomHitBox getCustomHitBox(int hit, EntityPlayer player) {
 
-		final List<IndexedCuboid6> list = new ArrayList<IndexedCuboid6>(7);
-		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord));
+		final List<IndexedCuboid6> list = new ArrayList<>(7);
+		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, pos));
 		IndexedCuboid6 cube = list.get(0);
 		cube.expand(0.003);
-		Vector3 min = cube.min, max = cube.max.sub(min);
+		Vector3 min = cube.min, max = cube.max.subtract(min);
 		CustomHitBox box = new CustomHitBox(max.x, max.y, max.z, min.x, min.y, min.z);
 		for (int i = 1, e = list.size(); i < e; ++i) {
 			cube = list.get(i);
 			if (shouldRenderCustomHitBox((Integer) cube.data, player)) {
-				cube.sub(min);
+				cube.subtract(min);
 				if (cube.min.y < 0)
 					box.sideLength[0] = Math.max(box.sideLength[0], -cube.min.y);
 				if (cube.min.z < 0)
 					box.sideLength[2] = Math.max(box.sideLength[2], -cube.min.z);
 				if (cube.min.x < 0)
 					box.sideLength[4] = Math.max(box.sideLength[4], -cube.min.x);
-				cube.sub(max);
+				cube.subtract(max);
 				if (cube.max.y > 0)
 					box.sideLength[1] = Math.max(box.sideLength[1], cube.max.y);
 				if (cube.max.z > 0)
@@ -604,17 +583,16 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
 
 		if (subHit >= 0 && subHit < (2 + 6 * 2)) {
-			if (MFRUtil.isHoldingUsableTool(player, xCoord, yCoord, zCoord)) {
+			if (MFRUtil.isHoldingUsableTool(player, pos)) {
 				if (!worldObj.isRemote) {
-					int data = sideMode[EnumFacing.OPPOSITES[side]] >> 2;
+					int data = sideMode[side.getOpposite().ordinal()] >> 2;
 					byte mode = getMode(side);
 					if (++mode == 2) ++mode;
 					if (data == 2) {
 						if (mode > 1)
 							mode = 0;
-						EnumFacing dir = EnumFacing.getOrientation(side);
-						TileEntityPlasticPipe cable = BlockPos.getAdjacentTileEntity(this, dir, TileEntityPlasticPipe.class);
-						if (!isInterfacing(dir)) {
+						TileEntityPlasticPipe cable = MFRUtil.getTile(worldObj, pos.offset(side), TileEntityPlasticPipe.class);
+						if (!isInterfacing(side)) {
 							if (couldInterface(cable)) {
 								mergeWith(cable, side);
 								cable.onMerge();
@@ -631,7 +609,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 						}
 						return true;
 					}
-					else if (side == 6) {
+					else if (side == null) {
 						if (mode > 1)
 							mode = 0;
 						setMode(side, mode);
@@ -674,19 +652,18 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
 
-		Vector3 offset = new Vector3(xCoord, yCoord, zCoord);
+		Vector3 offset = new Vector3(pos);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
 
-		EnumFacing[] side = EnumFacing.VALID_DIRECTIONS;
-		int[] opposite = EnumFacing.OPPOSITES;
+		EnumFacing[] side = EnumFacing.VALUES;
 		boolean cableMode = sideMode[6] == 1;
 		for (int i = side.length; i-- > 0;) {
-			int mode = sideMode[opposite[i]] >> 2;
+			int mode = sideMode[EnumFacing.VALUES[i].getOpposite().ordinal()] >> 2;
 			boolean iface = (mode > 0) & mode != 2;
 			int o = 2 + i;
-			if (((sideMode[opposite[i]] & 1) != 0) & mode > 0) {
+			if (((sideMode[EnumFacing.VALUES[i].getOpposite().ordinal()] & 1) != 0) & mode > 0) {
 				if (mode == 2) {
 					o = 2 + 6 * 3 + i;
 					list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? 2 + i : 1,
