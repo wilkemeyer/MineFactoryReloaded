@@ -13,9 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.ITextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,19 +42,18 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public boolean canUpdate() {
-
-		return false;
+	public void update() {
+		//TODO yet again one more that needs non tickable base as it's not supposed to tick
 	}
 
 	@Override
 	public void invalidate() {
 
 		if (grid != null) {
-			for (EnumFacing to : EnumFacing.VALID_DIRECTIONS) {
+			for (EnumFacing to : EnumFacing.VALUES) {
 				if ((sides & (1 << to.ordinal())) == 0)
 					continue;
-				TileEntityTank tank = BlockPos.getAdjacentTileEntity(this, to, TileEntityTank.class);
+				TileEntityTank tank = MFRUtil.getTile(worldObj, pos.offset(to), TileEntityTank.class);
 				if (tank != null)
 					tank.part(to.getOpposite());
 			}
@@ -76,10 +75,10 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	public void firstTick() {
 
 		if (!inWorld) return;
-		for (EnumFacing to : EnumFacing.VALID_DIRECTIONS) {
-			if (to.offsetY != 0 || !BlockPos.blockExists(this, to))
+		for (EnumFacing to : EnumFacing.VALUES) {
+			if (to.getFrontOffsetY() != 0 || !worldObj.isBlockLoaded(pos.offset(to)))
 				continue;
-			TileEntityTank tank = BlockPos.getAdjacentTileEntity(this, to, TileEntityTank.class);
+			TileEntityTank tank = MFRUtil.getTile(worldObj, pos.offset(to), TileEntityTank.class);
 			if (tank != null && tank.grid != null && FluidHelper.isFluidEqualOrNull(tank.grid.getStorage().getFluid(), _tank.getFluid())) {
 				if (tank.grid != null)
 					if (tank.grid == grid || tank.grid.addNode(this)) {
@@ -105,14 +104,14 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 		sides |= (1 << from.ordinal());
 		markChunkDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public void part(EnumFacing from) {
 
 		sides &= ~(1 << from.ordinal());
 		markChunkDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public boolean isInterfacing(EnumFacing to) {
@@ -126,7 +125,7 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (grid == null)
 			return null;
@@ -135,24 +134,24 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		if (fluid != null)
 			data.setTag("fluid", fluid.writeToNBT(new NBTTagCompound()));
 		data.setByte("sides", sides);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
+		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
 		return packet;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
 		super.onDataPacket(net, pkt);
-		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f()) {
+		NBTTagCompound data = pkt.getNbtCompound();
+		switch (pkt.getTileEntityType()) {
 		case 0:
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(data.getCompoundTag("fluid"));
 			_tank.setFluid(fluid);
 			sides = data.getByte("sides");
 			break;
 		}
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		worldObj.func_147451_t(xCoord, yCoord, zCoord);
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
+		worldObj.checkLight(pos);
 	}
 
 	@Override

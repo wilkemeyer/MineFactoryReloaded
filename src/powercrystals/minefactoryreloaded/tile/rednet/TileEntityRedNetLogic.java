@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
 import cofh.api.tileentity.IPortableData;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import cofh.lib.util.position.IRotateableTile;
 import net.minecraftforge.fml.relauncher.Side;
@@ -683,15 +684,15 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	public void rotateDirectlyTo(int facing) {
 
 		if (canRotate() && facing >= 2 && facing < 6) {
-			worldObj.setBlockMetadataWithNotify(pos, facing - 2, 3);
+			IBlockState state = worldObj.getBlockState(pos);
+			worldObj.setBlockState(pos, state.withProperty(BlockRedNetLogic.FACING, EnumFacing.HORIZONTALS[facing - 2]), 3);
 		}
 	}
 
 	@Override
 	public EnumFacing getDirectionFacing() {
 
-		int meta = worldObj.getBlockMetadata(pos) & 3;
-		return EnumFacing.getOrientation(meta + 2);
+		return worldObj.getBlockState(pos).getValue(BlockRedNetLogic.FACING);
 	}
 
 	private static boolean areEqual(int[] a, int[] b) {
