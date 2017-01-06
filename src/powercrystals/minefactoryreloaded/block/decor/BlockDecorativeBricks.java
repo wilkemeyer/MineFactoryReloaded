@@ -14,10 +14,9 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 
 public class BlockDecorativeBricks extends BlockFactory {
 
-	/*	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
-		"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
-		"meat.raw", "meat.cooked", "brick_large", "sugar_charcoal" };
-	private IIcon[] _icons = new IIcon[_names.length];*/
+	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
+	"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
+	"meat.raw", "meat.cooked", "brick_large", "sugar_charcoal" };
 
 	public BlockDecorativeBricks() {
 		

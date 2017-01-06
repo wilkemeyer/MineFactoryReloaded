@@ -2,31 +2,32 @@ package powercrystals.minefactoryreloaded.world;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class WorldGenLakesMeta extends WorldGenerator
 {
-	private Block _block;
-	private int _blockMeta;
-	
-	public WorldGenLakesMeta(Block block, int blockMeta)
+	private IBlockState state;
+
+	public WorldGenLakesMeta(IBlockState state)
 	{
-		_block = block;
-		_blockMeta = blockMeta;
+		this.state = state;
 	}
 	
 	@Override
 	public boolean generate(World world, Random random, BlockPos pos)
 	{
-		x -= 8;
-		
-		for(z -= 8; y > 5 && world.isAirBlock(x, y, z); --y)
+		int x = pos.getX() - 8;
+		int z = pos.getZ() - 8;
+		int y = pos.getY();
+
+		for(; y > 5 && world.isAirBlock(new BlockPos(x, y, z)); --y)
 		{
 			;
 		}
@@ -88,14 +89,14 @@ public class WorldGenLakesMeta extends WorldGenerator
 						
 						if(flag)
 						{
-							Material material = world.getBlock(x + i1, y + i2, z + j2).getMaterial();
+							Material material = world.getBlockState(new BlockPos(x + i1, y + i2, z + j2)).getMaterial();
 							
 							if(i2 >= 4 && material.isLiquid())
 							{
 								return false;
 							}
 							
-							if(i2 < 4 && !material.isSolid() && !world.getBlock(x + i1, y + i2, z + j2).equals(_block))
+							if(i2 < 4 && !material.isSolid() && !world.getBlockState(new BlockPos(x + i1, y + i2, z + j2)).getBlock().equals(state.getBlock()))
 							{
 								return false;
 							}
@@ -112,7 +113,7 @@ public class WorldGenLakesMeta extends WorldGenerator
 					{
 						if(aboolean[(i1 * 16 + j2) * 8 + i2])
 						{
-							world.setBlock(x + i1, y + i2, z + j2, i2 >= 4 ? Blocks.AIR : _block, _blockMeta, 2);
+							world.setBlockState(new BlockPos(x + i1, y + i2, z + j2), i2 >= 4 ? Blocks.AIR.getDefaultState() : state, 2);
 						}
 					}
 				}
@@ -124,12 +125,13 @@ public class WorldGenLakesMeta extends WorldGenerator
 				{
 					for(i2 = 4; i2 < 8; ++i2)
 					{
-						if(aboolean[(i1 * 16 + j2) * 8 + i2] && world.getBlock(x + i1, y + i2 - 1, z + j2).equals(Blocks.DIRT)
-								&& world.getSavedLightValue(EnumSkyBlock.Sky, x + i1, y + i2, z + j2) > 0)
+						BlockPos placementPos = new BlockPos(x + i1, y + i2, z + j2);
+						if(aboolean[(i1 * 16 + j2) * 8 + i2] && world.getBlockState(new BlockPos(x + i1, y + i2 - 1, z + j2)).getBlock().equals(Blocks.DIRT)
+								&& world.getLightFor(EnumSkyBlock.SKY, placementPos) > 0)
 						{
-							BiomeGenBase biomegenbase = world.getBiomeGenForCoords(x + i1, z + j2);
+							Biome biome = world.getBiome(placementPos);
 							
-							world.setBlock(x + i1, y + i2 - 1, z + j2, biomegenbase.topBlock, 0, 2);
+							world.setBlockState(placementPos.down(), biome.topBlock, 2);
 						}
 					}
 				}

@@ -81,8 +81,8 @@ public class GrindingWorldServer extends WorldServerProxy
 	public boolean addEntityForGrinding(Entity entity)
 	{
 		cofh_updateProps();
-		if (difficultySetting == EnumDifficulty.PEACEFUL)
-			difficultySetting = EnumDifficulty.EASY;
+		if (getDifficulty() == EnumDifficulty.PEACEFUL)
+			getWorldInfo().setDifficulty(EnumDifficulty.EASY);
 		if(entity.worldObj == this) return true;
 		if(entity.worldObj == this.proxiedWorld)
 		{

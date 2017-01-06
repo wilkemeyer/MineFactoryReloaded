@@ -1,25 +1,28 @@
 package powercrystals.minefactoryreloaded.world;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 import skyboy.core.world.WorldProxy;
 
+import javax.annotation.Nullable;
+
 // Nigel says: This is a
 public class SmashingWorld extends WorldProxy
 {
 	protected Block block;
 	protected int meta;
-	protected int x = 0, y = 1, z = 0;
-
+	protected BlockPos pos = new BlockPos(0, 1, 0);
 	public SmashingWorld(World world)
 	{
 		super(world);
@@ -32,65 +35,51 @@ public class SmashingWorld extends WorldProxy
 	}
 
 	@Override
-	public boolean setBlock(int par1, int par2, int par3, Block par4, int par5, int par6)
+	protected boolean isChunkLoaded(int x, int z, boolean allowEmpty)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean setBlockMetadataWithNotify(int par1, int par2, int par3, int par4, int par5)
+	public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean setBlockToAir(int par1, int par2, int par3)
-	{
-		return true;
-	}
-
-	@Override // destroyBlock
-	public boolean func_147480_a(int par1, int par2, int par3, boolean par4)
+	public boolean setBlockToAir(BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean setBlock(int par1, int par2, int par3, Block par4)
+	public boolean destroyBlock(BlockPos pos, boolean dropBlock)
 	{
 		return true;
 	}
 
 	@Override
-	public Block getBlock(int X, int Y, int Z)
+	public IBlockState getBlockState(BlockPos pos)
 	{
-		if (x == X & y == Y & z == Z)
-			return block;
-		return Blocks.AIR;
+		return this.pos.equals(pos) ? block.getStateFromMeta(meta) : Blocks.AIR.getDefaultState();
 	}
 
+	@Nullable
 	@Override
-	public TileEntity getTileEntity(int X, int Y, int Z)
+	public TileEntity getTileEntity(BlockPos pos)
 	{
 		return null;
 	}
 
-	@Override
-	public int getBlockMetadata(int X, int Y, int Z)
+	public List<ItemStack> smashBlock(ItemStack input, Block block, int meta, int fortune)
 	{
-		if (x == X & y == Y & z == Z)
-			return meta;
-		return 0;
-	}
-
-	public ArrayList<ItemStack> smashBlock(ItemStack input, Block block, int meta, int fortune)
-	{
-		ArrayList<ItemStack> drops = null;
+		List<ItemStack> drops = null;
 		if (block != null)
 		{
-			this.meta = meta;
 			this.block = block;
-			drops = block.getDrops(this, x, y, z, meta, fortune);
+			this.meta = meta;
+
+			drops = block.getDrops(this, pos, block.getStateFromMeta(meta), fortune);
 			if (drops.size() == 1)
 				if (UtilInventory.stacksEqual(drops.get(0), input, false))
 					return null;

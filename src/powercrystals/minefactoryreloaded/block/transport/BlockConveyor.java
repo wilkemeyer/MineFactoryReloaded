@@ -50,7 +50,6 @@ import static codechicken.nei.NEIClientConfig.world;
 
 public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 
-/*
 	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
 			"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default" };
 	private static final int[] colors = new int[17];
@@ -58,8 +57,8 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		for (int i = 16; i-- > 0;)
 			colors[i] = MFRUtil.COLORS[i];
 		colors[16] = 0xf6a82c;
-	};
-*/
+	}
+
 	public static final PropertyEnum<ConveyorDirection> DIRECTION = PropertyEnum.create("direction", ConveyorDirection.class);
 	private static final AxisAlignedBB CONVEYOR_COLLISION_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.01D, 0.875D);
 	private static final AxisAlignedBB CONVEYOR_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);

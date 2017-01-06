@@ -138,7 +138,6 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		return a == null && b.size() > 0 ? b.get(0) : null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<ItemStack> getOutput(ItemStack input) {
 
 		if (!(input.getItem() instanceof ItemBlock)) {
@@ -150,8 +149,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			return null;
 		}
 
-		@SuppressWarnings("rawtypes")
-		ArrayList drops = _smashingWorld.smashBlock(input, b, block.getMetadata(input.getItemDamage()), _fortune);
+		List<ItemStack> drops = _smashingWorld.smashBlock(input, b, block.getMetadata(input.getItemDamage()), _fortune);
 		if (drops != null && drops.size() > 0) {
 			return drops;
 		}

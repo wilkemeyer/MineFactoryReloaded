@@ -4,13 +4,9 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 
 public class BlockFactoryPlastic extends BlockFactory {
 
-/*
 	public static final String[] _names = new String[] { null, "paver", "column", "bricks_large", "chiseled", "road", "bricks" };
-	private IIcon[] _icons = new IIcon[_names.length];
-*/
 
-	public BlockFactoryPlastic() 
-	{
+	public BlockFactoryPlastic() {
 
 		super(0.3f);
 		slipperiness = 1f / 0.9801f;

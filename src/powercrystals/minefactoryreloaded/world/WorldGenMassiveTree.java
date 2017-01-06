@@ -6,8 +6,11 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockSapling;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -16,6 +19,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.BlockRubberWood;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class WorldGenMassiveTree extends WorldGenerator {
@@ -161,6 +165,8 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 	private void genLeafLayer(BlockPos pos, final int size) {
 
+		int x = pos.getX();
+		int z = pos.getZ();
 		int t;
 		final int X = x;
 		final int Z = z;
@@ -179,13 +185,15 @@ public class WorldGenMassiveTree extends WorldGenerator {
 					t = -1;
 					do {
 						z = Z + zMod * t;
-						Block block = worldObj.getBlock(x, y, z);
+						BlockPos placementPos = new BlockPos(x, pos.getY(), z);
+						IBlockState state = worldObj.getBlockState(placementPos);
+						Block block = state.getBlock();
 
-						if (safeGrowth ? (block.isAir(worldObj, x, y, z) ||
-								block.isLeaves(worldObj, x, y, z) ||
-								block.canBeReplacedByLeaves(worldObj, x, y, z)) :
+						if (safeGrowth ? (worldObj.isAirBlock(placementPos) ||
+								block.isLeaves(state, worldObj, placementPos) ||
+								block.canBeReplacedByLeaves(state, worldObj, placementPos)) :
 								block != Blocks.BEDROCK) {
-							this.setBlockAndNotifyAdequately(worldObj, x, y, z, leaves, 0);
+							this.setBlockAndNotifyAdequately(worldObj, placementPos, leaves.getDefaultState());
 						}
 
 						if (t == 1) break;
@@ -211,14 +219,14 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 			for (int var5 = y + leafDistanceLimit; y < var5; ++y) {
 				int size = (y != 0) & y != leafDistanceLimit - 1 ? 3 : 2;
-				genLeafLayer(x, yO++, z, size);
+				genLeafLayer(new BlockPos(x, yO++, z), size);
 			}
 		}
 	}
 
 	private int[] placeScratch = new int[3];
 
-	private void placeBlockLine(int[] par1, int[] par2, Block par3, int meta) {
+	private void placeBlockLine(int[] par1, int[] par2, IBlockState state) {
 
 		int t;
 		int[] var4 = placeScratch;
@@ -252,7 +260,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 				var14[var6] = MathHelper.floor_float(par1[var6] + var15 + 0.5F);
 				var14[var7] = MathHelper.floor_float(par1[var7] + var15 * var10 + 0.5F);
 				var14[var8] = MathHelper.floor_float(par1[var8] + var15 * var12 + 0.5F);
-				byte var17 = 0;
+				BlockLog.EnumAxis axis = BlockLog.EnumAxis.Y;
 				int var18 = var14[0] - par1[0];
 				var18 = ((t = var18 >> 31) ^ var18) - t;
 				int var19 = var14[2] - par1[2];
@@ -261,13 +269,13 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 				if (var20 > 0) {
 					if (var18 == var20) {
-						var17 = 4;
+						axis = BlockLog.EnumAxis.X;
 					} else if (var19 == var20) {
-						var17 = 8;
+						axis = BlockLog.EnumAxis.Z;
 					}
 				}
 
-				this.setBlockAndNotifyAdequately(worldObj, var14[0], var14[1], var14[2], par3, meta | var17);
+				this.setBlockAndNotifyAdequately(worldObj, new BlockPos(var14[0], var14[1], var14[2]), state.withProperty(BlockRubberWood.LOG_AXIS, axis));
 			}
 		}
 	}
@@ -278,32 +286,35 @@ public class WorldGenMassiveTree extends WorldGenerator {
 	 */
 	private void generateTrunk() {
 
-		int var1 = basePos[0];
-		int var2 = basePos[1];
-		int var3 = basePos[1] + height;
-		int var4 = basePos[2];
+		int x = basePos[0];
+		int y = basePos[1];
+		int maxX = basePos[1] + height;
+		int z = basePos[2];
+		BlockPos pos = new BlockPos(x, y, z);
 
-		int[] var5 = new int[] { var1, var2, var4 };
-		int[] var6 = new int[] { var1, var3, var4 };
+		int[] bottomPoint = new int[] { x, y, z };
+		int[] topPoint = new int[] { x, maxX, z };
 
 		double lim = 400f / trunkSize;
 
 		for (int i = -trunkSize; i <= trunkSize; i++) {
-			var5[0] = var1 + i;
-			var6[0] = var1 + i;
+			bottomPoint[0] = x + i;
+			topPoint[0] = x + i;
 
 			for (int j = -trunkSize; j <= trunkSize; j++) {
 				if ((j * j + i * i) * 4 < trunkSize * trunkSize * 5) {
-					var5[2] = var4 + j;
-					var6[2] = var4 + j;
+					bottomPoint[2] = z + j;
+					topPoint[2] = z + j;
 
 					if (slopeTrunk)
-						var6[1] = var2 + sinc2(lim * i, lim * j, height) - (rand.nextInt(3) - 1);
+						topPoint[1] = y + sinc2(lim * i, lim * j, height) - (rand.nextInt(3) - 1);
 
-					this.placeBlockLine(var5, var6, log, 1);
-					this.setBlockAndNotifyAdequately(worldObj, var6[0], var6[1], var6[2], log, 12 | 1);
-					worldObj.getBlock(var5[0], var5[1] - 1, var5[2]).
-							onPlantGrow(worldObj, var5[0], var5[1] - 1, var5[2], var1, var2, var4);
+					this.placeBlockLine(bottomPoint, topPoint, log.getDefaultState().withProperty(BlockRubberWood.RUBBER_FILLED, true));
+					this.setBlockAndNotifyAdequately(worldObj, new BlockPos(topPoint[0], topPoint[1], topPoint[2]),
+							log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z).withProperty(BlockRubberWood.RUBBER_FILLED, true));
+					BlockPos placementPos = new BlockPos(bottomPoint[0], bottomPoint[1] - 1, bottomPoint[2]);
+					IBlockState state = worldObj.getBlockState(placementPos);
+					state.getBlock().onPlantGrow(state, worldObj, placementPos, pos);
 				}
 			}
 		}
@@ -333,7 +344,8 @@ public class WorldGenMassiveTree extends WorldGenerator {
 			int height = start[1] - basePos[1];
 
 			if (height >= heightLimit) {
-				this.placeBlockLine(start, end, log, 12 | 1);
+				this.placeBlockLine(start, end,
+						log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z).withProperty(BlockRubberWood.RUBBER_FILLED, true));
 			}
 		}
 	}
@@ -381,16 +393,17 @@ public class WorldGenMassiveTree extends WorldGenerator {
 				var13[var5] = par1[var5] + var14;
 				var13[var6] = MathHelper.floor_float(par1[var6] + var14 * var9);
 				var13[var7] = MathHelper.floor_float(par1[var7] + var14 * var11);
-				int x = var13[0], y = var13[1], z = var13[2];
-				Block var16 = worldObj.getBlock(x, y, z);
+				BlockPos pos = new BlockPos(var13[0], var13[1], var13[2]);
+				IBlockState state = worldObj.getBlockState(pos);
+				Block block = state.getBlock();
 
-				if (safeGrowth ? !(var16.isAir(worldObj, x, y, z) ||
-						var16.isReplaceable(worldObj, x, y, z) ||
-						var16.canBeReplacedByLeaves(worldObj, x, y, z) ||
-						var16.isLeaves(worldObj, x, y, z) ||
-						var16.isWood(worldObj, x, y, z) ||
-						var16 instanceof BlockSapling) :
-						var16 == Blocks.BEDROCK)
+				if (safeGrowth ? !(block.isAir(state, worldObj, pos) ||
+						block.isReplaceable(worldObj, pos) ||
+						block.canBeReplacedByLeaves(state, worldObj, pos) ||
+						block.isLeaves(state, worldObj, pos) ||
+						block.isWood(worldObj, pos) ||
+						block instanceof BlockSapling) :
+						block == Blocks.BEDROCK)
 					break;
 			}
 
@@ -409,9 +422,11 @@ public class WorldGenMassiveTree extends WorldGenerator {
 			return false;
 		heightLimit = newHeight;
 
-		Block block = worldObj.getBlock(basePos[0], basePos[1] - 1, basePos[2]);
+		BlockPos pos = new BlockPos(basePos[0], basePos[1] - 1, basePos[2]);
+		IBlockState state = worldObj.getBlockState(pos);
+		Block block = state.getBlock();
 
-		if (!block.canSustainPlant(worldObj, basePos[0], basePos[1] - 1, basePos[2],
+		if (!block.canSustainPlant(state, worldObj, pos,
 			EnumFacing.UP, MFRThings.rubberSaplingBlock))
 			return false;
 		else {
@@ -465,14 +480,22 @@ public class WorldGenMassiveTree extends WorldGenerator {
 		}
 	}
 
+	@Override
+	public void setDecorationDefaults() {
+		//TODO implement replacement logic for setScale
+	}
+
 	/**
 	 * Rescales the generator settings, only used in WorldGenBigTree
 	 */
+
+/*
 	@Override
 	public void setScale(double par1, double par3, double par5) {
 
 		setTreeScale((float) par1, (float) par3, (float) par5);
 	}
+*/
 
 	public WorldGenMassiveTree setTreeScale(float height, float width, float leaves) {
 
@@ -521,9 +544,9 @@ public class WorldGenMassiveTree extends WorldGenerator {
 		worldObj = world;
 		long var6 = par2Random.nextLong();
 		rand.setSeed(var6);
-		basePos[0] = x;
-		basePos[1] = y;
-		basePos[2] = z;
+		basePos[0] = pos.getX();
+		basePos[1] = pos.getY();
+		basePos[2] = pos.getZ();
 		if (heightLimit == 0)
 			heightLimit = heightLimitLimit;
 		if (minHeight == -1)
@@ -565,7 +588,11 @@ public class WorldGenMassiveTree extends WorldGenerator {
 	private TLongObjectHashMap<Chunk> chunkMap;
 
 	@Override
-	public void setBlockAndNotifyAdequately(World world, BlockPos pos, Block block, int meta) {
+	public void setBlockAndNotifyAdequately(World world, BlockPos blockPos, IBlockState state) {
+
+		int x = blockPos.getX();
+		int y = blockPos.getY();
+		int z = blockPos.getZ();
 
 		if ((y < 0) | y > 255)
 			return;
@@ -574,23 +601,22 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 		Chunk chunk = chunkMap.get(pos);
 		if (chunk == null) {
-			chunk = world.getChunkFromBlockCoords(x, z);
+			chunk = world.getChunkFromBlockCoords(blockPos);
 			chunkMap.put(pos, chunk);
 		}
 
 		ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
 		ExtendedBlockStorage subChunk = storage[y >> 4];
 		if (subChunk == null)
-			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !world.provider.hasNoSky);
+			storage[y >> 4] = subChunk = new ExtendedBlockStorage(y & ~15, !world.provider.getHasNoSky());
 
 		x &= 15;
 		z &= 15;
-		if (subChunk.getBlockByExtId(x, y & 15, z).hasTileEntity(subChunk.getExtBlockMetadata(x, y & 15, z)))
-			chunk.removeTileEntity(x & 15, y, z & 15);
+		if (subChunk.get(x, y & 15, z).getBlock().hasTileEntity(subChunk.get(x, y & 15, z)))
+			chunk.removeTileEntity(blockPos);
 		y &= 15;
 
-		subChunk.func_150818_a(x, y, z, block);
-		subChunk.setExtBlockMetadata(x, y, z, meta);
+		subChunk.set(x, y, z, state);
 		subChunk.setExtBlocklightValue(x, y, z, 0);
 	}
 

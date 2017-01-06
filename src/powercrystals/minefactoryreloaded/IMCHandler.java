@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -301,12 +302,12 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("meta"))
 						MFRRegistry.registerPlantable(new PlantableCropPlant(
-								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								Item.REGISTRY.getObject(new ResourceLocation(item.getString("seed"))),
 								Block.getBlockFromName(item.getString("crop")),
 								item.getInteger("meta")));
 					else
 						MFRRegistry.registerPlantable(new PlantableCropPlant(
-								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								Item.REGISTRY.getObject(new ResourceLocation(item.getString("seed"))),
 								Block.getBlockFromName(item.getString("crop"))));
 				}
 				/*
@@ -316,7 +317,7 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("seed"))
 						MFRRegistry.registerPlantable(new PlantableSapling(
-								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								(Item) Item.REGISTRY.getObject(new ResourceLocation(item.getString("seed"))),
 								Block.getBlockFromName(item.getString("sapling"))));
 					else
 						MFRRegistry.registerPlantable(new PlantableSapling(
@@ -329,12 +330,12 @@ public class IMCHandler {
 					NBTTagCompound item = m.getNBTValue();
 					if (item.hasKey("meta"))
 						MFRRegistry.registerPlantable(new PlantableStandard(
-								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								(Item) Item.REGISTRY.getObject(new ResourceLocation(item.getString("seed"))),
 								Block.getBlockFromName(item.getString("crop")),
 								item.getInteger("meta")));
 					else
 						MFRRegistry.registerPlantable(new PlantableStandard(
-								(Item) Item.itemRegistry.getObject(item.getString("seed")),
+								(Item) Item.REGISTRY.getObject(new ResourceLocation(item.getString("seed"))),
 								Block.getBlockFromName(item.getString("crop"))));
 				}
 				/**
@@ -347,7 +348,7 @@ public class IMCHandler {
 				else if ("registerFertilizer_Standard".equals(k)) {
 					NBTTagCompound item = m.getNBTValue();
 					MFRRegistry.registerFertilizer(new FertilizerStandard(
-							(Item) Item.itemRegistry.getObject(item.getString("fert")),
+							(Item) Item.REGISTRY.getObject(new ResourceLocation(item.getString("fert"))),
 							item.getInteger("meta"),
 							FertilizerType.values()[item.getInteger("type")]));
 				}

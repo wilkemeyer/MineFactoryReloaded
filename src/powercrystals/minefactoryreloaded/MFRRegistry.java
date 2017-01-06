@@ -450,6 +450,7 @@ public abstract class MFRRegistry {
 
 		name = remapName(name);
 
+		block.setRegistryName(MineFactoryReloadedCore.modId, name);
 		GameRegistry.registerBlock(block, item, name, args);
 		if (item != null)
 			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));

@@ -24,7 +24,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class Zoologist
 {
-	public void init()
+	public static void init()
 	{
 		VillagerProfession zoologistProfession = new VillagerRegistry.VillagerProfession(MineFactoryReloadedCore.modId + ":zoologist", MineFactoryReloadedCore.modId + ":textures/villager/zoologist.png", "minecraft:/textures/entity/zombie_villager/zombie_villager.png");
 		VillagerRegistry.instance().register(zoologistProfession);

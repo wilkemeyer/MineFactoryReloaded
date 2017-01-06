@@ -1,19 +1,17 @@
 package powercrystals.minefactoryreloaded;
 
-import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
-import cofh.lib.render.RenderFluidOverlayItem;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,83 +22,29 @@ import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent.Unload;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
-import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
-import powercrystals.minefactoryreloaded.entity.DebugTracker;
-import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
-import powercrystals.minefactoryreloaded.entity.EntityNeedle;
-import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
-import powercrystals.minefactoryreloaded.entity.EntityRocket;
-import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
-import powercrystals.minefactoryreloaded.gui.container.ContainerAutoBrewer;
-import powercrystals.minefactoryreloaded.gui.container.ContainerAutoDisenchanter;
-import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
-import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
-import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptLaserFocus;
-import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptReusableSafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
-import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
-import powercrystals.minefactoryreloaded.render.block.ConveyorRenderer;
-import powercrystals.minefactoryreloaded.render.block.DetCordRenderer;
-import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
-import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
-import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
-import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
-import powercrystals.minefactoryreloaded.render.block.RedNetLogicRenderer;
-import powercrystals.minefactoryreloaded.render.block.VineScaffoldRenderer;
-import powercrystals.minefactoryreloaded.render.entity.EntityDebugTrackerRenderer;
-import powercrystals.minefactoryreloaded.render.entity.EntityNeedleRenderer;
-import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
-import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
-import powercrystals.minefactoryreloaded.render.entity.EntitySafariNetRenderer;
-import powercrystals.minefactoryreloaded.render.item.ConveyorItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.FactoryGlassPaneItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.PotatoLauncherItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.RocketItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.RocketLauncherItemRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillPrechargerRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.RedNetCardItemRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IResourceManagerReloadListener {
@@ -127,6 +71,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		instance = new MineFactoryReloadedClient();
 
+/* TODO fix rendering
 		// IDs
 		renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
 		renderIdFactoryGlassPane = RenderingRegistry.getNextAvailableRenderId();
@@ -146,8 +91,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			new FactoryGlassPaneRenderer());
 		BlockTankRenderer tankRender = new BlockTankRenderer();
 		RenderingRegistry.registerBlockHandler(renderIdFluidTank, tankRender);
-		/*RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
-				new RenderBlockFluidClassic(renderIdFluidClassic));//*/
+		*/
+/*RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
+				new RenderBlockFluidClassic(renderIdFluidClassic));/*/
+/*//*
+
 		RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
 			new VineScaffoldRenderer());
 		RenderingRegistry.registerBlockHandler(renderIdFactoryGlass,
@@ -217,10 +165,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new EntityRocketRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 			new RenderSnowball(fishingRodItem));
-
-		// Handlers
-		VillagerRegistry.instance().registerVillagerSkin(MFRConfig.zoologist.getInt(),
-			new ResourceLocation(villagerFolder + "zoologist.png"));
+*/
 
 		MinecraftForge.EVENT_BUS.register(instance);
 		FMLCommonHandler.instance().bus().register(instance);
@@ -233,68 +178,52 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@Override
 	public void onResourceManagerReload(IResourceManager p_110549_1_) {
 
+/* TODO fix rendering
 		NeedleGunItemRenderer.updateModel();
+*/
 	}
 
 	@SubscribeEvent
 	public void onPreTextureStitch(TextureStitchEvent.Pre e) {
 
-		switch (e.map.getTextureType()) {
-		case 1:
-			SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
-			ContainerAutoDisenchanter.background = e.map.registerIcon("minefactoryreloaded:gui/book");
-			ContainerAutoJukebox.background = e.map.registerIcon("minefactoryreloaded:gui/record");
-			SlotAcceptLaserFocus.background = e.map.registerIcon("minefactoryreloaded:gui/laserfocus");
-			ContainerAutoBrewer.ingredient = e.map.registerIcon("minefactoryreloaded:gui/netherwart");
-			ContainerAutoBrewer.bottle = e.map.registerIcon("minefactoryreloaded:gui/bottle");
-			ContainerFisher.background = e.map.registerIcon("minefactoryreloaded:gui/fishingrod");
-			break;
-		default:
-			break;
-		}
+/* TODO add code to gen GUI background
+		SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
+		ContainerAutoDisenchanter.background = e.map.registerIcon("minefactoryreloaded:gui/book");
+		ContainerAutoJukebox.background = e.map.registerIcon("minefactoryreloaded:gui/record");
+		SlotAcceptLaserFocus.background = e.map.registerIcon("minefactoryreloaded:gui/laserfocus");
+		ContainerAutoBrewer.ingredient = e.map.registerIcon("minefactoryreloaded:gui/netherwart");
+		ContainerAutoBrewer.bottle = e.map.registerIcon("minefactoryreloaded:gui/bottle");
+		ContainerFisher.background = e.map.registerIcon("minefactoryreloaded:gui/fishingrod");
+*/
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPostTextureStitch(TextureStitchEvent.Post e) {
 
-		switch (e.map.getTextureType()) {
-		case 0:
-			setIcons("milk", MFRThings.milkLiquid);
-			setIcons("sludge", MFRThings.sludgeLiquid);
-			setIcons("sewage", MFRThings.sewageLiquid);
-			setIcons("mobessence", MFRThings.essenceLiquid);
-			setIcons("biofuel", MFRThings.biofuelLiquid);
-			setIcons("meat", MFRThings.meatLiquid);
-			setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
-			setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
-			setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
-			setIcons("steam", MFRThings.steamFluid);
-			break;
-		default:
-			break;
-		}
-	}
-
-	private void setIcons(String name, BlockFactoryFluid block) {
-
-		Fluid fluid = FluidRegistry.getFluid(name);
-		if (block.equals(fluid.getBlock())) {
-			fluid.setIcons(block.getIcon(1, 0), block.getIcon(2, 0));
-		} else {
-			block.setIcons(fluid.getStillIcon(), fluid.getFlowingIcon());
-		}
+/* TODO add proper liquid registration
+		setIcons("milk", MFRThings.milkLiquid);
+		setIcons("sludge", MFRThings.sludgeLiquid);
+		setIcons("sewage", MFRThings.sewageLiquid);
+		setIcons("mobessence", MFRThings.essenceLiquid);
+		setIcons("biofuel", MFRThings.biofuelLiquid);
+		setIcons("meat", MFRThings.meatLiquid);
+		setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
+		setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
+		setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
+		setIcons("steam", MFRThings.steamFluid);
+*/
 	}
 
 	@SubscribeEvent
 	public void onPlayerChangedDimension(Unload world) {
 
-		if (world.world.provider == null ||
+		if (world.getWorld().provider == null ||
 				Minecraft.getMinecraft().thePlayer == null ||
 				Minecraft.getMinecraft().thePlayer.worldObj == null ||
 				Minecraft.getMinecraft().thePlayer.worldObj.provider == null) {
 			return;
 		}
-		if (world.world.provider.dimensionId == Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId) {
+		if (world.getWorld().provider.getDimension() == Minecraft.getMinecraft().thePlayer.worldObj.provider.getDimension()) {
 			_areaTileEntities.clear();
 			prcPages.clear();
 		}
@@ -353,7 +282,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		if (!mc.isGamePaused() && mc.currentScreen == null && mc.thePlayer != null &&
 				mc.thePlayer.inventory.getCurrentItem() != null
 				&& mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemRocketLauncher) {
-			ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+			ScaledResolution sr = new ScaledResolution(mc);
 			Point center = new Point(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2);
 
 			if (MineFactoryReloadedClient.instance.getLockedEntity() != Integer.MIN_VALUE) {
@@ -403,15 +332,16 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void setArmorModel(SetArmorModel e) {
 
-		ItemStack itemstack = e.stack;
+/* TODO fix armor model
+		ItemStack itemstack = e.getStack();
 
 		if (itemstack != null) {
 			Item item = itemstack.getItem();
-			int par2 = 3 - e.slot;
+			int par2 = 3 - e.getSlot();
 			//if (item.isValidArmor(itemstack, e.slot, e.entity))
 			if (item == plasticCupItem) {
 				Minecraft.getMinecraft().renderEngine.
-						bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.entity, par2, null)));
+						bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.getEntity(), par2, null)));
 				ModelBiped modelbiped = new ModelBiped(1.0F);
 				modelbiped.bipedHead.showModel = par2 == 0;
 				modelbiped.bipedHeadwear.showModel = par2 == 0;
@@ -420,7 +350,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				modelbiped.bipedLeftArm.showModel = par2 == 1;
 				modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
 				modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
-				e.renderer.setRenderPassModel(modelbiped);
+				e.getRenderer().setRenderPassModel(modelbiped);
 				modelbiped.onGround = e.entityLiving.getSwingProgress(e.partialRenderTick);
 				modelbiped.isRiding = e.entity.isRiding();
 				modelbiped.isChild = e.entityLiving.isChild();
@@ -435,6 +365,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				e.result = 1;
 			}
 		}
+*/
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -447,9 +378,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			return;
 		}
 
-		float playerOffsetX = -(float) (player.lastTickPosX + (player.posX - player.lastTickPosX) * e.partialTicks);
-		float playerOffsetY = -(float) (player.lastTickPosY + (player.posY - player.lastTickPosY) * e.partialTicks);
-		float playerOffsetZ = -(float) (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * e.partialTicks);
+		float playerOffsetX = -(float) (player.lastTickPosX + (player.posX - player.lastTickPosX) * e.getPartialTicks());
+		float playerOffsetY = -(float) (player.lastTickPosY + (player.posY - player.lastTickPosY) * e.getPartialTicks());
+		float playerOffsetZ = -(float) (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * e.getPartialTicks());
 
 		GL11.glColorMask(true, true, true, true);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -516,18 +447,18 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	private Entity rayTrace() {
 
-		if (Minecraft.getMinecraft().renderViewEntity == null || Minecraft.getMinecraft().theWorld == null) {
+		if (Minecraft.getMinecraft().getRenderViewEntity() == null || Minecraft.getMinecraft().theWorld == null) {
 			return null;
 		}
 
 		double range = 64;
-		Vec3 playerPos = Minecraft.getMinecraft().renderViewEntity.getPosition(1.0F);
+		Vec3d playerPos = new Vec3d(Minecraft.getMinecraft().getRenderViewEntity().getPosition());
 
-		Vec3 playerLook = Minecraft.getMinecraft().renderViewEntity.getLook(1.0F);
-		Vec3 playerLookRel = playerPos.addVector(playerLook.xCoord * range, playerLook.yCoord * range, playerLook.zCoord * range);
+		Vec3d playerLook = Minecraft.getMinecraft().getRenderViewEntity().getLook(1.0F);
+		Vec3d playerLookRel = playerPos.addVector(playerLook.xCoord * range, playerLook.yCoord * range, playerLook.zCoord * range);
 		List<?> list = Minecraft.getMinecraft().theWorld.getEntitiesWithinAABBExcludingEntity(
-			Minecraft.getMinecraft().renderViewEntity,
-			Minecraft.getMinecraft().renderViewEntity.boundingBox.addCoord(playerLook.xCoord * range, playerLook.yCoord * range,
+			Minecraft.getMinecraft().getRenderViewEntity(),
+			Minecraft.getMinecraft().getRenderViewEntity().getEntityBoundingBox().addCoord(playerLook.xCoord * range, playerLook.yCoord * range,
 				playerLook.zCoord * range)
 					.expand(1, 1, 1));
 
@@ -538,7 +469,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 			if (entity.canBeCollidedWith()) {
 				double entitySize = entity.getCollisionBorderSize();
-				AxisAlignedBB axisalignedbb = entity.boundingBox.expand(entitySize, entitySize, entitySize);
+				AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(entitySize, entitySize, entitySize);
 				RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(playerPos, playerLookRel);
 
 				if (axisalignedbb.isVecInside(playerPos)) {
@@ -567,37 +498,38 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		double eps = 0.006;
 
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer buffer = tessellator.getBuffer();
+		buffer.begin(5, DefaultVertexFormats.POSITION);
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps).endVertex();
 
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps).endVertex();
 
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps).endVertex();
 
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps).endVertex();
 
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.minX + eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps).endVertex();
 
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps);
-		tessellator.addVertex(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps);
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.minZ + eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.maxY - eps, par0AxisAlignedBB.maxZ - eps).endVertex();
+		buffer.pos(par0AxisAlignedBB.maxX - eps, par0AxisAlignedBB.minY + eps, par0AxisAlignedBB.maxZ - eps).endVertex();
 		tessellator.draw();
 	}
 

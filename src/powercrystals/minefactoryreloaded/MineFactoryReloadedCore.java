@@ -11,6 +11,7 @@ import cofh.lib.gui.container.InventoryContainerItemWrapper;
 import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
@@ -232,16 +233,16 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 	public static void registerFluids() {
 
-		registerFluid("milk", 1050, EnumRarity.common);
-		registerFluid("sludge", 1700, EnumRarity.common);
-		registerFluid("sewage", 1200, EnumRarity.common);
-		registerFluid("mobessence", 400, 9, 310, EnumRarity.epic);
-		registerFluid("biofuel", 800, EnumRarity.uncommon);
-		registerFluid("meat", 2000, EnumRarity.common);
-		registerFluid("pinkslime", 3000, EnumRarity.rare);
-		registerFluid("chocolatemilk", 1100, EnumRarity.common);
-		registerFluid("mushroomsoup", 1500, EnumRarity.common);
-		registerFluid("steam", -100, 0, 673, EnumRarity.common);
+		registerFluid("milk", 1050, EnumRarity.COMMON);
+		registerFluid("sludge", 1700, EnumRarity.COMMON);
+		registerFluid("sewage", 1200, EnumRarity.COMMON);
+		registerFluid("mobessence", 400, 9, 310, EnumRarity.EPIC);
+		registerFluid("biofuel", 800, EnumRarity.UNCOMMON);
+		registerFluid("meat", 2000, EnumRarity.COMMON);
+		registerFluid("pinkslime", 3000, EnumRarity.RARE);
+		registerFluid("chocolatemilk", 1100, EnumRarity.COMMON);
+		registerFluid("mushroomsoup", 1500, EnumRarity.COMMON);
+		registerFluid("steam", -100, 0, 673, EnumRarity.COMMON);
 	}
 
 	public static Fluid registerFluid(String name, int density, EnumRarity rarity) {
@@ -252,7 +253,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public static Fluid registerFluid(String name, int density, int lightValue, int temp, EnumRarity rarity) {
 
 		name = name.toLowerCase(Locale.ENGLISH);
-		Fluid fluid = new Fluid(name);
+		Fluid fluid = new Fluid(name, new ResourceLocation("blocks/fluid/fluid.mfr." + name + ".still"), new ResourceLocation("blocks/fluid/fluid.mfr." + name + ".flowing"));
 		if (!FluidRegistry.registerFluid(fluid))
 			fluid = FluidRegistry.getFluid(name);
 		if (density != 0) {
@@ -281,7 +282,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		MFRConfig.loadClientConfig(getClientConfig());
 		MFRConfig.loadCommonConfig(getCommonConfig());
 
-		loadLang();
+		//loadLang(); //TODO do we really need to load lang file?? if so core needs update
 
 		networkWrapper = new SimpleNetworkWrapper(modNetworkChannel);
 		networkWrapper.registerMessage(ServerPacketHandler.class, MFRMessage.class, 0, Side.SERVER);
@@ -332,11 +333,11 @@ public class MineFactoryReloadedCore extends BaseMod {
 		steamFluid = new BlockFactoryFluid("steam", BlockFactoryFluid.material);
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
-		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 0);
-		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 1);
-		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, 2);
+		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.HEAD);
+		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.CHEST);
+		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.LEGS);
 		plasticBootsItem = new ItemPlasticBoots();
-		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, 0);
+		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, EntityEquipmentSlot.HEAD);
 
 		rawRubberItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.raw");
 		rubberBarItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.bar");
@@ -412,10 +413,10 @@ public class MineFactoryReloadedCore extends BaseMod {
 		needlegunAmmoEmptyItem = (new ItemFactory()).setUnlocalizedName("mfr.needlegun.ammo.empty");
 		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard()).setUnlocalizedName("mfr.needlegun.ammo.standard");
 		needlegunAmmoPierceItem = (new ItemNeedlegunAmmoStandard(16, 2f, 8)).setUnlocalizedName("mfr.needlegun.ammo.pierce");
-		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.FLOWING_LAVA, 3))
+		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.FLOWING_LAVA.getDefaultState(), 3))
 				.setUnlocalizedName("mfr.needlegun.ammo.lava");
-		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid, 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
-		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid, 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
+		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid.getDefaultState(), 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
+		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid.getDefaultState(), 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
 		needlegunAmmoFireItem = (new ItemNeedlegunAmmoFire()).setUnlocalizedName("mfr.needlegun.ammo.fire");
 		needlegunAmmoAnvilItem = (new ItemNeedlegunAmmoAnvil()).setUnlocalizedName("mfr.needlegun.ammo.anvil");
 
@@ -508,16 +509,17 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 					return obj == milkBucket || obj == this;
 				}
-			}.setUnlocalizedName("mfr.bucket.milk").setTextureName("minecraft:bucket_milk").
-					setCreativeTab(CreativeTabs.tabMisc);
-			RegistryUtils.overwriteEntry(Item.itemRegistry, "minecraft:milk_bucket", Items.MILK_BUCKET);
+			}.setUnlocalizedName("mfr.bucket.milk").setCreativeTab(CreativeTabs.MISC);
+			RegistryUtils.overwriteEntry(Item.REGISTRY, "minecraft:milk_bucket", Items.MILK_BUCKET);
 		}
 
 		if (MFRConfig.vanillaRecipes.getBoolean(true))
 			recipeSets.add(new Vanilla());
 
+/* TODO readd when there's TE
 		if (MFRConfig.thermalExpansionRecipes.getBoolean(false))
 			recipeSets.add(new ThermalExpansion());
+*/
 
 		if (MFRConfig.enderioRecipes.getBoolean(false))
 			recipeSets.add(new EnderIO());
@@ -543,8 +545,10 @@ public class MineFactoryReloadedCore extends BaseMod {
 		for (Vanilla e : recipeSets)
 			e.registerOredictEntries();
 
+/* TODO stack sizes for door have changed in 1.8, figure out what this is for and if it needs to be readded
 		Items.WOODEN_DOOR.setMaxStackSize(8);
 		Items.IRON_DOOR.setMaxStackSize(8);
+*/
 
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidRegistry.getFluidStack("milk",
 			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(milkBottleItem), new ItemStack(Items.GLASS_BOTTLE)));
@@ -627,10 +631,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		addDispenserBehavior();
 		addChestGenItems();
 
-		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
-		VillagerRegistry.instance().register(); registerVillagerId(MFRConfig.zoologist.getInt());
-		VillagerRegistry.instance().registerVillageTradeHandler(MFRConfig.zoologist.getInt(),
-			new Zoologist());
+		Zoologist.init();
 
 		WorldHandler.instance.registerFeature(new MineFactoryReloadedWorldGen());
 
@@ -657,6 +658,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 	private void addChestGenItems() {
 
+/*  TODO add loot tables
 		//{ Vanilla chests
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
@@ -778,6 +780,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5));
 		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(portaSpawnerItem), 1, 1, 1));
 		//}
+*/
 	}
 
 	@EventHandler
