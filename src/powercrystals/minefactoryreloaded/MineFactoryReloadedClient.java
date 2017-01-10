@@ -88,6 +88,18 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.factoryPlasticBlock, "variant", BlockFactoryPlastic.Variant.NAMES);
 		registerModel(MFRThings.pinkSlimeBlock);
 
+		//fluids
+		registerModel(MFRThings.milkLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "milk"));
+		registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "sludge"));
+		registerModel(MFRThings.sewageLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "sewage"));
+		registerModel(MFRThings.essenceLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "essence"));
+		registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "biofuel"));
+		registerModel(MFRThings.meatLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "meat"));
+		registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "pink_slime"));
+		registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "chocolate_milk"));
+		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "mushroom_soup"));
+		registerModel(MFRThings.steamFluid, new ModelResourceLocation("minefactoryreloaded:fluid", "steam"));
+
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 	}
 	
@@ -104,11 +116,15 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	}
 
 	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
+		registerModel(block, new ModelResourceLocation(block.getRegistryName(), "normal"), propertiesToIgnore);
+	}
+
+	private static void registerModel(Block block, ModelResourceLocation modelLocation, IProperty<?>... propertiesToIgnore) {
 
 		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
 		Item item = Item.getItemFromBlock(block);
 		if (item != null)
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(block.getRegistryName(), "normal"));
+			ModelLoader.setCustomModelResourceLocation(item, 0, modelLocation);
 	}
 
 	public static void init() {

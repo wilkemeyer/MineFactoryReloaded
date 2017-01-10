@@ -1,0 +1,38 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "forge:fluid"
+    },
+    "variants": {
+        "milk": [{
+            "custom": { "fluid": "milk" }
+        }],
+        "sludge": [{
+            "custom": { "fluid": "sludge" }
+        }],
+        "sewage": [{
+            "custom": { "fluid": "sewage" }
+        }],
+        "essence": [{
+            "custom": { "fluid": "essence" }
+        }],
+        "biofuel": [{
+            "custom": { "fluid": "biofuel" }
+        }],
+        "meat": [{
+            "custom": { "fluid": "meat" }
+        }],
+        "pink_slime": [{
+            "custom": { "fluid": "pink_slime" }
+        }],
+        "chocolate_milk": [{
+            "custom": { "fluid": "chocolate_milk" }
+        }],
+        "mushroom_soup": [{
+            "custom": { "fluid": "mushroom_soup" }
+        }],
+        "steam": [{
+            "custom": { "fluid": "steam" }
+        }]
+    }
+}

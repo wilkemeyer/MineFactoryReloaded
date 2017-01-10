@@ -466,16 +466,16 @@ public class MineFactoryReloadedCore extends BaseMod {
 		chocolateMilkBucketItem = (new ItemFactoryBucket(chocolateMilkLiquid)).setUnlocalizedName("mfr.bucket.chocolatemilk");
 		mushroomSoupBucketItem = (new ItemFactoryBucket(mushroomSoupLiquid)).setUnlocalizedName("mfr.bucket.mushroomsoup");
 
-		registerBlock(milkLiquid, ItemBlock.class);
-		registerBlock(sludgeLiquid, ItemBlock.class);
-		registerBlock(sewageLiquid, ItemBlock.class);
-		registerBlock(essenceLiquid, ItemBlock.class);
-		registerBlock(biofuelLiquid, ItemBlock.class);
-		registerBlock(meatLiquid, ItemBlock.class);
-		registerBlock(pinkSlimeLiquid, ItemBlock.class);
-		registerBlock(chocolateMilkLiquid, ItemBlock.class);
-		registerBlock(mushroomSoupLiquid, ItemBlock.class);
-		registerBlock(steamFluid, ItemBlock.class);
+		registerBlock(milkLiquid, new ItemBlock(milkLiquid));
+		registerBlock(sludgeLiquid, new ItemBlock(sludgeLiquid));
+		registerBlock(sewageLiquid, new ItemBlock(sewageLiquid));
+		registerBlock(essenceLiquid, new ItemBlock(essenceLiquid));
+		registerBlock(biofuelLiquid, new ItemBlock(biofuelLiquid));
+		registerBlock(meatLiquid, new ItemBlock(meatLiquid));
+		registerBlock(pinkSlimeLiquid, new ItemBlock(pinkSlimeLiquid));
+		registerBlock(chocolateMilkLiquid, new ItemBlock(chocolateMilkLiquid));
+		registerBlock(mushroomSoupLiquid, new ItemBlock(mushroomSoupLiquid));
+		registerBlock(steamFluid, new ItemBlock(steamFluid));
 
 		Blocks.FIRE.setFireInfo(rubberWoodBlock, 50, 15);
 		Blocks.FIRE.setFireInfo(rubberLeavesBlock, 80, 25);
