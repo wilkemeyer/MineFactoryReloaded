@@ -81,10 +81,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	public static void preInit() {
 		
+		//decorative blocks
 		registerModel(MFRThings.factoryDecorativeBrickBlock, "variant", BlockDecorativeBricks.Variant.NAMES);
 		registerModel(MFRThings.factoryDecorativeStoneBlock, "variant", BlockDecorativeStone.Variant.NAMES);
 		registerModel(MFRThings.machineBlock, "variant", BlockFactoryDecoration.Variant.NAMES);
 		registerModel(MFRThings.factoryPlasticBlock, "variant", BlockFactoryPlastic.Variant.NAMES);
+		registerModel(MFRThings.pinkSlimeBlock);
+
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 	}
 	

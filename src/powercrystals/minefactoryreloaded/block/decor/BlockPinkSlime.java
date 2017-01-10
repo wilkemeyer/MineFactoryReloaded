@@ -6,6 +6,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -26,7 +28,7 @@ public class BlockPinkSlime extends BlockBreakable {
 	
 	public BlockPinkSlime() {
 
-		super(Material.CLAY, false); // FIXME: this doesn't take a string in 1.8
+		super(Material.CLAY, false);
 		setCreativeTab(MFRCreativeTab.tab);
 		setUnlocalizedName("mfr.pinkslime.block");
 //		setBlockTextureName("minefactoryreloaded:" + getUnlocalizedName());
@@ -36,13 +38,10 @@ public class BlockPinkSlime extends BlockBreakable {
 		setSoundType(SLIME);
 	}
 
-/*
 	@Override
-	public int getRenderBlockPass() {
-
-		return 1;
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.TRANSLUCENT;
 	}
-*/
 
 	@Nullable
 	@Override
