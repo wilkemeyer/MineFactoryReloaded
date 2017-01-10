@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
+import net.minecraft.block.Block;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.server.management.PlayerChunkMap;
 import net.minecraft.server.management.PlayerChunkMapEntry;
@@ -23,6 +24,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
@@ -60,6 +62,8 @@ public class CommonProxy implements LoadingCallback
 		return null;
 	}
 
+	public void preInit() {}
+	
 	public void init()
 	{
 		FMLCommonHandler.instance().bus().register(GridTickHandler.energy);

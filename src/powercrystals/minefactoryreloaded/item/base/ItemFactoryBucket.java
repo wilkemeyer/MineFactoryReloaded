@@ -23,8 +23,6 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 
 	private boolean _register, _needsOverlay;
-	@SideOnly(Side.CLIENT)
-	protected IIcon overlayIcon;
 
 	public ItemFactoryBucket(Block liquidBlock) {
 
@@ -49,7 +47,7 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 		return this;
 	}
 
-	@SideOnly(Side.CLIENT)
+/*	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister r) {
 
@@ -79,7 +77,7 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 		if (pass == 1)
 			return overlayIcon;
 		return itemIcon;
-	}
+	}*/
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

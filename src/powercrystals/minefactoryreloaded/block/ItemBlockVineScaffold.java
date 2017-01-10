@@ -1,5 +1,10 @@
 package powercrystals.minefactoryreloaded.block;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,26 +23,27 @@ public class ItemBlockVineScaffold extends ItemBlock
 	}
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-			BlockPos pos, EnumFacing side, float xOffset, float yOffset, float zOffset)
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
+			BlockPos pos, EnumFacing side, float xOffset, float yOffset, float zOffset, EnumHand hand)
 	{
+		IBlockState state = world.getBlockState(pos);
 		if (world.isRemote && !player.isSneaking() &&
-				world.getBlock(x, y, z).equals(MFRThings.vineScaffoldBlock))
+				state.getBlock().equals(MFRThings.vineScaffoldBlock))
 		{
-			if (MFRThings.vineScaffoldBlock.onBlockActivated(world, x, y, z,
-						player, side, xOffset, yOffset, zOffset))
-				player.swingItem();
+			if (MFRThings.vineScaffoldBlock.onBlockActivated(world, pos, state,
+						player, hand, stack, side, xOffset, yOffset, zOffset))
+				player.setActiveHand(hand);
 		}
-		return false;
+		return EnumActionResult.PASS;
 	}
 
     @Override
 	@SideOnly(Side.CLIENT)
-    public boolean func_150936_a(World world, BlockPos pos, EnumFacing side,
+    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side,
     		EntityPlayer player, ItemStack stack)
     {
     	return (player.isSneaking() ||
-    			!world.getBlock(x, y, z).equals(MFRThings.vineScaffoldBlock)) &&
-    			super.func_150936_a(world, x, y, z, side, player, stack);
+    			!world.getBlockState(pos).getBlock().equals(MFRThings.vineScaffoldBlock)) &&
+    			super.canPlaceBlockOnSide(world, pos, side, player, stack);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -32,11 +33,7 @@ import javax.annotation.Nullable;
 
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
-	public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("variant", Type.class, new Predicate<Type>() {
-		public boolean apply(@Nullable Type input) {
-			return input.getMetadata() < 4;
-		}
-	});
+	public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("variant", Type.class, input -> input.getMetadata() < 4);
 	static String[] _names = {null, "dry"};
 
 	public BlockRubberLeaves()
@@ -45,6 +42,11 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		setCreativeTab(MFRCreativeTab.tab);
 	}
 
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, VARIANT, DECAYABLE, CHECK_DECAY);
+	}
+	
 /*
 	@Override
 	@SideOnly(Side.CLIENT)

@@ -9,6 +9,12 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 public class ClientProxy extends CommonProxy
 {
 	@Override
+	public void preInit() {
+
+		MineFactoryReloadedClient.preInit();
+	}
+
+	@Override
 	public void init()
 	{
 		super.init();

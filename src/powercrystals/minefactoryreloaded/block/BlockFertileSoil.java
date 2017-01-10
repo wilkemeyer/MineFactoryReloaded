@@ -8,6 +8,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 
 public class BlockFertileSoil extends Block implements IGrowable
 {
-	public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
+	public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 15);
 	public static final AxisAlignedBB SOIL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
 
 	public BlockFertileSoil()
@@ -48,6 +49,21 @@ public class BlockFertileSoil extends Block implements IGrowable
 		setCreativeTab(MFRCreativeTab.tab);
 		useNeighborBrightness = true; // THIS IS SET IN THE DUMBEST DAMN WAY ON FARMLAND
 		setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, MOISTURE);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState().withProperty(MOISTURE, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(MOISTURE);
 	}
 
 	@Override

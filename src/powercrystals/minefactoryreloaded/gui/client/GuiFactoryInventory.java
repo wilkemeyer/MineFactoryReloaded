@@ -94,7 +94,7 @@ public class GuiFactoryInventory extends GuiBase {
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		GL11.glColor4f(1f, 1f, 1f, 1f);
-		fontRendererObj.drawString(_tileEntity.getInventoryName(), _xOffset, 6, 4210752);
+		fontRendererObj.drawString(_tileEntity.getName(), _xOffset, 6, 4210752);
 		fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 3, 4210752);
 
 		if (_renderTanks) {

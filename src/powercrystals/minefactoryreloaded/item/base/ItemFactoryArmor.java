@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.item.base;
 
 import cofh.core.item.ItemArmorAdv;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,8 +17,8 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 public class ItemFactoryArmor extends ItemArmorAdv {
 
-	public static final ItemArmor.ArmorMaterial PLASTIC_ARMOR = EnumHelper.addArmorMaterial("plastic", 3, new int[] { 1, 2, 2, 1 }, 7);
-	public static final ItemArmor.ArmorMaterial GLASS_ARMOR = EnumHelper.addArmorMaterial("mfr:glass", 3, new int[] { 0, 0, 0, 0 }, 0);
+	public static final ItemArmor.ArmorMaterial PLASTIC_ARMOR = EnumHelper.addArmorMaterial("mfr:plastic", "plastic", 3, new int[] { 1, 2, 2, 1 }, 7, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0);
+	public static final ItemArmor.ArmorMaterial GLASS_ARMOR = EnumHelper.addArmorMaterial("mfr:glass", "glass", 3, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0);
 
 	private static final String getName(ItemArmor.ArmorMaterial mat) {
 

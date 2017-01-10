@@ -383,7 +383,7 @@ public abstract class MFRRegistry {
 	private static Map<String, Block> blocks = new HashMap<String, Block>();
 	private static Map<String, Item> items = new HashMap<String, Item>();
 	static {
-		remaps.put("liquid", null);
+		remaps.put("liquid", null); // TODO is this needed for anything really?
 		remaps.put("armor", null);
 		remaps.put("decorative", null);
 
@@ -443,6 +443,22 @@ public abstract class MFRRegistry {
 		return item;
 	}
 
+	static void registerBlock(Block block, ItemBlock itemBlock) {
+
+		String name = block.getUnlocalizedName();
+		blocks.put(name, block);
+
+		name = remapName(name);
+
+		block.setRegistryName(MineFactoryReloadedCore.modId, name);
+		GameRegistry.register(block);
+		if (itemBlock != null) {
+			GameRegistry.register(itemBlock.setRegistryName(block.getRegistryName()));
+			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));
+		}
+	}
+	
+	@Deprecated
 	static void registerBlock(Block block, Class<? extends ItemBlock> item, Object... args) {
 
 		String name = block.getUnlocalizedName();
@@ -451,7 +467,7 @@ public abstract class MFRRegistry {
 		name = remapName(name);
 
 		block.setRegistryName(MineFactoryReloadedCore.modId, name);
-		GameRegistry.registerBlock(block, item, name, args);
+		GameRegistry.registerBlock(block, item, MineFactoryReloadedCore.modId + ":" + name, args);
 		if (item != null)
 			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));
 	}

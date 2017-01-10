@@ -1,0 +1,16 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "minecraft:farmland",
+		"textures": {
+			"particle": "blocks/dirt",
+			"dirt": "blocks/dirt",
+			"top": "minefactoryreloaded:blocks/tile.mfr.farmland"
+		}
+	},
+	"variants": {
+		"normal": [{
+
+		}]
+	}
+}

@@ -30,17 +30,25 @@ repositories {
     }
     maven {
         name = "CoFH Maven"
-        url = "http://jenkins.podgeweb.com:1616/maven/"
+        url = "http://maven.podgeweb.com/"
     }
+    maven {
+        name = "Player's Maven"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven { url "http://dvs1.progwml6.com/files/maven" }
 }
 
 dependencies {
     compile "codechicken:CodeChickenLib:${minecraft_version}-${ccl_version}:deobf"
     compile "cofh:CoFHCore:${minecraft_version}-${cofhcore_version}:deobf"
+    compile "net.industrial-craft:industrialcraft-2:${ic2_version}"
+    compile "net.sengir.forestry:forestry_${minecraft_version}:${forestry_version}"
+    //deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 minecraft {
     version = minecraft_version + "-" + forge_version

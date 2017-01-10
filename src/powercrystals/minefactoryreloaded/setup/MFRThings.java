@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 
 import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
+import powercrystals.minefactoryreloaded.block.BlockRubberSapling;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
@@ -33,7 +34,7 @@ public class MFRThings
 
 	public static Block rubberWoodBlock;
 	public static Block rubberLeavesBlock;
-	public static BlockSapling rubberSaplingBlock;
+	public static BlockRubberSapling rubberSaplingBlock;
 
 	public static Item rubberWoodItem;
 	public static Item rubberLeavesItem;

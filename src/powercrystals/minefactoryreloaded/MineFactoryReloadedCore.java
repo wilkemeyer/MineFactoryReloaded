@@ -7,8 +7,6 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import cofh.CoFHCore;
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
-import cofh.lib.gui.container.InventoryContainerItemWrapper;
-import cofh.lib.util.RegistryUtils;
 import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -30,14 +28,12 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
@@ -46,16 +42,10 @@ import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.util.WeightedRandomFishable;
-import net.minecraftforge.common.ChestGenHooks;
-import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.Fluid;
@@ -105,6 +95,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockRailCargoPickup;
 import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerDropoff;
 import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerPickup;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
+import powercrystals.minefactoryreloaded.core.ReflectionHelper;
 import powercrystals.minefactoryreloaded.entity.DebugTracker;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
@@ -160,9 +151,7 @@ import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
 import powercrystals.minefactoryreloaded.setup.recipe.EnderIO;
-import powercrystals.minefactoryreloaded.setup.recipe.ThermalExpansion;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
-import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
 import powercrystals.minefactoryreloaded.setup.village.Zoologist;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
@@ -179,7 +168,7 @@ import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 public class MineFactoryReloadedCore extends BaseMod {
 
 	//static{DepLoader.load();}
-	public static final String modId = "MineFactoryReloaded";
+	public static final String modId = "minefactoryreloaded";
 	public static final String modName = "MineFactory Reloaded";
 	public static final String version = "1.7.10R2.8.2B1";
 	public static final String dependencies = CoFHCore.version_group;
@@ -455,7 +444,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		registerBlock(factoryGlassPaneBlock, ItemBlockFactory.class, BlockFactoryGlass._names);
 		registerBlock(factoryRoadBlock, ItemBlockFactoryRoad.class);
 		registerBlock(factoryPlasticBlock, ItemBlockFactory.class, BlockFactoryPlastic._names);
-		registerBlock(factoryDecorativeBrickBlock, ItemBlockFactory.class, BlockDecorativeBricks._names);
+		registerBlock(factoryDecorativeBrickBlock, new ItemBlockFactory(factoryDecorativeBrickBlock, BlockDecorativeBricks.Type.NAMES));
 		factoryDecorativeBrickItem = Item.getItemFromBlock(factoryDecorativeBrickBlock);
 		registerBlock(factoryDecorativeStoneBlock, ItemBlockFactory.class, BlockDecorativeStone._names);
 		registerBlock(pinkSlimeBlock, ItemBlockFactory.class);
@@ -463,7 +452,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		registerBlock(vineScaffoldBlock, ItemBlockVineScaffold.class);
 		registerBlock(fertileSoil, ItemBlockFactory.class, 3);
-
+		
 		registerBlock(detCordBlock, ItemBlockDetCord.class);
 
 		registerBlock(fakeLaserBlock, null);
@@ -496,7 +485,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true)) {
 			final Item milkBucket = Items.MILK_BUCKET;
-			Items.MILK_BUCKET = new ItemFactoryBucket(milkLiquid, false) {
+			ReflectionHelper.setFinalValue(Items.class, null, new ItemFactoryBucket(milkLiquid, false) {
 
 				@Override
 				public int hashCode() {
@@ -509,8 +498,8 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 					return obj == milkBucket || obj == this;
 				}
-			}.setUnlocalizedName("mfr.bucket.milk").setCreativeTab(CreativeTabs.MISC);
-			RegistryUtils.overwriteEntry(Item.REGISTRY, "minecraft:milk_bucket", Items.MILK_BUCKET);
+			}.setUnlocalizedName("mfr.bucket.milk").setCreativeTab(CreativeTabs.MISC), "field_151117_aB", "MILK_BUCKET");;
+			//RegistryUtils.overwriteEntry(Item.REGISTRY, new ResourceLocation("minecraft:milk_bucket"), Items.MILK_BUCKET); TODO readd vanilla bucket replacement
 		}
 
 		if (MFRConfig.vanillaRecipes.getBoolean(true))
@@ -575,13 +564,22 @@ public class MineFactoryReloadedCore extends BaseMod {
 			FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.MUSHROOM_STEW), new ItemStack(Items.BOWL)));
 
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
+		
+		proxy.preInit();
 	}
 
+	private void registerBlock(Block block, ItemBlock itemBlock) {
+		
+		MFRRegistry.registerBlock(block, itemBlock);		
+	}
+
+	@Deprecated
 	private void registerBlock(Block block, Class<? extends ItemBlock> item, String[] args) {
 
 		MFRRegistry.registerBlock(block, item, new Object[] { args });
 	}
 
+	@Deprecated
 	private void registerBlock(Block block, Class<? extends ItemBlock> item, Object... args) {
 
 		MFRRegistry.registerBlock(block, item, args);
@@ -641,19 +639,19 @@ public class MineFactoryReloadedCore extends BaseMod {
 	private void addDispenserBehavior() {
 
 		IBehaviorDispenseItem behavior = new BehaviorDispenseSafariNet();
-		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetSingleItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(safariNetJailerItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(safariNetItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(safariNetSingleItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(safariNetJailerItem, behavior);
 
-		behavior = (IBehaviorDispenseItem) BlockDispenser.dispenseBehaviorRegistry.getObject(Items.WATER_BUCKET);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(sewageBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(sludgeBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(mobEssenceBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(bioFuelBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(meatBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(pinkSlimeBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(chocolateMilkBucketItem, behavior);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(mushroomSoupBucketItem, behavior);
+		behavior = BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.getObject(Items.WATER_BUCKET);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(sewageBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(sludgeBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(mobEssenceBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(bioFuelBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(meatBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(pinkSlimeBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(chocolateMilkBucketItem, behavior);
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(mushroomSoupBucketItem, behavior);
 	}
 
 	private void addChestGenItems() {
@@ -830,7 +828,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		}
 		list = MFRConfig.safarinetBlacklist.getStringList();
 		for (String s : list) {
-			Class<?> cl = (Class<?>) EntityList.stringToClassMapping.get(s);
+			Class<?> cl = (Class<?>) EntityList.NAME_TO_CLASS.get(s);
 			if (cl != null)
 				MFRRegistry.registerSafariNetBlacklist(cl);
 		}

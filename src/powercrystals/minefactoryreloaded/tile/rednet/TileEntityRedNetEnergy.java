@@ -14,6 +14,7 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyTransport;
 import cofh.asm.relauncher.Strippable;
+import ic2.api.energy.tile.*;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -22,9 +23,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,9 +38,9 @@ import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
-@Strippable("appeng.api.implementations.tiles.ICrankable")
+@Strippable({"appeng.api.implementations.tiles.ICrankable", "ic2.api.energy.tile.IEnergyEmitter", "ic2.api.energy.tile.IEnergyAcceptor"})
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
-																	IEnergyTransport, ICrankable//, IEnergyInfo
+																	IEnergyTransport, ICrankable, IEnergyAcceptor, IEnergyEmitter//, IEnergyInfo
 {
 
 	private static boolean IC2Classes = false, IC2Net = false;
@@ -507,6 +505,18 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
+		
+		return true;
+	}
+
+	@Override
+	public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
+		
+		return true;
 	}
 
 	private class IC2Cache {

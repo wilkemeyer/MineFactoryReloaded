@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -39,7 +40,7 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 		if (settings.get("isHarvestingTree") == Boolean.TRUE)
 			return true;
 
-		return canBePicked(world, x, y, z);
+		return canBePicked(world, pos);
 	}
 
 	@Override
@@ -48,13 +49,13 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 		if (fertilizerType != FertilizerType.GrowPlant)
 			return false;
 
-		return !canBePicked(world, x, y, z);
+		return !canBePicked(world, pos);
 	}
 
 	@Override
 	public boolean canBePicked(World world, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IFruitBearer)
 		{
 			IFruitBearer fruit = (IFruitBearer)te;
@@ -66,7 +67,7 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 	@Override
 	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IFruitBearer)
 		{
 			IFruitBearer fruit = (IFruitBearer)te;
@@ -90,13 +91,13 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 	@Override // HARVESTER
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
-		return getDrops(world, rand, x, y, z);
+		return getDrops(world, rand, pos);
 	}
 
 	@Override // FRUIT PICKER
 	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IFruitBearer)
 		{
 			List<ItemStack> prod = new ArrayList<ItemStack>();

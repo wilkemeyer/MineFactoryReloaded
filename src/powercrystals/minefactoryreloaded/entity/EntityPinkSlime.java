@@ -6,6 +6,7 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -57,9 +58,8 @@ public class EntityPinkSlime extends EntitySlime
 	}
 
 	@Override
-	protected String getSlimeParticle()
-	{
-		return "";
+	protected EnumParticleTypes getParticleType() {
+		return super.getParticleType(); //TODO figure out what to dod about stopping particle from displaying like it did before
 	}
 
 	@Override

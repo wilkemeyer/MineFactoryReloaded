@@ -85,7 +85,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 						else if (ln.contains("sacred") && random.nextInt(20) == 0)
 							generateSacredSpringRubberTree(world, random, world.getHeight(pos));
 					}
-					new WorldGenRubberTree(false).generate(world, random, x, random.nextInt(3) + 4, z);
+					new WorldGenRubberTree(false).generate(world, random, new BlockPos(x, random.nextInt(3) + 4, z));
 				}
 			}
 		}
@@ -100,7 +100,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(world.getActualHeight());
 				int lakeZ = z - 8 + random.nextInt(16);
-				new WorldGenLakesMeta(sludgeLiquid, 0).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
+				new WorldGenLakesMeta(sludgeLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 			}
 
 			rarity = _sewageLakeRarity;
@@ -114,11 +114,11 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				String ln = biomeName.toLowerCase(Locale.US);
 				if (ln.contains("mushroom"))
 				{
-					new WorldGenLakesMeta(mushroomSoupLiquid, 0).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
+					new WorldGenLakesMeta(mushroomSoupLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 				}
 				else
 				{
-					new WorldGenLakesMeta(sewageLiquid, 0).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
+					new WorldGenLakesMeta(sewageLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 				}
 			}
 		}

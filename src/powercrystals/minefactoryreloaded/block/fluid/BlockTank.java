@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.block.fluid;
 
 import cofh.api.block.IBlockInfo;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +15,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
-import powercrystals.minefactoryreloaded.render.IconOverlay;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
 import java.util.List;

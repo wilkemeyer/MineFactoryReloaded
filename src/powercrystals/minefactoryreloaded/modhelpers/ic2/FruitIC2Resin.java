@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import ic2.core.block.BlockRubWood;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -28,7 +31,7 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 			@Override
 			protected int getMeta(World world, BlockPos pos, ItemStack stack)
 			{
-				return world.getBlockMetadata(x, y, z) + 6;
+				return world.getBlockState(pos).getValue(BlockRubWood.stateProperty).getDry().ordinal();
 			}
 		};
 	}
@@ -44,24 +47,25 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 	{
 		if (fertilizerType == FertilizerType.Grass)
 			return false;
-		Block blockID = world.getBlock(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z) - 6;
-		return blockID.equals(_rubberWood) & (meta >= 2 & (meta <= 5));
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		BlockRubWood.RubberWoodState woodState = state.getValue(BlockRubWood.stateProperty);
+		return block.equals(_rubberWood) && !woodState.isPlain() && !woodState.wet;
 	}
 
 	@Override
 	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		final int meta = world.getBlockMetadata(x, y, z);
-		return world.setBlockMetadataWithNotify(x, y, z, meta - 6, 2);
+		IBlockState state = world.getBlockState(pos);
+		return world.setBlockState(pos, state.withProperty(BlockRubWood.stateProperty, state.getValue(BlockRubWood.stateProperty).getWet()), 2);
 	}
 
 	@Override
 	public boolean canBePicked(World world, BlockPos pos)
 	{
-		Block blockID = world.getBlock(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z);
-		return blockID.equals(_rubberWood) & (meta >= 2 & (meta <= 5));
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		return block.equals(_rubberWood) && state.getValue(BlockRubWood.stateProperty).wet;
 	}
 
 	@Override

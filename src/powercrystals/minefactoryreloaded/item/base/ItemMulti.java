@@ -1,8 +1,5 @@
 package powercrystals.minefactoryreloaded.item.base;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.Arrays;
 
 import net.minecraft.item.ItemStack;

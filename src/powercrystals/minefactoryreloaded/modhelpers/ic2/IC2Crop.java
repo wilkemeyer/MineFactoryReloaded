@@ -41,26 +41,26 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	@Override
 	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
-		return fertilizerType != FertilizerType.Grass && canFert(world, x, y, z);
+		return fertilizerType != FertilizerType.Grass && canFert(world, pos);
 	}
 
 	private boolean canFert(World world, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te == null || !(te instanceof ICropTile))
 			return false;
 		ICropTile tec = (ICropTile)te;
 
-		return tec.getNutrientStorage() < 15;
+		return tec.getStorageNutrients() < 15;
 	}
 
 	@Override
 	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
-		tec.setNutrientStorage(100);
+		ICropTile tec = (ICropTile)world.getTileEntity(pos);
+		tec.setStorageNutrients(100);
 		tec.updateState();
-		return tec.getNutrientStorage() == 100;
+		return tec.getStorageNutrients() == 100;
 	}
 
 	@Override
@@ -78,18 +78,18 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	@Override
 	public boolean canBeHarvested(World world, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
-		return canHarvest(world, x, y, z);
+		return canHarvest(world, pos);
 	}
 
 	@Override
 	public boolean canBePicked(World world, BlockPos pos)
 	{
-		return canHarvest(world, x, y, z);
+		return canHarvest(world, pos);
 	}
 
 	private boolean canHarvest(World world, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if(te == null || !(te instanceof ICropTile))
 			return false;
 
@@ -97,10 +97,9 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 		CropCard crop;
 		try
 		{
-			int ID = tec.getID();
-			if (ID < 0)
+			crop = tec.getCrop();
+			if (crop == null)
 				return false;
-			crop = Crops.instance.getCropList()[ID];
 			if(!crop.canBeHarvested(tec) || crop.canGrow(tec))
 			{
 				return false;
@@ -118,7 +117,7 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos)
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		getDrops(drops, world, rand, x, y, z);
+		getDrops(drops, world, rand, pos);
 		return drops;
 	}
 
@@ -126,20 +125,20 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		getDrops(drops, world, rand, x, y, z);
+		getDrops(drops, world, rand, pos);
 		return drops;
 	}
 
 	private void getDrops(List<ItemStack> drops, World world, Random rand, BlockPos pos)
 	{
-		ICropTile tec = (ICropTile)world.getTileEntity(x, y, z);
+		ICropTile tec = (ICropTile)world.getTileEntity(pos);
 		CropCard crop;
 		try
 		{
-			crop = Crops.instance.getCropList()[tec.getID()];
+			crop = tec.getCrop();
 
-			float chance = crop.dropGainChance();
-			for (int i = 0; i < tec.getGain(); i++)
+			double chance = crop.dropGainChance();
+			for (int i = 0; i < tec.getStatGain(); i++)
 			{
 				chance *= 1.03F;
 			}
@@ -155,13 +154,13 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 			for (int i = 0; i < numDrops; i++)
 			{
 				cropDrops[i] = crop.getGain(tec);
-				if((cropDrops[i] != null) && (rand.nextInt(100) <= tec.getGain()))
+				if((cropDrops[i] != null) && (rand.nextInt(100) <= tec.getStatGain()))
 				{
 					cropDrops[i].stackSize += 1;
 				}
 			}
 
-			tec.setSize(crop.getSizeAfterHarvest(tec));
+			tec.setCurrentSize(crop.getSizeAfterHarvest(tec));
 			tec.updateState();
 
 			for(ItemStack s : cropDrops)

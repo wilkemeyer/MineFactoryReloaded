@@ -203,7 +203,7 @@ public class MFRUtil {
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammer) {
-			return ((IToolHammer) currentItem).isUsable(player.inventory.getCurrentItem(), player, pos.getX(), pos.getY(), pos.getZ());
+			return ((IToolHammer) currentItem).isUsable(player.inventory.getCurrentItem(), player, pos);
 		}
 		else if (currentItem instanceof IMFRHammer) {
 			return true;
@@ -225,7 +225,7 @@ public class MFRUtil {
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammer) {
-			((IToolHammer) currentItem).toolUsed(player.inventory.getCurrentItem(), player, pos.getX(), pos.getY(), pos.getZ());
+			((IToolHammer) currentItem).toolUsed(player.inventory.getCurrentItem(), player, pos);
 		}
 		else if (currentItem instanceof IMFRHammer) {
 			;

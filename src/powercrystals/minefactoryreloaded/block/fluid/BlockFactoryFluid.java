@@ -215,7 +215,7 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	@Override
 	public String getUnlocalizedName() {
 
-		return "fluid." + fluidName;
+		return "fluid.mfr." + fluidName + ".still";
 	}
 
 /*

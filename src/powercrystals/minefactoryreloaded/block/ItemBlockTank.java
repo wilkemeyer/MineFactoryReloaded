@@ -27,8 +27,8 @@ public class ItemBlockTank extends ItemBlockFactory implements IFluidContainerIt
 	@Override
 	public FluidStack getFluid(ItemStack container)
 	{
-		if (container.stackTagCompound != null && container.stackTagCompound.hasKey("tank"))
-			return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("tank"));
+		if (container.getTagCompound() != null && container.getTagCompound().hasKey("tank"))
+			return FluidStack.loadFluidStackFromNBT(container.getTagCompound().getCompoundTag("tank"));
 		return null;
 	}
 
@@ -45,7 +45,7 @@ public class ItemBlockTank extends ItemBlockFactory implements IFluidContainerIt
 			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 			return 0;
 		int fillAmount = 0, capacity = getCapacity(stack);
-		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("tank") ||
 				(fluidTag = tag.getCompoundTag("tank")) == null ||
@@ -66,8 +66,10 @@ public class ItemBlockTank extends ItemBlockFactory implements IFluidContainerIt
 		fillAmount = Math.max(fillAmount, 0);
 		if (doFill)
 		{
-			if (tag == null)
-				tag = stack.stackTagCompound = new NBTTagCompound();
+			if (tag == null) {
+				stack.setTagCompound(new NBTTagCompound());
+				tag = stack.getTagCompound();
+			}
 			fluid.amount += fillAmount;
 			tag.setTag("tank", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
 		}
@@ -77,7 +79,7 @@ public class ItemBlockTank extends ItemBlockFactory implements IFluidContainerIt
 	@Override
 	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
 	{
-		NBTTagCompound tag = stack.stackTagCompound, fluidTag = null;
+		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 		FluidStack fluid = null;
 		if (tag == null || !tag.hasKey("tank") ||
 				(fluidTag = tag.getCompoundTag("tank")) == null ||

@@ -62,7 +62,7 @@ public class BlockFactoryRoad extends Block {
 
 	private static final Method TRIGGER_WALKING;
 	static {
-		TRIGGER_WALKING = ReflectionHelper.findMethod(Entity.class, null, new String[]{"func_70041_e_", "canTriggerWalking"}, Entity.class);
+		TRIGGER_WALKING = ReflectionHelper.findMethod(Entity.class, null, new String[]{"func_70041_e_", "canTriggerWalking"});
 	}
 	
 	private boolean canTriggerWalking(Entity e) {

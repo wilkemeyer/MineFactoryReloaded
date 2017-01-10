@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -30,6 +31,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		setUnlocalizedName("mfr.rubberwood.log");
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("axe", 0);
+		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true));
 	}
 
 /*
@@ -55,6 +57,11 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		return _iconLogTop;
 	}
 */
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, AXIS, RUBBER_FILLED);
+	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {

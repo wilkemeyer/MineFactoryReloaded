@@ -2,10 +2,16 @@ package powercrystals.minefactoryreloaded;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -43,8 +49,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
+import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IResourceManagerReloadListener {
@@ -66,6 +74,18 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	public static HashMap<BlockPos, Integer> prcPages = new HashMap<BlockPos, Integer>();
 
 	public static Set<IHarvestAreaContainer> _areaTileEntities = new LinkedHashSet<IHarvestAreaContainer>();
+
+	public static void preInit() {
+		
+		registerModel(MFRThings.factoryDecorativeBrickBlock, );
+		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
+	}
+	
+	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
+
+		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "normal"));
+	}
 
 	public static void init() {
 
