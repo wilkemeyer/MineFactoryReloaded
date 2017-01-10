@@ -765,7 +765,7 @@ public class EnderIO extends Vanilla {
 				new ItemStack(rednetCableBlock),
 		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineItem, 1, 1), new Object[] {
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineBlock, 1, 1), new Object[] {
 				"PRP",
 				"RGR",
 				"PIP",
@@ -779,7 +779,7 @@ public class EnderIO extends Vanilla {
 				"RDR",
 				"LGL",
 				"PHP",
-				'H', new ItemStack(machineItem, 1, 1),
+				'H', new ItemStack(machineBlock, 1, 1),
 				'P', "sheetPlastic",
 				'G', "ingotGold",
 				'L', "gemLapis",

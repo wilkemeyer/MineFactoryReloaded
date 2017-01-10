@@ -73,7 +73,7 @@ public class MFRThings
 
 	public static Block fertileSoil;
 
-	public static Block machineItem;
+	public static Block machineBlock;
 	public static Item machineBaseItem;
 
 	public static Item factoryHammerItem;

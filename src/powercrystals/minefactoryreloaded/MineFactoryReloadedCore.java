@@ -304,7 +304,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		fertileSoil = new BlockFertileSoil();
 
-		machineItem = new BlockFactoryDecoration();
+		machineBlock = new BlockFactoryDecoration();
 
 		plasticTank = new BlockTank();
 
@@ -413,8 +413,8 @@ public class MineFactoryReloadedCore extends BaseMod {
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
 		registerBlock(conveyorBlock, ItemBlockConveyor.class, BlockConveyor._names);
-		registerBlock(machineItem, ItemBlockFactory.class, BlockFactoryDecoration._names);
-		machineBaseItem = Item.getItemFromBlock(machineItem);
+		registerBlock(machineBlock, new ItemBlockFactory(machineBlock, BlockFactoryDecoration.Variant.NAMES));
+		machineBaseItem = Item.getItemFromBlock(machineBlock);
 
 		for (int i = 0, e = machineBlocks.size(); i < e; ++i) {
 			registerBlock(machineBlocks.get(i), ItemBlockFactoryMachine.class);

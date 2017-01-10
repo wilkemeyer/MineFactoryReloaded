@@ -50,11 +50,10 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
-import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
-import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -83,6 +82,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		registerModel(MFRThings.factoryDecorativeBrickBlock, "variant", BlockDecorativeBricks.Variant.NAMES);
 		registerModel(MFRThings.factoryDecorativeStoneBlock, "variant", BlockDecorativeStone.Variant.NAMES);
+		registerModel(MFRThings.machineBlock, "variant", BlockFactoryDecoration.Variant.NAMES);
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 	}
 	

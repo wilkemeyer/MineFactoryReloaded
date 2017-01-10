@@ -1513,7 +1513,7 @@ public class Vanilla {
 				stack(rednetCableBlock),
 		}));
 
-		addRecipe(ShapedRecipe(stack(machineItem, 1, 1), new Object[] {
+		addRecipe(ShapedRecipe(stack(machineBlock, 1, 1), new Object[] {
 				"PRP",
 				"RGR",
 				"PIP",
@@ -1527,7 +1527,7 @@ public class Vanilla {
 				"RDR",
 				"LGL",
 				"PHP",
-				'H', stack(machineItem, 1, 1),
+				'H', stack(machineBlock, 1, 1),
 				'P', "sheetPlastic",
 				'G', "ingotGold",
 				'L', "gemLapis",
