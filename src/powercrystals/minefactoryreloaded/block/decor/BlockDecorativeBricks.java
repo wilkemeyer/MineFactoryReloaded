@@ -108,19 +108,4 @@ public class BlockDecorativeBricks extends BlockFactory {
 			}
 		}
 	}
-/*	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		for(int i = 0; i < _icons.length; i++)
-		{
-			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
-		}
-	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta)
-	{
-		return _icons[Math.min(meta, _icons.length - 1)];
-	}*/
 }

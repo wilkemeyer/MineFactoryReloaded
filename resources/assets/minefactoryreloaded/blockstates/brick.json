@@ -5,6 +5,11 @@
 	},
 	"variants": {
 		"variant": {
+			"ice": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.ice"
+				}
+			},
 			"glowstone": {
 				"textures": {
 					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.glowstone"

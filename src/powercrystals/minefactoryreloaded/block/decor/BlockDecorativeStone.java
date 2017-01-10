@@ -7,10 +7,13 @@ import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -20,9 +23,7 @@ import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockDecorativeStone extends BlockFactory {
 
-	public static final String[] _names = new String[] { "black.smooth", "white.smooth", "black.cobble",
-			"white.cobble", "black.brick.large", "white.brick.large", "black.brick.small",
-			"white.brick.small", "black.gravel", "white.gravel", "black.paved", "white.paved" };
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
 	public BlockDecorativeStone() {
 
@@ -34,14 +35,22 @@ public class BlockDecorativeStone extends BlockFactory {
 		providesPower = false;
 	}
 
-/*	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, VARIANT);
+	}
 
-		for (int i = 0; i < _icons.length; i++) {
-			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
-		}
-	}*/
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		return state.getValue(VARIANT).meta;
+	}
 
 	@Override
 	public int damageDropped(IBlockState state) {
@@ -130,6 +139,51 @@ public class BlockDecorativeStone extends BlockFactory {
 	public int tickRate(World world) {
 
 		return 2;
+	}
+
+	public enum Variant implements IStringSerializable{
+
+		BLACK_SMOOTH(0, "black_smooth"),
+		WHITE_SMOOTH(1, "white_smooth"),
+		BLACK_COBBLE(2, "black_cobble"),
+		WHITE_COBBLE(3, "white_cobble"),
+		BLACK_BRICK_LARGE(4, "black_brick_large"),
+		WHITE_BRICK_LARGE(5, "white_brick_large"),
+		BLACK_BRICK_SMALL(6, "black_brick_small"),
+		WHITE_BRICK_SMALL(7, "white_brick_small"),
+		BLACK_GRAVEL(8, "black_gravel"),
+		WHITE_GRAVEL(9, "white_gravel"),
+		BLACK_PAVED(10, "black_paved"),
+		WHITE_PAVED(11, "white_paved");
+
+		private final int meta;
+		private final String name;
+
+		public static final String[] NAMES;
+
+		Variant(int meta, String name) {
+
+			this.meta = meta;
+			this.name = name;
+		}
+
+		@Override
+		public String getName() {
+
+			return name;
+		}
+
+		public static Variant byMetadata(int meta) {
+
+			return values()[meta];
+		}
+
+		static {
+			NAMES = new String[values().length];
+			for (Variant variant : values()) {
+				NAMES[variant.meta] = variant.name;
+			}
+		}
 	}
 
 	// TODO: step sounds require forge hook
