@@ -1,0 +1,85 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all"
+	},
+	"variants": {
+		"variant": {
+			"glowstone": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.glowstone"
+				}
+			},
+			"lapis": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.lapis"
+				}
+			},
+			"obsidian": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.obsidian"
+				}
+			},
+			"pavedstone": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.pavedstone"
+				}
+			},
+			"snow": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.snow"
+				}
+			},
+			"ice_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.ice_large"
+				}
+			},
+			"glowstone_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.glowstone_large"
+				}
+			},
+			"lapis_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.lapis_large"
+				}
+			},
+			"obsidian_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.obsidian_large"
+				}
+			},
+			"pavedstone_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.pavedstone_large"
+				}
+			},
+			"snow_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.snow_large"
+				}
+			},
+			"meat_raw": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.meat_raw"
+				}
+			},
+			"meat_cooked": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.meat_cooked"
+				}
+			},
+			"brick_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.brick_large"
+				}
+			},
+			"sugar_charcoal": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.brick.sugar_charcoal"
+				}
+			}
+		}
+	}
+}

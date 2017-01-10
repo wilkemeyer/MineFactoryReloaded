@@ -193,22 +193,6 @@ public class BlockFertileSoil extends Block implements IGrowable
 		}
 	}
 
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister)
-	{
-		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(EnumFacing side, int meta)
-	{
-		return side == 1 ? blockIcon : Blocks.DIRT.getIcon(side, 2);
-	}
-*/
-
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{

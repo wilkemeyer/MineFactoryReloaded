@@ -444,7 +444,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		registerBlock(factoryGlassPaneBlock, ItemBlockFactory.class, BlockFactoryGlass._names);
 		registerBlock(factoryRoadBlock, ItemBlockFactoryRoad.class);
 		registerBlock(factoryPlasticBlock, ItemBlockFactory.class, BlockFactoryPlastic._names);
-		registerBlock(factoryDecorativeBrickBlock, new ItemBlockFactory(factoryDecorativeBrickBlock, BlockDecorativeBricks.Type.NAMES));
+		registerBlock(factoryDecorativeBrickBlock, new ItemBlockFactory(factoryDecorativeBrickBlock, BlockDecorativeBricks.Variant.NAMES));
 		factoryDecorativeBrickItem = Item.getItemFromBlock(factoryDecorativeBrickBlock);
 		registerBlock(factoryDecorativeStoneBlock, ItemBlockFactory.class, BlockDecorativeStone._names);
 		registerBlock(pinkSlimeBlock, ItemBlockFactory.class);

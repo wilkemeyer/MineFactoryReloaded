@@ -20,27 +20,28 @@ public class ItemBlockFactory extends ItemBlock
 	protected String[] _names = {null};
 	protected int metaOffset = 0;
 
-	public ItemBlockFactory(Block p_i45328_1_)
+	public ItemBlockFactory(Block block)
 	{
-		super(p_i45328_1_);
+		super(block);
 		setMaxDamage(0);
 	}
 
-	public ItemBlockFactory(Block p_i45328_1_, String[] names)
+	public ItemBlockFactory(Block block, String[] names)
 	{
-		this(p_i45328_1_);
+		this(block);
 		setNames(names);
 	}
 
+/* TODO doesn't seem to be used - remove
 	public ItemBlockFactory(Block p_i45328_1_, Integer metaOffset, String[] names)
 	{
 		this(p_i45328_1_, names);
 		this.metaOffset = metaOffset.intValue();
 	}
-
-	public ItemBlockFactory(Block p_i45328_1_, Integer metaOffset)
+*/
+	public ItemBlockFactory(Block block, Integer metaOffset)
 	{
-		this(p_i45328_1_);
+		this(block);
 		this.metaOffset = metaOffset.intValue();
 	}
 
@@ -55,15 +56,6 @@ public class ItemBlockFactory extends ItemBlock
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];
 	}
 
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIconFromDamage(int damage)
-	{
-		return getBlock().getIcon(2, damage);
-	}
-*/
-
 	@Override
 	public int getMetadata(int meta)
 	{
@@ -76,10 +68,9 @@ public class ItemBlockFactory extends ItemBlock
 		return getName(getUnlocalizedName(), name(stack));
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean adv)
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv)
 	{
 		String str = getName("tip.info" + getUnlocalizedName().substring(4), name(stack));
 		str = MFRUtil.localize(str, true, null);
@@ -95,10 +86,9 @@ public class ItemBlockFactory extends ItemBlock
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubItems(Item itemId, CreativeTabs creativeTab, List subTypes)
+	public void getSubItems(Item item, CreativeTabs creativeTab, List<ItemStack> subTypes)
 	{
-		getSubItems(itemId, subTypes);
+		getSubItems(item, subTypes);
 	}
 }

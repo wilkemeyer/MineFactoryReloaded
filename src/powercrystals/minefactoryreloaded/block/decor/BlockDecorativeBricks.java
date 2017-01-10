@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block.decor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -16,7 +17,7 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 
 public class BlockDecorativeBricks extends BlockFactory {
 
-	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 	
 	public BlockDecorativeBricks() {
 		
@@ -28,21 +29,39 @@ public class BlockDecorativeBricks extends BlockFactory {
 		providesPower = false;
 	}
 
-	//TODO likely replace with something better than meta checks - properties
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, VARIANT);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		return state.getValue(VARIANT).meta;
+	}
+
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
-		
-		int meta = getMetaFromState(world.getBlockState(pos));
-		return meta == 1 | meta == 7 ? 15 : 0;
+
+		Variant variant = state.getValue(VARIANT);
+		return variant == Variant.GLOWSTONE || variant == Variant.GLOWSTONE_LARGE ? 15 : 0;
 	}
 
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
-		
-		int meta = getMetaFromState(world.getBlockState(pos));
-		return meta == 3 | meta == 9 ? Blocks.OBSIDIAN.getExplosionResistance(exploder) : getExplosionResistance(exploder);
+
+		Variant variant = world.getBlockState(pos).getValue(VARIANT);
+		return variant == Variant.OBSIDIAN || variant == Variant.OBSIDIAN_LARGE ? Blocks.OBSIDIAN.getExplosionResistance(exploder) : getExplosionResistance(exploder);
 	}
-	public enum Type implements IStringSerializable {
+
+	public enum Variant implements IStringSerializable {
+
 		ICE(0, "ice"),
 		GLOWSTONE(1, "glowstone"),
 		LAPIS(2, "lapis"),
@@ -65,7 +84,7 @@ public class BlockDecorativeBricks extends BlockFactory {
 		
 		public static final String[] NAMES;
 
-		Type(int meta, String name) {
+		Variant(int meta, String name) {
 
 			this.meta = meta;
 			this.name = name;
@@ -76,11 +95,16 @@ public class BlockDecorativeBricks extends BlockFactory {
 			
 			return name;
 		}
+
+		public static Variant byMetadata(int meta) {
+
+			return values()[meta];
+		}
 		
 		static {
 			NAMES = new String[values().length];
-			for (Type type : values()) {
-				NAMES[type.meta] = type.name;
+			for (Variant variant : values()) {
+				NAMES[variant.meta] = variant.name;
 			}
 		}
 	}

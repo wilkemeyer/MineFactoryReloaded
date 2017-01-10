@@ -50,7 +50,10 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -77,14 +80,28 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	public static void preInit() {
 		
-		registerModel(MFRThings.factoryDecorativeBrickBlock, );
+		registerModel(MFRThings.factoryDecorativeBrickBlock, "variant", BlockDecorativeBricks.Variant.NAMES);
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 	}
 	
+	private static void registerModel(Block block, String propertyName, String[] values, IProperty<?>... propertiesToIgnore) {
+
+		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
+
+		Item item = Item.getItemFromBlock(block);
+		if (item != null) {
+			for (int i = 0; i < values.length; i++) {
+				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(block.getRegistryName(), propertyName + "=" + values[i]));
+			}
+		}
+	}
+
 	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
 
 		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "normal"));
+		Item item = Item.getItemFromBlock(block);
+		if (item != null)
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(block.getRegistryName(), "normal"));
 	}
 
 	public static void init() {
