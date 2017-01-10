@@ -3,8 +3,13 @@ package powercrystals.minefactoryreloaded.block.decor;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.util.EnumFacing;
@@ -16,6 +21,8 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
+	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+
 	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
 		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" };
 
@@ -27,6 +34,24 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		setHardness(0.3F);
 		setSoundType(SoundType.GLASS);
 		setCreativeTab(MFRCreativeTab.tab);
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, COLOR);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(COLOR).getMetadata();
 	}
 
 	@Override
@@ -83,6 +108,12 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	{
 		return new IconOverlay(_texture, 8, 8, 0, 0);
 	}*/
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+
+		return BlockRenderLayer.TRANSLUCENT;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
