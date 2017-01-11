@@ -8,7 +8,11 @@ import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -107,6 +111,11 @@ public class MFRUtil {
 	public static String getFluidName(FluidStack fluid) {
 
 		return StringHelper.getFluidName(fluid);
+	}
+	
+	public static ItemStack getBucketFor(Fluid fluid){
+		
+		return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, fluid);
 	}
 
 	public static boolean containsForcedUnicode(String str) {

@@ -14,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -66,8 +67,9 @@ public class ItemXpExtractor extends ItemFactoryTool {
 					target.attackEntityFrom(damage, 0.25f);
 					target.worldObj.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 0.15f, 0.25f);
 				}
-				if (!player.inventory.addItemStackToInventory(new ItemStack(MFRThings.mobEssenceBucketItem))) {
-					player.dropItem(MFRThings.mobEssenceBucketItem, 1);
+				ItemStack essenceBucket = MFRUtil.getBucketFor(MFRThings.essence);
+				if (!player.inventory.addItemStackToInventory(essenceBucket)) {
+					player.entityDropItem(essenceBucket, 0f);
 				}
 			}
 		}

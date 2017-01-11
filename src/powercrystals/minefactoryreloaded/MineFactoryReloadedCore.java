@@ -11,6 +11,8 @@ import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -224,16 +226,48 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		FluidRegistry.enableUniversalBucket();
 
-		registerFluid("milk", 1050, EnumRarity.COMMON);
-		FluidRegistry.addBucketForFluid(registerFluid("sludge", 1700, EnumRarity.COMMON));
-		FluidRegistry.addBucketForFluid(registerFluid("sewage", 1200, EnumRarity.COMMON));
-		FluidRegistry.addBucketForFluid(registerFluid("mob_essence", 400, 9, 310, EnumRarity.EPIC));
-		FluidRegistry.addBucketForFluid(registerFluid("biofuel", 800, EnumRarity.UNCOMMON));
-		FluidRegistry.addBucketForFluid(registerFluid("meat", 2000, EnumRarity.COMMON));
-		FluidRegistry.addBucketForFluid(registerFluid("pink_slime", 3000, EnumRarity.RARE));
-		FluidRegistry.addBucketForFluid(registerFluid("chocolate_milk", 1100, EnumRarity.COMMON));
-		FluidRegistry.addBucketForFluid(registerFluid("mushroom_soup", 1500, EnumRarity.COMMON));
-		registerFluid("steam", -100, 0, 673, EnumRarity.COMMON);
+		milk = registerFluid("milk", 1050, EnumRarity.COMMON);
+		sludge = registerFluid("sludge", 1700, EnumRarity.COMMON);
+		sewage = registerFluid("sewage", 1200, EnumRarity.COMMON);
+		essence = registerFluid("mob_essence", 400, 9, 310, EnumRarity.EPIC);
+		biofuel = registerFluid("biofuel", 800, EnumRarity.UNCOMMON);
+		meat = registerFluid("meat", 2000, EnumRarity.COMMON);
+		pinkSlime = registerFluid("pink_slime", 3000, EnumRarity.RARE);
+		chocolateMilk = registerFluid("chocolate_milk", 1100, EnumRarity.COMMON);
+		mushroomSoup = registerFluid("mushroom_soup", 1500, EnumRarity.COMMON);
+		steam = registerFluid("steam", -100, 0, 673, EnumRarity.COMMON);
+
+		FluidRegistry.addBucketForFluid(sludge);
+		FluidRegistry.addBucketForFluid(sewage);
+		FluidRegistry.addBucketForFluid(essence);
+		FluidRegistry.addBucketForFluid(biofuel);
+		FluidRegistry.addBucketForFluid(meat);
+		FluidRegistry.addBucketForFluid(pinkSlime);
+		FluidRegistry.addBucketForFluid(chocolateMilk);
+		FluidRegistry.addBucketForFluid(mushroomSoup);
+
+		milkLiquid = new BlockFactoryFluid("milk");
+		sludgeLiquid = new BlockFactoryFluid("sludge");
+		sewageLiquid = new BlockFactoryFluid("sewage");
+		essenceLiquid = new BlockFactoryFluid("mob_essence");
+		biofuelLiquid = new BlockExplodingFluid("biofuel");
+		meatLiquid = new BlockFactoryFluid("meat");
+		pinkSlimeLiquid = new BlockPinkSlimeFluid("pink_slime");
+		chocolateMilkLiquid = new BlockFactoryFluid("chocolate_milk");
+		mushroomSoupLiquid = new BlockFactoryFluid("mushroom_soup");
+		steamFluid = new BlockFactoryFluid("steam", BlockFactoryFluid.material);
+
+		registerBlock(milkLiquid, new ItemBlock(milkLiquid));
+		registerBlock(sludgeLiquid, new ItemBlock(sludgeLiquid));
+		registerBlock(sewageLiquid, new ItemBlock(sewageLiquid));
+		registerBlock(essenceLiquid, new ItemBlock(essenceLiquid));
+		registerBlock(biofuelLiquid, new ItemBlock(biofuelLiquid));
+		registerBlock(meatLiquid, new ItemBlock(meatLiquid));
+		registerBlock(pinkSlimeLiquid, new ItemBlock(pinkSlimeLiquid));
+		registerBlock(chocolateMilkLiquid, new ItemBlock(chocolateMilkLiquid));
+		registerBlock(mushroomSoupLiquid, new ItemBlock(mushroomSoupLiquid));
+		registerBlock(steamFluid, new ItemBlock(steamFluid));
+
 	}
 
 	public static Fluid registerFluid(String name, int density, EnumRarity rarity) {
@@ -311,17 +345,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 		plasticTank = new BlockTank();
 
 		registerFluids();
-
-		milkLiquid = new BlockFactoryFluid("milk");
-		sludgeLiquid = new BlockFactoryFluid("sludge");
-		sewageLiquid = new BlockFactoryFluid("sewage");
-		essenceLiquid = new BlockFactoryFluid("mob_essence");
-		biofuelLiquid = new BlockExplodingFluid("biofuel");
-		meatLiquid = new BlockFactoryFluid("meat");
-		pinkSlimeLiquid = new BlockPinkSlimeFluid("pink_slime");
-		chocolateMilkLiquid = new BlockFactoryFluid("chocolate_milk");
-		mushroomSoupLiquid = new BlockFactoryFluid("mushroom_soup");
-		steamFluid = new BlockFactoryFluid("steam", BlockFactoryFluid.material);
 
 		factoryHammerItem = (new ItemFactoryHammer()).setUnlocalizedName("mfr.hammer").setMaxStackSize(1);
 		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.HEAD);
@@ -459,26 +482,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		registerBlock(fakeLaserBlock, null);
 
-		sewageBucketItem = (new ItemFactoryBucket(sewageLiquid)).setUnlocalizedName("mfr.bucket.sewage");
-		sludgeBucketItem = (new ItemFactoryBucket(sludgeLiquid)).setUnlocalizedName("mfr.bucket.sludge");
-		mobEssenceBucketItem = (new ItemFactoryBucket(essenceLiquid)).setUnlocalizedName("mfr.bucket.essence");
-		bioFuelBucketItem = (new ItemFactoryBucket(biofuelLiquid)).setUnlocalizedName("mfr.bucket.biofuel");
-		meatBucketItem = (new ItemFactoryBucket(meatLiquid)).setUnlocalizedName("mfr.bucket.meat");
-		pinkSlimeBucketItem = (new ItemFactoryBucket(pinkSlimeLiquid)).setUnlocalizedName("mfr.bucket.pinkslime");
-		chocolateMilkBucketItem = (new ItemFactoryBucket(chocolateMilkLiquid)).setUnlocalizedName("mfr.bucket.chocolatemilk");
-		mushroomSoupBucketItem = (new ItemFactoryBucket(mushroomSoupLiquid)).setUnlocalizedName("mfr.bucket.mushroomsoup");
-
-		registerBlock(milkLiquid, new ItemBlock(milkLiquid));
-		registerBlock(sludgeLiquid, new ItemBlock(sludgeLiquid));
-		registerBlock(sewageLiquid, new ItemBlock(sewageLiquid));
-		registerBlock(essenceLiquid, new ItemBlock(essenceLiquid));
-		registerBlock(biofuelLiquid, new ItemBlock(biofuelLiquid));
-		registerBlock(meatLiquid, new ItemBlock(meatLiquid));
-		registerBlock(pinkSlimeLiquid, new ItemBlock(pinkSlimeLiquid));
-		registerBlock(chocolateMilkLiquid, new ItemBlock(chocolateMilkLiquid));
-		registerBlock(mushroomSoupLiquid, new ItemBlock(mushroomSoupLiquid));
-		registerBlock(steamFluid, new ItemBlock(steamFluid));
-
 		Blocks.FIRE.setFireInfo(rubberWoodBlock, 50, 15);
 		Blocks.FIRE.setFireInfo(rubberLeavesBlock, 80, 25);
 		Blocks.FIRE.setFireInfo(rubberSaplingBlock, 30, 20);
@@ -554,7 +557,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		proxy.preInit();
 	}
 
-	private void registerBlock(Block block, ItemBlock itemBlock) {
+	private static void registerBlock(Block block, ItemBlock itemBlock) {
 		
 		MFRRegistry.registerBlock(block, itemBlock);		
 	}
@@ -629,6 +632,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(safariNetSingleItem, behavior);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(safariNetJailerItem, behavior);
 
+/*
 		behavior = BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.getObject(Items.WATER_BUCKET);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(sewageBucketItem, behavior);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(sludgeBucketItem, behavior);
@@ -638,6 +642,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(pinkSlimeBucketItem, behavior);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(chocolateMilkBucketItem, behavior);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(mushroomSoupBucketItem, behavior);
+*/
 	}
 
 	private void addChestGenItems() {

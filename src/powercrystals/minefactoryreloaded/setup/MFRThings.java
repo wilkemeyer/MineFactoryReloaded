@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.item.Item;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
 import powercrystals.minefactoryreloaded.block.BlockRubberSapling;
@@ -51,6 +53,17 @@ public class MFRThings
 	public static BlockRedNetLogic rednetLogicBlock;
 	public static BlockRedNetPanel rednetPanelBlock;
 
+	public static Fluid milk;
+	public static Fluid sludge;
+	public static Fluid sewage;
+	public static Fluid essence;
+	public static Fluid biofuel;
+	public static Fluid meat;
+	public static Fluid pinkSlime;
+	public static Fluid chocolateMilk;
+	public static Fluid mushroomSoup;
+	public static Fluid steam;
+	
 	public static BlockFactoryFluid milkLiquid;
 	public static BlockFactoryFluid sludgeLiquid;
 	public static BlockFactoryFluid sewageLiquid;
@@ -81,9 +94,6 @@ public class MFRThings
 	public static Item plasticSheetItem;
 	public static Item rubberBarItem;
 	public static Item rawPlasticItem;
-	public static Item sewageBucketItem;
-	public static Item sludgeBucketItem;
-	public static Item mobEssenceBucketItem;
 	public static Item syringeEmptyItem;
 	public static Item syringeHealthItem;
 	public static Item syringeGrowthItem;
@@ -93,7 +103,6 @@ public class MFRThings
 	public static Item blankRecordItem;
 	public static Item syringeZombieItem;
 	public static Item safariNetSingleItem;
-	public static Item bioFuelBucketItem;
 	public static Item upgradeItem;
 	public static Item safariNetLauncherItem;
 	public static Item sugarCharcoalItem;
@@ -112,13 +121,9 @@ public class MFRThings
 	public static Item meatIngotCookedItem;
 	public static Item meatNuggetRawItem;
 	public static Item meatNuggetCookedItem;
-	public static Item meatBucketItem;
-	public static Item pinkSlimeBucketItem;
 	public static Item pinkSlimeItem;
 	public static Item safariNetJailerItem;
 	public static Item laserFocusItem;
-	public static Item chocolateMilkBucketItem;
-	public static Item mushroomSoupBucketItem;
 	public static Item needlegunItem;
 	public static Item needlegunAmmoEmptyItem;
 	public static Item needlegunAmmoStandardItem;

@@ -1,9 +1,11 @@
 package powercrystals.minefactoryreloaded.setup;
 
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.IFuelHandler;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 public class MineFactoryReloadedFuelHandler implements IFuelHandler
 {
@@ -42,7 +44,7 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		{
 			return 90;
 		}
-		else if (item.equals(MFRThings.bioFuelBucketItem))
+		else if (item instanceof UniversalBucket && ItemStack.areItemStacksEqual(MFRUtil.getBucketFor(MFRThings.biofuel), fuel))
 		{
 			return 22500;
 		}
