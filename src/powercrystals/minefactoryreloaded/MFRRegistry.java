@@ -430,16 +430,23 @@ public abstract class MFRRegistry {
 	static Block remapBlock(String id) {
 
 		Block block = blocks.get(id);
-		if (block == null)
-			block = GameRegistry.findBlock("MineFactoryReloaded", remapName(id));
+		if (block == null) {
+			id = remapName(id);
+			if (id != null)
+				block = GameRegistry.findBlock("MineFactoryReloaded", id);
+		}
+
 		return block;
 	}
 
 	static Item remapItem(String id) {
 
 		Item item = items.get(id);
-		if (item == null)
-			item = GameRegistry.findItem("MineFactoryReloaded", remapName(id));
+		if (item == null) {
+			id = remapName(id);
+			if (id != null)
+				item = GameRegistry.findItem("MineFactoryReloaded", id);
+		}
 		return item;
 	}
 

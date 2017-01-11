@@ -96,7 +96,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.milkLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "milk"));
 		registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "sludge"));
 		registerModel(MFRThings.sewageLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "sewage"));
-		registerModel(MFRThings.essenceLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "essence"));
+		registerModel(MFRThings.essenceLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "mob_essence"));
 		registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "biofuel"));
 		registerModel(MFRThings.meatLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "meat"));
 		registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "pink_slime"));

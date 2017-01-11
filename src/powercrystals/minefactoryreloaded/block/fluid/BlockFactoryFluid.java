@@ -217,32 +217,4 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 		return "fluid.mfr." + fluidName + ".still";
 	}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		String pre = "minefactoryreloaded:", name = getUnlocalizedName();
-		if (!RegistryUtils.blockTextureExists(pre + name)) {
-			pre += "fluid/";
-		}
-		setIcons(ir.registerIcon(name = pre + name), ir.registerIcon(name.replace(".still", ".flowing")));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setIcons(IIcon still, IIcon flowing) {
-
-		_iconStill = still;
-		_iconFlowing = flowing;
-		setParticleColor(color = RegistryUtils.getBlockTextureColor(still.getIconName()));
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		return side <= 1 ? _iconStill : _iconFlowing;
-	}
-*/
 }

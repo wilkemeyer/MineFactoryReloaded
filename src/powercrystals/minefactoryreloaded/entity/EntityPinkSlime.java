@@ -59,7 +59,7 @@ public class EntityPinkSlime extends EntitySlime
 
 	@Override
 	protected EnumParticleTypes getParticleType() {
-		return super.getParticleType(); //TODO figure out what to dod about stopping particle from displaying like it did before
+		return super.getParticleType(); //TODO figure out what to do about stopping particle from displaying like it did before
 	}
 
 	@Override

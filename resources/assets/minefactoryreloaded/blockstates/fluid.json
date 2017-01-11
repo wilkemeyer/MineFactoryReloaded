@@ -13,8 +13,8 @@
         "sewage": [{
             "custom": { "fluid": "sewage" }
         }],
-        "essence": [{
-            "custom": { "fluid": "essence" }
+        "mob_essence": [{
+            "custom": { "fluid": "mob_essence" }
         }],
         "biofuel": [{
             "custom": { "fluid": "biofuel" }
