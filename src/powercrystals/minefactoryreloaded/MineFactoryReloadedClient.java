@@ -4,14 +4,18 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -115,16 +119,25 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 	}
 
-	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
-		registerModel(block, new ModelResourceLocation(block.getRegistryName(), "normal"), propertiesToIgnore);
+	private static void registerModel(Block block, ModelResourceLocation modelLocation) {
+
+		ModelLoader.setCustomStateMapper(block, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return modelLocation;
+			}
+		});
+		Item item = Item.getItemFromBlock(block);
+		if (item != null)
+			ModelLoader.setCustomModelResourceLocation(item, 0,  modelLocation);
 	}
 
-	private static void registerModel(Block block, ModelResourceLocation modelLocation, IProperty<?>... propertiesToIgnore) {
+	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
 
 		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
 		Item item = Item.getItemFromBlock(block);
 		if (item != null)
-			ModelLoader.setCustomModelResourceLocation(item, 0, modelLocation);
+			ModelLoader.setCustomModelResourceLocation(item, 0,  new ModelResourceLocation(block.getRegistryName(), "normal"));
 	}
 
 	public static void init() {
@@ -228,8 +241,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 */
 
 		MinecraftForge.EVENT_BUS.register(instance);
-		FMLCommonHandler.instance().bus().register(instance);
-		gl14 = GLContext.getCapabilities().OpenGL14;
+		gl14 = GLContext.getCapabilities().OpenGL14; //TODO what is this used for? doesn't seem to have anything referring to it
 
 		IReloadableResourceManager manager = (IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager();
 		manager.registerReloadListener(instance);
@@ -246,6 +258,17 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void onPreTextureStitch(TextureStitchEvent.Pre e) {
 
+		registerFluidSprites(e.getMap(), milkLiquid.getFluid());
+		registerFluidSprites(e.getMap(), sludgeLiquid.getFluid());
+		registerFluidSprites(e.getMap(), sewageLiquid.getFluid());
+		registerFluidSprites(e.getMap(), essenceLiquid.getFluid());
+		registerFluidSprites(e.getMap(), biofuelLiquid.getFluid());
+		registerFluidSprites(e.getMap(), meatLiquid.getFluid());
+		registerFluidSprites(e.getMap(), pinkSlimeLiquid.getFluid());
+		registerFluidSprites(e.getMap(), chocolateMilkLiquid.getFluid());
+		registerFluidSprites(e.getMap(), mushroomSoupLiquid.getFluid());
+		registerFluidSprites(e.getMap(), steamFluid.getFluid());
+		
 /* TODO add code to gen GUI background
 		SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
 		ContainerAutoDisenchanter.background = e.map.registerIcon("minefactoryreloaded:gui/book");
@@ -255,6 +278,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ContainerAutoBrewer.bottle = e.map.registerIcon("minefactoryreloaded:gui/bottle");
 		ContainerFisher.background = e.map.registerIcon("minefactoryreloaded:gui/fishingrod");
 */
+	}
+
+	private void registerFluidSprites(TextureMap textureMap, Fluid fluid) {
+		if (fluid != null) {
+			textureMap.registerSprite(fluid.getStill());
+			textureMap.registerSprite(fluid.getFlowing());
+		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)

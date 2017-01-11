@@ -242,7 +242,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public static Fluid registerFluid(String name, int density, int lightValue, int temp, EnumRarity rarity) {
 
 		name = name.toLowerCase(Locale.ENGLISH);
-		Fluid fluid = new Fluid(name, new ResourceLocation("blocks/fluid/fluid.mfr." + name + ".still"), new ResourceLocation("blocks/fluid/fluid.mfr." + name + ".flowing"));
+		Fluid fluid = new Fluid(name, new ResourceLocation("minefactoryreloaded:blocks/fluid/fluid.mfr." + name + ".still"), new ResourceLocation("minefactoryreloaded:blocks/fluid/fluid.mfr." + name + ".flowing"));
 		if (!FluidRegistry.registerFluid(fluid))
 			fluid = FluidRegistry.getFluid(name);
 		if (density != 0) {
