@@ -28,7 +28,7 @@ public class ItemFactory extends Item {
 	public Item setUnlocalizedName(String name) {
 
 		super.setUnlocalizedName(name);
-		MFRRegistry.registerItem(this, getUnlocalizedName());
+		MFRRegistry.registerItem(this, getUnlocalizedName()); //TODO move this to a better place
 		return this;
 	}
 

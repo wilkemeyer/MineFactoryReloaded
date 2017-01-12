@@ -256,9 +256,9 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public boolean activated(World world, BlockPos pos, EntityPlayer entityplayer, EnumFacing side) {
+	public boolean activated(World world, BlockPos pos, EntityPlayer entityplayer, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
-		if (super.activated(world, pos, entityplayer, side))
+		if (super.activated(world, pos, entityplayer, side, hand, heldItem))
 			return true;
 		TileEntity te = getTile(world, pos);
 		if (te == null) {
@@ -266,12 +266,12 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		}
 
 		if (te instanceof TileEntityFactoryInventory) {
-			if (((TileEntityFactoryInventory)te).acceptUpgrade(entityplayer.getActiveItemStack())) {
+			if (((TileEntityFactoryInventory)te).acceptUpgrade(heldItem)) {
 				if (entityplayer.capabilities.isCreativeMode) {
-					++entityplayer.getActiveItemStack().stackSize;
+					++heldItem.stackSize;
 				}
-				if (entityplayer.getActiveItemStack().stackSize <= 0) {
-					EntityEquipmentSlot slot = entityplayer.getActiveHand() == EnumHand.OFF_HAND ? EntityEquipmentSlot.OFFHAND : EntityEquipmentSlot.MAINHAND;
+				if (heldItem.stackSize <= 0) {
+					EntityEquipmentSlot slot = hand == EnumHand.OFF_HAND ? EntityEquipmentSlot.OFFHAND : EntityEquipmentSlot.MAINHAND;
 					entityplayer.setItemStackToSlot(slot, null);
 				}
 				return true;

@@ -36,26 +36,6 @@ public class BlockFactoryPlastic extends BlockFactory {
 		return state.getValue(VARIANT).meta;
 	}
 
-	/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		for (int i = 0; i < _icons.length; i++) {
-			String name = getName(unlocalizedName, _names[i]);
-			_icons[i] = ir.registerIcon("minefactoryreloaded:tile." + name);
-		}
-	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		if (side < 2 & meta == 2) {
-			--meta;
-		}
-		return _icons[Math.min(meta, _icons.length - 1)];
-	}
-*/
 	public enum Variant implements IStringSerializable {
 
 		REGULAR(0, "regular"),

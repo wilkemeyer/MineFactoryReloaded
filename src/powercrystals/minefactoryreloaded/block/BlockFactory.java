@@ -141,32 +141,31 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 			return false;
 
 		activationOffsets(xOffset, yOffset, zOffset);
-		return activated(world, pos, player, side);
+		return activated(world, pos, player, side, hand, heldItem);
 	}
 
 	protected void activationOffsets(float xOffset, float yOffset, float zOffset) {}
 
-	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side)
+	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem)
 	{
 		TileEntity te = world.getTileEntity(pos);
 		if (te == null)
 		{
 			return false;
 		}
-		ItemStack ci = player.inventory.getCurrentItem();
-		if (ci != null && te instanceof ITankContainerBucketable)
+		if (heldItem != null && te instanceof ITankContainerBucketable)
 		{
-			boolean isFluidContainer = ci.getItem() instanceof IFluidContainerItem;
-			if ((isFluidContainer || FluidContainerRegistry.isEmptyContainer(ci)) &&
-					((ITankContainerBucketable)te).allowBucketDrain(ci))
+			boolean isFluidContainer = heldItem.getItem() instanceof IFluidContainerItem;
+			if ((isFluidContainer || FluidContainerRegistry.isEmptyContainer(heldItem)) &&
+					((ITankContainerBucketable)te).allowBucketDrain(heldItem))
 			{
 				if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, player))
 				{
 					return true;
 				}
 			}
-			if ((isFluidContainer || FluidContainerRegistry.isFilledContainer(ci)) &&
-					((ITankContainerBucketable)te).allowBucketFill(ci))
+			if ((isFluidContainer || FluidContainerRegistry.isFilledContainer(heldItem)) &&
+					((ITankContainerBucketable)te).allowBucketFill(heldItem))
 			{
 				if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, player))
 				{

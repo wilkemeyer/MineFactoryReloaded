@@ -4,7 +4,9 @@ import cofh.api.block.IBlockInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockAccess;
@@ -141,9 +143,9 @@ public class BlockTank extends BlockFactory implements IBlockInfo {
 */
 
 	@Override
-	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
+	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
-		super.activated(world, pos, player, side);
+		super.activated(world, pos, player, side, hand, heldItem);
 		return true;
 	}
 

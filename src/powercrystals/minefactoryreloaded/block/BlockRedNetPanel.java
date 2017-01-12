@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -88,9 +89,8 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 	}
 
 	@Override
-	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side)
+	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem)
 	{
-		ItemStack s = player.inventory.getCurrentItem();
 		IBlockState state = world.getBlockState(pos);
 
 		TileEntity te = getTile(world, pos);
@@ -106,9 +106,9 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 			player.openGui(MineFactoryReloadedCore.instance(), 0, world, pos.getX(), pos.getY(), pos.getZ());
 			return true;
 		}
-		else if(te instanceof TileEntityRedNetHistorian && s != null && s.getItem().equals(Items.DYE))
+		else if(te instanceof TileEntityRedNetHistorian && heldItem != null && heldItem.getItem().equals(Items.DYE))
 		{
-			((TileEntityRedNetHistorian)te).setSelectedSubnet(15 - s.getItemDamage());
+			((TileEntityRedNetHistorian)te).setSelectedSubnet(15 - heldItem.getItemDamage());
 			MFRUtil.notifyBlockUpdate(world, pos, state);
 			return true;
 		}

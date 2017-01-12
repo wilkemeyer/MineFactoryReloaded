@@ -41,7 +41,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 	}
 
 	@Override
-	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
+	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityPlasticPipe) {
@@ -61,15 +61,12 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 			}
 			int subSide = _subSideMappings[subHit];
 
-			ItemStack s = player.getActiveItemStack();
-			EntityEquipmentSlot activeSlot = player.getActiveHand() == EnumHand.OFF_HAND ? EntityEquipmentSlot.OFFHAND : EntityEquipmentSlot.MAINHAND;
-
 			l2: if (cable.onPartHit(player, EnumFacing.VALUES[subSide], subHit)) {
 				if (MFRUtil.isHoldingUsableTool(player, pos)) {
 					MFRUtil.usedWrench(player, pos);
 				}
 			}
-			else if (s != null && s.isItemEqual(new ItemStack(Blocks.REDSTONE_TORCH))) {
+			else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_TORCH))) {
 				int t = cable.getUpgrade();
 				if (t != 0) {
 					if (t == 1) break l2;
@@ -78,8 +75,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 				}
 				if (!world.isRemote) {
 					if (!player.capabilities.isCreativeMode) {
-						player.setItemStackToSlot(activeSlot, ItemHelper.consumeItem(s));
-						
+						ItemHelper.consumeItem(heldItem);
 					}
 					cable.setUpgrade(1);
 					neighborChanged(state, world, pos, Blocks.AIR);
@@ -88,7 +84,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 				}
 				return true;
 			}
-			else if (s != null && s.isItemEqual(new ItemStack(Blocks.REDSTONE_BLOCK))) {
+			else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_BLOCK))) {
 				int t = cable.getUpgrade();
 				if (t != 0) {
 					if (t == 2) break l2;
@@ -97,7 +93,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 				}
 				if (!world.isRemote) {
 					if (!player.capabilities.isCreativeMode)
-						player.setItemStackToSlot(activeSlot, ItemHelper.consumeItem(s));
+						ItemHelper.consumeItem(heldItem);
 					cable.setUpgrade(2);
 					neighborChanged(state, world, pos, Blocks.AIR);
 					player.addChatMessage(new TextComponentTranslation(

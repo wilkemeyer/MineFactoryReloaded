@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -137,7 +138,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
+	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityRedNetCable) {
@@ -158,8 +159,6 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 			}
 			int subSide = _subSideMappings[subHit];
 
-			ItemStack s = player.inventory.getCurrentItem();
-
 			if (cable.onPartHit(player, EnumFacing.VALUES[subSide], subHit)) {
 				;
 			} else if (subHit >= (2 + 6 * 2) && subHit < (2 + 6 * 3)) {
@@ -176,9 +175,9 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 						cable.setSideColor(EnumFacing.VALUES[subSide], nextColor);
 						return true;
 					}
-				} else if (s != null && s.getItem().equals(Items.DYE)) {
+				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
-						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - s.getItemDamage());
+						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());
 						return true;
 					}
 				}
@@ -241,9 +240,9 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 						}
 					}
 					MFRUtil.usedWrench(player, pos);
-				} else if (s != null && s.getItem().equals(Items.DYE)) {
+				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
-						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - s.getItemDamage());
+						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());
 						MFRUtil.notifyBlockUpdate(world, pos, state);
 						return true;
 					}

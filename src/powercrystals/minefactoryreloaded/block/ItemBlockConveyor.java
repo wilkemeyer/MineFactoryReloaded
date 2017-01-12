@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 
 public class ItemBlockConveyor extends ItemBlockFactory
 {
-	public ItemBlockConveyor(Block p_i45328_1_, String[] names)
+	public ItemBlockConveyor(Block block, String[] names)
 	{
-		super(p_i45328_1_, names);
+		super(block, names);
 	}
 
 	@Override

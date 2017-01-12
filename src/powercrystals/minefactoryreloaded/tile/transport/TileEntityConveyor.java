@@ -12,6 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -29,7 +30,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 public class TileEntityConveyor extends TileEntityBase
 			implements IRotateableTile, ISidedInventory, IPipeConnection, IInventoryConnection
 {
-	private int _dye = -1;
+	EnumDyeColor _dye = null;
 
 	private boolean _rednetReversed = false;
 	private boolean _isReversed = false;
@@ -41,12 +42,12 @@ public class TileEntityConveyor extends TileEntityBase
 
 	private boolean _isFast = false;
 
-	public int getDyeColor()
+	public EnumDyeColor getDyeColor()
 	{
 		return _dye;
 	}
 
-	public void setDyeColor(int dye)
+	public void setDyeColor(EnumDyeColor dye)
 	{
 		if(worldObj != null && !worldObj.isRemote && _dye != dye)
 		{
@@ -59,7 +60,7 @@ public class TileEntityConveyor extends TileEntityBase
 	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("dye", _dye);
+		data.setInteger("dye", _dye == null ? -1 : _dye.getMetadata());
 		data.setBoolean("conveyorActive", _conveyorActive);
 		data.setBoolean("isFast", _isFast);
 		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
@@ -70,7 +71,7 @@ public class TileEntityConveyor extends TileEntityBase
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
 		NBTTagCompound data = pkt.getNbtCompound();
-		_dye = data.getInteger("dye");
+		_dye = data.getInteger("dye") == -1 ? null : EnumDyeColor.byMetadata(data.getInteger("dye"));
 		_conveyorActive = data.getBoolean("conveyorActive");
 		_isFast = data.getBoolean("isFast");
 	}
@@ -267,7 +268,7 @@ public class TileEntityConveyor extends TileEntityBase
 	{
 		super.writeToNBT(tag);
 
-		tag.setInteger("dyeColor", _dye);
+		tag.setInteger("dyeColor", _dye == null ? -1 : _dye.getMetadata());
 		tag.setBoolean("isReversed", _isReversed);
 		tag.setBoolean("redNetActive", _conveyorActive);
 		tag.setBoolean("gateActive", _gateAllowsActive);
@@ -285,7 +286,7 @@ public class TileEntityConveyor extends TileEntityBase
 
 		if(tag.hasKey("dyeColor"))
 		{
-			_dye = tag.getInteger("dyeColor");
+			_dye = tag.getInteger("dyeColor") == -1 ? null : EnumDyeColor.byMetadata(tag.getInteger("dyeColor"));
 		}
 		if (tag.hasKey("redNetActive"))
 		{

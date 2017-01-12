@@ -6,7 +6,9 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -109,7 +111,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side) {
+	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
 		if (MFRUtil.isHoldingUsableTool(player, pos)) {
 			if (rotateBlock(world, pos, side)) {
@@ -121,10 +123,9 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		if (MFRUtil.isHolding(player, ItemLogicUpgradeCard.class)) {
 			TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
 			if (logic != null) {
-				if (logic.insertUpgrade(player.inventory.getCurrentItem().getItemDamage() + 1)) {
+				if (logic.insertUpgrade(heldItem.getItemDamage() + 1)) {
 					if (!player.capabilities.isCreativeMode) {
-						player.inventory.setInventorySlotContents(player.inventory.currentItem,
-							ItemHelper.consumeItem(player.inventory.getCurrentItem(), player));
+						ItemHelper.consumeItem(heldItem, player);
 					}
 					return true;
 				}

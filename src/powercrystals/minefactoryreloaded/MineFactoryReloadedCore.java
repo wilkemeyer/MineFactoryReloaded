@@ -438,7 +438,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		rocketLauncherItem = (new ItemRocketLauncher()).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
-		registerBlock(conveyorBlock, ItemBlockConveyor.class, BlockConveyor._names);
+		registerBlock(conveyorBlock, new ItemBlockConveyor(conveyorBlock, BlockConveyor._names));
 		registerBlock(machineBlock, new ItemBlockFactory(machineBlock, BlockFactoryDecoration.Variant.NAMES));
 		machineBaseItem = Item.getItemFromBlock(machineBlock);
 
