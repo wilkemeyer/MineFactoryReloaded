@@ -103,7 +103,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "chocolate_milk"));
 		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "mushroom_soup"));
 		registerModel(MFRThings.steamFluid, new ModelResourceLocation("minefactoryreloaded:fluid", "steam"));
-
+		ModelLoader.setCustomModelResourceLocation(MFRThings.milkBottleItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":milk_bottle"));
+		
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 	}
 	

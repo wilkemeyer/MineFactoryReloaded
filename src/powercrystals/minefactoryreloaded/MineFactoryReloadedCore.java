@@ -237,6 +237,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		mushroomSoup = registerFluid("mushroom_soup", 1500, EnumRarity.COMMON);
 		steam = registerFluid("steam", -100, 0, 673, EnumRarity.COMMON);
 
+		FluidRegistry.addBucketForFluid(milk);
 		FluidRegistry.addBucketForFluid(sludge);
 		FluidRegistry.addBucketForFluid(sewage);
 		FluidRegistry.addBucketForFluid(essence);
