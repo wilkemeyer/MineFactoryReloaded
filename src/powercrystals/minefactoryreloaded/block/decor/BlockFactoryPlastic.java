@@ -59,7 +59,7 @@ public class BlockFactoryPlastic extends BlockFactory {
 	public enum Variant implements IStringSerializable {
 
 		REGULAR(0, "regular"),
-		PRC(1, "paver"),
+		PAVER(1, "paver"),
 		COLUMN(2, "column"),
 		BRICKS_LARGE(3, "bricks_large"),
 		CHISELED(4, "chiseled"),
