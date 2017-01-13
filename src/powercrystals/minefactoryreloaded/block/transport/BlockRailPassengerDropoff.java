@@ -28,26 +28,18 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 	@Override
 	public void onMinecartPass(World world, EntityMinecart minecart, BlockPos pos) {
 
-		if (world.isRemote)
+		if (world.isRemote || minecart.getPassengers().size() < 1)
 			return;
 
 		Class<? extends EntityLivingBase> target = isPowered(world, pos) ? EntityLiving.class : EntityPlayer.class;
 		if (!target.isInstance(minecart.getPassengers().get(0)))
 			return;
 
-		Entity player = minecart.getPassengers().get(0);
-		AxisAlignedBB dropCoords = findSpaceForPlayer(player, pos, world);
-		if (dropCoords == null)
-			return;
-
-		player.dismountRidingEntity();
-		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityLivingBase) player,
-			dropCoords.minX + (dropCoords.maxX - dropCoords.minX) / 2,
-			dropCoords.minY,
-			dropCoords.minZ + (dropCoords.maxZ - dropCoords.minZ) / 2);
+		Entity entity = minecart.getPassengers().get(0);
+		entity.dismountRidingEntity();
 	}
 
-	private AxisAlignedBB findSpaceForPlayer(Entity entity, BlockPos pos, World world) {
+	private AxisAlignedBB findSpaceForEntity(Entity entity, BlockPos pos, World world) {
 
 		final int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
 		final int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt() * 2;
@@ -57,13 +49,13 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 		final double halfX = (bb.maxX - bb.minX) / 2;
 		final double halfZ = (bb.maxZ - bb.minZ) / 2;
 
-		bb.offset(pos.getX() - bb.minX + .5 - halfX, pos.getY() - bb.minY + 0.05, pos.getZ() - bb.minZ + .5 - halfZ);
+		bb = bb.offset(pos.getX() - bb.minX + .5 - halfX, pos.getY() - bb.minY + 0.05, pos.getZ() - bb.minZ + .5 - halfZ);
 
-		bb.offset(0, -(searchY >> 1), 0);
+		bb = bb.offset(0, -(searchY >> 1), 0);
 		for (int offsetY = -searchY; offsetY <= searchY; offsetY++) {
-			bb.offset(-searchX, 0, 0);
+			bb = bb.offset(-searchX, 0, 0);
 			for (int offsetX = -searchX; offsetX <= searchX; offsetX++) {
-				bb.offset(0, 0, -searchX);
+				bb = bb.offset(0, 0, -searchX);
 				for (int offsetZ = -searchX; offsetZ <= searchX; offsetZ++) {
 
 					if (world.getCollisionBoxes(bb).isEmpty()
@@ -76,11 +68,11 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 						if (!isBadBlockToStandOn(world, new BlockPos(targetX, targetY - 1, targetZ)))
 							return bb;
 					}
-					bb.offset(0, 0, 1);
+					bb = bb.offset(0, 0, 1);
 				}
-				bb.offset(1, 0, -searchX - 1);
+				bb = bb.offset(1, 0, -searchX - 1);
 			}
-			bb.offset(-searchX - 1, 0.5, 0);
+			bb = bb.offset(-searchX - 1, 0.5, 0);
 		}
 
 		return null;

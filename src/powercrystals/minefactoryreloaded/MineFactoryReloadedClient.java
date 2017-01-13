@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -67,8 +66,6 @@ import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
-import javax.annotation.Nullable;
-
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IResourceManagerReloadListener {
 
@@ -117,23 +114,29 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		for (int i=0; i < 17; i++)
 			ModelLoader.setCustomModelResourceLocation(item, i,  new ModelResourceLocation(MFRThings.conveyorBlock.getRegistryName(), "inventory"));
 
-		ModelLoader.setCustomStateMapper(MFRThings.railPickupCargoBlock, new StateMapperBase() {
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "shape=" + state.getValue(BlockFactoryRail.SHAPE) + ",type=cargo_pickup");
-			}
-		});
-/*
-		registerModel(MFRThings.railDropoffPassengerBlock, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "type=passenger_dropoff, shape=inventory"));
-		registerModel(MFRThings.railPickupPassengerBlock);
-		registerModel(MFRThings.railDropoffCargoBlock);
-*/
+		registerRailModel(MFRThings.railPickupCargoBlock, "cargo_pickup");
+		registerRailModel(MFRThings.railDropoffCargoBlock, "cargo_dropoff");
+		registerRailModel(MFRThings.railPickupPassengerBlock, "passenger_pickup");
+		registerRailModel(MFRThings.railDropoffPassengerBlock, "passenger_dropoff");
 
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
 	}
-	
+
+	private static void registerRailModel(Block railBlock, final String typeVariant) {
+		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "shape=" + state.getValue(BlockFactoryRail.SHAPE) + ",type=" + typeVariant);
+			}
+		});
+
+		Item item = Item.getItemFromBlock(railBlock);
+		if (item != null)
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail_" + typeVariant, "inventory"));
+	}
+
 	private static void registerModel(Block block, String propertyName, String[] values, IProperty<?>... propertiesToIgnore) {
 
 		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
