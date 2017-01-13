@@ -6,6 +6,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +28,24 @@ public class BlockFactoryRail extends BlockRailBase {
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MFRCreativeTab.tab);
 		canSlope = slopes;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+
+		return new BlockStateContainer(this, SHAPE, POWERED);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+
+		return this.getDefaultState().withProperty(SHAPE, BlockRailBase.EnumRailDirection.byMetadata(meta & 7)).withProperty(POWERED, (meta & 8) > 0);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		return state.getValue(SHAPE).getMetadata() | (state.getValue(POWERED) ? 0 : 8);
 	}
 
 	@Override
@@ -62,15 +81,6 @@ public class BlockFactoryRail extends BlockRailBase {
 		}
 	}
 
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-
-		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-
-*/
 	@Override
 	public IProperty<EnumRailDirection> getShapeProperty() {
 		return SHAPE;

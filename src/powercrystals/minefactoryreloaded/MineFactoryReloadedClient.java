@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -19,7 +18,6 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -63,6 +61,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
+import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -101,22 +100,34 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.pinkSlimeBlock);
 
 		//fluids
-		registerModel(MFRThings.milkLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "milk"));
-		registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "sludge"));
-		registerModel(MFRThings.sewageLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "sewage"));
-		registerModel(MFRThings.essenceLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "mob_essence"));
-		registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "biofuel"));
-		registerModel(MFRThings.meatLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "meat"));
-		registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "pink_slime"));
-		registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "chocolate_milk"));
-		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation("minefactoryreloaded:fluid", "mushroom_soup"));
-		registerModel(MFRThings.steamFluid, new ModelResourceLocation("minefactoryreloaded:fluid", "steam"));
+		registerModel(MFRThings.milkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "milk"));
+		registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sludge"));
+		registerModel(MFRThings.sewageLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sewage"));
+		registerModel(MFRThings.essenceLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mob_essence"));
+		registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "biofuel"));
+		registerModel(MFRThings.meatLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "meat"));
+		registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "pink_slime"));
+		registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "chocolate_milk"));
+		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
+		registerModel(MFRThings.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.milkBottleItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":milk_bottle"));
 
 		//transport
 		Item item = Item.getItemFromBlock(MFRThings.conveyorBlock);
 		for (int i=0; i < 17; i++)
 			ModelLoader.setCustomModelResourceLocation(item, i,  new ModelResourceLocation(MFRThings.conveyorBlock.getRegistryName(), "inventory"));
+
+		ModelLoader.setCustomStateMapper(MFRThings.railPickupCargoBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "shape=" + state.getValue(BlockFactoryRail.SHAPE) + ",type=cargo_pickup");
+			}
+		});
+/*
+		registerModel(MFRThings.railDropoffPassengerBlock, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "type=passenger_dropoff, shape=inventory"));
+		registerModel(MFRThings.railPickupPassengerBlock);
+		registerModel(MFRThings.railDropoffCargoBlock);
+*/
 
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 
@@ -179,18 +190,15 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}, MFRThings.conveyorBlock);
 
 		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-		itemColors.registerItemColorHandler(new IItemColor() {
-			@Override
-			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+		itemColors.registerItemColorHandler((stack, tintIndex) -> {
 
-				if (tintIndex != 0)
-					return 0xFFFFFF;
+			if (tintIndex != 0)
+				return 0xFFFFFF;
 
-				if (stack.getItemDamage() == 16)
-					return 0xf6a82c;
+			if (stack.getItemDamage() == 16)
+				return 0xf6a82c;
 
-				return EnumDyeColor.byMetadata(stack.getItemDamage()).getMapColor().colorValue;
-			}
+			return EnumDyeColor.byMetadata(stack.getItemDamage()).getMapColor().colorValue;
 		}, MFRThings.conveyorBlock);
 
 

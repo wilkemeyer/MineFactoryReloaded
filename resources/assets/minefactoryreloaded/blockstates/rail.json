@@ -1,0 +1,51 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "minecraft:rail_flat"
+    },
+    "variants": {
+        "type": {
+            "cargo_dropoff": {
+                "textures": {
+                    "rail": "minefactoryreloaded:blocks/tile.mfr.rail.cargo.dropoff"
+                }
+            },
+            "cargo_pickup": {
+                "textures": {
+                    "rail": "minefactoryreloaded:blocks/tile.mfr.rail.cargo.pickup"
+                }
+            },
+            "passenger_dropoff": {
+                "textures": {
+                    "rail": "minefactoryreloaded:blocks/tile.mfr.rail.passenger.dropoff"
+                }
+            },
+            "passenger_pickup": {
+                "textures": {
+                    "rail": "minefactoryreloaded:blocks/tile.mfr.rail.passenger.pickup"
+                }
+            }
+        },
+        "shape": {
+            "north_south": {
+            },
+            "east_west": {
+                "y": 90
+            },
+            "ascending_east": {
+                "model": "minecraft:rail_raised_ne",
+                "y": 90
+            },
+            "ascending_west": {
+                "model": "minecraft:rail_raised_sw",
+                "y": 90
+            },
+            "ascending_north": {
+                "model": "minecraft:rail_raised_ne"
+            },
+            "ascending_south": {
+                "model": "minecraft:rail_raised_sw"
+            }
+        }
+    }
+}
