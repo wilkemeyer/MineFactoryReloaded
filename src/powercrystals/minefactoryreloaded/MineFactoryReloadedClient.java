@@ -175,7 +175,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 					return 0xf6a82c;
 				}
 			}
-			return 0;
+			return 0xFFFFFF;
 		}, MFRThings.conveyorBlock);
 
 		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
@@ -184,7 +184,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 
 				if (tintIndex != 0)
-					return 0;
+					return 0xFFFFFF;
 
 				if (stack.getItemDamage() == 16)
 					return 0xf6a82c;

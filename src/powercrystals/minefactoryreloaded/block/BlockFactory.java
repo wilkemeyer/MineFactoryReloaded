@@ -94,7 +94,6 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 			harvesters.set(player);
 			dropBlockAsItem(world, pos, state, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getActiveItemStack()));
 			harvesters.set(null);
-			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 7);
 		}
 	}
 
