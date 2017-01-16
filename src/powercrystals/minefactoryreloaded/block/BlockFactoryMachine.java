@@ -1,10 +1,14 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.core.CoFHProps;
 import cofh.lib.util.position.IRotateableTile;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -35,7 +39,10 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
-
+	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+	public static final PropertyBool CB = PropertyBool.create("cb");
+	
 	private int _mfrMachineBlockIndex;
 
 	public BlockFactoryMachine(int index) {
@@ -52,7 +59,36 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		return _mfrMachineBlockIndex;
 	}
 
-/*
+	@Override
+	protected BlockStateContainer createBlockState() {
+		
+		return new BlockStateContainer(this, TYPE, FACING, ACTIVE, CB);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(TYPE, Type.byMetadata(_mfrMachineBlockIndex, meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(TYPE).getMeta();
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		
+		if (world.getTileEntity(pos) instanceof TileEntityFactory) {
+			TileEntityFactory te = (TileEntityFactory) world.getTileEntity(pos);
+			return state.withProperty(FACING, te.getDirectionFacing()).withProperty(ACTIVE, te.isActive()).withProperty(CB, CoFHProps.enableColorBlindTextures);
+		}
+		
+		return state;
+	}
+
+	/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir) {
@@ -237,7 +273,8 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, getMetaFromState(state)).getNewTileEntity();
+		
+		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, state.getValue(TYPE).getMeta()).getNewTileEntity();
 	}
 
 	@Override
@@ -348,41 +385,67 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	public enum Type implements IStringSerializable {
-		PLANTER(0, 0, "Planter"),
-		FISHER(0, 1, "Fisher"),
-		HARVESTER(0, 2, "Harvester"),
-		RANCHER(0, 3, "Rancher"),
-		FERTILIZER(0, 4, "Fertilizer"),
-		VET(0, 5, "Vet"),
-		ITEMCOLLECTOR(0, 6, "ItemCollector"),
-		BLOCKBREAKER(0, 7, "BlockBreaker"),
-		WEATHERCOLLECTOR(0, 8, "WeatherCollector"),
-		SLUDGEBOILER(0, 9, "SludgeBoiler"),
-		SEWER(0, 10, "Sewer"),
-		COMPOSTER(0, 11, "Composter"),
-		BREEDER(0, 12, "Breeder"),
-		GRINDER(0, 13, "Grinder"),
-		AUTOENCHANTER(0, 14, "AutoEnchanter"),
-		CHRONOTYPER(0, 15, "Chronotyper"),
+		PLANTER(0, 0, "planter"),
+		FISHER(0, 1, "fisher"),
+		HARVESTER(0, 2, "harvester"),
+		RANCHER(0, 3, "rancher"),
+		FERTILIZER(0, 4, "fertilizer"),
+		VET(0, 5, "vet"),
+		ITEM_COLLECTOR(0, 6, "item_collector"),
+		BLOCK_BREAKER(0, 7, "block_breaker"),
+		WEATHER_COLLECTOR(0, 8, "weather_collector"),
+		SLUDGE_BOILER(0, 9, "sludge_boiler"),
+		SEWER(0, 10, "sewer"),
+		COMPOSTER(0, 11, "composter"),
+		BREEDER(0, 12, "breeder"),
+		GRINDER(0, 13, "grinder"),
+		AUTO_ENCHANTER(0, 14, "auto_enchanter"),
+		CHRONOTYPER(0, 15, "chronotyper"),
 
-		EJECTOR(1, 0, "Ejector"),
-		ITEMROUTER(1, 1, "ItemRouter"),
-		LIQUIDROUTER(1, 2, "LiquidRouter"),
-		DEEPSTORAGEUNIT(1, 3, "DeepStorageUnit");
+		EJECTOR(1, 0, "ejector"),
+		ITEM_ROUTER(1, 1, "item_router"),
+		LIQUID_ROUTER(1, 2, "liquid_router"),
+		DEEP_STORAGE_UNIT(1, 3, "deep_storage_unit"),
+		LIQUI_CRAFTER(1, 4, "liqui_crafter"),
+		LAVA_FABRICATOR(1, 5, "lava_fabricator"),
+		STEAM_BOILER(1, 6, "steam_boiler"),
+		AUTO_JUKEBOX(1, 7, "auto_jukebox"),
+		UNIFIER(1, 8, "unifier"),
+		AUTO_SPAWNER(1, 9, "auto_spawner"),
+		BIO_REACTOR(1, 10, "bio_reactor"),
+		BIO_FUEL_GENERATOR(1, 11, "bio_fuel_generator"),
+		AUTO_DISENCHANTER(1, 12, "auto_disenchanter"),
+		SLAUGHTER_HOUSE(1, 13, "slaughter_house"),
+		MEAT_PACKER(1, 14, "meat_packer"),
+		ENCHANTMENT_ROUTER(1, 15, "enchantment_router"),
 
-		private final int group;
+		LASER_DRILL(2, 0, "laser_drill"),
+		LASER_DRILL_PRECHARGER(2, 1, "laser_drill_precharger"),
+		AUTO_ANVIL(2, 2, "auto_anvil"),
+		BLOCK_SMASHER(2, 3, "block_smasher"),
+		RED_NOTE(2, 4, "red_note"),
+		AUTO_BREWER(2, 5, "auto_brewer"),
+		FRUIT_PICKER(2, 6, "fruit_picker"),
+		BLOCK_PLACER(2, 7, "block_placer"),
+		MOB_COUNTER(2, 8, "mob_counter"),
+		STEAM_TURBINE(2, 9, "steam_turbine"),
+		CHUNK_LOADER(2, 10, "chunk_loader"),
+		FOUNTAIN(2, 11, "fountain"),
+		MOB_ROUTER(2, 12, "mob_router");
+		
+		private final int groupIndex;
 		private final int meta;
 		private final String name;
 
-		Type(int group, int meta, String name) {
+		Type(int groupIndex, int meta, String name) {
 
-			this.group = group;
+			this.groupIndex = groupIndex;
 			this.meta = meta;
 			this.name = name;
 		}
 
-		public int getGroup() {
-			return group;
+		public int getGroupIndex() {
+			return groupIndex;
 		}
 
 		public int getMeta() {
@@ -392,6 +455,11 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		@Override
 		public String getName() {
 			return name;
+		}
+		
+		public static Type byMetadata(int groupIndex, int meta) {
+			
+			return values()[groupIndex * 16 + meta];
 		}
 	}
 }

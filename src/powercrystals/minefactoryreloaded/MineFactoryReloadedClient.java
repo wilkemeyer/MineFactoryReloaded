@@ -7,6 +7,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
@@ -27,10 +28,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -55,6 +53,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
+import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
@@ -63,6 +62,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
+import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -118,6 +118,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerRailModel(MFRThings.railDropoffCargoBlock, "cargo_dropoff");
 		registerRailModel(MFRThings.railPickupPassengerBlock, "passenger_pickup");
 		registerRailModel(MFRThings.railDropoffPassengerBlock, "passenger_dropoff");
+
+		//machines
+		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(0), MachineStateMapper.getInstance());
+		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(1), MachineStateMapper.getInstance());
+		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(2), MachineStateMapper.getInstance());
 
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 
