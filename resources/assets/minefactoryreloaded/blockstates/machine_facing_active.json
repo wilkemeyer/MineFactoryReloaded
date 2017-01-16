@@ -1,0 +1,205 @@
+{
+    "ccl_marker": "1",
+    "variant_sets": [
+        "type,facing,active",
+        "type"
+    ],
+    "defaults": {
+        "model": "minecraft:cube",
+        "transform": "ccl:default-block",
+        "textures": {
+            "particle": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.bottom",
+            "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.top",
+            "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side"
+        }
+    },
+    "variants": {
+        "type": {
+            "harvester": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.harvester.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.harvester.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.harvester.left",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.harvester.right"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.harvester.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "rancher": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.rancher.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.rancher.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.rancher.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.rancher.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.rancher.active.front"
+                            }
+                        },
+                        "false": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.rancher.idle.front"
+                            }
+                        }
+                    }
+                }
+            },
+            "fertilizer": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fertilizer.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fertilizer.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fertilizer.left",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fertilizer.right"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fertilizer.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "vet": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.vet.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.vet.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.vet.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.vet.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.vet.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "block_breaker": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockbreaker.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockbreaker.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockbreaker.left",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockbreaker.right"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockbreaker.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "sludge_boiler": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.idle.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.idle.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.idle.left",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.idle.right"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.active.side",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.active.side",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.active.left",
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sludgeboiler.active.right"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "breeder": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.breeder.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.breeder.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.breeder.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.breeder.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.breeder.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "grinder": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.grinder.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.grinder.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.grinder.left",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.grinder.right"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.grinder.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "chronotyper": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.chronotyper.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.chronotyper.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.chronotyper.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.chronotyper.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.chronotyper.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            }
+        },
+        "facing": {
+            "north": {},
+            "south": {
+                "y": 180
+            },
+            "west": {
+                "y": 270
+            },
+            "east": {
+                "y": 90
+            }
+        }
+    }
+}

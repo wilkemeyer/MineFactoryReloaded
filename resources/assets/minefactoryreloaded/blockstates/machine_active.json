@@ -1,0 +1,159 @@
+{
+    "ccl_marker": "1",
+    "variant_sets": [
+        "type,active",
+        "type"
+    ],
+    "defaults": {
+        "model": "minecraft:cube",
+        "transform": "ccl:default-block",
+        "textures": {
+            "particle": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.bottom",
+            "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.top",
+            "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side"
+        }
+    },
+    "variants": {
+        "type": {
+            "fisher": {
+                "textures": {
+                    "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.idle.bottom",
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fisher.active.bottom"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "item_collector": {
+                "textures": {
+                    "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.idle.bottom",
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.idle.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.idle.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.idle.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.idle.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.idle.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.active.bottom",
+                                "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.active.top",
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.active.side",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.active.side",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.active.side",
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemcollector.active.side"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "deep_storage_unit": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.idle.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.idle.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.idle.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.idle.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.idle.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.active.top",
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.active.side",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.active.side",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.active.side",
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.deepstorageunit.active.side"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "liqui_crafter": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.idle.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.idle.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.idle.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.idle.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.idle.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.active.top",
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.active.side",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.active.side",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.active.side",
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquicrafter.active.side"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "lava_fabricator": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.idle.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.idle.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.idle.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.idle.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.idle.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.active.top",
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.active.side",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.active.side",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.active.side",
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.lavafabricator.active.side"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "steam_boiler": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.idle.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.idle.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.idle.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.idle.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.active.side",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.active.side",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.active.side",
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.steamboiler.active.side"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            }
+        }
+    }
+}

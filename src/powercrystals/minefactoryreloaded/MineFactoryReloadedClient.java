@@ -124,6 +124,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(1), MachineStateMapper.getInstance());
 		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(2), MachineStateMapper.getInstance());
 
+		for (BlockFactoryMachine.Type type : BlockFactoryMachine.Type.values()) {
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(MFRThings.machineBlocks.get(type.getGroupIndex())), type.getMeta(),
+					new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + MachineStateMapper.getModelName(type), "type=" + type.getName()));
+		}
+
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));

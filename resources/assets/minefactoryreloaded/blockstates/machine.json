@@ -1,0 +1,59 @@
+{
+    "ccl_marker": "1",
+    "variant_sets": [
+        "type"
+    ],
+    "defaults": {
+        "model": "minecraft:cube",
+        "transform": "ccl:default-block",
+        "textures": {
+            "particle": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.bottom",
+            "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.top",
+            "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side",
+            "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.0.active.side"
+        }
+    },
+    "variants": {
+        "type": {
+            "weather_collector": {
+                "textures": {
+                    "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.weathercollector.bottom",
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.weathercollector.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.weathercollector.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.weathercollector.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.weathercollector.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.weathercollector.side"
+                }
+            },
+            "sewer": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sewer.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sewer.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sewer.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sewer.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.sewer.side"
+                }
+            },
+            "composter": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.composter.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.composter.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.composter.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.composter.side"
+                }
+            },
+            "auto_enchanter": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoenchanter.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoenchanter.side",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoenchanter.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoenchanter.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoenchanter.side"
+                }
+            }
+        }
+    }
+}

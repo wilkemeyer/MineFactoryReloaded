@@ -39,13 +39,66 @@ public class MachineStateMapper extends StateMapperBase {
 			case GRINDER:
 			case CHRONOTYPER:
 				builder.add(BlockFactoryMachine.FACING);
+				builder.add(BlockFactoryMachine.ACTIVE);
+				break;
 			case FISHER:
 			case ITEM_COLLECTOR:
+			case DEEP_STORAGE_UNIT:
+			case LIQUI_CRAFTER:
+			case LAVA_FABRICATOR:
+			case STEAM_BOILER:
 				builder.add(BlockFactoryMachine.ACTIVE);
+				break;
+			case EJECTOR:
+				builder.add(BlockFactoryMachine.FACING);
+				break;
+			case ITEM_ROUTER:
+			case LIQUID_ROUTER:
+				builder.add(BlockFactoryMachine.FACING);
+				builder.add(BlockFactoryMachine.CB);
 				break;
 		}
 
-		return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":machine", builder.build());
+		return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + getModelName(type), builder.build());
+	}
+
+	public static String getModelName(BlockFactoryMachine.Type type) {
+
+		String model = "machine";
+
+		switch(type) {
+			case PLANTER:
+				model = "machine_active_cb";
+				break;
+			case HARVESTER:
+			case RANCHER:
+			case FERTILIZER:
+			case VET:
+			case BLOCK_BREAKER:
+			case SLUDGE_BOILER:
+			case BREEDER:
+			case GRINDER:
+			case CHRONOTYPER:
+				model = "machine_facing_active";
+				break;
+			case FISHER:
+			case ITEM_COLLECTOR:
+			case DEEP_STORAGE_UNIT:
+			case LIQUI_CRAFTER:
+			case LAVA_FABRICATOR:
+			case STEAM_BOILER:
+				model = "machine_active";
+				break;
+			case EJECTOR:
+				model = "machine_facing";
+				break;
+			case ITEM_ROUTER:
+			case LIQUID_ROUTER:
+				model = "machine_facing_cb";
+				break;
+		}
+
+		return model;
 	}
 
 	class VariantBuilder {

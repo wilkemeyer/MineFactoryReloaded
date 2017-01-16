@@ -5,6 +5,7 @@ import cofh.lib.util.position.IRotateableTile;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
@@ -39,7 +40,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
-	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	public static final PropertyBool CB = PropertyBool.create("cb");
 	
@@ -459,7 +460,8 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		
 		public static Type byMetadata(int groupIndex, int meta) {
 			
-			return values()[groupIndex * 16 + meta];
+			int index = groupIndex * 16 + meta;
+			return index >= values().length ? PLANTER : values()[index];
 		}
 	}
 }
