@@ -92,9 +92,9 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public void cofh_validate() {
+	public void validate() {
 
-		super.cofh_validate();
+		super.validate();
 		if (worldObj.isRemote)
 			return;
 		firstTick();

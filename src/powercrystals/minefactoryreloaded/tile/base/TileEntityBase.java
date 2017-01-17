@@ -35,16 +35,12 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	public void invalidate()
 	{
 		super.invalidate();
-	}
-
-	public void cofh_validate() {
-		inWorld = true;
-	}
-
-	public void cofh_invalidate() {
-		invalidate();
 		inWorld = false;
-		markChunkDirty();
+	}
+
+	@Override
+	public void validate() {
+		inWorld = true;
 	}
 
 	@Override

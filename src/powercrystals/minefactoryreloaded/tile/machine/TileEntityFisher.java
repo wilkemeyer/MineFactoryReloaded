@@ -50,9 +50,9 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public void cofh_validate() {
+	public void validate() {
 
-		super.cofh_validate();
+		super.validate();
 		if (_rand == null) {
 			_rand = new Random(worldObj.getSeed() ^ worldObj.rand.nextLong());
 		}
@@ -181,7 +181,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		super.onFactoryInventoryChanged();
 		boost = 0;
 		_needItem = false;
-		if (!client && _inventory[0] != null) {
+		if (!worldObj.isRemote && _inventory[0] != null) {
 			_luck = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, _inventory[0]);
 			_speed = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantments.LURE, _inventory[0]);
 			boost = 75 * _speed + 75;

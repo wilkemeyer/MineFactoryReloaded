@@ -32,9 +32,9 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void cofh_validate() {
+	public void validate() {
 
-		super.cofh_validate();
+		super.validate();
 		_ignoreChanges = false;
 		onFactoryInventoryChanged();
 	}

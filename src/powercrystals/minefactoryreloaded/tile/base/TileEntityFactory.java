@@ -69,9 +69,9 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public void cofh_validate() {
+	public void validate() {
 
-		super.cofh_validate();
+		super.validate();
 		onRotate();
 		if (worldObj.isRemote && hasHAM()) {
 			MineFactoryReloadedClient.addTileToAreaList(this);

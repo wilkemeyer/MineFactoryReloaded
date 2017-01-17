@@ -138,9 +138,9 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void cofh_validate() {
+	public void validate() {
 
-		super.cofh_validate();
+		super.validate();
 		deadCache = true;
 		handlerCache = null;
 		if (worldObj.isRemote) return;

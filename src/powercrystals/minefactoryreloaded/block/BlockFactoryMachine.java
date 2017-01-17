@@ -83,42 +83,11 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		
 		if (world.getTileEntity(pos) instanceof TileEntityFactory) {
 			TileEntityFactory te = (TileEntityFactory) world.getTileEntity(pos);
-			return state.withProperty(FACING, te.getDirectionFacing()).withProperty(ACTIVE, te.isActive()).withProperty(CB, CoFHProps.enableColorBlindTextures);
+			return state.withProperty(FACING, EnumFacing.getHorizontal(te.getDirectionFacing().getHorizontalIndex())).withProperty(ACTIVE, te.isActive()).withProperty(CB, CoFHProps.enableColorBlindTextures);
 		}
 		
 		return state;
 	}
-
-	/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		Machine.LoadTextures(_mfrMachineBlockIndex, ir);
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess iblockaccess, BlockPos pos, EnumFacing side) {
-
-		int md = iblockaccess.getBlockMetadata(x, y, z);
-		boolean isActive = false;
-		TileEntity te = iblockaccess.getTileEntity(x, y, z);
-		if (te instanceof TileEntityFactory) {
-			side = ((TileEntityFactory) te).getRotatedSide(side);
-			isActive = ((TileEntityFactory) te).isActive();
-		}
-		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, md).getIcon(side, isActive);
-	}
-
-	private static int[] itemRotation = { 0, 1, 3, 2, 5, 4 };
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		side = itemRotation[side];
-		return Machine.getMachineFromIndex(_mfrMachineBlockIndex, meta).getIcon(side, false);
-	}
-*/
 
 	@Override
 	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {

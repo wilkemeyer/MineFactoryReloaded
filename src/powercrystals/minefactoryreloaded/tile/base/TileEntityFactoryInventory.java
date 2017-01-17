@@ -39,7 +39,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected ItemStack[] _inventory;
 
-	protected boolean internalChange = false, client = false;
+	protected boolean internalChange = false;
 
 	protected TileEntityFactoryInventory(Machine machine) {
 
@@ -47,13 +47,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		_inventory = new ItemStack[getSizeInventory()];
 		_tanks = createTanks();
 		setManageFluids(_tanks != null);
-	}
-
-	@Override
-	public void cofh_validate() {
-
-		super.cofh_validate();
-		client = worldObj.isRemote;
 	}
 
 	@Override

@@ -83,6 +83,16 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		ic2Cache = null;
 		if (worldObj.isRemote)
 			return;
+		if (_grid == null) {
+			incorporateTiles();
+			if (_grid == null) {
+				setGrid(new RedstoneEnergyNetwork(this));
+			}
+		}
+		readFromNBT = true;
+		reCache();
+
+		//Packets.sendToAllPlayersWatching(this); //TODO likely just remove
 	}
 
 	@Override
@@ -122,23 +132,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			deadCache = false;
 			RedstoneEnergyNetwork.HANDLER.addConduitForUpdate(this);
 		}
-	}
-
-	@Override
-	public void cofh_validate() {
-
-		super.cofh_validate();
-		if (worldObj.isRemote) return;
-		if (_grid == null) {
-			incorporateTiles();
-			if (_grid == null) {
-				setGrid(new RedstoneEnergyNetwork(this));
-			}
-		}
-		readFromNBT = true;
-		reCache();
-		markDirty();
-		Packets.sendToAllPlayersWatching(this);
 	}
 
 	private void incorporateTiles() {
