@@ -122,11 +122,10 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	public boolean activateMachine()
 	{
 		_grindingWorld.cleanReferences();
-		List<?> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+		List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 
-		entityList: for(Object o : entities)
+		entityList: for(EntityLivingBase e : entities)
 		{
-			EntityLivingBase e = (EntityLivingBase)o;
 			if(e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0 || e.isEntityInvulnerable(_damageSource) || e.getHealth() <= 0)
 			{
 				continue;

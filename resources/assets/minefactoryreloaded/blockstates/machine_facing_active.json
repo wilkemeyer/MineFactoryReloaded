@@ -187,6 +187,82 @@
                         "false": {}
                     }
                 }
+            },
+            "slaughter_house": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.slaughterhouse.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.slaughterhouse.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.slaughterhouse.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.slaughterhouse.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.slaughterhouse.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "laser_drill_precharger": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.idle.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.active.top",
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrillprecharger.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "fruit_picker": {
+                "textures": {
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fruitpicker.top",
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fruitpicker.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fruitpicker.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fruitpicker.side",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fruitpicker.side"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.fruitpicker.active.front"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
+            },
+            "mob_router": {
+                "textures": {
+                    "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobrouter.idle.front",
+                    "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobrouter.idle.back",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobrouter.left",
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobrouter.right"
+                },
+                "variants": {
+                    "active": {
+                        "true": {
+                            "textures": {
+                                "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobrouter.active.front",
+                                "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobrouter.active.back"
+                            }
+                        },
+                        "false": {}
+                    }
+                }
             }
         },
         "facing": {

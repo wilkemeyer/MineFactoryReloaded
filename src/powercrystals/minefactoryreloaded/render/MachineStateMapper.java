@@ -38,6 +38,10 @@ public class MachineStateMapper extends StateMapperBase {
 			case BREEDER:
 			case GRINDER:
 			case CHRONOTYPER:
+			case SLAUGHTER_HOUSE:
+			case LASER_DRILL_PRECHARGER:
+			case FRUIT_PICKER:
+			case MOB_ROUTER:
 				builder.add(BlockFactoryMachine.FACING);
 				builder.add(BlockFactoryMachine.ACTIVE);
 				break;
@@ -47,9 +51,18 @@ public class MachineStateMapper extends StateMapperBase {
 			case LIQUI_CRAFTER:
 			case LAVA_FABRICATOR:
 			case STEAM_BOILER:
+			case BIO_FUEL_GENERATOR:
+			case STEAM_TURBINE:
+			case CHUNK_LOADER:
+			case FOUNTAIN:
+			case LASER_DRILL:
 				builder.add(BlockFactoryMachine.ACTIVE);
 				break;
 			case EJECTOR:
+			case ENCHANTMENT_ROUTER:
+			case AUTO_ANVIL:
+			case BLOCK_PLACER:
+			case MOB_COUNTER:
 				builder.add(BlockFactoryMachine.FACING);
 				break;
 			case ITEM_ROUTER:
@@ -79,6 +92,10 @@ public class MachineStateMapper extends StateMapperBase {
 			case BREEDER:
 			case GRINDER:
 			case CHRONOTYPER:
+			case SLAUGHTER_HOUSE:
+			case LASER_DRILL_PRECHARGER:
+			case FRUIT_PICKER:
+			case MOB_ROUTER:
 				model = "machine_facing_active";
 				break;
 			case FISHER:
@@ -87,9 +104,18 @@ public class MachineStateMapper extends StateMapperBase {
 			case LIQUI_CRAFTER:
 			case LAVA_FABRICATOR:
 			case STEAM_BOILER:
+			case BIO_FUEL_GENERATOR:
+			case STEAM_TURBINE:
+			case CHUNK_LOADER:
+			case FOUNTAIN:
+			case LASER_DRILL:
 				model = "machine_active";
 				break;
 			case EJECTOR:
+			case ENCHANTMENT_ROUTER:
+			case AUTO_ANVIL:
+			case BLOCK_PLACER:
+			case MOB_COUNTER:
 				model = "machine_facing";
 				break;
 			case ITEM_ROUTER:
