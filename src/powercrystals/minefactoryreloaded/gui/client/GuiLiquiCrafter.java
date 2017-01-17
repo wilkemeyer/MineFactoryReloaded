@@ -83,6 +83,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 
+	//TODO replace with call to drawFluid from GuiBase
 	@Override
 	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level) {
 

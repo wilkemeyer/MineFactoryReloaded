@@ -148,34 +148,7 @@ public class GuiFactoryInventory extends GuiBase {
 	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level) {
 
 		if (stack == null) return;
-		Fluid fluid = stack.getFluid();
-		if (fluid == null) return;
-
-		texture = fluid.getStill();
-		if (texture == null)
-			texture = FluidRegistry.LAVA.getFlowing();
-
-		int vertOffset = 0;
-
-		bindTexture();
-
-		while (level > 0) {
-			int texHeight = 0;
-
-			if (level > 16) {
-				texHeight = 16;
-				level -= 16;
-			} else {
-				texHeight = level;
-				level = 0;
-			}
-
-			drawTexturedModalRect(xOffset, yOffset - texHeight - vertOffset, mc.getTextureMapBlocks().getAtlasSprite(texture.toString()), 16, texHeight);
-			vertOffset = vertOffset + 16;
-		}
-
-		bindTexture(this.texture);
-		this.drawTexturedModalRect(xOffset, yOffset - 60, 176, 0, 16, 60);
+		drawFluid(xOffset, yOffset - level, stack, 16, level);
 	}
 
 	protected void bindTexture() {
