@@ -40,6 +40,7 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 
 	@Override
 	public void validate() {
+		super.validate();
 		inWorld = true;
 	}
 

@@ -72,7 +72,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public void validate() {
 
 		super.validate();
-		onRotate();
 		if (worldObj.isRemote && hasHAM()) {
 			MineFactoryReloadedClient.addTileToAreaList(this);
 		}
