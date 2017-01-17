@@ -236,17 +236,18 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	protected void writePacketData(NBTTagCompound tag) {
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
-		super.writePacketData(tag);
 
 		tag.setInteger("color", color);
+
+		return super.writePacketData(tag);
 	}
 
 	@Override
-	protected void readPacketData(NBTTagCompound tag) {
+	protected void handlePacketData(NBTTagCompound tag) {
 
-		super.readPacketData(tag);
+		super.handlePacketData(tag);
 
 		color = tag.getInteger("color");
 	}

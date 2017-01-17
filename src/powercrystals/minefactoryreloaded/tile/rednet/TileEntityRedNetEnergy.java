@@ -258,44 +258,38 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
+
+		tag.setInteger("mode[2]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
+				((sideMode[3] & 0xFF) << 24));
+		tag.setInteger("mode[3]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16));
+
+		return super.writePacketData(tag);
+	}
+
+	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (deadCache)
 			return null;
-		NBTTagCompound data = new NBTTagCompound();
-		data.setIntArray("colors", _sideColors);
-		data.setInteger("mode[0]", (_cableMode[0] & 0xFF) | ((_cableMode[1] & 0xFF) << 8) | ((_cableMode[2] & 0xFF) << 16) |
-				((_cableMode[3] & 0xFF) << 24));
-		data.setInteger("mode[1]", (_cableMode[4] & 0xFF) | ((_cableMode[5] & 0xFF) << 8) | ((_cableMode[6] & 0xFF) << 16));
-		data.setInteger("mode[2]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
-				((sideMode[3] & 0xFF) << 24));
-		data.setInteger("mode[3]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16));
-		data.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
-				(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
-				(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
-		return packet;
+
+		return super.getUpdatePacket();
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	protected void handlePacketData(NBTTagCompound tag) {
 
-		super.onDataPacket(net, pkt);
-		NBTTagCompound data = pkt.getNbtCompound();
-		switch (pkt.getTileEntityType()) {
-		case 0:
-			int mode = data.getInteger("mode[2]");
-			sideMode[0] = (byte) (mode & 0xFF);
-			sideMode[1] = (byte) ((mode >> 8) & 0xFF);
-			sideMode[2] = (byte) ((mode >> 16) & 0xFF);
-			sideMode[3] = (byte) ((mode >> 24) & 0xFF);
-			mode = data.getInteger("mode[3]");
-			sideMode[4] = (byte) (mode & 0xFF);
-			sideMode[5] = (byte) ((mode >> 8) & 0xFF);
-			sideMode[6] = (byte) ((mode >> 16) & 0xFF);
-			break;
-		}
-		MFRUtil.notifyBlockUpdate(worldObj, pos);
+		super.handlePacketData(tag);
+
+		int mode = tag.getInteger("mode[2]");
+		sideMode[0] = (byte) (mode & 0xFF);
+		sideMode[1] = (byte) ((mode >> 8) & 0xFF);
+		sideMode[2] = (byte) ((mode >> 16) & 0xFF);
+		sideMode[3] = (byte) ((mode >> 24) & 0xFF);
+		mode = tag.getInteger("mode[3]");
+		sideMode[4] = (byte) (mode & 0xFF);
+		sideMode[5] = (byte) ((mode >> 8) & 0xFF);
+		sideMode[6] = (byte) ((mode >> 16) & 0xFF);
 	}
 
 	@SideOnly(Side.CLIENT)

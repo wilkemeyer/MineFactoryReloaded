@@ -734,45 +734,40 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
-		NBTTagCompound data = new NBTTagCompound();
-		data.setIntArray("colors", _sideColors);
-		data.setInteger("mode[0]", (_cableMode[0] & 0xFF) | ((_cableMode[1] & 0xFF) << 8) | ((_cableMode[2] & 0xFF) << 16) |
+		tag.setIntArray("colors", _sideColors);
+		tag.setInteger("mode[0]", (_cableMode[0] & 0xFF) | ((_cableMode[1] & 0xFF) << 8) | ((_cableMode[2] & 0xFF) << 16) |
 				((_cableMode[3] & 0xFF) << 24));
-		data.setInteger("mode[1]", (_cableMode[4] & 0xFF) | ((_cableMode[5] & 0xFF) << 8) | ((_cableMode[6] & 0xFF) << 16));
-		data.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
+		tag.setInteger("mode[1]", (_cableMode[4] & 0xFF) | ((_cableMode[5] & 0xFF) << 8) | ((_cableMode[6] & 0xFF) << 16));
+		tag.setInteger("state[0]", _connectionState[0].ordinal() | (_connectionState[1].ordinal() << 4) |
 				(_connectionState[2].ordinal() << 8) | (_connectionState[3].ordinal() << 12) |
 				(_connectionState[4].ordinal() << 16) | (_connectionState[5].ordinal() << 20));
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
-		return packet;
+
+		return tag;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	protected void handlePacketData(NBTTagCompound tag) {
 
-		NBTTagCompound data = pkt.getNbtCompound();
-		switch (pkt.getTileEntityType()) {
-		case 0:
-			_sideColors = data.getIntArray("colors");
-			int mode = data.getInteger("mode[0]");
-			_cableMode[0] = (byte) ((mode >> 0) & 0xFF);
-			_cableMode[1] = (byte) ((mode >> 8) & 0xFF);
-			_cableMode[2] = (byte) ((mode >> 16) & 0xFF);
-			_cableMode[3] = (byte) ((mode >> 24) & 0xFF);
-			mode = data.getInteger("mode[1]");
-			_cableMode[4] = (byte) ((mode >> 0) & 0xFF);
-			_cableMode[5] = (byte) ((mode >> 8) & 0xFF);
-			_cableMode[6] = (byte) ((mode >> 16) & 0xFF);
-			mode = data.getInteger("state[0]");
-			_connectionState[0] = RedNetConnectionType.values()[(mode >> 0) & 0xF];
-			_connectionState[1] = RedNetConnectionType.values()[(mode >> 4) & 0xF];
-			_connectionState[2] = RedNetConnectionType.values()[(mode >> 8) & 0xF];
-			_connectionState[3] = RedNetConnectionType.values()[(mode >> 12) & 0xF];
-			_connectionState[4] = RedNetConnectionType.values()[(mode >> 16) & 0xF];
-			_connectionState[5] = RedNetConnectionType.values()[(mode >> 20) & 0xF];
-			break;
-		}
+		_sideColors = tag.getIntArray("colors");
+		int mode = tag.getInteger("mode[0]");
+		_cableMode[0] = (byte) ((mode) & 0xFF);
+		_cableMode[1] = (byte) ((mode >> 8) & 0xFF);
+		_cableMode[2] = (byte) ((mode >> 16) & 0xFF);
+		_cableMode[3] = (byte) ((mode >> 24) & 0xFF);
+		mode = tag.getInteger("mode[1]");
+		_cableMode[4] = (byte) ((mode) & 0xFF);
+		_cableMode[5] = (byte) ((mode >> 8) & 0xFF);
+		_cableMode[6] = (byte) ((mode >> 16) & 0xFF);
+		mode = tag.getInteger("state[0]");
+		_connectionState[0] = RedNetConnectionType.values()[(mode) & 0xF];
+		_connectionState[1] = RedNetConnectionType.values()[(mode >> 4) & 0xF];
+		_connectionState[2] = RedNetConnectionType.values()[(mode >> 8) & 0xF];
+		_connectionState[3] = RedNetConnectionType.values()[(mode >> 12) & 0xF];
+		_connectionState[4] = RedNetConnectionType.values()[(mode >> 16) & 0xF];
+		_connectionState[5] = RedNetConnectionType.values()[(mode >> 20) & 0xF];
+
 		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 

@@ -4,13 +4,18 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
-public class TileEntityBase extends net.minecraft.tileentity.TileEntity implements ITickable
+import javax.annotation.Nullable;
+
+public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity implements ITickable
 {
 	protected String _invName;
 	protected boolean inWorld;
@@ -95,6 +100,55 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity implemen
     {
         return pass == 0 && getMaxRenderDistanceSquared() != -1D;
     }
+*/
+
+	@Nullable
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		if (worldObj != null) {
+			return new SPacketUpdateTileEntity(pos, 0, writePacketData(new NBTTagCompound()));
+		}
+		return null;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		return writePacketData(super.getUpdateTag());
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag)
+	{
+		super.handleUpdateTag(tag);
+		handlePacketData(tag);
+
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.getNbtCompound();
+		switch(pkt.getTileEntityType()) {
+			case 0:
+				handlePacketData(data);
+				break;
+		}
+
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
+	}
+
+	protected NBTTagCompound writePacketData(NBTTagCompound tag)
+	{
+		return tag;
+	}
+
+	protected void handlePacketData(NBTTagCompound tag)
+	{
+	}
+
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
@@ -113,7 +167,7 @@ public class TileEntityBase extends net.minecraft.tileentity.TileEntity implemen
 			}
 		}
 	}
-*/
+
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag)

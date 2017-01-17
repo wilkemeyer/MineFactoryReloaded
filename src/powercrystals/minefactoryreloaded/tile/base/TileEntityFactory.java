@@ -229,7 +229,8 @@ public abstract class TileEntityFactory extends TileEntityBase
 				!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime()) {
 			_lastActive = worldObj.getTotalWorldTime() + _activeSyncTimeout;
 			_prevActive = _isActive;
-			MFRUtil.notifyBlockUpdate(worldObj, pos);
+			MFRUtil.notifyBlockUpdate(worldObj, pos); //TODO either remove this as unnecessary or do something with the timeout above,
+			// perhaps this should have timeout for active==false only?
 		}
 		_isActive = isActive;
 	}
@@ -284,12 +285,25 @@ public abstract class TileEntityFactory extends TileEntityBase
 		super.markDirty();
 	}
 
-	protected void writePacketData(NBTTagCompound tag) {
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
+		tag.setByte("r", (byte) _forwardDirection.ordinal());
+		tag.setBoolean("a", _isActive);
+
+		return super.writePacketData(tag);
 	}
 
-	protected void readPacketData(NBTTagCompound tag) {
+	protected void handlePacketData(NBTTagCompound tag) {
 
+		rotateDirectlyTo(tag.getByte("r"));
+		_prevActive = _isActive;
+		_isActive = tag.getBoolean("a");
+		if (_prevActive != _isActive)
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
+		if (_lastActive < 0 && hasHAM()) {
+			Packets.sendToServer(Packets.HAMUpdate, this);
+		}
+		_lastActive = 5;
 	}
 
 	public void markForUpdate() {
@@ -301,11 +315,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (worldObj != null && _lastActive < worldObj.getTotalWorldTime()) {
-			NBTTagCompound data = new NBTTagCompound();
-			data.setByte("r", (byte) _forwardDirection.ordinal());
-			data.setBoolean("a", _isActive);
-			writePacketData(data);
-			return new SPacketUpdateTileEntity(pos, 0, data);
+			return super.getUpdatePacket();
 		}
 		return null;
 	}
@@ -313,25 +323,20 @@ public abstract class TileEntityFactory extends TileEntityBase
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
-		NBTTagCompound data = pkt.getNbtCompound();
 		switch (pkt.getTileEntityType()) {
 		case 0:
-			rotateDirectlyTo(data.getByte("r"));
-			_prevActive = _isActive;
-			_isActive = data.getBoolean("a");
-			readPacketData(data);
-			if (_prevActive != _isActive)
-				MFRUtil.notifyBlockUpdate(worldObj, pos);
-			if (_lastActive < 0 && hasHAM()) {
-				Packets.sendToServer(Packets.HAMUpdate, this);
-			}
-			_lastActive = 5;
+			super.onDataPacket(net, pkt);
 			break;
 		case 255:
-			if (hasHAM()) {
-				getHAM().setUpgradeLevel(data.getInteger("_upgradeLevel"));
-			}
+			handleUpgradePacket(pkt);
 			break;
+		}
+	}
+
+	protected void handleUpgradePacket(SPacketUpdateTileEntity pkt) {
+
+		if (hasHAM()) {
+			getHAM().setUpgradeLevel(pkt.getNbtCompound().getInteger("_upgradeLevel"));
 		}
 	}
 

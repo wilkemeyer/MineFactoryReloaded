@@ -31,14 +31,20 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
+	protected NBTTagCompound writePacketData(NBTTagCompound tag)
 	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("facing", getDirectionFacing().ordinal());
-		data.setInteger("subnet", _currentSubnet);
-		data.setInteger("current", _lastValues[_currentSubnet]);
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
-		return packet;
+		tag.setInteger("subnet", _currentSubnet);
+		tag.setInteger("current", _lastValues[_currentSubnet]);
+
+		return super.writePacketData(tag);
+	}
+
+	@Override
+	protected void handlePacketData(NBTTagCompound tag)
+	{
+		super.handlePacketData(tag);
+		_currentSubnet = tag.getInteger("subnet");
+		_currentValueClient = tag.getInteger("current");
 	}
 
 	@Override
@@ -48,9 +54,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		switch (pkt.getTileEntityType())
 		{
 		case 0:
-			_currentSubnet = data.getInteger("subnet");
-			_currentValueClient = data.getInteger("current");
-			rotateDirectlyTo(data.getInteger("facing"));
+			super.onDataPacket(net, pkt);
 			break;
 		case 1:
 			_currentValueClient = data.getInteger("value");
@@ -67,25 +71,15 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		}
 		else
 		{
-			_valuesClient = new ArrayQueue<Integer>(100);
+			_valuesClient = new ArrayQueue<>(100);
 			_currentValueClient = 0;
 		}
 	}
-
-/* TODO to update or not to update that is the question (especially with update method that actually seems to do something)
-	@Override
-	@SideOnly(Side.SERVER)
-	public boolean canUpdate()
-	{
-		return false;
-	}
-*/
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void update()
 	{
-		super.update();
 		if (worldObj.isRemote)
 		{
 			_valuesClient.pop();

@@ -139,8 +139,9 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 
 		if (fisherPos.getY() == pos.getY() - 1 && !(fisherPos.getX() == pos.getX() && fisherPos.getZ() == pos.getZ())) {
 			BlockPos posToCheck = new BlockPos(fisherPos.getX(), pos.getY(), fisherPos.getZ());
-			if (worldObj.getBlockState(posToCheck).getValue(BlockFactoryMachine.TYPE).getMeta() == _machine.getMeta() &&
-					worldObj.getBlockState(posToCheck).getBlock() == _machine.getBlock())
+			IBlockState state = worldObj.getBlockState(posToCheck);
+			if (state.getBlock() == _machine.getBlock()
+					&& state.getValue(BlockFactoryMachine.TYPE) == BlockFactoryMachine.Type.FISHER)
 				return true;
 		}
 		return false;
@@ -151,7 +152,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		if (!worldObj.isBlockLoaded(pos) || isFisher(pos))
 			return false;
 		IBlockState state = worldObj.getBlockState(pos);
-		if (state.getValue(BlockFluidBase.LEVEL) != 0) return false;
+		if (state.getBlock() != Blocks.WATER || state.getValue(BlockFluidBase.LEVEL) != 0) return false;
 		Block block = state.getBlock();
 		return block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER);
 	}

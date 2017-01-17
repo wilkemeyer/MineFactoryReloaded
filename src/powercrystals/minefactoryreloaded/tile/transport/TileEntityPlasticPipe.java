@@ -272,42 +272,42 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
+
+		tag.setInteger("mode[0]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
+				((sideMode[3] & 0xFF) << 24));
+		tag.setInteger("mode[1]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16) |
+				(isPowered ? 1 << 24 : 0));
+		tag.setByte("upgrade", upgradeItem);
+
+		return super.writePacketData(tag);
+	}
+
+	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (deadCache)
 			return null;
-		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("mode[0]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
-				((sideMode[3] & 0xFF) << 24));
-		data.setInteger("mode[1]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16) |
-				(isPowered ? 1 << 24 : 0));
-		data.setByte("upgrade", upgradeItem);
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
-		return packet;
+
+		return super.getUpdatePacket();
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	protected void handlePacketData(NBTTagCompound tag) {
 
-		super.onDataPacket(net, pkt);
-		NBTTagCompound data = pkt.getNbtCompound();
-		switch (pkt.getTileEntityType())
-		{
-		case 0:
-			int mode = data.getInteger("mode[0]");
-			sideMode[0] = (byte) ((mode >> 0) & 0xFF);
-			sideMode[1] = (byte) ((mode >> 8) & 0xFF);
-			sideMode[2] = (byte) ((mode >> 16) & 0xFF);
-			sideMode[3] = (byte) ((mode >> 24) & 0xFF);
-			mode = data.getInteger("mode[1]");
-			sideMode[4] = (byte) ((mode >> 0) & 0xFF);
-			sideMode[5] = (byte) ((mode >> 8) & 0xFF);
-			sideMode[6] = (byte) ((mode >> 16) & 0xFF);
-			isPowered = (mode >> 24) > 0;
-			upgradeItem = data.getByte("upgrade");
-			break;
-		}
-		MFRUtil.notifyBlockUpdate(worldObj, pos);
+		super.handlePacketData(tag);
+
+		int mode = tag.getInteger("mode[0]");
+		sideMode[0] = (byte) ((mode >> 0) & 0xFF);
+		sideMode[1] = (byte) ((mode >> 8) & 0xFF);
+		sideMode[2] = (byte) ((mode >> 16) & 0xFF);
+		sideMode[3] = (byte) ((mode >> 24) & 0xFF);
+		mode = tag.getInteger("mode[1]");
+		sideMode[4] = (byte) ((mode >> 0) & 0xFF);
+		sideMode[5] = (byte) ((mode >> 8) & 0xFF);
+		sideMode[6] = (byte) ((mode >> 16) & 0xFF);
+		isPowered = (mode >> 24) > 0;
+		upgradeItem = tag.getByte("upgrade");
 	}
 
 	public void setUpgrade(int i) {

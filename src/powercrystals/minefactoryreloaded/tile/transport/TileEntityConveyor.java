@@ -57,35 +57,20 @@ public class TileEntityConveyor extends TileEntityBase
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
+	public NBTTagCompound writePacketData(NBTTagCompound tag)
 	{
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
-		return packet;
+		tag.setInteger("dye", _dye == null ? -1 : _dye.getMetadata());
+		tag.setBoolean("conveyorActive", _conveyorActive);
+		tag.setBoolean("isFast", _isFast);
+
+		return super.writePacketData(tag);
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag()
+	public void handlePacketData(NBTTagCompound tag)
 	{
-		NBTTagCompound data = super.getUpdateTag();
-		data.setInteger("dye", _dye == null ? -1 : _dye.getMetadata());
-		data.setBoolean("conveyorActive", _conveyorActive);
-		data.setBoolean("isFast", _isFast);
-		return data;
-	}
+		super.handlePacketData(tag);
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-	{
-		NBTTagCompound data = pkt.getNbtCompound();
-		handleUpdateTag(data);
-
-		MFRUtil.notifyBlockUpdate(worldObj, pos);
-	}
-
-	@Override
-	public void handleUpdateTag(NBTTagCompound tag)
-	{
-		super.handleUpdateTag(tag);
 		_dye = tag.getInteger("dye") == -1 ? null : EnumDyeColor.byMetadata(tag.getInteger("dye"));
 		_conveyorActive = tag.getBoolean("conveyorActive");
 		_isFast = tag.getBoolean("isFast");

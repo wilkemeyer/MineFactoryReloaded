@@ -125,33 +125,35 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
+
+		FluidStack fluid = grid.getStorage().drain(1, false); //TODO does this need to be drain instead of simple getFluid??
+		if (fluid != null)
+			tag.setTag("fluid", fluid.writeToNBT(new NBTTagCompound()));
+		tag.setByte("sides", sides);
+
+		return super.writePacketData(tag);
+	}
+
+	@Override
+	protected void handlePacketData(NBTTagCompound tag) {
+
+		super.handlePacketData(tag);
+
+		FluidStack fluid = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
+		_tank.setFluid(fluid);
+		sides = tag.getByte("sides");
+
+		worldObj.checkLight(pos);
+	}
+
+	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 
 		if (grid == null)
 			return null;
-		NBTTagCompound data = new NBTTagCompound();
-		FluidStack fluid = grid.getStorage().drain(1, false);
-		if (fluid != null)
-			data.setTag("fluid", fluid.writeToNBT(new NBTTagCompound()));
-		data.setByte("sides", sides);
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
-		return packet;
-	}
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-
-		super.onDataPacket(net, pkt);
-		NBTTagCompound data = pkt.getNbtCompound();
-		switch (pkt.getTileEntityType()) {
-		case 0:
-			FluidStack fluid = FluidStack.loadFluidStackFromNBT(data.getCompoundTag("fluid"));
-			_tank.setFluid(fluid);
-			sides = data.getByte("sides");
-			break;
-		}
-		MFRUtil.notifyBlockUpdate(worldObj, pos);
-		worldObj.checkLight(pos);
+		return super.getUpdatePacket();
 	}
 
 	@Override

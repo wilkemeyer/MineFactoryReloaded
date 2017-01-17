@@ -553,12 +553,20 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
-		NBTTagCompound data = new NBTTagCompound();
-		data.setIntArray("upgrades", _upgradeLevel);
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, data);
-		return packet;
+		tag.setIntArray("upgrades", _upgradeLevel);
+		return super.writePacketData(tag);
+	}
+
+	@Override
+	protected void handlePacketData(NBTTagCompound tag) {
+
+		super.handlePacketData(tag);
+
+		_upgradeLevel = tag.getIntArray("upgrades");
+		updateUpgradeLevels();
+		_prevCircuits = Arrays.copyOf(_prevCircuits, _circuitCount);
 	}
 
 	@Override
@@ -566,9 +574,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 
 		switch (pkt.getTileEntityType()) {
 		case 0:
-			_upgradeLevel = pkt.getNbtCompound().getIntArray("upgrades");
-			updateUpgradeLevels();
-			_prevCircuits = Arrays.copyOf(_prevCircuits, _circuitCount);
+			super.onDataPacket(net, pkt);
 			break;
 		case 1:
 			setCircuitFromPacket(pkt.getNbtCompound());
