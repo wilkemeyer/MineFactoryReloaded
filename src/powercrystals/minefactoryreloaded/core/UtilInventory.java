@@ -252,11 +252,8 @@ public abstract class UtilInventory
 			}
 		}
 		// (3) Having failed to put it in a chest or a pipe, drop it in the air if airdropdirection is a valid direction.
-		if (airdropdirection != null)
-			pos.offset(airdropdirection);
-		if (MFRUtil.VALID_DIRECTIONS.contains(airdropdirection) && isAirDrop(world, pos))
+		if (MFRUtil.VALID_DIRECTIONS.contains(airdropdirection) && isAirDrop(world, pos.offset(airdropdirection)))
 		{
-			pos.offset(airdropdirection.getOpposite());
 			dropStackInAir(world, pos, stack, airdropdirection);
 			return null;
 		}
