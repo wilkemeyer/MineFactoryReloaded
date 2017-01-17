@@ -48,7 +48,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 
 	protected static TObjectIntHashMap<String> fluidConsumptionRate = new TObjectIntHashMap<String>();
 	static {
-		fluidConsumptionRate.put("mobessence", 10);
+		fluidConsumptionRate.put("mob_essence", 10);
 		fluidConsumptionRate.put("liquidessence", 20);
 		fluidConsumptionRate.put("ender", 40);
 	}

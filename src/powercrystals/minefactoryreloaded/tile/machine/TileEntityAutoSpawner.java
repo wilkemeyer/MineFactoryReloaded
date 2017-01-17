@@ -46,7 +46,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		setManageSolids(true);
 		createHAM(this, _spawnRange, 0, 2, false);
 		_areaManager.setOverrideDirection(EnumFacing.UP);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	public boolean getSpawnExact() {

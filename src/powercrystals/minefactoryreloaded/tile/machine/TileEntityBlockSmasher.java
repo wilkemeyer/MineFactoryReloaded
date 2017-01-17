@@ -44,7 +44,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 
 		super(Machine.BlockSmasher);
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	@Override

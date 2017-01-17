@@ -41,7 +41,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 
 		super(Machine.AutoAnvil);
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	@Override

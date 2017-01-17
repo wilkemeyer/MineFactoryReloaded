@@ -16,7 +16,7 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 {
 	public TileEntityAutoDisenchanterFluid()
 	{
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	@Override

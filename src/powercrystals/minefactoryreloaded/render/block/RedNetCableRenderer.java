@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.render.block;
 
 import cofh.lib.render.RenderHelper;
 import cofh.repack.codechicken.lib.lighting.LightModel;
+import cofh.repack.codechicken.lib.lighting.LightModel;
 import cofh.repack.codechicken.lib.render.CCModel;
 import cofh.repack.codechicken.lib.render.CCRenderState;
 import cofh.repack.codechicken.lib.render.uv.IconTransformation;

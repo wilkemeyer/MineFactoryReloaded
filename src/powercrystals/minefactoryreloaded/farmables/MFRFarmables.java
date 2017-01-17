@@ -154,7 +154,7 @@ public class MFRFarmables {
 		MFRRegistry.registerLiquidDrinkHandler("biofuel", new DrinkHandlerBiofuel());
 		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
 		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
-		MFRRegistry.registerLiquidDrinkHandler("mobessence", new DrinkHandlerMobEssence());
+		MFRRegistry.registerLiquidDrinkHandler("mob_essence", new DrinkHandlerMobEssence());
 		MFRRegistry.registerLiquidDrinkHandler("meat", new DrinkHandlerMeat());
 		MFRRegistry.registerLiquidDrinkHandler("pinkslime", new DrinkHandlerPinkSlime());
 		MFRRegistry.registerLiquidDrinkHandler("chocolatemilk", new DrinkHandlerChocolateMilk());

@@ -40,7 +40,7 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 
 		_targetLevel = 30;
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	@Override

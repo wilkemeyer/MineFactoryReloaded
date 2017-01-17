@@ -365,7 +365,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		setIcons("milk", MFRThings.milkLiquid);
 		setIcons("sludge", MFRThings.sludgeLiquid);
 		setIcons("sewage", MFRThings.sewageLiquid);
-		setIcons("mobessence", MFRThings.essenceLiquid);
+		setIcons("mob_essence", MFRThings.essenceLiquid);
 		setIcons("biofuel", MFRThings.biofuelLiquid);
 		setIcons("meat", MFRThings.meatLiquid);
 		setIcons("pinkslime", MFRThings.pinkSlimeLiquid);

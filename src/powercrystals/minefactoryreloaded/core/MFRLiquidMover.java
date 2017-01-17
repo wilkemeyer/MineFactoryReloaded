@@ -194,7 +194,7 @@ public abstract class MFRLiquidMover
 		if (found > 0)
 		{
 			found = (int)(found * 66.66666667f);
-			tank.fill(FluidRegistry.getFluidStack("mobessence", found), true);
+			tank.fill(FluidRegistry.getFluidStack("mob_essence", found), true);
 			return found;
 		}
 		return 0;

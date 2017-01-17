@@ -48,7 +48,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		_rand = new Random();
 		setManageSolids(true);
 		setCanRotate(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	public TileEntityGrinder()
@@ -169,7 +169,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 			damageEntity(e);
 			if(e.getHealth() <= 0)
 			{
-				//fillTank(_tanks[0], "mobessence", 1);
+				//fillTank(_tanks[0], "mob_essence", 1);
 				setIdleTicks(20);
 			}
 			else
