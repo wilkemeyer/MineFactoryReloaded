@@ -21,7 +21,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 {
-	protected BlockPos bp;
+	protected BlockPos breakPos;
 	public TileEntityBlockBreaker()
 	{
 		super(Machine.BlockBreaker);
@@ -32,14 +32,14 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	protected void onRotate()
 	{
-		bp = pos.offset(getDirectionFacing());
+		breakPos = pos.offset(getDirectionFacing());
 		super.onRotate();
 	}
 
 	@Override
 	public void onNeighborBlockChange()
 	{
-		if (bp != null && !worldObj.isAirBlock(bp))
+		if (breakPos != null && !worldObj.isAirBlock(breakPos))
 			setIdleTicks(0);
 	}
 
@@ -47,19 +47,19 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	public boolean activateMachine()
 	{
 		World worldObj = this.worldObj;
-		IBlockState state = worldObj.getBlockState(pos);
+		IBlockState state = worldObj.getBlockState(breakPos);
 		Block block = state.getBlock();
 
-		if (!block.isAir(state, worldObj, pos) &&
+		if (!block.isAir(state, worldObj, breakPos) &&
 				!state.getMaterial().isLiquid() &&
-				state.getBlockHardness(worldObj, pos) >= 0)
+				state.getBlockHardness(worldObj, breakPos) >= 0)
 		{
-			List<ItemStack> drops = block.getDrops(worldObj, pos, state, 0);
-			if (worldObj.setBlockToAir(pos))
+			List<ItemStack> drops = block.getDrops(worldObj, breakPos, state, 0);
+			if (worldObj.setBlockToAir(breakPos))
 			{
 				doDrop(drops);
 				if (MFRConfig.playSounds.getBoolean(true))
-					worldObj.playEvent(null, 2001, pos, Block.getStateId(state));
+					worldObj.playEvent(null, 2001, breakPos, Block.getStateId(state));
 			}
 			return true;
 		}
