@@ -92,13 +92,13 @@ public class TileEntityAutoJukebox extends TileEntityFactoryInventory
 	public void playRecord()
 	{
 		if(_inventory[0] != null && _inventory[0].getItem() instanceof ItemRecord)
-			worldObj.playEvent(1005, pos, Item.getIdFromItem(_inventory[0].getItem()));
+			worldObj.playEvent(1010, pos, Item.getIdFromItem(_inventory[0].getItem()));
 		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	public void stopRecord()
 	{
-		worldObj.playEvent(1005, pos, 0);
+		worldObj.playEvent(1010, pos, 0);
 		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
