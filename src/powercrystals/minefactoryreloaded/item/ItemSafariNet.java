@@ -325,15 +325,15 @@ public class ItemSafariNet extends ItemFactory {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity, EnumHand hand) {
 
-		return captureEntity(itemstack, entity, player);
+		return captureEntity(itemstack, entity, player, hand);
 	}
 
 	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity) {
 
-		return captureEntity(itemstack, entity, null);
+		return captureEntity(itemstack, entity, null, null);
 	}
 
-	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity, EntityPlayer player) {
+	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity, EntityPlayer player, EnumHand hand) {
 
 		if (entity.worldObj.isRemote) {
 			return false;
@@ -347,7 +347,7 @@ public class ItemSafariNet extends ItemFactory {
 			boolean flag = player != null && player.capabilities.isCreativeMode;
 			NBTTagCompound c = new NBTTagCompound();
 
-			synchronized (entity) {
+			synchronized (entity) { //TODO why is this block synchronized? as far as I can see it runs in the main thread
 				entity.writeToNBT(c);
 
 				c.setString("id", EntityList.getEntityString(entity));
@@ -359,7 +359,7 @@ public class ItemSafariNet extends ItemFactory {
 					entity.setDead();
 				if (flag | entity.isDead) {
 					flag = false;
-					if (--itemstack.stackSize > 0) {
+					if (--itemstack.stackSize > 0) { //TODO why is there this logic here and the one below to add to inventory when nets can't stack?
 						flag = true;
 						itemstack = itemstack.copy();
 					}
@@ -371,6 +371,8 @@ public class ItemSafariNet extends ItemFactory {
 						player.openContainer.detectAndSendChanges();
 						((EntityPlayerMP) player).updateCraftingInventory(player.openContainer,
 							player.openContainer.getInventory());
+					} else if (player != null && hand != null){
+						player.setHeldItem(hand, itemstack);
 					}
 
 					return true;
