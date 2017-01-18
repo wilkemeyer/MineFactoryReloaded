@@ -25,8 +25,8 @@
                     "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.bottom",
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.back",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.left",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.right"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.left",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.right"
                 },
                 "variants": {
                     "cb": {
@@ -35,8 +35,8 @@
                                 "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.bottom.cb",
                                 "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.front.cb",
                                 "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.back.cb",
-                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.left.cb",
-                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.right.cb"
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.left.cb",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.itemrouter.right.cb"
                             }
                         },
                         "false": {}
@@ -49,8 +49,8 @@
                     "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.bottom",
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.back",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.left",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.right"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.left",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.right"
                 },
                 "variants": {
                     "cb": {
@@ -60,8 +60,8 @@
                                 "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.bottom.cb",
                                 "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.front.cb",
                                 "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.back.cb",
-                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.left.cb",
-                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.right.cb"
+                                "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.left.cb",
+                                "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.liquidrouter.right.cb"
                             }
                         },
                         "false": {}

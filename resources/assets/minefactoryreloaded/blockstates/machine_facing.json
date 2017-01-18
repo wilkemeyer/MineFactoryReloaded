@@ -23,8 +23,8 @@
                 "textures": {
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.ejector.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.ejector.back",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.ejector.left",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.ejector.right"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.ejector.left",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.ejector.right"
                 }
 
             },
@@ -34,8 +34,8 @@
                     "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.bottom",
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.back",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.left",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.right"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.left",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.enchantmentrouter.right"
                 }
 
             },
@@ -44,8 +44,8 @@
                     "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.top",
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.back",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.side",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.side"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.autoanvil.side"
                 }
 
             },
@@ -53,8 +53,8 @@
                 "textures": {
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockplacer.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockplacer.back",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockplacer.left",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockplacer.right"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockplacer.left",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.blockplacer.right"
                 }
 
             },
@@ -62,8 +62,8 @@
                 "textures": {
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobcounter.front",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobcounter.side",
-                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobcounter.side",
-                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobcounter.side"
+                    "west": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobcounter.side",
+                    "east": "minefactoryreloaded:blocks/machines/tile.mfr.machine.mobcounter.side"
                 }
 
             }
