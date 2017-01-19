@@ -11,7 +11,6 @@ import net.minecraft.world.WorldServer;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 
 public final class Packets
 {
@@ -80,14 +79,6 @@ public final class Packets
 	public static final short RocketLaunch		= 11;
 	public static final short FakeSlotChange		= 20; // TODO: remove in favor of CoFH fake slots
 
-	public static void sendToServer(short packet, TileEntity te, Object... args)
-	{
-		sendToServer(new MFRMessage(packet, te, args));
-	}
-	public static void sendToServer(short packet, Entity te, Object... args)
-	{
-		sendToServer(new MFRMessage(packet, te, args));
-	}
 	public static void sendToAllPlayersWatching(TileEntity te, Packet packet)
 	{
 		sendToAllPlayersWatching(te.getWorld(), te.getPos(), packet);

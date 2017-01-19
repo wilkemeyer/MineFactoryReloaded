@@ -37,6 +37,7 @@ import powercrystals.minefactoryreloaded.gui.control.ButtonLogicBufferSelect;
 import powercrystals.minefactoryreloaded.gui.control.ButtonLogicPinSelect;
 import powercrystals.minefactoryreloaded.gui.control.ListBoxElementCircuit;
 import powercrystals.minefactoryreloaded.gui.control.LogicButtonType;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic.PinMapping;
@@ -140,8 +141,7 @@ public class GuiRedNetLogic extends GuiBase {
 			@Override
 			protected void onElementClicked(IListBoxElement newElement) {
 
-				Packets.sendToServer(Packets.LogicSetCircuit, _logic,
-					_selectedCircuit, newElement.getValue().getClass().getName());
+				MFRPacket.requestLogicSetCircuitFromServer(_logic, _selectedCircuit, newElement.getValue().getClass().getName());
 			}
 
 			@Override
@@ -241,8 +241,7 @@ public class GuiRedNetLogic extends GuiBase {
 			@Override
 			public void onClick() {
 
-				Packets.sendToServer(Packets.LogicReinitialize, _logic,
-					Minecraft.getMinecraft().thePlayer.getEntityId());
+				MFRPacket.sendLogicReinitializeToServer(_logic,	Minecraft.getMinecraft().thePlayer.getEntityId());
 				_reinitCountdown = 0;
 				_listNeedsUpdated = true;
 			}
@@ -402,20 +401,17 @@ public class GuiRedNetLogic extends GuiBase {
 
 	private void requestCircuit() {
 
-		Packets.sendToServer(Packets.CircuitDefinition, _logic,
-			_selectedCircuit);
+		MFRPacket.requestCircuitDefinitionFromServer(_logic, _selectedCircuit);
 	}
 
 	public void setInputPinMapping(int index, int buffer, int pin) {
 
-		Packets.sendToServer(Packets.LogicSetPin, _logic,
-			(byte) 0, _selectedCircuit, index, buffer, pin);
+		MFRPacket.sendLogicSetPinToServer(_logic, (byte) 0, _selectedCircuit, index, buffer, pin);
 	}
 
 	public void setOutputPinMapping(int index, int buffer, int pin) {
 
-		Packets.sendToServer(Packets.LogicSetPin, _logic,
-			(byte) 1, _selectedCircuit, index, buffer, pin);
+		MFRPacket.sendLogicSetPinToServer(_logic, (byte) 1, _selectedCircuit, index, buffer, pin);
 	}
 
 	public int getVariableCount() {

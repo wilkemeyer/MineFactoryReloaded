@@ -2,15 +2,21 @@ package powercrystals.minefactoryreloaded.net;
 
 import cofh.core.network.PacketCoFHBase;
 import cofh.core.network.PacketHandler;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
+import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoEnchanter;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
+import powercrystals.minefactoryreloaded.tile.machine.*;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class MFRPacket extends PacketCoFHBase {
 
@@ -64,10 +70,173 @@ public class MFRPacket extends PacketCoFHBase {
 					break;
 				case HARVESTER_BUTTON: // client -> server: harvester setting
 					pos = getCoords();
-					te = world.getTileEntity(new BlockPos(x, y, z));
+					te = world.getTileEntity(pos);
 
 					if (te instanceof TileEntityHarvester) {
-						((TileEntityHarvester) te).getSettings().put(ByteBufUtils.readUTF8String(data), data.readBoolean());
+						((TileEntityHarvester) te).getSettings().put(getString(), getBool());
+					}
+					break;
+				case CHRONOTYPER_BUTTON:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					if (te instanceof TileEntityChronotyper) {
+						((TileEntityChronotyper) te).setMoveOld(!((TileEntityChronotyper) te).getMoveOld());
+					} else if (te instanceof TileEntityDeepStorageUnit) {
+						((TileEntityDeepStorageUnit) te).setIsActive(!((TileEntityDeepStorageUnit) te).isActive());
+						((TileEntityDeepStorageUnit) te).markForUpdate();
+						Packets.sendToAllPlayersWatching(te);
+					}
+					break;
+				case AUTO_JUKEBOX_BUTTON: // client -> server: copy record
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					if (te instanceof TileEntityAutoJukebox) {
+						TileEntityAutoJukebox j = ((TileEntityAutoJukebox) te);
+						int button = getByte();
+						if (button == 1)
+							j.playRecord();
+						else if (button == 2)
+							j.stopRecord();
+						else if (button == 3) j.copyRecord();
+					}
+					break;
+				case AUTO_SPAWNER_BUTTON:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					if (te instanceof TileEntityAutoSpawner) {
+						((TileEntityAutoSpawner) te).setSpawnExact(!((TileEntityAutoSpawner) te).getSpawnExact());
+					}
+					break;
+				case CIRCUIT_DEFINITION:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					if (te instanceof TileEntityRedNetLogic) {
+						((TileEntityRedNetLogic) te).sendCircuitDefinition(getInt());
+					}
+					break;
+				case LOGIC_SET_CIRCUIT:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					int circuit = getInt();
+					if (te instanceof TileEntityRedNetLogic) {
+						((TileEntityRedNetLogic) te).initCircuit(circuit, getString());
+						((TileEntityRedNetLogic) te).sendCircuitDefinition(circuit);
+					}
+					break;
+				case LOGIC_SET_PIN:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					amt = getByte();
+					int circuitIndex = getInt(),
+							pinIndex = getInt(),
+							buffer = getInt(),
+							pin = getInt();
+					if (te instanceof TileEntityRedNetLogic) {
+						if (amt == 0) {
+							((TileEntityRedNetLogic) te).setInputPinMapping(circuitIndex, pinIndex, buffer, pin);
+						} else if (amt == 1) {
+							((TileEntityRedNetLogic) te).setOutputPinMapping(circuitIndex, pinIndex, buffer, pin);
+						}
+						((TileEntityRedNetLogic) te).sendCircuitDefinition(circuitIndex);
+					}
+					break;
+				case LOGIC_REINITIALIZE:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+					player = (EntityPlayer) world.getEntityByID(getInt());
+
+					if (te instanceof TileEntityRedNetLogic) {
+						((TileEntityRedNetLogic) te).reinitialize(player);
+					}
+					break;
+				case ROUTER_BUTTON:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+
+					int data = getInt();
+					if (te instanceof TileEntityEnchantmentRouter) {
+						switch (data) {
+							case 2:
+								((TileEntityItemRouter) te).setRejectUnmapped(!((TileEntityItemRouter) te).getRejectUnmapped());
+								break;
+							case 1:
+								((TileEntityEnchantmentRouter) te).setMatchLevels(!((TileEntityEnchantmentRouter) te).getMatchLevels());
+								break;
+						}
+					} else if (te instanceof TileEntityItemRouter) {
+						((TileEntityItemRouter) te).setRejectUnmapped(!((TileEntityItemRouter) te).getRejectUnmapped());
+					} else if (te instanceof TileEntityEjector) {
+						switch (data) {
+							case 1:
+								((TileEntityEjector) te).setIsWhitelist(!((TileEntityEjector) te).getIsWhitelist());
+								break;
+							case 2:
+								((TileEntityEjector) te).setIsNBTMatch(!((TileEntityEjector) te).getIsNBTMatch());
+								break;
+							case 3:
+								((TileEntityEjector) te).setIsIDMatch(!((TileEntityEjector) te).getIsIDMatch());
+								break;
+						}
+					} else if (te instanceof TileEntityAutoAnvil) {
+						((TileEntityAutoAnvil) te).setRepairOnly(!((TileEntityAutoAnvil) te).getRepairOnly());
+					} else if (te instanceof TileEntityChunkLoader) {
+						((TileEntityChunkLoader) te).setRadius((short) data);
+					} else if (te instanceof TileEntityPlanter) {
+						((TileEntityPlanter) te).setConsumeAll(!((TileEntityPlanter) te).getConsumeAll());
+					} else if (te instanceof TileEntityMobRouter) {
+						switch (data) {
+							case 1:
+								((TileEntityMobRouter) te).setWhiteList(!((TileEntityMobRouter) te).getWhiteList());
+								break;
+							case 2:
+								((TileEntityMobRouter) te).setMatchMode(((TileEntityMobRouter) te).getMatchMode() + 1);
+								break;
+							case 3:
+								((TileEntityMobRouter) te).setMatchMode(((TileEntityMobRouter) te).getMatchMode() - 1);
+								break;
+						}
+					}
+					break;
+				case FAKE_SLOT_CHANGE:
+					pos = getCoords();
+					te = world.getTileEntity(pos);
+					player = (EntityPlayer) world.getEntityByID(getInt());
+
+					ItemStack playerStack = player.inventory.getItemStack();
+					int slotNumber = getInt(),
+							click = getByte();
+					if (te instanceof IInventory) {
+						if (playerStack == null) {
+							((IInventory) te).setInventorySlotContents(slotNumber, null);
+						} else {
+							playerStack = playerStack.copy();
+							playerStack.stackSize = click == 1 ? -1 : 1;
+							ItemStack s = ((IInventory) te).getStackInSlot(slotNumber);
+							if (!UtilInventory.stacksEqual(s, playerStack))
+								playerStack.stackSize = 1;
+							else
+								playerStack.stackSize = Math.max(playerStack.stackSize + s.stackSize, 1);
+							((IInventory) te).setInventorySlotContents(slotNumber, playerStack);
+						}
+					}
+					break;
+				case ROCKET_LAUNCH:
+					Entity owner = world.getEntityByID(getInt());
+					int t = getInt();
+					Entity target = null;
+					if (t != Integer.MIN_VALUE) {
+						target = world.getEntityByID(t);
+					}
+
+					if (owner instanceof EntityLivingBase) {
+						EntityRocket r = new EntityRocket(world, ((EntityLivingBase) owner), target);
+						world.spawnEntityInWorld(r);
 					}
 					break;
 			}
@@ -76,172 +245,6 @@ public class MFRPacket extends PacketCoFHBase {
 			MineFactoryReloadedCore.log().error("Packet payload failure! Please check your config files!");
 			e.printStackTrace();
 		}
-		switch (data.readUnsignedShort()) {
-			case Packets.ChronotyperButton: // client -> server: toggle chronotyper
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				if (te instanceof TileEntityChronotyper) {
-					((TileEntityChronotyper) te).setMoveOld(!((TileEntityChronotyper) te).getMoveOld());
-				} else if (te instanceof TileEntityDeepStorageUnit) {
-					((TileEntityDeepStorageUnit) te).setIsActive(!((TileEntityDeepStorageUnit) te).isActive());
-					((TileEntityDeepStorageUnit) te).markForUpdate();
-					Packets.sendToAllPlayersWatching(te);
-				}
-				break;
-			case Packets.AutoJukeboxButton: // client -> server: copy record
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				if (te instanceof TileEntityAutoJukebox) {
-					TileEntityAutoJukebox j = ((TileEntityAutoJukebox) te);
-					int button = data.readByte();
-					if (button == 1)
-						j.playRecord();
-					else if (button == 2)
-						j.stopRecord();
-					else if (button == 3) j.copyRecord();
-				}
-				break;
-			case Packets.AutoSpawnerButton: // client -> server: toggle autospawner
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				if (te instanceof TileEntityAutoSpawner) {
-					((TileEntityAutoSpawner) te).setSpawnExact(!((TileEntityAutoSpawner) te).getSpawnExact());
-				}
-				break;
-			case Packets.CircuitDefinition: // client -> server: request circuit from server
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				if (te instanceof TileEntityRedNetLogic) {
-					((TileEntityRedNetLogic) te).sendCircuitDefinition(data.readInt());
-				}
-				break;
-			case Packets.LogicSetCircuit: // client -> server: set circuit
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				int circuit = data.readInt();
-				if (te instanceof TileEntityRedNetLogic) {
-					((TileEntityRedNetLogic) te).initCircuit(circuit, ByteBufUtils.readUTF8String(data));
-					((TileEntityRedNetLogic) te).sendCircuitDefinition(circuit);
-				}
-				break;
-			case Packets.LogicSetPin: // client -> server: set pin
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				amt = data.readByte();
-				int circuitIndex = data.readInt(),
-						pinIndex = data.readInt(),
-						buffer = data.readInt(),
-						pin = data.readInt();
-				if (te instanceof TileEntityRedNetLogic) {
-					if (amt == 0) {
-						((TileEntityRedNetLogic) te).setInputPinMapping(circuitIndex, pinIndex, buffer, pin);
-					} else if (amt == 1) {
-						((TileEntityRedNetLogic) te).setOutputPinMapping(circuitIndex, pinIndex, buffer, pin);
-					}
-					((TileEntityRedNetLogic) te).sendCircuitDefinition(circuitIndex);
-				}
-				break;
-			case Packets.LogicReinitialize: // client -> server: set circuit
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-				player = (EntityPlayer) world.getEntityByID(data.readInt());
-
-				if (te instanceof TileEntityRedNetLogic) {
-					((TileEntityRedNetLogic) te).reinitialize(player);
-				}
-				break;
-			case Packets.RouterButton: // client -> server: toggle 'levels'/'reject unmapped' mode
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-
-				a = data.readInt();
-				if (te instanceof TileEntityEnchantmentRouter) {
-					switch (a) {
-						case 2:
-							((TileEntityItemRouter) te).setRejectUnmapped(!((TileEntityItemRouter) te).getRejectUnmapped());
-							break;
-						case 1:
-							((TileEntityEnchantmentRouter) te).setMatchLevels(!((TileEntityEnchantmentRouter) te).getMatchLevels());
-							break;
-					}
-				} else if (te instanceof TileEntityItemRouter) {
-					((TileEntityItemRouter) te).setRejectUnmapped(!((TileEntityItemRouter) te).getRejectUnmapped());
-				} else if (te instanceof TileEntityEjector) {
-					switch (a) {
-						case 1:
-							((TileEntityEjector) te).setIsWhitelist(!((TileEntityEjector) te).getIsWhitelist());
-							break;
-						case 2:
-							((TileEntityEjector) te).setIsNBTMatch(!((TileEntityEjector) te).getIsNBTMatch());
-							break;
-						case 3:
-							((TileEntityEjector) te).setIsIDMatch(!((TileEntityEjector) te).getIsIDMatch());
-							break;
-					}
-				} else if (te instanceof TileEntityAutoAnvil) {
-					((TileEntityAutoAnvil) te).setRepairOnly(!((TileEntityAutoAnvil) te).getRepairOnly());
-				} else if (te instanceof TileEntityChunkLoader) {
-					((TileEntityChunkLoader) te).setRadius((short) a);
-				} else if (te instanceof TileEntityPlanter) {
-					((TileEntityPlanter) te).setConsumeAll(!((TileEntityPlanter) te).getConsumeAll());
-				} else if (te instanceof TileEntityMobRouter) {
-					switch (a) {
-						case 1:
-							((TileEntityMobRouter) te).setWhiteList(!((TileEntityMobRouter) te).getWhiteList());
-							break;
-						case 2:
-							((TileEntityMobRouter) te).setMatchMode(((TileEntityMobRouter) te).getMatchMode() + 1);
-							break;
-						case 3:
-							((TileEntityMobRouter) te).setMatchMode(((TileEntityMobRouter) te).getMatchMode() - 1);
-							break;
-					}
-				}
-				break;
-			case Packets.FakeSlotChange: // client -> server: client clicked on a fake slot
-				pos = getCoords();
-				te = world.getTileEntity(new BlockPos(x, y, z));
-				player = (EntityPlayer) world.getEntityByID(data.readInt());
-
-				ItemStack playerStack = player.inventory.getItemStack();
-				int slotNumber = data.readInt(),
-						click = data.readByte();
-				if (te instanceof IInventory) {
-					if (playerStack == null) {
-						((IInventory) te).setInventorySlotContents(slotNumber, null);
-					} else {
-						playerStack = playerStack.copy();
-						playerStack.stackSize = click == 1 ? -1 : 1;
-						ItemStack s = ((IInventory) te).getStackInSlot(slotNumber);
-						if (!UtilInventory.stacksEqual(s, playerStack))
-							playerStack.stackSize = 1;
-						else
-							playerStack.stackSize = Math.max(playerStack.stackSize + s.stackSize, 1);
-						((IInventory) te).setInventorySlotContents(slotNumber, playerStack);
-					}
-				}
-				break;
-			case Packets.RocketLaunch: // client -> server: client firing SPAMR missile
-				Entity owner = world.getEntityByID(data.readInt());
-				int t = data.readInt();
-				Entity target = null;
-				if (t != Integer.MIN_VALUE) {
-					target = world.getEntityByID(t);
-				}
-
-				if (owner instanceof EntityLivingBase) {
-					EntityRocket r = new EntityRocket(world, ((EntityLivingBase) owner), target);
-					world.spawnEntityInWorld(r);
-				}
-				break;
-		}
-		return null;
 	}
 
 	public static void sendHAMUpdateToServer(TileEntity te) {
@@ -257,8 +260,64 @@ public class MFRPacket extends PacketCoFHBase {
 		}
 	}
 
-	public static void sendEnchanterButtonToServer(TileEntity te) {
-		finish
+	public static void sendEnchanterButtonToServer(TileEntity te, byte amt) {
+		
+		PacketHandler.sendToServer(getPacket(PacketType.ENCHANTER_BUTTON).addCoords(te).addByte(amt));
+	}
+	
+	public static void sendHarvesterButtonToServer(TileEntity te, String setting, boolean value) {
+		
+		PacketHandler.sendToServer(getPacket(PacketType.HARVESTER_BUTTON).addCoords(te).addString(setting).addBool(value));
+	}
+
+	public static void sendChronotyperButtonToServer(TileEntity te) {
+		
+		PacketHandler.sendToServer(getPacket(PacketType.CHRONOTYPER_BUTTON).addCoords(te));
+	}
+
+	public static void sendAutoJukeBoxButtonToServer(TileEntity te, byte button) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.AUTO_JUKEBOX_BUTTON).addCoords(te).addByte(button));
+	}
+
+	public static void sendAutoSpawnerButtonToServer(TileEntity te) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.AUTO_SPAWNER_BUTTON).addCoords(te));
+	}
+	
+	public static void requestCircuitDefinitionFromServer(TileEntity te, int circuit) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.CIRCUIT_DEFINITION).addCoords(te).addInt(circuit));
+	}
+
+	public static void requestLogicSetCircuitFromServer(TileEntity te, int circuit, String className) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.LOGIC_SET_CIRCUIT).addCoords(te).addInt(circuit).addString(className));
+	}
+
+	public static void sendLogicSetPinToServer(TileEntity te, byte amt, int circuit, int pinIndex, int buffer, int pin) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.LOGIC_SET_PIN).addCoords(te).addByte(amt).addInt(circuit).addInt(pinIndex).addInt(buffer).addInt(pin));
+	}
+
+	public static void sendLogicReinitializeToServer(TileEntity te, int entityId) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.LOGIC_REINITIALIZE).addCoords(te).addInt(entityId));
+	}
+
+	public static void sendRouterButtonToServer(TileEntity te, int data) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.ROUTER_BUTTON).addCoords(te).addInt(data));
+	}
+
+	public static void sendFakeSlotToServer(TileEntity te, int entityId, int slotNumber, byte click) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.FAKE_SLOT_CHANGE).addCoords(te).addInt(entityId).addInt(slotNumber).addByte(click));
+	}
+
+	public static void sendRocketLaunchToServer(int ownerId, int entityId) {
+
+		PacketHandler.sendToServer(getPacket(PacketType.ROCKET_LAUNCH).addInt(ownerId).addInt(entityId));
 	}
 
 	public static PacketCoFHBase getPacket(PacketType type) {

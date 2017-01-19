@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -35,7 +36,7 @@ public class ItemRocketLauncher extends ItemFactoryGun {
 					mainInventory[slot] = null;
 
 			if (world.isRemote) {
-				Packets.sendToServer(Packets.RocketLaunch, player,
+				MFRPacket.sendRocketLaunchToServer(player.getEntityId(), 
 						damage == 0 ? MineFactoryReloadedClient.instance.getLockedEntity() : Integer.MIN_VALUE);
 			} else if (!player.addedToChunk) {
 				EntityRocket r = new EntityRocket(world, player, null);

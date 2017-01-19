@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityPlanter;
 
@@ -37,7 +38,7 @@ public class GuiPlanter extends GuiUpgradeable {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 
-		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
+		MFRPacket.sendRouterButtonToServer(_tileEntity, button.id);
 	}
 
 	@Override

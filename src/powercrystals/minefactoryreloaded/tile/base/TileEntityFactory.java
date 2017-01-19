@@ -301,7 +301,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 		if (_prevActive != _isActive)
 			MFRUtil.notifyBlockUpdate(worldObj, pos);
 		if (_lastActive < 0 && hasHAM()) {
-			Packets.sendToServer(Packets.HAMUpdate, this);
+			MFRPacket.sendHAMUpdateToServer(this);
 		}
 		_lastActive = 5;
 	}

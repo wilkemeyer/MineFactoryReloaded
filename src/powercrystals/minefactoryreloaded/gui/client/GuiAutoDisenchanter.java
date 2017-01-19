@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
 
@@ -40,8 +41,7 @@ public class GuiAutoDisenchanter extends GuiFactoryPowered
 		if(button.id == 1)
 		{
 			_disenchanter.setRepeatDisenchant(!_disenchanter.getRepeatDisenchant());
-			Packets.sendToServer(Packets.EnchanterButton, _tileEntity,
-					(byte)(_disenchanter.getRepeatDisenchant() ? 1 : 0));
+			MFRPacket.sendEnchanterButtonToServer(_tileEntity, (byte)(_disenchanter.getRepeatDisenchant() ? 1 : 0));
 		}
 	}
 }

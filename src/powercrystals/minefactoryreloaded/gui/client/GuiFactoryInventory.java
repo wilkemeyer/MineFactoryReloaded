@@ -33,6 +33,7 @@ import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -82,9 +83,8 @@ public class GuiFactoryInventory extends GuiBase {
 			SlotFake s = (SlotFake) o;
 			if (x >= s.xDisplayPosition && x <= s.xDisplayPosition + 16 && y >= s.yDisplayPosition &&
 					y <= s.yDisplayPosition + 16) {
-				Packets.sendToServer(Packets.FakeSlotChange, _tileEntity,
-					Minecraft.getMinecraft().thePlayer.getEntityId(),
-					s.slotNumber, (byte) button);
+				MFRPacket.sendFakeSlotToServer(_tileEntity,	Minecraft.getMinecraft().thePlayer.getEntityId(),
+						s.slotNumber, (byte) button);
 			}
 		}
 	}

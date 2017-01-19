@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerBlockSmasher;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 
@@ -56,12 +57,12 @@ public class GuiBlockSmasher extends GuiFactoryPowered {
 		if (button.id == 1) {
 			if (_smasher.getFortune() < MAX_FORTUNE) {
 				_smasher.setFortune(_smasher.getFortune() + 1);
-				Packets.sendToServer(Packets.EnchanterButton, _tileEntity, (byte) (1));
+				MFRPacket.sendEnchanterButtonToServer(_tileEntity, (byte) 1);
 			}
 		} else {
 			if (_smasher.getFortune() > 0) {
 				_smasher.setFortune(_smasher.getFortune() - 1);
-				Packets.sendToServer(Packets.EnchanterButton, _tileEntity, (byte) (-1));
+				MFRPacket.sendEnchanterButtonToServer(_tileEntity, (byte) -1);
 			}
 		}
 	}

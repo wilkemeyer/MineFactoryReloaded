@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoSpawner;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoSpawner;
 
@@ -41,7 +42,7 @@ public class GuiAutoSpawner extends GuiFactoryPowered
 	{
 		if(button.id == 1)
 		{
-			Packets.sendToServer(Packets.AutoSpawnerButton, _tileEntity);
+			MFRPacket.sendAutoSpawnerButtonToServer(_tileEntity);
 		}
 	}
 }

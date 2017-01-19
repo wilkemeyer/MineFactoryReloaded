@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoEnchanter;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoEnchanter;
 
@@ -54,8 +55,7 @@ public class GuiAutoEnchanter extends GuiFactoryPowered
 			if(_enchanter.getTargetLevel() < 30)
 			{
 				_enchanter.setTargetLevel(_enchanter.getTargetLevel() + 1);
-				Packets.sendToServer(Packets.EnchanterButton, _tileEntity,
-						(byte)(1));
+				MFRPacket.sendEnchanterButtonToServer(_tileEntity, (byte) 1);
 			}
 		}
 		else
@@ -63,8 +63,7 @@ public class GuiAutoEnchanter extends GuiFactoryPowered
 			if(_enchanter.getTargetLevel() > 1)
 			{
 				_enchanter.setTargetLevel(_enchanter.getTargetLevel() - 1);
-				Packets.sendToServer(Packets.EnchanterButton, _tileEntity,
-						(byte)(-1));
+				MFRPacket.sendEnchanterButtonToServer(_tileEntity, (byte) -1);
 			}
 		}
 	}

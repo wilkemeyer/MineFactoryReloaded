@@ -4,6 +4,7 @@ import cofh.lib.gui.element.ElementButtonManaged;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityDeepStorageUnit;
 
@@ -33,7 +34,7 @@ public class GuiDeepStorageUnit extends GuiFactoryInventory {
 			@Override
 			public void onClick() {
 
-				Packets.sendToServer(Packets.ChronotyperButton, _dsu);
+				MFRPacket.sendChronotyperButtonToServer(_dsu);
 			}
 		});
 	}
