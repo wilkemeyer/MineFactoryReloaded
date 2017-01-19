@@ -8,9 +8,11 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -22,10 +24,13 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnec
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
+import javax.annotation.Nullable;
+
 public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 
 	public static final PropertyDirection FACING = BlockDirectional.FACING;
-
+	private static final AxisAlignedBB NO_AABB = new AxisAlignedBB(0D, 0D, 0D, 0D, 0D, 0D);
+	
 	public static Material laser = new MaterialTransparent(MapColor.AIR);
 	private static GrindingDamage laserDamage = new GrindingDamage("mfr.laser");
 
@@ -38,9 +43,33 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+	protected BlockStateContainer createBlockState() {
+		
+		return new BlockStateContainer(this, FACING);
+	}
 
-		return NULL_AABB;
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(FACING, EnumFacing.VALUES[meta]);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(FACING).getIndex();
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		
+		return NO_AABB;
 	}
 
 	@Override
@@ -75,7 +104,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 	@Override
 	public boolean isFullCube(IBlockState state) {
 
-		return false;
+		return true;
 	}
 
 	@Override

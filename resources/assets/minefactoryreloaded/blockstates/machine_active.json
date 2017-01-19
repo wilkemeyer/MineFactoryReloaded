@@ -179,7 +179,7 @@
             },
             "laser_drill": {
                 "textures": {
-                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.idle.top",
+                    "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.top",
                     "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.idle.bottom",
                     "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.idle.side",
                     "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.idle.side",
@@ -190,7 +190,6 @@
                     "active": {
                         "true": {
                             "textures": {
-                                "up": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.active.top",
                                 "down": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.active.bottom",
                                 "north": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.active.side",
                                 "south": "minefactoryreloaded:blocks/machines/tile.mfr.machine.laserdrill.active.side",
