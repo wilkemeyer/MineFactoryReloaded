@@ -4,6 +4,7 @@ import cofh.api.item.IAugmentItem;
 import cofh.core.util.fluid.FluidTankAdv;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,11 +14,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 
 import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
@@ -26,6 +22,7 @@ import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFountain;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -116,9 +113,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 							if (state.getValue(BlockLiquid.LEVEL) == 0)
 								break l;
 						}
-					block = _tanks[0].getFluid().getFluid().getBlock();
-					if (worldObj.setBlockState(fillPos, block.getDefaultState())) {// TODO: when forge supports NBT fluid blocks, adapt this
-						worldObj.notifyNeighborsOfStateChange(fillPos, block);
+					if (worldObj.setBlockState(fillPos, getFlowingState(_tanks[0].getFluid()), 11)) {// TODO: when forge supports NBT fluid blocks, adapt this
 						drain(BUCKET_VOLUME, true, _tanks[0]);
 						setIdleTicks(1);
 						return true;
@@ -131,6 +126,16 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 		}
 		setIdleTicks(idleTicks);
 		return false;
+	}
+
+	private IBlockState getFlowingState(FluidStack fluid) {
+		
+		if (fluid.getFluid() == FluidRegistry.LAVA)
+			return Blocks.FLOWING_LAVA.getDefaultState();
+		else if (fluid.getFluid() == FluidRegistry.WATER)
+			return Blocks.FLOWING_WATER.getDefaultState();
+		
+		return fluid.getFluid().getBlock().getDefaultState();
 	}
 
 	@Override
