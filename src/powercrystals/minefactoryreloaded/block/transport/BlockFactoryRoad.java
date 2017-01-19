@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -104,6 +105,23 @@ public class BlockFactoryRoad extends Block {
 */
 
 	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, TYPE);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(TYPE, Type.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(TYPE).getMetadata();
+	}
+
+	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 
 		if (!world.isRemote) {
@@ -194,7 +212,7 @@ public class BlockFactoryRoad extends Block {
 			this.name = name;
 		}
 
-		public Type byMetadata(int meta) {
+		public static Type byMetadata(int meta) {
 			return META_LOOKUP[meta];
 		}
 		
