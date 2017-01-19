@@ -27,6 +27,7 @@ import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -278,7 +279,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 			HarvestAreaManager<TileEntityFactory> ham = getHAM();
 			int u = ham.getUpgradeLevel();
 			if (_lastUpgrade != u)
-				Packets.sendToAllPlayersWatching(worldObj, pos, ham.getUpgradePacket());
+				MFRPacket.sendUpgradeLevelToClient(this);
 			_lastUpgrade = u;
 		}
 		super.markDirty();

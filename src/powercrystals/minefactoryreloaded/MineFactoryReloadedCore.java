@@ -11,8 +11,6 @@ import cofh.mod.BaseMod;
 import cofh.mod.updater.UpdateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeModContainer;
-import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -147,6 +145,7 @@ import powercrystals.minefactoryreloaded.item.tool.ItemStraw;
 import powercrystals.minefactoryreloaded.item.tool.ItemXpExtractor;
 import powercrystals.minefactoryreloaded.net.CommonProxy;
 import powercrystals.minefactoryreloaded.net.EntityHandler;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler;
 import powercrystals.minefactoryreloaded.net.ServerPacketHandler.MFRMessage;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
@@ -309,9 +308,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 		MFRConfig.loadCommonConfig(getCommonConfig());
 
 		//loadLang(); //TODO do we really need to load lang file?? if so core needs update
-
-		networkWrapper = new SimpleNetworkWrapper(modNetworkChannel);
-		networkWrapper.registerMessage(ServerPacketHandler.class, MFRMessage.class, 0, Side.SERVER);
 
 		float meatNuggetSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.1F : 0.2F;
 		float meatIngotSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.2F : 0.8F;
@@ -615,6 +611,8 @@ public class MineFactoryReloadedCore extends BaseMod {
 		MFRFarmables.load();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new MFRGUIHandler());
+
+		MFRPacket.initialize();
 
 		addDispenserBehavior();
 		addChestGenItems();

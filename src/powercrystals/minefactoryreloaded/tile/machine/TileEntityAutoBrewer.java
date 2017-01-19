@@ -188,7 +188,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 			return false;
 		}
 
-		boolean hasIngredients = _inventory[getTemplateSlot(row)].stackSize > 0;
+		boolean hasIngredients = _inventory[getTemplateSlot(row)].stackSize > 0; //TODO, why this check when template slots always are of size 0?
 		if (!hasIngredients) for (int i = 0; i < 3; i++) {
 			if (UtilInventory.stacksEqual(_inventory[getTemplateSlot(row)], _inventory[getResourceSlot(row, i)])) {
 				hasIngredients = true;

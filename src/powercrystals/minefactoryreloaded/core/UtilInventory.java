@@ -397,11 +397,19 @@ public abstract class UtilInventory
 		from.stackSize -= amountToCopy;
 	}
 
+	/*
+		@deprecated use ItemStack.areItemStacksEqual instead
+	 */
+	@Deprecated
 	public static boolean stacksEqual(ItemStack s1, ItemStack s2)
 	{
 		return stacksEqual(s1, s2, true);
 	}
 
+	/*
+		@deprecated use ItemStack.areItemsEqual for nbtSensitive == false and ItemStack.areItemStacksEqual for nbtSensitive == true
+	 */
+	@Deprecated
 	public static boolean stacksEqual(ItemStack s1, ItemStack s2, boolean nbtSensitive)
 	{
 		if (s1 == null | s2 == null) return false;
