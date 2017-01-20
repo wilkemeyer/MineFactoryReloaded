@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.util.math.BlockPos;
@@ -31,14 +31,14 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 
 	public static int CAPACITY = FluidHelper.BUCKET_VOLUME * 4;
 	TankNetwork grid;
-	FluidTankAdv _tank;
+	FluidTankCore _tank;
 	protected byte sides;
 
 	public TileEntityTank() {
 
 		super(null);
 		setManageFluids(true);
-		_tank = new FluidTankAdv(CAPACITY);
+		_tank = new FluidTankCore(CAPACITY);
 	}
 
 	@Override

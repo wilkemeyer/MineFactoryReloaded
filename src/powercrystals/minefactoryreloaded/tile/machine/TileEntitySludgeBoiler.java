@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.WeightedRandomItemStack;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.EnumParticleTypes;
@@ -168,9 +168,9 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
+	protected FluidTankCore[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
+		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
 	}
 
 	@Override

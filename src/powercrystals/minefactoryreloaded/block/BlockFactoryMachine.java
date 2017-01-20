@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.core.CoFHProps;
-import cofh.lib.util.position.IRotateableTile;
 
 import java.util.ArrayList;
 
@@ -30,6 +29,7 @@ import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
+import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
@@ -173,10 +173,9 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnBlock) {
+	public ArrayList<ItemStack> dismantleBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player, boolean returnBlock) {
 
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
-		IBlockState state = world.getBlockState(pos);
 		ItemStack machine = new ItemStack(getItemDropped(state, world.rand, 0),	1, damageDropped(state));
 		list.add(machine);
 		TileEntity te = getTile(world, pos);
@@ -199,7 +198,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos) {
+	public boolean canDismantle(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
 
 		return getTile(world, pos) instanceof TileEntityFactory;
 	}

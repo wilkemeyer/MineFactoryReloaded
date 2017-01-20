@@ -5,7 +5,6 @@ import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IDismantleable;
 import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.render.hitbox.RenderHitbox;
-import cofh.lib.util.position.IRotateableTile;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -176,14 +175,13 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos)
+	public boolean canDismantle(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
 		return true;
 	}
 
 	@Override
-	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos,
-			boolean returnBlock)
+	public ArrayList<ItemStack> dismantleBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player, boolean returnBlock)
 	{
 		ArrayList<ItemStack> list = getDrops(world, pos, world.getBlockState(pos), 0);
 
@@ -218,8 +216,8 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		return drops;
 	}
 
-	public void getBlockInfo(IBlockAccess world, BlockPos pos, EnumFacing side,
-			EntityPlayer player, List<ITextComponent> info, boolean debug)
+	public void getBlockInfo(List<ITextComponent> info, IBlockAccess world, BlockPos pos, EnumFacing side,
+			EntityPlayer player, boolean debug)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityBase)

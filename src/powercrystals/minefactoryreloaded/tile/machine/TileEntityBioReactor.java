@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.CoreUtils;
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -201,9 +201,9 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory implements 
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
+	protected FluidTankCore[] createTanks() {
 
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override

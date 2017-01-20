@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -338,9 +338,9 @@ public class TileEntityHarvester extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
+	protected FluidTankCore[] createTanks() {
 
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override

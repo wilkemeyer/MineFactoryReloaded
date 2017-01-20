@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -61,8 +61,8 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
-		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME)};
+	protected FluidTankCore[] createTanks() {
+		return new FluidTankCore[] {new FluidTankCore(BUCKET_VOLUME)};
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.CoreUtils;
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -388,12 +388,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
+	protected FluidTankCore[] createTanks()
 	{
-		FluidTankAdv[] _tanks = new FluidTankAdv[9];
+		FluidTankCore[] _tanks = new FluidTankCore[9];
 		for (int i = 0; i < 9; i++)
 		{
-			_tanks[i] = new FluidTankAdv(BUCKET_VOLUME * 10);
+			_tanks[i] = new FluidTankCore(BUCKET_VOLUME * 10);
 		}
 		return _tanks;
 	}

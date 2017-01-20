@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import cofh.api.tileentity.IPortableData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
-import cofh.lib.util.position.IRotateableTile;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,6 +25,7 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.circuits.Noop;
+import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.net.Packets;

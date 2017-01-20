@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.util.CoreUtils;
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -253,10 +253,10 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
+	protected FluidTankCore[] createTanks()
 	{
-		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 32),
-				new FluidTankAdv(BUCKET_VOLUME * 16)};
+		return new FluidTankCore[] {new FluidTankCore(BUCKET_VOLUME * 32),
+				new FluidTankCore(BUCKET_VOLUME * 16)};
 	}
 
 	@Override
@@ -289,7 +289,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
-		FluidTankAdv _tank = _tanks[0];
+		FluidTankCore _tank = _tanks[0];
 		if (_tank.getFluidAmount() > 0)
 			return _tank.drain(maxDrain, doDrain);
 		return null;
@@ -300,7 +300,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	{
 		if (resource != null)
 		{
-			FluidTankAdv _tank = _tanks[0];
+			FluidTankCore _tank = _tanks[0];
 			if (resource.isFluidEqual(_tank.getFluid()))
 				return _tank.drain(resource.amount, doDrain);
 		}

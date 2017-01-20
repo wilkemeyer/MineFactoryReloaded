@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import com.google.common.base.Throwables;
 
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.IFluidTank;
 
 public class FluidTankMulti implements IFluidTank {
 
-	FluidTankAdv[] tanks = new FluidTankAdv[2];
+	FluidTankCore[] tanks = new FluidTankCore[2];
 	int length, index;
 	private FluidStack fluid = null;
 	private TankNetwork grid;
@@ -20,7 +20,7 @@ public class FluidTankMulti implements IFluidTank {
 		grid = network;
 	}
 
-	public void addTank(FluidTankAdv tank) {
+	public void addTank(FluidTankCore tank) {
 		if (tank == null)
 			throw new IllegalArgumentException("null");
 		for (int i = length; i --> 0; )
@@ -28,15 +28,15 @@ public class FluidTankMulti implements IFluidTank {
 				return;
 
 		if (++length >= tanks.length) {
-			FluidTankAdv[] old = tanks;
-			tanks = new FluidTankAdv[length * 2];
+			FluidTankCore[] old = tanks;
+			tanks = new FluidTankCore[length * 2];
 			System.arraycopy(old, 0, tanks, 0, length - 1);
 		}
 		tanks[length - 1] = tank;
 		fill(tank.drain(tank.getCapacity(), true), true);
 	}
 
-	public void removeTank(FluidTankAdv tank) {
+	public void removeTank(FluidTankCore tank) {
 		if (tank == null)
 			throw new IllegalArgumentException("null");
 		int i = length;
@@ -44,12 +44,12 @@ public class FluidTankMulti implements IFluidTank {
 		if (i < 0) return;
 
 		{
-			FluidTankAdv[] old = tanks;
+			FluidTankCore[] old = tanks;
 			if (--length != i) {
 				System.arraycopy(old, i + 1, old, i, length - i + 1);
 			}
 			if (length <= old.length / 4) {
-				tanks = new FluidTankAdv[old.length / 2];
+				tanks = new FluidTankCore[old.length / 2];
 				System.arraycopy(old, 0, tanks, 0, tanks.length);
 			}
 		}

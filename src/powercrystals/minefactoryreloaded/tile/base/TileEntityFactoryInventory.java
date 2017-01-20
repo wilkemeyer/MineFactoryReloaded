@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.api.item.IAugmentItem;
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.helpers.FluidHelper;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory {
 
-	protected final static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] { };
+	protected final static FluidTankCore[] emptyIFluidTank = new FluidTankCore[] { };
 	protected final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
 	protected final static int BUCKET_VOLUME = FluidContainerRegistry.BUCKET_VOLUME;
 
@@ -35,7 +35,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	protected int _failedDropTicksMax = 20;
 	private int _failedDropTicks = 0;
 
-	protected FluidTankAdv[] _tanks;
+	protected FluidTankCore[] _tanks;
 
 	protected ItemStack[] _inventory;
 
@@ -115,19 +115,19 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return r;
 	}
 
-	protected FluidTankAdv[] createTanks() {
+	protected FluidTankCore[] createTanks() {
 
 		return null;
 	}
 
-	public FluidTankAdv[] getTanks() {
+	public FluidTankCore[] getTanks() {
 
 		if (_tanks != null)
 			return _tanks;
 		return emptyIFluidTank;
 	}
 
-	public int drain(int maxDrain, boolean doDrain, FluidTankAdv _tank) {
+	public int drain(int maxDrain, boolean doDrain, FluidTankCore _tank) {
 
 		if (_tank.getFluidAmount() > 0) {
 			FluidStack drained = _tank.drain(maxDrain, doDrain);
@@ -145,7 +145,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 
-		for (FluidTankAdv _tank : getTanks())
+		for (FluidTankCore _tank : getTanks())
 			if (_tank.getFluidAmount() > 0)
 				return _tank.drain(maxDrain, doDrain);
 		return null;
@@ -154,7 +154,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	public FluidStack drain(FluidStack resource, boolean doDrain) {
 
 		if (resource != null)
-			for (FluidTankAdv _tank : getTanks())
+			for (FluidTankCore _tank : getTanks())
 				if (resource.isFluidEqual(_tank.getFluid()))
 					return _tank.drain(resource.amount, doDrain);
 		return null;
@@ -163,7 +163,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	public int fill(FluidStack resource, boolean doFill) {
 
 		if (resource != null)
-			for (FluidTankAdv _tank : getTanks())
+			for (FluidTankCore _tank : getTanks())
 				if (FluidHelper.isFluidEqualOrNull(_tank.getFluid(), resource))
 					return _tank.fill(resource, doFill);
 		return 0;
@@ -421,7 +421,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				if (j < _tanks.length) {
 					FluidStack l = FluidStack.loadFluidStackFromNBT(nbttagcompound1);
 					if (l != null) {
-						((FluidTankAdv) _tanks[j]).setFluid(l);
+						((FluidTankCore) _tanks[j]).setFluid(l);
 					}
 				}
 			}

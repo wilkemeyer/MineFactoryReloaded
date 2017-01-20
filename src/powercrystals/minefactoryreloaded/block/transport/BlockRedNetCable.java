@@ -284,9 +284,9 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public boolean canDismantle(EntityPlayer player, World world, BlockPos pos) {
+	public boolean canDismantle(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
 
-		RayTraceResult part = collisionRayTrace(world.getBlockState(pos), world, pos,
+		RayTraceResult part = collisionRayTrace(state, world, pos,
 			RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 		if (part == null)
 			return false;
@@ -380,7 +380,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, List<ITextComponent> info, boolean debug) {
+	public void getBlockInfo(List<ITextComponent> info, IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityRedNetCable) {
