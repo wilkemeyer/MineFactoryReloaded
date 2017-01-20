@@ -5,7 +5,7 @@ public class ItemBlockFactoryLeaves extends ItemBlockFactory {
 	public ItemBlockFactoryLeaves(net.minecraft.block.Block id) {
 		super(id);
 		setHasSubtypes(true);
-		setNames(BlockRubberLeaves._names);
+		setNames(BlockRubberLeaves.Variant.NAMES);
 	}
 
 	@Override

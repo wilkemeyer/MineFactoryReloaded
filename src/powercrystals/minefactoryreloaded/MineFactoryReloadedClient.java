@@ -5,12 +5,15 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -18,6 +21,9 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -55,6 +61,8 @@ import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
 import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
+import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
+import powercrystals.minefactoryreloaded.block.BlockRubberWood;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
@@ -65,6 +73,8 @@ import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
+
+import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IResourceManagerReloadListener {
@@ -130,7 +140,16 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
+		
+		ModelLoader.setCustomStateMapper(MFRThings.rubberLeavesBlock, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());
+		item = Item.getItemFromBlock(MFRThings.rubberLeavesBlock);
+		ModelLoader.setCustomMeshDefinition(item, stack -> {
 
+			String variant = "fancy=" + Minecraft.getMinecraft().gameSettings.fancyGraphics;
+			variant += ",variant=" + (stack.getMetadata() == 0 ? "normal" : "dry");
+			return new ModelResourceLocation(MFRThings.rubberLeavesBlock.getRegistryName(), variant); //TODO cache values
+		});
+		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
 	}
 
@@ -201,6 +220,27 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			}
 			return 0xFFFFFF;
 		}, MFRThings.conveyorBlock);
+		
+		blockColors.registerBlockColorHandler((state, world, pos, tintIndex) -> {
+			
+			BlockRubberLeaves.Variant variant = state.getValue(BlockRubberLeaves.VARIANT);
+
+			int foliageColor;
+			if (world != null && pos != null) {
+				foliageColor = BiomeColorHelper.getFoliageColorAtPos(world, pos);
+			} else {
+				foliageColor = ColorizerFoliage.getFoliageColorBasic();
+			}
+			
+			if (variant == BlockRubberLeaves.Variant.DRY) {
+				int r = (foliageColor & 16711680) >> 16;
+				int g = (foliageColor & 65280) >> 8;
+				int b = foliageColor & 255;
+				return ( r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
+			}
+
+			return foliageColor;
+		}, MFRThings.rubberLeavesBlock);
 
 		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 		itemColors.registerItemColorHandler((stack, tintIndex) -> {
@@ -213,6 +253,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 			return EnumDyeColor.byMetadata(stack.getItemDamage()).getMapColor().colorValue;
 		}, MFRThings.conveyorBlock);
+		
+		itemColors.registerItemColorHandler((stack, tintIndex) -> stack.getMetadata() == 1 ? 0xFFFFFF : ColorizerFoliage.getFoliageColorBasic(), MFRThings.rubberLeavesBlock);
 
 
 	/* TODO fix rendering

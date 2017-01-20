@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.base.Predicate;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -15,6 +14,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -25,17 +25,14 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
-import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-import javax.annotation.Nullable;
-
 public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
 {
-	public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("variant", Type.class, input -> input.getMetadata() < 4);
-	static String[] _names = {null, "dry"};
-
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class, input -> input.getMetadata() < 4);
+	public static final PropertyBool FANCY = PropertyBool.create("fancy");
+	
 	public BlockRubberLeaves()
 	{
 		setUnlocalizedName("mfr.rubberwood.leaves");
@@ -44,76 +41,21 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, VARIANT, DECAYABLE, CHECK_DECAY);
+		return new BlockStateContainer(this, VARIANT, FANCY, DECAYABLE, CHECK_DECAY);
 	}
-	
-/*
+
 	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+
+		return state.withProperty(FANCY, !isOpaqueCube(state));
+	}
+
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		String unlocalizedName = getUnlocalizedName();
-		for (int i = _names.length; i --> 0; )
-		{
-			String name = getName(unlocalizedName, _names[i]);
-			_iconOpaque[i] = ir.registerIcon("minefactoryreloaded:" + name + ".opaque");
-			_iconTransparent[i] = ir.registerIcon("minefactoryreloaded:" + name + ".transparent");
-		}
-	}
-
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		return getIcon(side, world.getBlockMetadata(x, y, z));
+	public BlockRenderLayer getBlockLayer()	{
+		
+		return BlockRenderLayer.CUTOUT; // isOpaqueCube(null) ? BlockRenderLayer.SOLID : BlockRenderLayer.CUTOUT_MIPPED;
 	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta)
-	{
-		meta %= 4; // bits 3 and 4 are state flags
-		// using mod instead of bitand to preserve sign just incase something is passing us a negative value
-		if (meta < 0 || meta >= _names.length) {
-			return Blocks.BEDROCK.getIcon(0, 0); // invalid metadata gets something distinct (green bedrock!)
-		}
-
-		return isOpaqueCube() ? _iconOpaque[meta] : _iconTransparent[meta];
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(int par1)
-	{
-		return par1 == 1 ? 0xFFFFFF : super.getRenderColor(par1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess iba, BlockPos pos)
-	{
-		int meta = iba.getBlockMetadata(x, y, z) & 3;
-		int r = 0;
-		int g = 0;
-		int b = 0;
-
-		for (int l1 = -1; l1 <= 1; ++l1)
-			for (int i2 = -1; i2 <= 1; ++i2)
-			{
-				int j2 = iba.getBiomeGenForCoords(x + i2, z + l1).getBiomeFoliageColor(x, y, z);
-				r += (j2 & 16711680) >> 16;
-			g += (j2 & 65280) >> 8;
-			b += j2 & 255;
-			}
-
-		r = (r / 9 & 255);
-		g = (g / 9 & 255);
-		b = (b / 9 & 255);
-		if (meta == 1)
-			return (r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
-
-		return r << 16 | g << 8 | b;
-	}
-*/
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -154,8 +96,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		return this.getDefaultState().withProperty(VARIANT, this.getVariant(meta)).withProperty(DECAYABLE, (meta & 4) == 0).withProperty(CHECK_DECAY, (meta & 8) > 0);
 	}
 
-	private Type getVariant(int meta) {
-		return Type.byMetadata((meta & 3) % 4);
+	private Variant getVariant(int meta) {
+		return Variant.byMetadata((meta & 3) % 4);
 	}
 	
 	@Override
@@ -199,7 +141,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	{
 		if (world.isRemote)
 			return;
-		if (state.getValue(VARIANT) == Type.NORMAL && !state.getValue(DECAYABLE))
+		if (state.getValue(VARIANT) == Variant.NORMAL && !state.getValue(DECAYABLE))
 		{
 			boolean decay = state.getValue(CHECK_DECAY);
 			if (decay)
@@ -230,7 +172,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			}
 			if (decay && rand.nextInt(chance) == 0)
 			{
-				world.setBlockState(pos, state.withProperty(VARIANT, Type.DRY));
+				world.setBlockState(pos, state.withProperty(VARIANT, Variant.DRY));
 				return;
 			}
 		}
@@ -261,7 +203,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 					chance += 3;
 			}
 			if (decay && world.rand.nextInt(chance) == 0)
-				world.setBlockState(pos, state.withProperty(VARIANT, Type.DRY));
+				world.setBlockState(pos, state.withProperty(VARIANT, Variant.DRY));
 		}
 	}
 
@@ -276,8 +218,6 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		boolean cube = isOpaqueCube(state);
-		if (cube && state.getBlock() == this)
-			return false;
 		return cube ? super.shouldSideBeRendered(state, world, pos, side) : true;
 	}
 
@@ -294,15 +234,15 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		return null;
 	}
 
-	enum Type implements IStringSerializable {
+	public enum Variant implements IStringSerializable {
 		NORMAL (0, "normal"),
 		DRY(1, "dry");
 
 		private int meta;
 		private String name;
 
-		private static final Type[] META_LOOKUP = new Type[values().length];
-		Type(int meta, String name) {
+		private static final Variant[] META_LOOKUP = new Variant[values().length];
+		Variant(int meta, String name) {
 
 			this.meta = meta;
 			this.name = name;
@@ -317,7 +257,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			return meta;
 		}
 
-		public static Type byMetadata(int meta) {
+		public static Variant byMetadata(int meta) {
 			
 			if(meta < 0 || meta >= META_LOOKUP.length) {
 				meta = 0;
@@ -328,10 +268,18 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 		static {
 			for(int i = 0; i < values().length; ++i) {
-				Type variant = values()[i];
+				Variant variant = values()[i];
 				META_LOOKUP[variant.getMetadata()] = variant;
 			}
-
 		}
+
+		public static final String[] NAMES;
+		static {
+			NAMES = new String[values().length];
+			for (Variant variant : values()) {
+				NAMES[variant.meta] = variant.name;
+			}
+		}
+
 	}
 }
