@@ -6,9 +6,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,32 +33,8 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		setUnlocalizedName("mfr.rubberwood.log");
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("axe", 0);
-		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true));
+		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true).withProperty(AXIS, EnumFacing.Axis.Y));
 	}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		_iconLogSide = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
-		_iconLogTop = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	protected IIcon getSideIcon(int par1)
-	{
-		return _iconLogSide;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	protected IIcon getTopIcon(int par1)
-	{
-		return _iconLogTop;
-	}
-*/
 
 	@Override
 	protected BlockStateContainer createBlockState() {
@@ -88,6 +66,35 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		return drops;
 	}
 
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		return this.getStateFromMeta(meta).withProperty(AXIS, facing.getAxis());
+	}
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot)
+	{
+		switch (rot)
+		{
+			case COUNTERCLOCKWISE_90:
+			case CLOCKWISE_90:
+
+				switch (state.getValue(AXIS))
+				{
+					case X:
+						return state.withProperty(AXIS, EnumFacing.Axis.Z);
+					case Z:
+						return state.withProperty(AXIS, EnumFacing.Axis.X);
+					default:
+						return state;
+				}
+
+			default:
+				return state;
+		}
+	}
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

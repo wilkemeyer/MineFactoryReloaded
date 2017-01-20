@@ -454,7 +454,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		registerBlock(railDropoffPassengerBlock, new ItemBlock(railDropoffPassengerBlock));
 
 		registerBlock(rubberSaplingBlock, new ItemBlockFactoryTree(rubberSaplingBlock));
-		registerBlock(rubberWoodBlock, ItemBlock.class);
+		registerBlock(rubberWoodBlock, new ItemBlock(rubberWoodBlock));
 		registerBlock(rubberLeavesBlock, new ItemBlockFactoryLeaves(rubberLeavesBlock));
 		rubberSaplingItem = Item.getItemFromBlock(rubberSaplingBlock);
 		rubberWoodItem = Item.getItemFromBlock(rubberWoodBlock);

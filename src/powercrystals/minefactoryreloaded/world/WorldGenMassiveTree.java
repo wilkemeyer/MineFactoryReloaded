@@ -309,9 +309,9 @@ public class WorldGenMassiveTree extends WorldGenerator {
 					if (slopeTrunk)
 						topPoint[1] = y + sinc2(lim * i, lim * j, height) - (rand.nextInt(3) - 1);
 
-					this.placeBlockLine(bottomPoint, topPoint, log.getDefaultState().withProperty(BlockRubberWood.RUBBER_FILLED, true));
+					this.placeBlockLine(bottomPoint, topPoint, log.getDefaultState());
 					this.setBlockAndNotifyAdequately(worldObj, new BlockPos(topPoint[0], topPoint[1], topPoint[2]),
-							log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z).withProperty(BlockRubberWood.RUBBER_FILLED, true));
+							log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z));
 					BlockPos placementPos = new BlockPos(bottomPoint[0], bottomPoint[1] - 1, bottomPoint[2]);
 					IBlockState state = worldObj.getBlockState(placementPos);
 					state.getBlock().onPlantGrow(state, worldObj, placementPos, pos);
@@ -345,7 +345,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 			if (height >= heightLimit) {
 				this.placeBlockLine(start, end,
-						log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z).withProperty(BlockRubberWood.RUBBER_FILLED, true));
+						log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z));
 			}
 		}
 	}
