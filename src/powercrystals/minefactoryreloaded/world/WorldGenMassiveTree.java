@@ -268,10 +268,8 @@ public class WorldGenMassiveTree extends WorldGenerator {
 				int var20 = Math.max(var18, var19);
 
 				if (var20 > 0) {
-					if (var18 == var20) {
-						axis = BlockLog.EnumAxis.X;
-					} else if (var19 == var20) {
-						axis = BlockLog.EnumAxis.Z;
+					if (var18 == var20 || var19 == var20) {
+						axis = BlockLog.EnumAxis.NONE;
 					}
 				}
 
@@ -311,7 +309,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 					this.placeBlockLine(bottomPoint, topPoint, log.getDefaultState());
 					this.setBlockAndNotifyAdequately(worldObj, new BlockPos(topPoint[0], topPoint[1], topPoint[2]),
-							log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z));
+							log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.NONE));
 					BlockPos placementPos = new BlockPos(bottomPoint[0], bottomPoint[1] - 1, bottomPoint[2]);
 					IBlockState state = worldObj.getBlockState(placementPos);
 					state.getBlock().onPlantGrow(state, worldObj, placementPos, pos);
@@ -345,7 +343,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 			if (height >= heightLimit) {
 				this.placeBlockLine(start, end,
-						log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z));
+						log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.NONE));
 			}
 		}
 	}

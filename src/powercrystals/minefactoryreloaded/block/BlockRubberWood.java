@@ -33,22 +33,54 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		setUnlocalizedName("mfr.rubberwood.log");
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("axe", 0);
-		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true).withProperty(AXIS, EnumFacing.Axis.Y));
+		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true).withProperty(LOG_AXIS, EnumAxis.Y));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, AXIS, RUBBER_FILLED);
+		return new BlockStateContainer(this, LOG_AXIS, RUBBER_FILLED);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return super.getStateFromMeta(meta).withProperty(RUBBER_FILLED, (meta & 3) == 1);
+
+		IBlockState state = getDefaultState().withProperty(RUBBER_FILLED, (meta & 3) == 1);
+		
+		switch (meta & 12)
+		{
+			case 0:
+				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Y);
+				break;
+			case 4:
+				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.X);
+				break;
+			case 8:
+				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.Z);
+				break;
+			default:
+				state = state.withProperty(LOG_AXIS, BlockLog.EnumAxis.NONE);
+		}
+		
+		return state;
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return super.getMetaFromState(state) | (state.getValue(RUBBER_FILLED) ? 1 : 0);
+
+		int meta = state.getValue(RUBBER_FILLED) ? 1 : 0;
+		switch (state.getValue(LOG_AXIS))
+		{
+			case X:
+				meta |= 4;
+				break;
+			case Z:
+				meta |= 8;
+				break;
+			case NONE:
+				meta |= 12;
+		}
+		
+		return meta;
 	}
 
 	@Override
@@ -66,35 +98,6 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		return drops;
 	}
 
-	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
-		return this.getStateFromMeta(meta).withProperty(AXIS, facing.getAxis());
-	}
-
-	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot)
-	{
-		switch (rot)
-		{
-			case COUNTERCLOCKWISE_90:
-			case CLOCKWISE_90:
-
-				switch (state.getValue(AXIS))
-				{
-					case X:
-						return state.withProperty(AXIS, EnumFacing.Axis.Z);
-					case Z:
-						return state.withProperty(AXIS, EnumFacing.Axis.X);
-					default:
-						return state;
-				}
-
-			default:
-				return state;
-		}
-	}
-	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

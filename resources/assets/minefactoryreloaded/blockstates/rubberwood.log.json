@@ -15,6 +15,12 @@
 			},
 			"x": {
 				"x": 90, "y": 90
+			},
+			"none": {
+				"model": "minecraft:cube_all",
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.rubberwood.log.side"
+				}
 			}
 		}
 	}
