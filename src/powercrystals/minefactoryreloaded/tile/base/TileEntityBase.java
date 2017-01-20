@@ -38,9 +38,8 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		inWorld = false;
 	}
 
-	@Override
-	public void validate() {
-		super.validate();
+	public void cofh_validate() {
+
 		inWorld = true;
 	}
 
