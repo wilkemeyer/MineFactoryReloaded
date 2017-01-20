@@ -3,10 +3,9 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import cofh.api.inventory.IInventoryConnection;
+import cofh.api.tileentity.IInventoryConnection;
 import cofh.api.tileentity.IPortableData;
 import cofh.asm.relauncher.Strippable;
-import cofh.lib.util.position.IRotateableTile;
 import com.google.common.base.Strings;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,6 +23,7 @@ import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.core.HarvestAreaManager;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
@@ -33,8 +33,8 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public abstract class TileEntityFactory extends TileEntityBase
-																implements IRotateableTile, IInventoryConnection, IPortableData,
-																IHarvestAreaContainer, IPipeConnection {
+		implements IRotateableTile, IInventoryConnection, IPortableData,
+				   IHarvestAreaContainer, IPipeConnection {
 
 	protected static class FactoryAreaManager extends HarvestAreaManager<TileEntityFactory> {
 

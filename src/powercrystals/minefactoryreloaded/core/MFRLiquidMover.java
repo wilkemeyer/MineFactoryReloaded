@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.entity.item.EntityXPOrb;
@@ -177,7 +177,7 @@ public abstract class MFRLiquidMover
 		return false;
 	}
 
-	public static int fillTankWithXP(FluidTankAdv tank, EntityXPOrb orb)
+	public static int fillTankWithXP(FluidTankCore tank, EntityXPOrb orb)
 	{
 		int maxAmount = tank.getSpace(), maxXP = (int) (maxAmount / 66.66666667f);
 		if (maxAmount <= 0)

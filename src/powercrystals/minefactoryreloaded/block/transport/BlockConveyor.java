@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.util.helpers.BlockHelper;
-import cofh.lib.util.position.IRotateableTile;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -48,15 +47,12 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
+import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
-
-import javax.annotation.Nullable;
-
-import static codechicken.nei.NEIClientConfig.world;
 
 public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 

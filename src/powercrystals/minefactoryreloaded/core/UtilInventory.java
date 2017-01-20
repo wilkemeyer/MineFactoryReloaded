@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.core;
 
 import buildcraft.api.transport.IPipeTile;
 
-import cofh.api.transport.IItemDuct;
+import cofh.api.tileentity.IItemDuct;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;

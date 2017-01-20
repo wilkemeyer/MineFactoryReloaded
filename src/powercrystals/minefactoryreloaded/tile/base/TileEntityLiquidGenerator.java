@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,8 +65,8 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	protected abstract boolean isFluidFuel(FluidStack fuel);
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
-		return new FluidTankAdv[] {new FluidTankAdv(BUCKET_VOLUME * 4)};
+	protected FluidTankCore[] createTanks() {
+		return new FluidTankCore[] {new FluidTankCore(BUCKET_VOLUME * 4)};
 	}
 
 	protected String getFluidName(FluidStack fluid) {
@@ -102,7 +102,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		if (resource != null && isFluidFuel(resource))
-			for (FluidTankAdv _tank : getTanks())
+			for (FluidTankCore _tank : getTanks())
 				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
 					return _tank.fill(resource, doFill);
 		return 0;

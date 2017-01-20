@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.helpers.MathHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -175,10 +175,10 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
+	protected FluidTankCore[] createTanks() {
 
-		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME),
-				new FluidTankAdv(BUCKET_VOLUME * 4) };
+		return new FluidTankCore[] { new FluidTankCore(BUCKET_VOLUME),
+				new FluidTankCore(BUCKET_VOLUME * 4) };
 	}
 
 	@Override

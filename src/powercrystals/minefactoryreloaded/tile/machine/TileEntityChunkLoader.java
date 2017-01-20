@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -87,9 +87,9 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
+	protected FluidTankCore[] createTanks() {
 
-		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME * 10) };
+		return new FluidTankCore[] { new FluidTankCore(BUCKET_VOLUME * 10) };
 	}
 
 	@Override
@@ -365,7 +365,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 
 		if (!unableToRequestTicket & resource != null && isFluidFuel(resource))
-			for (FluidTankAdv _tank : getTanks())
+			for (FluidTankCore _tank : getTanks())
 				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
 					return _tank.fill(resource, doFill);
 		return 0;

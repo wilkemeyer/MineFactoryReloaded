@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/gui/config" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/ae" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/buildcraft" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/forestry" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/ic2" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/railcraft" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/thermalexpansion" />
+      <excludeFolder url="file://$MODULE_DIR$/src/powercrystals/minefactoryreloaded/modhelpers/tinkersconstruct" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="CodeChickenLib" />
+    <orderEntry type="module" module-name="CoFHCore" />
+    <orderEntry type="module" module-name="CoFHLib" />
+    <orderEntry type="module" module-name="z Minecraft 1.10.2" />
+  </component>
+</module>

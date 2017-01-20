@@ -3,10 +3,9 @@ package powercrystals.minefactoryreloaded.tile.transport;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
-import cofh.api.inventory.IInventoryConnection;
+import cofh.api.tileentity.IInventoryConnection;
 import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
-import cofh.lib.util.position.IRotateableTile;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -23,12 +22,14 @@ import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
 import static powercrystals.minefactoryreloaded.block.transport.BlockConveyor.ConveyorDirection.*;
+
+import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 @Strippable("buildcraft.api.transport.IPipeConnection")
 public class TileEntityConveyor extends TileEntityBase
-			implements IRotateableTile, ISidedInventory, IPipeConnection, IInventoryConnection
+		implements IRotateableTile, ISidedInventory, IPipeConnection, IInventoryConnection
 {
 	EnumDyeColor _dye = null;
 

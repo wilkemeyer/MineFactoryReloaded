@@ -14,15 +14,12 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyTransport;
 import cofh.asm.relauncher.Strippable;
-import ic2.api.energy.tile.*;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import ic2.api.energy.EnergyNet;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,29 +35,15 @@ import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
-@Strippable({"appeng.api.implementations.tiles.ICrankable", "ic2.api.energy.tile.IEnergyEmitter", "ic2.api.energy.tile.IEnergyAcceptor"})
+@Strippable({"appeng.api.implementations.tiles.ICrankable"})
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
-																	IEnergyTransport, ICrankable, IEnergyAcceptor, IEnergyEmitter//, IEnergyInfo
+																	IEnergyTransport, ICrankable//, IEnergyInfo
 {
-
-	private static boolean IC2Classes = false, IC2Net = false;
-
-	static {
-		try {
-			Class.forName("ic2.api.energy.tile.IEnergySource");
-			Class.forName("ic2.api.energy.tile.IEnergySink");
-			IC2Classes = true;
-			Class.forName("ic2.api.energy.EnergyNet");
-			IC2Net = true;
-		} catch (Throwable _) {
-		}
-	}
 
 	private byte[] sideMode = { 1, 1, 1, 1, 1, 1, 0 };
 	private InterfaceType[] transportTypes = null;
 	private IEnergyReceiver[] receiverCache = null;
 	private IEnergyProvider[] providerCache = null;
-	private IC2Cache ic2Cache = null;
 	private boolean deadCache = false;
 	private boolean readFromNBT = false;
 
@@ -80,7 +63,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		deadCache = true;
 		receiverCache = null;
 		providerCache = null;
-		ic2Cache = null;
 		if (worldObj.isRemote)
 			return;
 		if (_grid == null) {
@@ -181,8 +163,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			receiverCache[side.ordinal()] = null;
 		if (providerCache != null)
 			providerCache[side.ordinal()] = null;
-		if (ic2Cache != null)
-			ic2Cache.erase(side);
 		int lastMode = sideMode[side.ordinal()];
 		sideMode[side.ordinal()] &= 1;
 		if (tile instanceof TileEntityRedNetEnergy) {
@@ -223,8 +203,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					providerCache[side.ordinal()] = (IEnergyProvider) tile;
 				}
 			}
-		} else if (checkIC2Tiles(tile, side)) {
-			;
 		}
 		if (!deadCache) {
 			if (lastMode != sideMode[side.ordinal()]) {
@@ -240,14 +218,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		for (int i = transportTypes.length; i-- > 0; ) {
 			transportTypes[i] = InterfaceType.BALANCE;
 		}
-	}
-
-	private boolean checkIC2Tiles(TileEntity tile, EnumFacing side) {
-
-		if (!IC2Classes)
-			return false;
-		if (ic2Cache == null) ic2Cache = new IC2Cache();
-		return ic2Cache.add(tile, side);
 	}
 
 	@Override
@@ -448,8 +418,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				break;
 			}
 			case 3: // IEnergyTile
-				if (ic2Cache != null)
-					ic2Cache.extract(bSide);
 				break;
 			case 4: // TileEntityRednetCable
 			case 0: // no mode
@@ -482,8 +450,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				break;
 			}
 			case 3: // IEnergyTile
-				if (ic2Cache != null)
-					return ic2Cache.transmit(energy, side, bSide);
 				break;
 			case 4: // TileEntityRednetCable
 			case 0: // no mode
@@ -492,115 +458,6 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			}
 		}
 		return 0;
-	}
-
-	@Override
-	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
-		
-		return true;
-	}
-
-	@Override
-	public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
-		
-		return true;
-	}
-
-	private class IC2Cache {
-
-		IEnergySource[] sourceCache = null;
-		IEnergySink[] sinkCache = null;
-
-		void erase(EnumFacing side) {
-
-			if (sourceCache != null)
-				sourceCache[side.ordinal()] = null;
-			if (sinkCache != null)
-				sinkCache[side.ordinal()] = null;
-		}
-
-		public boolean add(TileEntity tile, EnumFacing side) {
-
-			boolean r = false;
-			if (tile instanceof IEnergyTile) {
-				if (tile instanceof IEnergySource && ((IEnergySource) tile).emitsEnergyTo(TileEntityRedNetEnergy.this, side)) {
-					if (sourceCache == null) sourceCache = new IEnergySource[6];
-					sourceCache[side.ordinal()] = (IEnergySource) tile;
-					sideMode[side.ordinal()] |= 3 << 1;
-					r = true;
-				}
-				if (tile instanceof IEnergySink && ((IEnergySink) tile).acceptsEnergyFrom(TileEntityRedNetEnergy.this, side)) {
-					if (sinkCache == null) sinkCache = new IEnergySink[6];
-					sinkCache[side.ordinal()] = (IEnergySink) tile;
-					sideMode[side.ordinal()] |= 3 << 1;
-					r = true;
-				}
-			}
-			return r;
-		}
-
-		void extract(int bSide) {
-
-			if (sourceCache != null) {
-				IEnergySource source = sourceCache[bSide];
-				if (source == null) return;
-				int e = Math.min((int) (source.getOfferedEnergy() * energyPerEU), TRANSFER_RATE);
-				if (e > 0) {
-					e = _grid.storage.receiveEnergy(e, false);
-					if (e > 0)
-						source.drawEnergy(e / (float) energyPerEU);
-				}
-			}
-			return;
-		}
-
-		int transmit(int energy, EnumFacing side, int bSide) {
-
-			if (sinkCache != null) {
-				IEnergySink sink = sinkCache[bSide];
-				if (sink == null) return 0;
-				int e = (int) Math.min(getPowerFromTier(sink.getSinkTier()) * energyPerEU, energy);
-				e = Math.min((int) (sink.getDemandedEnergy() * energyPerEU), e);
-				if (e > 0) {
-					float v = e / (float) energyPerEU;
-					e -= (int) Math.ceil(sink.injectEnergy(side, v, getPowerFromTier(getTierFromPower(v))) * energyPerEU);
-					return e;
-				}
-			}
-			return 0;
-		}
-
-		private double getPowerFromTier(int t) {
-
-			if (IC2Net) return getPower(t);
-			return t * 32;
-		}
-
-		private double getPower(int t) {
-
-			if (EnergyNet.instance != null)
-				return EnergyNet.instance.getPowerFromTier(t);
-			return t * 32;
-		}
-
-		private int getTierFromPower(double t) {
-
-			if (IC2Net) return getTier(t);
-			return 1;
-		}
-
-		private int getTier(double t) {
-
-			if (EnergyNet.instance != null)
-				return EnergyNet.instance.getTierFromPower(t);
-			return 1;
-		}
-
-		@Override
-		public String toString() {
-
-			return "{Source:" + Arrays.toString(sourceCache) + ", Sink:" + Arrays.toString(sinkCache) + "}";
-		}
 	}
 
 	void setGrid(RedstoneEnergyNetwork newGrid) {
@@ -732,9 +589,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				info.add(text("Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount()));
 				info.add(text("Grid Max: " + _grid.storage.getMaxEnergyStored() + ", Grid Cur: " +
 						_grid.storage.getEnergyStored()));
-				info.add(text("Caches: (RF, EU):({" + Arrays.toString(receiverCache) + "," +
-						Arrays.toString(providerCache) + "}, " +
-						ic2Cache + ")"));
+				info.add(text("Caches: (RF):({" + Arrays.toString(receiverCache) + "," +
+						Arrays.toString(providerCache) + "})"));
 			} else {
 				info.add(text("Null Grid"));
 			}

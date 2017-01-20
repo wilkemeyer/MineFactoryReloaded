@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -204,16 +204,16 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 		return 0;
 	}
 
-	protected void fillTank(FluidTankAdv tank, String fluid, float amount)
+	protected void fillTank(FluidTankCore tank, String fluid, float amount)
 	{
 		tank.fill(FluidRegistry.getFluidStack(fluid, (int)(100 * amount)), true);
 		markDirty();
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
+	protected FluidTankCore[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
+		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
 	}
 
 	@Override

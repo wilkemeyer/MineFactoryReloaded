@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import cofh.core.CoFHProps;
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.util.RegistryUtils;
 
@@ -121,7 +121,7 @@ public class GuiFactoryInventory extends GuiBase {
 
 	protected void drawTooltips(int mouseX, int mouseY) {
 
-		FluidTankAdv[] tanks = _tileEntity.getTanks();
+		FluidTankCore[] tanks = _tileEntity.getTanks();
 		int n = tanks.length > 3 ? 3 : tanks.length;
 		tanks: if (n > 0 && isPointInRegion(_tanksOffsetX - ((n - 1) * 20) + 1, _tanksOffsetY + 1,
 			n * 20 - n - 1, _tankSizeMax - 2, mouseX, mouseY)) {
@@ -156,7 +156,7 @@ public class GuiFactoryInventory extends GuiBase {
 		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
-	protected void drawTankTooltip(FluidTankAdv tank, int x, int y) {
+	protected void drawTankTooltip(FluidTankCore tank, int x, int y) {
 
 		FluidStack fluid = tank.getFluid();
 		if (fluid != null)

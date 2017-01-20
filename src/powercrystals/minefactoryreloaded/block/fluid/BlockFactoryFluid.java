@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block.fluid;
 
-import cofh.core.fluid.BlockFluidCoFHBase;
+import cofh.core.fluid.BlockFluidCore;
 import cofh.lib.util.WeightedRandomItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -32,7 +32,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.Random;
 
-public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDecorative { // TODO: convert to BlockFluidFinite
+public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorative { // TODO: convert to BlockFluidFinite
 
 	private static DamageSource steam = new DamageSource("steam"); {
 		steam.setDamageBypassesArmor().setFireDamage().setDifficultyScaled();

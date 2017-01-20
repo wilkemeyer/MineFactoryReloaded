@@ -162,7 +162,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo {
 	}
 
 	@Override
-	public void getBlockInfo(IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, List<ITextComponent> info, boolean debug) {
+	public void getBlockInfo(List<ITextComponent> info, IBlockAccess world, BlockPos pos, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TileEntityTank) {

@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 
 import java.util.Locale;
 
@@ -37,9 +37,9 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
+	protected FluidTankCore[] createTanks()
 	{
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override

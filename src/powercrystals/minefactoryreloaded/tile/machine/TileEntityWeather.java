@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import static net.minecraftforge.fluids.FluidRegistry.WATER;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
 import net.minecraft.block.state.IBlockState;
@@ -182,9 +182,9 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
+	protected FluidTankCore[] createTanks()
 	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
+		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
 	}
 
 	@Override

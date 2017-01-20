@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
 import cofh.api.block.IBlockConfigGui;
-import cofh.api.block.IBlockDebug;
 import cofh.api.block.IBlockInfo;
 import cofh.api.tileentity.ITileInfo;
 import cofh.lib.util.helpers.ServerHelper;
@@ -66,16 +65,13 @@ public class ItemRedNetMeter extends ItemMulti {
 		switch (stack.getItemDamage()) {
 		case 2:
 			ArrayList<ITextComponent> info = new ArrayList<ITextComponent>();
-			if (player.isSneaking() && block instanceof IBlockDebug) {
-				((IBlockDebug) (block)).debugBlock(world, pos, hitSide, player);
-				return true;
-			} else if (block instanceof IBlockInfo) {
+			if (block instanceof IBlockInfo) {
 				if (ServerHelper.isClientWorld(world)) {
 					info.add(new TextComponentString("-Client-"));
 				} else {
 					info.add(new TextComponentString("-Server-"));
 				}
-				((IBlockInfo) (block)).getBlockInfo(world, pos, hitSide, player, info, true);
+				((IBlockInfo) (block)).getBlockInfo(info, world, pos, hitSide, player, true);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
@@ -84,7 +80,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(pos);
 				if (theTile instanceof ITileInfo) {
 					if (ServerHelper.isServerWorld(world)) {
-						((ITileInfo) theTile).getTileInfo(info, null, player, player.isSneaking());
+						((ITileInfo) theTile).getTileInfo(info, null, pos, hitSide, player, player.isSneaking());
 						for (int i = 0; i < info.size(); i++) {
 							player.addChatMessage(info.get(i));
 						}
@@ -106,7 +102,7 @@ public class ItemRedNetMeter extends ItemMulti {
 					return true;
 			}
 			if (block instanceof IBlockInfo) {
-				((IBlockInfo) (block)).getBlockInfo(world, pos, hitSide, player, info, false);
+				((IBlockInfo) (block)).getBlockInfo(info, world, pos, hitSide, player, false);
 				for (int i = 0; i < info.size(); i++) {
 					player.addChatMessage(info.get(i));
 				}
@@ -115,7 +111,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(pos);
 				if (theTile instanceof ITileInfo) {
 					if (ServerHelper.isServerWorld(world)) {
-						((ITileInfo) theTile).getTileInfo(info, null, player, false);
+						((ITileInfo) theTile).getTileInfo(info, null, pos, hitSide, player, false);
 						for (int i = 0; i < info.size(); i++) {
 							player.addChatMessage(info.get(i));
 						}

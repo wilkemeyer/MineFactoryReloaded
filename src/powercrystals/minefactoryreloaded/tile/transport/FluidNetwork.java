@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.util.fluid.FluidTankCore;
 import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.helpers.FluidHelper;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +28,7 @@ public class FluidNetwork implements IGrid {
 	private TileEntityPlasticPipe master;
 	private int overflowSelector;
 	private boolean regenerating = false;
-	FluidTankAdv storage = new FluidTankAdv(320);
+	FluidTankCore storage = new FluidTankCore(320);
 
 	public int distribution;
 	public int distributionSide;
@@ -171,7 +171,7 @@ public class FluidNetwork implements IGrid {
 			HANDLER.removeGrid(this);
 			return;
 		}
-		FluidTankAdv tank = storage;
+		FluidTankCore tank = storage;
 		if (tank.getSpace() <= 0)
 			return;
 		EnumFacing[] directions = EnumFacing.VALUES;
@@ -189,7 +189,7 @@ public class FluidNetwork implements IGrid {
 			HANDLER.removeGrid(this);
 			return;
 		}
-		FluidTankAdv storage = this.storage;
+		FluidTankCore storage = this.storage;
 		if (storage.getFluidAmount() <= 0)
 			return;
 		EnumFacing[] directions = EnumFacing.VALUES;

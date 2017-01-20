@@ -7,8 +7,6 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import cofh.CoFHCore;
 import cofh.core.CoFHProps;
 import cofh.core.world.WorldHandler;
-import cofh.mod.BaseMod;
-import cofh.mod.updater.UpdateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -146,6 +144,7 @@ import powercrystals.minefactoryreloaded.item.tool.ItemXpExtractor;
 import powercrystals.minefactoryreloaded.net.CommonProxy;
 import powercrystals.minefactoryreloaded.net.EntityHandler;
 import powercrystals.minefactoryreloaded.net.MFRPacket;
+import powercrystals.minefactoryreloaded.setup.BaseMod;
 import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
@@ -166,11 +165,11 @@ import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 		customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class MineFactoryReloadedCore extends BaseMod {
 
-	//static{DepLoader.load();}
+	static{FluidRegistry.enableUniversalBucket();}
 	public static final String modId = "minefactoryreloaded";
 	public static final String modName = "MineFactory Reloaded";
 	public static final String version = "1.7.10R2.8.2B1";
-	public static final String dependencies = CoFHCore.version_group;
+	public static final String dependencies = CoFHCore.VERSION_GROUP;
 	public static final String modNetworkChannel = "MFReloaded";
 
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy",
@@ -619,7 +618,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		WorldHandler.instance.registerFeature(new MineFactoryReloadedWorldGen());
 
-		UpdateManager.registerUpdater(new UpdateManager(this, null, CoFHProps.DOWNLOAD_URL));
+		//UpdateManager.registerUpdater(new UpdateManager(this, null, CoFHProps.DOWNLOAD_URL));
 	}
 
 	private void addDispenserBehavior() {
@@ -835,17 +834,5 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public String getModId() {
 
 		return modId;
-	}
-
-	@Override
-	public String getModName() {
-
-		return modName;
-	}
-
-	@Override
-	public String getModVersion() {
-
-		return version;
 	}
 }

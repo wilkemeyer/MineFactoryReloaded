@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.core;
 import cofh.api.item.IAugmentItem;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
-import cofh.lib.util.position.IRotateableTile;
 
 import java.util.List;
 

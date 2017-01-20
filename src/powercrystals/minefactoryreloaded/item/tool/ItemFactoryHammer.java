@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -55,9 +56,9 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 			}
 
 			if (player.isSneaking() && block instanceof IDismantleable &&
-					((IDismantleable) block).canDismantle(player, world, pos)) {
+					((IDismantleable) block).canDismantle(world, pos, state, player)) {
 				if (!world.isRemote)
-					((IDismantleable) block).dismantleBlock(player, world, pos, false);
+					((IDismantleable) block).dismantleBlock(world, pos, state, player, false);
 				player.swingArm(hand);
 				return EnumActionResult.PASS;
 			}
@@ -89,6 +90,17 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 
 	@Override
 	public void toolUsed(ItemStack item, EntityLivingBase user, BlockPos pos) {
+
+	}
+
+	@Override
+	public boolean isUsable(ItemStack item, EntityLivingBase user, Entity ent) {
+
+		return true;
+	}
+
+	@Override
+	public void toolUsed(ItemStack item, EntityLivingBase user, Entity ent) {
 
 	}
 
