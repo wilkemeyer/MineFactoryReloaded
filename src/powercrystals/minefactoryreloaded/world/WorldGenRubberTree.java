@@ -160,7 +160,7 @@ public class WorldGenRubberTree extends WorldGenerator {
 							block.isLeaves(state, world, pos) ||
 							block.isReplaceable(world, pos)) { // replace snow
 
-						this.setBlockAndNotifyAdequately(world, pos, MFRThings.rubberWoodBlock.getDefaultState().withProperty(BlockRubberWood.RUBBER_FILLED, true));
+						this.setBlockAndNotifyAdequately(world, pos, MFRThings.rubberWoodBlock.getDefaultState());
 					}
 				}
 

@@ -42,21 +42,6 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 		this.setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.REGULAR).withProperty(STAGE, 0));
 	}
 
-	/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-
-		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int metadata) {
-
-		return blockIcon;
-	}
-*/
-
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
 		
