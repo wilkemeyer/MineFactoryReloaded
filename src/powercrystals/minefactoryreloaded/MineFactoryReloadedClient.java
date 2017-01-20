@@ -59,10 +59,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
-import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
-import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
-import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
-import powercrystals.minefactoryreloaded.block.BlockRubberWood;
+import powercrystals.minefactoryreloaded.block.*;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
@@ -149,6 +146,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			variant += ",variant=" + (stack.getMetadata() == 0 ? "normal" : "dry");
 			return new ModelResourceLocation(MFRThings.rubberLeavesBlock.getRegistryName(), variant); //TODO cache values
 		});
+
+		ModelLoader.setCustomStateMapper(MFRThings.rubberSaplingBlock, new StateMap.Builder().ignore(BlockRubberSapling.TYPE, BlockRubberSapling.STAGE).build());
+		item = Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
+		for (int i=0; i<4; i++) {
+			ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(MFRThings.rubberSaplingBlock.getRegistryName(), "inventory"));
+		}
 		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
 	}
