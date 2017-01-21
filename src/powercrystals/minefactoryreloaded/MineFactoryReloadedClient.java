@@ -188,8 +188,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.xpExtractorItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":xp_extractor_1", "inventory"));
 		
 		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
-		
-		
+		ModelLoader.setCustomModelResourceLocation(MFRThings.plasticBagItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_bag", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.pinkSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":pink_slime", "variant=ball"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.pinkSlimeItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":pink_slime", "variant=gem"));
 	}
 
 	private static void registerColoredItemModels(Item item, String modelName) {

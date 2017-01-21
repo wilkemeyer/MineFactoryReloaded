@@ -16,7 +16,7 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerBag;
 @SideOnly(Side.CLIENT)
 public class GUIBag extends GuiContainer
 {
-    private static final ResourceLocation guiTextures = new ResourceLocation(PATH_GUI_STORAGE + "Storage5.png");
+    private static final ResourceLocation guiTextures = new ResourceLocation(PATH_GUI_STORAGE + "storage_5.png");
     private ContainerBag bag;
 
     public GUIBag(ContainerBag container)
