@@ -66,6 +66,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
+import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -170,7 +171,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeZombieItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=zombie"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=slime"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeCureItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=cure"));
-		
+
+		//tools
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
 
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=hammer"));
@@ -183,10 +185,20 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rulerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=ruler"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.spyglassItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=spyglass"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.strawItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=straw"));
-		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.xpExtractorItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":xp_extractor_1", "inventory"));
+		
+		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
+		
+		
 	}
 
+	private static void registerColoredItemModels(Item item, String modelName) {
+		
+		for (EnumDyeColor color : EnumDyeColor.values()) {
+			ModelLoader.setCustomModelResourceLocation(item, color.ordinal(), new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + modelName, "color=" + color.getName()));
+		}
+	}
+	
 	private static void registerRailModel(Block railBlock, final String typeVariant) {
 		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
 			@Override

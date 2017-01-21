@@ -17,21 +17,9 @@ public class ItemMulti extends ItemFactory {
 	protected void setNames(String... names) {
 
 		_names = names;
-//		_icons = new IIcon[_names.length];
 		setMetaMax(_names.length - 1);
 	}
-
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIconFromDamage(int damage) {
-
-		if (!_hasIcons)
-			return null;
-		return _icons[Math.min(damage, _metaMax)];
-	}
-
-*/
+	
 	@Override
 	public int getMetadata(int meta) {
 
@@ -43,20 +31,6 @@ public class ItemMulti extends ItemFactory {
 
 		return getName(getUnlocalizedName(), _names[Math.min(stack.getItemDamage(), _metaMax)]);
 	}
-
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister ir) {
-
-		if (!_hasIcons)
-			return;
-		String str = "minefactoryreloaded:" + getUnlocalizedName();
-		for (int i = 0; i < _icons.length; i++) {
-			_icons[i] = ir.registerIcon(getName(str, _names[i]));
-		}
-	}
-*/
 
 	public static String getName(String name, String postfix) {
 

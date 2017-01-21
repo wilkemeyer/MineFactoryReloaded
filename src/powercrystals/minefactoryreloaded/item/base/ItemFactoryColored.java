@@ -1,11 +1,16 @@
 package powercrystals.minefactoryreloaded.item.base;
 
+import net.minecraft.item.EnumDyeColor;
 
 public class ItemFactoryColored extends ItemMulti {
 
 	public ItemFactoryColored() {
 
-		setNames("white", "orange", "magenta", "lightblue", "yellow", "lime", "pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black");
+		String[] names = new String[16];
+		for(EnumDyeColor color : EnumDyeColor.values()) {
+			names[color.ordinal()] = color.getName();
+		}
+		setNames(names);
 	}
 
 }
