@@ -25,17 +25,14 @@ public class ItemXpExtractor extends ItemFactoryTool {
 	public static DamageSource damage = new DamageSource("mfr.xpsuck").setDamageBypassesArmor().setDamageIsAbsolute();
 
 	public ItemXpExtractor() {
-		this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter()
-		{
+		
+		this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter() {
+		
 			@SideOnly(Side.CLIENT)
-			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entity)
-			{
-				if (entity == null)
-				{
+			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entity)	{
+				if (entity == null)	{
 					return 1F;
-				}
-				else
-				{
+				} else {
 					if (entity.isHandActive() && stack != null && entity.getActiveItemStack() == stack && stack.getItem() == MFRThings.xpExtractorItem) {
 						int useRemaining = entity.getItemInUseCount();
 						if (useRemaining > 24) return 1F;
