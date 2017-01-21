@@ -77,12 +77,6 @@ public class BlockDecorativeStone extends BlockFactory {
 		return list;
 	}
 
-/*	@Override
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		return _icons[Math.min(meta, _icons.length)];
-	}*/
-
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 

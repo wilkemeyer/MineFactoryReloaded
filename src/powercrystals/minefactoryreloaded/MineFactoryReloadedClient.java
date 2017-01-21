@@ -159,6 +159,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomStateMapper(MFRThings.rubberWoodBlock, new StateMap.Builder().ignore(BlockRubberWood.RUBBER_FILLED).build());
 		item = Item.getItemFromBlock(MFRThings.rubberWoodBlock);
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MFRThings.rubberWoodBlock.getRegistryName(), "axis=y"));
+		ModelLoader.setCustomModelResourceLocation(item, 1, new ModelResourceLocation(MFRThings.rubberWoodBlock.getRegistryName(), "axis=y"));
 		
 		registerModel(MFRThings.vineScaffoldBlock);
 		
