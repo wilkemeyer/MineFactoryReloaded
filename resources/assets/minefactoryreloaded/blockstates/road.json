@@ -1,0 +1,35 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all"
+	},
+	"variants": {
+		"variant": {
+			"normal": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.road"
+				}
+			},
+			"light_off": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.road.light.off"
+				}
+			},
+			"light_on": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.road.light.on"
+				}
+			},
+			"light_inverted_off": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.road.light.off"
+				}
+			},
+			"light_inverted_on": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.road.light.on"
+				}
+			}
+		}
+	}
+}

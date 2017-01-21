@@ -65,6 +65,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
+import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
@@ -126,6 +127,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerRailModel(MFRThings.railPickupPassengerBlock, "passenger_pickup");
 		registerRailModel(MFRThings.railDropoffPassengerBlock, "passenger_dropoff");
 
+		registerModel(MFRThings.factoryRoadBlock, "variant", BlockFactoryRoad.Variant.NAMES);
+		
 		//machines
 		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(0), MachineStateMapper.getInstance());
 		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(1), MachineStateMapper.getInstance());
@@ -177,7 +180,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	private static void registerModel(Block block, String propertyName, String[] values, IProperty<?>... propertiesToIgnore) {
 
-		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
+		if (propertiesToIgnore.length > 0)
+			ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
 
 		Item item = Item.getItemFromBlock(block);
 		if (item != null) {
@@ -202,7 +206,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
 
-		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
+		if (propertiesToIgnore.length > 0)
+			ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
+	
 		Item item = Item.getItemFromBlock(block);
 		if (item != null)
 			ModelLoader.setCustomModelResourceLocation(item, 0,  new ModelResourceLocation(block.getRegistryName(), "normal"));

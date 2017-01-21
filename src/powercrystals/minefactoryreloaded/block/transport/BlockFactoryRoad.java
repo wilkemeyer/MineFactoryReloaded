@@ -20,12 +20,11 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 public class BlockFactoryRoad extends Block {
 
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D - 1/128D, 1D);
-	private static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
+	private static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 	
 	public BlockFactoryRoad() {
 
@@ -106,44 +105,44 @@ public class BlockFactoryRoad extends Block {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, TYPE);
+		return new BlockStateContainer(this, VARIANT);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		
-		return getDefaultState().withProperty(TYPE, Type.byMetadata(meta));
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
 		
-		return state.getValue(TYPE).getMetadata();
+		return state.getValue(VARIANT).getMetadata();
 	}
 
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 
 		if (!world.isRemote) {
-			Type type = state.getValue(TYPE);
+			Variant variant = state.getValue(VARIANT);
 			boolean isPowered = CoreUtils.isRedstonePowered(world, pos);
-			Type newType = null;
+			Variant newVariant = null;
 
-			if (type == Type.LIGHT_OFF && isPowered) {
-				newType = Type.LIGHT_ON;
+			if (variant == Variant.LIGHT_OFF && isPowered) {
+				newVariant = Variant.LIGHT_ON;
 			}
-			else if (type == Type.LIGHT_ON && !isPowered) {
-				newType = Type.LIGHT_OFF;
+			else if (variant == Variant.LIGHT_ON && !isPowered) {
+				newVariant = Variant.LIGHT_OFF;
 			}
-			else if (type == Type.LIGHT_INVERTED_OFF && !isPowered) {
-				newType = Type.LIGHT_INVERTED_ON;
+			else if (variant == Variant.LIGHT_INVERTED_OFF && !isPowered) {
+				newVariant = Variant.LIGHT_INVERTED_ON;
 			}
-			else if (type == Type.LIGHT_INVERTED_ON && isPowered) {
-				newType = Type.LIGHT_INVERTED_OFF;
+			else if (variant == Variant.LIGHT_INVERTED_ON && isPowered) {
+				newVariant = Variant.LIGHT_INVERTED_OFF;
 			}
 
-			if (newType != null) {
-				world.setBlockState(pos, state.withProperty(TYPE, newType));
+			if (newVariant != null) {
+				world.setBlockState(pos, state.withProperty(VARIANT, newVariant));
 			}
 		}
 	}
@@ -156,25 +155,25 @@ public class BlockFactoryRoad extends Block {
 	@Override
 	public int damageDropped(IBlockState state) {
 
-		Type type = state.getValue(TYPE);
+		Variant variant = state.getValue(VARIANT);
 
-		switch (type) {
+		switch (variant) {
 			case LIGHT_OFF:
 			case LIGHT_ON:
-				return Type.LIGHT_OFF.getMetadata();
+				return Variant.LIGHT_OFF.getMetadata();
 			case LIGHT_INVERTED_ON:
 			case LIGHT_INVERTED_OFF:
-				return Type.LIGHT_INVERTED_ON.getMetadata();
+				return Variant.LIGHT_INVERTED_ON.getMetadata();
 			default:
-				return Type.DEFAULT.getMetadata();
+				return Variant.NORMAL.getMetadata();
 		}
 	}
 
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		Type type = state.getValue(TYPE);
-		return type == Type.LIGHT_ON || type == Type.LIGHT_INVERTED_ON ? 15 : 0;
+		Variant variant = state.getValue(VARIANT);
+		return variant == Variant.LIGHT_ON || variant == Variant.LIGHT_INVERTED_ON ? 15 : 0;
 	}
 
 	@Override
@@ -193,9 +192,9 @@ public class BlockFactoryRoad extends Block {
 		return true;
 	}
 	
-	public enum Type implements IStringSerializable {
+	public enum Variant implements IStringSerializable {
 		
-		DEFAULT(0, "default"),
+		NORMAL(0, "normal"),
 		LIGHT_OFF(1, "light_off"),
 		LIGHT_ON(2, "light_on"),
 		LIGHT_INVERTED_OFF(3, "light_inverted_off"),
@@ -204,15 +203,16 @@ public class BlockFactoryRoad extends Block {
 		private final int meta;
 		private final String name;
 
-		private static final Type[] META_LOOKUP = new Type[values().length];
+		private static final Variant[] META_LOOKUP = new Variant[values().length];
+		public static final String[] NAMES = new String[values().length]; 
 		
-		Type(int meta, String name) {
+		Variant(int meta, String name) {
 
 			this.meta = meta;
 			this.name = name;
 		}
 
-		public static Type byMetadata(int meta) {
+		public static Variant byMetadata(int meta) {
 			return META_LOOKUP[meta];
 		}
 		
@@ -227,8 +227,9 @@ public class BlockFactoryRoad extends Block {
 		}
 
 		static {
-			for (Type type : values()) {
-				META_LOOKUP[type.getMetadata()] = type;
+			for (Variant variant : values()) {
+				META_LOOKUP[variant.getMetadata()] = variant;
+				NAMES[variant.meta] = variant.name;
 			}
 		}
 	}
