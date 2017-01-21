@@ -139,6 +139,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 					new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + MachineStateMapper.getModelName(type), "type=" + type.getName()));
 		}
 
+		//general
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 		
 		ModelLoader.setCustomStateMapper(MFRThings.rubberLeavesBlock, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());
@@ -162,6 +163,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(item, 1, new ModelResourceLocation(MFRThings.rubberWoodBlock.getRegistryName(), "axis=y"));
 		
 		registerModel(MFRThings.vineScaffoldBlock);
+		
+		//syringes
+		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeEmptyItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=empty"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeHealthItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=health"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeGrowthItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=growth"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeZombieItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=zombie"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=slime"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeCureItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=cure"));
 		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
 	}
