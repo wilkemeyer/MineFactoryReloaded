@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -40,7 +41,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 
 		super(Material.LEAVES);
 		setUnlocalizedName("mfr.vinescaffold");
-		setSoundType(SoundType.GROUND);
+		setSoundType(SoundType.PLANT);
 		setHardness(0.1F);
 		setTickRandomly(true);
 		setCreativeTab(MFRCreativeTab.tab);
@@ -70,22 +71,11 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 		return COLLISION_AABB;
 	}
 
-/*
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		_sideIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
-		_topIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
+	public BlockRenderLayer getBlockLayer() {
+		
+		return BlockRenderLayer.CUTOUT;
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		return side < 2 ? _topIcon : _sideIcon;
-	}
-*/
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
@@ -105,36 +95,6 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 
 		return !state.isOpaqueCube();
 	}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(int meta) {
-
-		return ColorizerFoliage.getFoliageColorBasic();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, BlockPos pos) {
-
-		int r = 0;
-		int g = 0;
-		int b = 0;
-
-		for (int zOffset = -1; zOffset <= 1; ++zOffset) {
-			for (int xOffset = -1; xOffset <= 1; ++xOffset) {
-				int biomeColor = world.getBiome(x + xOffset, z + zOffset).getBiomeFoliageColor(x, y, z);
-				r += (biomeColor & 16711680) >> 16;
-				g += (biomeColor & 65280) >> 8;
-				b += biomeColor & 255;
-			}
-		}
-
-		return (r / 9 & 255) << 16 | (g / 9 & 255) << 8 | b / 9 & 255;
-	}
-
-*/
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float xOffset,
@@ -199,17 +159,17 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 
 		if (!canBlockStay(world, pos)) {
 			int height = world.getActualHeight();
-			BlockPos posAbove = pos;
-			while((posAbove = posAbove.up()).getY() < height) {
-				IBlockState stateAbove = world.getBlockState(posAbove);
-				block = stateAbove.getBlock();
+			BlockPos currentPos = pos;
+			while(currentPos.getY() < height) {
+				IBlockState currentState = world.getBlockState(currentPos);
+				block = currentState.getBlock();
 				if (!block.equals(this))
 					break;
-				dropBlockAsItem(world, posAbove, stateAbove, 0);
-				world.setBlockState(posAbove, Blocks.AIR.getDefaultState());
+				dropBlockAsItem(world, currentPos, currentState, 0);
+				world.setBlockState(currentPos, Blocks.AIR.getDefaultState());
 				for (EnumFacing facing : _attachDirections) {
 					for (int i = 1; i <= _attachDistance; i++) {
-						BlockPos posSide = posAbove.offset(facing, i);
+						BlockPos posSide = currentPos.offset(facing, i);
 						block = world.getBlockState(posSide).getBlock();
 						if (block.equals(this)) {
 							world.scheduleBlockUpdate(posSide, block, 0, 0);
@@ -217,8 +177,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 							break;
 					}
 				}
-			}
-			for (int offset = 1 ; offset < height - pos.getY(); offset++) {
+				currentPos = currentPos.up();
 			}
 		}
 	}

@@ -157,6 +157,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		item = Item.getItemFromBlock(MFRThings.rubberWoodBlock);
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MFRThings.rubberWoodBlock.getRegistryName(), "axis=y"));
 		
+		registerModel(MFRThings.vineScaffoldBlock);
+		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
 	}
 
@@ -248,7 +250,10 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 			return foliageColor;
 		}, MFRThings.rubberLeavesBlock);
-
+		
+		blockColors.registerBlockColorHandler((state, world, pos, tintIndex) -> 
+				(world != null && pos != null) ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic(), vineScaffoldBlock);
+		
 		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 		itemColors.registerItemColorHandler((stack, tintIndex) -> {
 
@@ -262,7 +267,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}, MFRThings.conveyorBlock);
 		
 		itemColors.registerItemColorHandler((stack, tintIndex) -> stack.getMetadata() == 1 ? 0xFFFFFF : ColorizerFoliage.getFoliageColorBasic(), MFRThings.rubberLeavesBlock);
-
+		itemColors.registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), MFRThings.vineScaffoldBlock);
 
 	/* TODO fix rendering
 		// IDs
