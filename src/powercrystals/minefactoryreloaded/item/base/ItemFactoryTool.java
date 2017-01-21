@@ -21,6 +21,10 @@ public class ItemFactoryTool extends ItemFactory {
 	@Override
 	public Multimap getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+		
+		if (slot != EntityEquipmentSlot.MAINHAND)
+			return multimap;
+		
 		int dmg = getWeaponDamage(stack);
 		if (dmg != 0) {
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),

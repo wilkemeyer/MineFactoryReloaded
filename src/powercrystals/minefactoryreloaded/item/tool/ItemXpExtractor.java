@@ -5,15 +5,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
@@ -25,6 +24,30 @@ public class ItemXpExtractor extends ItemFactoryTool {
 
 	public static DamageSource damage = new DamageSource("mfr.xpsuck").setDamageBypassesArmor().setDamageIsAbsolute();
 
+	public ItemXpExtractor() {
+		this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter()
+		{
+			@SideOnly(Side.CLIENT)
+			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entity)
+			{
+				if (entity == null)
+				{
+					return 1F;
+				}
+				else
+				{
+					if (entity.isHandActive() && stack != null && entity.getActiveItemStack() == stack && stack.getItem() == MFRThings.xpExtractorItem) {
+						int useRemaining = entity.getItemInUseCount();
+						if (useRemaining > 24) return 1F;
+						if (useRemaining > 12) return 2F;
+						return 3F;
+					}
+					return 1F;
+				}
+			}
+		});
+	}
+	
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.BOW;

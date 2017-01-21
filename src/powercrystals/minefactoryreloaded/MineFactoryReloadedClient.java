@@ -5,6 +5,7 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -170,15 +171,20 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=slime"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeCureItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=cure"));
 		
-		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.fishingRodItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fishing_rod"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
-				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
 
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_meter", "variant=normal"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_meter", "variant=info"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 2, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_meter", "variant=debug"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=hammer"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.fishingRodItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=fishing_rod"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
+				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter_info"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 2, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter_debug"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rulerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=ruler"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.spyglassItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=spyglass"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.strawItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=straw"));
+		
+		ModelLoader.setCustomModelResourceLocation(MFRThings.xpExtractorItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":xp_extractor_1", "inventory"));
 	}
 
 	private static void registerRailModel(Block railBlock, final String typeVariant) {

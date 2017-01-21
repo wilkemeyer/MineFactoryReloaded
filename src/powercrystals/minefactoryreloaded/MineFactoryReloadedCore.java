@@ -304,7 +304,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		MFRConfig.loadClientConfig(getClientConfig());
 		MFRConfig.loadCommonConfig(getCommonConfig());
 
-		//loadLang(); //TODO do we really need to load lang file?? if so core needs update
+		loadLang(); //TODO do we really need this custom stuff instead of just default lang folder?
 
 		float meatNuggetSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.1F : 0.2F;
 		float meatIngotSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.2F : 0.8F;

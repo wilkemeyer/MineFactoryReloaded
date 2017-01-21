@@ -1,0 +1,51 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-tool"
+	},
+	"variants": {
+		"variant": {
+			"rednet_meter": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.rednet.meter"
+				}
+			},
+			"rednet_meter_info": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.rednet.meter.info"
+				}
+			},
+			"rednet_meter_debug": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.rednet.meter.debug"
+				}
+			},
+			"fishing_rod": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.fishingrod"
+				}
+			},
+			"hammer": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.hammer"
+				}
+			},
+			"ruler": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.ruler"
+				}
+			},
+			"spyglass": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.spyglass"
+				}
+			},
+			"straw": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.straw"
+				}
+			}
+		}
+	}
+}
