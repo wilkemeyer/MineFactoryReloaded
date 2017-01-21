@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.modhelpers.tinkersconstruct;
 
 import static cofh.lib.util.helpers.ItemHelper.stack;
 
-import cofh.mod.ChildMod;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -15,11 +14,11 @@ import net.minecraft.util.text.TextFormatting;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatTConstruct",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatTConstruct",
 		name = "MFR Compat: Tinkers' Construct",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:TConstruct",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class TConstruct {
 
 	@EventHandler

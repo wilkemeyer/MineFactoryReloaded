@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
-import cofh.mod.ChildMod;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -29,11 +28,11 @@ import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion",
 		name = "MFR Compat: ThermalExpansion",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:ThermalExpansion",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class ThermalExpansion implements IRandomMobProvider {
 
 	@EventHandler

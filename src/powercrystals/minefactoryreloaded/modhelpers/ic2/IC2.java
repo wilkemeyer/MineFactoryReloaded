@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
 import cofh.asm.relauncher.Strippable;
-import cofh.mod.ChildMod;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
@@ -32,11 +31,11 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeL
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatIC2",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatIC2",
 		name = "MFR Compat: IC2",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:IC2",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class IC2 {
 
 	@EventHandler

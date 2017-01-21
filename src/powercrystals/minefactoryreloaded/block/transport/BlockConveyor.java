@@ -136,6 +136,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+		
 		return getDefaultState().withProperty(DIRECTION, ConveyorDirection.byFacing(placer.getHorizontalFacing()));
 	}
 

@@ -80,7 +80,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(pos);
 				if (theTile instanceof ITileInfo) {
 					if (ServerHelper.isServerWorld(world)) {
-						((ITileInfo) theTile).getTileInfo(info, null, pos, hitSide, player, player.isSneaking());
+						((ITileInfo) theTile).getTileInfo(info, hitSide, player, player.isSneaking());
 						for (int i = 0; i < info.size(); i++) {
 							player.addChatMessage(info.get(i));
 						}
@@ -111,7 +111,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(pos);
 				if (theTile instanceof ITileInfo) {
 					if (ServerHelper.isServerWorld(world)) {
-						((ITileInfo) theTile).getTileInfo(info, null, pos, hitSide, player, false);
+						((ITileInfo) theTile).getTileInfo(info, hitSide, player, false);
 						for (int i = 0; i < info.size(); i++) {
 							player.addChatMessage(info.get(i));
 						}

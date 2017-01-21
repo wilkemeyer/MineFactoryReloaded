@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.modhelpers.railcraft;
 
-import cofh.mod.ChildMod;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
@@ -21,11 +20,11 @@ import org.apache.logging.log4j.LogManager;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatRailcraft",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatRailcraft",
 		name = "MFR Compat: Railcraft",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:Railcraft",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class Railcraft {
 
 	@EventHandler

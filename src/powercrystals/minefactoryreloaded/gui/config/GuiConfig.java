@@ -16,7 +16,7 @@ public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig {
 
 	public GuiConfig(GuiScreen parentScreen) {
 
-		super(parentScreen, getConfigElements(parentScreen), CoFHCore.modId, false, false, CoFHCore.modName);
+		super(parentScreen, getConfigElements(parentScreen), CoFHCore.MOD_ID, false, false, CoFHCore.MOD_NAME);
 	}
 
 	private static List<IConfigElement> getConfigElements(GuiScreen parent) {
