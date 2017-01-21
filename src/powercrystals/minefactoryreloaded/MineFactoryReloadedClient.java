@@ -172,11 +172,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.fishingRodItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fishing_rod"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
-
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
 
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_meter", "variant=normal"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_meter", "variant=info"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 2, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_meter", "variant=debug"));
 	}
 
 	private static void registerRailModel(Block railBlock, final String typeVariant) {
