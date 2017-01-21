@@ -5,16 +5,13 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.EnumDyeColor;
@@ -22,10 +19,10 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ColorizerFoliage;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -67,6 +64,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -173,6 +171,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeCureItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=cure"));
 		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":hammer"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.fishingRodItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fishing_rod"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
+				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
+
 	}
 
 	private static void registerRailModel(Block railBlock, final String typeVariant) {
@@ -377,10 +381,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			new EntityPinkSlimeRenderer(new ModelSlime(16), new ModelSlime(0), 0.25F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNeedle.class, new EntityNeedleRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new EntityRocketRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
-			new RenderSnowball(fishingRodItem));
 */
-
+		
 		MinecraftForge.EVENT_BUS.register(instance);
 		gl14 = GLContext.getCapabilities().OpenGL14; //TODO what is this used for? doesn't seem to have anything referring to it
 
