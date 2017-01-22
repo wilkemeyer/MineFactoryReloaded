@@ -503,20 +503,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void tickEnd(RenderTickEvent evt) {
-
-		if (evt.phase != Phase.END)
-			return;
-		renderHUD(evt.renderTickTime);
-		// this solves a bug where render pass 0 textures have alpha forced by
-		// minecraft's fog on small and tiny render distances
-		GL11.glShadeModel(GL11.GL_FLAT);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-	}
-
 	private void renderHUD(float partialTicks) {
 
 		Minecraft mc = Minecraft.getMinecraft();
