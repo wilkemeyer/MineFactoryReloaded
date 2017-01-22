@@ -32,13 +32,18 @@ public abstract class ItemFactoryGun extends ItemFactory {
 		if (stack.getTagCompound() == null)
 			stack.setTagCompound(new NBTTagCompound());
 
+		EnumActionResult result = EnumActionResult.FAIL;
 		if (!(hasGUI(stack) && openGUI(stack, world, player))) {
 			NBTTagCompound tag = player.getEntityData();
 			String delayTag = getDelayTag(stack);
-			if (tag.getLong(delayTag) < world.getTotalWorldTime())
+			if (tag.getLong(delayTag) < world.getTotalWorldTime()) {
+				result = EnumActionResult.SUCCESS;
 				tag.setLong(delayTag, world.getTotalWorldTime() + getDelay(stack, fire(stack, world, player)));
+			}
+		} else {
+			result = EnumActionResult.SUCCESS;
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+		return new ActionResult<ItemStack>(result, stack);
 	}
 
 }
