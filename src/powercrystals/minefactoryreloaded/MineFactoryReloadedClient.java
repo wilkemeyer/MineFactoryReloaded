@@ -193,6 +193,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.xpExtractorItem, "xp_extractor_1");
 		
 		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
+		registerColoredItemModels(MFRThings.laserFocusItem, "laser_focus");
+		
 		registerModel(MFRThings.plasticBagItem, "plastic_bag");
 		registerModel(MFRThings.pinkSlimeItem, "pink_slime", "variant=ball");
 		registerModel(MFRThings.pinkSlimeItem, 1, "pink_slime", "variant=gem");

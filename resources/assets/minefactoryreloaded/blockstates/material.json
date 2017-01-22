@@ -38,7 +38,7 @@
 			},
 			"blank_record": {
 				"textures": {
-					"layer0": "minefactoryreloaded:items/item.mfr.blank_record"
+					"layer0": "minefactoryreloaded:items/item.mfr.record.blank"
 				}
 			}
 		}
