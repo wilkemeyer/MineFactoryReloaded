@@ -66,8 +66,11 @@ import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
+import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
+import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
+import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -175,8 +178,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=hammer"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.fishingRodItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=fishing_rod"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
-				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter_info"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 2, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter_debug"));
@@ -185,6 +186,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.strawItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=straw"));
 		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.xpExtractorItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":xp_extractor_1", "inventory"));
+
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
+				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
+				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingItem.class,
+				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
 	}
 
 	private static void registerRailModel(Block railBlock, final String typeVariant) {
