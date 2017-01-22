@@ -1,0 +1,31 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"variant": {
+			"meat_ingot_raw": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.meat.ingot.raw"
+				}
+			},
+			"meat_ingot_cooked": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.meat.ingot.cooked"
+				}
+			},
+			"meat_nugget_raw": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.meat.nugget.raw"
+				}
+			},
+			"meat_nugget_cooked": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.meat.nugget.cooked"
+				}
+			}
+		}
+	}
+}

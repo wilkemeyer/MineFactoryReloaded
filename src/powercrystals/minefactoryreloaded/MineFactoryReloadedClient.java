@@ -5,7 +5,6 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -72,7 +71,6 @@ import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
-import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
@@ -80,8 +78,6 @@ import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
-
-import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IResourceManagerReloadListener {
@@ -126,12 +122,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "chocolate_milk"));
 		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
 		registerModel(MFRThings.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.milkBottleItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":milk_bottle"));
+		registerModel(MFRThings.milkBottleItem, "milk_bottle");
 
 		//transport
 		Item item = Item.getItemFromBlock(MFRThings.conveyorBlock);
 		for (int i=0; i < 17; i++)
-			ModelLoader.setCustomModelResourceLocation(item, i,  new ModelResourceLocation(MFRThings.conveyorBlock.getRegistryName(), "inventory"));
+			registerModel(item, i, "conveyor", "inventory");
 
 		registerRailModel(MFRThings.railPickupCargoBlock, "cargo_pickup");
 		registerRailModel(MFRThings.railDropoffCargoBlock, "cargo_dropoff");
@@ -146,8 +142,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(2), MachineStateMapper.getInstance());
 
 		for (BlockFactoryMachine.Type type : BlockFactoryMachine.Type.values()) {
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(MFRThings.machineBlocks.get(type.getGroupIndex())), type.getMeta(),
-					new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + MachineStateMapper.getModelName(type), "type=" + type.getName()));
+			item = Item.getItemFromBlock(MFRThings.machineBlocks.get(type.getGroupIndex()));
+			registerModel(item, type.getMeta(), MachineStateMapper.getModelName(type), "type=" + type.getName());
 		}
 
 		//general
@@ -159,50 +155,48 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 			String variant = "fancy=" + Minecraft.getMinecraft().gameSettings.fancyGraphics;
 			variant += ",variant=" + (stack.getMetadata() == 0 ? "normal" : "dry");
-			return new ModelResourceLocation(MFRThings.rubberLeavesBlock.getRegistryName(), variant); //TODO cache values
+			return new ModelResourceLocation("rubberwood.leaves", variant); //TODO cache values
 		});
 
 		ModelLoader.setCustomStateMapper(MFRThings.rubberSaplingBlock, new StateMap.Builder().ignore(BlockRubberSapling.TYPE, BlockRubberSapling.STAGE).build());
 		item = Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
 		for (int i=0; i<4; i++) {
-			ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(MFRThings.rubberSaplingBlock.getRegistryName(), "inventory"));
+			registerModel(item, i, "rubberwood.sapling");
 		}
 
 		ModelLoader.setCustomStateMapper(MFRThings.rubberWoodBlock, new StateMap.Builder().ignore(BlockRubberWood.RUBBER_FILLED).build());
 		item = Item.getItemFromBlock(MFRThings.rubberWoodBlock);
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MFRThings.rubberWoodBlock.getRegistryName(), "axis=y"));
-		ModelLoader.setCustomModelResourceLocation(item, 1, new ModelResourceLocation(MFRThings.rubberWoodBlock.getRegistryName(), "axis=y"));
+		registerModel(item, "rubberwood.log", "axis=y");
+		registerModel(item, 1, "rubberwood.log", "axis=y");
 		
 		registerModel(MFRThings.vineScaffoldBlock);
 		
 		//syringes
-		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeEmptyItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=empty"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeHealthItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=health"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeGrowthItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=growth"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeZombieItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=zombie"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=slime"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeCureItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=cure"));
-		
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
+		registerModel(MFRThings.syringeEmptyItem, "syringe", "variant=empty");
+		registerModel(MFRThings.syringeHealthItem, "syringe", "variant=health");
+		registerModel(MFRThings.syringeGrowthItem, "syringe", "variant=growth");		
+		registerModel(MFRThings.syringeZombieItem, "syringe", "variant=zombie");
+		registerModel(MFRThings.syringeSlimeItem, "syringe", "variant=slime");
+		registerModel(MFRThings.syringeCureItem, "syringe", "variant=cure");
 
-		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=hammer"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.fishingRodItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=fishing_rod"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
-				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter_info"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMeterItem, 2, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=rednet_meter_debug"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.rulerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=ruler"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.spyglassItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=spyglass"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.strawItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=straw"));
-		
-		ModelLoader.setCustomModelResourceLocation(MFRThings.xpExtractorItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":xp_extractor_1", "inventory"));
+		registerModel(MFRThings.rednetMemoryCardItem, "memory_card");
+
+		registerModel(MFRThings.factoryHammerItem, "tool", "variant=hammer");
+		registerModel(MFRThings.fishingRodItem, "tool", "variant=fishing_rod");
+		registerModel(MFRThings.rednetMeterItem, "tool", "variant=rednet_meter");
+		registerModel(MFRThings.rednetMeterItem, 1, "tool", "variant=rednet_meter_info");
+		registerModel(MFRThings.rednetMeterItem, 2, "tool", "variant=rednet_meter_debug");
+		registerModel(MFRThings.rulerItem, "tool", "variant=ruler");
+		registerModel(MFRThings.spyglassItem, "tool", "variant=spyglass");
+		registerModel(MFRThings.strawItem, "tool", "variant=straw");
+
+		registerModel(MFRThings.xpExtractorItem, "xp_extractor_1");
 		
 		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
-		ModelLoader.setCustomModelResourceLocation(MFRThings.plasticBagItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_bag", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.pinkSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":pink_slime", "variant=ball"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.pinkSlimeItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":pink_slime", "variant=gem"));
-		ModelLoader.setCustomModelResourceLocation(MFRThings.portaSpawnerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":porta_spawner", "inventory"));
+		registerModel(MFRThings.plasticBagItem, "plastic_bag");
+		registerModel(MFRThings.pinkSlimeItem, "pink_slime", "variant=ball");
+		registerModel(MFRThings.pinkSlimeItem, 1, "pink_slime", "variant=gem");
+		registerModel(MFRThings.portaSpawnerItem, "porta_spawner");
 		
 		registerSafariNetModel(MFRThings.safariNetItem, "reusable");
 		registerSafariNetModel(MFRThings.safariNetJailerItem, "jailer");
@@ -210,10 +204,15 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerSafariNetModel(MFRThings.safariNetFancyJailerItem, "jailer_fancy");
 		
 		for(int i=0; i < ItemUpgrade.NAMES.length; i++) {
-			ModelLoader.setCustomModelResourceLocation(MFRThings.upgradeItem, i, 
-					new ModelResourceLocation(MineFactoryReloadedCore.modId + ":upgrade", "variant=" + ItemUpgrade.NAMES[i]));
+			registerModel(MFRThings.upgradeItem, i, "upgrade", "variant=" + ItemUpgrade.NAMES[i]);
 		}
 
+		//food
+		registerModel(MFRThings.meatIngotRawItem, "food", "variant=meat_ingot_raw");
+		registerModel(MFRThings.meatIngotCookedItem, "food", "variant=meat_ingot_cooked");
+		registerModel(MFRThings.meatNuggetRawItem, "food", "variant=meat_nugget_raw");
+		registerModel(MFRThings.meatNuggetCookedItem, "food", "variant=meat_nugget_cooked");
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
@@ -222,6 +221,26 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
 	}
 
+	private static void registerModel(Item item, String modelName) {
+	
+		registerModel(item, modelName, "inventory");
+	}
+	
+	private static void registerModel(Item item, String modelName, String variant) {
+		
+		registerModel(item, 0, modelName, variant);
+	}
+	
+	private static void registerModel(Item item, int meta, String modelName) {
+		
+		registerModel(item, meta, modelName, "inventory");
+	}
+	
+	private static void registerModel(Item item, int meta, String modelName, String variant) {
+
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + modelName, variant));
+	}
+	
 	private static void registerSafariNetModel(Item item, String variant) {
 
 		//TODO cache values
@@ -242,8 +261,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		for (EnumDyeColor color : EnumDyeColor.values()) {
 			ModelLoader.setCustomModelResourceLocation(item, color.ordinal(), new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + modelName, "color=" + color.getName()));
 		}
-
-
 	}
 
 	private static void registerRailModel(Block railBlock, final String typeVariant) {
