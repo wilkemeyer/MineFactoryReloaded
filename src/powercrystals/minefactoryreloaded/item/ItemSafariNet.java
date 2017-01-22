@@ -194,8 +194,15 @@ public class ItemSafariNet extends ItemFactory {
 		} else if (isEmpty(itemstack)) {
 			return EnumActionResult.SUCCESS;
 		} else {
-			if (player != null && player.capabilities.isCreativeMode)
+			if (player != null && player.capabilities.isCreativeMode) {
 				itemstack = itemstack.copy();
+				NBTTagCompound tag = itemstack.getTagCompound();
+				if (tag != null) {
+					tag.removeTag("UUID");
+					tag.removeTag("UUIDMost");
+					tag.removeTag("UUIDLeast");
+				}
+			}
 			return releaseEntity(itemstack, world, pos, side) != null ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 		}
 	}
@@ -265,9 +272,6 @@ public class ItemSafariNet extends ItemFactory {
 			pos.set(2, new NBTTagDouble(z));
 
 			e = EntityList.createEntityFromNBT(mobTag, world);
-			if (e != null) {
-				e.readFromNBT(mobTag);
-			}
 		}
 
 		if (e != null) {
