@@ -155,7 +155,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 			String variant = "fancy=" + Minecraft.getMinecraft().gameSettings.fancyGraphics;
 			variant += ",variant=" + (stack.getMetadata() == 0 ? "normal" : "dry");
-			return new ModelResourceLocation("rubberwood.leaves", variant); //TODO cache values
+			return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rubberwood.leaves", variant); //TODO cache values
 		});
 
 		ModelLoader.setCustomStateMapper(MFRThings.rubberSaplingBlock, new StateMap.Builder().ignore(BlockRubberSapling.TYPE, BlockRubberSapling.STAGE).build());
@@ -212,6 +212,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.meatIngotCookedItem, "food", "variant=meat_ingot_cooked");
 		registerModel(MFRThings.meatNuggetRawItem, "food", "variant=meat_nugget_raw");
 		registerModel(MFRThings.meatNuggetCookedItem, "food", "variant=meat_nugget_cooked");
+
+		registerModel(MFRThings.rawRubberItem, "material", "type=rubber_raw");
+		registerModel(MFRThings.rubberBarItem, "material", "type=rubber_bar");
+		registerModel(MFRThings.rawPlasticItem, "material", "type=plastic_raw");
+		registerModel(MFRThings.plasticSheetItem, "material", "type=plastic_sheet");
+		registerModel(MFRThings.sugarCharcoalItem, "material", "type=sugar_charcoal");
+		registerModel(MFRThings.fertilizerItem, "material", "type=fertilizer");
+		registerModel(MFRThings.blankRecordItem, "material", "type=blank_record");
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
