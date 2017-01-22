@@ -9,28 +9,12 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.monster.EntityCaveSpider;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityMooshroom;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.monster.*;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -60,14 +44,18 @@ public class VanillaMobProvider implements IRandomMobProvider
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySheep.class,     world), 100));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCow.class,       world), 100));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityPig.class,       world), 100));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityRabbit.class,    world),  50));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityBat.class,       world),  35));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityEndermite.class, world),  35));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySquid.class,     world),  30));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityGuardian.class,  world),  30));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityCreeper.class,   world),  25));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMooshroom.class, world),  20));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntitySlime.class,     world),  20));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityOcelot.class,    world),  20));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWolf.class,      world),  20));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityHorse.class,     world),  20));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityPolarBear.class, world),  15));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityGhast.class,     world),  15));
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityWitch.class,     world),  10));
 		
@@ -78,6 +66,7 @@ public class VanillaMobProvider implements IRandomMobProvider
 		mobs.add(new RandomMob(invisibat, 55));
 		
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityMinecartHopper.class, world), 15));
+		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityArmorStand.class, world), 15));
 		
 		EntityPig sheep = MFRUtil.prepareMob(EntityPig.class, world);
 		for (EntityAITaskEntry a : (List<EntityAITaskEntry>)sheep.tasks.taskEntries)
