@@ -58,6 +58,7 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 					ammo.stackSize = 1;
 					if (!world.isRemote) {
 						EntitySafariNet esn = new EntitySafariNet(world, player, ammo);
+						esn.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, 2f, .5f);
 						world.spawnEntityInWorld(esn);
 
 						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS,  0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));

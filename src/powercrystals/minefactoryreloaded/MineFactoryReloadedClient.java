@@ -73,8 +73,11 @@ import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
+import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
+import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
+import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -179,8 +182,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeZombieItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=zombie"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=slime"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.syringeCureItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":syringe", "variant=cure"));
-
-		//tools
+		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rednetMemoryCardItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":memory_card"));
 
 		ModelLoader.setCustomModelResourceLocation(MFRThings.factoryHammerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=hammer"));
@@ -193,6 +195,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.rulerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=ruler"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.spyglassItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=spyglass"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.strawItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":tool", "variant=straw"));
+		
 		ModelLoader.setCustomModelResourceLocation(MFRThings.xpExtractorItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":xp_extractor_1", "inventory"));
 		
 		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
@@ -210,6 +213,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			ModelLoader.setCustomModelResourceLocation(MFRThings.upgradeItem, i, 
 					new ModelResourceLocation(MineFactoryReloadedCore.modId + ":upgrade", "variant=" + ItemUpgrade.NAMES[i]));
 		}
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
+				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
+				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingItem.class,
+				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
 	}
 
 	private static void registerSafariNetModel(Item item, String variant) {
@@ -232,8 +242,10 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		for (EnumDyeColor color : EnumDyeColor.values()) {
 			ModelLoader.setCustomModelResourceLocation(item, color.ordinal(), new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + modelName, "color=" + color.getName()));
 		}
+
+
 	}
-	
+
 	private static void registerRailModel(Block railBlock, final String typeVariant) {
 		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
 			@Override
@@ -564,6 +576,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 	}
 
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void tickEnd(RenderTickEvent evt) {
+
+		if (evt.phase != Phase.END)
+			return;
+		renderHUD(evt.renderTickTime);
+	}
+
 	@SubscribeEvent
 	public void tickStart(PlayerTickEvent evt) {
 
@@ -580,9 +600,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			} else if ((e == null || e != _lastEntityOver) && _lockonLostTicks > 0) {
 				_lockonLostTicks--;
 			} else if (e == null && _lockonLostTicks == 0) {
-				if (_lockonTicks > 0) {
-					_lockonTicks--;
-				}
+				_lockonTicks = 0;
 				_lastEntityOver = null;
 			} else if (_lastEntityOver == null) {
 				_lastEntityOver = e;
@@ -595,20 +613,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				_lockonLostTicks = _lockonLostMax;
 			}
 		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void tickEnd(RenderTickEvent evt) {
-
-		if (evt.phase != Phase.END)
-			return;
-		renderHUD(evt.renderTickTime);
-		// this solves a bug where render pass 0 textures have alpha forced by
-		// minecraft's fog on small and tiny render distances
-		GL11.glShadeModel(GL11.GL_FLAT);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	private void renderHUD(float partialTicks) {
@@ -787,9 +791,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 
 		double range = 64;
-		Vec3d playerPos = new Vec3d(Minecraft.getMinecraft().getRenderViewEntity().getPosition());
+		Vec3d playerPos = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(1);
 
-		Vec3d playerLook = Minecraft.getMinecraft().getRenderViewEntity().getLook(1.0F);
+		Vec3d playerLook = Minecraft.getMinecraft().getRenderViewEntity().getLook(1);
 		Vec3d playerLookRel = playerPos.addVector(playerLook.xCoord * range, playerLook.yCoord * range, playerLook.zCoord * range);
 		List<?> list = Minecraft.getMinecraft().theWorld.getEntitiesWithinAABBExcludingEntity(
 			Minecraft.getMinecraft().getRenderViewEntity(),

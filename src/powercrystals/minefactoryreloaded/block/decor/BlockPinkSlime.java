@@ -20,10 +20,6 @@ import javax.annotation.Nullable;
 
 public class BlockPinkSlime extends BlockBreakable {
 
-	private static final SoundEvent SOUND_BIG = new SoundEvent(new ResourceLocation("minefactoryreloaded:mob.slime.big"));
-	private static final SoundEvent SOUND_SMALL = new SoundEvent(new ResourceLocation("minefactoryreloaded:mob.slime.small"));
-	private static final SoundType SLIME = new SoundType(1f, 1f, SOUND_BIG, SOUND_BIG, SOUND_SMALL, SOUND_BIG, SOUND_BIG);
-
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.875D, 1D);
 	
 	public BlockPinkSlime() {
@@ -35,7 +31,7 @@ public class BlockPinkSlime extends BlockBreakable {
 		slipperiness = 0.8f;
 		setHardness(0.5f);
 		setHarvestLevel("shovel", 0);
-		setSoundType(SLIME);
+		setSoundType(SoundType.SLIME);
 	}
 
 	@Override

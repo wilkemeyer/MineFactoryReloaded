@@ -27,19 +27,19 @@ public class EntitySafariNet extends EntityThrowable {
 	public EntitySafariNet(World world) {
 
 		super(world);
-		dataManager.set(STORED_ENTITY, Optional.<ItemStack>absent());
+		dataManager.register(STORED_ENTITY, Optional.<ItemStack>absent());
 	}
 
 	public EntitySafariNet(World world, double x, double y, double z, ItemStack netStack) {
 
 		super(world, x, y, z);
-		dataManager.set(STORED_ENTITY, Optional.fromNullable(netStack));
+		dataManager.register(STORED_ENTITY, Optional.fromNullable(netStack));
 	}
 
 	public EntitySafariNet(World world, EntityLivingBase owner, ItemStack netStack) {
 
 		super(world, owner);
-		dataManager.set(STORED_ENTITY, Optional.fromNullable(netStack));
+		dataManager.register(STORED_ENTITY, Optional.fromNullable(netStack));
 	}
 
 	@SideOnly(Side.CLIENT)

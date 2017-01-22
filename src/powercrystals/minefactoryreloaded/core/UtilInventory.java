@@ -397,19 +397,11 @@ public abstract class UtilInventory
 		from.stackSize -= amountToCopy;
 	}
 
-	/*
-		@deprecated use ItemStack.areItemStacksEqual instead
-	 */
-	@Deprecated
 	public static boolean stacksEqual(ItemStack s1, ItemStack s2)
 	{
 		return stacksEqual(s1, s2, true);
 	}
 
-	/*
-		@deprecated use ItemStack.areItemsEqual for nbtSensitive == false and ItemStack.areItemStacksEqual for nbtSensitive == true
-	 */
-	@Deprecated
 	public static boolean stacksEqual(ItemStack s1, ItemStack s2, boolean nbtSensitive)
 	{
 		if (s1 == null | s2 == null) return false;
@@ -419,6 +411,11 @@ public abstract class UtilInventory
 		if (s1.getTagCompound() == s2.getTagCompound()) return true;
 		if (s1.getTagCompound() == null || s2.getTagCompound() == null) return false;
 		return s1.getTagCompound().equals(s2.getTagCompound());
+	}
+
+	public static boolean stackIsItem(ItemStack stack, Item item) {
+
+		return stack != null && stack.getItem() == item;
 	}
 
 	private static boolean handlePipeTiles = false;
@@ -433,7 +430,7 @@ public abstract class UtilInventory
 	public static boolean playerHasItem(EntityPlayer player, Item item) {
 		for (int i = 0; i < player.inventory.getSizeInventory(); ++i)
 		{
-			if (player.inventory.getStackInSlot(i).getItem() == item)
+			if (stackIsItem(player.inventory.getStackInSlot(i), item))
 				return true;
 		}
 		return false;
@@ -441,11 +438,11 @@ public abstract class UtilInventory
 
 	public static ItemStack findItem(EntityPlayer player, Item item)
 	{
-		if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == item)
+		if (stackIsItem(player.getHeldItem(EnumHand.OFF_HAND), item))
 		{
 			return player.getHeldItem(EnumHand.OFF_HAND);
 		}
-		else if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == item)
+		else if (stackIsItem(player.getHeldItem(EnumHand.MAIN_HAND), item))
 		{
 			return player.getHeldItem(EnumHand.MAIN_HAND);
 		}
@@ -455,7 +452,7 @@ public abstract class UtilInventory
 			{
 				ItemStack itemstack = player.inventory.getStackInSlot(i);
 
-				if (itemstack.getItem() == item)
+				if (stackIsItem(itemstack, item))
 				{
 					return itemstack;
 				}
