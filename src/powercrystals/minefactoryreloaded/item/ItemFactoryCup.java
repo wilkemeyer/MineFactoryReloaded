@@ -47,7 +47,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public final static IUseHandler drinkUseAction = new DrinkUseHandler();
 
 	private boolean _prefix = false;
-	@SideOnly(Side.CLIENT)
 	protected List<IUseHandler> useHandlers;
 
 	public ItemFactoryCup(int stackSize, int maxUses) {
