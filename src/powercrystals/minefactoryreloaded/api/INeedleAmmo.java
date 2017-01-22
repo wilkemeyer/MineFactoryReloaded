@@ -12,6 +12,7 @@ public interface INeedleAmmo {
 	public boolean onHitEntity(ItemStack stac, EntityPlayer owner, Entity hit, double distance);
 
 	public void onHitBlock(ItemStack stac, EntityPlayer owner, World world, BlockPos pos, EnumFacing side, double distance);
+	// TODO: needle entity should be available
 
 	public float getSpread(ItemStack stack);
 
