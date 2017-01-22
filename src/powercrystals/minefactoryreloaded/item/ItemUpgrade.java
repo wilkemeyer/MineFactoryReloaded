@@ -19,21 +19,12 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
 	private static Set<String> types = ImmutableSet.of("radius");
 	public static ResourceLocation background;
-
+	public static String[] NAMES = new String[] { "lapis", "tin", "iron", "copper", "bronze", "silver", "gold", "quartz", "diamond", "platinum", "emerald", "cobble" };
+	
 	public ItemUpgrade() {
 
-		setNames(new String[] { "lapis", "tin", "iron", "copper", "bronze", "silver", "gold", "quartz", "diamond", "platinum", "emerald", "cobble" });
+		setNames(NAMES);
 	}
-
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister ir) {
-
-		super.registerIcons(ir);
-		background = ir.registerIcon("minefactoryreloaded:gui/" + getUnlocalizedName());
-	}
-*/
 
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {

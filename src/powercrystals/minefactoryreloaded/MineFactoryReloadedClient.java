@@ -71,6 +71,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
@@ -204,6 +205,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerSafariNetModel(MFRThings.safariNetJailerItem, "jailer");
 		registerSafariNetModel(MFRThings.safariNetSingleItem, "single_use");
 		registerSafariNetModel(MFRThings.safariNetFancyJailerItem, "jailer_fancy");
+		
+		for(int i=0; i < ItemUpgrade.NAMES.length; i++) {
+			ModelLoader.setCustomModelResourceLocation(MFRThings.upgradeItem, i, 
+					new ModelResourceLocation(MineFactoryReloadedCore.modId + ":upgrade", "variant=" + ItemUpgrade.NAMES[i]));
+		}
 	}
 
 	private static void registerSafariNetModel(Item item, String variant) {
