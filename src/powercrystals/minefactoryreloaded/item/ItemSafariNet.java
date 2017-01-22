@@ -169,22 +169,6 @@ public class ItemSafariNet extends ItemFactory {
 	}
 */
 
-	private EntityEggInfo getEgg(ItemStack safariStack) {
-
-		if (safariStack.getTagCompound() == null) {
-			return null;
-		}
-
-		for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
-			EntityEggInfo egg = handler.getEgg(safariStack);
-			if (egg != null) {
-				return egg;
-			}
-		}
-
-		return null;
-	}
-
 	@Override
 	public EnumActionResult onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {

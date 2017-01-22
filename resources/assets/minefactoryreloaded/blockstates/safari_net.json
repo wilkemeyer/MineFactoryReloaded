@@ -1,0 +1,59 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"variant": {
+			"reusable_empty": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.reusable.empty"
+				}
+			},
+			"reusable": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.reusable.back",
+					"layer1": "minefactoryreloaded:items/item.mfr.safarinet.reusable.mid",
+					"layer2": "minefactoryreloaded:items/item.mfr.safarinet.reusable.front"
+				}
+			},
+			"single_use_empty": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.singleuse.empty"
+				}
+			},
+			"single_use": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.singleuse.back",
+					"layer1": "minefactoryreloaded:items/item.mfr.safarinet.singleuse.mid",
+					"layer2": "minefactoryreloaded:items/item.mfr.safarinet.singleuse.front"
+				}
+			},
+			"jailer_empty": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.jailer.empty"
+				}
+			},
+			"jailer": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.jailer.back",
+					"layer1": "minefactoryreloaded:items/item.mfr.safarinet.jailer.mid",
+					"layer2": "minefactoryreloaded:items/item.mfr.safarinet.jailer.front"
+				}
+			},
+			"jailer_fancy_empty": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.jailer.fancy.empty"
+				}
+			},
+			"jailer_fancy": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.safarinet.jailer.fancy.back",
+					"layer1": "minefactoryreloaded:items/item.mfr.safarinet.jailer.fancy.mid",
+					"layer2": "minefactoryreloaded:items/item.mfr.safarinet.jailer.fancy.front"
+				}
+			}
+		}
+	}
+}

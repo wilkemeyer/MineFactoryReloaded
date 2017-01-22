@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.item;
 
+import cofh.lib.util.helpers.ItemHelper;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumActionResult;
@@ -90,6 +91,12 @@ public class ItemPortaSpawner extends ItemFactory {
 	}
 
 	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+		
+		return !ItemHelper.areItemStacksEqualIgnoreTags(oldStack, newStack, placeTag);
+	}
+
+	@Override
 	public EnumActionResult onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
@@ -122,25 +129,27 @@ public class ItemPortaSpawner extends ItemFactory {
 
 		IBlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
+		
+		BlockPos placePos = pos;
 
 		if (block == Blocks.SNOW_LAYER) {
 			side = EnumFacing.UP;
-		} else if (!block.isReplaceable(world, pos)) {
-			pos.offset(side);
+		} else if (!block.isReplaceable(world, placePos)) {
+			placePos = placePos.offset(side);
 		}
 
 		if (itemstack.stackSize == 0) {
 			return false;
-		} else if (!player.canPlayerEdit(pos, side, itemstack)) {
+		} else if (!player.canPlayerEdit(placePos, side, itemstack)) {
 			return false;
-		} else if (pos.getY() == 255 && state.getMaterial().isSolid()) {
+		} else if (placePos.getY() == 255 && state.getMaterial().isSolid()) {
 			return false;
-		} else if (world.canBlockBePlaced(_block, pos, false, side, player, itemstack)) {
-			IBlockState placedState = block.getStateForPlacement(world, pos, side, xOffset, yOffset, zOffset, 0, player, itemstack);
+		} else if (world.canBlockBePlaced(_block, placePos, false, side, player, itemstack)) {
+			IBlockState placedState = _block.getStateForPlacement(world, placePos, side, xOffset, yOffset, zOffset, 0, player, itemstack);
 
-			if (placeBlockAt(itemstack, player, world, pos, side, xOffset, yOffset, zOffset, placedState)) {
-				SoundType soundType = block.getSoundType(state, world, pos, null);
-				world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, soundType.getStepSound(), SoundCategory.BLOCKS,
+			if (placeBlockAt(itemstack, player, world, placePos, side, xOffset, yOffset, zOffset, placedState)) {
+				SoundType soundType = block.getSoundType(state, world, placePos, null);
+				world.playSound(null, placePos.getX() + 0.5F, placePos.getY() + 0.5F, placePos.getZ() + 0.5F, soundType.getStepSound(), SoundCategory.BLOCKS,
 					(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 				--itemstack.stackSize;
 			}

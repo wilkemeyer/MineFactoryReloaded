@@ -11,15 +11,18 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
@@ -57,6 +60,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 
+import powercrystals.minefactoryreloaded.api.IMobEggHandler;
 import powercrystals.minefactoryreloaded.block.*;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
@@ -66,6 +70,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
+import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
@@ -94,6 +99,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	public static HashMap<BlockPos, Integer> prcPages = new HashMap<BlockPos, Integer>();
 
 	public static Set<IHarvestAreaContainer> _areaTileEntities = new LinkedHashSet<IHarvestAreaContainer>();
+
+	private static Random colorRand = new Random();
 
 	public static void preInit() {
 		
@@ -191,8 +198,29 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomModelResourceLocation(MFRThings.plasticBagItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_bag", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.pinkSlimeItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":pink_slime", "variant=ball"));
 		ModelLoader.setCustomModelResourceLocation(MFRThings.pinkSlimeItem, 1, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":pink_slime", "variant=gem"));
+		ModelLoader.setCustomModelResourceLocation(MFRThings.portaSpawnerItem, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":porta_spawner", "inventory"));
+		
+		registerSafariNetModel(MFRThings.safariNetItem, "reusable");
+		registerSafariNetModel(MFRThings.safariNetJailerItem, "jailer");
+		registerSafariNetModel(MFRThings.safariNetSingleItem, "single_use");
+		registerSafariNetModel(MFRThings.safariNetFancyJailerItem, "jailer_fancy");
 	}
 
+	private static void registerSafariNetModel(Item item, String variant) {
+
+		//TODO cache values
+		ModelResourceLocation empty = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":safari_net", "variant=" + variant + "_empty");
+		ModelResourceLocation full = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":safari_net", "variant=" + variant);
+
+		ModelLoader.setCustomMeshDefinition(item, stack -> {
+			
+			if (ItemSafariNet.isEmpty(stack))
+				return empty;
+			return full; 
+		});
+		ModelLoader.registerItemVariants(item, empty, full);
+	}
+	
 	private static void registerColoredItemModels(Item item, String modelName) {
 		
 		for (EnumDyeColor color : EnumDyeColor.values()) {
@@ -309,7 +337,54 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		itemColors.registerItemColorHandler((stack, tintIndex) -> stack.getMetadata() == 1 ? 0xFFFFFF : ColorizerFoliage.getFoliageColorBasic(), MFRThings.rubberLeavesBlock);
 		itemColors.registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), MFRThings.vineScaffoldBlock);
+		itemColors.registerItemColorHandler(new IItemColor() {
+			@Override
+			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 
+				if (stack.getItemDamage() == 0 && (stack.getTagCompound() == null)) {
+					return 16777215;
+				}
+				if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide")) {
+					World world = Minecraft.getMinecraft().theWorld;
+					colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * tintIndex);
+					if (tintIndex == 2)
+						return colorRand.nextInt();
+					else if (tintIndex == 1)
+						return colorRand.nextInt();
+					else
+						return 16777215;
+				}
+				EntityList.EntityEggInfo egg = getEgg(stack);
+
+				if (egg == null) {
+					return 16777215;
+				} else if (tintIndex == 2) {
+					return egg.primaryColor;
+				} else if (tintIndex == 1) {
+					return egg.secondaryColor;
+				} else {
+					return 16777215;
+				}
+			}
+			
+			private EntityList.EntityEggInfo getEgg(ItemStack safariStack) {
+
+				if (safariStack.getTagCompound() == null) {
+					return null;
+				}
+
+				for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
+					EntityList.EntityEggInfo egg = handler.getEgg(safariStack);
+					if (egg != null) {
+						return egg;
+					}
+				}
+
+				return null;
+			}
+		}, MFRThings.safariNetFancyJailerItem, MFRThings.safariNetJailerItem, MFRThings.safariNetItem, MFRThings.safariNetSingleItem);
+		
+		
 	/* TODO fix rendering
 		// IDs
 		renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
