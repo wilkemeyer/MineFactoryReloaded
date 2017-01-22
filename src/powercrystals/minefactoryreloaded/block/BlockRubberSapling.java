@@ -36,7 +36,7 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 	public BlockRubberSapling() {
 
 		setHardness(0.0F);
-		setSoundType(SoundType.GROUND);
+		setSoundType(SoundType.PLANT);
 		setUnlocalizedName("mfr.rubberwood.sapling");
 		setCreativeTab(MFRCreativeTab.tab);
 		this.setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.REGULAR).withProperty(STAGE, 0));
