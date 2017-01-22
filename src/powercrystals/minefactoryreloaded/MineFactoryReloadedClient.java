@@ -470,6 +470,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 	}
 
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void tickEnd(RenderTickEvent evt) {
+
+		if (evt.phase != Phase.END)
+			return;
+		renderHUD(evt.renderTickTime);
+	}
+
 	@SubscribeEvent
 	public void tickStart(PlayerTickEvent evt) {
 
@@ -486,9 +494,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			} else if ((e == null || e != _lastEntityOver) && _lockonLostTicks > 0) {
 				_lockonLostTicks--;
 			} else if (e == null && _lockonLostTicks == 0) {
-				if (_lockonTicks > 0) {
-					_lockonTicks--;
-				}
+				_lockonTicks = 0;
 				_lastEntityOver = null;
 			} else if (_lastEntityOver == null) {
 				_lastEntityOver = e;
@@ -679,9 +685,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 
 		double range = 64;
-		Vec3d playerPos = new Vec3d(Minecraft.getMinecraft().getRenderViewEntity().getPosition());
+		Vec3d playerPos = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(1);
 
-		Vec3d playerLook = Minecraft.getMinecraft().getRenderViewEntity().getLook(1.0F);
+		Vec3d playerLook = Minecraft.getMinecraft().getRenderViewEntity().getLook(1);
 		Vec3d playerLookRel = playerPos.addVector(playerLook.xCoord * range, playerLook.yCoord * range, playerLook.zCoord * range);
 		List<?> list = Minecraft.getMinecraft().theWorld.getEntitiesWithinAABBExcludingEntity(
 			Minecraft.getMinecraft().getRenderViewEntity(),
