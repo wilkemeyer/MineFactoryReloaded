@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import codechicken.lib.model.ModelRegistryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -77,6 +78,7 @@ import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
+import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -223,10 +225,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.sugarCharcoalItem, "material", "type=sugar_charcoal");
 		registerModel(MFRThings.fertilizerItem, "material", "type=fertilizer");
 		registerModel(MFRThings.blankRecordItem, "material", "type=blank_record");
-
-		OBJLoader.INSTANCE.addDomain(MineFactoryReloadedCore.modId);
+		
 		registerModel(MFRThings.needlegunItem, "needle_gun");
-
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":needle_gun", "inventory"), new NeedleGunItemRenderer());
+		NeedleGunItemRenderer.loadModel();
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
