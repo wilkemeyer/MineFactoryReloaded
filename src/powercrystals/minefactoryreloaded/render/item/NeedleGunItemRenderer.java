@@ -1,36 +1,24 @@
 package powercrystals.minefactoryreloaded.render.item;
 
 import codechicken.lib.render.CCModel;
-import codechicken.lib.render.CCModelState;
 import codechicken.lib.render.CCOBJParser;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.item.IItemRenderer;
 import codechicken.lib.texture.TextureUtils;
 import codechicken.lib.util.TransformUtils;
 import codechicken.lib.vec.SwapYZ;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class NeedleGunItemRenderer implements IItemRenderer, IPerspectiveAwareModel {
+public class NeedleGunItemRenderer extends BaseItemRenderer {
 
 	public static CCModel gunModel;
 	public static CCModel magazineModel;
@@ -38,63 +26,9 @@ public class NeedleGunItemRenderer implements IItemRenderer, IPerspectiveAwareMo
 	private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORMATIONS;
 	
 	@Override
-	public void renderItem(ItemStack stack) {
-		
-		GlStateManager.pushMatrix();
-		CCRenderState ccrs = CCRenderState.instance();
-		ccrs.reset();
-
-		renderGun(ccrs, stack);
-		
-		GlStateManager.popMatrix();
-	}
-
-	@Override
 	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
 
 		return MapWrapper.handlePerspective(this, TRANSFORMATIONS, cameraTransformType);
-	}
-
-	@Override
-	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-		
-		return new ArrayList<>();
-	}
-
-	@Override
-	public boolean isAmbientOcclusion() {
-		
-		return false;
-	}
-
-	@Override
-	public boolean isGui3d() {
-		
-		return false;
-	}
-
-	@Override
-	public boolean isBuiltInRenderer() {
-		
-		return true;
-	}
-
-	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		
-		return null;
-	}
-
-	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
-		
-		return ItemCameraTransforms.DEFAULT;
-	}
-
-	@Override
-	public ItemOverrideList getOverrides() {
-		
-		return ItemOverrideList.NONE;
 	}
 
 	public static void loadModel() {
@@ -119,11 +53,7 @@ public class NeedleGunItemRenderer implements IItemRenderer, IPerspectiveAwareMo
 		TRANSFORMATIONS = builder.build();
 	}
 	
-	private void renderGun(CCRenderState ccrs, ItemStack stack) {
-
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0.5, 0, 0.5);
-		GlStateManager.rotate(-90 * (2 + 2), 0, 1, 0);
+	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
 
 		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/needle_gun.png");
 		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
@@ -133,9 +63,7 @@ public class NeedleGunItemRenderer implements IItemRenderer, IPerspectiveAwareMo
 				!stack.getTagCompound().getCompoundTag("ammo").hasNoTags()) {
 			magazineModel.render(ccrs);
 		}
-		
-		ccrs.draw();
 
-		GlStateManager.popMatrix();
+		ccrs.draw();
 	}
 }

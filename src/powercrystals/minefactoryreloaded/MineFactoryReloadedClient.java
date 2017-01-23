@@ -79,6 +79,7 @@ import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
+import powercrystals.minefactoryreloaded.render.item.PotatoLauncherItemRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -228,8 +229,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.blankRecordItem, "material", "type=blank_record");
 		
 		registerModel(MFRThings.needlegunItem, "needle_gun");
+		registerModel(MFRThings.potatoLauncherItem, "potato_launcher");
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":needle_gun", "inventory"), new NeedleGunItemRenderer());
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":potato_launcher", "inventory"), new PotatoLauncherItemRenderer());
 		NeedleGunItemRenderer.loadModel();
+		PotatoLauncherItemRenderer.loadModel();
 		
 		registerModel(MFRThings.needlegunAmmoAnvilItem, "needle_gun_ammo", "variant=anvil");
 		registerModel(MFRThings.needlegunAmmoEmptyItem, "needle_gun_ammo", "variant=empty");

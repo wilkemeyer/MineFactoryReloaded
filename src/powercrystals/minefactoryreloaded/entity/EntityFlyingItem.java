@@ -86,29 +86,31 @@ public class EntityFlyingItem extends EntitySafariNet {
 		ItemStack stack = entity.isPresent() ? entity.get() : null;
 
 		float X = 0, Y = 0.14f, Z = 0;
-		switch (side) {
-		case UP:
-			y += 1;
-		case DOWN:
-			x += 0.5;
-			z += 0.5;
-			if (side == EnumFacing.DOWN)
-				Y = 0;
-			break;
-		case SOUTH:
-			z += 1;
-		case NORTH:
-			x += 0.5;
-			y += 0.5;
-			Z = side == EnumFacing.SOUTH ? 1 : -1;
-			break;
-		case EAST:
-			x += 1;
-		case WEST:
-			y += 0.5;
-			z += 0.5;
-			X = side == EnumFacing.EAST ? 1 : -1;
-			break;
+		if (side != null) {
+			switch (side) {
+				case UP:
+					y += 1;
+				case DOWN:
+					x += 0.5;
+					z += 0.5;
+					if (side == EnumFacing.DOWN)
+						Y = 0;
+					break;
+				case SOUTH:
+					z += 1;
+				case NORTH:
+					x += 0.5;
+					y += 0.5;
+					Z = side == EnumFacing.SOUTH ? 1 : -1;
+					break;
+				case EAST:
+					x += 1;
+				case WEST:
+					y += 0.5;
+					z += 0.5;
+					X = side == EnumFacing.EAST ? 1 : -1;
+					break;
+			}
 		}
 		for (int j = 0; j < 8; ++j) {
 			float f = (worldObj.rand.nextFloat() - 0.5f) * 0.37f;

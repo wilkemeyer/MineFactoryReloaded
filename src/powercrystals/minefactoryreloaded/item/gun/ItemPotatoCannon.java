@@ -31,7 +31,7 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 		return false;
 	}
 
-	public int cofh_canEnchantApply(ItemStack stack, Enchantment ench) {
+	public int cofh_canEnchantApply(ItemStack stack, Enchantment ench) { //TODO implement (or change to an anvil event)
 
 		if (ench == Enchantments.LOOTING)
 			return 1;
