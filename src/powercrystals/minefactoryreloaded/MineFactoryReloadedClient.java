@@ -24,6 +24,7 @@ import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -222,7 +223,10 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.sugarCharcoalItem, "material", "type=sugar_charcoal");
 		registerModel(MFRThings.fertilizerItem, "material", "type=fertilizer");
 		registerModel(MFRThings.blankRecordItem, "material", "type=blank_record");
-		
+
+		OBJLoader.INSTANCE.addDomain(MineFactoryReloadedCore.modId);
+		registerModel(MFRThings.needlegunItem, "needle_gun");
+
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
