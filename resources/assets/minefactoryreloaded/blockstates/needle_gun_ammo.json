@@ -1,0 +1,51 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"variant": {
+			"empty": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.empty"
+				}
+			},
+			"anvil": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.anvil"
+				}
+			},
+			"fire": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.fire"
+				}
+			},
+			"lava": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.lava"
+				}
+			},
+			"pierce": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.pierce"
+				}
+			},
+			"sewage": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.sewage"
+				}
+			},
+			"sludge": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.sludge"
+				}
+			},
+			"standard": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.needlegun.ammo.standard"
+				}
+			}
+		}
+	}
+}

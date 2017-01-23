@@ -230,6 +230,15 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":needle_gun", "inventory"), new NeedleGunItemRenderer());
 		NeedleGunItemRenderer.loadModel();
 		
+		registerModel(MFRThings.needlegunAmmoAnvilItem, "needle_gun_ammo", "variant=anvil");
+		registerModel(MFRThings.needlegunAmmoEmptyItem, "needle_gun_ammo", "variant=empty");
+		registerModel(MFRThings.needlegunAmmoFireItem, "needle_gun_ammo", "variant=fire");
+		registerModel(MFRThings.needlegunAmmoLavaItem, "needle_gun_ammo", "variant=lava");
+		registerModel(MFRThings.needlegunAmmoPierceItem, "needle_gun_ammo", "variant=pierce");
+		registerModel(MFRThings.needlegunAmmoSewageItem, "needle_gun_ammo", "variant=sewage");
+		registerModel(MFRThings.needlegunAmmoSludgeItem, "needle_gun_ammo", "variant=sludge");
+		registerModel(MFRThings.needlegunAmmoStandardItem, "needle_gun_ammo", "variant=standard");
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
