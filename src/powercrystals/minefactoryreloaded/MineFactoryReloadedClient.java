@@ -207,6 +207,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerSafariNetModel(MFRThings.safariNetJailerItem, "jailer");
 		registerSafariNetModel(MFRThings.safariNetSingleItem, "single_use");
 		registerSafariNetModel(MFRThings.safariNetFancyJailerItem, "jailer_fancy");
+		registerModel(MFRThings.safariNetLauncherItem, "safari_net_launcher");
 		
 		for(int i : MFRThings.upgradeItem.getMetadataValues()) {
 			registerModel(MFRThings.upgradeItem, i, "upgrade", "variant=" + MFRThings.upgradeItem.getName(i));
