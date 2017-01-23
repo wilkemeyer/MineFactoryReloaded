@@ -361,7 +361,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 			plasticGlasses.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.glass.armor.helm");
 		}
 
-		upgradeItem = (new ItemUpgrade()).setUnlocalizedName("mfr.upgrade.radius").setMaxStackSize(64);
+		(upgradeItem = new ItemUpgrade()).setUnlocalizedName("mfr.upgrade.radius").setMaxStackSize(64);
 
 		rednetMeterItem = (new ItemRedNetMeter()).setUnlocalizedName("mfr.rednet.meter").setMaxStackSize(1);
 		rednetMemoryCardItem = (new ItemRedNetMemoryCard()).setUnlocalizedName("mfr.rednet.memorycard").setMaxStackSize(1);
@@ -407,8 +407,8 @@ public class MineFactoryReloadedCore extends BaseMod {
 		sugarCharcoalItem = (new ItemFactory()).setUnlocalizedName("mfr.sugarcharcoal");
 		fertilizerItem = (new ItemFactory()).setUnlocalizedName("mfr.fertilizer");
 
-		ceramicDyeItem = (new ItemCeramicDye()).setUnlocalizedName("mfr.ceramicdye");
-		laserFocusItem = (new ItemFactoryColored()).setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
+		(ceramicDyeItem = new ItemCeramicDye()).setUnlocalizedName("mfr.ceramicdye");
+		(laserFocusItem = new ItemFactoryColored()).setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
 
 		blankRecordItem = (new ItemFactory()).setUnlocalizedName("mfr.record.blank").setMaxStackSize(1);
 		spyglassItem = (new ItemSpyglass()).setUnlocalizedName("mfr.spyglass").setMaxStackSize(1);

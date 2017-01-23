@@ -16,7 +16,6 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class ItemFactory extends Item {
 
-	protected int _metaMax = 0;
 	protected boolean _hasIcons = true;
 
 	public ItemFactory() {
@@ -38,16 +37,9 @@ public class ItemFactory extends Item {
 		return this;
 	}
 
-	protected void setMetaMax(int max) {
-
-		_metaMax = max;
-	}
-
 	public void getSubItems(Item item, List<ItemStack> subTypes) {
 
-		for (int meta = 0; meta <= _metaMax; meta++) {
-			subTypes.add(new ItemStack(item, 1, meta));
-		}
+		subTypes.add(new ItemStack(item, 1, 0));
 	}
 
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {

@@ -19,11 +19,12 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
 	private static Set<String> types = ImmutableSet.of("radius");
 	public static ResourceLocation background;
-	public static String[] NAMES = new String[] { "lapis", "tin", "iron", "copper", "bronze", "silver", "gold", "quartz", "diamond", "platinum", "emerald", "cobble" };
+	private static int NEGATIVE_START = (Short.MIN_VALUE >>> 1) & Short.MAX_VALUE;
 	
 	public ItemUpgrade() {
 
-		setNames(NAMES);
+		setNames(0, "lapis", "tin", "iron", "copper", "bronze", "silver", "gold", "quartz", "diamond", "platinum", "emerald");
+		setNames(NEGATIVE_START, "cobble");
 	}
 
 	@Override
@@ -38,12 +39,9 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
 		if (type.equals("radius")) {
 			int dmg = stack.getItemDamage();
-			switch (dmg) {
-			case 11:
-				return -1;
-			default:
-				return dmg + 1;
-			}
+			int mult = dmg >= NEGATIVE_START ? -1 : 1;
+			dmg &= NEGATIVE_START - 1;
+			return (dmg + 1) * mult;
 		}
 		return 0;
 	}

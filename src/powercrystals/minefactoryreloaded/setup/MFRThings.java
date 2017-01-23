@@ -17,6 +17,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
 import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
+import powercrystals.minefactoryreloaded.item.base.ItemMulti;
 
 public class MFRThings
 {
@@ -99,11 +100,11 @@ public class MFRThings
 	public static Item syringeGrowthItem;
 	public static Item rawRubberItem;
 	public static Item safariNetItem;
-	public static Item ceramicDyeItem;
+	public static ItemMulti ceramicDyeItem;
 	public static Item blankRecordItem;
 	public static Item syringeZombieItem;
 	public static Item safariNetSingleItem;
-	public static Item upgradeItem;
+	public static ItemMulti upgradeItem;
 	public static Item safariNetLauncherItem;
 	public static Item sugarCharcoalItem;
 	public static Item milkBottleItem;
@@ -123,7 +124,7 @@ public class MFRThings
 	public static Item meatNuggetCookedItem;
 	public static Item pinkSlimeItem;
 	public static Item safariNetJailerItem;
-	public static Item laserFocusItem;
+	public static ItemMulti laserFocusItem;
 	public static Item needlegunItem;
 	public static Item needlegunAmmoEmptyItem;
 	public static Item needlegunAmmoStandardItem;
