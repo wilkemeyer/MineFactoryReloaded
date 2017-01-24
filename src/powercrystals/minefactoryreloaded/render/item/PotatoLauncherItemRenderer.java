@@ -20,33 +20,10 @@ import java.util.Map;
 
 public class PotatoLauncherItemRenderer extends BaseItemRenderer {
 
-	private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORMATIONS;
-	private static boolean initialized = false;
 	private static CCModel launcherModel;
 	
-	@Override
-	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
-		
-		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/potato_launcher.png");
-		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+	public PotatoLauncherItemRenderer() {
 
-		launcherModel.render(ccrs);
-
-		ccrs.draw();
-	}
-
-	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-
-		return MapWrapper.handlePerspective(this, TRANSFORMATIONS, cameraTransformType);
-	}
-
-	public static void loadModel() {
-
-		if (initialized) {
-			return;
-		}
-		initialized = true;
 		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/potato_launcher.obj"), new SwapYZ());
 		launcherModel = models.get("Box009");
 
@@ -59,6 +36,17 @@ public class PotatoLauncherItemRenderer extends BaseItemRenderer {
 		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
 		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(0, -1, 0, 8, 190, 0, 0.025f));
 		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(0, -1, 0, 8, 190, 0, 0.025f));
-		TRANSFORMATIONS = builder.build();
+		transformations = builder.build();
+	}
+
+	@Override
+	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
+		
+		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/potato_launcher.png");
+		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+
+		launcherModel.render(ccrs);
+
+		ccrs.draw();
 	}
 }

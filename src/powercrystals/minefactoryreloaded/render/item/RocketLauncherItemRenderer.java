@@ -1,86 +1,76 @@
-/*
 package powercrystals.minefactoryreloaded.render.item;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-
-import org.lwjgl.opengl.GL11;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureManager;
+import codechicken.lib.render.CCModel;
+import codechicken.lib.render.CCOBJParser;
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.texture.TextureUtils;
+import codechicken.lib.util.TransformUtils;
+import codechicken.lib.vec.Scale;
+import codechicken.lib.vec.SwapYZ;
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.common.model.TRSRTransformation;
+import org.apache.commons.lang3.tuple.Pair;
 
-@SideOnly(Side.CLIENT)
-public class RocketLauncherItemRenderer implements IItemRenderer
-{
-	private static final ResourceLocation launcher =
-			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "RocketLauncher.png");
-	private IModelCustom _model;
-	
-	public RocketLauncherItemRenderer()
-	{
-		try
-		{
-			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					MineFactoryReloadedCore.modelFolder + "RocketLauncher.obj"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+import javax.vecmath.Matrix4f;
+import java.util.Map;
+
+public class RocketLauncherItemRenderer extends BaseItemRenderer {
+
+	CCModel launcherModel;
+	RocketLauncherItemRenderer offHandRenderrer;
+
+	private RocketLauncherItemRenderer(boolean offHand) {
+
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/rocket_launcher.obj"), new SwapYZ());
+		launcherModel = models.get("Box009");
 	}
-	
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type)
-	{
-		return true;
+
+	public RocketLauncherItemRenderer() {
+
+		offHandRenderrer = new RocketLauncherItemRenderer(true);
+
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/rocket_launcher.obj"), new SwapYZ());
+		launcherModel = models.get("Box009").copy().apply(new Scale(-1, 1, 1)).backfacedCopy();
+
+		setupTransformations();
 	}
-	
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-	{
-		return helper != ItemRendererHelper.EQUIPPED_BLOCK;
+
+	private void setupTransformations() {
+		TRSRTransformation thirdPerson = TransformUtils.get(0, 0, 2, 0, 180, 0, 0.02f);
+		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
+		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(0, -1, 0, 30, 135, 0, 0.015f));
+		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 3, 0, 0, 0, 0, 0.01f));
+		builder.put(ItemCameraTransforms.TransformType.FIXED, TransformUtils.get(0, 0, 0, 0, 90, 0, 0.03f));
+		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdPerson);
+		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(0, 5, 4, 8, 180, 0, 0.025f));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(0, 5, 4, 8, 180, 0, 0.025f));
+		transformations = builder.build();
 	}
-	
+
 	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
-	{
-		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
-		
-		if(renderengine != null)
-		{
-			renderengine.bindTexture(launcher);
-		}
-		
-		GL11.glPushMatrix();
-		
-		if(type == ItemRenderType.EQUIPPED_FIRST_PERSON)
-		{
-			GL11.glRotatef(270, 0, 1, 0);
-			GL11.glRotatef(300, 1, 0, 0);
-			GL11.glTranslatef(-0.3F, 0.3F, 0.5F);
-			GL11.glScalef(0.03F, 0.03F, 0.03F);
-		}
-		else if(type == ItemRenderType.EQUIPPED)
-		{
-			GL11.glRotatef(270, 1, 0, 0);
-			GL11.glTranslatef(0.3F, -0.4F, 1.0F);
-			GL11.glScalef(0.03F, 0.03F, 0.03F);
-		}
-		else
-		{
-			GL11.glRotatef(270, 1, 0, 0);
-			GL11.glScalef(0.025F, 0.025F, 0.025F);
-		}
-		
-		_model.renderAll();
-		
-		GL11.glPopMatrix();
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+
+		if (cameraTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
+				|| cameraTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND)
+			return MapWrapper.handlePerspective(offHandRenderrer, transformations, cameraTransformType);
+
+		return MapWrapper.handlePerspective(this, transformations, cameraTransformType);
+	}
+
+	@Override
+	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
+
+		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/rocket_launcher.png");
+		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+
+		launcherModel.render(ccrs);
+
+		ccrs.draw();
 	}
 }
-*/

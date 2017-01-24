@@ -22,21 +22,9 @@ public class NeedleGunItemRenderer extends BaseItemRenderer {
 
 	public static CCModel gunModel;
 	public static CCModel magazineModel;
-	private static boolean initialized = false;
-	private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORMATIONS;
-	
-	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
 
-		return MapWrapper.handlePerspective(this, TRANSFORMATIONS, cameraTransformType);
-	}
+	public NeedleGunItemRenderer() {
 
-	public static void loadModel() {
-		
-		if (initialized) {
-			return;
-		}
-		initialized = true;
 		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/needle_gun.obj"), new SwapYZ());
 		gunModel = models.get("gun");
 		magazineModel = models.get("magazine");
@@ -50,9 +38,15 @@ public class NeedleGunItemRenderer extends BaseItemRenderer {
 		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
 		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(4, 0, 0, 8, 190, 0, 0.025f));
 		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(4, 0, 0, 8, 190, 0, 0.025f));
-		TRANSFORMATIONS = builder.build();
+		transformations = builder.build();
 	}
-	
+
+	@Override
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+
+		return MapWrapper.handlePerspective(this, transformations, cameraTransformType);
+	}
+
 	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
 
 		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/needle_gun.png");

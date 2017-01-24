@@ -80,6 +80,7 @@ import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
 import powercrystals.minefactoryreloaded.render.item.PotatoLauncherItemRenderer;
+import powercrystals.minefactoryreloaded.render.item.RocketLauncherItemRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -230,11 +231,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		registerModel(MFRThings.needlegunItem, "needle_gun");
 		registerModel(MFRThings.potatoLauncherItem, "potato_launcher");
+		registerModel(MFRThings.rocketLauncherItem, "rocket_launcher");
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":needle_gun", "inventory"), new NeedleGunItemRenderer());
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":potato_launcher", "inventory"), new PotatoLauncherItemRenderer());
-		NeedleGunItemRenderer.loadModel();
-		PotatoLauncherItemRenderer.loadModel();
-		
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rocket_launcher", "inventory"), new RocketLauncherItemRenderer());
+
 		registerModel(MFRThings.needlegunAmmoAnvilItem, "needle_gun_ammo", "variant=anvil");
 		registerModel(MFRThings.needlegunAmmoEmptyItem, "needle_gun_ammo", "variant=empty");
 		registerModel(MFRThings.needlegunAmmoFireItem, "needle_gun_ammo", "variant=fire");
@@ -638,9 +639,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		if (evt.side != Side.CLIENT | evt.phase != Phase.START)
 			return;
 
-		EntityPlayer player = evt.player;
-		ItemStack equipped = player.inventory.getCurrentItem();
-		if (equipped != null && equipped.getItem() instanceof ItemRocketLauncher) {
+		if (holdsRocketLauncher(evt.player)) {
 			Entity e = rayTrace();
 			if (_lastEntityOver != null && _lastEntityOver.isDead) {
 				_lastEntityOver = null;
@@ -666,9 +665,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	private void renderHUD(float partialTicks) {
 
 		Minecraft mc = Minecraft.getMinecraft();
-		if (!mc.isGamePaused() && mc.currentScreen == null && mc.thePlayer != null &&
-				mc.thePlayer.inventory.getCurrentItem() != null
-				&& mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemRocketLauncher) {
+
+		if (mc.gameSettings.hideGUI)
+			return;
+
+		if (!mc.isGamePaused() && mc.currentScreen == null && holdsRocketLauncher(mc.thePlayer)) {
 			ScaledResolution sr = new ScaledResolution(mc);
 			Point center = new Point(sr.getScaledWidth() / 2, sr.getScaledHeight() / 2);
 
@@ -692,6 +693,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 			GL11.glPopMatrix();
 		}
+	}
+
+	private boolean holdsRocketLauncher(EntityPlayer player) {
+
+		return player != null && ((player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() == MFRThings.rocketLauncherItem) ||
+				(player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == MFRThings.rocketLauncherItem));
 	}
 
 	private void drawLockonPart(Point center, float distanceFromCenter, int rotation) {
