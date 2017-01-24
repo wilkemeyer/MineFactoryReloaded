@@ -1,39 +1,55 @@
-/*
 package powercrystals.minefactoryreloaded.render.tileentity;
 
+import codechicken.lib.render.item.IItemRenderer;
+import codechicken.lib.texture.TextureUtils;
+import codechicken.lib.util.TransformUtils;
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.common.model.TRSRTransformation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.registry.ISimpleBlockRenderingHandler;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.render.model.RedNetHistorianModel;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.util.EnumFacing;
 
-public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler
+import javax.annotation.Nullable;
+import javax.vecmath.Matrix4f;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RedNetHistorianRenderer extends TileEntitySpecialRenderer  implements IItemRenderer, IPerspectiveAwareModel
 {
 	private static final ResourceLocation historianTex = new ResourceLocation(MineFactoryReloadedCore.tileEntityFolder + "historian.png");
-	private RedNetHistorianModel _model;
-	private static final double _renderMin = 1.0/16.0;
-	private static final double _renderMax = 15.0/16.0;
+	private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transformations;
+
+	private RedNetHistorianModel model;
+	private static final double renderMin = 1.0/16.0;
+	private static final double renderMax = 15.0/16.0;
 	
 	public RedNetHistorianRenderer()
 	{
-		_model = new RedNetHistorianModel();
+		model = new RedNetHistorianModel();
+		transformations = TransformUtils.DEFAULT_BLOCK.getTransforms();
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTicks)
+	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTicks, int destroyStage)
 	{
 		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
 		TileEntityRedNetHistorian historian = (TileEntityRedNetHistorian)tileentity;
@@ -43,40 +59,41 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 			renderengine.bindTexture(historianTex);
 		}
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		GlStateManager.translate((float)x, (float)y, (float)z);
 		
 		if(historian.getDirectionFacing() == EnumFacing.EAST)
 		{
-			GL11.glTranslatef(1, 0, 0);
-			GL11.glRotatef(270, 0, 1, 0);
+			GlStateManager.translate(1, 0, 0);
+			GlStateManager.rotate(270, 0, 1, 0);
 		}
 		else if(historian.getDirectionFacing() == EnumFacing.SOUTH)
 		{
-			GL11.glTranslatef(1, 0, 1);
-			GL11.glRotatef(180, 0, 1, 0);
+			GlStateManager.translate(1, 0, 1);
+			GlStateManager.rotate(180, 0, 1, 0);
 		}
 		else if(historian.getDirectionFacing() == EnumFacing.WEST)
 		{
-			GL11.glTranslatef(0, 0, 1);
-			GL11.glRotatef(90, 0, 1, 0);
+			GlStateManager.translate(0, 0, 1);
+			GlStateManager.rotate(90, 0, 1, 0);
 		}	
 		
-		_model.render((TileEntityRedNetHistorian)tileentity);
+		model.render((TileEntityRedNetHistorian)tileentity);
 		
-		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+		GlStateManager.pushAttrib();
 		RenderHelper.disableStandardItemLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		
-		Tessellator t = Tessellator.instance;
-		t.startDrawing(GL11.GL_LINES);
-		GL11.glLineWidth(2.0F);
+		Tessellator t = Tessellator.getInstance();
+		VertexBuffer buffer = t.getBuffer();
+		buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+		GlStateManager.glLineWidth(2.0F);
 		
 		Integer[] values = historian.getValues();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		int yMin = Integer.MAX_VALUE;
 		int yMax = Integer.MIN_VALUE;
@@ -118,11 +135,11 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 			{
 				double x1 = (14.0/16.0)/values.length * lastX + (1.0/16.0);
 				double x2 = (14.0/16.0)/values.length * (i) + (1.0/16.0);
-				double y1 = (values[i - 1] - yMin) * (_renderMax - _renderMin) / (yMax - yMin) + _renderMin;
-				double y2 = (values[i] - yMin) * (_renderMax - _renderMin) / (yMax - yMin) + _renderMin;
+				double y1 = (values[i - 1] - yMin) * (renderMax - renderMin) / (yMax - yMin) + renderMin;
+				double y2 = (values[i] - yMin) * (renderMax - renderMin) / (yMax - yMin) + renderMin;
 				
-				t.addVertex(x1, y1, 0.253);
-				t.addVertex(x2, y2, 0.253);
+				buffer.pos(x1, y1, 0.253).endVertex();
+				buffer.pos(x2, y2, 0.253).endVertex();
 				
 				lastValue = values[i];
 				lastX = i;
@@ -131,42 +148,70 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer implement
 		
 		t.draw();
 
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.popAttrib();
+		GlStateManager.popMatrix();
 		
 	}
 
 	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
-	{
-		bindTexture(historianTex);
-		
-		GL11.glPushMatrix();
-		GL11.glTranslated(0.12, 0, 0);
-		_model.render(null);
-		GL11.glPopMatrix();
-		
-		return;
+	public void renderItem(ItemStack item) {
+
+		GlStateManager.pushMatrix();
+
+		TextureUtils.changeTexture(historianTex);
+
+		model.render(null);
+
+		GlStateManager.popMatrix();
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, BlockPos pos, Block block, int modelId, RenderBlocks renderer)
-	{
+	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+
+		return MapWrapper.handlePerspective(this, transformations, cameraTransformType);
+	}
+
+	@Override
+	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+
+		return new ArrayList<>();
+	}
+
+	@Override
+	public boolean isAmbientOcclusion() {
+
 		return false;
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
+	public boolean isGui3d() {
+
+		return false;
+	}
+
+	@Override
+	public boolean isBuiltInRenderer() {
+
 		return true;
 	}
 
 	@Override
-	public int getRenderId()
-	{
-		return MineFactoryReloadedCore.renderIdRedNetPanel;
+	public TextureAtlasSprite getParticleTexture() {
+
+		return null;
+	}
+
+	@Override
+	public ItemCameraTransforms getItemCameraTransforms() {
+
+		return ItemCameraTransforms.DEFAULT;
+	}
+
+	@Override
+	public ItemOverrideList getOverrides() {
+
+		return ItemOverrideList.NONE;
 	}
 }
-*/
