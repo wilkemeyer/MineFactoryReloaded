@@ -12,5 +12,6 @@ public interface ILiquidDrinkHandler {
 	 *            ILiquidDrinkHandler manages
 	 */
 	public void onDrink(EntityLivingBase entity);
+	// TODO: pass in fluidstack
 
 }

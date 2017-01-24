@@ -91,6 +91,8 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		}
 	}*/
 
+	// TODO: subItems to provide a syringe for all fluids via creative under a config
+
 	public String getFluidName(ItemStack container)
 	{
 		NBTTagCompound tag = container.getTagCompound();
