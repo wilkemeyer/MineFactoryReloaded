@@ -1,12 +1,9 @@
 /*
 package powercrystals.minefactoryreloaded.render.item;
 
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
@@ -15,19 +12,22 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
+import org.lwjgl.opengl.GL11;
+
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
+
 @SideOnly(Side.CLIENT)
-public class RocketLauncherItemRenderer implements IItemRenderer
+public class RocketItemRenderer implements IItemRenderer
 {
-	private static final ResourceLocation launcher =
-			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "RocketLauncher.png");
 	private IModelCustom _model;
 	
-	public RocketLauncherItemRenderer()
+	public RocketItemRenderer()
 	{
 		try
 		{
 			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					MineFactoryReloadedCore.modelFolder + "RocketLauncher.obj"));
+					MineFactoryReloadedCore.modelFolder + "Rocket.obj"));
 		}
 		catch(Exception e)
 		{
@@ -54,7 +54,7 @@ public class RocketLauncherItemRenderer implements IItemRenderer
 		
 		if(renderengine != null)
 		{
-			renderengine.bindTexture(launcher);
+			renderengine.bindTexture(EntityRocketRenderer.rocket);
 		}
 		
 		GL11.glPushMatrix();
