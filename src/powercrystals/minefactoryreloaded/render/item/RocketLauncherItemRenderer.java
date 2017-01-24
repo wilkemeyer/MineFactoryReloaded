@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 import javax.vecmath.Matrix4f;
 import java.util.Map;
@@ -23,10 +24,11 @@ public class RocketLauncherItemRenderer extends BaseItemRenderer {
 
 	CCModel launcherModel;
 	RocketLauncherItemRenderer offHandRenderrer;
+	private static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "rocket_launcher.png");
 
 	private RocketLauncherItemRenderer(boolean offHand) {
 
-		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/rocket_launcher.obj"), new SwapYZ());
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation(MineFactoryReloadedCore.modelFolder + "rocket_launcher.obj"), new SwapYZ());
 		launcherModel = models.get("Box009");
 	}
 
@@ -34,7 +36,7 @@ public class RocketLauncherItemRenderer extends BaseItemRenderer {
 
 		offHandRenderrer = new RocketLauncherItemRenderer(true);
 
-		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/rocket_launcher.obj"), new SwapYZ());
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation(MineFactoryReloadedCore.modelFolder + "rocket_launcher.obj"), new SwapYZ());
 		launcherModel = models.get("Box009").copy().apply(new Scale(-1, 1, 1)).backfacedCopy();
 
 		setupTransformations();
@@ -66,7 +68,7 @@ public class RocketLauncherItemRenderer extends BaseItemRenderer {
 	@Override
 	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
 
-		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/rocket_launcher.png");
+		TextureUtils.changeTexture(textureLocation);
 		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
 		launcherModel.render(ccrs);

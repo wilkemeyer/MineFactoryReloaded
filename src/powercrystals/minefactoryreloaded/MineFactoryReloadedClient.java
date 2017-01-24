@@ -6,6 +6,7 @@ import codechicken.lib.model.ModelRegistryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -80,10 +81,7 @@ import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
-import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.PotatoLauncherItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.RocketItemRenderer;
-import powercrystals.minefactoryreloaded.render.item.RocketLauncherItemRenderer;
+import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
@@ -250,9 +248,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		registerModel(rocketItem, "rocket");
 		registerModel(rocketItem, 1, "rocket");
-
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rocket", "inventory"), new RocketItemRenderer());
 
+		ModelResourceLocation rednetCard = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_card", "inventory");
+		ModelLoader.setCustomMeshDefinition(logicCardItem, stack -> rednetCard);
+		ModelLoader.registerItemVariants(logicCardItem, rednetCard);
+		ModelRegistryHelper.register(rednetCard, new RedNetCardItemRenderer());
+				
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
 				manager -> new RenderSnowball<>(manager, fishingRodItem, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,

@@ -14,18 +14,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 import javax.vecmath.Matrix4f;
 import java.util.Map;
 
 public class NeedleGunItemRenderer extends BaseItemRenderer {
 
-	public static CCModel gunModel;
-	public static CCModel magazineModel;
+	private static CCModel gunModel;
+	private static CCModel magazineModel;
+	private static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "needle_gun.png");
 
 	public NeedleGunItemRenderer() {
 
-		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/needle_gun.obj"), new SwapYZ());
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation(MineFactoryReloadedCore.modelFolder + "needle_gun.obj"), new SwapYZ());
 		gunModel = models.get("gun");
 		magazineModel = models.get("magazine");
 
@@ -49,7 +51,7 @@ public class NeedleGunItemRenderer extends BaseItemRenderer {
 
 	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
 
-		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/needle_gun.png");
+		TextureUtils.changeTexture(textureLocation);
 		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 		
 		gunModel.render(ccrs);

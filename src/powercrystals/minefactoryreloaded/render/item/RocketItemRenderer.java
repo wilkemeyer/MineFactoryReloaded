@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 
@@ -23,10 +24,10 @@ public class RocketItemRenderer extends BaseItemRenderer {
 
 	public RocketItemRenderer() {
 
-		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/rocket.obj"), new SwapYZ());
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation(MineFactoryReloadedCore.modelFolder + "rocket.obj"), new SwapYZ());
 		launcherModel = models.get("Tube");
 
-		TRSRTransformation thirdPerson = TransformUtils.get(0, 3, 0, 90, 180, 0, 0.015f);
+		TRSRTransformation thirdPerson = TransformUtils.get(0, 0, 1, 90, 180, 0, 0.015f);
 		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
 		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(0, -1, 0, 30, 135, 0, 0.015f));
 		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 3, 0, 0, 0, 0, 0.01f));
@@ -43,17 +44,6 @@ public class RocketItemRenderer extends BaseItemRenderer {
 
 		TextureUtils.changeTexture(EntityRocketRenderer.rocket);
 		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-
-		TRSRTransformation thirdPerson = TransformUtils.get(0, 0, 1, 90, 180, 0, 0.015f);
-		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(0, -1, 0, 30, 135, 0, 0.015f));
-		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 3, 0, 0, 0, 0, 0.01f));
-		builder.put(ItemCameraTransforms.TransformType.FIXED, TransformUtils.get(0, 0, 0, 0, 90, 0, 0.03f));
-		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdPerson);
-		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(0, -1, 0, 8, 190, 0, 0.025f));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(0, -1, 0, 8, 190, 0, 0.025f));
-		transformations = builder.build();
 
 		launcherModel.render(ccrs);
 

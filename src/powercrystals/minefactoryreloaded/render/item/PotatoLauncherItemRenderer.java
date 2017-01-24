@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
 import javax.vecmath.Matrix4f;
 import java.util.Map;
@@ -21,10 +22,11 @@ import java.util.Map;
 public class PotatoLauncherItemRenderer extends BaseItemRenderer {
 
 	private static CCModel launcherModel;
+	private static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "potato_launcher.png");
 	
 	public PotatoLauncherItemRenderer() {
 
-		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation("minefactoryreloaded", "models/potato_launcher.obj"), new SwapYZ());
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation(MineFactoryReloadedCore.modelFolder + "potato_launcher.obj"), new SwapYZ());
 		launcherModel = models.get("Box009");
 
 		TRSRTransformation thirdPerson = TransformUtils.get(0, 3, 0, 90, 180, 0, 0.015f);
@@ -42,7 +44,7 @@ public class PotatoLauncherItemRenderer extends BaseItemRenderer {
 	@Override
 	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
 		
-		TextureUtils.changeTexture("minefactoryreloaded:textures/itemmodels/potato_launcher.png");
+		TextureUtils.changeTexture(textureLocation);
 		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
 		launcherModel.render(ccrs);
