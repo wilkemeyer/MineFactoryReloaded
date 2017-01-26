@@ -63,6 +63,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		deadCache = true;
 		receiverCache = null;
 		providerCache = null;
+	}
+
+	@Override
+	public void cofh_validate() {
+		super.cofh_validate();
+
 		if (worldObj.isRemote)
 			return;
 		if (_grid == null) {
@@ -73,8 +79,18 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		}
 		readFromNBT = true;
 		reCache();
-
 		//Packets.sendToAllPlayersWatching(this); //TODO likely just remove
+	}
+
+	boolean firstTick = true;
+	
+	@Override
+	public void update() {
+		
+		if (firstTick) {
+			cofh_validate();
+			firstTick = false;
+		}
 	}
 
 	@Override

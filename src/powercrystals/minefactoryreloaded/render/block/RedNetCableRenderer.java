@@ -157,6 +157,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements II
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 		}
 		ccrs.startDrawing(7, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
+		ccrs.setBrightness(getWorld(), te.getPos());
 
 		TextureUtils.changeTexture(textureLocation);
 
@@ -219,9 +220,9 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements II
 				default:
 					break;
 			}
-			if (_cond != null && _cond.isInterfacing(f)) {
+			if (_cond != null && _cond.isInterfacing(f.getOpposite())) {
 				wire[i].render(ccrs);
-				if (_cond.interfaceMode(f) != 4)
+				if (_cond.interfaceMode(f.getOpposite()) != 4)
 					caps[i].render(ccrs);
 			}
 		}

@@ -4,6 +4,8 @@ import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.Cuboid6;
 import cofh.api.block.IBlockInfo;
 
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -36,6 +39,8 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import java.util.List;
 
 public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo {
+
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
 	public static final String[] _names = { null, "glass", "energy", "energyglass" };
 
@@ -139,9 +144,33 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
+	protected BlockStateContainer createBlockState() {
+		
+		return new BlockStateContainer(this, VARIANT);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(VARIANT).getMetadata();
+	}
+
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+		
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
 	}
 
 	@Override
@@ -343,25 +372,14 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 
-		//TODO refactor to IProperty
-		switch (getMetaFromState(state)) {
+		switch (state.getValue(VARIANT)) {
 		default:
-		case 0:
-			return new TileEntityRedNetCable();
-		case 2:
-			return new TileEntityRedNetEnergy();
+			case REDSTONE:
+				return new TileEntityRedNetCable();
+			case ENERGY:
+				return new TileEntityRedNetEnergy();
 		}
 	}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		RedNetCableRenderer.updateUVT(blockIcon);
-	}
-*/
 
 	@Override
 	public void updateNetwork(World world, BlockPos pos, EnumFacing from) {
@@ -432,6 +450,47 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				info.add(new TextComponentTranslation("chat.info.mfr.rednet.meter.cable.allzero"));
 			} else if (foundNonZero < 16) {
 				info.add(new TextComponentTranslation("chat.info.mfr.rednet.meter.cable.restzero"));
+			}
+		}
+	}
+
+	public enum Variant implements IStringSerializable {
+
+		REDSTONE(0, "redstone"),
+		REDSTONE_GLASS(1, "redstone_glass"),
+		ENERGY(2, "energy"),
+		ENERGY_GLASS(3, "energy_glass");
+
+		private final int meta;
+		private final String name;
+
+		private static final Variant[] META_LOOKUP = new Variant[values().length];
+		public static final String[] NAMES = new String[values().length];
+
+		Variant(int meta, String name) {
+
+			this.meta = meta;
+			this.name = name;
+		}
+
+		public static Variant byMetadata(int meta) {
+			return META_LOOKUP[meta];
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		private int getMetadata() {
+
+			return meta;
+		}
+
+		static {
+			for (Variant variant : values()) {
+				META_LOOKUP[variant.getMetadata()] = variant;
+				NAMES[variant.meta] = variant.name;
 			}
 		}
 	}

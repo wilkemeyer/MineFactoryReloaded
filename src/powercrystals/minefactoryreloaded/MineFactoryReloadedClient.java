@@ -71,6 +71,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
+import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
@@ -86,6 +87,7 @@ import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 @SideOnly(Side.CLIENT)
@@ -267,13 +269,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, EntityRocketRenderer::new);
 
-
-		item=Item.getItemFromBlock(rednetCableBlock);
-		registerModel(item,"rednet_cable");
-		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId+":rednet_cable","inventory"), new RedNetCableRenderer());
-
+		ModelResourceLocation rednetCable = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_cable", "inventory");
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(rednetCableBlock), stack -> rednetCable);
+		ModelRegistryHelper.register(rednetCable, new RedNetCableRenderer());
+		ModelLoader.setCustomStateMapper(rednetCableBlock, new StateMap.Builder().ignore(BlockRedNetCable.VARIANT).build());
+		
 		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
 	}
 
 	private static void registerModel(Item item, String modelName) {
