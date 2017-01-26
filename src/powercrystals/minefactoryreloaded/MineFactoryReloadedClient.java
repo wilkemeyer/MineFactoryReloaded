@@ -28,6 +28,7 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -79,10 +80,12 @@ import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
+import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 @SideOnly(Side.CLIENT)
@@ -263,6 +266,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingItem.class,
 				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, EntityRocketRenderer::new);
+
+
+		item=Item.getItemFromBlock(rednetCableBlock);
+		registerModel(item,"rednet_cable");
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId+":rednet_cable","inventory"), new RedNetCableRenderer());
+
+		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
 	}
 
 	private static void registerModel(Item item, String modelName) {
@@ -603,23 +614,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			textureMap.registerSprite(fluid.getStill());
 			textureMap.registerSprite(fluid.getFlowing());
 		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onPostTextureStitch(TextureStitchEvent.Post e) {
-
-/* TODO add proper liquid registration
-		setIcons("milk", MFRThings.milkLiquid);
-		setIcons("sludge", MFRThings.sludgeLiquid);
-		setIcons("sewage", MFRThings.sewageLiquid);
-		setIcons("mob_essence", MFRThings.essenceLiquid);
-		setIcons("biofuel", MFRThings.biofuelLiquid);
-		setIcons("meat", MFRThings.meatLiquid);
-		setIcons("pinkslime", MFRThings.pinkSlimeLiquid);
-		setIcons("chocolatemilk", MFRThings.chocolateMilkLiquid);
-		setIcons("mushroomsoup", MFRThings.mushroomSoupLiquid);
-		setIcons("steam", MFRThings.steamFluid);
-*/
 	}
 
 	@SubscribeEvent

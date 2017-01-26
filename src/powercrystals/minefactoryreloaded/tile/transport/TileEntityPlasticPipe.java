@@ -225,7 +225,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 							} else {
 								if (pipe._grid.addConduit(this)) {
 									hasGrid = true;
-									mergeWith(pipe, dir);
+									mergeWith(pipe, dir.ordinal());
 								}
 							}
 						}
@@ -261,13 +261,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		return fluidForGrid == te.fluidForGrid || FluidHelper.isFluidEqualOrNull(fluidForGrid, te.fluidForGrid);
 	}
 
-	private void mergeWith(TileEntityPlasticPipe te, EnumFacing side) {
+	private void mergeWith(TileEntityPlasticPipe te, int side) {
 
 		if (_grid != null && te._grid != null && couldInterface(te)) {
 			te._grid.mergeGrid(_grid);
 			final byte one = 1;
 			setMode(side, one);
-			te.setMode(side.getOpposite(), one);
+			te.setMode(side ^ 1, one);
 		}
 	}
 
@@ -326,18 +326,18 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		sideMode = modes;
 	}
 
-	public byte getMode(EnumFacing side) {
+	public byte getMode(int subSide) {
 
-		return (byte) (sideMode[side.getOpposite().ordinal()] & 3);
+		return (byte) (sideMode[subSide < 6 ? EnumFacing.VALUES[subSide].getOpposite().ordinal() : 6] & 3);
 	}
 
-	public void setMode(EnumFacing side, byte mode) {
+	public void setMode(int subSide, byte mode) {
 
-		side = side.getOpposite();
+		subSide = subSide < 6 ? subSide ^ 1 : 6;
 		mode &= 3;
-		int t = sideMode[side.ordinal()];
+		int t = sideMode[subSide];
 		boolean mustUpdate = (mode != (t & 3));
-		sideMode[side.ordinal()] = (byte) ((t & ~3) | mode);
+		sideMode[subSide] = (byte) ((t & ~3) | mode);
 		if (mustUpdate)
 		{
 			FluidNetwork.HANDLER.addConduitForUpdate(this);
@@ -550,7 +550,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public CustomHitBox getCustomHitBox(int hit, EntityPlayer player) {
 
 		final List<IndexedCuboid6> list = new ArrayList<>(7);
-		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, pos));
+		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, pos), true);
 		IndexedCuboid6 cube = list.get(0);
 		cube.expand(0.003);
 		Vector3 min = cube.min, max = cube.max.subtract(min);
@@ -580,13 +580,14 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
+	public boolean onPartHit(EntityPlayer player, int subSide, int subHit) {
 
 		if (subHit >= 0 && subHit < (2 + 6 * 2)) {
 			if (MFRUtil.isHoldingUsableTool(player, pos)) {
 				if (!worldObj.isRemote) {
-					int data = sideMode[side.getOpposite().ordinal()] >> 2;
-					byte mode = getMode(side);
+					EnumFacing side = subSide < 6 ? EnumFacing.VALUES[subSide] : null;
+					int data = sideMode[side != null ? side.getOpposite().ordinal() : 6] >> 2;
+					byte mode = getMode(subSide);
 					if (++mode == 2) ++mode;
 					if (data == 2) {
 						if (mode > 1)
@@ -594,14 +595,14 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 						TileEntityPlasticPipe cable = MFRUtil.getTile(worldObj, pos.offset(side), TileEntityPlasticPipe.class);
 						if (!isInterfacing(side)) {
 							if (couldInterface(cable)) {
-								mergeWith(cable, side);
+								mergeWith(cable, subSide);
 								cable.onMerge();
 								onMerge();
 							}
 						} else {
 							removeFromGrid();
 							final byte zero = 0;
-							setMode(side, zero);
+							setMode(subSide, zero);
 							cable.onMerge();
 							onMerge();
 							if (_grid == null)
@@ -612,7 +613,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 					else if (side == null) {
 						if (mode > 1)
 							mode = 0;
-						setMode(side, mode);
+						setMode(subSide, mode);
 						markDirty();
 						switch (mode) {
 						case 0:
@@ -628,7 +629,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 					if (mode > 3) {
 						mode = 0;
 					}
-					setMode(side, mode);
+					setMode(subSide, mode);
 					markDirty();
 					switch (mode) {
 					case 0:
@@ -650,9 +651,9 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool, boolean offsetCuboids) {
 
-		Vector3 offset = new Vector3(pos);
+		Vector3 offset = offsetCuboids ? Vector3.fromBlockPos(pos) : new Vector3(0, 0, 0);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);

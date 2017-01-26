@@ -8,6 +8,7 @@ import net.minecraft.util.EnumFacing;
 
 public interface ITraceable
 {
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool);
-	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit);
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool, boolean offsetCuboids);
+	
+	public boolean onPartHit(EntityPlayer player, int side, int subHit);
 }

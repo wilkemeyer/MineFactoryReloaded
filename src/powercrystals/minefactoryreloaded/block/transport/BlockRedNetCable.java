@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -138,6 +139,12 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+
+	@Override
 	public boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
 		TileEntity te = world.getTileEntity(pos);
@@ -159,7 +166,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 			}
 			int subSide = _subSideMappings[subHit];
 
-			if (cable.onPartHit(player, EnumFacing.VALUES[subSide], subHit)) {
+			if (cable.onPartHit(player, subSide, subHit)) {
 				;
 			} else if (subHit >= (2 + 6 * 2) && subHit < (2 + 6 * 3)) {
 				if (MFRUtil.isHoldingUsableTool(player, pos)) {
@@ -173,8 +180,8 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 							if (nextColor < 0) nextColor = 15;
 						}
 						cable.setSideColor(EnumFacing.VALUES[subSide], nextColor);
-						return true;
 					}
+					return true;
 				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
 						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());
@@ -240,6 +247,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 						}
 					}
 					MFRUtil.usedWrench(player, pos);
+					return true;					
 				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
 						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());

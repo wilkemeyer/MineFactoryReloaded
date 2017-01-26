@@ -296,7 +296,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-			((ITraceable)te).addTraceableCuboids(cuboids, false, false);
+			((ITraceable)te).addTraceableCuboids(cuboids, false, false, true);
 			for (IndexedCuboid6 c : cuboids)
 			{
 				AxisAlignedBB aabb = c.aabb();
@@ -329,7 +329,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		if (te instanceof ITraceable)
 		{
 			List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
-			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingUsableTool(harvesters.get(), pos));
+			((ITraceable)te).addTraceableCuboids(cuboids, true, MFRUtil.isHoldingUsableTool(harvesters.get(), pos), false);
 			return RayTracer.rayTraceCuboidsClosest(start, end, cuboids, pos);
 		}
 		else if (world instanceof World)

@@ -484,12 +484,12 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public boolean onPartHit(EntityPlayer player, EnumFacing side, int subHit) {
+	public boolean onPartHit(EntityPlayer player, int subSide, int subHit) {
 
 		if (subHit >= (2 + 6 * 4) && subHit < (2 + 6 * 6)) {
 			if (MFRUtil.isHoldingUsableTool(player, pos)) {
 				if (!player.worldObj.isRemote) {
-					int dir = side.getOpposite().ordinal();
+					int dir = subSide < 6 ? EnumFacing.VALUES[subSide].getOpposite().ordinal() : 6;
 					if (sideMode[dir] == 9) {
 						removeFromGrid();
 					}
@@ -512,9 +512,9 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	@Override
-	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool) {
+	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool, boolean offsetCuboids) {
 
-		Vector3 offset = Vector3.fromBlockPos(pos);
+		Vector3 offset = offsetCuboids ? Vector3.fromBlockPos(pos) : new Vector3(0, 0, 0);
 
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[1]); // main body
 		list.add(main);

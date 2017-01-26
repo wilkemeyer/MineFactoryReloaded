@@ -61,7 +61,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 			}
 			int subSide = _subSideMappings[subHit];
 
-			l2: if (cable.onPartHit(player, EnumFacing.VALUES[subSide], subHit)) {
+			l2: if (cable.onPartHit(player, subSide, subHit)) {
 				if (MFRUtil.isHoldingUsableTool(player, pos)) {
 					MFRUtil.usedWrench(player, pos);
 				}
