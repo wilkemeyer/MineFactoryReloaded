@@ -7,13 +7,9 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.item.IItemRenderer;
 import codechicken.lib.texture.TextureUtils;
 import codechicken.lib.util.TransformUtils;
-import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Scale;
-import codechicken.lib.vec.Translation;
-import codechicken.lib.vec.Vector3;
 import codechicken.lib.vec.uv.IconTransformation;
 import cofh.lib.render.RenderHelper;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
-import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -39,7 +34,6 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,13 +44,8 @@ public class RedNetLogicRenderer extends TileEntitySpecialRenderer<TileEntityRed
 	protected static CCModel cards;
 	private RedNetCardsModel cardsModel = new RedNetCardsModel();
 
-	private static final double rotAmt = Math.PI * 0.5;
-	private static final Vector3 axis = Rotation.axes[1];
-
 	public static final ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.rednet.logic");
 	public static IconTransformation uvt;
-
-	private static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transformations;
 
 	static {
 		try {
@@ -69,17 +58,6 @@ public class RedNetLogicRenderer extends TileEntitySpecialRenderer<TileEntityRed
 			cards = cableModels.get("cards").backfacedCopy();
 			compute(cards);
 		} catch (Throwable ex) { ex.printStackTrace(); }
-
-		TRSRTransformation thirdPerson = TransformUtils.get(0, 2.5f, 1f, 90, 0, 0, 0.375f);
-		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(0, 0, 0, 30, 135, 0, 0.625f));
-		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 3, 0, 0, 0, 0, 0.25f));
-		builder.put(ItemCameraTransforms.TransformType.FIXED, TransformUtils.get(0, 0, 0, 0, 90, 0, 0.5f));
-		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdPerson);
-		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(3, 1, 0, 60, 0, 0, 0.4f));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(3, 1, 0, 60, 0, 0, 0.4f));
-		transformations = builder.build();
 	}
 
 	private static void compute(CCModel m) {
