@@ -14,7 +14,7 @@ import powercrystals.minefactoryreloaded.render.model.RedNetCardsModel;
 public class RedNetCardItemRenderer extends BaseItemRenderer {
 
 	private static RedNetCardsModel cardsModel = new RedNetCardsModel();
-	private static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.tileEntityFolder + "cards.png");
+	public static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.tileEntityFolder + "cards.png");
 	
 	public RedNetCardItemRenderer() {
 

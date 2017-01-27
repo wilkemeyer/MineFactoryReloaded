@@ -170,7 +170,9 @@ public class PlasticPipeRenderer extends TileEntitySpecialRenderer<TileEntityPla
 		}
 		
 		ccrs.draw();
-		
+
+		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+
 		GlStateManager.popMatrix();
 		
 		GlStateManager.popMatrix();

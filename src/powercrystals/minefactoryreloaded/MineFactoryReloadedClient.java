@@ -87,10 +87,12 @@ import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
+import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
@@ -290,6 +292,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		PlasticPipeRenderer plasticPipeRenderer = new PlasticPipeRenderer();
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_pipe", "inventory"), plasticPipeRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlasticPipe.class, plasticPipeRenderer);
+		
+		ModelResourceLocation rednetLogic = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_logic", "inventory");
+		RedNetLogicRenderer logicRenderer = new RedNetLogicRenderer();
+		registerModel(Item.getItemFromBlock(rednetLogicBlock), "rednet_logic");
+		ModelRegistryHelper.register(rednetLogic, logicRenderer);
+		ModelLoader.setCustomStateMapper(rednetLogicBlock, new StateMap.Builder().ignore(BlockRedNetLogic.FACING).build());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRenderer);
 	}
 
 	private static void registerModel(Item item, String modelName) {
@@ -629,6 +638,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	public void onPostTextureStitch(TextureStitchEvent.Post evt) {
 
 		PlasticPipeRenderer.updateUVT(evt.getMap().getAtlasSprite(PlasticPipeRenderer.textureLocation.toString()));
+		RedNetLogicRenderer.updateUVT(evt.getMap().getAtlasSprite(RedNetLogicRenderer.textureLocation.toString()));
 	}
 
 	private void registerFluidSprites(TextureMap textureMap, Fluid fluid) {

@@ -436,7 +436,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		machineBaseItem = Item.getItemFromBlock(machineBlock);
 
 		for (int i = 0, e = machineBlocks.size(); i < e; ++i) {
-			registerBlock(machineBlocks.get(i), ItemBlockFactoryMachine.class);
+			registerBlock(machineBlocks.get(i), new ItemBlockFactoryMachine(machineBlocks.get(i)));
 		}
 
 		registerBlock(plasticTank, ItemBlockTank.class);
@@ -444,7 +444,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		registerBlock(plasticPipeBlock, new ItemBlockFactory(plasticPipeBlock));
 
 		registerBlock(rednetCableBlock, new ItemBlockFactory(rednetCableBlock, BlockRedNetCable._names));
-		registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class);
+		registerBlock(rednetLogicBlock, new ItemBlockRedNetLogic(rednetLogicBlock));
 		registerBlock(rednetPanelBlock, new ItemBlockRedNetPanel(rednetPanelBlock));
 
 		registerBlock(railPickupCargoBlock, new ItemBlock(railPickupCargoBlock));
@@ -470,7 +470,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		pinkSlimeBlockItem = Item.getItemFromBlock(pinkSlimeBlock);
 
 		registerBlock(vineScaffoldBlock, new ItemBlockVineScaffold(vineScaffoldBlock));
-		registerBlock(fertileSoil, ItemBlockFactory.class, 3);
+		registerBlock(fertileSoil, new ItemBlockFactory(fertileSoil, 3));
 		
 		registerBlock(detCordBlock, ItemBlockDetCord.class);
 

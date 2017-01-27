@@ -3,11 +3,13 @@ package powercrystals.minefactoryreloaded.block;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -24,6 +26,7 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMemoryCard;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 import java.util.List;
@@ -32,8 +35,6 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-	private int[] _sideRemap = new int[] { 3, 1, 2, 0 };
-
 	public BlockRedNetLogic() {
 
 		super(0.8F);
@@ -41,18 +42,43 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
 
+	@Override
+	protected BlockStateContainer createBlockState() {
+
+		return new BlockStateContainer(this, FACING);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(FACING, meta >= 0 && meta < 6 ? EnumFacing.VALUES[meta] : EnumFacing.NORTH);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(FACING).ordinal();
+	}
+
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+		
 		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
-	public boolean hasTileEntity() {
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
+		
 		return new TileEntityRedNetLogic();
 	}
 
@@ -120,7 +146,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 			}
 		}
 
-		if (MFRUtil.isHolding(player, ItemLogicUpgradeCard.class)) {
+		if (MFRUtil.isHolding(player, MFRThings.logicCardItem, hand)) {
 			TileEntityRedNetLogic logic = (TileEntityRedNetLogic) world.getTileEntity(pos);
 			if (logic != null) {
 				if (logic.insertUpgrade(heldItem.getItemDamage() + 1)) {
@@ -131,7 +157,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 				}
 			}
 			return false;
-		} else if (!MFRUtil.isHolding(player, ItemRedNetMeter.class) && !MFRUtil.isHolding(player, ItemRedNetMemoryCard.class)) {
+		} else if (!MFRUtil.isHolding(player, MFRThings.rednetMeterItem, hand) && !MFRUtil.isHolding(player, MFRThings.rednetMemoryCardItem, hand)) {
 			if (!world.isRemote) {
 				player.openGui(MineFactoryReloadedCore.instance(), 0, world, pos.getX(), pos.getY(), pos.getZ());
 			}
@@ -139,16 +165,6 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		}
 		return false;
 	}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		RedNetLogicRenderer.updateUVT(blockIcon);
-	}
-*/
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {

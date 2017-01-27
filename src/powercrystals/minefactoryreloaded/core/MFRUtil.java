@@ -9,6 +9,7 @@ import cofh.api.item.IToolHammer;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
@@ -279,16 +280,16 @@ public class MFRUtil {
 		return false;
 	}
 
-	public static boolean isHolding(EntityPlayer player, Class<? extends Item> itemClass) {
+	public static boolean isHolding(EntityPlayer player, Item item, EnumHand hand) {
 
 		if (player == null) {
 			return false;
 		}
-		if (player.inventory.getCurrentItem() == null) {
+		if (player.getHeldItem(hand) == null) {
 			return false;
 		}
-		Item currentItem = player.inventory.getCurrentItem().getItem();
-		if (currentItem != null && itemClass.isAssignableFrom(currentItem.getClass())) {
+		Item currentItem = player.getHeldItem(hand).getItem();
+		if (currentItem != null && item == currentItem) {
 			return true;
 		}
 		return false;

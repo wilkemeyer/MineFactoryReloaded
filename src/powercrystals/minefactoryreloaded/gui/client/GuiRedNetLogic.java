@@ -381,7 +381,7 @@ public class GuiRedNetLogic extends GuiBase {
 		float vScale = 1.0F / 256.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexbuffer.pos(x + 0, y + ySize, this.zLevel).tex((u + 0) * uScale, (v + ySize) * vScale).endVertex();
 		vertexbuffer.pos(x + xSize, y + ySize, this.zLevel).tex((u + xSize) * uScale, (v + ySize) * vScale).endVertex();
 		vertexbuffer.pos(x + xSize, y + 0, this.zLevel).tex((u + xSize) * uScale, (v + 0) * vScale).endVertex();
