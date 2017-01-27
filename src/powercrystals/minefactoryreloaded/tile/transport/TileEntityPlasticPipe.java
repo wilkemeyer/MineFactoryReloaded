@@ -94,8 +94,17 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			_grid.regenerate();
 	}
 
+	boolean firstTick = true;
+	
 	@Override
 	public void update() {
+		
+		//TODO remove in favor of ASM
+		if (firstTick) {
+			cofh_validate();
+			firstTick = false;
+		}
+		
 		//TODO yet again needs a non tickable base TE
 	}
 
@@ -163,14 +172,14 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			return;
 		TileEntity tile = worldObj.isBlockLoaded(neighborPos) ? worldObj.getTileEntity(neighborPos) : null;
 
-		Vec3i diff = neighborPos.subtract(pos);
+		Vec3i diff = pos.subtract(neighborPos);
 		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
 
 	private void addCache(TileEntity tile) {
 
 		if (tile == null) return;
-		Vec3i diff = tile.getPos().subtract(pos);
+		Vec3i diff = pos.subtract(tile.getPos());
 		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
 
@@ -658,13 +667,13 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
 
-		EnumFacing[] side = EnumFacing.VALUES;
+		EnumFacing[] sides = EnumFacing.VALUES;
 		boolean cableMode = sideMode[6] == 1;
-		for (int i = side.length; i-- > 0;) {
-			int mode = sideMode[EnumFacing.VALUES[i].getOpposite().ordinal()] >> 2;
+		for (int i = sides.length; i-- > 0;) {
+			int mode = sideMode[sides[i].getOpposite().ordinal()] >> 2;
 			boolean iface = (mode > 0) & mode != 2;
 			int o = 2 + i;
-			if (((sideMode[EnumFacing.VALUES[i].getOpposite().ordinal()] & 1) != 0) & mode > 0) {
+			if (((sideMode[sides[i].getOpposite().ordinal()] & 1) != 0) & mode > 0) {
 				if (mode == 2) {
 					o = 2 + 6 * 3 + i;
 					list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? 2 + i : 1,

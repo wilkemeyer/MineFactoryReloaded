@@ -1,0 +1,12 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minefactoryreloaded:blocks/tile.mfr.cable.plastic"
+		}
+	},
+	"variants": {
+		"normal": [{}]
+	}
+}

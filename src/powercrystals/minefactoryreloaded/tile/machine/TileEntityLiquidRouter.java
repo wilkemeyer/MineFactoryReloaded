@@ -26,6 +26,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 public class TileEntityLiquidRouter extends TileEntityFactoryInventory implements IFluidHandler
 {
+	//TODO this really needs a rewrite - very confusing that the order here doesn't match EnumFacing
 	private static final EnumFacing[] _outputDirections = new EnumFacing[]
 			{ EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST };
 
@@ -76,13 +77,13 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		if(amountRemaining >= totalWeight(routes))
 		{
 			int startingAmount = amountRemaining;
-			for(EnumFacing side : _outputDirections)
+			for(int i = 0; i < routes.length; i++)
 			{
-				TileEntity te = MFRUtil.getTile(worldObj, pos.offset(side));
-				int amountForThisRoute = startingAmount * routes[side.ordinal()] / totalWeight(routes);
+				TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[i]));
+				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
 				if(te instanceof IFluidHandler && amountForThisRoute > 0)
 				{
-					amountRemaining -= ((IFluidHandler)te).fill(side.getOpposite(),
+					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),
 							new FluidStack(resource, amountForThisRoute), doFill);
 					if(amountRemaining <= 0)
 					{

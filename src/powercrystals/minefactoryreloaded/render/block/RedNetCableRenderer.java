@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RedNetCableRenderer extends TileEntitySpecialRenderer implements IItemRenderer, IPerspectiveAwareModel {
+public class RedNetCableRenderer extends TileEntitySpecialRenderer<TileEntityRedNetCable> implements IItemRenderer, IPerspectiveAwareModel {
 
 	protected static CCModel base;
 	protected static CCModel cage;
@@ -58,7 +58,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements II
 	protected static CCModel[] wire  = new CCModel[6];
 	protected static CCModel[] caps  = new CCModel[6];
 
-	private static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.cable.redstone.png");
+	private static final ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.cable.redstone.png");
 
 	private static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transformations;
 
@@ -134,7 +134,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements II
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void renderTileEntityAt(TileEntityRedNetCable te, double x, double y, double z, float partialTicks, int destroyStage) {
 
 		GlStateManager.pushMatrix();
 
@@ -161,7 +161,7 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements II
 
 		TextureUtils.changeTexture(textureLocation);
 
-		renderCable((TileEntityRedNetCable) te, ccrs);
+		renderCable(te, ccrs);
 
 		ccrs.draw();
 
@@ -232,7 +232,6 @@ public class RedNetCableRenderer extends TileEntitySpecialRenderer implements II
 
 	@Override
 	public void renderItem(ItemStack item) {
-
 
 		GlStateManager.pushMatrix();
 

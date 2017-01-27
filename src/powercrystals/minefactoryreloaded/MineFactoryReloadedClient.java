@@ -81,6 +81,7 @@ import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
+import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
@@ -89,6 +90,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 @SideOnly(Side.CLIENT)
 public class MineFactoryReloadedClient implements IResourceManagerReloadListener {
@@ -270,13 +272,17 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, EntityRocketRenderer::new);
 
 		ModelResourceLocation rednetCable = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_cable", "inventory");
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(rednetCableBlock), stack -> rednetCable);
-		ModelRegistryHelper.register(rednetCable, new RedNetCableRenderer());
-		ModelLoader.setCustomStateMapper(rednetCableBlock, new StateMap.Builder().ignore(BlockRedNetCable.VARIANT).build());
-		
 		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(rednetCableBlock), stack -> rednetCable);
+		ModelRegistryHelper.register(rednetCable, cableRenderer);
+		ModelLoader.setCustomStateMapper(rednetCableBlock, new StateMap.Builder().ignore(BlockRedNetCable.VARIANT).build());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
+
+		registerModel(Item.getItemFromBlock(plasticPipeBlock), "plastic_pipe");
+		PlasticPipeRenderer plasticPipeRenderer = new PlasticPipeRenderer();
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_pipe", "inventory"), plasticPipeRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlasticPipe.class, plasticPipeRenderer);
 	}
 
 	private static void registerModel(Item item, String modelName) {
@@ -588,18 +594,18 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	}
 
 	@SubscribeEvent
-	public void onPreTextureStitch(TextureStitchEvent.Pre e) {
+	public void onPreTextureStitch(TextureStitchEvent.Pre evt) {
 
-		registerFluidSprites(e.getMap(), milkLiquid.getFluid());
-		registerFluidSprites(e.getMap(), sludgeLiquid.getFluid());
-		registerFluidSprites(e.getMap(), sewageLiquid.getFluid());
-		registerFluidSprites(e.getMap(), essenceLiquid.getFluid());
-		registerFluidSprites(e.getMap(), biofuelLiquid.getFluid());
-		registerFluidSprites(e.getMap(), meatLiquid.getFluid());
-		registerFluidSprites(e.getMap(), pinkSlimeLiquid.getFluid());
-		registerFluidSprites(e.getMap(), chocolateMilkLiquid.getFluid());
-		registerFluidSprites(e.getMap(), mushroomSoupLiquid.getFluid());
-		registerFluidSprites(e.getMap(), steamFluid.getFluid());
+		registerFluidSprites(evt.getMap(), milkLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), sludgeLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), sewageLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), essenceLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), biofuelLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), meatLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), pinkSlimeLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), chocolateMilkLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), mushroomSoupLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), steamFluid.getFluid());
 		
 /* TODO add code to gen GUI background
 		SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
@@ -610,6 +616,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ContainerAutoBrewer.bottle = e.map.registerIcon("minefactoryreloaded:gui/bottle");
 		ContainerFisher.background = e.map.registerIcon("minefactoryreloaded:gui/fishingrod");
 */
+	}
+
+	@SubscribeEvent
+	public void onPostTextureStitch(TextureStitchEvent.Post evt) {
+
+		PlasticPipeRenderer.updateUVT(evt.getMap().getAtlasSprite(PlasticPipeRenderer.textureLocation.toString()));
 	}
 
 	private void registerFluidSprites(TextureMap textureMap, Fluid fluid) {
