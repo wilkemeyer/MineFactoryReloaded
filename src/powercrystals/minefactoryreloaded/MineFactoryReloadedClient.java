@@ -26,6 +26,7 @@ import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -86,6 +87,7 @@ import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
+import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -299,6 +301,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelRegistryHelper.register(rednetLogic, logicRenderer);
 		ModelLoader.setCustomStateMapper(rednetLogicBlock, new StateMap.Builder().ignore(BlockRedNetLogic.FACING).build());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRenderer);
+		
+		registerModel(plasticCupItem, "plastic_cup");
+		ModelLoaderRegistry.registerLoader(PlasticCupModel.LoaderPlasticCup.INSTANCE);
 	}
 
 	private static void registerModel(Item item, String modelName) {
