@@ -445,7 +445,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		registerBlock(rednetCableBlock, new ItemBlockFactory(rednetCableBlock, BlockRedNetCable._names));
 		registerBlock(rednetLogicBlock, ItemBlockRedNetLogic.class);
-		registerBlock(rednetPanelBlock, ItemBlockRedNetPanel.class);
+		registerBlock(rednetPanelBlock, new ItemBlockRedNetPanel(rednetPanelBlock));
 
 		registerBlock(railPickupCargoBlock, new ItemBlock(railPickupCargoBlock));
 		registerBlock(railDropoffCargoBlock, new ItemBlock(railDropoffCargoBlock));

@@ -86,9 +86,11 @@ import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
+import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
+import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
@@ -278,6 +280,11 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomStateMapper(rednetCableBlock, new StateMap.Builder().ignore(BlockRedNetCable.VARIANT).build());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
+
+		RedNetHistorianRenderer historianRenderer = new RedNetHistorianRenderer();
+		registerModel(Item.getItemFromBlock(rednetPanelBlock), "rednet_historian");
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_historian", "inventory"), historianRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, historianRenderer);
 
 		registerModel(Item.getItemFromBlock(plasticPipeBlock), "plastic_pipe");
 		PlasticPipeRenderer plasticPipeRenderer = new PlasticPipeRenderer();

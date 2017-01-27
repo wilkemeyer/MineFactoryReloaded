@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +34,12 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 	{
 		super(0.8F);
 		setUnlocalizedName("mfr.rednet.panel");
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
@@ -174,12 +181,4 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue)
 	{
 	}
-
-/*
-	@Override
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-*/
 }

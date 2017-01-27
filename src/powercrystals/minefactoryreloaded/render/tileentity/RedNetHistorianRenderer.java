@@ -45,7 +45,17 @@ public class RedNetHistorianRenderer extends TileEntitySpecialRenderer  implemen
 	public RedNetHistorianRenderer()
 	{
 		model = new RedNetHistorianModel();
-		transformations = TransformUtils.DEFAULT_BLOCK.getTransforms();
+
+		TRSRTransformation thirdPerson = TransformUtils.get(0, 3, 3, 0, 0, 0, 0.375f);
+		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
+		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(3, -1, 0, 30, 45, 0, 0.625f));
+		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 0, 0, 0, 0, 0, 0.25f));
+		builder.put(ItemCameraTransforms.TransformType.FIXED, TransformUtils.get(0, 0, 3, 0, 0, 0, 0.5f));
+		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdPerson);
+		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(0, 3, 2, -30, -70, 0, 0.4f));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(0, 3, 2, -30, -70, 0, 0.4f));
+		transformations = builder.build();
 	}
 	
 	@Override
