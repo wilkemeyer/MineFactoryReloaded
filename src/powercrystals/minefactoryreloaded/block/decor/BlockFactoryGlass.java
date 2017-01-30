@@ -1,30 +1,36 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import codechicken.lib.texture.IWorldBlockTextureProvider;
+import codechicken.lib.texture.SpriteSheetManager;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IWorldBlockTextureProvider
 {
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+	public static final SpriteSheetManager.SpriteSheet spriteSheet = SpriteSheetManager.getSheet(8, 8, new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.stainedglass.png"));
 
 	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
-		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" };
+		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" }; //TODO change to EnumDyeColor
 
 	public BlockFactoryGlass()
 	{
@@ -110,12 +116,6 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	}*/
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
-
-		return BlockRenderLayer.TRANSLUCENT;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -126,6 +126,125 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 			return getMetaFromState(state) != neighborState.getBlock().getMetaFromState(neighborState);
 		}
 		return r;
+	}
+
+	@Override
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+
+		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.SOLID;
+	}
+
+	//Extract into separate renderer
+	@Override
+	public TextureAtlasSprite getTexture(EnumFacing side, IBlockState state, BlockRenderLayer layer, IBlockAccess world, BlockPos pos) {
+
+		BlockPos posToCheck;
+		boolean[] sides = new boolean[8];
+		if (side.getAxis() == EnumFacing.Axis.Y)
+		{
+			posToCheck = pos.offset(EnumFacing.EAST);
+			sides[0] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.SOUTH);
+			sides[4] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.WEST);
+			sides[1] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.WEST);
+			sides[5] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.NORTH);
+			sides[3] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.NORTH);
+			sides[6] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.EAST);
+			sides[2] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = posToCheck.offset(EnumFacing.EAST);
+			sides[7] = world.getBlockState(posToCheck).getBlock().equals(this);
+		}
+		else
+		{
+			EnumFacing right = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2) ^ 1] : EnumFacing.VALUES[(side.ordinal() - 2) ^ 1];
+			EnumFacing left = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2) ^ 1] : EnumFacing.VALUES[(side.ordinal() - 2) ^ 1];
+
+			posToCheck = pos.offset(right);
+			sides[0] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(EnumFacing.DOWN);
+			sides[4] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(left);
+			sides[1] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(left);
+			sides[5] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(EnumFacing.UP);
+			sides[3] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(EnumFacing.UP);
+			sides[6] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(right);
+			sides[2] = world.getBlockState(posToCheck).getBlock().equals(this);
+			posToCheck = pos.offset(right);
+			sides[7] = world.getBlockState(posToCheck).getBlock().equals(this);
+		}
+		return getSpriteFromSheet(8, 8, sides);
+	}
+
+	private TextureAtlasSprite getSpriteFromSheet(int subX, int subY, boolean[] sides) {
+
+		int parts = toInt(sides) & 255;
+		int index = (parts & 15);
+		parts = parts >> 4;
+		int w;
+		switch (index) {
+			case 3: // bottom right connection
+				index ^= ((parts & 1) << 4); // bithack: add 16 if connection
+				break;
+			case 5: // top right connection
+				index ^= ((parts & 8) << 1); // bithack: add 16 if connection
+				break;
+			case 7: // left empty
+				w = parts & 9;
+				index ^= ((w & (w << 3)) << 1); // bithack: add 16 if both connections
+				if ((w == 1) | w == 8) // bottom right, top right
+					index = 32 | (w >> 3);
+				break;
+			case 10: // bottom left connection
+				index ^= ((parts & 2) << 3); // bithack: add 16 if connection
+				break;
+			case 11: // top empty
+				w = parts & 3;
+				index ^= ((w & (w << 1)) << 3); // bithack: add 16 if both connections
+				if ((w == 1) | w == 2) // bottom right, bottom left
+					index = 34 | (w >> 1);
+				break;
+			case 12: // top left connection
+				index ^= ((parts & 4) << 2); // bithack: add 16 if connection
+				break;
+			case 13: // bottom empty
+				w = parts & 12;
+				index ^= ((w & (w << 1)) << 1); // bithack: add 16 if both connections
+				if ((w == 4) | w == 8) // top left, top right
+					index = 36 | (w >> 3);
+				break;
+			case 14: // right empty
+				w = parts & 6;
+				index ^= ((w & (w << 1)) << 2); // bithack: add 16 if both connections
+				if ((w == 2) | w == 4) // bottom left, top left
+					index = 38 | (w >> 2);
+				break;
+			case 15: // all sides
+				index = 40 + parts;
+			default:
+		}
+		return spriteSheet.getSprite(index);
+	}
+
+	private static int toInt(boolean ...flags) {
+		int ret = 0;
+		for (int i = flags.length; i --> 0;)
+			ret |= (flags[i] ? 1 : 0) << i;
+		return ret;
+	}
+
+	@Override
+	public TextureAtlasSprite getTexture(EnumFacing side, int metadata) {
+
+		return spriteSheet.getSprite(63); //TODO fix this
 	}
 
 /*	public IIcon getBlockOverlayTexture(IBlockAccess world, BlockPos pos, EnumFacing side)

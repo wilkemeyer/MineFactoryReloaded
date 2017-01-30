@@ -3,9 +3,12 @@ package powercrystals.minefactoryreloaded;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import codechicken.lib.model.ModelRegistryHelper;
+import codechicken.lib.model.blockbakery.CCBakeryModel;
+import codechicken.lib.texture.TextureUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -67,6 +70,7 @@ import powercrystals.minefactoryreloaded.block.*;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
@@ -300,6 +304,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		registerModel(plasticCupItem, "plastic_cup");
 		ModelLoaderRegistry.registerLoader(FluidItemLoader.INSTANCE);
+
+		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMap.Builder().ignore(BlockFactoryGlass.COLOR).build());
+		ModelResourceLocation glass = new ModelResourceLocation(factoryGlassBlock.getRegistryName(), "normal");
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(factoryGlassBlock), stack -> glass);
+		ModelRegistryHelper.register(glass, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass"));
+		TextureUtils.addIconRegister(BlockFactoryGlass.spriteSheet);
 	}
 
 	private static void registerModel(Item item, String modelName) {
