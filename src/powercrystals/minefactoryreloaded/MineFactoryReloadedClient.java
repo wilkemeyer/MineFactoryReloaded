@@ -307,7 +307,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMap.Builder().ignore(BlockFactoryGlass.COLOR).build());
 		ModelResourceLocation glass = new ModelResourceLocation(factoryGlassBlock.getRegistryName(), "normal");
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(factoryGlassBlock), stack -> glass);
+		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(factoryGlassBlock), stack -> new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "inventory"));
 		ModelRegistryHelper.register(glass, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass"));
 		TextureUtils.addIconRegister(BlockFactoryGlass.spriteSheet);
 	}

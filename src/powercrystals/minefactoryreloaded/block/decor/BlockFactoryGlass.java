@@ -1,10 +1,13 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import codechicken.lib.model.blockbakery.BlockBakery;
+import codechicken.lib.model.blockbakery.BlockBakeryProperties;
 import codechicken.lib.texture.IWorldBlockTextureProvider;
 import codechicken.lib.texture.SpriteSheetManager;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -18,17 +21,28 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IWorldBlockTextureProvider
 {
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
 	public static final SpriteSheetManager.SpriteSheet spriteSheet = SpriteSheetManager.getSheet(8, 8, new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.stainedglass.png"));
 
+	static {
+		for(int i=0; i < 64; i++) 
+			spriteSheet.setupSprite(i);
+	}
+	
 	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
 		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" }; //TODO change to EnumDyeColor
 
@@ -43,9 +57,32 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 	}
 
 	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		IExtendedBlockState extState = (IExtendedBlockState) state;
+		IWorldBlockTextureProvider provider = ((IWorldBlockTextureProvider) extState.getBlock());
+		Map<BlockRenderLayer, Map<EnumFacing, TextureAtlasSprite>> layerFaceSpriteMap = new HashMap<BlockRenderLayer, Map<EnumFacing, TextureAtlasSprite>>();
+		for (BlockRenderLayer layer : BlockRenderLayer.values()) {
+			if (extState.getBlock().canRenderInLayer(extState, layer)) {
+				Map<EnumFacing, TextureAtlasSprite> faceSpriteMap = new HashMap<EnumFacing, TextureAtlasSprite>();
+				for (EnumFacing face : EnumFacing.VALUES) {
+					TextureAtlasSprite sprite = provider.getTexture(face, extState, layer, world, pos);
+					if (sprite != null) {
+						faceSpriteMap.put(face, sprite);
+					}
+				}
+				layerFaceSpriteMap.put(layer, faceSpriteMap);
+			}
+		}
+		extState = extState.withProperty(BlockBakeryProperties.LAYER_FACE_SPRITE_MAP, layerFaceSpriteMap);
+		
+		return extState;
+	}
+
+	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, COLOR);
+		return new BlockStateContainer.Builder(this).add(COLOR).add(BlockBakeryProperties.LAYER_FACE_SPRITE_MAP).build();
 	}
 
 	@Override
@@ -131,13 +168,16 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 	@Override
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
 
-		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.SOLID;
+		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
 	}
 
 	//Extract into separate renderer
 	@Override
 	public TextureAtlasSprite getTexture(EnumFacing side, IBlockState state, BlockRenderLayer layer, IBlockAccess world, BlockPos pos) {
 
+		if (layer == BlockRenderLayer.TRANSLUCENT)
+			return spriteSheet.getSprite(62);
+		
 		BlockPos posToCheck;
 		boolean[] sides = new boolean[8];
 		if (side.getAxis() == EnumFacing.Axis.Y)
@@ -161,24 +201,24 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 		}
 		else
 		{
-			EnumFacing right = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2) ^ 1] : EnumFacing.VALUES[(side.ordinal() - 2) ^ 1];
-			EnumFacing left = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2) ^ 1] : EnumFacing.VALUES[(side.ordinal() - 2) ^ 1];
+			EnumFacing right = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2)] : EnumFacing.VALUES[(side.ordinal() - 2) ^ 1];
+			EnumFacing left = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2) ^ 1] : EnumFacing.VALUES[(side.ordinal() - 2)];
 
 			posToCheck = pos.offset(right);
 			sides[0] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(EnumFacing.DOWN);
+			posToCheck = posToCheck.offset(EnumFacing.DOWN);
 			sides[4] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(left);
+			posToCheck = posToCheck.offset(left);
 			sides[1] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(left);
+			posToCheck = posToCheck.offset(left);
 			sides[5] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(EnumFacing.UP);
+			posToCheck = posToCheck.offset(EnumFacing.UP);
 			sides[3] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(EnumFacing.UP);
+			posToCheck = posToCheck.offset(EnumFacing.UP);
 			sides[6] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(right);
+			posToCheck = posToCheck.offset(right);
 			sides[2] = world.getBlockState(posToCheck).getBlock().equals(this);
-			posToCheck = pos.offset(right);
+			posToCheck = posToCheck.offset(right);
 			sides[7] = world.getBlockState(posToCheck).getBlock().equals(this);
 		}
 		return getSpriteFromSheet(8, 8, sides);
