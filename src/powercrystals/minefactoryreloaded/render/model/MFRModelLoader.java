@@ -5,13 +5,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 
-public enum FluidItemLoader implements ICustomModelLoader {
+public enum MFRModelLoader implements ICustomModelLoader {
 	INSTANCE;
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
 
-		return modelLocation.equals(PlasticCupModel.MODEL_LOCATION) || modelLocation.equals(SyringeModel.MODEL_LOCATION);
+		return modelLocation.equals(PlasticCupModel.MODEL_LOCATION)
+				|| modelLocation.equals(SyringeModel.MODEL_LOCATION)
+				|| modelLocation.equals(FactoryGlassModel.MODEL_LOCATION);
 	}
 
 	@Override
@@ -19,7 +21,12 @@ public enum FluidItemLoader implements ICustomModelLoader {
 
 		if (modelLocation.equals(PlasticCupModel.MODEL_LOCATION))
 			return PlasticCupModel.MODEL;
-		return SyringeModel.MODEL;
+		if (modelLocation.equals(SyringeModel.MODEL_LOCATION))
+			return SyringeModel.MODEL;
+		if (modelLocation.equals(FactoryGlassModel.MODEL_LOCATION))
+			return FactoryGlassModel.MODEL;
+
+		return null;
 	}
 
 	@Override

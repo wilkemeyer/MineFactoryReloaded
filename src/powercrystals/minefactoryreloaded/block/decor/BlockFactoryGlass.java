@@ -1,41 +1,39 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import codechicken.lib.model.blockbakery.BlockBakery;
-import codechicken.lib.model.blockbakery.BlockBakeryProperties;
-import codechicken.lib.texture.IWorldBlockTextureProvider;
 import codechicken.lib.texture.SpriteSheetManager;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.util.EnumFacing;
-
-import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IWorldBlockTextureProvider
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
+
+	static {
+		for (int i = 0; i < 6; i++)
+			CTM_VALUE[i] = Properties.toUnlisted(PropertyInteger.create("ctm_value_" + i, 0, 255));
+	}
+
 	public static final SpriteSheetManager.SpriteSheet spriteSheet = SpriteSheetManager.getSheet(8, 8, new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.stainedglass.png"));
 
 	static {
@@ -60,29 +58,24 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		IExtendedBlockState extState = (IExtendedBlockState) state;
-		IWorldBlockTextureProvider provider = ((IWorldBlockTextureProvider) extState.getBlock());
-		Map<BlockRenderLayer, Map<EnumFacing, TextureAtlasSprite>> layerFaceSpriteMap = new HashMap<BlockRenderLayer, Map<EnumFacing, TextureAtlasSprite>>();
-		for (BlockRenderLayer layer : BlockRenderLayer.values()) {
-			if (extState.getBlock().canRenderInLayer(extState, layer)) {
-				Map<EnumFacing, TextureAtlasSprite> faceSpriteMap = new HashMap<EnumFacing, TextureAtlasSprite>();
-				for (EnumFacing face : EnumFacing.VALUES) {
-					TextureAtlasSprite sprite = provider.getTexture(face, extState, layer, world, pos);
-					if (sprite != null) {
-						faceSpriteMap.put(face, sprite);
-					}
-				}
-				layerFaceSpriteMap.put(layer, faceSpriteMap);
-			}
+
+		for(EnumFacing facing : EnumFacing.VALUES) {
+			extState = extState.withProperty(CTM_VALUE[facing.ordinal()], getCTMValue(facing, world, pos));
 		}
-		extState = extState.withProperty(BlockBakeryProperties.LAYER_FACE_SPRITE_MAP, layerFaceSpriteMap);
-		
+
 		return extState;
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer.Builder(this).add(COLOR).add(BlockBakeryProperties.LAYER_FACE_SPRITE_MAP).build();
+
+		BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+		builder.add(COLOR);
+		for (int i = 0; i < 6; i++) {
+			builder.add(CTM_VALUE[i]);
+		}
+		return builder.build();
 	}
 
 	@Override
@@ -171,13 +164,8 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
 	}
 
-	//Extract into separate renderer
-	@Override
-	public TextureAtlasSprite getTexture(EnumFacing side, IBlockState state, BlockRenderLayer layer, IBlockAccess world, BlockPos pos) {
+	private int getCTMValue(EnumFacing side, IBlockAccess world, BlockPos pos) {
 
-		if (layer == BlockRenderLayer.TRANSLUCENT)
-			return spriteSheet.getSprite(62);
-		
 		BlockPos posToCheck;
 		boolean[] sides = new boolean[8];
 		if (side.getAxis() == EnumFacing.Axis.Y)
@@ -221,57 +209,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 			posToCheck = posToCheck.offset(right);
 			sides[7] = world.getBlockState(posToCheck).getBlock().equals(this);
 		}
-		return getSpriteFromSheet(8, 8, sides);
-	}
-
-	private TextureAtlasSprite getSpriteFromSheet(int subX, int subY, boolean[] sides) {
-
-		int parts = toInt(sides) & 255;
-		int index = (parts & 15);
-		parts = parts >> 4;
-		int w;
-		switch (index) {
-			case 3: // bottom right connection
-				index ^= ((parts & 1) << 4); // bithack: add 16 if connection
-				break;
-			case 5: // top right connection
-				index ^= ((parts & 8) << 1); // bithack: add 16 if connection
-				break;
-			case 7: // left empty
-				w = parts & 9;
-				index ^= ((w & (w << 3)) << 1); // bithack: add 16 if both connections
-				if ((w == 1) | w == 8) // bottom right, top right
-					index = 32 | (w >> 3);
-				break;
-			case 10: // bottom left connection
-				index ^= ((parts & 2) << 3); // bithack: add 16 if connection
-				break;
-			case 11: // top empty
-				w = parts & 3;
-				index ^= ((w & (w << 1)) << 3); // bithack: add 16 if both connections
-				if ((w == 1) | w == 2) // bottom right, bottom left
-					index = 34 | (w >> 1);
-				break;
-			case 12: // top left connection
-				index ^= ((parts & 4) << 2); // bithack: add 16 if connection
-				break;
-			case 13: // bottom empty
-				w = parts & 12;
-				index ^= ((w & (w << 1)) << 1); // bithack: add 16 if both connections
-				if ((w == 4) | w == 8) // top left, top right
-					index = 36 | (w >> 3);
-				break;
-			case 14: // right empty
-				w = parts & 6;
-				index ^= ((w & (w << 1)) << 2); // bithack: add 16 if both connections
-				if ((w == 2) | w == 4) // bottom left, top left
-					index = 38 | (w >> 2);
-				break;
-			case 15: // all sides
-				index = 40 + parts;
-			default:
-		}
-		return spriteSheet.getSprite(index);
+		return toInt(sides) & 255;
 	}
 
 	private static int toInt(boolean ...flags) {
@@ -280,63 +218,4 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 			ret |= (flags[i] ? 1 : 0) << i;
 		return ret;
 	}
-
-	@Override
-	public TextureAtlasSprite getTexture(EnumFacing side, int metadata) {
-
-		return spriteSheet.getSprite(63); //TODO fix this
-	}
-
-/*	public IIcon getBlockOverlayTexture(IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		BlockPos bp;
-		boolean[] sides = new boolean[8];
-		if (side <= 1)
-		{
-			bp = new BlockPos(x, y, z, EnumFacing.NORTH);
-			bp.moveRight(1);
-			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveBackwards(1);
-			sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveLeft(1);
-			sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveLeft(1);
-			sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveForwards(1);
-			sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveForwards(1);
-			sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveRight(1);
-			sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveRight(1);
-			sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		}
-		else
-		{
-			bp = new BlockPos(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
-			bp.moveRight(1);
-			sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveDown(1);
-			sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveLeft(1);
-			sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveLeft(1);
-			sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveUp(1);
-			sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveUp(1);
-			sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveRight(1);
-			sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-			bp.moveRight(1);
-			sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		}
-		return new IconOverlay(_texture, 8, 8, sides);
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return MineFactoryReloadedCore.renderIdFactoryGlass;
-	}*/
 }

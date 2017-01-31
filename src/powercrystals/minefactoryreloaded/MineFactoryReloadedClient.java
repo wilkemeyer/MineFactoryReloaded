@@ -8,7 +8,6 @@ import codechicken.lib.texture.TextureUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -87,7 +86,8 @@ import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
-import powercrystals.minefactoryreloaded.render.model.FluidItemLoader;
+import powercrystals.minefactoryreloaded.render.model.FactoryGlassModel;
+import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -303,13 +303,19 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRenderer);
 		
 		registerModel(plasticCupItem, "plastic_cup");
-		ModelLoaderRegistry.registerLoader(FluidItemLoader.INSTANCE);
+		ModelLoaderRegistry.registerLoader(MFRModelLoader.INSTANCE);
 
-		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMap.Builder().ignore(BlockFactoryGlass.COLOR).build());
-		ModelResourceLocation glass = new ModelResourceLocation(factoryGlassBlock.getRegistryName(), "normal");
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(factoryGlassBlock), stack -> new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "inventory"));
-		ModelRegistryHelper.register(glass, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass"));
-		TextureUtils.addIconRegister(BlockFactoryGlass.spriteSheet);
+		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return FactoryGlassModel.MODEL_LOCATION;
+			}
+		});
+		ModelResourceLocation glassItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "inventory");
+		item = Item.getItemFromBlock(factoryGlassBlock);
+		ModelLoader.setCustomMeshDefinition(item, stack -> glassItemModel);
+		ModelLoader.registerItemVariants(item, glassItemModel);
+		TextureUtils.addIconRegister(FactoryGlassModel.spriteSheet);
 	}
 
 	private static void registerModel(Item item, String modelName) {
@@ -448,7 +454,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		blockColors.registerBlockColorHandler((state, world, pos, tintIndex) -> 
 				(world != null && pos != null) ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic(), vineScaffoldBlock);
-		
+
 		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 		itemColors.registerItemColorHandler((stack, tintIndex) -> {
 
@@ -509,7 +515,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				return null;
 			}
 		}, MFRThings.safariNetFancyJailerItem, MFRThings.safariNetJailerItem, MFRThings.safariNetItem, MFRThings.safariNetSingleItem);
-		
+
+		itemColors.registerItemColorHandler((stack, tintIndex) -> {
+
+			if (tintIndex != 0)
+				return 0xFFFFFF;
+
+			return EnumDyeColor.byMetadata(stack.getMetadata()).getMapColor().colorValue;
+		}, MFRThings.factoryGlassBlock);
 		
 	/* TODO fix rendering
 		// IDs

@@ -1,0 +1,220 @@
+package powercrystals.minefactoryreloaded.render.model;
+
+import codechicken.lib.colour.ColourRGBA;
+import codechicken.lib.model.bakery.PlanarFaceBakery;
+import codechicken.lib.texture.SpriteSheetManager;
+import codechicken.lib.util.TransformUtils;
+import com.google.common.base.Function;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+public class FactoryGlassModel implements IModel {
+
+	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "normal");
+
+	private static final ResourceLocation SPRITE_LOCATION = new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.stainedglass.png");
+	public static final int FULL_FRAME = 0;
+	public static SpriteSheetManager.SpriteSheet spriteSheet = SpriteSheetManager.getSheet(8, 8, SPRITE_LOCATION);;
+
+	public static final IModel MODEL = new FactoryGlassModel();
+
+	@Override
+	public Collection<ResourceLocation> getDependencies() {
+
+		return ImmutableList.of();
+	}
+
+	@Override
+	public Collection<ResourceLocation> getTextures() {
+
+		return ImmutableList.of(SPRITE_LOCATION);
+	}
+
+	@Override
+	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+
+		for(int i=0; i < 64; i++)
+			spriteSheet.setupSprite(i); //TODO shouldn't this really be done by CCL itself?
+
+		return new FactoryGlassBakedModel();
+	}
+
+	@Override
+	public IModelState getDefaultState() {
+
+		return TransformUtils.DEFAULT_BLOCK;
+	}
+
+	private static class FactoryGlassBakedModel implements IBakedModel {
+
+		//TODO all this color stuff is only required because PlanarFaceBakery doesn't support setting tintindexes - review and either change or keep
+		private Cache<EnumDyeColor, Map<EnumFacing,List<BakedQuad>>> coreCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
+		private Cache<Integer, BakedQuad> frameCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
+
+		@Override
+		public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+
+			if (side == null) {
+				return Collections.emptyList();
+			}
+			BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+
+			if (layer == BlockRenderLayer.TRANSLUCENT) {
+				return getCoreQuads(state.getValue(BlockFactoryGlass.COLOR), side);
+			} else if (layer == BlockRenderLayer.CUTOUT) {
+				IExtendedBlockState extState = (IExtendedBlockState) state;
+				return Collections.singletonList(getFrameQuadForSide(side, extState.getValue(BlockFactoryGlass.CTM_VALUE[side.ordinal()])));
+			}
+
+			return Collections.emptyList();
+		}
+
+		private BakedQuad getFrameQuadForSide(EnumFacing side, int ctmValue) {
+
+			int key = (side.ordinal() << 8) + ctmValue;
+
+			BakedQuad quad = frameCache.getIfPresent(key);
+			if (quad == null) {
+				quad = PlanarFaceBakery.bakeFace(side, getSpriteFromSheet(side, ctmValue));
+
+				frameCache.put(key, quad);
+			}
+
+			return quad;
+		}
+
+		private TextureAtlasSprite getSpriteFromSheet(EnumFacing side, int ctmValue) {
+
+			int index = (ctmValue & 15);
+			ctmValue = ctmValue >> 4;
+			int w;
+			switch (index) {
+				case 3: // bottom right connection
+					index ^= ((ctmValue & 1) << 4); // bithack: add 16 if connection
+					break;
+				case 5: // top right connection
+					index ^= ((ctmValue & 8) << 1); // bithack: add 16 if connection
+					break;
+				case 7: // left empty
+					w = ctmValue & 9;
+					index ^= ((w & (w << 3)) << 1); // bithack: add 16 if both connections
+					if ((w == 1) | w == 8) // bottom right, top right
+						index = 32 | (w >> 3);
+					break;
+				case 10: // bottom left connection
+					index ^= ((ctmValue & 2) << 3); // bithack: add 16 if connection
+					break;
+				case 11: // top empty
+					w = ctmValue & 3;
+					index ^= ((w & (w << 1)) << 3); // bithack: add 16 if both connections
+					if ((w == 1) | w == 2) // bottom right, bottom left
+						index = 34 | (w >> 1);
+					break;
+				case 12: // top left connection
+					index ^= ((ctmValue & 4) << 2); // bithack: add 16 if connection
+					break;
+				case 13: // bottom empty
+					w = ctmValue & 12;
+					index ^= ((w & (w << 1)) << 1); // bithack: add 16 if both connections
+					if ((w == 4) | w == 8) // top left, top right
+						index = 36 | (w >> 3);
+					break;
+				case 14: // right empty
+					w = ctmValue & 6;
+					index ^= ((w & (w << 1)) << 2); // bithack: add 16 if both connections
+					if ((w == 2) | w == 4) // bottom left, top left
+						index = 38 | (w >> 2);
+					break;
+				case 15: // all sides
+					index = 40 + ctmValue;
+				default:
+			}
+			return spriteSheet.getSprite(index);
+		}
+
+		private List<BakedQuad> getCoreQuads(EnumDyeColor color, EnumFacing side) {
+
+			Map<EnumFacing, List<BakedQuad>> coreQuads = coreCache.getIfPresent(color);
+
+			if (coreQuads == null) {
+				coreQuads = new HashMap<>();
+				for (EnumFacing facing : EnumFacing.VALUES) {
+					List<BakedQuad> faceQuads = new ArrayList<>();
+					int colorValue = color.getMapColor().colorValue;
+					ColourRGBA rgba = new ColourRGBA((colorValue >> 16) & 255, (colorValue >> 8) & 255, (colorValue & 0xFF) & 255, 0xFF);
+					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(63), DefaultVertexFormats.ITEM, rgba));
+					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(62), DefaultVertexFormats.ITEM, rgba));
+					coreQuads.put(facing, faceQuads);
+				}
+
+				coreCache.put(color, coreQuads);
+			}
+			return coreQuads.get(side);
+		}
+
+		@Override
+		public boolean isAmbientOcclusion() {
+
+			return true;
+		}
+
+		@Override
+		public boolean isGui3d() {
+
+			return true;
+		}
+
+		@Override
+		public boolean isBuiltInRenderer() {
+
+			return false;
+		}
+
+		@Override
+		public TextureAtlasSprite getParticleTexture() {
+
+			return spriteSheet.getSprite(FULL_FRAME);
+		}
+
+		@Override
+		public ItemCameraTransforms getItemCameraTransforms() {
+
+			return ItemCameraTransforms.DEFAULT;
+		}
+
+		@Override
+		public ItemOverrideList getOverrides() {
+
+			return ItemOverrideList.NONE;
+		}
+	}
+}
