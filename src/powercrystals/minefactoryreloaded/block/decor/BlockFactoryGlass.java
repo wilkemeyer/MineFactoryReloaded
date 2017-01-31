@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -102,49 +103,6 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		return true;
 	}
 
-/*	
-	@Override
-	public int getRenderBlockPass()
-	{
-		return 1;
-	}
-
-
-	@Override
-	public boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color)
-	{
-		int meta = getBlockMetadata(x, y, z);
-		if (meta != colour)
-		{
-			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
-		}
-		return false;
-	}*/
-
-/*	@Override
-	public int getRenderColor(int meta)
-	{
-		return MFRUtil.COLORS[Math.min(Math.max(meta, 0), 15)];
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		_texture = ir.registerIcon("minefactoryreloaded:tile.mfr.stainedglass");
-	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta)
-	{
-		return new IconOverlay(_texture, 8, 8, meta > 15 ? 6 : 7, 7);
-	}
-
-	public IIcon getBlockOverlayTexture()
-	{
-		return new IconOverlay(_texture, 8, 8, 0, 0);
-	}*/
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
@@ -159,9 +117,9 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	}
 
 	@Override
-	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-
-		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
+	public BlockRenderLayer getBlockLayer() {
+		
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	private int getCTMValue(EnumFacing side, IBlockAccess world, BlockPos pos) {

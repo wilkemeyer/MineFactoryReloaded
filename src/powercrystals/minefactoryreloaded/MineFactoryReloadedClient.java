@@ -75,6 +75,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
@@ -518,10 +519,10 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		itemColors.registerItemColorHandler((stack, tintIndex) -> {
 
-			if (tintIndex != 0)
+			if (tintIndex != 0 || stack.getMetadata() > 15 || stack.getMetadata() < 0)
 				return 0xFFFFFF;
 
-			return EnumDyeColor.byMetadata(stack.getMetadata()).getMapColor().colorValue;
+			return MFRUtil.COLORS[stack.getMetadata()];
 		}, MFRThings.factoryGlassBlock);
 		
 	/* TODO fix rendering

@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.render.model;
 
-import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.model.bakery.PlanarFaceBakery;
 import codechicken.lib.texture.SpriteSheetManager;
 import codechicken.lib.util.TransformUtils;
@@ -9,32 +8,22 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class FactoryGlassModel implements IModel {
@@ -86,16 +75,12 @@ public class FactoryGlassModel implements IModel {
 			if (side == null) {
 				return Collections.emptyList();
 			}
-			BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
 
-			if (layer == BlockRenderLayer.TRANSLUCENT) {
-				return getCoreQuads(state.getValue(BlockFactoryGlass.COLOR), side);
-			} else if (layer == BlockRenderLayer.CUTOUT) {
-				IExtendedBlockState extState = (IExtendedBlockState) state;
-				return Collections.singletonList(getFrameQuadForSide(side, extState.getValue(BlockFactoryGlass.CTM_VALUE[side.ordinal()])));
-			}
-
-			return Collections.emptyList();
+			List<BakedQuad> quads = new ArrayList<>();
+			quads.addAll(getCoreQuads(state.getValue(BlockFactoryGlass.COLOR), side));
+			IExtendedBlockState extState = (IExtendedBlockState) state;
+			quads.add(getFrameQuadForSide(side, extState.getValue(BlockFactoryGlass.CTM_VALUE[side.ordinal()])));
+			return quads;
 		}
 
 		private BakedQuad getFrameQuadForSide(EnumFacing side, int ctmValue) {
@@ -167,12 +152,11 @@ public class FactoryGlassModel implements IModel {
 
 			if (coreQuads == null) {
 				coreQuads = new HashMap<>();
+				int colorValue = (MFRUtil.COLORS[color.ordinal()] << 8) + 0xFF;
 				for (EnumFacing facing : EnumFacing.VALUES) {
 					List<BakedQuad> faceQuads = new ArrayList<>();
-					int colorValue = color.getMapColor().colorValue;
-					ColourRGBA rgba = new ColourRGBA((colorValue >> 16) & 255, (colorValue >> 8) & 255, (colorValue & 0xFF) & 255, 0xFF);
-					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(63), DefaultVertexFormats.ITEM, rgba));
-					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(62), DefaultVertexFormats.ITEM, rgba));
+					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(63), DefaultVertexFormats.ITEM, colorValue));
+					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(62), DefaultVertexFormats.ITEM, colorValue));
 					coreQuads.put(facing, faceQuads);
 				}
 
