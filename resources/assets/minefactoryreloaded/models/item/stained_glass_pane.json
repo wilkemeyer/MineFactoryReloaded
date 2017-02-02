@@ -1,0 +1,26 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "glass": "minefactoryreloaded:blocks/tile.mfr.stainedglass"
+    },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#glass", "uv": [ 14, 14, 16, 16 ], "tintindex": 0 }
+            }
+        },
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#glass", "uv": [ 12, 14, 14, 16 ], "tintindex": 0 }
+            }
+        },
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#glass", "uv": [ 0, 0, 2, 2] }
+            }
+        }
+    ]
+}

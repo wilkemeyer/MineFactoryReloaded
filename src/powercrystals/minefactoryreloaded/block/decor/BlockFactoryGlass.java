@@ -27,7 +27,7 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 {
-	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
 
 	static {

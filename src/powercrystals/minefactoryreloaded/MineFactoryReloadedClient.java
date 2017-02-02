@@ -88,7 +88,10 @@ import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.render.model.FactoryGlassModel;
+import powercrystals.minefactoryreloaded.render.model.FactoryGlassPaneModel;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
+import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
+import powercrystals.minefactoryreloaded.render.model.SyringeModel;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -198,6 +201,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.syringeZombieItem, "syringe", "variant=zombie");
 		registerModel(MFRThings.syringeSlimeItem, "syringe", "variant=slime");
 		registerModel(MFRThings.syringeCureItem, "syringe", "variant=cure");
+		MFRModelLoader.registerModel(SyringeModel.MODEL_LOCATION, SyringeModel.MODEL);
 
 		registerModel(MFRThings.rednetMemoryCardItem, "memory_card");
 
@@ -304,7 +308,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRenderer);
 		
 		registerModel(plasticCupItem, "plastic_cup");
-		ModelLoaderRegistry.registerLoader(MFRModelLoader.INSTANCE);
+		MFRModelLoader.registerModel(PlasticCupModel.MODEL_LOCATION, PlasticCupModel.MODEL);
 
 		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMapperBase() {
 			@Override
@@ -317,6 +321,21 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ModelLoader.setCustomMeshDefinition(item, stack -> glassItemModel);
 		ModelLoader.registerItemVariants(item, glassItemModel);
 		TextureUtils.addIconRegister(FactoryGlassModel.spriteSheet);
+		MFRModelLoader.registerModel(FactoryGlassModel.MODEL_LOCATION, FactoryGlassModel.MODEL);
+
+		ModelLoader.setCustomStateMapper(factoryGlassPaneBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return FactoryGlassPaneModel.MODEL_LOCATION;
+			}
+		});
+		ModelResourceLocation glassPaneItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass_pane", "inventory");
+		item = Item.getItemFromBlock(factoryGlassPaneBlock);
+		ModelLoader.setCustomMeshDefinition(item, stack -> glassPaneItemModel);
+		ModelLoader.registerItemVariants(item, glassPaneItemModel);
+		MFRModelLoader.registerModel(FactoryGlassPaneModel.MODEL_LOCATION, FactoryGlassPaneModel.MODEL);
+
+		ModelLoaderRegistry.registerLoader(MFRModelLoader.INSTANCE);
 	}
 
 	private static void registerModel(Item item, String modelName) {
@@ -523,7 +542,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				return 0xFFFFFF;
 
 			return MFRUtil.COLORS[stack.getMetadata()];
-		}, MFRThings.factoryGlassBlock);
+		}, factoryGlassBlock, factoryGlassPaneBlock);
 		
 	/* TODO fix rendering
 		// IDs

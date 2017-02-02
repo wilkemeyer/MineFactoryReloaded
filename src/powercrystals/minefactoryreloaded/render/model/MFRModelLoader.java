@@ -5,28 +5,29 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum MFRModelLoader implements ICustomModelLoader {
 	INSTANCE;
+
+	private static Map<ResourceLocation, IModel> models = new HashMap<>();
+
+	public static void registerModel(ResourceLocation modelLocation, IModel model) {
+
+		models.put(modelLocation, model);
+	}
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
 
-		return modelLocation.equals(PlasticCupModel.MODEL_LOCATION)
-				|| modelLocation.equals(SyringeModel.MODEL_LOCATION)
-				|| modelLocation.equals(FactoryGlassModel.MODEL_LOCATION);
+		return models.keySet().contains(modelLocation);
 	}
 
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) {
 
-		if (modelLocation.equals(PlasticCupModel.MODEL_LOCATION))
-			return PlasticCupModel.MODEL;
-		if (modelLocation.equals(SyringeModel.MODEL_LOCATION))
-			return SyringeModel.MODEL;
-		if (modelLocation.equals(FactoryGlassModel.MODEL_LOCATION))
-			return FactoryGlassModel.MODEL;
-
-		return null;
+		return models.getOrDefault(modelLocation, null);
 	}
 
 	@Override

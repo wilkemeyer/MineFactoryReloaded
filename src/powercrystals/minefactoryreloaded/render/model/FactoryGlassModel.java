@@ -34,6 +34,12 @@ public class FactoryGlassModel implements IModel {
 	public static final int FULL_FRAME = 0;
 	public static SpriteSheetManager.SpriteSheet spriteSheet = SpriteSheetManager.getSheet(8, 8, SPRITE_LOCATION);;
 
+	static {
+
+		for(int i=0; i < 64; i++)
+			spriteSheet.setupSprite(i); //TODO shouldn't this really be done by CCL itself?
+	}
+
 	public static final IModel MODEL = new FactoryGlassModel();
 
 	@Override
@@ -50,9 +56,6 @@ public class FactoryGlassModel implements IModel {
 
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-
-		for(int i=0; i < 64; i++)
-			spriteSheet.setupSprite(i); //TODO shouldn't this really be done by CCL itself?
 
 		return new FactoryGlassBakedModel();
 	}
