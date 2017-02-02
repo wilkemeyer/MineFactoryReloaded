@@ -1,16 +1,15 @@
 package powercrystals.minefactoryreloaded.render.model;
 
-import codechicken.lib.model.bakery.PlanarFaceBakery;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.buffer.BakingVertexBuffer;
-import codechicken.lib.texture.SpriteSheetManager;
 import codechicken.lib.util.TransformUtils;
 import codechicken.lib.vec.uv.IconTransformation;
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
@@ -24,7 +23,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
+import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 import javax.annotation.Nullable;
@@ -104,22 +103,37 @@ public class FactoryGlassPaneModel implements IModel {
 			//TODO textures
 			//TODO don't return model faces that are not to be displayed
 
-			post.render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(FULL_FRAME)));
-
+			int color = (MFRUtil.COLORS[state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()] << 8) + 0xFF;
+			IExtendedBlockState exState = (IExtendedBlockState) state;
+			ImmutableMap.Builder<EnumFacing, TextureAtlasSprite> builder = ImmutableMap.builder();
+			for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+				builder.put(facing, FactoryGlassModel.getSpriteByCTMValue(exState.getValue(BlockFactoryGlassPane.CTM_VALUE[facing.getHorizontalIndex()])));
+			}
+			Map<EnumFacing, TextureAtlasSprite> sideTextures = builder.build();
+					
+			post.render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(61)));
+			
 			if (state.getValue(BlockPane.NORTH)) {
-				sideModels.get(EnumFacing.NORTH).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(FULL_FRAME)));
+				sideModels.get(EnumFacing.NORTH).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
+				sideModels.get(EnumFacing.NORTH).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(62)));
+
+				CCModel model = sideModels.get(EnumFacing.NORTH).copy();
+				for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+					model.render(ccrs, (facing.getHorizontalIndex() + 2) * 4, (facing.getHorizontalIndex() + 3) * 4,
+							new IconTransformation(sideTextures.get(facing)));
+				}
 			}
 
 			if (state.getValue(BlockPane.SOUTH)) {
-				sideModels.get(EnumFacing.SOUTH).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(FULL_FRAME)));
+				sideModels.get(EnumFacing.SOUTH).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
 			}
 
 			if (state.getValue(BlockPane.WEST)) {
-				sideModels.get(EnumFacing.WEST).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(FULL_FRAME)));
+				sideModels.get(EnumFacing.WEST).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
 			}
 
 			if (state.getValue(BlockPane.EAST)) {
-				sideModels.get(EnumFacing.EAST).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(FULL_FRAME)));
+				sideModels.get(EnumFacing.EAST).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
 			}
 
 			buffer.finishDrawing();

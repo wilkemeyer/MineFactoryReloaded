@@ -9,6 +9,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.util.EnumFacing;
@@ -53,6 +54,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	{
 		return getMetaFromState(state);
 	}
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
@@ -93,6 +95,11 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		return state.getValue(COLOR).getMetadata();
 	}
 
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		
+		return BlockRenderLayer.TRANSLUCENT;
+	}
 
 /*
 	@Override

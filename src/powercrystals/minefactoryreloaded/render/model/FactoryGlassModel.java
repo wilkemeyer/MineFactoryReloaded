@@ -66,10 +66,59 @@ public class FactoryGlassModel implements IModel {
 		return TransformUtils.DEFAULT_BLOCK;
 	}
 
-	private static class FactoryGlassBakedModel implements IBakedModel {
+	static TextureAtlasSprite getSpriteByCTMValue(int ctmValue) {
 
+		int index = (ctmValue & 15);
+		ctmValue = ctmValue >> 4;
+		int w;
+		switch (index) {
+			case 3: // bottom right connection
+				index ^= ((ctmValue & 1) << 4); // bithack: add 16 if connection
+				break;
+			case 5: // top right connection
+				index ^= ((ctmValue & 8) << 1); // bithack: add 16 if connection
+				break;
+			case 7: // left empty
+				w = ctmValue & 9;
+				index ^= ((w & (w << 3)) << 1); // bithack: add 16 if both connections
+				if ((w == 1) | w == 8) // bottom right, top right
+					index = 32 | (w >> 3);
+				break;
+			case 10: // bottom left connection
+				index ^= ((ctmValue & 2) << 3); // bithack: add 16 if connection
+				break;
+			case 11: // top empty
+				w = ctmValue & 3;
+				index ^= ((w & (w << 1)) << 3); // bithack: add 16 if both connections
+				if ((w == 1) | w == 2) // bottom right, bottom left
+					index = 34 | (w >> 1);
+				break;
+			case 12: // top left connection
+				index ^= ((ctmValue & 4) << 2); // bithack: add 16 if connection
+				break;
+			case 13: // bottom empty
+				w = ctmValue & 12;
+				index ^= ((w & (w << 1)) << 1); // bithack: add 16 if both connections
+				if ((w == 4) | w == 8) // top left, top right
+					index = 36 | (w >> 3);
+				break;
+			case 14: // right empty
+				w = ctmValue & 6;
+				index ^= ((w & (w << 1)) << 2); // bithack: add 16 if both connections
+				if ((w == 2) | w == 4) // bottom left, top left
+					index = 38 | (w >> 2);
+				break;
+			case 15: // all sides
+				index = 40 + ctmValue;
+			default:
+		}
+		return spriteSheet.getSprite(index);
+	}
+
+	private static class FactoryGlassBakedModel implements IBakedModel {
 		//TODO all this color stuff is only required because PlanarFaceBakery doesn't support setting tintindexes - review and either change or keep
 		private Cache<EnumDyeColor, Map<EnumFacing,List<BakedQuad>>> coreCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
+
 		private Cache<Integer, BakedQuad> frameCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
 		@Override
@@ -92,61 +141,12 @@ public class FactoryGlassModel implements IModel {
 
 			BakedQuad quad = frameCache.getIfPresent(key);
 			if (quad == null) {
-				quad = PlanarFaceBakery.bakeFace(side, getSpriteFromSheet(side, ctmValue));
+				quad = PlanarFaceBakery.bakeFace(side, getSpriteByCTMValue(ctmValue));
 
 				frameCache.put(key, quad);
 			}
 
 			return quad;
-		}
-
-		private TextureAtlasSprite getSpriteFromSheet(EnumFacing side, int ctmValue) {
-
-			int index = (ctmValue & 15);
-			ctmValue = ctmValue >> 4;
-			int w;
-			switch (index) {
-				case 3: // bottom right connection
-					index ^= ((ctmValue & 1) << 4); // bithack: add 16 if connection
-					break;
-				case 5: // top right connection
-					index ^= ((ctmValue & 8) << 1); // bithack: add 16 if connection
-					break;
-				case 7: // left empty
-					w = ctmValue & 9;
-					index ^= ((w & (w << 3)) << 1); // bithack: add 16 if both connections
-					if ((w == 1) | w == 8) // bottom right, top right
-						index = 32 | (w >> 3);
-					break;
-				case 10: // bottom left connection
-					index ^= ((ctmValue & 2) << 3); // bithack: add 16 if connection
-					break;
-				case 11: // top empty
-					w = ctmValue & 3;
-					index ^= ((w & (w << 1)) << 3); // bithack: add 16 if both connections
-					if ((w == 1) | w == 2) // bottom right, bottom left
-						index = 34 | (w >> 1);
-					break;
-				case 12: // top left connection
-					index ^= ((ctmValue & 4) << 2); // bithack: add 16 if connection
-					break;
-				case 13: // bottom empty
-					w = ctmValue & 12;
-					index ^= ((w & (w << 1)) << 1); // bithack: add 16 if both connections
-					if ((w == 4) | w == 8) // top left, top right
-						index = 36 | (w >> 3);
-					break;
-				case 14: // right empty
-					w = ctmValue & 6;
-					index ^= ((w & (w << 1)) << 2); // bithack: add 16 if both connections
-					if ((w == 2) | w == 4) // bottom left, top left
-						index = 38 | (w >> 2);
-					break;
-				case 15: // all sides
-					index = 40 + ctmValue;
-				default:
-			}
-			return spriteSheet.getSprite(index);
 		}
 
 		private List<BakedQuad> getCoreQuads(EnumDyeColor color, EnumFacing side) {
