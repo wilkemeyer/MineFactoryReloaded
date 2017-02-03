@@ -70,6 +70,9 @@ public class FactoryGlassPaneModel implements IModel {
 		private Cache<EnumDyeColor, Map<EnumFacing, CCModel>> coreCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 		private Cache<Integer, CCModel> frameCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
+		private TextureAtlasSprite glassTexture;
+		private TextureAtlasSprite glassStreaksTexture;
+
 		public FactoryGlassPaneBakedModel() {
 
 			post = CCModel.quadModel(24);
@@ -84,6 +87,9 @@ public class FactoryGlassPaneModel implements IModel {
 			sideModels.put(EnumFacing.SOUTH, south);
 			sideModels.put(EnumFacing.WEST, west);
 			sideModels.put(EnumFacing.EAST, east);
+
+			glassTexture = FactoryGlassModel.spriteSheet.getSprite(63);
+			glassStreaksTexture = FactoryGlassModel.spriteSheet.getSprite(62);
 		}
 
 		@Override
@@ -99,45 +105,98 @@ public class FactoryGlassPaneModel implements IModel {
 			ccrs.reset();
 			ccrs.bind(buffer);
 
-			//TODO color support
-			//TODO textures
-			//TODO don't return model faces that are not to be displayed
+			//TODO get rid of faces when two panes connect to each other
+			//TODO fix top bottom textures to check for diagonal connecting (in ctm bits) before hiding them
 
 			int color = (MFRUtil.COLORS[state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()] << 8) + 0xFF;
 			IExtendedBlockState exState = (IExtendedBlockState) state;
 			ImmutableMap.Builder<EnumFacing, TextureAtlasSprite> builder = ImmutableMap.builder();
+
 			for(EnumFacing facing : EnumFacing.HORIZONTALS) {
 				builder.put(facing, FactoryGlassModel.getSpriteByCTMValue(exState.getValue(BlockFactoryGlassPane.CTM_VALUE[facing.getHorizontalIndex()])));
 			}
 			Map<EnumFacing, TextureAtlasSprite> sideTextures = builder.build();
-					
-			post.render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(61)));
-			
-			if (state.getValue(BlockPane.NORTH)) {
-				sideModels.get(EnumFacing.NORTH).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
-				sideModels.get(EnumFacing.NORTH).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(62)));
 
-				CCModel model = sideModels.get(EnumFacing.NORTH).copy();
-				for(EnumFacing facing : EnumFacing.HORIZONTALS) {
-					model.render(ccrs, (facing.getHorizontalIndex() + 2) * 4, (facing.getHorizontalIndex() + 3) * 4,
-							new IconTransformation(sideTextures.get(facing)));
-				}
+			int ctmValue = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[0]);
+			boolean connectedUp = ((ctmValue >> 2) & 1) == 1;
+			boolean connectedDown = ((ctmValue >> 1) & 1) == 1;
+
+			if (state.getValue(BlockPane.NORTH)) {
+				renderPaneSide(ccrs, EnumFacing.NORTH, sideTextures, color, connectedUp, connectedDown);
+			} else {
+				renderPostFace(ccrs, EnumFacing.NORTH, sideTextures.get(EnumFacing.NORTH), color);
 			}
 
 			if (state.getValue(BlockPane.SOUTH)) {
-				sideModels.get(EnumFacing.SOUTH).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
+				renderPaneSide(ccrs, EnumFacing.SOUTH, sideTextures, color, connectedUp, connectedDown);
+			} else {
+				renderPostFace(ccrs, EnumFacing.SOUTH, sideTextures.get(EnumFacing.SOUTH), color);
 			}
 
 			if (state.getValue(BlockPane.WEST)) {
-				sideModels.get(EnumFacing.WEST).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
+				renderPaneSide(ccrs, EnumFacing.WEST, sideTextures, color, connectedUp, connectedDown);
+			} else {
+				renderPostFace(ccrs, EnumFacing.WEST, sideTextures.get(EnumFacing.WEST), color);
 			}
 
 			if (state.getValue(BlockPane.EAST)) {
-				sideModels.get(EnumFacing.EAST).copy().setColour(color).render(ccrs, new IconTransformation(FactoryGlassModel.spriteSheet.getSprite(63)));
+				renderPaneSide(ccrs, EnumFacing.EAST, sideTextures, color, connectedUp, connectedDown);
+			} else {
+				renderPostFace(ccrs, EnumFacing.EAST, sideTextures.get(EnumFacing.EAST), color);
+			}
+
+			if (!connectedUp) {
+				renderPostFace(ccrs, EnumFacing.UP, FactoryGlassModel.spriteSheet.getSprite(61), color);
+			}
+
+			if (!connectedDown) {
+				renderPostFace(ccrs, EnumFacing.DOWN, FactoryGlassModel.spriteSheet.getSprite(61), color);
 			}
 
 			buffer.finishDrawing();
 			return buffer.bake();
+		}
+
+		private void renderPostFace(CCRenderState ccrs, EnumFacing facing, TextureAtlasSprite texture, int color) {
+
+			renderModelFace(ccrs, post, facing, glassTexture, color);
+			renderModelFace(ccrs, post, facing, glassStreaksTexture, color);
+			renderModelFace(ccrs, post, facing, texture);
+		}
+
+		private void renderPaneSide(CCRenderState ccrs,
+				@Nullable EnumFacing side, Map<EnumFacing, TextureAtlasSprite> sideTextures, int color, boolean connectedUp, boolean connectedDown) {
+
+			CCModel model = sideModels.get(side).copy();
+
+			for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+				//exclude side that's next to post
+				if (facing != side.getOpposite()) {
+					renderModelFace(ccrs, model, facing, glassTexture, color);
+					renderModelFace(ccrs, model, facing, glassStreaksTexture, color);
+					renderModelFace(ccrs, model, facing, sideTextures.get(facing));
+				}
+			}
+
+			if (!connectedUp) {
+				renderModelFace(ccrs, model, EnumFacing.UP, glassTexture, color);
+				renderModelFace(ccrs, model, EnumFacing.UP, glassStreaksTexture, color);
+				renderModelFace(ccrs, model, EnumFacing.UP, FactoryGlassModel.spriteSheet.getSprite(61));
+			}
+
+			if (!connectedDown) {
+				renderModelFace(ccrs, model, EnumFacing.DOWN, glassTexture, color);
+				renderModelFace(ccrs, model, EnumFacing.DOWN, glassStreaksTexture, color);
+				renderModelFace(ccrs, model, EnumFacing.DOWN, FactoryGlassModel.spriteSheet.getSprite(61));
+			}
+		}
+
+		private void renderModelFace(CCRenderState ccrs, CCModel model, EnumFacing facing, TextureAtlasSprite texture) {
+			model.render(ccrs, facing.ordinal() * 4, (facing.ordinal() + 1) * 4, new IconTransformation(texture));
+		}
+
+		private void renderModelFace(CCRenderState ccrs, CCModel model, EnumFacing facing, TextureAtlasSprite texture, int color) {
+			model.copy().setColour(color).render(ccrs, facing.ordinal() * 4, (facing.ordinal() + 1) * 4, new IconTransformation(texture));
 		}
 
 		@Override
