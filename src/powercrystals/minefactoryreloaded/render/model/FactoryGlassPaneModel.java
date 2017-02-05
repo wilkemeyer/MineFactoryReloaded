@@ -105,9 +105,8 @@ public class FactoryGlassPaneModel implements IModel {
 			ccrs.reset();
 			ccrs.bind(buffer);
 
-			//TODO get rid of faces when two panes connect to each other
-			//TODO fix top bottom textures to check for diagonal connecting (in ctm bits) before hiding them
-
+			//TODO cache !!!
+			
 			int color = (MFRUtil.COLORS[state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()] << 8) + 0xFF;
 			IExtendedBlockState exState = (IExtendedBlockState) state;
 			ImmutableMap.Builder<EnumFacing, TextureAtlasSprite> builder = ImmutableMap.builder();
@@ -117,30 +116,38 @@ public class FactoryGlassPaneModel implements IModel {
 			}
 			Map<EnumFacing, TextureAtlasSprite> sideTextures = builder.build();
 
-			int ctmValue = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[0]);
-			boolean connectedUp = ((ctmValue >> 2) & 1) == 1;
-			boolean connectedDown = ((ctmValue >> 1) & 1) == 1;
+			int ctmValueSouth = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[0]);
+			int ctmValueWest = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[1]);
 
+			boolean connectedUp = ((ctmValueSouth >> 2) & 1) == 1;
+			boolean connectedDown = ((ctmValueSouth >> 1) & 1) == 1;
+			Map<EnumFacing, Boolean> levelConnections = new HashMap<>();
+
+			levelConnections.put(EnumFacing.WEST, ((ctmValueSouth >> 3) & 1) == 1);
+			levelConnections.put(EnumFacing.EAST, (ctmValueSouth & 1) == 1);
+			levelConnections.put(EnumFacing.NORTH, ((ctmValueWest >> 3) & 1) == 1);
+			levelConnections.put(EnumFacing.SOUTH, (ctmValueWest & 1) == 1);
+			
 			if (state.getValue(BlockPane.NORTH)) {
-				renderPaneSide(ccrs, EnumFacing.NORTH, sideTextures, color, connectedUp, connectedDown);
+				renderPaneSide(ccrs, EnumFacing.NORTH, sideTextures, color, connectedUp, connectedDown, levelConnections.get(EnumFacing.NORTH));
 			} else {
 				renderPostFace(ccrs, EnumFacing.NORTH, sideTextures.get(EnumFacing.NORTH), color);
 			}
 
 			if (state.getValue(BlockPane.SOUTH)) {
-				renderPaneSide(ccrs, EnumFacing.SOUTH, sideTextures, color, connectedUp, connectedDown);
+				renderPaneSide(ccrs, EnumFacing.SOUTH, sideTextures, color, connectedUp, connectedDown, levelConnections.get(EnumFacing.SOUTH));
 			} else {
 				renderPostFace(ccrs, EnumFacing.SOUTH, sideTextures.get(EnumFacing.SOUTH), color);
 			}
 
 			if (state.getValue(BlockPane.WEST)) {
-				renderPaneSide(ccrs, EnumFacing.WEST, sideTextures, color, connectedUp, connectedDown);
+				renderPaneSide(ccrs, EnumFacing.WEST, sideTextures, color, connectedUp, connectedDown, levelConnections.get(EnumFacing.WEST));
 			} else {
 				renderPostFace(ccrs, EnumFacing.WEST, sideTextures.get(EnumFacing.WEST), color);
 			}
 
 			if (state.getValue(BlockPane.EAST)) {
-				renderPaneSide(ccrs, EnumFacing.EAST, sideTextures, color, connectedUp, connectedDown);
+				renderPaneSide(ccrs, EnumFacing.EAST, sideTextures, color, connectedUp, connectedDown, levelConnections.get(EnumFacing.EAST));
 			} else {
 				renderPostFace(ccrs, EnumFacing.EAST, sideTextures.get(EnumFacing.EAST), color);
 			}
@@ -165,13 +172,14 @@ public class FactoryGlassPaneModel implements IModel {
 		}
 
 		private void renderPaneSide(CCRenderState ccrs,
-				@Nullable EnumFacing side, Map<EnumFacing, TextureAtlasSprite> sideTextures, int color, boolean connectedUp, boolean connectedDown) {
+				@Nullable EnumFacing side, Map<EnumFacing, TextureAtlasSprite> sideTextures, int color, 
+				boolean connectedUp, boolean connectedDown, boolean connectedLevel) {
 
 			CCModel model = sideModels.get(side).copy();
 
 			for(EnumFacing facing : EnumFacing.HORIZONTALS) {
 				//exclude side that's next to post
-				if (facing != side.getOpposite()) {
+				if (facing != side.getOpposite() && !(connectedLevel && facing == side)) {
 					renderModelFace(ccrs, model, facing, glassTexture, color);
 					renderModelFace(ccrs, model, facing, glassStreaksTexture, color);
 					renderModelFace(ccrs, model, facing, sideTextures.get(facing));
