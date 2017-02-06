@@ -49,7 +49,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 
 
 	@Override
-	public boolean generateFeature(Random random, int chunkX, int chunkZ, World world, boolean newGen)
+	public boolean generateFeature(Random random, int chunkX, int chunkZ, World world, boolean hasVillage, boolean newGen)
 	{
 		if(_blacklistedDimensions == null)
 		{
@@ -90,7 +90,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 			}
 		}
 
-		if (_lakesEnabled && world.provider.canRespawnHere())
+		if (!hasVillage && _lakesEnabled && world.provider.canRespawnHere())
 		{
 			int rarity = _sludgeLakeRarity;
 			if (rarity > 0 & (newGen | _regenSludge) &&
