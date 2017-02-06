@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.core.CoFHProps;
+import cofh.core.init.CoreProps;
 
 import java.util.ArrayList;
 
@@ -83,7 +83,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		
 		if (world.getTileEntity(pos) instanceof TileEntityFactory) {
 			TileEntityFactory te = (TileEntityFactory) world.getTileEntity(pos);
-			return state.withProperty(FACING, EnumFacing.getHorizontal(te.getDirectionFacing().getHorizontalIndex())).withProperty(ACTIVE, te.isActive()).withProperty(CB, CoFHProps.enableColorBlindTextures);
+			return state.withProperty(FACING, EnumFacing.getHorizontal(te.getDirectionFacing().getHorizontalIndex())).withProperty(ACTIVE, te.isActive()).withProperty(CB, CoreProps.enableColorBlindTextures);
 		}
 		
 		return state;

@@ -5,7 +5,7 @@ import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.CoFHCore;
-import cofh.core.CoFHProps;
+import cofh.core.init.CoreProps;
 import cofh.core.world.WorldHandler;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;

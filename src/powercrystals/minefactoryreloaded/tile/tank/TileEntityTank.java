@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.util.math.BlockPos;
@@ -41,8 +41,13 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		_tank = new FluidTankCore(CAPACITY);
 	}
 
+	private boolean firstTick = true;
 	@Override
 	public void update() {
+		if (firstTick) {
+			cofh_validate();
+			firstTick = false;
+		}
 		//TODO yet again one more that needs non tickable base as it's not supposed to tick
 	}
 
@@ -92,9 +97,9 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public void validate() {
+	public void cofh_validate() {
 
-		super.validate();
+		super.cofh_validate();
 		if (worldObj.isRemote)
 			return;
 		firstTick();

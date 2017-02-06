@@ -17,7 +17,6 @@ import powercrystals.minefactoryreloaded.item.base.ItemMulti;
 
 public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
-	private static Set<String> types = ImmutableSet.of("radius");
 	public static ResourceLocation background;
 	private static int NEGATIVE_START = (Short.MIN_VALUE >>> 1) & Short.MAX_VALUE;
 	
@@ -47,12 +46,12 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 	}
 
 	@Override
-	public Set<String> getAugmentTypes(ItemStack stack) {
+	public String getAugmentType(ItemStack stack) {
 
 		int dmg = stack.getItemDamage();
 		switch (dmg) {
 		default:
-			return types;
+			return "radius";
 		}
 	}
 

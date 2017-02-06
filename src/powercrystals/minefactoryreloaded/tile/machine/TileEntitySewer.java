@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.MathHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;

@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import static net.minecraftforge.fluids.FluidRegistry.WATER;
 
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
 import net.minecraft.block.state.IBlockState;

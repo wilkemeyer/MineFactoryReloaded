@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;

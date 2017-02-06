@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.fluid.FluidTankCore;
 import com.google.common.base.Throwables;
 
 import java.util.Arrays;

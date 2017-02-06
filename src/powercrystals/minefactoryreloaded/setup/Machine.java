@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.setup;
 import static net.minecraft.util.text.TextFormatting.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
-import cofh.core.CoFHProps;
+import cofh.core.init.CoreProps;
 import cofh.lib.util.RegistryUtils;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraftforge.fml.common.FMLLog;
@@ -418,7 +418,7 @@ public class Machine {
 		final String a = side.getMain(active);
 		final String name = getInternalName() + ".";
 		String t;
-		if (CoFHProps.enableColorBlindTextures) {
+		if (CoreProps.enableColorBlindTextures) {
 			final String cb = ".cb";
 			if (RegistryUtils.blockTextureExists(t = base + name + a + cb))
 				return t;

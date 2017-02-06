@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cofh.core.CoFHProps;
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.init.CoreProps;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.util.RegistryUtils;
 
@@ -61,7 +61,7 @@ public class GuiFactoryInventory extends GuiBase {
 		_container = container;
 		drawInventory = drawTitle = false;
 		_tileEntity = tileEntity;
-		if (CoFHProps.enableColorBlindTextures) {
+		if (CoreProps.enableColorBlindTextures) {
 			ResourceLocation t = new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground() + "_cb.png");
 			if (RegistryUtils.textureExists(t))
 				texture = t;

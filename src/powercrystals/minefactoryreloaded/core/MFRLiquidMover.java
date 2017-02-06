@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.core.util.fluid.FluidTankCore;
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraft.entity.item.EntityXPOrb;

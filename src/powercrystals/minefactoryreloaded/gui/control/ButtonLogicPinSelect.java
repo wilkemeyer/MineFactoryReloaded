@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.control;
 
-import cofh.core.CoFHProps;
+import cofh.core.init.CoreProps;
 import cofh.lib.gui.GuiColor;
 import cofh.lib.gui.element.ElementButtonManaged;
 
@@ -205,7 +205,7 @@ public class ButtonLogicPinSelect extends ElementButtonManaged
 	{
 		if (_buffer < 12)
 		{
-			if (!CoFHProps.enableColorBlindTextures)
+			if (!CoreProps.enableColorBlindTextures)
 			{
 				drawModalRect(posX + 3, posY + 3, posX + sizeX - 3, posY + sizeY - 3, _pinColors[_pin].getColor());
 			}
