@@ -159,7 +159,7 @@ public class FactoryGlassModel implements IModel {
 				for (EnumFacing facing : EnumFacing.VALUES) {
 					List<BakedQuad> faceQuads = new ArrayList<>();
 					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(63), DefaultVertexFormats.ITEM, colorValue));
-					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(62), DefaultVertexFormats.ITEM, colorValue));
+					faceQuads.add(PlanarFaceBakery.bakeFace(facing, spriteSheet.getSprite(62)));
 					coreQuads.put(facing, faceQuads);
 				}
 
