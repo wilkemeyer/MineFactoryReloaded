@@ -94,7 +94,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 	private void updateDiagonalConnection(IBlockAccess world, BlockPos pos, Map<Integer, Boolean> connections, EnumFacing facing,
 			EnumFacing secondFacing, int initialIndex)
 	{
-		if(connections.get(secondFacing.ordinal()) || connections.get(facing.ordinal())) {
+		if(connections.get(secondFacing.ordinal()) && connections.get(facing.ordinal())) {
 			IBlockState neighborState = world.getBlockState(pos.offset(secondFacing).offset(facing));
 			connections.put(initialIndex + facing.getHorizontalIndex(),	neighborState.getBlock() == this);
 		} else {

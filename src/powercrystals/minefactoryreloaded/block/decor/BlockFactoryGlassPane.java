@@ -20,6 +20,9 @@ import net.minecraftforge.common.property.Properties;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative
 {
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class); //TODO move properties to one place
@@ -54,23 +57,58 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	{
 		return getMetaFromState(state);
 	}
-	
+
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		IExtendedBlockState extState = (IExtendedBlockState) state;
 
+		Map<Integer, Boolean> connections = getConnections(world, pos);
+
 		for(EnumFacing facing : EnumFacing.HORIZONTALS) {
-			extState = extState.withProperty(CTM_VALUE[facing.getHorizontalIndex()], getCTMValue(facing, world, pos));
+			extState = extState.withProperty(CTM_VALUE[facing.getHorizontalIndex()], getCTMValue(connections, facing));
 		}
 
 		return extState;
 	}
 
+	private Map<Integer, Boolean> getConnections(IBlockAccess world, BlockPos pos)
+	{
+		Map<Integer, Boolean> connections = new HashMap<>();
+
+		for(EnumFacing facing : EnumFacing.VALUES) {
+			updateSideConnection(world, pos, connections, facing);
+		}
+
+		for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+			updateDiagonalConnection(world, pos, connections, facing, EnumFacing.UP, 6);
+			updateDiagonalConnection(world, pos, connections, facing, EnumFacing.HORIZONTALS[(facing.getHorizontalIndex() + 1) % 4], 10);
+			updateDiagonalConnection(world, pos, connections, facing, EnumFacing.DOWN, 14);
+		}
+
+		return connections;
+	}
+
+	private void updateDiagonalConnection(IBlockAccess world, BlockPos pos, Map<Integer, Boolean> connections, EnumFacing facing,
+			EnumFacing secondFacing, int initialIndex)
+	{
+		if(connections.get(secondFacing.ordinal()) && connections.get(facing.ordinal())) {
+			IBlockState neighborState = world.getBlockState(pos.offset(secondFacing).offset(facing));
+			connections.put(initialIndex + facing.getHorizontalIndex(),	neighborState.getBlock() == this);
+		} else {
+			connections.put(initialIndex + facing.getHorizontalIndex(), false);
+		}
+	}
+
+	private void updateSideConnection(IBlockAccess world, BlockPos pos, Map<Integer, Boolean> connections, EnumFacing facing)
+	{
+		IBlockState stateNeigbor = world.getBlockState(pos.offset(facing));
+		connections.put(facing.ordinal(), stateNeigbor.getBlock() == this);
+	}
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-
 		BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 		builder.add(COLOR);
 		builder.add(NORTH);
@@ -96,125 +134,25 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
-		
+	public BlockRenderLayer getBlockLayer()
+	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
+	private int getCTMValue(Map<Integer, Boolean> connections, EnumFacing side)
 	{
-		// This space intentionally left blank.
-	}
-
-	@Override
-	public int getRenderBlockPass()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getRenderColor(int meta)
-	{
-		return MFRUtil.COLORS[Math.min(Math.max(meta, 0), 15)];
-	}
-
-	@Override
-	public boolean recolourBlock(World world, BlockPos pos, EnumFacing side, int colour)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-		if (meta != colour)
-		{
-			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
-		}
-		return false;
-	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta)
-	{
-		meta /= 16;
-		switch (meta)
-		{
-		case 2:
-			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);
-		case 1:
-			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 6, 7);
-		case 0:
-		default:
-			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 7, 7);
-		}
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		BlockPos bp = new BlockPos(x, y, z, EnumFacing.VALID_DIRECTIONS[side]);
 		boolean[] sides = new boolean[8];
-		bp.moveRight(1);
-		sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveDown(1);
-		sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveLeft(1);
-		sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveLeft(1);
-		sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveUp(1);
-		sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveUp(1);
-		sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveRight(1);
-		sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveRight(1);
-		sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, sides);
-	}
+		EnumFacing left = EnumFacing.HORIZONTALS[(side.getHorizontalIndex() + 1) % 4];
+		EnumFacing right = left.getOpposite();
 
-	@Override
-	public IIcon func_150097_e()
-	{
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 5, 7);
-	}
-*/
-
-	@Override
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		return !(canPaneConnectTo(world, pos, side) ||
-				!super.shouldSideBeRendered(state, world, pos, side));
-	}
-
-/*	@Override
-	public int getRenderType()
-	{
-		return MineFactoryReloadedCore.renderIdFactoryGlassPane;
-	}*/
-
-	private int getCTMValue(EnumFacing side, IBlockAccess world, BlockPos pos) {
-
-		BlockPos posToCheck;
-		boolean[] sides = new boolean[8];
-		EnumFacing right = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2)] : EnumFacing.VALUES[(side.ordinal() - 2) ^ 1];
-		EnumFacing left = side.getAxis() == EnumFacing.Axis.Z ? EnumFacing.VALUES[(side.ordinal() + 2) ^ 1] : EnumFacing.VALUES[(side.ordinal() - 2)];
-
-		posToCheck = pos.offset(right);
-		sides[0] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(EnumFacing.DOWN);
-		sides[4] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(left);
-		sides[1] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(left);
-		sides[5] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(EnumFacing.UP);
-		sides[3] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(EnumFacing.UP);
-		sides[6] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(right);
-		sides[2] = world.getBlockState(posToCheck).getBlock().equals(this);
-		posToCheck = posToCheck.offset(right);
-		sides[7] = world.getBlockState(posToCheck).getBlock().equals(this);
+		sides[0] = connections.get(right.ordinal()); //right
+		sides[4] = connections.get(14 + right.getHorizontalIndex()); //right down
+		sides[1] = connections.get(EnumFacing.DOWN.ordinal()); //down
+		sides[5] = connections.get(14 + left.getHorizontalIndex()); //left down
+		sides[3] = connections.get(left.ordinal()); //left
+		sides[6] = connections.get(6 + left.getHorizontalIndex()); //left up
+		sides[2] = connections.get(EnumFacing.UP.ordinal()); //up
+		sides[7] = connections.get(6 + right.getHorizontalIndex()); //right up
 
 		return toInt(sides) & 255;
 	}
@@ -226,3 +164,4 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		return ret;
 	}
 }
+
