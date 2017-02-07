@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import static cofh.core.CoFHProps.PATH_GUI_STORAGE;
+import static cofh.core.init.CoreProps.PATH_GUI_STORAGE;
 
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;

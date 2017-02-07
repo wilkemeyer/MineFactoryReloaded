@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 {
@@ -180,7 +182,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		if (stack.getItem() instanceof IAugmentItem)
 		{
 			IAugmentItem upgrade = (IAugmentItem)stack.getItem();
-			int r = upgrade.getAugmentLevel(stack, "radius");
+			int r = "radius".equals(upgrade.getAugmentIdentifier(stack)) ? ((ItemUpgrade)upgrade).getAugmentLevel(stack, "radius") : 0;
 			if (r != 0)
 				newUpgradeLevel = (int)(r * _upgradeModifier);
 		}

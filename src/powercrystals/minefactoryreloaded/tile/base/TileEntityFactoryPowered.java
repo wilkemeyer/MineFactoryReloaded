@@ -118,8 +118,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		ItemStack stack = getStackInSlot(i);
 		if (AugmentHelper.isAugmentItem(stack)) {
 			IAugmentItem item = (IAugmentItem) stack.getItem();
-			int level = item.getAugmentLevel(stack, "machineSpeed");
-			if (level >= 0) {
+			if ("machineSpeed".equals(item.getAugmentIdentifier(stack))) {
+				int level = item.getAugmentType(stack) == IAugmentItem.AugmentType.BASIC ? 1 : 2; //TODO this needs review
 				_workTicks = (int) Math.pow(2, level);
 				int e = _machine.getActivationEnergy();
 				setActivationEnergy(_workTicks * (e + ((e * level) >> 1)));
@@ -135,7 +135,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	protected boolean canUseUpgrade(ItemStack stack, IAugmentItem item) {
 
-		return super.canUseUpgrade(stack, item) || item.getAugmentLevel(stack, "machineSpeed") > 0;
+		return super.canUseUpgrade(stack, item) || "machineSpeed".equals(item.getAugmentIdentifier(stack));
 	}
 
 	protected boolean updateIsActive(boolean failedDrops) {

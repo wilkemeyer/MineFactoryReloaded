@@ -22,7 +22,7 @@ import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFountain;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -151,7 +151,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 		_reverse = false;
 		if (isUsableAugment(_inventory[0])) {
 			IAugmentItem upgrade = (IAugmentItem) _inventory[0].getItem();
-			int r = upgrade.getAugmentLevel(_inventory[0], "radius");
+			int r = "radius".equals(upgrade.getAugmentIdentifier(_inventory[0])) ? ((ItemUpgrade)upgrade).getAugmentLevel(_inventory[0], "radius") : 0;
 			if (r > 0) {
 				_areaManager.setUpgradeLevel(r);
 				Area area = new Area(pos.up(), r, 0, r * 2);

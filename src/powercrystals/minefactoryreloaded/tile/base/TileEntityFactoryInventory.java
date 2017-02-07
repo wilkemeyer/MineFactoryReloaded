@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory {
@@ -272,7 +273,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected boolean canUseUpgrade(ItemStack stack, IAugmentItem item) {
 
-		return _areaManager != null && item.getAugmentLevel(stack, "radius") != 0;
+		return _areaManager != null && item instanceof ItemUpgrade && ((ItemUpgrade) item).getAugmentLevel(stack, "radius") != 0;
 	}
 
 	public boolean isUsableAugment(ItemStack stack) {

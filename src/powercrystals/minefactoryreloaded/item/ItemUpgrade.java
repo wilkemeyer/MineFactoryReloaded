@@ -33,7 +33,8 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 		infoList.add(String.format(MFRUtil.localize("tip.info.mfr.upgrade.radius", true), getAugmentLevel(stack, "radius")));
 	}
 
-	@Override
+	//TODO fix upgrades when it comes to former augment level implementation
+	//@Override
 	public int getAugmentLevel(ItemStack stack, String type) {
 
 		if (type.equals("radius")) {
@@ -46,13 +47,15 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 	}
 
 	@Override
-	public String getAugmentType(ItemStack stack) {
+	public AugmentType getAugmentType(ItemStack stack) {
 
-		int dmg = stack.getItemDamage();
-		switch (dmg) {
-		default:
-			return "radius";
-		}
+		return AugmentType.BASIC;
+	}
+
+	@Override
+	public String getAugmentIdentifier(ItemStack stack) {
+
+		return "radius";
 	}
 
 }
