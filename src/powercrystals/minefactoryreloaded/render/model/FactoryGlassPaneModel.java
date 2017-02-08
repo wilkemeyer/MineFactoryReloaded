@@ -66,10 +66,6 @@ public class FactoryGlassPaneModel implements IModel {
 
 		private CCModel post;
 		private Map<EnumFacing, CCModel> sideModels = new HashMap<>();
-		//TODO all this color stuff is only required because PlanarFaceBakery doesn't support setting tintindexes - review and either change or keep
-		private Cache<EnumDyeColor, Map<EnumFacing, CCModel>> coreCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
-		private Cache<Integer, CCModel> frameCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
-
 		private TextureAtlasSprite glassTexture;
 		private TextureAtlasSprite glassStreaksTexture;
 
@@ -123,23 +119,26 @@ public class FactoryGlassPaneModel implements IModel {
 			int ctmValueWest = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[1]);
 			Map<EnumFacing, Boolean> connections = getConnections(ctmValueSouth, ctmValueWest);
 
-			renderPaneParts(state, ccrs, color, overlayTextures, connections);
+			renderPaneParts(exState, ccrs, color, overlayTextures, connections);
 		}
 
-		private void renderPaneParts(@Nullable IBlockState state, CCRenderState ccrs, int color, Map<EnumFacing, TextureAtlasSprite> overlayTextures, 
+		private void renderPaneParts(@Nullable IExtendedBlockState state, CCRenderState ccrs, int color, Map<EnumFacing, TextureAtlasSprite> overlayTextures,
 				Map<EnumFacing, Boolean> connections) {
-			
-			renderPaneSide(ccrs, EnumFacing.NORTH, color, overlayTextures, connections, state.getValue(BlockPane.NORTH));
-			renderPaneSide(ccrs, EnumFacing.SOUTH, color, overlayTextures, connections, state.getValue(BlockPane.SOUTH));
-			renderPaneSide(ccrs, EnumFacing.WEST, color, overlayTextures, connections, state.getValue(BlockPane.WEST));
-			renderPaneSide(ccrs, EnumFacing.EAST, color, overlayTextures, connections, state.getValue(BlockPane.EAST));
 
-			if (!connections.get(EnumFacing.UP)) {
-				renderPostFace(ccrs, EnumFacing.UP, FactoryGlassModel.spriteSheet.getSprite(61), color);
+			int facesToShow = state.getValue(BlockFactoryGlassPane.FACES);
+			renderPaneSide(ccrs, EnumFacing.NORTH, color, overlayTextures, connections, state.getValue(BlockPane.NORTH), facesToShow);
+			renderPaneSide(ccrs, EnumFacing.SOUTH, color, overlayTextures, connections, state.getValue(BlockPane.SOUTH), facesToShow);
+			renderPaneSide(ccrs, EnumFacing.WEST, color, overlayTextures, connections, state.getValue(BlockPane.WEST), facesToShow);
+			renderPaneSide(ccrs, EnumFacing.EAST, color, overlayTextures, connections, state.getValue(BlockPane.EAST), facesToShow);
+
+			boolean renderUp = shouldRenderFace(facesToShow, EnumFacing.UP);
+			if (!connections.get(EnumFacing.UP) || renderUp) {
+				renderPostFace(ccrs, EnumFacing.UP, FactoryGlassModel.spriteSheet.getSprite(61), color, !renderUp);
 			}
 
-			if (!connections.get(EnumFacing.DOWN)) {
-				renderPostFace(ccrs, EnumFacing.DOWN, FactoryGlassModel.spriteSheet.getSprite(61), color);
+			boolean renderDown = shouldRenderFace(facesToShow, EnumFacing.DOWN);
+			if (!connections.get(EnumFacing.DOWN) || renderDown) {
+				renderPostFace(ccrs, EnumFacing.DOWN, FactoryGlassModel.spriteSheet.getSprite(61), color, !renderDown);
 			}
 		}
 
@@ -153,7 +152,7 @@ public class FactoryGlassPaneModel implements IModel {
 		}
 
 		private Map<EnumFacing, Boolean> getConnections(int ctmValueSouth, int ctmValueWest) {
-			
+
 			Map<EnumFacing, Boolean> connections = new HashMap<>();
 			connections.put(EnumFacing.UP, ((ctmValueSouth >> 2) & 1) == 1);
 			connections.put(EnumFacing.DOWN, ((ctmValueSouth >> 1) & 1) == 1);
@@ -164,49 +163,68 @@ public class FactoryGlassPaneModel implements IModel {
 			return connections;
 		}
 
-		private void renderPaneSide(CCRenderState ccrs, EnumFacing facing, int color, Map<EnumFacing, TextureAtlasSprite> overlayTextures, 
-				Map<EnumFacing, Boolean> connections, boolean renderPart) {
-			
+		private boolean shouldRenderFace(int facesToShow, EnumFacing side) {
+
+			return ((facesToShow >> side.ordinal()) & 1) == 1;
+		}
+
+		private boolean shouldRenderBorder(int facesToShow, EnumFacing upDownSide, EnumFacing horizontalSide) {
+
+			int offset = upDownSide == EnumFacing.UP ? 6 : 10;
+			return ((facesToShow >> (offset + horizontalSide.getHorizontalIndex())) & 1) == 1;
+		}
+
+		private void renderPaneSide(CCRenderState ccrs, EnumFacing facing, int color, Map<EnumFacing, TextureAtlasSprite> overlayTextures,
+				Map<EnumFacing, Boolean> connections, boolean renderPart, int facesToShow) {
+
 			if (renderPart) {
-				renderPanePart(ccrs, facing, overlayTextures, color, connections);
+				renderPanePart(ccrs, facing, overlayTextures, color, connections, facesToShow);
 			} else {
-				renderPostFace(ccrs, facing, overlayTextures.get(facing), color);
+				renderPostFace(ccrs, facing, overlayTextures.get(facing), color, true);
 			}
 		}
 
-		private void renderPostFace(CCRenderState ccrs, EnumFacing facing, TextureAtlasSprite texture, int color) {
+		private void renderPostFace(CCRenderState ccrs, EnumFacing facing, TextureAtlasSprite texture, int color, boolean renderOverlay) {
 
 			renderModelFace(ccrs, post, facing, glassTexture, color);
 			renderModelFace(ccrs, post, facing, glassStreaksTexture, color);
-			renderModelFace(ccrs, post, facing, texture);
+			if (renderOverlay)
+				renderModelFace(ccrs, post, facing, texture);
 		}
 
 		private void renderPanePart(CCRenderState ccrs,	@Nullable EnumFacing side, Map<EnumFacing, TextureAtlasSprite> overlayTextures, int color,
-				Map<EnumFacing, Boolean> connections) {
+				Map<EnumFacing, Boolean> connections, int facesToShow) {
 
 			CCModel model = sideModels.get(side).copy();
 
+			boolean renderFaceOnSide = shouldRenderFace(facesToShow, side);
 			for(EnumFacing facing : EnumFacing.HORIZONTALS) {
-				//exclude side that's next to post
-				if (facing != side.getOpposite() && !(connections.get(side) && facing == side)) {
-					renderGlassFaces(ccrs, model, facing, overlayTextures.get(facing), color);
-				}
+				//skip the face that's next to post and the face that's connected to another pane and is not supposed to be rendered (same color pane)
+				if (facing == side.getOpposite() || (facing == side && connections.get(side) && !renderFaceOnSide))
+					continue;
+
+				renderGlassFaces(ccrs, model, facing, overlayTextures.get(facing), color, side != facing || !renderFaceOnSide);
 			}
 
-			if (!connections.get(EnumFacing.UP)) {
-				renderGlassFaces(ccrs, model, EnumFacing.UP, FactoryGlassModel.spriteSheet.getSprite(61), color);
+			boolean renderUp = shouldRenderFace(facesToShow, EnumFacing.UP);
+			boolean renderBorderUp = shouldRenderBorder(facesToShow, EnumFacing.UP, side);
+			if (!connections.get(EnumFacing.UP) || renderUp || renderBorderUp) {
+				renderGlassFaces(ccrs, model, EnumFacing.UP, FactoryGlassModel.spriteSheet.getSprite(61), color, !renderUp || renderBorderUp);
 			}
 
-			if (!connections.get(EnumFacing.DOWN)) {
-				renderGlassFaces(ccrs, model, EnumFacing.DOWN, FactoryGlassModel.spriteSheet.getSprite(61), color);
+			boolean renderDown = shouldRenderFace(facesToShow, EnumFacing.DOWN);
+			boolean renderBorderDown = shouldRenderBorder(facesToShow, EnumFacing.DOWN, side);
+			if (!connections.get(EnumFacing.DOWN) || renderDown) {
+				renderGlassFaces(ccrs, model, EnumFacing.DOWN, FactoryGlassModel.spriteSheet.getSprite(61), color, !renderDown || renderBorderDown);
 			}
 		}
 
-		private void renderGlassFaces(CCRenderState ccrs, CCModel model, EnumFacing facing, TextureAtlasSprite overlayTexture, int color) {
-			
+		private void renderGlassFaces(CCRenderState ccrs, CCModel model, EnumFacing facing, TextureAtlasSprite overlayTexture, int color, boolean renderOverlay) {
+
 			renderModelFace(ccrs, model, facing, glassTexture, color);
 			renderModelFace(ccrs, model, facing, glassStreaksTexture);
-			renderModelFace(ccrs, model, facing, overlayTexture);
+			if (renderOverlay)
+				renderModelFace(ccrs, model, facing, overlayTexture);
 		}
 
 		private void renderModelFace(CCRenderState ccrs, CCModel model, EnumFacing facing, TextureAtlasSprite texture) {
