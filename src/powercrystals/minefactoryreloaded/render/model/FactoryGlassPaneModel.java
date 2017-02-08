@@ -64,6 +64,7 @@ public class FactoryGlassPaneModel implements IModel {
 
 	private static class FactoryGlassPaneBakedModel implements IBakedModel {
 
+		private Cache<Long, List<BakedQuad>> cache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 		private CCModel post;
 		private Map<EnumFacing, CCModel> sideModels = new HashMap<>();
 		private TextureAtlasSprite glassTexture;
@@ -95,18 +96,52 @@ public class FactoryGlassPaneModel implements IModel {
 				return Collections.emptyList();
 			}
 
-			BakingVertexBuffer buffer = BakingVertexBuffer.create();
-			buffer.begin(7, DefaultVertexFormats.ITEM);
-			CCRenderState ccrs = CCRenderState.instance();
-			ccrs.reset();
-			ccrs.bind(buffer);
+			long key = getCacheKey(state);
+			List<BakedQuad> quads = cache.getIfPresent(key);
 
-			//TODO cache !!!
+			if (quads == null) {
+				BakingVertexBuffer buffer = BakingVertexBuffer.create();
+				buffer.begin(7, DefaultVertexFormats.ITEM);
+				CCRenderState ccrs = CCRenderState.instance();
+				ccrs.reset();
+				ccrs.bind(buffer);
 
-			renderPane(state, ccrs);
+				renderPane(state, ccrs);
 
-			buffer.finishDrawing();
-			return buffer.bake();
+				buffer.finishDrawing();
+				quads = buffer.bake();
+				cache.put(key, quads);
+			}
+			return quads;
+		}
+
+		private long getCacheKey(IBlockState state) {
+
+			IExtendedBlockState exState = (IExtendedBlockState) state;
+
+			long key = 0;
+
+			key |= exState.getValue(BlockFactoryGlassPane.COLOR).getMetadata();
+			key = key << 14;
+			key |= exState.getValue(BlockFactoryGlassPane.FACES);
+			key = key << 8;
+			key |= exState.getValue(BlockFactoryGlassPane.CTM_VALUE[0]);
+			key = key << 8;
+			key |= exState.getValue(BlockFactoryGlassPane.CTM_VALUE[1]);
+			key = key << 8;
+			key |= exState.getValue(BlockFactoryGlassPane.CTM_VALUE[2]);
+			key = key << 8;
+			key |= exState.getValue(BlockFactoryGlassPane.CTM_VALUE[3]);
+			key = key << 1;
+			key |= exState.getValue(BlockPane.NORTH) ? 1 : 0;
+			key = key << 1;
+			key |= exState.getValue(BlockPane.SOUTH) ? 1 : 0;
+			key = key << 1;
+			key |= exState.getValue(BlockPane.WEST) ? 1 : 0;
+			key = key << 1;
+			key |= exState.getValue(BlockPane.EAST) ? 1 : 0;
+
+			return key;
 		}
 
 		private void renderPane(@Nullable IBlockState state, CCRenderState ccrs) {

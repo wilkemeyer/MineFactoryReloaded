@@ -116,9 +116,8 @@ public class FactoryGlassModel implements IModel {
 	}
 
 	private static class FactoryGlassBakedModel implements IBakedModel {
-		//TODO all this color stuff is only required because PlanarFaceBakery doesn't support setting tintindexes - review and either change or keep
-		private Cache<EnumDyeColor, Map<EnumFacing,List<BakedQuad>>> coreCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
+		private Cache<EnumDyeColor, Map<EnumFacing,List<BakedQuad>>> coreCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 		private Cache<Integer, BakedQuad> frameCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
 		@Override
