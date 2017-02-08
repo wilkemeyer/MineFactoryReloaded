@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "minefactoryreloaded:detcord",
+		"textures": {
+			"detcord": "minefactoryreloaded:blocks/tile.mfr.detcord"
+		}
+	},
+	"variants": {
+		"normal": [{
+
+		}]
+	}
+}

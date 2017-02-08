@@ -1,0 +1,21 @@
+{
+    "parent": "block/block",
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "#detcord"
+    },
+    "elements": [
+        {
+            "from": [0, 0, 6],
+            "to": [16, 3, 10],
+            "faces": {
+                "down":  { "texture": "#detcord"},
+                "up":    { "texture": "#detcord"},
+                "north": { "texture": "#detcord"},
+                "south": { "texture": "#detcord"},
+                "west":  { "texture": "#detcord"},
+                "east":  { "texture": "#detcord"}
+            }
+        }
+    ]
+}

@@ -170,6 +170,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 
 		//general
+		registerModel(detCordBlock);
 		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 		
 		ModelLoader.setCustomStateMapper(MFRThings.rubberLeavesBlock, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());

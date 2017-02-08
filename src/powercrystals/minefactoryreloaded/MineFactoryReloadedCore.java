@@ -472,7 +472,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		registerBlock(vineScaffoldBlock, new ItemBlockVineScaffold(vineScaffoldBlock));
 		registerBlock(fertileSoil, new ItemBlockFactory(fertileSoil, 3));
 		
-		registerBlock(detCordBlock, ItemBlockDetCord.class);
+		registerBlock(detCordBlock, new ItemBlockDetCord(detCordBlock));
 
 		registerBlock(fakeLaserBlock, null);
 
