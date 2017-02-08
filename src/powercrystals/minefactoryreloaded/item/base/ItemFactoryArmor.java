@@ -43,15 +43,6 @@ public class ItemFactoryArmor extends ItemArmorCore {
 		return this;
 	}
 
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-
-		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-*/
-
 	@Override
 	public String toString() {
 

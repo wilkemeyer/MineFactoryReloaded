@@ -216,7 +216,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.strawItem, "tool", "variant=straw");
 
 		registerModel(MFRThings.xpExtractorItem, "xp_extractor_1");
-		
+
+		registerModel(plasticGlasses, "armor", "type=glass_helm");
+		registerModel(plasticHelmetItem, "armor", "type=helm");
+		registerModel(plasticChestplateItem, "armor", "type=chest");
+		registerModel(plasticLeggingsItem, "armor", "type=legs");
+		registerModel(plasticBootsItem, "armor", "type=boots");
+
 		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
 		registerColoredItemModels(MFRThings.laserFocusItem, "laser_focus");
 		

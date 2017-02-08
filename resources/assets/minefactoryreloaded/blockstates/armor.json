@@ -1,0 +1,36 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"type": {
+			"glass_helm": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.glass.armor.helm"
+				}
+			},
+			"boots": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.plastic.armor.boots"
+				}
+			},
+			"chest": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.plastic.armor.chest"
+				}
+			},
+			"helm": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.plastic.armor.helm"
+				}
+			},
+			"legs": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.plastic.armor.legs"
+				}
+			}
+		}
+	}
+}
