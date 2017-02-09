@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import codechicken.lib.model.ModelRegistryHelper;
+import codechicken.lib.model.blockbakery.BlockBakery;
 import codechicken.lib.model.blockbakery.CCBakeryModel;
 import codechicken.lib.texture.TextureUtils;
 import net.minecraft.block.Block;
@@ -69,7 +70,6 @@ import powercrystals.minefactoryreloaded.block.*;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
@@ -82,6 +82,7 @@ import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
+import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
@@ -146,6 +147,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
 		registerModel(MFRThings.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
 		registerModel(MFRThings.milkBottleItem, "milk_bottle");
+
+		registerModel(plasticTank, BlockTankRenderer.MODEL_LOCATION);
+		ModelRegistryHelper.register(BlockTankRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/dynamo/dynamo_coil_redstone"));
+		BlockBakery.registerBlockKeyGenerator(plasticTank,
+				state -> String.valueOf(colorRand.nextInt(Integer.MAX_VALUE))); // state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockTank.FLUID) + "," + state.getValue(BlockTank.SIDES));
+		//TODO REVERT TO NON RANDOM KEY
+
 
 		//transport
 		Item item = Item.getItemFromBlock(MFRThings.conveyorBlock);
@@ -673,7 +681,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerFluidSprites(evt.getMap(), chocolateMilkLiquid.getFluid());
 		registerFluidSprites(evt.getMap(), mushroomSoupLiquid.getFluid());
 		registerFluidSprites(evt.getMap(), steamFluid.getFluid());
-		
+
+		evt.getMap().registerSprite(BlockTankRenderer.BOTTOM_TEXTURE_LOCATION);
+
 /* TODO add code to gen GUI background
 		SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
 		ContainerAutoDisenchanter.background = e.map.registerIcon("minefactoryreloaded:gui/book");
@@ -690,6 +700,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		PlasticPipeRenderer.updateUVT(evt.getMap().getAtlasSprite(PlasticPipeRenderer.textureLocation.toString()));
 		RedNetLogicRenderer.updateUVT(evt.getMap().getAtlasSprite(RedNetLogicRenderer.textureLocation.toString()));
+		BlockTankRenderer.updateSprites(evt.getMap());
 	}
 
 	private void registerFluidSprites(TextureMap textureMap, Fluid fluid) {
