@@ -5,6 +5,7 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import codechicken.lib.model.ModelRegistryHelper;
 import codechicken.lib.model.blockbakery.BlockBakery;
 import codechicken.lib.model.blockbakery.CCBakeryModel;
+import codechicken.lib.model.blockbakery.IItemStackKeyGenerator;
 import codechicken.lib.texture.TextureUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -30,6 +31,7 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -71,6 +73,7 @@ import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
 import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
+import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
@@ -149,12 +152,21 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(MFRThings.milkBottleItem, "milk_bottle");
 
 		registerModel(plasticTank, BlockTankRenderer.MODEL_LOCATION);
-		ModelRegistryHelper.register(BlockTankRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/dynamo/dynamo_coil_redstone"));
+		ModelRegistryHelper.register(BlockTankRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/machines/tile.mfr.tank.bottom"));
 		BlockBakery.registerBlockKeyGenerator(plasticTank,
-				state -> String.valueOf(colorRand.nextInt(Integer.MAX_VALUE))); // state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockTank.FLUID) + "," + state.getValue(BlockTank.SIDES));
-		//TODO REVERT TO NON RANDOM KEY
-
-
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockTank.FLUID) + "," + state.getValue(BlockTank.SIDES));
+		BlockBakery.registerItemKeyGenerator(Item.getItemFromBlock(plasticTank), stack -> {
+			String key = stack.getItem().getRegistryName().toString();
+			if (stack.getItem() instanceof ItemBlockTank) {
+				FluidStack fluidStack = ((ItemBlockTank) stack.getItem()).getFluid(stack);
+				if (fluidStack != null) {
+					key += "," + fluidStack.getFluid().getStill().toString();
+				}
+			}
+			return key;
+		});
+		
+		
 		//transport
 		Item item = Item.getItemFromBlock(MFRThings.conveyorBlock);
 		for (int i=0; i < 17; i++)
@@ -335,7 +347,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		item = Item.getItemFromBlock(factoryGlassBlock);
 		ModelLoader.setCustomMeshDefinition(item, stack -> glassItemModel);
 		ModelLoader.registerItemVariants(item, glassItemModel);
-		TextureUtils.addIconRegister(FactoryGlassModel.spriteSheet);
 		MFRModelLoader.registerModel(FactoryGlassModel.MODEL_LOCATION, FactoryGlassModel.MODEL);
 
 		ModelLoader.setCustomStateMapper(factoryGlassPaneBlock, new StateMapperBase() {

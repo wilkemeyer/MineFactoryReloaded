@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.render.model;
 
 import codechicken.lib.model.bakery.PlanarFaceBakery;
 import codechicken.lib.texture.SpriteSheetManager;
+import codechicken.lib.texture.TextureUtils;
 import codechicken.lib.util.TransformUtils;
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
@@ -38,6 +39,8 @@ public class FactoryGlassModel implements IModel {
 
 		for(int i=0; i < 64; i++)
 			spriteSheet.setupSprite(i); //TODO shouldn't this really be done by CCL itself?
+
+		TextureUtils.addIconRegister(FactoryGlassModel.spriteSheet);
 	}
 
 	public static final IModel MODEL = new FactoryGlassModel();

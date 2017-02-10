@@ -88,17 +88,16 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 	}
 
 	@Override
-	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-
-		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
+	public BlockRenderLayer getBlockLayer() {
+		
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		Block block = state.getBlock();
-		if (side.getAxis().isHorizontal() && block.equals(this)) {
+		if (side.getAxis().isHorizontal() && world.getBlockState(pos.offset(side)).getBlock().equals(this)) {
 			return false;
 		}
 		return true;
@@ -122,67 +121,6 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 		}
 		return 0;
 	}
-
-/*
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		if (side == 0)
-			return icons[0];
-		if ((side % 6) == 1) {
-			return new IconOverlay(icons[1], 2, 2, meta);
-		}
-		return new IconOverlay(icons[2], 3, 3, meta);
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, BlockPos pos, EnumFacing side) {
-
-		int meta = 0;
-		if (side == 6 || side == 7) {
-			meta = 1;
-			TileEntity tile = world.getTileEntity(x, y, z);
-			if (tile instanceof TileEntityTank) {
-				TileEntityTank tank = (TileEntityTank) tile;
-				FluidStack fluid = tank.getFluid();
-				if (fluid != null)
-					return fluid.getFluid().getIcon(fluid);
-			}
-		}
-		if (side > 1 && side < 6) {
-			TileEntity tile = world.getTileEntity(x, y, z);
-			if (tile instanceof TileEntityTank) {
-				TileEntityTank tank = (TileEntityTank) tile;
-				int side2 = (((side / 2 - 1) ^ 1) + 1) * 2 + ((side & 1) ^ (side / 2 - 1));
-				boolean a = tank.isInterfacing(EnumFacing.getOrientation(side2));
-				boolean b = tank.isInterfacing(EnumFacing.getOrientation(side2 ^ 1));
-				if (a) {
-					if (b)
-						meta = 2;
-					else
-						meta = 1;
-				} else if (b)
-					meta = 3;
-				if (meta != 0)
-					meta += 2;
-			}
-		}
-		return getIcon(side, meta);
-	}
-
-	@Override
-	public int colorMultiplier(IBlockAccess world, BlockPos pos) {
-
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityTank) {
-			TileEntityTank tank = (TileEntityTank) tile;
-			FluidStack fluid = tank.getFluid();
-			if (fluid != null)
-				return fluid.getFluid().getColor(fluid);
-		}
-		return 0xFFFFFF;
-	}
-*/
 
 	@Override
 	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {

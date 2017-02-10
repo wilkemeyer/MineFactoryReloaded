@@ -16,8 +16,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.ItemBlockTank;
 import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
+import powercrystals.minefactoryreloaded.render.model.FactoryGlassModel;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
 import java.util.ArrayList;
@@ -45,6 +49,8 @@ public class BlockTankRenderer implements ISimpleBlockBakery {
 		spriteSheetSide.setupSprite(4);
 		spriteSheetSide.setupSprite(5);
 
+		TextureUtils.addIconRegister(spriteSheetTop);
+		TextureUtils.addIconRegister(spriteSheetSide);
 	}
 	private static TextureAtlasSprite bottom;
 
@@ -79,13 +85,10 @@ public class BlockTankRenderer implements ISimpleBlockBakery {
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		if (MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.TRANSLUCENT) {
-			String fluid = state.getValue(BlockTank.FLUID);
-			addFluidFaceQuads(face, fluid, quads);
-		} else if(MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.CUTOUT) {
-			byte sides = state.getValue(BlockTank.SIDES);
-			addOverlayFaceQuads(face, sides, quads);
-		}
+		String fluid = state.getValue(BlockTank.FLUID);
+		addFluidFaceQuads(face, fluid, quads);
+		byte sides = state.getValue(BlockTank.SIDES);
+		addOverlayFaceQuads(face, sides, quads);
 
 		return quads;
 	}
@@ -142,8 +145,16 @@ public class BlockTankRenderer implements ISimpleBlockBakery {
 		if (face == null) {
 			List<BakedQuad> quads = new ArrayList<>();
 
+			String fluid = null;
+			if (stack.getItem() instanceof ItemBlockTank) {
+				FluidStack fluidStack = ((ItemBlockTank) stack.getItem()).getFluid(stack);
+				if (fluidStack != null) {
+					fluid = fluidStack.getFluid().getStill().toString();
+				}
+			}
+			
 			for(EnumFacing facing : EnumFacing.VALUES) {
-				addFluidFaceQuads(facing, null, quads);
+				addFluidFaceQuads(facing, fluid, quads);
 				addOverlayFaceQuads(facing, (byte) 0, quads);
 			}
 			return quads;
