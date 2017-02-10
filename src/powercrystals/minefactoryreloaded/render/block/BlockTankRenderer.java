@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.render.block;
 
 import codechicken.lib.model.bakery.PlanarFaceBakery;
 import codechicken.lib.model.blockbakery.ISimpleBlockBakery;
-import codechicken.lib.render.CCModel;
 import codechicken.lib.texture.SpriteSheetManager;
 import codechicken.lib.texture.TextureUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -11,17 +10,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockTank;
 import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
-import powercrystals.minefactoryreloaded.render.model.FactoryGlassModel;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
 import java.util.ArrayList;
@@ -34,7 +29,6 @@ public class BlockTankRenderer implements ISimpleBlockBakery {
 	public static final ResourceLocation BOTTOM_TEXTURE_LOCATION = new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/machines/tile.mfr.tank.bottom");
 	public static final ResourceLocation TOP_TEXTURE_LOCATION = new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/machines/tile.mfr.tank.top.png");
 	public static final ResourceLocation SIDE_TEXTURE_LOCATION = new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/machines/tile.mfr.tank.side.png");
-
 
 	private static SpriteSheetManager.SpriteSheet spriteSheetTop = SpriteSheetManager.getSheet(2, 2, TOP_TEXTURE_LOCATION);
 	private static SpriteSheetManager.SpriteSheet spriteSheetSide = SpriteSheetManager.getSheet(3, 3, SIDE_TEXTURE_LOCATION);
