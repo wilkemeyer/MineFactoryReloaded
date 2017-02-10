@@ -5,9 +5,8 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import codechicken.lib.model.ModelRegistryHelper;
 import codechicken.lib.model.blockbakery.BlockBakery;
 import codechicken.lib.model.blockbakery.CCBakeryModel;
-import codechicken.lib.model.blockbakery.IItemStackKeyGenerator;
-import codechicken.lib.texture.TextureUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPane;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -18,6 +17,7 @@ import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityList;
@@ -69,10 +69,7 @@ import org.lwjgl.util.Point;
 
 import powercrystals.minefactoryreloaded.api.IMobEggHandler;
 import powercrystals.minefactoryreloaded.block.*;
-import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
-import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
+import powercrystals.minefactoryreloaded.block.decor.*;
 import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
@@ -91,8 +88,8 @@ import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 import powercrystals.minefactoryreloaded.render.item.*;
-import powercrystals.minefactoryreloaded.render.model.FactoryGlassModel;
-import powercrystals.minefactoryreloaded.render.model.FactoryGlassPaneModel;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
 import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
 import powercrystals.minefactoryreloaded.render.model.SyringeModel;
@@ -337,29 +334,57 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		registerModel(plasticCupItem, "plastic_cup");
 		MFRModelLoader.registerModel(PlasticCupModel.MODEL_LOCATION, PlasticCupModel.MODEL);
 
-		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMapperBase() {
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return FactoryGlassModel.MODEL_LOCATION;
-			}
-		});
 		ModelResourceLocation glassItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "inventory");
 		item = Item.getItemFromBlock(factoryGlassBlock);
 		ModelLoader.setCustomMeshDefinition(item, stack -> glassItemModel);
 		ModelLoader.registerItemVariants(item, glassItemModel);
-		MFRModelLoader.registerModel(FactoryGlassModel.MODEL_LOCATION, FactoryGlassModel.MODEL);
+		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMapperBase() {
+			@Override protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return FactoryGlassRenderer.MODEL_LOCATION;
+			}
+		});
+		ModelRegistryHelper.register(FactoryGlassRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
+			@Override public TextureAtlasSprite getParticleTexture() { 
+				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME); 
+			}
+		});
+		BlockBakery.registerBlockKeyGenerator(factoryGlassBlock,
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlass.COLOR).getMetadata() 
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[0])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[1])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[2])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[3])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[4])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[5])
+		);
 
 		ModelLoader.setCustomStateMapper(factoryGlassPaneBlock, new StateMapperBase() {
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return FactoryGlassPaneModel.MODEL_LOCATION;
+				return FactoryGlassPaneRenderer.MODEL_LOCATION;
 			}
 		});
+		ModelRegistryHelper.register(FactoryGlassPaneRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
+			@Override public TextureAtlasSprite getParticleTexture() {
+				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME);
+			}
+		});
+		BlockBakery.registerBlockKeyGenerator(factoryGlassPaneBlock,
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[0])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[1])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[2])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[3])
+						+ "," + state.getValue(BlockFactoryGlassPane.FACES)
+						+ "," + (state.getValue(BlockPane.NORTH) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.SOUTH) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.WEST) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.EAST) ? 1 : 0)
+		);
 		ModelResourceLocation glassPaneItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass_pane", "inventory");
 		item = Item.getItemFromBlock(factoryGlassPaneBlock);
 		ModelLoader.setCustomMeshDefinition(item, stack -> glassPaneItemModel);
 		ModelLoader.registerItemVariants(item, glassPaneItemModel);
-		MFRModelLoader.registerModel(FactoryGlassPaneModel.MODEL_LOCATION, FactoryGlassPaneModel.MODEL);
 
 		ModelLoaderRegistry.registerLoader(MFRModelLoader.INSTANCE);
 	}

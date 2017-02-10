@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import codechicken.lib.model.blockbakery.IBakeryBlock;
+import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import codechicken.lib.texture.SpriteSheetManager;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
@@ -25,12 +27,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock
 {
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
@@ -204,5 +207,11 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative
 		for (int i = flags.length; i --> 0;)
 			ret |= (flags[i] ? 1 : 0) << i;
 		return ret;
+	}
+
+	@Override
+	public ICustomBlockBakery getCustomBakery() {
+		
+		return FactoryGlassRenderer.INSTANCE;
 	}
 }

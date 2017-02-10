@@ -1,5 +1,7 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import codechicken.lib.model.blockbakery.IBakeryBlock;
+import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -21,11 +23,12 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative
+public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock
 {
 	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[4];
@@ -185,5 +188,11 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		for (int i = flags.length; i --> 0;)
 			ret |= (flags[i] ? 1 : 0) << i;
 		return ret;
+	}
+
+	@Override
+	public ICustomBlockBakery getCustomBakery() {
+		
+		return FactoryGlassPaneRenderer.INSTANCE;
 	}
 }
