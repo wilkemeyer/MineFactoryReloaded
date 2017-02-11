@@ -9,6 +9,7 @@ import cofh.core.init.CoreProps;
 import cofh.core.world.WorldHandler;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -522,6 +523,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "SafariNet", 0, instance, 160, 5, true);
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, instance, 160, 5, true);
+		LootTableList.register(EntityPinkSlime.PINK_SLIME);
 		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, instance, 160, 3, true);
 		EntityRegistry.registerModEntity(EntityRocket.class, "Rocket", 3, instance, 160, 1, true);
 		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, instance, 80, 3, true);
