@@ -5,7 +5,6 @@ import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.CoFHCore;
-import cofh.core.init.CoreProps;
 import cofh.core.world.WorldHandler;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +26,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -94,6 +92,7 @@ import powercrystals.minefactoryreloaded.block.transport.BlockRailCargoPickup;
 import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerDropoff;
 import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerPickup;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.ReflectionHelper;
 import powercrystals.minefactoryreloaded.entity.DebugTracker;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
@@ -432,7 +431,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		rocketLauncherItem = (new ItemRocketLauncher()).setUnlocalizedName("mfr.rocketlauncher").setMaxStackSize(1);
 		rocketItem = (new ItemRocket()).setUnlocalizedName("mfr.rocket").setMaxStackSize(16);
 
-		registerBlock(conveyorBlock, new ItemBlockConveyor(conveyorBlock, BlockConveyor._names));
+		registerBlock(conveyorBlock, new ItemBlockConveyor(conveyorBlock,  BlockConveyor.NAMES));
 		registerBlock(machineBlock, new ItemBlockFactory(machineBlock, BlockFactoryDecoration.Variant.NAMES));
 		machineBaseItem = Item.getItemFromBlock(machineBlock);
 
@@ -460,8 +459,8 @@ public class MineFactoryReloadedCore extends BaseMod {
 		rubberWoodItem = Item.getItemFromBlock(rubberWoodBlock);
 		rubberLeavesItem = Item.getItemFromBlock(rubberLeavesBlock);
 
-		registerBlock(factoryGlassBlock, new ItemBlockFactory(factoryGlassBlock, BlockFactoryGlass._names));
-		registerBlock(factoryGlassPaneBlock, new ItemBlockFactory(factoryGlassPaneBlock, BlockFactoryGlass._names));
+		registerBlock(factoryGlassBlock, new ItemBlockFactory(factoryGlassBlock, MFRDyeColor.NAMES));
+		registerBlock(factoryGlassPaneBlock, new ItemBlockFactory(factoryGlassPaneBlock, MFRDyeColor.NAMES));
 		registerBlock(factoryRoadBlock, new ItemBlockFactoryRoad(factoryRoadBlock));
 		registerBlock(factoryPlasticBlock, new ItemBlockFactory(factoryPlasticBlock, BlockFactoryPlastic.Variant.NAMES));
 		registerBlock(factoryDecorativeBrickBlock, new ItemBlockFactory(factoryDecorativeBrickBlock, BlockDecorativeBricks.Variant.NAMES));

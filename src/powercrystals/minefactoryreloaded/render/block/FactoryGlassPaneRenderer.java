@@ -74,7 +74,7 @@ public class FactoryGlassPaneRenderer implements ISimpleBlockBakery {
 
 		IExtendedBlockState exState = (IExtendedBlockState) state;
 
-		int color = (MFRUtil.COLORS[state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()] << 8) + 0xFF;
+		int color = (state.getValue(BlockFactoryGlassPane.COLOR).getColor() << 8) + 0xFF;
 		Map<EnumFacing, TextureAtlasSprite> overlayTextures = getOverlayTextures(exState);
 		int ctmValueSouth = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[0]);
 		int ctmValueWest = exState.getValue(BlockFactoryGlassPane.CTM_VALUE[1]);

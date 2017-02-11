@@ -11,11 +11,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
@@ -23,6 +20,7 @@ import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
 import static powercrystals.minefactoryreloaded.block.transport.BlockConveyor.ConveyorDirection.*;
 
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
@@ -31,7 +29,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 public class TileEntityConveyor extends TileEntityBase
 		implements IRotateableTile, ISidedInventory, IPipeConnection, IInventoryConnection
 {
-	EnumDyeColor _dye = null;
+	MFRDyeColor _dye = null;
 
 	private boolean _rednetReversed = false;
 	private boolean _isReversed = false;
@@ -43,12 +41,12 @@ public class TileEntityConveyor extends TileEntityBase
 
 	private boolean _isFast = false;
 
-	public EnumDyeColor getDyeColor()
+	public MFRDyeColor getDyeColor()
 	{
 		return _dye;
 	}
 
-	public void setDyeColor(EnumDyeColor dye)
+	public void setDyeColor(MFRDyeColor dye)
 	{
 		if(worldObj != null && !worldObj.isRemote && _dye != dye)
 		{
@@ -72,7 +70,7 @@ public class TileEntityConveyor extends TileEntityBase
 	{
 		super.handlePacketData(tag);
 
-		_dye = tag.getInteger("dye") == -1 ? null : EnumDyeColor.byMetadata(tag.getInteger("dye"));
+		_dye = tag.getInteger("dye") == -1 ? null : MFRDyeColor.byMetadata(tag.getInteger("dye"));
 		_conveyorActive = tag.getBoolean("conveyorActive");
 		_isFast = tag.getBoolean("isFast");
 	}
@@ -287,7 +285,7 @@ public class TileEntityConveyor extends TileEntityBase
 
 		if(tag.hasKey("dyeColor"))
 		{
-			_dye = tag.getInteger("dyeColor") == -1 ? null : EnumDyeColor.byMetadata(tag.getInteger("dyeColor"));
+			_dye = tag.getInteger("dyeColor") == -1 ? null : MFRDyeColor.byMetadata(tag.getInteger("dyeColor"));
 		}
 		if (tag.hasKey("redNetActive"))
 		{

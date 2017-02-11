@@ -5,13 +5,11 @@ import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +20,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
 
@@ -30,7 +29,7 @@ import java.util.Map;
 
 public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock
 {
-	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class); //TODO move properties to one place
+	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[4];
 	public static final IUnlistedProperty<Integer> FACES = Properties.toUnlisted(PropertyInteger.create("faces", 0, 16384));
 
@@ -69,7 +68,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 
 		IExtendedBlockState extState = (IExtendedBlockState) state;
 
-		EnumDyeColor color = extState.getValue(COLOR);
+		MFRDyeColor color = extState.getValue(COLOR);
 		Map<Integer, Tuple<Boolean, Boolean>> connections = getConnections(world, pos, color);
 
 		for(EnumFacing facing : EnumFacing.HORIZONTALS) {
@@ -96,7 +95,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		return facesValue;
 	}
 
-	private Map<Integer, Tuple<Boolean, Boolean>> getConnections(IBlockAccess world, BlockPos pos, EnumDyeColor color)
+	private Map<Integer, Tuple<Boolean, Boolean>> getConnections(IBlockAccess world, BlockPos pos, MFRDyeColor color)
 	{
 		Map<Integer, Tuple<Boolean, Boolean>> connections = new HashMap<>();
 
@@ -125,7 +124,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		}
 	}
 
-	private void updateSideConnection(IBlockAccess world, BlockPos pos, EnumDyeColor color, Map<Integer, Tuple<Boolean, Boolean>> connections, EnumFacing facing)
+	private void updateSideConnection(IBlockAccess world, BlockPos pos, MFRDyeColor color, Map<Integer, Tuple<Boolean, Boolean>> connections, EnumFacing facing)
 	{
 		IBlockState stateNeigbor = world.getBlockState(pos.offset(facing));
 		connections.put(facing.ordinal(), new Tuple<>(stateNeigbor.getBlock() == this, stateNeigbor.getBlock() == this && stateNeigbor.getValue(COLOR) != color));
@@ -150,7 +149,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
+		return getDefaultState().withProperty(COLOR, MFRDyeColor.byMetadata(meta));
 	}
 
 	@Override

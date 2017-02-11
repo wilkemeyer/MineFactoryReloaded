@@ -4,13 +4,10 @@ import codechicken.lib.model.bakery.PlanarFaceBakery;
 import codechicken.lib.model.blockbakery.ISimpleBlockBakery;
 import codechicken.lib.texture.SpriteSheetManager;
 import codechicken.lib.texture.TextureUtils;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -18,11 +15,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FactoryGlassRenderer implements ISimpleBlockBakery {
 
@@ -108,9 +105,9 @@ public class FactoryGlassRenderer implements ISimpleBlockBakery {
 		return PlanarFaceBakery.bakeFace(side, getSpriteByCTMValue(ctmValue));
 	}
 
-	private List<BakedQuad> getCoreQuadsForSide(EnumDyeColor color, EnumFacing side) {
+	private List<BakedQuad> getCoreQuadsForSide(MFRDyeColor color, EnumFacing side) {
 
-		int colorValue = (MFRUtil.COLORS[color.ordinal()] << 8) + 0xFF;
+		int colorValue = (color.getColor() << 8) + 0xFF;
 
 		List<BakedQuad> faceQuads = new ArrayList<>();
 		faceQuads.add(PlanarFaceBakery.bakeFace(side, spriteSheet.getSprite(63), DefaultVertexFormats.ITEM, colorValue));

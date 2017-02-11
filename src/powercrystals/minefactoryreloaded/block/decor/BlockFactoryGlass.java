@@ -11,12 +11,9 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -26,6 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 
@@ -35,7 +33,7 @@ import java.util.Map;
 
 public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock
 {
-	public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class); //TODO move properties to one place
+	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
 
 	static {
@@ -50,9 +48,6 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 			spriteSheet.setupSprite(i);
 	}
 	
-	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
-		"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black" }; //TODO change to EnumDyeColor
-
 	public BlockFactoryGlass()
 	{
 		super(Material.GLASS, false);
@@ -126,7 +121,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
+		return getDefaultState().withProperty(COLOR, MFRDyeColor.byMetadata(meta));
 	}
 
 	@Override

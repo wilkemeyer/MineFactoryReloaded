@@ -37,10 +37,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorati
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
-import powercrystals.minefactoryreloaded.core.IGridController;
-import powercrystals.minefactoryreloaded.core.INode;
-import powercrystals.minefactoryreloaded.core.ITraceable;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.*;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -484,7 +481,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	public int getSideColorValue(EnumFacing side) {
 
-		return (MFRUtil.COLORS[getSideColor(side) & 15] << 8) | 0xFF;
+		return (MFRDyeColor.byMetadata(getSideColor(side) & 15).getColor() << 8) | 0xFF;
 	}
 
 	public boolean toggleSide(EnumFacing side) {

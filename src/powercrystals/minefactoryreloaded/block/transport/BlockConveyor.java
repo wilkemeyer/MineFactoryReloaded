@@ -1,19 +1,11 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.util.helpers.BlockHelper;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleDigging;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -23,12 +15,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -37,15 +28,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.IRotateableTile;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
@@ -54,16 +41,16 @@ import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
+import java.util.ArrayList;
+
 public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 
-	//TODO replace with use of EnumDyeColor
-	public static final String[] _names = { "white", "orange", "magenta", "lightblue", "yellow", "lime",
-			"pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black", "default" };
-	private static final int[] colors = new int[17];
+	public static final String[] NAMES = new String[17];
 	static {
-		for (int i = 16; i-- > 0;)
-			colors[i] = MFRUtil.COLORS[i];
-		colors[16] = 0xf6a82c;
+		for (MFRDyeColor color : MFRDyeColor.values()) {
+			NAMES[color.getMetadata()] = color.getUnlocalizedName();
+		}
+		NAMES[16] = "default";
 	}
 
 	public static final PropertyEnum<ConveyorDirection> DIRECTION = PropertyEnum.create("direction", ConveyorDirection.class);
@@ -150,7 +137,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityConveyor) {
-			((TileEntityConveyor) te).setDyeColor(stack.getItemDamage() == 16 ? null : EnumDyeColor.byMetadata(stack.getItemDamage()));
+			((TileEntityConveyor) te).setDyeColor(stack.getItemDamage() == 16 ? null : MFRDyeColor.byMetadata(stack.getItemDamage()));
 		}
 	}
 
@@ -445,7 +432,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		TileEntity te = world.getTileEntity(pos);
 		int meta = 16;
 		if (te instanceof TileEntityConveyor) {
-			EnumDyeColor dyeColor = ((TileEntityConveyor) te).getDyeColor();
+			MFRDyeColor dyeColor = ((TileEntityConveyor) te).getDyeColor();
 			meta = dyeColor == null ? 16 : dyeColor.getMetadata();
 		}
 

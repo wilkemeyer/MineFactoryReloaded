@@ -24,6 +24,7 @@ import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -213,7 +214,7 @@ public class TileEntityLaserDrill extends TileEntityFactoryInventory implements 
 				b += 255;
 				continue;
 			}
-			int c = MFRUtil.COLORS[s.getItemDamage()];
+			int c = MFRDyeColor.byMetadata(s.getItemDamage()).getColor();
 			r += (c >> 16) & 255;
 			g += (c >> 8) & 255;
 			b += (c >> 0) & 255;
