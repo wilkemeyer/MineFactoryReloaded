@@ -61,7 +61,7 @@ public class ItemXpExtractor extends ItemFactoryTool {
 			player.setActiveHand(hand);
 		}
 
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 
 	@Nullable
@@ -94,26 +94,4 @@ public class ItemXpExtractor extends ItemFactoryTool {
 			}
 		}
 	}
-
-/*
-	@Override
-	public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining) {
-		if (usingItem != null && usingItem.getItem().equals(this)) {
-			if (useRemaining > 24) return _icon1;
-			if (useRemaining > 12) return _icon2;
-			return _icon3;
-		}
-		return _icon1;
-	}
-
-	@Override
-	public void registerIcons(IIconRegister ir) {
-		_icon1 = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".1");
-		_icon2 = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".2");
-		_icon3 = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".3");
-
-		itemIcon = _icon1;
-	}
-*/
-
 }
