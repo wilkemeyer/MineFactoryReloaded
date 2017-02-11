@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded;
 
+import codechicken.lib.model.DummyBakedModel;
 import codechicken.lib.model.ModelRegistryHelper;
 import codechicken.lib.model.blockbakery.BlockBakery;
 import codechicken.lib.model.blockbakery.CCBakeryModel;
@@ -67,9 +68,8 @@ import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
 import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
 import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
-import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.entity.*;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.render.MachineStateMapper;
@@ -112,11 +112,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@SuppressWarnings("unused")
 	private static boolean gl14 = false;
 
-	public static HashMap<BlockPos, Integer> prcPages = new HashMap<BlockPos, Integer>();
+	public static HashMap<BlockPos, Integer> prcPages = new HashMap<>();
 
-	public static Set<IHarvestAreaContainer> _areaTileEntities = new LinkedHashSet<IHarvestAreaContainer>();
+	public static Set<IHarvestAreaContainer> _areaTileEntities = new LinkedHashSet<>();
 
 	private static Random colorRand = new Random();
+
+	private static final DummyBakedModel DUMMY_MODEL = new DummyBakedModel();
 
 	public static void preInit() {
 		
@@ -177,6 +179,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			item = Item.getItemFromBlock(MFRThings.machineBlocks.get(type.getGroupIndex()));
 			registerModel(item, type.getMeta(), MachineStateMapper.getModelName(type), "type=" + type.getName());
 		}
+		final ModelResourceLocation fakeLaserLocation = new ModelResourceLocation(fakeLaserBlock.getRegistryName(), "normal");
+		ModelLoader.setCustomStateMapper(fakeLaserBlock, new StateMap.Builder().ignore(BlockFakeLaser.FACING).build());
+		ModelRegistryHelper.register(fakeLaserLocation, DUMMY_MODEL);
 
 		//general
 		registerModel(detCordBlock);
@@ -184,11 +189,16 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		ModelLoader.setCustomStateMapper(MFRThings.rubberLeavesBlock, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());
 		item = Item.getItemFromBlock(MFRThings.rubberLeavesBlock);
+		final ModelResourceLocation[] leavesModels = new ModelResourceLocation[4];
+		for(int i = 0; i < 4; i++) {
+			String variant = "fancy=" + (i < 2) + ",variant=" + (((i % 2) == 0) ? "normal" : "dry");
+			leavesModels[i] = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rubberwood.leaves", variant);
+			ModelLoader.registerItemVariants(item, leavesModels[i]);
+		}
 		ModelLoader.setCustomMeshDefinition(item, stack -> {
-
-			String variant = "fancy=" + Minecraft.getMinecraft().gameSettings.fancyGraphics;
-			variant += ",variant=" + (stack.getMetadata() == 0 ? "normal" : "dry");
-			return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rubberwood.leaves", variant); //TODO cache values
+			int id = Minecraft.getMinecraft().gameSettings.fancyGraphics ? 0 : 2;
+			id += (stack.getMetadata() == 0 ? 0 : 1);
+			return leavesModels[id];
 		});
 
 		ModelLoader.setCustomStateMapper(MFRThings.rubberSaplingBlock, new StateMap.Builder().ignore(BlockRubberSapling.TYPE, BlockRubberSapling.STAGE).build());
@@ -302,7 +312,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		
 		ModelResourceLocation rednetCable = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_cable", "inventory");
 		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(rednetCableBlock), stack -> rednetCable);
+		item = Item.getItemFromBlock(rednetCableBlock);
+		ModelLoader.setCustomMeshDefinition(item, stack -> rednetCable);
+		ModelLoader.registerItemVariants(item, rednetCable);
 		ModelRegistryHelper.register(rednetCable, cableRenderer);
 		ModelLoader.setCustomStateMapper(rednetCableBlock, new StateMap.Builder().ignore(BlockRedNetCable.VARIANT).build());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);

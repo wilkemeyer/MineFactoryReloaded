@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
+import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.SoundType;
@@ -15,10 +16,14 @@ import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
+import javax.annotation.Nullable;
+
 public class BlockFactoryRail extends BlockRailBase {
 
 	protected boolean canSlope;
-	public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.<BlockRailBase.EnumRailDirection>create("shape", BlockRailBase.EnumRailDirection.class);
+	public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, 
+			dir -> dir != EnumRailDirection.NORTH_EAST && dir != EnumRailDirection.NORTH_WEST 
+					&& dir != EnumRailDirection.SOUTH_EAST && dir != EnumRailDirection.SOUTH_WEST);
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
 
 	public BlockFactoryRail(boolean par2, boolean slopes) {
