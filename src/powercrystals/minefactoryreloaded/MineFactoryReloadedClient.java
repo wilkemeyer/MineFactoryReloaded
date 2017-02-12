@@ -81,9 +81,13 @@ import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
 import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
 import powercrystals.minefactoryreloaded.render.model.SyringeModel;
+import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillPrechargerRenderer;
+import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
@@ -182,6 +186,9 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		final ModelResourceLocation fakeLaserLocation = new ModelResourceLocation(fakeLaserBlock.getRegistryName(), "normal");
 		ModelLoader.setCustomStateMapper(fakeLaserBlock, new StateMap.Builder().ignore(BlockFakeLaser.FACING).build());
 		ModelRegistryHelper.register(fakeLaserLocation, DUMMY_MODEL);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrill.class, new LaserDrillRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrillPrecharger.class,
+				new LaserDrillPrechargerRenderer());
 
 		//general
 		registerModel(detCordBlock);
