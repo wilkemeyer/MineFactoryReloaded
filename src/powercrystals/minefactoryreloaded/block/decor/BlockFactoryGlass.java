@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block.decor;
 import codechicken.lib.model.blockbakery.IBakeryBlock;
 import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import codechicken.lib.texture.SpriteSheetManager;
+import cofh.api.core.IInitializer;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -21,17 +22,20 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock, IInitializer
 {
 	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
@@ -56,6 +60,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 		setHardness(0.3F);
 		setSoundType(SoundType.GLASS);
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -208,5 +213,24 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 	public ICustomBlockBakery getCustomBakery() {
 		
 		return FactoryGlassRenderer.INSTANCE;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, MFRDyeColor.NAMES));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		
+		return true;
 	}
 }

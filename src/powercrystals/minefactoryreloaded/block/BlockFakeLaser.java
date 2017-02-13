@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.block;
 
 import java.util.Random;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.MapColor;
@@ -19,14 +20,16 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
 import javax.annotation.Nullable;
 
-public class BlockFakeLaser extends Block implements IRedNetNoConnection {
+public class BlockFakeLaser extends Block implements IRedNetNoConnection, IInitializer {
 
 	public static final PropertyDirection FACING = BlockDirectional.FACING;
 	private static final AxisAlignedBB NO_AABB = new AxisAlignedBB(0D, 0D, 0D, 0D, 0D, 0D);
@@ -40,6 +43,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
 		setUnlocalizedName("mfr.laserair");
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -155,5 +159,24 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 				TileEntityLaserDrill.canReplaceBlock(lowerBlock, world, pos.down())) {
 			world.setBlockState(pos.down(), this.getDefaultState());
 		}
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, null);
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
 	}
 }

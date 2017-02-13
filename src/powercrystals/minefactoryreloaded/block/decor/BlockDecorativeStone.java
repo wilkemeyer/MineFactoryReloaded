@@ -18,7 +18,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockDecorativeStone extends BlockFactory {
@@ -132,6 +134,13 @@ public class BlockDecorativeStone extends BlockFactory {
 	public int tickRate(World world) {
 
 		return 2;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, BlockDecorativeStone.Variant.NAMES));
+		return true;
 	}
 
 	public enum Variant implements IStringSerializable{

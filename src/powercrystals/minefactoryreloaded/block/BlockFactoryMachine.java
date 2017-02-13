@@ -3,7 +3,9 @@ package powercrystals.minefactoryreloaded.block;
 import cofh.core.init.CoreProps;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -26,6 +28,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -353,6 +357,30 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		}
 	}
 
+	@Override
+	public String getHarvestTool(IBlockState state) {
+		
+		return "pickaxe";
+	}
+
+	@Override
+	public int getHarvestLevel(IBlockState state) {
+		
+		return 0;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactoryMachine(this));
+		//TODO look into replacing the meta in here with state or at least enum
+		for(Type type : Type.GROUP_TYPES[_mfrMachineBlockIndex]) {
+			Machine machine = Machine.getMachineFromIndex(_mfrMachineBlockIndex, type.getMeta());
+			GameRegistry.registerTileEntity(machine.getTileEntityClass(), machine.getTileEntityName());
+		}
+		return true;
+	}
+
 	public enum Type implements IStringSerializable {
 		PLANTER(0, 0, "planter"),
 		FISHER(0, 1, "fisher"),
@@ -405,6 +433,8 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		private final int groupIndex;
 		private final int meta;
 		private final String name;
+		
+		public static List<Type>[] GROUP_TYPES = new List[3]; 
 
 		Type(int groupIndex, int meta, String name) {
 
@@ -430,6 +460,15 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 			
 			int index = groupIndex * 16 + meta;
 			return index >= values().length ? PLANTER : values()[index];
+		}
+		
+		static {
+			for(int i=0; i<3; i++)
+				GROUP_TYPES[i] = new ArrayList<>();
+
+			for(Type type : Type.values()) {
+				GROUP_TYPES[type.getGroupIndex()].add(type);
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
+import cofh.api.core.IInitializer;
 import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
@@ -10,15 +11,18 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import javax.annotation.Nullable;
 
-public class BlockFactoryRail extends BlockRailBase {
+public class BlockFactoryRail extends BlockRailBase implements IInitializer {
 
 	protected boolean canSlope;
 	public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, 
@@ -33,6 +37,7 @@ public class BlockFactoryRail extends BlockRailBase {
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MFRCreativeTab.tab);
 		canSlope = slopes;
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -89,5 +94,24 @@ public class BlockFactoryRail extends BlockRailBase {
 	@Override
 	public IProperty<EnumRailDirection> getShapeProperty() {
 		return SHAPE;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlock(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		
+		return true;
 	}
 }

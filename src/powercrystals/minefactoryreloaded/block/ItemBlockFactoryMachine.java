@@ -47,12 +47,6 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 	}
 
 	@Override
-	public boolean shouldRotateAroundWhenRendering() {
-
-		return false;
-	}
-
-	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 
 		return _names[Math.min(stack.getItemDamage(), _names.length - 1)];

@@ -4,7 +4,9 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 
 public class BlockFactoryDecoration extends BlockFactory
 {
@@ -31,6 +33,13 @@ public class BlockFactoryDecoration extends BlockFactory
 	public int getMetaFromState(IBlockState state) {
 
 		return state.getValue(VARIANT).meta;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.NAMES));
+		return true;
 	}
 
 	public enum Variant implements IStringSerializable {

@@ -20,9 +20,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockTank;
 import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
@@ -57,23 +60,6 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 		setUnlocalizedName("mfr.tank");
 		setLightOpacity(1);
 	}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		icons[0] = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.tank.bottom");
-		icons[1] = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.tank.top");
-		icons[2] = ir.registerIcon("minefactoryreloaded:machines/tile.mfr.tank.side");
-	}
-
-	@Override
-	public int getRenderType() {
-
-		return MineFactoryReloadedCore.renderIdFluidTank;
-	}
-*/
 
 	@Override
 	protected BlockStateContainer createBlockState() {
@@ -153,6 +139,14 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 	@Override
 	public ICustomBlockBakery getCustomBakery() {
 		return BlockTankRenderer.INSTANCE;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockTank(this));
+		GameRegistry.registerTileEntity(TileEntityTank.class, "factoryTank");
+		return true;
 	}
 }
 

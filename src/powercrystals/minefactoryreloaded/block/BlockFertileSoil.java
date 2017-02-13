@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import java.util.ArrayList;
 import java.util.Random;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
@@ -31,7 +32,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import javax.annotation.Nullable;
 
-public class BlockFertileSoil extends Block implements IGrowable
+public class BlockFertileSoil extends Block implements IGrowable, IInitializer
 {
 	public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 15);
 	public static final AxisAlignedBB SOIL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
@@ -49,6 +50,7 @@ public class BlockFertileSoil extends Block implements IGrowable
 		setCreativeTab(MFRCreativeTab.tab);
 		useNeighborBrightness = true; // THIS IS SET IN THE DUMBEST DAMN WAY ON FARMLAND
 		setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -241,5 +243,24 @@ public class BlockFertileSoil extends Block implements IGrowable
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state)
 	{ // fertilize
 		changeMoisture(world, pos, state, 1 + (int)(rand.nextFloat() * 1.5f));
+	}
+
+	@Override
+	public boolean preInit() 
+	{
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, 3));
+		return true;
+	}
+
+	@Override
+	public boolean initialize()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean postInit()
+	{
+		return true;
 	}
 }

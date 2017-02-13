@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Map.Entry;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail

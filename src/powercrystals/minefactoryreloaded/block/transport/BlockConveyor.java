@@ -28,10 +28,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
 import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.IEntityCollidable;
 import powercrystals.minefactoryreloaded.core.IRotateableTile;
@@ -607,6 +609,14 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		public int getYOffset() {
 			return yOffset;
 		}
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockConveyor(this, NAMES));
+		GameRegistry.registerTileEntity(TileEntityConveyor.class, "factoryConveyor");
+		return true;
 	}
 
 	public enum Speed implements IStringSerializable {

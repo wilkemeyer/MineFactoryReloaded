@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -14,11 +15,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import javax.annotation.Nullable;
 
-public class BlockPinkSlime extends BlockBreakable {
+public class BlockPinkSlime extends BlockBreakable implements IInitializer {
 
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.875D, 1D);
 	
@@ -27,11 +31,11 @@ public class BlockPinkSlime extends BlockBreakable {
 		super(Material.CLAY, false);
 		setCreativeTab(MFRCreativeTab.tab);
 		setUnlocalizedName("mfr.pinkslime.block");
-//		setBlockTextureName("minefactoryreloaded:" + getUnlocalizedName());
 		slipperiness = 0.8f;
 		setHardness(0.5f);
 		setHarvestLevel("shovel", 0);
 		setSoundType(SoundType.SLIME);
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -75,5 +79,24 @@ public class BlockPinkSlime extends BlockBreakable {
 			entity.motionZ *= d;
 		}
 		super.onEntityCollidedWithBlock(world, pos, state, entity);
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		
+		return true;
 	}
 }

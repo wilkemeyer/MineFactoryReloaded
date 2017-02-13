@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.block.*;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -11,6 +12,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
@@ -22,13 +24,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 import powercrystals.minefactoryreloaded.world.WorldGenMassiveTree;
 import powercrystals.minefactoryreloaded.world.WorldGenRubberTree;
 
-public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection, IGrowable {
+public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection, IGrowable, IInitializer {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
 	private static WorldGenRubberTree treeGen = new WorldGenRubberTree(true);
@@ -40,6 +44,7 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 		setUnlocalizedName("mfr.rubberwood.sapling");
 		setCreativeTab(MFRCreativeTab.tab);
 		this.setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.REGULAR).withProperty(STAGE, 0));
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -105,7 +110,27 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, TYPE, STAGE);
 	}
-	
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactoryTree(this));
+		Blocks.FIRE.setFireInfo(this, 30, 20);
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
+
 	private enum Type implements IStringSerializable {
 		
 		REGULAR(0, "regular"),

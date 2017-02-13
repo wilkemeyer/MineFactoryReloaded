@@ -24,11 +24,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetNetworkContainer;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -42,7 +45,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 
 	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
-	public static final String[] _names = { null, "glass", "energy", "energyglass" };
+	public static final String[] NAMES = { null, "glass", "energy", "energyglass" };
 
 	//@formatter:off
 	private static float _wireSize   =  4.0F / 16.0F;
@@ -452,6 +455,15 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				info.add(new TextComponentTranslation("chat.info.mfr.rednet.meter.cable.restzero"));
 			}
 		}
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, BlockRedNetCable.NAMES));
+		GameRegistry.registerTileEntity(TileEntityRedNetCable.class, "factoryRedstoneCable");
+		GameRegistry.registerTileEntity(TileEntityRedNetEnergy.class, "factoryRedstoneCableEnergy");
+		return true;
 	}
 
 	public enum Variant implements IStringSerializable {

@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityDetCord;
@@ -81,12 +83,11 @@ public class BlockDetCord extends BlockFactory {
 		return neighborState.isSideSolid(world, neighborPos, side);
 	}
 
-/*
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public boolean preInit() {
 
-		blockIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
+		MFRRegistry.registerBlock(this, new ItemBlockDetCord(this));
+		Blocks.FIRE.setFireInfo(this, 100, 20);
+		return true;
 	}
-*/
 }

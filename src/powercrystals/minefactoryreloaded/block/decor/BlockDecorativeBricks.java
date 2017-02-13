@@ -13,7 +13,9 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 
 public class BlockDecorativeBricks extends BlockFactory {
 
@@ -58,6 +60,13 @@ public class BlockDecorativeBricks extends BlockFactory {
 
 		Variant variant = world.getBlockState(pos).getValue(VARIANT);
 		return variant == Variant.OBSIDIAN || variant == Variant.OBSIDIAN_LARGE ? Blocks.OBSIDIAN.getExplosionResistance(exploder) : getExplosionResistance(exploder);
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, BlockDecorativeBricks.Variant.NAMES));
+		return true;
 	}
 
 	public enum Variant implements IStringSerializable {

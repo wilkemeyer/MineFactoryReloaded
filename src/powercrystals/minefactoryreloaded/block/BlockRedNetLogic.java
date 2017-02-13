@@ -18,6 +18,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
@@ -203,5 +205,12 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 			}
 		}
 	}
+	
+	@Override
+	public boolean preInit() {
 
+		MFRRegistry.registerBlock(this, new ItemBlockRedNetLogic(this));
+		GameRegistry.registerTileEntity(TileEntityRedNetLogic.class, "factoryRednetLogic");
+		return true;
+	}
 }

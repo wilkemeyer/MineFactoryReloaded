@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.properties.PropertyBool;
@@ -24,11 +25,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
+public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection, IInitializer
 {
 	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class, input -> input.getMetadata() < 4);
 	public static final PropertyBool FANCY = PropertyBool.create("fancy");
@@ -37,6 +39,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	{
 		setUnlocalizedName("mfr.rubberwood.leaves");
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -232,6 +235,26 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@Override
 	public List<ItemStack> onSheared(ItemStack itemStack, IBlockAccess iBlockAccess, BlockPos blockPos, int i) {
 		return null;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		Blocks.FIRE.setFireInfo(this, 80, 25);
+		MFRRegistry.registerBlock(this, new ItemBlockFactoryLeaves(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
 	}
 
 	public enum Variant implements IStringSerializable {

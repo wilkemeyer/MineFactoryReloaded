@@ -26,8 +26,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
@@ -149,16 +152,6 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 		return false;
 	}
 
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		blockIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		PlasticPipeRenderer.updateUVT(blockIcon);
-	}
-*/
-
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
@@ -175,5 +168,13 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 	public TileEntity createTileEntity(World world, IBlockState state) {
 
 		return new TileEntityPlasticPipe();
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this));
+		GameRegistry.registerTileEntity(TileEntityPlasticPipe.class, "factoryPlasticPipe");
+		return true;
 	}
 }

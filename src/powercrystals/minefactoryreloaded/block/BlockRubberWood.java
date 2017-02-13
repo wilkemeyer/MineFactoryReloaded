@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -7,7 +8,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
@@ -16,6 +19,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
@@ -24,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockRubberWood extends BlockLog implements IRedNetDecorative
+public class BlockRubberWood extends BlockLog implements IRedNetDecorative, IInitializer
 {
 	public static final PropertyBool RUBBER_FILLED = PropertyBool.create("rubber");
 
@@ -34,6 +38,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("axe", 0);
 		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true).withProperty(LOG_AXIS, EnumAxis.Y));
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -123,5 +128,25 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative
 	protected boolean canSilkHarvest()
 	{
 		return false;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlock(this));
+		Blocks.FIRE.setFireInfo(this, 50, 15);
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
 	}
 }

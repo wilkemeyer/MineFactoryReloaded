@@ -382,11 +382,6 @@ public class Machine {
 				_activationEnergy = c.get("Machine." + _name, "ActivationCostRF", getActivationEnergy(),
 					comment + ", in units of **1** RF").setRequiresMcRestart(true).getInt();
 		}
-		Block machineBlock = MFRThings.machineBlocks.get(_blockIndex);
-
-		//TODO look into replacing the meta in here with state or at least enum
-		machineBlock.setHarvestLevel("pickaxe", 0, machineBlock.getStateFromMeta(_meta));
-		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 
 /* TODO remove when not needed
@@ -445,6 +440,16 @@ public class Machine {
 			return t;
 		else
 			return base + "tile.mfr.machine.0." + side.alt;
+	}
+
+	public String getTileEntityName() {
+		
+		return _tileEntityName;
+	}
+
+	public Class<? extends TileEntityFactory> getTileEntityClass() {
+		
+		return _tileEntityClass;
 	}
 
 	protected static enum Side {

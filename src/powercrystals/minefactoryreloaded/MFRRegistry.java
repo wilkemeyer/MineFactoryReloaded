@@ -450,7 +450,7 @@ public abstract class MFRRegistry {
 		return item;
 	}
 
-	static void registerBlock(Block block, ItemBlock itemBlock) {
+	public static void registerBlock(Block block, ItemBlock itemBlock) {
 
 		String name = block.getUnlocalizedName();
 		blocks.put(name, block);

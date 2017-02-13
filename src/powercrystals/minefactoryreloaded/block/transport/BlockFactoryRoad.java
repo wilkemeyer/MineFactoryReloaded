@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
+import cofh.api.core.IInitializer;
 import cofh.core.util.CoreUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -16,12 +17,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class BlockFactoryRoad extends Block {
+public class BlockFactoryRoad extends Block implements IInitializer {
 
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D - 1/128D, 1D);
 	private static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
@@ -34,6 +38,7 @@ public class BlockFactoryRoad extends Block {
 		setResistance(25.0F);
 		setSoundType(SoundType.STONE);
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -77,32 +82,6 @@ public class BlockFactoryRoad extends Block {
 		}
 	}
 	
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-
-		_iconRoad = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		_iconRoadOff = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".light.off");
-		_iconRoadOn = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".light.on");
-	}
-
-	@Override
-	public IIcon getIcon(EnumFacing side, int meta) {
-
-		switch (meta) {
-		case 1:
-		case 3:
-			return _iconRoadOff;
-		case 2:
-		case 4:
-			return _iconRoadOn;
-		default:
-			return _iconRoad;
-		}
-	}
-*/
-
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, VARIANT);
@@ -191,7 +170,26 @@ public class BlockFactoryRoad extends Block {
 
 		return true;
 	}
-	
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactoryRoad(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		
+		return true;
+	}
+
 	public enum Variant implements IStringSerializable {
 		
 		NORMAL(0, "normal"),

@@ -15,6 +15,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
@@ -180,5 +182,13 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 	@Override
 	public void onInputChanged(World world, BlockPos pos, EnumFacing side, int inputValue)
 	{
+	}
+
+	@Override
+	public boolean preInit() 
+	{
+		MFRRegistry.registerBlock(this, new ItemBlockRedNetPanel(this));
+		GameRegistry.registerTileEntity(TileEntityRedNetHistorian.class, "factoryRednetHistorian");
+		return true;
 	}
 }

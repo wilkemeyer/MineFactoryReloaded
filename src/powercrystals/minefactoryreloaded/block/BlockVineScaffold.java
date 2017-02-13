@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block;
 
+import cofh.api.core.IInitializer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.block.SoundType;
@@ -23,13 +24,15 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import javax.annotation.Nullable;
 
-public class BlockVineScaffold extends Block implements IRedNetDecorative {
+public class BlockVineScaffold extends Block implements IRedNetDecorative, IInitializer {
 
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 			
@@ -45,6 +48,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 		setHardness(0.1F);
 		setTickRandomly(true);
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -186,5 +190,24 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
 		return side == EnumFacing.UP || side == EnumFacing.DOWN;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockVineScaffold(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
 	}
 }

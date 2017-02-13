@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IDismantleable;
+import cofh.api.core.IInitializer;
 import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.render.hitbox.RenderHitbox;
 
@@ -50,12 +51,13 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnecti
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.*;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 import javax.annotation.Nullable;
 
-public class BlockFactory extends Block implements IRedNetConnection, IDismantleable
+public class BlockFactory extends Block implements IRedNetConnection, IDismantleable, IInitializer
 {
 	private static final float SHRINK_AMOUNT = 0.125F;
 	private static final AxisAlignedBB SHRUNK_AABB = new AxisAlignedBB(SHRINK_AMOUNT, SHRINK_AMOUNT, SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT);
@@ -69,6 +71,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
+		MFRThings.registerInitializer(this);
 	}
 
 	protected BlockFactory(Material material)
@@ -76,6 +79,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		super(material);
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
+		MFRThings.registerInitializer(this);
 	}
 
 	protected static final TileEntity getTile(IBlockAccess world, BlockPos pos)
@@ -413,5 +417,23 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 			return RedNetConnectionType.DecorativeSingle;
 		else
 			return RedNetConnectionType.ForcedDecorativeSingle;
+	}
+
+	@Override
+	public boolean preInit() 
+	{
+		return true;
+	}
+
+	@Override
+	public boolean initialize() 
+	{
+		return true;
+	}
+
+	@Override
+	public boolean postInit() 
+	{
+		return true;
 	}
 }

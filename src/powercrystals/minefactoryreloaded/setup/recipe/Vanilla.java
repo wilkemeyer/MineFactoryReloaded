@@ -137,10 +137,6 @@ public class Vanilla {
 		registerOre("listAllwater", stack(POTIONITEM, 1, 0));
 	}
 
-	public void registerOredictEntries() {
-
-	}
-
 	protected void gatherItems() {
 
 	}

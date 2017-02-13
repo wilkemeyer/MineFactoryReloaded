@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.block.decor;
 
 import codechicken.lib.model.blockbakery.IBakeryBlock;
 import codechicken.lib.model.blockbakery.ICustomBlockBakery;
+import cofh.api.core.IInitializer;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -19,15 +20,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock
+public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock, IInitializer
 {
 	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[4];
@@ -55,6 +59,8 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		}
 		else
 			setCreativeTab(CreativeTabs.DECORATIONS);
+
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
@@ -193,5 +199,22 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	public ICustomBlockBakery getCustomBakery() {
 		
 		return FactoryGlassPaneRenderer.INSTANCE;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, MFRDyeColor.NAMES));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		return true;
 	}
 }
