@@ -823,13 +823,14 @@ public class Vanilla {
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 8), "blockLapis", stack(STONEBRICK));
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 9), stack2(OBSIDIAN), stack(STONEBRICK));
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 4, 10), stack(STONE_SLAB, 1, 0), stack(STONEBRICK));
+/*		TODO double slab doesn't have item as it did before, do we use something else instead here?
 		if (enableSmoothSlabRecipe.getBoolean(true)) {
 			addRecipe(stack(factoryDecorativeBrickBlock, 8, 10), new Object[] {
 				"VV",
 				"VV",
 				'V', stack(DOUBLE_STONE_SLAB, 1, 8)
 			});
-		}
+		}*/
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 11), stack2(SNOW), stack(STONEBRICK));
 		// 12 & 13 are special blocks
 		addRotatedGearRecipe(stack(factoryDecorativeBrickBlock, 8, 14), stack(BRICK_BLOCK, 1, 0), stack(STONEBRICK));
@@ -1238,6 +1239,7 @@ public class Vanilla {
 			}));
 		}
 
+/*		TODO double stone slab has no item as it did before. Use something else instead of it?
 		if (enableSmoothSlabRecipe.getBoolean(true)) {
 			addRecipe(stack(DOUBLE_STONE_SLAB, 3, 0), new Object[] {
 				"VVV",
@@ -1253,6 +1255,7 @@ public class Vanilla {
 				'V', stack(STONE_SLAB, 1, 1)
 			});
 		}
+*/
 
 		addRecipe(stack(vineScaffoldBlock, 8), new Object[] {
 				"VV",
