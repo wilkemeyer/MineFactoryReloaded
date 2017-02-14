@@ -23,6 +23,12 @@ import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class ItemRedNetMemoryCard extends ItemFactory {
 
+	public ItemRedNetMemoryCard() {
+
+		setUnlocalizedName("mfr.rednet.memorycard");
+		setMaxStackSize(1);
+	}
+
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
 

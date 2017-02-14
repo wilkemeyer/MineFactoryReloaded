@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -17,6 +18,12 @@ import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemNeedleGun extends ItemFactoryGun {
+
+	public ItemNeedleGun() {
+
+		setUnlocalizedName("mfr.needlegun");
+		setMaxStackSize(1);
+	}
 
 	@Override
 	protected boolean hasGUI(ItemStack stack) {
@@ -85,4 +92,12 @@ public class ItemNeedleGun extends ItemFactoryGun {
 		return "mfr:NeedleLaunched";
 	}
 
+	@Override
+	public boolean preInit() {
+
+		super.preInit();
+		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, MineFactoryReloadedCore.instance(), 160, 3, true);
+
+		return true;
+	}
 }

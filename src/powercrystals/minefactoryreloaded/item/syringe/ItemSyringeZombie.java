@@ -11,9 +11,16 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.HorseType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeZombie extends ItemSyringe
 {
+	public ItemSyringeZombie()
+	{
+		setUnlocalizedName("mfr.syringe.zombie");
+		setContainerItem(MFRThings.syringeEmptyItem);
+	}
+
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{

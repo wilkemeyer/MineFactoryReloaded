@@ -5,6 +5,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 
@@ -45,4 +47,12 @@ public class ItemFishingRod extends ItemFactoryTool {
 		return true;
 	}
 
+	@Override
+	public boolean preInit() {
+
+		super.preInit();
+		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, MineFactoryReloadedCore.instance(), 80, 3, true);
+
+		return true;
+	}
 }

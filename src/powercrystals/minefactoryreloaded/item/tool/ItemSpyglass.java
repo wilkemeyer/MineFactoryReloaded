@@ -26,6 +26,12 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemSpyglass extends ItemFactoryTool {
 
+	public ItemSpyglass() {
+
+		setUnlocalizedName("mfr.spyglass");
+		setMaxStackSize(1);
+	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		if (world.isRemote) {

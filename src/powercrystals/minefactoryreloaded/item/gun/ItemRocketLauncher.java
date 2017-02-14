@@ -5,7 +5,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
 import powercrystals.minefactoryreloaded.net.MFRPacket;
@@ -13,6 +15,12 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemRocketLauncher extends ItemFactoryGun {
+
+	public ItemRocketLauncher() {
+
+		setUnlocalizedName("mfr.rocketlauncher");
+		setMaxStackSize(1);
+	}
 
 	@Override
 	protected boolean hasGUI(ItemStack stack) {
@@ -57,4 +65,12 @@ public class ItemRocketLauncher extends ItemFactoryGun {
 		return "mfr:SPAMRLaunched";
 	}
 
+	@Override
+	public boolean preInit() {
+
+		super.preInit();
+		EntityRegistry.registerModEntity(EntityRocket.class, "Rocket", 3, MineFactoryReloadedCore.instance(), 160, 1, true);
+
+		return true;
+	}
 }

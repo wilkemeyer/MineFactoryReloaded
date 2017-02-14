@@ -12,6 +12,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
@@ -20,6 +22,8 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 
 	public ItemSafariNetLauncher() {
 		setHasIcons(true);
+		setUnlocalizedName("mfr.safarinet.launcher");
+		setMaxStackSize(1);
 	}
 
 	@Override
@@ -82,5 +86,14 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 	@Override
 	protected String getDelayTag(ItemStack stack) {
 		return "mfr:SafariLaunch";
+	}
+
+	@Override
+	public boolean preInit() {
+
+		super.preInit();
+		EntityRegistry.registerModEntity(EntitySafariNet.class, "SafariNet", 0, MineFactoryReloadedCore.instance(), 160, 5, true);
+
+		return true;
 	}
 }

@@ -43,6 +43,9 @@ public class ItemXpExtractor extends ItemFactoryTool {
 				}
 			}
 		});
+
+		setUnlocalizedName("mfr.xpextractor");
+		setMaxStackSize(1);
 	}
 	
 	@Override

@@ -18,16 +18,11 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerItem
 {
 	private boolean _prefix = false;
-/*    @SideOnly(Side.CLIENT)
-    protected IIcon fillIcon;
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
-	}*/
+	public ItemSyringeLiquid() {
+
+		setUnlocalizedName("mfr.syringe.empty");
+	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)

@@ -34,6 +34,12 @@ public class ItemPortaSpawner extends ItemFactory {
 	public static final String spawnerTag = "spawner";
 	private static final String placeTag = "placeDelay";
 
+	public ItemPortaSpawner() {
+
+		setUnlocalizedName("mfr.portaspawner");
+		setMaxStackSize(1);
+	}
+
 	public static NBTTagCompound getSpawnerTag(ItemStack stack) {
 
 		NBTTagCompound tag = stack.getTagCompound();

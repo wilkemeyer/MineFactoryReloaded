@@ -21,6 +21,12 @@ import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 
 public class ItemFactoryBag extends ItemFactory implements IInventoryContainerItem {
 
+	public ItemFactoryBag() {
+
+		setUnlocalizedName("mfr.plastic.bag");
+		setMaxStackSize(24);
+	}
+
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
 

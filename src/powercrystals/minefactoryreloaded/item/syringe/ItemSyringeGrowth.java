@@ -7,9 +7,16 @@ import net.minecraft.entity.monster.EntityGiantZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeGrowth extends ItemSyringe
 {
+	public ItemSyringeGrowth()
+	{
+		setUnlocalizedName("mfr.syringe.growth");
+		setContainerItem(MFRThings.syringeEmptyItem);
+	}
+
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{

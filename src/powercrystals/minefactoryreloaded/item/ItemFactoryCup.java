@@ -56,6 +56,7 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		useHandlers = new LinkedList<IUseHandler>();
 		useHandlers.add(defaultUseAction);
 		useHandlers.add(drinkUseAction);
+		setUnlocalizedName("mfr.plastic.cup");
 	}
 
 	@Override

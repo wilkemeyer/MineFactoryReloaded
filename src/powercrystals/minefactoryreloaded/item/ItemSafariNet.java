@@ -56,6 +56,11 @@ public class ItemSafariNet extends ItemFactory {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return super.getUnlocalizedName();
+	}
+
+	@Override
 	public int getItemStackLimit(ItemStack stack) {
 
 		if (!isSingleUse(stack) || !isEmpty(stack))

@@ -19,6 +19,8 @@ public class ItemMilkBottle extends ItemFactory {
 	public ItemMilkBottle() {
 
 		setContainerItem(Items.GLASS_BOTTLE);
+		setUnlocalizedName("mfr.milkbottle");
+		setMaxStackSize(16);
 	}
 
 	@Nullable

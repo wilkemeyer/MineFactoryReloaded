@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.item.base;
 
+import cofh.api.core.IInitializer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,22 +14,16 @@ import net.minecraft.item.ItemStack;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemFactory extends Item {
+public class ItemFactory extends Item implements IInitializer{
 
 	protected boolean _hasIcons = true;
 
 	public ItemFactory() {
 
 		setCreativeTab(MFRCreativeTab.tab);
-	}
-
-	@Override
-	public Item setUnlocalizedName(String name) {
-
-		super.setUnlocalizedName(name);
-		MFRRegistry.registerItem(this, getUnlocalizedName()); //TODO move this to a better place
-		return this;
+		MFRThings.registerInitializer(this);
 	}
 
 	public Item setHasIcons(boolean icons) {
@@ -59,16 +54,6 @@ public class ItemFactory extends Item {
 		addInfo(stack, player, infoList, advancedTooltips);
 	}
 
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-
-		if (_hasIcons)
-			this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-
-*/
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List subTypes) {
@@ -86,4 +71,22 @@ public class ItemFactory extends Item {
 		return b.toString();
 	}
 
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerItem(this, getUnlocalizedName()); //TODO change to separate registry name
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
 }

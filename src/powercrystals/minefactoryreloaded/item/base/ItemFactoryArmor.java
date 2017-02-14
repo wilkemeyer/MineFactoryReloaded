@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.item.base;
 
+import cofh.api.core.IInitializer;
 import cofh.core.item.ItemArmorCore;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -14,8 +15,9 @@ import net.minecraftforge.common.util.EnumHelper;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemFactoryArmor extends ItemArmorCore {
+public class ItemFactoryArmor extends ItemArmorCore implements IInitializer {
 
 	public static final ItemArmor.ArmorMaterial PLASTIC_ARMOR = EnumHelper.addArmorMaterial("mfr:plastic", "plastic", 3, new int[] { 1, 2, 2, 1 }, 7, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0);
 	public static final ItemArmor.ArmorMaterial GLASS_ARMOR = EnumHelper.addArmorMaterial("mfr:glass", "glass", 3, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0);
@@ -33,13 +35,13 @@ public class ItemFactoryArmor extends ItemArmorCore {
 		setMaxStackSize(1);
 		String prefix = MineFactoryReloadedCore.armorTextureFolder + getName(mat);
 		setArmorTextures(new String[] { prefix + "_layer_1.png", prefix + "_layer_2.png" });
+		MFRThings.registerInitializer(this);
 	}
 
 	@Override
 	public Item setUnlocalizedName(String name) {
 
 		super.setUnlocalizedName(name);
-		MFRRegistry.registerItem(this, getUnlocalizedName());
 		return this;
 	}
 
@@ -53,4 +55,22 @@ public class ItemFactoryArmor extends ItemArmorCore {
 		return b.toString();
 	}
 
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerItem(this, getUnlocalizedName());
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
 }

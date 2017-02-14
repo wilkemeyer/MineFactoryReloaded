@@ -17,6 +17,12 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemRuler extends ItemFactoryTool {
 
+	public ItemRuler() {
+
+		setUnlocalizedName("mfr.ruler");
+		setMaxStackSize(1);
+	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
 		if (world.isRemote) {

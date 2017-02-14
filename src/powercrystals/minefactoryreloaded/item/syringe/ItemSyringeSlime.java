@@ -4,9 +4,16 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeSlime extends ItemSyringe
 {
+	public ItemSyringeSlime()
+	{
+		setUnlocalizedName("mfr.syringe.slime");
+		setContainerItem(MFRThings.syringeEmptyItem);
+	}
+
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{

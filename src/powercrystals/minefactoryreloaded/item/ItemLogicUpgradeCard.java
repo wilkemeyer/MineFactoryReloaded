@@ -15,6 +15,8 @@ public class ItemLogicUpgradeCard extends ItemMulti {
 
 		setNames(_upgradeNames);
 		setHasIcons(false);
+		setUnlocalizedName("mfr.upgrade.logic");
+		setMaxStackSize(1);
 	}
 
 	@Override

@@ -40,6 +40,8 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	public ItemFactoryHammer() {
 
 		setHarvestLevel("wrench", 1);
+		setUnlocalizedName("mfr.hammer");
+		setMaxStackSize(1);
 	}
 
 	@Override

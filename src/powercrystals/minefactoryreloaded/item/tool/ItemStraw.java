@@ -29,6 +29,12 @@ import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 
 public class ItemStraw extends ItemFactoryTool {
 
+	public ItemStraw() {
+
+		setUnlocalizedName("mfr.straw");
+		setMaxStackSize(1);
+	}
+
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
 

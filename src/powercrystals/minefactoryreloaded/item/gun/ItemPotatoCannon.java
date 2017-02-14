@@ -14,6 +14,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.entity.EntityFlyingItem;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
@@ -24,6 +26,12 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 		Items.APPLE, Items.BOWL, Items.BRICK, Items.NETHERBRICK };
 	private static final float[] dmg = { 1f, 1f, 0.3f, 0.6f, 1f, 1.1f, 1.3f, 0.9f };
 	private static final int[] recover = { 7, 7, 0, 5, 8, 2, 1, 1 };
+
+	public ItemPotatoCannon() {
+
+		setUnlocalizedName("mfr.potatolauncher");
+		setMaxStackSize(1);
+	}
 
 	@Override
 	protected boolean hasGUI(ItemStack stack) {
@@ -117,4 +125,12 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 		return "mfr:PotatoLaunched";
 	}
 
+	@Override
+	public boolean preInit() {
+
+		super.preInit();
+		EntityRegistry.registerModEntity(EntityFlyingItem.class, "Item", 5, MineFactoryReloadedCore.instance(), 160, 7, true);
+
+		return true;
+	}
 }
