@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.api.core.IInitializer;
-import com.google.common.base.Predicate;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.SoundType;
@@ -10,19 +10,24 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-import javax.annotation.Nullable;
-
-public class BlockFactoryRail extends BlockRailBase implements IInitializer {
+public class BlockFactoryRail extends BlockRailBase implements IInitializer, IModelRegister {
 
 	protected boolean canSlope;
 	public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, 
@@ -38,6 +43,7 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer {
 		setCreativeTab(MFRCreativeTab.tab);
 		canSlope = slopes;
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -113,5 +119,25 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer {
 	public boolean postInit() {
 		
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+		
+	}
+
+	protected static void registerRailModel(Block railBlock, final String typeVariant) {
+		
+		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "shape=" + state.getValue(BlockFactoryRail.SHAPE) + ",type=" + typeVariant);
+			}
+		});
+
+		Item item = Item.getItemFromBlock(railBlock);
+		if (item != null)
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail_" + typeVariant, "inventory"));
 	}
 }

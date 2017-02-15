@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
-import java.util.Random;
-
+import codechicken.lib.model.ModelRegistryHelper;
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.MapColor;
@@ -11,25 +11,33 @@ import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
-
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-import javax.annotation.Nullable;
+import java.util.Random;
 
-public class BlockFakeLaser extends Block implements IRedNetNoConnection, IInitializer {
+import static powercrystals.minefactoryreloaded.setup.MFRThings.fakeLaserBlock;
+
+public class BlockFakeLaser extends Block implements IRedNetNoConnection, IInitializer, IModelRegister {
 
 	public static final PropertyDirection FACING = BlockDirectional.FACING;
 	private static final AxisAlignedBB NO_AABB = new AxisAlignedBB(0D, 0D, 0D, 0D, 0D, 0D);
@@ -44,6 +52,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection, IIniti
 		setResistance(Float.POSITIVE_INFINITY);
 		setUnlocalizedName("mfr.laserair");
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -166,6 +175,15 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection, IIniti
 
 		MFRRegistry.registerBlock(this, null);
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		final ModelResourceLocation fakeLaserLocation = new ModelResourceLocation(fakeLaserBlock.getRegistryName(), "normal");
+		ModelLoader.setCustomStateMapper(fakeLaserBlock, new StateMap.Builder().ignore(BlockFakeLaser.FACING).build());
+		ModelRegistryHelper.register(fakeLaserLocation, ModelHelper.DUMMY_MODEL);
 	}
 
 	@Override

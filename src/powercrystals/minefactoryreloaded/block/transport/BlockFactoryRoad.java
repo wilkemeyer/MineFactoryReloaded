@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import cofh.core.util.CoreUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -17,15 +18,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class BlockFactoryRoad extends Block implements IInitializer {
+public class BlockFactoryRoad extends Block implements IInitializer, IModelRegister {
 
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D - 1/128D, 1D);
 	private static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
@@ -39,6 +44,7 @@ public class BlockFactoryRoad extends Block implements IInitializer {
 		setSoundType(SoundType.STONE);
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -188,6 +194,13 @@ public class BlockFactoryRoad extends Block implements IInitializer {
 	public boolean postInit() {
 		
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "variant", Variant.NAMES);
 	}
 
 	public enum Variant implements IStringSerializable {

@@ -5,7 +5,6 @@ import cofh.core.init.CoreProps;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -17,6 +16,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,18 +28,27 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IRotateableTile;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.MachineStateMapper;
+import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillPrechargerRenderer;
+import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
+import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
 
 public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode {
 
@@ -379,6 +388,26 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 			GameRegistry.registerTileEntity(machine.getTileEntityClass(), machine.getTileEntityName());
 		}
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelLoader.setCustomStateMapper(this, MachineStateMapper.getInstance());
+
+		Item item = Item.getItemFromBlock(this);
+		
+		for (Type type : Type.GROUP_TYPES[_mfrMachineBlockIndex]) {
+			ModelHelper.registerModel(item, type.getMeta(), MachineStateMapper.getModelName(type), "type=" + type.getName());
+		}
+		
+		if(_mfrMachineBlockIndex == 2) {
+			//slightly hacky but probably best way to handle just two TESRs needed to get registered
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrill.class, new LaserDrillRenderer());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrillPrecharger.class,
+					new LaserDrillPrechargerRenderer());
+		}
 	}
 
 	public enum Type implements IStringSerializable {

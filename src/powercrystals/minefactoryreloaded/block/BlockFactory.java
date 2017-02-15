@@ -4,14 +4,9 @@ import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IDismantleable;
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.render.hitbox.RenderHitbox;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -19,13 +14,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -36,11 +30,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
-
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -56,8 +48,12 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
-public class BlockFactory extends Block implements IRedNetConnection, IDismantleable, IInitializer
+public class BlockFactory extends Block implements IRedNetConnection, IDismantleable, IInitializer, IModelRegister
 {
 	private static final float SHRINK_AMOUNT = 0.125F;
 	private static final AxisAlignedBB SHRUNK_AABB = new AxisAlignedBB(SHRINK_AMOUNT, SHRINK_AMOUNT, SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT);
@@ -72,6 +68,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	protected BlockFactory(Material material)
@@ -80,6 +77,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		setCreativeTab(MFRCreativeTab.tab);
 		setHarvestLevel("pickaxe", 0);
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	protected static final TileEntity getTile(IBlockAccess world, BlockPos pos)
@@ -435,5 +433,11 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	public boolean postInit() 
 	{
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+		
 	}
 }

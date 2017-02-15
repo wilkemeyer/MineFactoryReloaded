@@ -1,26 +1,28 @@
 package powercrystals.minefactoryreloaded.block;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockRubberWood extends BlockLog implements IRedNetDecorative, IInitializer
+public class BlockRubberWood extends BlockLog implements IRedNetDecorative, IInitializer, IModelRegister
 {
 	public static final PropertyBool RUBBER_FILLED = PropertyBool.create("rubber");
 
@@ -39,6 +41,7 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative, IIni
 		setHarvestLevel("axe", 0);
 		setDefaultState(blockState.getBaseState().withProperty(RUBBER_FILLED, true).withProperty(LOG_AXIS, EnumAxis.Y));
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -148,5 +151,15 @@ public class BlockRubberWood extends BlockLog implements IRedNetDecorative, IIni
 	public boolean postInit() {
 
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(RUBBER_FILLED).build());
+		Item item = Item.getItemFromBlock(this);
+		ModelHelper.registerModel(item, "rubberwood.log", "axis=y");
+		ModelHelper.registerModel(item, 1, "rubberwood.log", "axis=y");
 	}
 }

@@ -13,9 +13,12 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class BlockDecorativeBricks extends BlockFactory {
 
@@ -65,8 +68,15 @@ public class BlockDecorativeBricks extends BlockFactory {
 	@Override
 	public boolean preInit() {
 
-		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, BlockDecorativeBricks.Variant.NAMES));
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.NAMES));
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "variant", Variant.NAMES);
 	}
 
 	public enum Variant implements IStringSerializable {

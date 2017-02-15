@@ -1,9 +1,13 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import codechicken.lib.model.ModelRegistryHelper;
+import codechicken.lib.model.blockbakery.BlockBakery;
+import codechicken.lib.model.blockbakery.CCBakeryModel;
 import codechicken.lib.model.blockbakery.IBakeryBlock;
 import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import codechicken.lib.texture.SpriteSheetManager;
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,12 +15,17 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
@@ -35,7 +44,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock, IInitializer
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock, IInitializer, IModelRegister
 {
 	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
@@ -61,6 +70,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 		setSoundType(SoundType.GLASS);
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -232,5 +242,35 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 	public boolean postInit() {
 		
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelResourceLocation glassItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "inventory");
+		Item item = Item.getItemFromBlock(this);
+		ModelLoader.setCustomMeshDefinition(item, stack -> glassItemModel);
+		ModelLoader.registerItemVariants(item, glassItemModel);
+		ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+			@Override protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return FactoryGlassRenderer.MODEL_LOCATION;
+			}
+		});
+		ModelRegistryHelper.register(FactoryGlassRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
+			@Override public TextureAtlasSprite getParticleTexture() {
+				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME);
+			}
+		});
+		BlockBakery.registerBlockKeyGenerator(this,
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlass.COLOR).getMetadata()
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[0])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[1])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[2])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[3])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[4])
+						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[5])
+		);
+
 	}
 }

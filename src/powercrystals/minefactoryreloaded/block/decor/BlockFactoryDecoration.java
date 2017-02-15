@@ -4,9 +4,12 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class BlockFactoryDecoration extends BlockFactory
 {
@@ -40,6 +43,13 @@ public class BlockFactoryDecoration extends BlockFactory
 
 		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.NAMES));
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "variant", Variant.NAMES);
 	}
 
 	public enum Variant implements IStringSerializable {

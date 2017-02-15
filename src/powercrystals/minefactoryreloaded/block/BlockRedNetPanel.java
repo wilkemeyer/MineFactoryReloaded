@@ -1,9 +1,12 @@
 package powercrystals.minefactoryreloaded.block;
 
+import codechicken.lib.model.ModelRegistryHelper;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -15,12 +18,17 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
 
@@ -190,5 +198,16 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 		MFRRegistry.registerBlock(this, new ItemBlockRedNetPanel(this));
 		GameRegistry.registerTileEntity(TileEntityRedNetHistorian.class, "factoryRednetHistorian");
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		RedNetHistorianRenderer historianRenderer = new RedNetHistorianRenderer();
+		ModelHelper.registerModel(Item.getItemFromBlock(this), "rednet_historian");
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_historian", "inventory"), historianRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, historianRenderer);
+
 	}
 }

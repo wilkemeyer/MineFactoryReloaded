@@ -2,7 +2,6 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Map.Entry;
@@ -10,11 +9,11 @@ import java.util.Map.Entry;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
-import powercrystals.minefactoryreloaded.MFRRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail
@@ -50,5 +49,12 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 
 			minecart.removeItem(stackToAdd.stackSize, stackToAdd);
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		registerRailModel(this, "cargo_dropoff");
 	}
 }

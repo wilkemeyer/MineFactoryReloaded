@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
+import codechicken.lib.model.ModelRegistryHelper;
 import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.Cuboid6;
 import cofh.api.block.IBlockInfo;
@@ -7,9 +8,12 @@ import cofh.api.block.IBlockInfo;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -24,7 +28,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
@@ -34,6 +42,7 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
+import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
@@ -464,6 +473,22 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		GameRegistry.registerTileEntity(TileEntityRedNetCable.class, "factoryRedstoneCable");
 		GameRegistry.registerTileEntity(TileEntityRedNetEnergy.class, "factoryRedstoneCableEnergy");
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelResourceLocation rednetCable = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_cable", "inventory");
+		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
+		Item item = Item.getItemFromBlock(this);
+		ModelLoader.setCustomMeshDefinition(item, stack -> rednetCable);
+		ModelLoader.registerItemVariants(item, rednetCable);
+		ModelRegistryHelper.register(rednetCable, cableRenderer);
+		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(VARIANT).build());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
+
 	}
 
 	public enum Variant implements IStringSerializable {

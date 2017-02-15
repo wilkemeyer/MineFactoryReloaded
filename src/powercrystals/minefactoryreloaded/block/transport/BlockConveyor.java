@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
@@ -29,23 +31,24 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInputNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockConveyor;
-import powercrystals.minefactoryreloaded.core.MFRDyeColor;
-import powercrystals.minefactoryreloaded.core.IEntityCollidable;
-import powercrystals.minefactoryreloaded.core.IRotateableTile;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.core.*;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
 
 import java.util.ArrayList;
 
-public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
+public class BlockConveyor extends BlockFactory implements IRedNetInputNode, IColorRegister {
 
 	public static final String[] NAMES = new String[17];
 	static {
@@ -69,6 +72,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		setHardness(0.5F);
 		setUnlocalizedName("mfr.conveyor");
 		setCreativeTab(MFRCreativeTab.tab);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
 	}
 
 	@Override
@@ -261,10 +265,10 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 							break l;
 						break;
 				}
-			if(!BlockHelper.getAdjacentBlock(world, pos, direction.getFacing()).getBlock().equals(MFRThings.conveyorBlock)) {
+			if(!BlockHelper.getAdjacentBlock(world, pos, direction.getFacing()).getBlock().equals(this)) {
 				if(direction.isUphill() | direction.isDownhill()) {
 					double d = .25;
-					if(!BlockHelper.getAdjacentBlock(world, pos.add(0, direction.getYOffset(), 0), direction.getFacing()).equals(MFRThings.conveyorBlock)) {
+					if(!BlockHelper.getAdjacentBlock(world, pos.add(0, direction.getYOffset(), 0), direction.getFacing()).equals(this)) {
 						d = 1;
 					}
 					entity.motionY = yVelocity * d;
@@ -503,6 +507,39 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		}
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, world, pos, tintIndex) -> {
+
+			if(tintIndex == 0 && pos != null) {
+				TileEntity te = world.getTileEntity(pos);
+
+				if(te instanceof TileEntityConveyor) {
+					MFRDyeColor dyeColor = ((TileEntityConveyor) te).getDyeColor();
+
+					if(dyeColor != null) {
+						return dyeColor.getColor();
+					}
+					return 0xf6a82c;
+				}
+			}
+			return 0xFFFFFF;
+		}, this);
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+
+			if (tintIndex != 0)
+				return 0xFFFFFF;
+
+			if (stack.getItemDamage() == 16)
+				return 0xf6a82c;
+
+			return MFRDyeColor.byMetadata(stack.getItemDamage()).getColor();
+		}, this);
+	}
+
 	public enum ConveyorDirection implements IStringSerializable {
 
 		EAST(0, "east", EnumFacing.EAST, 0),
@@ -617,6 +654,15 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode {
 		MFRRegistry.registerBlock(this, new ItemBlockConveyor(this, NAMES));
 		GameRegistry.registerTileEntity(TileEntityConveyor.class, "factoryConveyor");
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		Item item = Item.getItemFromBlock(this);
+		for (int i=0; i < 17; i++)
+			ModelHelper.registerModel(item, i, "conveyor", "inventory");
 	}
 
 	public enum Speed implements IStringSerializable {

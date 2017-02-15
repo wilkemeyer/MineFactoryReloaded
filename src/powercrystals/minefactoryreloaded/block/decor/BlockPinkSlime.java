@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -8,21 +9,21 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import javax.annotation.Nullable;
 
-public class BlockPinkSlime extends BlockBreakable implements IInitializer {
+public class BlockPinkSlime extends BlockBreakable implements IInitializer, IModelRegister {
 
 	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.875D, 1D);
 	
@@ -36,6 +37,7 @@ public class BlockPinkSlime extends BlockBreakable implements IInitializer {
 		setHarvestLevel("shovel", 0);
 		setSoundType(SoundType.SLIME);
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -87,7 +89,7 @@ public class BlockPinkSlime extends BlockBreakable implements IInitializer {
 		MFRRegistry.registerBlock(this, new ItemBlockFactory(this));
 		return true;
 	}
-
+	
 	@Override
 	public boolean initialize() {
 		
@@ -98,5 +100,12 @@ public class BlockPinkSlime extends BlockBreakable implements IInitializer {
 	public boolean postInit() {
 		
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this);
 	}
 }

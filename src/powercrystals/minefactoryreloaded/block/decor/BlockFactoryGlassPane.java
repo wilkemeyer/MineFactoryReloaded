@@ -1,8 +1,12 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import codechicken.lib.model.ModelRegistryHelper;
+import codechicken.lib.model.blockbakery.BlockBakery;
+import codechicken.lib.model.blockbakery.CCBakeryModel;
 import codechicken.lib.model.blockbakery.IBakeryBlock;
 import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -10,28 +14,37 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock, IInitializer
+public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock, IInitializer, IModelRegister
 {
 	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[4];
@@ -61,6 +74,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 			setCreativeTab(CreativeTabs.DECORATIONS);
 
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -216,5 +230,39 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 	@Override
 	public boolean postInit() {
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return FactoryGlassPaneRenderer.MODEL_LOCATION;
+			}
+		});
+		ModelRegistryHelper.register(FactoryGlassPaneRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
+			@Override public TextureAtlasSprite getParticleTexture() {
+				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME);
+			}
+		});
+		BlockBakery.registerBlockKeyGenerator(this,
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[0])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[1])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[2])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[3])
+						+ "," + state.getValue(BlockFactoryGlassPane.FACES)
+						+ "," + (state.getValue(BlockPane.NORTH) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.SOUTH) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.WEST) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.EAST) ? 1 : 0)
+		);
+		ModelResourceLocation glassPaneItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass_pane", "inventory");
+		Item item = Item.getItemFromBlock(this);
+		ModelLoader.setCustomMeshDefinition(item, stack -> glassPaneItemModel);
+		ModelLoader.registerItemVariants(item, glassPaneItemModel);
+
 	}
 }

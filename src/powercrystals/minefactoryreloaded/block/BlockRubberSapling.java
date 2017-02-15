@@ -5,12 +5,13 @@ import java.util.Locale;
 import java.util.Random;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.*;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -18,21 +19,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 import powercrystals.minefactoryreloaded.world.WorldGenMassiveTree;
 import powercrystals.minefactoryreloaded.world.WorldGenRubberTree;
 
-public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection, IGrowable, IInitializer {
+public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection, IGrowable, IInitializer, IModelRegister {
 
 	public static final PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
 	private static WorldGenRubberTree treeGen = new WorldGenRubberTree(true);
@@ -45,6 +50,7 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 		setCreativeTab(MFRCreativeTab.tab);
 		this.setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.REGULAR).withProperty(STAGE, 0));
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -129,6 +135,17 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 	public boolean postInit() {
 
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(TYPE, STAGE).build());
+		Item item = Item.getItemFromBlock(this);
+		for (int i=0; i<4; i++) {
+			ModelHelper.registerModel(item, i, "rubberwood.sapling");
+		}
 	}
 
 	private enum Type implements IStringSerializable {

@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Random;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -18,19 +22,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection, IInitializer
+public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection, IInitializer, IModelRegister, IColorRegister
 {
 	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class, input -> input.getMetadata() < 4);
 	public static final PropertyBool FANCY = PropertyBool.create("fancy");
@@ -40,6 +49,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		setUnlocalizedName("mfr.rubberwood.leaves");
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
 	}
 
 	@Override
@@ -255,6 +266,55 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	public boolean postInit() {
 
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());
+		Item item = Item.getItemFromBlock(this);
+		final ModelResourceLocation[] leavesModels = new ModelResourceLocation[4];
+		for(int i = 0; i < 4; i++) {
+			String variant = "fancy=" + (i < 2) + ",variant=" + (((i % 2) == 0) ? "normal" : "dry");
+			leavesModels[i] = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rubberwood.leaves", variant);
+			ModelLoader.registerItemVariants(item, leavesModels[i]);
+		}
+		ModelLoader.setCustomMeshDefinition(item, stack -> {
+			int id = Minecraft.getMinecraft().gameSettings.fancyGraphics ? 0 : 2;
+			id += (stack.getMetadata() == 0 ? 0 : 1);
+			return leavesModels[id];
+		});
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, world, pos, tintIndex) -> {
+
+			BlockRubberLeaves.Variant variant = state.getValue(VARIANT);
+
+			int foliageColor;
+			if (world != null && pos != null) {
+				foliageColor = BiomeColorHelper.getFoliageColorAtPos(world, pos);
+			} else {
+				foliageColor = ColorizerFoliage.getFoliageColorBasic();
+			}
+
+			if (variant == BlockRubberLeaves.Variant.DRY) {
+				int r = (foliageColor & 16711680) >> 16;
+				int g = (foliageColor & 65280) >> 8;
+				int b = foliageColor & 255;
+				return ( r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
+			}
+
+			return foliageColor;
+		}, MFRThings.rubberLeavesBlock);
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(
+				(stack, tintIndex) -> stack.getMetadata() == 1 ? 0xFFFFFF : ColorizerFoliage.getFoliageColorBasic(), this);
+
 	}
 
 	public enum Variant implements IStringSerializable {

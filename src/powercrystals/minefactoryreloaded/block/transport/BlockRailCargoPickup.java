@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
-import cofh.api.core.IInitializer;
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
 
@@ -8,15 +7,14 @@ import java.util.Map.Entry;
 
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
-import powercrystals.minefactoryreloaded.MFRRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockRailCargoPickup extends BlockFactoryRail
 {
@@ -62,5 +60,12 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 				}
 			}
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		registerRailModel(this, "cargo_pickup");
 	}
 }

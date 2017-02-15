@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.server.management.PlayerChunkMap;
@@ -26,6 +27,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
 public class CommonProxy implements LoadingCallback
@@ -72,6 +74,10 @@ public class CommonProxy implements LoadingCallback
 		FMLCommonHandler.instance().bus().register(new ConnectionHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
+
+	public void addModelRegister(IModelRegister register) {}
+	
+	public void addColorRegister(IColorRegister register) {}
 
 	public void movePlayerToCoordinates(EntityLivingBase e, double x, double y, double z)
 	{

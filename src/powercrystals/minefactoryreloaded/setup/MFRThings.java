@@ -353,11 +353,6 @@ public class MFRThings
 		pinkSlimeBlockItem = Item.getItemFromBlock(pinkSlimeBlock);
 	}
 
-	private static void registerBlock(Block block, ItemBlock itemBlock) {
-
-		MFRRegistry.registerBlock(block, itemBlock);
-	}
-
 	public static void initialize() {
 
 		for(IInitializer init : initList) {

@@ -1,26 +1,16 @@
 package powercrystals.minefactoryreloaded;
 
-import codechicken.lib.model.DummyBakedModel;
 import codechicken.lib.model.ModelRegistryHelper;
-import codechicken.lib.model.blockbakery.BlockBakery;
-import codechicken.lib.model.blockbakery.CCBakeryModel;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockPane;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -48,8 +38,6 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -62,18 +50,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 import powercrystals.minefactoryreloaded.api.IMobEggHandler;
-import powercrystals.minefactoryreloaded.block.*;
-import powercrystals.minefactoryreloaded.block.decor.*;
-import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
-import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRail;
-import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
-import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
+import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.core.MFRDyeColor;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.entity.*;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
-import powercrystals.minefactoryreloaded.render.MachineStateMapper;
-import powercrystals.minefactoryreloaded.render.block.*;
+import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
+import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityRocketRenderer;
 import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
@@ -81,19 +65,9 @@ import powercrystals.minefactoryreloaded.render.item.*;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
 import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
 import powercrystals.minefactoryreloaded.render.model.SyringeModel;
-import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillPrechargerRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.LaserDrillRenderer;
-import powercrystals.minefactoryreloaded.render.tileentity.RedNetHistorianRenderer;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
-import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrillPrecharger;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
-import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 import java.util.*;
 
@@ -122,184 +96,100 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	private static Random colorRand = new Random();
 
-	private static final DummyBakedModel DUMMY_MODEL = new DummyBakedModel();
-
 	public static void preInit() {
 		
-		//decorative blocks
-		registerModel(MFRThings.factoryDecorativeBrickBlock, "variant", BlockDecorativeBricks.Variant.NAMES);
-		registerModel(MFRThings.factoryDecorativeStoneBlock, "variant", BlockDecorativeStone.Variant.NAMES);
-		registerModel(MFRThings.machineBlock, "variant", BlockFactoryDecoration.Variant.NAMES);
-		registerModel(MFRThings.factoryPlasticBlock, "variant", BlockFactoryPlastic.Variant.NAMES);
-		registerModel(MFRThings.pinkSlimeBlock);
-
 		//fluids
-		registerModel(MFRThings.milkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "milk"));
-		registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sludge"));
-		registerModel(MFRThings.sewageLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sewage"));
-		registerModel(MFRThings.essenceLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mob_essence"));
-		registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "biofuel"));
-		registerModel(MFRThings.meatLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "meat"));
-		registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "pink_slime"));
-		registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "chocolate_milk"));
-		registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
-		registerModel(MFRThings.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
-		registerModel(MFRThings.milkBottleItem, "milk_bottle");
+		ModelHelper.registerModel(MFRThings.milkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "milk"));
+		ModelHelper.registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sludge"));
+		ModelHelper.registerModel(MFRThings.sewageLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sewage"));
+		ModelHelper.registerModel(MFRThings.essenceLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mob_essence"));
+		ModelHelper.registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "biofuel"));
+		ModelHelper.registerModel(MFRThings.meatLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "meat"));
+		ModelHelper.registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "pink_slime"));
+		ModelHelper.registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "chocolate_milk"));
+		ModelHelper.registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
+		ModelHelper.registerModel(MFRThings.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
+		ModelHelper.registerModel(MFRThings.milkBottleItem, "milk_bottle");
 
-		registerModel(plasticTank, BlockTankRenderer.MODEL_LOCATION);
-		ModelRegistryHelper.register(BlockTankRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/machines/tile.mfr.tank.bottom"));
-		BlockBakery.registerBlockKeyGenerator(plasticTank,
-				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockTank.FLUID) + "," + state.getValue(BlockTank.SIDES));
-		BlockBakery.registerItemKeyGenerator(Item.getItemFromBlock(plasticTank), stack -> {
-			String key = stack.getItem().getRegistryName().toString();
-			if (stack.getItem() instanceof ItemBlockTank) {
-				FluidStack fluidStack = ((ItemBlockTank) stack.getItem()).getFluid(stack);
-				if (fluidStack != null) {
-					key += "," + fluidStack.getFluid().getStill().toString();
-				}
-			}
-			return key;
-		});
-		
-		
-		//transport
-		Item item = Item.getItemFromBlock(MFRThings.conveyorBlock);
-		for (int i=0; i < 17; i++)
-			registerModel(item, i, "conveyor", "inventory");
-
-		registerRailModel(MFRThings.railPickupCargoBlock, "cargo_pickup");
-		registerRailModel(MFRThings.railDropoffCargoBlock, "cargo_dropoff");
-		registerRailModel(MFRThings.railPickupPassengerBlock, "passenger_pickup");
-		registerRailModel(MFRThings.railDropoffPassengerBlock, "passenger_dropoff");
-
-		registerModel(MFRThings.factoryRoadBlock, "variant", BlockFactoryRoad.Variant.NAMES);
-		
-		//machines
-		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(0), MachineStateMapper.getInstance());
-		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(1), MachineStateMapper.getInstance());
-		ModelLoader.setCustomStateMapper(MFRThings.machineBlocks.get(2), MachineStateMapper.getInstance());
-
-		for (BlockFactoryMachine.Type type : BlockFactoryMachine.Type.values()) {
-			item = Item.getItemFromBlock(MFRThings.machineBlocks.get(type.getGroupIndex()));
-			registerModel(item, type.getMeta(), MachineStateMapper.getModelName(type), "type=" + type.getName());
-		}
-		final ModelResourceLocation fakeLaserLocation = new ModelResourceLocation(fakeLaserBlock.getRegistryName(), "normal");
-		ModelLoader.setCustomStateMapper(fakeLaserBlock, new StateMap.Builder().ignore(BlockFakeLaser.FACING).build());
-		ModelRegistryHelper.register(fakeLaserLocation, DUMMY_MODEL);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrill.class, new LaserDrillRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrillPrecharger.class,
-				new LaserDrillPrechargerRenderer());
-
-		//general
-		registerModel(detCordBlock);
-		registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
-		
-		ModelLoader.setCustomStateMapper(MFRThings.rubberLeavesBlock, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());
-		item = Item.getItemFromBlock(MFRThings.rubberLeavesBlock);
-		final ModelResourceLocation[] leavesModels = new ModelResourceLocation[4];
-		for(int i = 0; i < 4; i++) {
-			String variant = "fancy=" + (i < 2) + ",variant=" + (((i % 2) == 0) ? "normal" : "dry");
-			leavesModels[i] = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rubberwood.leaves", variant);
-			ModelLoader.registerItemVariants(item, leavesModels[i]);
-		}
-		ModelLoader.setCustomMeshDefinition(item, stack -> {
-			int id = Minecraft.getMinecraft().gameSettings.fancyGraphics ? 0 : 2;
-			id += (stack.getMetadata() == 0 ? 0 : 1);
-			return leavesModels[id];
-		});
-
-		ModelLoader.setCustomStateMapper(MFRThings.rubberSaplingBlock, new StateMap.Builder().ignore(BlockRubberSapling.TYPE, BlockRubberSapling.STAGE).build());
-		item = Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
-		for (int i=0; i<4; i++) {
-			registerModel(item, i, "rubberwood.sapling");
-		}
-
-		ModelLoader.setCustomStateMapper(MFRThings.rubberWoodBlock, new StateMap.Builder().ignore(BlockRubberWood.RUBBER_FILLED).build());
-		item = Item.getItemFromBlock(MFRThings.rubberWoodBlock);
-		registerModel(item, "rubberwood.log", "axis=y");
-		registerModel(item, 1, "rubberwood.log", "axis=y");
-		
-		registerModel(MFRThings.vineScaffoldBlock);
-		
 		//syringes
-		registerModel(MFRThings.syringeEmptyItem, "syringe", "variant=empty");
-		registerModel(MFRThings.syringeHealthItem, "syringe", "variant=health");
-		registerModel(MFRThings.syringeGrowthItem, "syringe", "variant=growth");		
-		registerModel(MFRThings.syringeZombieItem, "syringe", "variant=zombie");
-		registerModel(MFRThings.syringeSlimeItem, "syringe", "variant=slime");
-		registerModel(MFRThings.syringeCureItem, "syringe", "variant=cure");
+		ModelHelper.registerModel(MFRThings.syringeEmptyItem, "syringe", "variant=empty");
+		ModelHelper.registerModel(MFRThings.syringeHealthItem, "syringe", "variant=health");
+		ModelHelper.registerModel(MFRThings.syringeGrowthItem, "syringe", "variant=growth");		
+		ModelHelper.registerModel(MFRThings.syringeZombieItem, "syringe", "variant=zombie");
+		ModelHelper.registerModel(MFRThings.syringeSlimeItem, "syringe", "variant=slime");
+		ModelHelper.registerModel(MFRThings.syringeCureItem, "syringe", "variant=cure");
 		MFRModelLoader.registerModel(SyringeModel.MODEL_LOCATION, SyringeModel.MODEL);
 
-		registerModel(MFRThings.rednetMemoryCardItem, "memory_card");
+		ModelHelper.registerModel(MFRThings.rednetMemoryCardItem, "memory_card");
 
-		registerModel(MFRThings.factoryHammerItem, "tool", "variant=hammer");
-		registerModel(MFRThings.fishingRodItem, "tool", "variant=fishing_rod");
-		registerModel(MFRThings.rednetMeterItem, "tool", "variant=rednet_meter");
-		registerModel(MFRThings.rednetMeterItem, 1, "tool", "variant=rednet_meter_info");
-		registerModel(MFRThings.rednetMeterItem, 2, "tool", "variant=rednet_meter_debug");
-		registerModel(MFRThings.rulerItem, "tool", "variant=ruler");
-		registerModel(MFRThings.spyglassItem, "tool", "variant=spyglass");
-		registerModel(MFRThings.strawItem, "tool", "variant=straw");
+		ModelHelper.registerModel(MFRThings.factoryHammerItem, "tool", "variant=hammer");
+		ModelHelper.registerModel(MFRThings.fishingRodItem, "tool", "variant=fishing_rod");
+		ModelHelper.registerModel(MFRThings.rednetMeterItem, "tool", "variant=rednet_meter");
+		ModelHelper.registerModel(MFRThings.rednetMeterItem, 1, "tool", "variant=rednet_meter_info");
+		ModelHelper.registerModel(MFRThings.rednetMeterItem, 2, "tool", "variant=rednet_meter_debug");
+		ModelHelper.registerModel(MFRThings.rulerItem, "tool", "variant=ruler");
+		ModelHelper.registerModel(MFRThings.spyglassItem, "tool", "variant=spyglass");
+		ModelHelper.registerModel(MFRThings.strawItem, "tool", "variant=straw");
 
-		registerModel(MFRThings.xpExtractorItem, "xp_extractor_1");
+		ModelHelper.registerModel(MFRThings.xpExtractorItem, "xp_extractor_1");
 
-		registerModel(plasticGlasses, "armor", "type=glass_helm");
-		registerModel(plasticHelmetItem, "armor", "type=helm");
-		registerModel(plasticChestplateItem, "armor", "type=chest");
-		registerModel(plasticLeggingsItem, "armor", "type=legs");
-		registerModel(plasticBootsItem, "armor", "type=boots");
+		ModelHelper.registerModel(plasticGlasses, "armor", "type=glass_helm");
+		ModelHelper.registerModel(plasticHelmetItem, "armor", "type=helm");
+		ModelHelper.registerModel(plasticChestplateItem, "armor", "type=chest");
+		ModelHelper.registerModel(plasticLeggingsItem, "armor", "type=legs");
+		ModelHelper.registerModel(plasticBootsItem, "armor", "type=boots");
 
 		registerColoredItemModels(MFRThings.ceramicDyeItem, "ceramic_dye");
 		registerColoredItemModels(MFRThings.laserFocusItem, "laser_focus");
 		
-		registerModel(MFRThings.plasticBagItem, "plastic_bag");
-		registerModel(MFRThings.pinkSlimeItem, "pink_slime", "variant=ball");
-		registerModel(MFRThings.pinkSlimeItem, 1, "pink_slime", "variant=gem");
-		registerModel(MFRThings.portaSpawnerItem, "porta_spawner");
+		ModelHelper.registerModel(MFRThings.plasticBagItem, "plastic_bag");
+		ModelHelper.registerModel(MFRThings.pinkSlimeItem, "pink_slime", "variant=ball");
+		ModelHelper.registerModel(MFRThings.pinkSlimeItem, 1, "pink_slime", "variant=gem");
+		ModelHelper.registerModel(MFRThings.portaSpawnerItem, "porta_spawner");
 		
 		registerSafariNetModel(MFRThings.safariNetItem, "reusable");
 		registerSafariNetModel(MFRThings.safariNetJailerItem, "jailer");
 		registerSafariNetModel(MFRThings.safariNetSingleItem, "single_use");
 		registerSafariNetModel(MFRThings.safariNetFancyJailerItem, "jailer_fancy");
-		registerModel(MFRThings.safariNetLauncherItem, "safari_net_launcher");
-		registerModel(MFRThings.safariNetLauncherItem, 1, "safari_net_launcher");
+		ModelHelper.registerModel(MFRThings.safariNetLauncherItem, "safari_net_launcher");
+		ModelHelper.registerModel(MFRThings.safariNetLauncherItem, 1, "safari_net_launcher");
 		
 		for(int i : MFRThings.upgradeItem.getMetadataValues()) {
-			registerModel(MFRThings.upgradeItem, i, "upgrade", "variant=" + MFRThings.upgradeItem.getName(i));
+			ModelHelper.registerModel(MFRThings.upgradeItem, i, "upgrade", "variant=" + MFRThings.upgradeItem.getName(i));
 		}
 
 		//food
-		registerModel(MFRThings.meatIngotRawItem, "food", "variant=meat_ingot_raw");
-		registerModel(MFRThings.meatIngotCookedItem, "food", "variant=meat_ingot_cooked");
-		registerModel(MFRThings.meatNuggetRawItem, "food", "variant=meat_nugget_raw");
-		registerModel(MFRThings.meatNuggetCookedItem, "food", "variant=meat_nugget_cooked");
+		ModelHelper.registerModel(MFRThings.meatIngotRawItem, "food", "variant=meat_ingot_raw");
+		ModelHelper.registerModel(MFRThings.meatIngotCookedItem, "food", "variant=meat_ingot_cooked");
+		ModelHelper.registerModel(MFRThings.meatNuggetRawItem, "food", "variant=meat_nugget_raw");
+		ModelHelper.registerModel(MFRThings.meatNuggetCookedItem, "food", "variant=meat_nugget_cooked");
 
-		registerModel(MFRThings.rawRubberItem, "material", "type=rubber_raw");
-		registerModel(MFRThings.rubberBarItem, "material", "type=rubber_bar");
-		registerModel(MFRThings.rawPlasticItem, "material", "type=plastic_raw");
-		registerModel(MFRThings.plasticSheetItem, "material", "type=plastic_sheet");
-		registerModel(MFRThings.sugarCharcoalItem, "material", "type=sugar_charcoal");
-		registerModel(MFRThings.fertilizerItem, "material", "type=fertilizer");
-		registerModel(MFRThings.blankRecordItem, "material", "type=blank_record");
+		ModelHelper.registerModel(MFRThings.rawRubberItem, "material", "type=rubber_raw");
+		ModelHelper.registerModel(MFRThings.rubberBarItem, "material", "type=rubber_bar");
+		ModelHelper.registerModel(MFRThings.rawPlasticItem, "material", "type=plastic_raw");
+		ModelHelper.registerModel(MFRThings.plasticSheetItem, "material", "type=plastic_sheet");
+		ModelHelper.registerModel(MFRThings.sugarCharcoalItem, "material", "type=sugar_charcoal");
+		ModelHelper.registerModel(MFRThings.fertilizerItem, "material", "type=fertilizer");
+		ModelHelper.registerModel(MFRThings.blankRecordItem, "material", "type=blank_record");
 		
-		registerModel(MFRThings.needlegunItem, "needle_gun");
-		registerModel(MFRThings.potatoLauncherItem, "potato_launcher");
-		registerModel(MFRThings.rocketLauncherItem, "rocket_launcher");
+		ModelHelper.registerModel(MFRThings.needlegunItem, "needle_gun");
+		ModelHelper.registerModel(MFRThings.potatoLauncherItem, "potato_launcher");
+		ModelHelper.registerModel(MFRThings.rocketLauncherItem, "rocket_launcher");
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":needle_gun", "inventory"), new NeedleGunItemRenderer());
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":potato_launcher", "inventory"), new PotatoLauncherItemRenderer());
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rocket_launcher", "inventory"), new RocketLauncherItemRenderer());
 
-		registerModel(MFRThings.needlegunAmmoAnvilItem, "needle_gun_ammo", "variant=anvil");
-		registerModel(MFRThings.needlegunAmmoEmptyItem, "needle_gun_ammo", "variant=empty");
-		registerModel(MFRThings.needlegunAmmoFireItem, "needle_gun_ammo", "variant=fire");
-		registerModel(MFRThings.needlegunAmmoLavaItem, "needle_gun_ammo", "variant=lava");
-		registerModel(MFRThings.needlegunAmmoPierceItem, "needle_gun_ammo", "variant=pierce");
-		registerModel(MFRThings.needlegunAmmoSewageItem, "needle_gun_ammo", "variant=sewage");
-		registerModel(MFRThings.needlegunAmmoSludgeItem, "needle_gun_ammo", "variant=sludge");
-		registerModel(MFRThings.needlegunAmmoStandardItem, "needle_gun_ammo", "variant=standard");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoAnvilItem, "needle_gun_ammo", "variant=anvil");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoEmptyItem, "needle_gun_ammo", "variant=empty");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoFireItem, "needle_gun_ammo", "variant=fire");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoLavaItem, "needle_gun_ammo", "variant=lava");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoPierceItem, "needle_gun_ammo", "variant=pierce");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoSewageItem, "needle_gun_ammo", "variant=sewage");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoSludgeItem, "needle_gun_ammo", "variant=sludge");
+		ModelHelper.registerModel(MFRThings.needlegunAmmoStandardItem, "needle_gun_ammo", "variant=standard");
 
-		registerModel(rocketItem, "rocket");
-		registerModel(rocketItem, 1, "rocket");
+		ModelHelper.registerModel(rocketItem, "rocket");
+		ModelHelper.registerModel(rocketItem, 1, "rocket");
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rocket", "inventory"), new RocketItemRenderer());
 
 		ModelResourceLocation rednetCard = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_card", "inventory");
@@ -317,111 +207,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		RenderingRegistry.registerEntityRenderingHandler(EntityPinkSlime.class, 
 				manager -> new EntityPinkSlimeRenderer(manager, new ModelSlime(16), 0.25F));
 		
-		ModelResourceLocation rednetCable = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_cable", "inventory");
-		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
-		item = Item.getItemFromBlock(rednetCableBlock);
-		ModelLoader.setCustomMeshDefinition(item, stack -> rednetCable);
-		ModelLoader.registerItemVariants(item, rednetCable);
-		ModelRegistryHelper.register(rednetCable, cableRenderer);
-		ModelLoader.setCustomStateMapper(rednetCableBlock, new StateMap.Builder().ignore(BlockRedNetCable.VARIANT).build());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
-
-		RedNetHistorianRenderer historianRenderer = new RedNetHistorianRenderer();
-		registerModel(Item.getItemFromBlock(rednetPanelBlock), "rednet_historian");
-		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_historian", "inventory"), historianRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, historianRenderer);
-
-		registerModel(Item.getItemFromBlock(plasticPipeBlock), "plastic_pipe");
-		PlasticPipeRenderer plasticPipeRenderer = new PlasticPipeRenderer();
-		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_pipe", "inventory"), plasticPipeRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlasticPipe.class, plasticPipeRenderer);
-		
-		ModelResourceLocation rednetLogic = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_logic", "inventory");
-		RedNetLogicRenderer logicRenderer = new RedNetLogicRenderer();
-		registerModel(Item.getItemFromBlock(rednetLogicBlock), "rednet_logic");
-		ModelRegistryHelper.register(rednetLogic, logicRenderer);
-		ModelLoader.setCustomStateMapper(rednetLogicBlock, new StateMap.Builder().ignore(BlockRedNetLogic.FACING).build());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRenderer);
-		
-		registerModel(plasticCupItem, "plastic_cup");
+		ModelHelper.registerModel(plasticCupItem, "plastic_cup");
 		MFRModelLoader.registerModel(PlasticCupModel.MODEL_LOCATION, PlasticCupModel.MODEL);
-
-		ModelResourceLocation glassItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass", "inventory");
-		item = Item.getItemFromBlock(factoryGlassBlock);
-		ModelLoader.setCustomMeshDefinition(item, stack -> glassItemModel);
-		ModelLoader.registerItemVariants(item, glassItemModel);
-		ModelLoader.setCustomStateMapper(factoryGlassBlock, new StateMapperBase() {
-			@Override protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return FactoryGlassRenderer.MODEL_LOCATION;
-			}
-		});
-		ModelRegistryHelper.register(FactoryGlassRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
-			@Override public TextureAtlasSprite getParticleTexture() { 
-				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME); 
-			}
-		});
-		BlockBakery.registerBlockKeyGenerator(factoryGlassBlock,
-				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlass.COLOR).getMetadata() 
-						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[0])
-						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[1])
-						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[2])
-						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[3])
-						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[4])
-						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[5])
-		);
-
-		ModelLoader.setCustomStateMapper(factoryGlassPaneBlock, new StateMapperBase() {
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return FactoryGlassPaneRenderer.MODEL_LOCATION;
-			}
-		});
-		ModelRegistryHelper.register(FactoryGlassPaneRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
-			@Override public TextureAtlasSprite getParticleTexture() {
-				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME);
-			}
-		});
-		BlockBakery.registerBlockKeyGenerator(factoryGlassPaneBlock,
-				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()
-						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[0])
-						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[1])
-						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[2])
-						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[3])
-						+ "," + state.getValue(BlockFactoryGlassPane.FACES)
-						+ "," + (state.getValue(BlockPane.NORTH) ? 1 : 0)
-						+ "," + (state.getValue(BlockPane.SOUTH) ? 1 : 0)
-						+ "," + (state.getValue(BlockPane.WEST) ? 1 : 0)
-						+ "," + (state.getValue(BlockPane.EAST) ? 1 : 0)
-		);
-		ModelResourceLocation glassPaneItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass_pane", "inventory");
-		item = Item.getItemFromBlock(factoryGlassPaneBlock);
-		ModelLoader.setCustomMeshDefinition(item, stack -> glassPaneItemModel);
-		ModelLoader.registerItemVariants(item, glassPaneItemModel);
 
 		ModelLoaderRegistry.registerLoader(MFRModelLoader.INSTANCE);
 	}
 
-	private static void registerModel(Item item, String modelName) {
-	
-		registerModel(item, modelName, "inventory");
-	}
-	
-	private static void registerModel(Item item, String modelName, String variant) {
-		
-		registerModel(item, 0, modelName, variant);
-	}
-	
-	private static void registerModel(Item item, int meta, String modelName) {
-		
-		registerModel(item, meta, modelName, "inventory");
-	}
-	
-	private static void registerModel(Item item, int meta, String modelName, String variant) {
-
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + modelName, variant));
-	}
-	
 	private static void registerSafariNetModel(Item item, String variant) {
 
 		//TODO cache values
@@ -444,115 +235,12 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		}
 	}
 
-	private static void registerRailModel(Block railBlock, final String typeVariant) {
-		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "shape=" + state.getValue(BlockFactoryRail.SHAPE) + ",type=" + typeVariant);
-			}
-		});
-
-		Item item = Item.getItemFromBlock(railBlock);
-		if (item != null)
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail_" + typeVariant, "inventory"));
-	}
-
-	private static void registerModel(Block block, String propertyName, String[] values, IProperty<?>... propertiesToIgnore) {
-
-		if (propertiesToIgnore.length > 0)
-			ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
-
-		Item item = Item.getItemFromBlock(block);
-		if (item != null) {
-			for (int i = 0; i < values.length; i++) {
-				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(block.getRegistryName(), propertyName + "=" + values[i]));
-			}
-		}
-	}
-
-	private static void registerModel(Block block, ModelResourceLocation modelLocation) {
-
-		ModelLoader.setCustomStateMapper(block, new StateMapperBase() {
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return modelLocation;
-			}
-		});
-		Item item = Item.getItemFromBlock(block);
-		if (item != null)
-			ModelLoader.setCustomModelResourceLocation(item, 0,  modelLocation);
-	}
-
-	private static void registerModel(Block block, IProperty<?>... propertiesToIgnore) {
-
-		if (propertiesToIgnore.length > 0)
-			ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(propertiesToIgnore).build());
-	
-		Item item = Item.getItemFromBlock(block);
-		if (item != null)
-			ModelLoader.setCustomModelResourceLocation(item, 0,  new ModelResourceLocation(block.getRegistryName(), "normal"));
-	}
-
 	public static void init() {
 
 		instance = new MineFactoryReloadedClient();
 
-		BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
-		blockColors.registerBlockColorHandler((state, world, pos, tintIndex) -> {
-
-			if(tintIndex == 0 && pos != null) {
-				TileEntity te = world.getTileEntity(pos);
-
-				if(te instanceof TileEntityConveyor) {
-					MFRDyeColor dyeColor = ((TileEntityConveyor) te).getDyeColor();
-
-					if(dyeColor != null) {
-						return dyeColor.getColor();
-					}
-					return 0xf6a82c;
-				}
-			}
-			return 0xFFFFFF;
-		}, MFRThings.conveyorBlock);
-		
-		blockColors.registerBlockColorHandler((state, world, pos, tintIndex) -> {
-			
-			BlockRubberLeaves.Variant variant = state.getValue(BlockRubberLeaves.VARIANT);
-
-			int foliageColor;
-			if (world != null && pos != null) {
-				foliageColor = BiomeColorHelper.getFoliageColorAtPos(world, pos);
-			} else {
-				foliageColor = ColorizerFoliage.getFoliageColorBasic();
-			}
-			
-			if (variant == BlockRubberLeaves.Variant.DRY) {
-				int r = (foliageColor & 16711680) >> 16;
-				int g = (foliageColor & 65280) >> 8;
-				int b = foliageColor & 255;
-				return ( r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
-			}
-
-			return foliageColor;
-		}, MFRThings.rubberLeavesBlock);
-		
-		blockColors.registerBlockColorHandler((state, world, pos, tintIndex) -> 
-				(world != null && pos != null) ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic(), vineScaffoldBlock);
-
 		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-		itemColors.registerItemColorHandler((stack, tintIndex) -> {
-
-			if (tintIndex != 0)
-				return 0xFFFFFF;
-
-			if (stack.getItemDamage() == 16)
-				return 0xf6a82c;
-
-			return MFRDyeColor.byMetadata(stack.getItemDamage()).getColor();
-		}, MFRThings.conveyorBlock);
 		
-		itemColors.registerItemColorHandler((stack, tintIndex) -> stack.getMetadata() == 1 ? 0xFFFFFF : ColorizerFoliage.getFoliageColorBasic(), MFRThings.rubberLeavesBlock);
-		itemColors.registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), MFRThings.vineScaffoldBlock);
 		itemColors.registerItemColorHandler(new IItemColor() {
 			@Override
 			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
@@ -608,98 +296,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			return MFRDyeColor.byMetadata(stack.getMetadata()).getColor();
 		}, factoryGlassBlock, factoryGlassPaneBlock);
 		
-	/* TODO fix rendering
-		// IDs
-		renderIdConveyor = RenderingRegistry.getNextAvailableRenderId();
-		renderIdFactoryGlassPane = RenderingRegistry.getNextAvailableRenderId();
-		renderIdFluidTank = RenderingRegistry.getNextAvailableRenderId();
-		renderIdFluidClassic = RenderingRegistry.getNextAvailableRenderId();
-		renderIdRedNetLogic = RenderingRegistry.getNextAvailableRenderId();
-		renderIdVineScaffold = RenderingRegistry.getNextAvailableRenderId();
-		renderIdFactoryGlass = RenderingRegistry.getNextAvailableRenderId();
-		renderIdDetCord = RenderingRegistry.getNextAvailableRenderId();
-		renderIdRedNet = RenderingRegistry.getNextAvailableRenderId();
-		renderIdPPipe = RenderingRegistry.getNextAvailableRenderId();
+/*
 
-		// Blocks
-		RenderingRegistry.registerBlockHandler(renderIdConveyor,
-			new ConveyorRenderer());
-		RenderingRegistry.registerBlockHandler(renderIdFactoryGlassPane,
-			new FactoryGlassPaneRenderer());
-		BlockTankRenderer tankRender = new BlockTankRenderer();
-		RenderingRegistry.registerBlockHandler(renderIdFluidTank, tankRender);
-		*/
-/*RenderingRegistry.registerBlockHandler(renderIdFluidClassic,
-				new RenderBlockFluidClassic(renderIdFluidClassic));/*/
-/*//*
-
-		RenderingRegistry.registerBlockHandler(renderIdVineScaffold,
-			new VineScaffoldRenderer());
-		RenderingRegistry.registerBlockHandler(renderIdFactoryGlass,
-			new FactoryGlassRenderer());
-		RenderingRegistry.registerBlockHandler(renderIdDetCord,
-			new DetCordRenderer());
-		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
-		RenderingRegistry.registerBlockHandler(renderIdRedNet, cableRenderer);
-		RenderingRegistry.registerBlockHandler(renderIdPPipe,
-			new PlasticPipeRenderer());
-		RenderingRegistry.registerBlockHandler(renderIdRedNetLogic,
-			new RedNetLogicRenderer());
-
-		// TODO: convert card renderer and remove this
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class,
-			new powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer());
-
-		// Items
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(conveyorBlock),
-			new ConveyorItemRenderer());
-
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(factoryGlassPaneBlock),
-			new FactoryGlassPaneItemRenderer());
-
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(plasticTank), tankRender);
-
-		MinecraftForgeClient.registerItemRenderer(logicCardItem, new RedNetCardItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(needlegunItem, new NeedleGunItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(rocketItem, new RocketItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(rocketLauncherItem, new RocketLauncherItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(potatoLauncherItem, new PotatoLauncherItemRenderer());
-
-		RenderFluidOverlayItem fluidRender = new RenderFluidOverlayItem();
-		MinecraftForgeClient.registerItemRenderer(plasticCupItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(sewageBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(sludgeBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(mobEssenceBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(bioFuelBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(meatBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(pinkSlimeBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(chocolateMilkBucketItem, fluidRender);
-		MinecraftForgeClient.registerItemRenderer(mushroomSoupBucketItem, fluidRender);
 		if (syringeEmptyItem instanceof IFluidContainerItem)
 			MinecraftForgeClient.registerItemRenderer(syringeEmptyItem,
 				new RenderFluidOverlayItem(false));
 		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
 		//		new FactoryFluidOverlayRenderer());
 
-		// TileEntities
-		RedNetHistorianRenderer panelRenderer = new RedNetHistorianRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetHistorian.class, panelRenderer);
-		RenderingRegistry.registerBlockHandler(panelRenderer);
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrill.class, new LaserDrillRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserDrillPrecharger.class,
-			new LaserDrillPrechargerRenderer());
-
-		// Entities
-		RenderingRegistry.registerEntityRenderingHandler(DebugTracker.class, new EntityDebugTrackerRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class, new EntitySafariNetRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntityPinkSlime.class,
-			new EntityPinkSlimeRenderer(new ModelSlime(16), new ModelSlime(0), 0.25F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityNeedle.class, new EntityNeedleRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, new EntityRocketRenderer());
 */
 		
 		MinecraftForge.EVENT_BUS.register(instance);
@@ -712,9 +316,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@Override
 	public void onResourceManagerReload(IResourceManager p_110549_1_) {
 
-/* TODO fix rendering
-		NeedleGunItemRenderer.updateModel();
-*/
 	}
 
 	@SubscribeEvent

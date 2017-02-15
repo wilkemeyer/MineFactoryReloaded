@@ -1,12 +1,16 @@
 package powercrystals.minefactoryreloaded.block;
 
+import codechicken.lib.model.ModelRegistryHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -18,6 +22,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -25,9 +31,8 @@ import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetOmniNode;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
-import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMemoryCard;
-import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
@@ -212,5 +217,16 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 		MFRRegistry.registerBlock(this, new ItemBlockRedNetLogic(this));
 		GameRegistry.registerTileEntity(TileEntityRedNetLogic.class, "factoryRednetLogic");
 		return true;
+	}
+
+	@Override
+	public void registerModels() {
+
+		ModelResourceLocation rednetLogic = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_logic", "inventory");
+		RedNetLogicRenderer logicRenderer = new RedNetLogicRenderer();
+		ModelHelper.registerModel(Item.getItemFromBlock(this), "rednet_logic");
+		ModelRegistryHelper.register(rednetLogic, logicRenderer);
+		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(BlockRedNetLogic.FACING).build());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetLogic.class, logicRenderer);
 	}
 }

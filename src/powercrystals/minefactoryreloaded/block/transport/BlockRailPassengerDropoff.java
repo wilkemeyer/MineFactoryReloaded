@@ -1,21 +1,14 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRailBase;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRailPassengerDropoff extends BlockFactoryRail {
 
@@ -37,5 +30,12 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 
 		Entity entity = minecart.getPassengers().get(0);
 		entity.dismountRidingEntity();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		registerRailModel(this, "passenger_dropoff");
 	}
 }

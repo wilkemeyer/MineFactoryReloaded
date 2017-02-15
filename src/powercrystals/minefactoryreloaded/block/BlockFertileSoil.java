@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
@@ -25,14 +26,18 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import javax.annotation.Nullable;
 
-public class BlockFertileSoil extends Block implements IGrowable, IInitializer
+public class BlockFertileSoil extends Block implements IGrowable, IInitializer, IModelRegister
 {
 	public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 15);
 	public static final AxisAlignedBB SOIL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
@@ -51,6 +56,7 @@ public class BlockFertileSoil extends Block implements IGrowable, IInitializer
 		useNeighborBrightness = true; // THIS IS SET IN THE DUMBEST DAMN WAY ON FARMLAND
 		setDefaultState(blockState.getBaseState().withProperty(MOISTURE, 0));
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -262,5 +268,12 @@ public class BlockFertileSoil extends Block implements IGrowable, IInitializer
 	public boolean postInit()
 	{
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(MFRThings.fertileSoil, BlockFertileSoil.MOISTURE);
 	}
 }
