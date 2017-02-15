@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemMulti;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
@@ -60,4 +61,12 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 		return "radius";
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		for(int i : getMetadataValues()) {
+			ModelHelper.registerModel(this, i, "upgrade", "variant=" + getName(i));
+		}
+	}
 }

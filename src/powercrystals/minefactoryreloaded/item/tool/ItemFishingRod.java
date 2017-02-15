@@ -1,10 +1,13 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,6 +19,7 @@ import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityFishingRod;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemFishingRod extends ItemFactoryTool {
 
@@ -54,5 +58,14 @@ public class ItemFishingRod extends ItemFactoryTool {
 		EntityRegistry.registerModEntity(EntityFishingRod.class, "FishingRod", 4, MineFactoryReloadedCore.instance(), 80, 3, true);
 
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "tool", "variant=fishing_rod");
+		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
+				manager -> new RenderSnowball<>(manager, this, Minecraft.getMinecraft().getRenderItem()));
 	}
 }

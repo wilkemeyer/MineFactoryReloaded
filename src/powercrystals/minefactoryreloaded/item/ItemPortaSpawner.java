@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.net.Packets;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemPortaSpawner extends ItemFactory {
 
@@ -204,4 +205,10 @@ public class ItemPortaSpawner extends ItemFactory {
 		return hasData(stack) ? EnumRarity.EPIC : EnumRarity.RARE;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "porta_spawner");
+	}
 }

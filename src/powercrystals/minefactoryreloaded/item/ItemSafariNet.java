@@ -1,6 +1,10 @@
 package powercrystals.minefactoryreloaded.item;
 
 import net.minecraft.block.BlockFence;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -8,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -27,7 +32,11 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IMobEggHandler;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.ISafariNetHandler;
@@ -35,10 +44,12 @@ import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.village.Zoologist;
 
-public class ItemSafariNet extends ItemFactory {
+public class ItemSafariNet extends ItemFactory implements IColorRegister {
 
 	private final boolean multiuse;
 	private final int type;
@@ -53,6 +64,7 @@ public class ItemSafariNet extends ItemFactory {
 		this.multiuse = multiuse;
 		this.type = type;
 		setMaxStackSize(multiuse ? 12 : 1);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
 	}
 
 	@Override
@@ -357,4 +369,77 @@ public class ItemSafariNet extends ItemFactory {
 		}
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelResourceLocation empty = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":safari_net", "variant=" + variant + "_empty");
+		ModelResourceLocation full = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":safari_net", "variant=" + variant);
+
+		ModelLoader.setCustomMeshDefinition(this, stack -> {
+
+			if (ItemSafariNet.isEmpty(stack))
+				return empty;
+			return full;
+		});
+		ModelLoader.registerItemVariants(this, empty, full);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static Random colorRand = new Random();
+
+	@SideOnly(Side.CLIENT)
+	private static final IItemColor COLOR_HANDLER = new IItemColor() {
+		@Override
+		public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+
+			if (stack.getItemDamage() == 0 && (stack.getTagCompound() == null)) {
+				return 16777215;
+			}
+			if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide")) {
+				World world = Minecraft.getMinecraft().theWorld;
+				colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * tintIndex);
+				if (tintIndex == 2)
+					return colorRand.nextInt();
+				else if (tintIndex == 1)
+					return colorRand.nextInt();
+				else
+					return 16777215;
+			}
+			EntityList.EntityEggInfo egg = getEgg(stack);
+
+			if (egg == null) {
+				return 16777215;
+			} else if (tintIndex == 2) {
+				return egg.primaryColor;
+			} else if (tintIndex == 1) {
+				return egg.secondaryColor;
+			} else {
+				return 16777215;
+			}
+		}
+
+		private EntityList.EntityEggInfo getEgg(ItemStack safariStack) {
+
+			if (safariStack.getTagCompound() == null) {
+				return null;
+			}
+
+			for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
+				EntityList.EntityEggInfo egg = handler.getEgg(safariStack);
+				if (egg != null) {
+					return egg;
+				}
+			}
+
+			return null;
+		}
+	};
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR_HANDLER, this);
+	}
 }

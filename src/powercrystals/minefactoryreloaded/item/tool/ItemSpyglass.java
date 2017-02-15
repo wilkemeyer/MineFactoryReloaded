@@ -21,7 +21,10 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemSpyglass extends ItemFactoryTool {
@@ -137,4 +140,10 @@ public class ItemSpyglass extends ItemFactoryTool {
 		return 2;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "tool", "variant=spyglass");
+	}
 }

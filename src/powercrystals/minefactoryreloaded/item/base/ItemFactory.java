@@ -1,6 +1,9 @@
 package powercrystals.minefactoryreloaded.item.base;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,24 +15,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemFactory extends Item implements IInitializer{
+public class ItemFactory extends Item implements IInitializer, IModelRegister{
 
-	protected boolean _hasIcons = true;
+	protected String modelName;
+	protected String variant;
 
 	public ItemFactory() {
 
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
-	}
-
-	public Item setHasIcons(boolean icons) {
-
-		_hasIcons = icons;
-		return this;
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	public void getSubItems(Item item, List<ItemStack> subTypes) {
@@ -88,5 +89,20 @@ public class ItemFactory extends Item implements IInitializer{
 	public boolean postInit() {
 
 		return true;
+	}
+
+	public ItemFactory setModelLocation(String modelName, String variant) {
+
+		this.modelName = modelName;
+		this.variant = variant;
+
+		return this;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, modelName, variant);
 	}
 }

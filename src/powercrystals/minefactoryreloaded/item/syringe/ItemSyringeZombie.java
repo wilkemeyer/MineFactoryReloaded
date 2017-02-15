@@ -11,6 +11,9 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.HorseType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeZombie extends ItemSyringe
@@ -65,5 +68,11 @@ public class ItemSyringeZombie extends ItemSyringe
 		}
 		return true;
 	}
-	
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(MFRThings.syringeZombieItem, "syringe", "variant=zombie");
+	}
 }

@@ -4,6 +4,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeSlime extends ItemSyringe
@@ -27,5 +30,11 @@ public class ItemSyringeSlime extends ItemSyringe
 		slime.setSlimeSize(slime.getSlimeSize() << 1);
 		return true;
 	}
-	
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "syringe", "variant=slime");
+	}
 }

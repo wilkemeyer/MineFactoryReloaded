@@ -5,6 +5,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock {
 
@@ -21,4 +24,10 @@ public class ItemNeedlegunAmmoFire extends ItemNeedlegunAmmoBlock {
 		return true;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "needle_gun_ammo", "variant=fire");
+	}
 }

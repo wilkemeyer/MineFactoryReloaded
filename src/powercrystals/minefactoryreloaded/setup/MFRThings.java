@@ -4,29 +4,22 @@ import cofh.api.core.IInitializer;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import javafx.fxml.Initializable;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.*;
 import powercrystals.minefactoryreloaded.block.decor.*;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
 import powercrystals.minefactoryreloaded.block.transport.*;
-import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.core.ReflectionHelper;
 import powercrystals.minefactoryreloaded.entity.*;
 import powercrystals.minefactoryreloaded.item.*;
@@ -38,18 +31,8 @@ import powercrystals.minefactoryreloaded.item.gun.ItemSafariNetLauncher;
 import powercrystals.minefactoryreloaded.item.gun.ammo.*;
 import powercrystals.minefactoryreloaded.item.syringe.*;
 import powercrystals.minefactoryreloaded.item.tool.*;
-import powercrystals.minefactoryreloaded.setup.recipe.EnderIO;
-import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetHistorian;
-import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
-import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
-import powercrystals.minefactoryreloaded.tile.transport.TileEntityConveyor;
-import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class MFRThings
 {
@@ -221,17 +204,17 @@ public class MFRThings
 		plasticTank = new BlockTank();
 
 		factoryHammerItem = new ItemFactoryHammer();
-		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.HEAD);
-		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.CHEST);
-		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.LEGS);
+		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.HEAD).setModelLocation("armor", "type=helm");
+		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.CHEST).setModelLocation("armor", "type=chest");
+		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.LEGS).setModelLocation("armor", "type=legs");
 		plasticBootsItem = new ItemPlasticBoots();
-		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, EntityEquipmentSlot.HEAD);
+		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, EntityEquipmentSlot.HEAD).setModelLocation("armor", "type=glass_helm");
 
-		rawRubberItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.raw");
-		rubberBarItem = (new ItemFactory()).setUnlocalizedName("mfr.rubber.bar");
+		rawRubberItem = (new ItemFactory()).setModelLocation("material", "type=rubber_raw").setUnlocalizedName("mfr.rubber.raw");
+		rubberBarItem = (new ItemFactory()).setModelLocation("material", "type=rubber_bar").setUnlocalizedName("mfr.rubber.bar");
 
-		rawPlasticItem = (new ItemFactory()).setUnlocalizedName("mfr.plastic.raw");
-		plasticSheetItem = (new ItemFactory()).setUnlocalizedName("mfr.plastic.sheet").setMaxStackSize(96);
+		rawPlasticItem = (new ItemFactory()).setModelLocation("material", "type=plastic_raw").setUnlocalizedName("mfr.plastic.raw");
+		plasticSheetItem = (new ItemFactory()).setModelLocation("material", "type=plastic_sheet").setUnlocalizedName("mfr.plastic.sheet").setMaxStackSize(96);
 		{
 			int i = MFRConfig.armorStacks.getBoolean(false) ? 4 : 1;
 			plasticHelmetItem.setRepairIngot("itemPlastic").setUnlocalizedName("mfr.plastic.armor.helm").setMaxStackSize(i);
@@ -249,16 +232,20 @@ public class MFRThings
 
 		float meatNuggetSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.1F : 0.2F;
 		float meatIngotSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.2F : 0.8F;
-		meatIngotRawItem = (new ItemFactoryFood(4, meatIngotSaturation)).setUnlocalizedName("mfr.meat.ingot.raw");
-		meatIngotCookedItem = (new ItemFactoryFood(10, meatIngotSaturation)).setUnlocalizedName("mfr.meat.ingot.cooked");
-		meatNuggetRawItem = (new ItemFactoryFood(1, meatNuggetSaturation)).setUnlocalizedName("mfr.meat.nugget.raw");
-		meatNuggetCookedItem = (new ItemFactoryFood(4, meatNuggetSaturation)).setUnlocalizedName("mfr.meat.nugget.cooked");
+		meatIngotRawItem = (new ItemFactoryFood(4, meatIngotSaturation))
+				.setModelLocation("food", "variant=meat_ingot_raw").setUnlocalizedName("mfr.meat.ingot.raw");
+		meatIngotCookedItem = (new ItemFactoryFood(10, meatIngotSaturation))
+				.setModelLocation("food", "variant=meat_ingot_cooked").setUnlocalizedName("mfr.meat.ingot.cooked");
+		meatNuggetRawItem = (new ItemFactoryFood(1, meatNuggetSaturation))
+				.setModelLocation("food", "variant=meat_nugget_raw").setUnlocalizedName("mfr.meat.nugget.raw");
+		meatNuggetCookedItem = (new ItemFactoryFood(4, meatNuggetSaturation))
+				.setModelLocation("food", "variant=meat_nugget_cooked").setUnlocalizedName("mfr.meat.nugget.cooked");
 		pinkSlimeItem = new ItemPinkSlime();
 
 		if (MFRConfig.enableLiquidSyringe.getBoolean(true))
 			syringeEmptyItem = new ItemSyringeLiquid();
 		else
-			syringeEmptyItem = (new ItemFactory()).setUnlocalizedName("mfr.syringe.empty");
+			syringeEmptyItem = (new ItemFactory()).setModelLocation("syringe", "variant=empty").setUnlocalizedName("mfr.syringe.empty");
 		syringeHealthItem = new ItemSyringeHealth();
 		syringeGrowthItem = new ItemSyringeGrowth();
 		syringeZombieItem = new ItemSyringeZombie();
@@ -266,10 +253,10 @@ public class MFRThings
 		syringeCureItem = new ItemSyringeCure();
 
 		safariNetLauncherItem = new ItemSafariNetLauncher();
-		safariNetItem = (new ItemSafariNet(0, true)).setUnlocalizedName("mfr.safarinet.reusable");
-		safariNetSingleItem = (new ItemSafariNet(0)).setUnlocalizedName("mfr.safarinet.singleuse");
-		safariNetJailerItem = (new ItemSafariNet(1)).setUnlocalizedName("mfr.safarinet.jailer");
-		safariNetFancyJailerItem = (new ItemSafariNet(3)).setUnlocalizedName("mfr.safarinet.jailer.fancy");
+		safariNetItem = (new ItemSafariNet(0, true)).setModelLocation("safari_net", "reusable").setUnlocalizedName("mfr.safarinet.reusable");
+		safariNetSingleItem = (new ItemSafariNet(0)).setModelLocation("safari_net", "single_use").setUnlocalizedName("mfr.safarinet.singleuse");
+		safariNetJailerItem = (new ItemSafariNet(1)).setModelLocation("safari_net", "jailer").setUnlocalizedName("mfr.safarinet.jailer");
+		safariNetFancyJailerItem = (new ItemSafariNet(3)).setModelLocation("safari_net", "jailer_fancy").setUnlocalizedName("mfr.safarinet.jailer.fancy");
 
 		portaSpawnerItem = new ItemPortaSpawner();
 
@@ -287,13 +274,13 @@ public class MFRThings
 		//plasticCellItem = CarbonContainer.cell;
 		plasticBagItem = new ItemFactoryBag();
 
-		sugarCharcoalItem = (new ItemFactory()).setUnlocalizedName("mfr.sugarcharcoal");
-		fertilizerItem = (new ItemFactory()).setUnlocalizedName("mfr.fertilizer");
+		sugarCharcoalItem = (new ItemFactory()).setModelLocation("material", "type=sugar_charcoal").setUnlocalizedName("mfr.sugarcharcoal");
+		fertilizerItem = (new ItemFactory()).setModelLocation("material", "type=fertilizer").setUnlocalizedName("mfr.fertilizer");
 
 		ceramicDyeItem = new ItemCeramicDye();
-		(laserFocusItem = new ItemFactoryColored()).setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
+		(laserFocusItem = new ItemFactoryColored()).setModelLocation("laser_focus", "").setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1);
 
-		blankRecordItem = (new ItemFactory()).setUnlocalizedName("mfr.record.blank").setMaxStackSize(1);
+		blankRecordItem = (new ItemFactory()).setModelLocation("material", "type=blank_record").setUnlocalizedName("mfr.record.blank").setMaxStackSize(1);
 		spyglassItem = new ItemSpyglass();
 		rulerItem = new ItemRuler();
 		fishingRodItem = new ItemFishingRod();
@@ -301,13 +288,17 @@ public class MFRThings
 		potatoLauncherItem = new ItemPotatoCannon();
 
 		needlegunItem = new ItemNeedleGun();
-		needlegunAmmoEmptyItem = (new ItemFactory()).setUnlocalizedName("mfr.needlegun.ammo.empty");
-		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard()).setUnlocalizedName("mfr.needlegun.ammo.standard");
-		needlegunAmmoPierceItem = (new ItemNeedlegunAmmoStandard(16, 2f, 8)).setUnlocalizedName("mfr.needlegun.ammo.pierce");
+		needlegunAmmoEmptyItem = (new ItemFactory()).setModelLocation("needle_gun_ammo", "variant=empty").setUnlocalizedName("mfr.needlegun.ammo.empty");
+		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard())
+				.setModelLocation("needle_gun_ammo", "variant=standard").setUnlocalizedName("mfr.needlegun.ammo.standard");
+		needlegunAmmoPierceItem = (new ItemNeedlegunAmmoStandard(16, 2f, 8))
+				.setModelLocation("needle_gun_ammo", "variant=pierce").setUnlocalizedName("mfr.needlegun.ammo.pierce");
 		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.FLOWING_LAVA.getDefaultState(), 3))
-				.setUnlocalizedName("mfr.needlegun.ammo.lava");
-		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid.getDefaultState(), 6)).setUnlocalizedName("mfr.needlegun.ammo.sludge");
-		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid.getDefaultState(), 6)).setUnlocalizedName("mfr.needlegun.ammo.sewage");
+				.setModelLocation("needle_gun_ammo", "variant=lava").setUnlocalizedName("mfr.needlegun.ammo.lava");
+		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid.getDefaultState(), 6))
+				.setModelLocation("needle_gun_ammo", "variant=sludge").setUnlocalizedName("mfr.needlegun.ammo.sludge");
+		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid.getDefaultState(), 6))
+				.setModelLocation("needle_gun_ammo", "variant=sewage").setUnlocalizedName("mfr.needlegun.ammo.sewage");
 		needlegunAmmoFireItem = (new ItemNeedlegunAmmoFire()).setUnlocalizedName("mfr.needlegun.ammo.fire");
 		needlegunAmmoAnvilItem = (new ItemNeedlegunAmmoAnvil()).setUnlocalizedName("mfr.needlegun.ammo.anvil");
 

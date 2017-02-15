@@ -11,7 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemCeramicDye extends ItemFactoryColored {
@@ -49,4 +52,10 @@ public class ItemCeramicDye extends ItemFactoryColored {
 		return EnumActionResult.PASS;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerColoredItemModels(this, "ceramic_dye");
+	}
 }

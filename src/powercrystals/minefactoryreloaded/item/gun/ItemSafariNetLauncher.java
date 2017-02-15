@@ -4,6 +4,7 @@ import cofh.lib.util.helpers.ItemHelper;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -12,16 +13,20 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntitySafariNet;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.entity.RenderSafarinet;
 
 public class ItemSafariNetLauncher extends ItemFactoryGun {
 
 	public ItemSafariNetLauncher() {
-		setHasIcons(true);
 		setUnlocalizedName("mfr.safarinet.launcher");
 		setMaxStackSize(1);
 	}
@@ -95,5 +100,15 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 		EntityRegistry.registerModEntity(EntitySafariNet.class, "SafariNet", 0, MineFactoryReloadedCore.instance(), 160, 5, true);
 
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "safari_net_launcher");
+		ModelHelper.registerModel(this, 1, "safari_net_launcher");
+		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
+				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
 	}
 }

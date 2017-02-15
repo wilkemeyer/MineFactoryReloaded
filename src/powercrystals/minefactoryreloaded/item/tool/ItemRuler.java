@@ -12,7 +12,10 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class ItemRuler extends ItemFactoryTool {
@@ -78,4 +81,10 @@ public class ItemRuler extends ItemFactoryTool {
 		return 1;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "tool", "variant=ruler");
+	}
 }

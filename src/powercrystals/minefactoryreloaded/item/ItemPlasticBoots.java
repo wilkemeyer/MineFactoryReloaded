@@ -10,7 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemPlasticBoots extends ItemFactoryArmor {
 
@@ -38,4 +41,10 @@ public class ItemPlasticBoots extends ItemFactoryArmor {
 		}
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "armor", "type=boots");
+	}
 }

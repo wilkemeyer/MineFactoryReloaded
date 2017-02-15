@@ -1,6 +1,9 @@
 package powercrystals.minefactoryreloaded.item.base;
 
 import net.minecraft.item.EnumDyeColor;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemFactoryColored extends ItemMulti {
 
@@ -13,4 +16,10 @@ public class ItemFactoryColored extends ItemMulti {
 		setNames(names);
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerColoredItemModels(this, modelName);
+	}
 }

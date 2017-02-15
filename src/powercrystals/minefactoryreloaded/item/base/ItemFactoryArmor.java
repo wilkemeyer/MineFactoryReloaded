@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.item.base;
 
 import cofh.api.core.IInitializer;
+import cofh.api.core.IModelRegister;
 import cofh.core.item.ItemArmorCore;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -15,12 +16,16 @@ import net.minecraftforge.common.util.EnumHelper;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemFactoryArmor extends ItemArmorCore implements IInitializer {
+public class ItemFactoryArmor extends ItemArmorCore implements IInitializer, IModelRegister {
 
 	public static final ItemArmor.ArmorMaterial PLASTIC_ARMOR = EnumHelper.addArmorMaterial("mfr:plastic", "plastic", 3, new int[] { 1, 2, 2, 1 }, 7, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0);
 	public static final ItemArmor.ArmorMaterial GLASS_ARMOR = EnumHelper.addArmorMaterial("mfr:glass", "glass", 3, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0);
+
+	private String modelName;
+	private String variant;
 
 	private static final String getName(ItemArmor.ArmorMaterial mat) {
 
@@ -36,6 +41,7 @@ public class ItemFactoryArmor extends ItemArmorCore implements IInitializer {
 		String prefix = MineFactoryReloadedCore.armorTextureFolder + getName(mat);
 		setArmorTextures(new String[] { prefix + "_layer_1.png", prefix + "_layer_2.png" });
 		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
@@ -72,5 +78,20 @@ public class ItemFactoryArmor extends ItemArmorCore implements IInitializer {
 	public boolean postInit() {
 
 		return true;
+	}
+
+	public ItemFactoryArmor setModelLocation(String modelName, String variant) {
+
+		this.modelName = modelName;
+		this.variant = variant;
+
+		return this;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, modelName, variant);
 	}
 }

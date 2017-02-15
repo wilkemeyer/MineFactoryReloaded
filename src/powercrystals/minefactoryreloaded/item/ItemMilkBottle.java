@@ -10,7 +10,10 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 import javax.annotation.Nullable;
 
@@ -72,4 +75,10 @@ public class ItemMilkBottle extends ItemFactory {
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "milk_bottle");
+	}
 }

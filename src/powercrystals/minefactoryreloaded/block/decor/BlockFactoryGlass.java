@@ -15,6 +15,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -37,6 +38,7 @@ import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorati
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
 import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -44,7 +46,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock, IInitializer, IModelRegister
+public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, IBakeryBlock, IInitializer, IModelRegister, IColorRegister
 {
 	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
 	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[6];
@@ -71,6 +73,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
 	}
 
 	@Override
@@ -272,5 +275,18 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 						+ "," + state.getValue(BlockFactoryGlass.CTM_VALUE[5])
 		);
 
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+
+			if (tintIndex != 0 || stack.getMetadata() > 15 || stack.getMetadata() < 0)
+				return 0xFFFFFF;
+
+			return MFRDyeColor.byMetadata(stack.getMetadata()).getColor();
+		}, this);
 	}
 }

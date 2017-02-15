@@ -23,9 +23,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemStraw extends ItemFactoryTool {
 
@@ -127,4 +130,10 @@ public class ItemStraw extends ItemFactoryTool {
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "tool", "variant=straw");
+	}
 }

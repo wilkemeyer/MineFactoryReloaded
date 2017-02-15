@@ -11,10 +11,6 @@ import net.minecraft.world.World;
 
 public abstract class ItemFactoryGun extends ItemFactory {
 
-	public ItemFactoryGun() {
-		setHasIcons(false);
-	}
-
 	protected abstract boolean hasGUI(ItemStack stack);
 
 	protected boolean openGUI(ItemStack stack, World world, EntityPlayer player) {

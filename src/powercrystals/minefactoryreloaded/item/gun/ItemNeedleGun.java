@@ -1,7 +1,9 @@
 package powercrystals.minefactoryreloaded.item.gun;
 
+import codechicken.lib.model.ModelRegistryHelper;
 import cofh.lib.util.helpers.ItemHelper;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -10,11 +12,15 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.entity.EntityNeedle;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryGun;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.item.NeedleGunItemRenderer;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemNeedleGun extends ItemFactoryGun {
@@ -99,5 +105,13 @@ public class ItemNeedleGun extends ItemFactoryGun {
 		EntityRegistry.registerModEntity(EntityNeedle.class, "Needle", 2, MineFactoryReloadedCore.instance(), 160, 3, true);
 
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "needle_gun");
+		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":needle_gun", "inventory"), new NeedleGunItemRenderer());
 	}
 }

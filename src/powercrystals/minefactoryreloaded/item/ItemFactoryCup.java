@@ -37,6 +37,9 @@ import powercrystals.minefactoryreloaded.core.IUseable;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DefaultUseHandler;
 import powercrystals.minefactoryreloaded.farmables.usehandlers.DrinkUseHandler;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
+import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
 
 import javax.annotation.Nullable;
 
@@ -267,27 +270,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, item);
 	}
 
-/*
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		this.fillIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".fill");
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ItemStack stack, int pass) {
-		switch (pass) {
-		case 1:
-			return this.fillIcon;
-		case 0:
-		default:
-			return this.itemIcon;
-		}
-	}
-*/
-
 	@Override
 	public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity) {
 		if (armorType == EntityEquipmentSlot.HEAD)
@@ -351,4 +333,11 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 		return ret;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "plastic_cup");
+		MFRModelLoader.registerModel(PlasticCupModel.MODEL_LOCATION, PlasticCupModel.MODEL);
+	}
 }

@@ -15,9 +15,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemFactoryBag extends ItemFactory implements IInventoryContainerItem {
 
@@ -78,4 +81,10 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "plastic_bag");
+	}
 }

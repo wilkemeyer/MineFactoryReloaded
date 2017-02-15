@@ -25,8 +25,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
 import powercrystals.minefactoryreloaded.item.base.ItemMulti;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemRedNetMeter extends ItemMulti {
 
@@ -98,7 +101,7 @@ public class ItemRedNetMeter extends ItemMulti {
 				TileEntity theTile = world.getTileEntity(pos);
 				return theTile instanceof ITileInfo;
 			}
-			info = new ArrayList<ITextComponent>();
+			info = new ArrayList<>();
 			if (player.isSneaking() && block instanceof IBlockConfigGui) {
 				if (((IBlockConfigGui)block).openConfigGui(world, pos, hitSide, player))
 					return true;
@@ -126,7 +129,7 @@ public class ItemRedNetMeter extends ItemMulti {
 			if (ServerHelper.isClientWorld(world)) {
 				return block instanceof IRedNetInfo || block.equals(Blocks.REDSTONE_WIRE);
 			}
-			info = new ArrayList<ITextComponent>();
+			info = new ArrayList<>();
 			if (block.equals(Blocks.REDSTONE_WIRE)) {
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.meter.dustprefix")
 						.appendText(": " + state.getValue(BlockRedstoneWire.POWER)));
@@ -148,4 +151,12 @@ public class ItemRedNetMeter extends ItemMulti {
 		return true;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "tool", "variant=rednet_meter");
+		ModelHelper.registerModel(this, 1, "tool", "variant=rednet_meter_info");
+		ModelHelper.registerModel(this, 2, "tool", "variant=rednet_meter_debug");
+	}
 }

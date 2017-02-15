@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class ItemRedNetMemoryCard extends ItemFactory {
@@ -109,4 +111,10 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 		return tag != null && (tag.hasKey("Type") || tag.hasKey("circuits", 9));
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "memory_card");
+	}
 }

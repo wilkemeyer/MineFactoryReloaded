@@ -25,6 +25,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetInfo;
@@ -220,6 +222,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 
 		ModelResourceLocation rednetLogic = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_logic", "inventory");

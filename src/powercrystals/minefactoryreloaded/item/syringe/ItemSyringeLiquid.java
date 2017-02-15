@@ -11,8 +11,13 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
+import powercrystals.minefactoryreloaded.render.model.SyringeModel;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerItem
@@ -72,19 +77,6 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		ret += t.isEmpty() ? " Syringe" : " " + t;
 		return ret;
 	}
-
-/*	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ItemStack stack, int pass) {
-		switch (pass)
-		{
-		case 1:
-			return this.fillIcon;
-		case 0:
-		default:
-			return this.itemIcon;
-		}
-	}*/
 
 	// TODO: subItems to provide a syringe for all fluids via creative under a config
 
@@ -206,4 +198,11 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 		return fluid;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "syringe", "variant=empty");
+		MFRModelLoader.registerModel(SyringeModel.MODEL_LOCATION, SyringeModel.MODEL);
+	}
 }

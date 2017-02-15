@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 
 public class ModelHelper {
 
@@ -69,5 +70,12 @@ public class ModelHelper {
 		Item item = Item.getItemFromBlock(block);
 		if (item != null)
 			ModelLoader.setCustomModelResourceLocation(item, 0,  new ModelResourceLocation(block.getRegistryName(), "normal"));
+	}
+
+	public static void registerColoredItemModels(Item item, String modelName) {
+
+		for (MFRDyeColor color : MFRDyeColor.values()) {
+			ModelLoader.setCustomModelResourceLocation(item, color.ordinal(), new ModelResourceLocation(MineFactoryReloadedCore.modId + ":" + modelName, "color=" + color.getName()));
+		}
 	}
 }

@@ -30,8 +30,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.IMFRHammer;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 @Implementable("buildcraft.api.tools.IToolWrench")
@@ -189,4 +192,10 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 		return 4;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "tool", "variant=hammer");
+	}
 }

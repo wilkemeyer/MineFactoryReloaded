@@ -9,6 +9,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock {
 
@@ -34,4 +37,10 @@ public class ItemNeedlegunAmmoAnvil extends ItemNeedlegunAmmoBlock {
 		}
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "needle_gun_ammo", "variant=anvil");
+	}
 }
