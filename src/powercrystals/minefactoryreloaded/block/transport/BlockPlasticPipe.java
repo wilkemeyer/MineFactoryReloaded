@@ -47,6 +47,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 		super(0.8F);
 		setUnlocalizedName("mfr.cable.plastic");
 		providesPower = true;
+		setRegistryName(MineFactoryReloadedCore.modId, "plastic_pipe");
 	}
 
 	@Override

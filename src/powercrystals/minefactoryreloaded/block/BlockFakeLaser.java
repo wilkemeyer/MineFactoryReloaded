@@ -53,6 +53,7 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection, IIniti
 		setUnlocalizedName("mfr.laserair");
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "fake_laser");
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class BlockRailPassengerPickup extends BlockFactoryRail {
@@ -20,6 +21,7 @@ public class BlockRailPassengerPickup extends BlockFactoryRail {
 
 		super(true, false);
 		setUnlocalizedName("mfr.rail.passenger.pickup");
+		setRegistryName(MineFactoryReloadedCore.modId, "rail_passenger_pickup");
 	}
 
 	@Override

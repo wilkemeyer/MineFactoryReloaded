@@ -48,6 +48,7 @@ public class BlockRedNetLogic extends BlockFactory implements IRedNetOmniNode, I
 
 		super(0.8F);
 		setUnlocalizedName("mfr.rednet.logic");
+		setRegistryName(MineFactoryReloadedCore.modId, "rednet_logic");
 	}
 
 	@Override

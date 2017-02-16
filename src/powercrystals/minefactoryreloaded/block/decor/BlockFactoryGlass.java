@@ -74,6 +74,7 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
 		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "stained_glass");
 	}
 
 	@Override

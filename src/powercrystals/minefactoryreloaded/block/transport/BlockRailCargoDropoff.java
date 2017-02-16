@@ -14,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail
@@ -22,6 +23,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 	{
 		super(true, false);
 		setUnlocalizedName("mfr.rail.cargo.dropoff");
+		setRegistryName(MineFactoryReloadedCore.modId, "rail_cargo_dropoff");
 	}
 
 	@Override

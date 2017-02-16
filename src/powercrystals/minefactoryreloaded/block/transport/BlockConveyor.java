@@ -73,6 +73,7 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ICo
 		setUnlocalizedName("mfr.conveyor");
 		setCreativeTab(MFRCreativeTab.tab);
 		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "conveyor");
 	}
 
 	@Override

@@ -44,6 +44,7 @@ public class BlockRedNetPanel extends BlockFactory implements IRedNetInputNode
 	{
 		super(0.8F);
 		setUnlocalizedName("mfr.rednet.panel");
+		setRegistryName(MineFactoryReloadedCore.modId, "rednet_panel");
 	}
 
 	@Override

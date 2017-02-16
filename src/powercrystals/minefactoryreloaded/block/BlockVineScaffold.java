@@ -55,6 +55,7 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative, IInit
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
 		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "vine_scaffold");
 	}
 
 	@Override

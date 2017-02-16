@@ -38,6 +38,7 @@ public class BlockPinkSlime extends BlockBreakable implements IInitializer, IMod
 		setSoundType(SoundType.SLIME);
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "pink_slime_block");
 	}
 
 	@Override

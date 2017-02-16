@@ -7,6 +7,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
@@ -19,6 +20,7 @@ public class BlockFactoryDecoration extends BlockFactory
 		
 		super(0.5f);
 		setUnlocalizedName("mfr.machineblock");
+		setRegistryName(MineFactoryReloadedCore.modId, "machine_block");
 	}
 
 	@Override

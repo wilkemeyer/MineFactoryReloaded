@@ -45,6 +45,7 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "road");
 	}
 
 	@Override

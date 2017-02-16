@@ -66,6 +66,7 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 		_mfrMachineBlockIndex = index;
 		providesPower = true;
 		setHarvestLevel("wrench", 0);
+		setRegistryName(MineFactoryReloadedCore.modId, "machine_" + index);
 	}
 
 	public int getBlockIndex() {

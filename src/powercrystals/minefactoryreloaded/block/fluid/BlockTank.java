@@ -63,6 +63,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 		super(0.5f);
 		setUnlocalizedName("mfr.tank");
 		setLightOpacity(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "tank");
 	}
 
 	@Override

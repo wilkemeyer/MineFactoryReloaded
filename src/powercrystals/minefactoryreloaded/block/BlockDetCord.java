@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.setup.Machine;
@@ -32,6 +33,7 @@ public class BlockDetCord extends BlockFactory {
 		setSoundType(SoundType.SNOW);
 		setUnlocalizedName("mfr.detcord");
 		setCreativeTab(MFRCreativeTab.tab);
+		setRegistryName(MineFactoryReloadedCore.modId, "detcord");
 	}
 
 	@Override

@@ -78,6 +78,7 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
 		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "stained_glass_pane");
 	}
 
 	@Override

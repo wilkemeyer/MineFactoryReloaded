@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
@@ -32,6 +33,7 @@ public class BlockDecorativeBricks extends BlockFactory {
 		setSoundType(SoundType.STONE);
 		setUnlocalizedName("mfr.decorative.brick");
 		providesPower = false;
+		setRegistryName(MineFactoryReloadedCore.modId, "brick");
 	}
 
 	@Override

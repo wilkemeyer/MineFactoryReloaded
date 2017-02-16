@@ -383,15 +383,8 @@ public abstract class MFRRegistry {
 	private static Map<String, Block> blocks = new HashMap<String, Block>();
 	private static Map<String, Item> items = new HashMap<String, Item>();
 	static {
-		remaps.put("liquid", null); // TODO is this needed for anything really?
-		remaps.put("armor", null);
-		remaps.put("decorative", null);
-
-		remaps.put("tile.mfr.decorativebrick", "brick");
-		remaps.put("tile.mfr.decorativestone", "stone");
-		remaps.put("item.mfr.bucket.plasticcup", "plastic.cup");
-		remaps.put("item.mfr.armor.boots.plastic", "plastic.boots");
-		remaps.put("item.mfr.pinkslimeball", "pinkslime");
+		//This is where remaps should go if needed in the future
+		//remaps.put("tile.mfr.decorativebrick", "brick");
 	}
 
 	private static String remapPhrase(String s) {
@@ -452,16 +445,13 @@ public abstract class MFRRegistry {
 
 	public static void registerBlock(Block block, ItemBlock itemBlock) {
 
-		String name = block.getUnlocalizedName();
+		String name = block.getRegistryName().getResourcePath();
 		blocks.put(name, block);
 
-		name = remapName(name);
-
-		block.setRegistryName(MineFactoryReloadedCore.modId, name);
 		GameRegistry.register(block);
 		if (itemBlock != null) {
 			GameRegistry.register(itemBlock.setRegistryName(block.getRegistryName()));
-			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));
+			items.put(name, Item.getItemFromBlock(block));
 		}
 	}
 	
