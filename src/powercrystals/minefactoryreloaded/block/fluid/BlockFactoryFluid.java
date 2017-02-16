@@ -65,7 +65,7 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 		setLightOpacity(3);
 		setDisplaceFluids(true);
 		fluidName = liquidName;
-		setRegistryName(MineFactoryReloadedCore.modId, liquidName);
+		setRegistryName(MineFactoryReloadedCore.modId, liquidName + "_fluid");
 	}
 
 	@Override

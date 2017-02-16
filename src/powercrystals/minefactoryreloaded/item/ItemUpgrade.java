@@ -12,6 +12,7 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemMulti;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
@@ -27,6 +28,7 @@ public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 		setNames(NEGATIVE_START, "cobble");
 		setUnlocalizedName("mfr.upgrade.radius");
 		setMaxStackSize(64);
+		setRegistryName(MineFactoryReloadedCore.modId, "upgrade_radius");
 	}
 
 	@Override

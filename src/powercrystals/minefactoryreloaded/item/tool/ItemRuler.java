@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryTool;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
@@ -24,6 +25,7 @@ public class ItemRuler extends ItemFactoryTool {
 
 		setUnlocalizedName("mfr.ruler");
 		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "ruler");
 	}
 
 	@Override

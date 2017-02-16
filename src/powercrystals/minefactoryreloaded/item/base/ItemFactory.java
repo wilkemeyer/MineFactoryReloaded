@@ -75,7 +75,7 @@ public class ItemFactory extends Item implements IInitializer, IModelRegister{
 	@Override
 	public boolean preInit() {
 
-		MFRRegistry.registerItem(this, getUnlocalizedName()); //TODO change to separate registry name
+		MFRRegistry.registerItem(this);
 		return true;
 	}
 

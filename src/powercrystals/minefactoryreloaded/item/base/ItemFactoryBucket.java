@@ -42,42 +42,8 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 	public Item setUnlocalizedName(String name) {
 
 		super.setUnlocalizedName(name);
-		if (_register)
-			MFRRegistry.registerItem(this, getUnlocalizedName());
 		return this;
 	}
-
-/*	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister r) {
-
-		String t = "minefactoryreloaded:" + getUnlocalizedName();
-		if (iconString != null && !RegistryUtils.itemTextureExists(t))
-			t = iconString;
-		if (RegistryUtils.itemTextureExists(t)) {
-			itemIcon = r.registerIcon(t);
-			_needsOverlay = false;
-		} else {
-			itemIcon = r.registerIcon("minecraft:bucket_empty");
-			_needsOverlay = true;
-		}
-		overlayIcon = r.registerIcon("minefactoryreloaded:item.mfr.bucket.fill");
-	}
-
-	@Override
-	public int getRenderPasses(int metadata) {
-
-		return _needsOverlay ? 2 : 1;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
-
-		if (pass == 1)
-			return overlayIcon;
-		return itemIcon;
-	}*/
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

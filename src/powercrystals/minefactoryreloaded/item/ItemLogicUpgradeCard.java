@@ -23,6 +23,7 @@ public class ItemLogicUpgradeCard extends ItemMulti {
 		setNames(_upgradeNames);
 		setUnlocalizedName("mfr.upgrade.logic");
 		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "upgrade_logic");
 	}
 
 	@Override

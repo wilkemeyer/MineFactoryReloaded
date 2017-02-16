@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
@@ -27,6 +28,7 @@ public class ItemSyringeLiquid extends ItemSyringe implements IFluidContainerIte
 	public ItemSyringeLiquid() {
 
 		setUnlocalizedName("mfr.syringe.empty");
+		setRegistryName(MineFactoryReloadedCore.modId, "syringe_empty");
 	}
 
 	@Override

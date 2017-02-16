@@ -469,12 +469,10 @@ public abstract class MFRRegistry {
 			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));
 	}
 
-	public static void registerItem(Item item, String name) {
+	public static void registerItem(Item item) {
 
-		items.put(name, item);
+		items.put(item.getRegistryName().getResourcePath(), item);
 
-		name = remapName(name);
-
-		GameRegistry.registerItem(item, name);
+		GameRegistry.register(item);
 	}
 }

@@ -40,6 +40,7 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 
 		setUnlocalizedName("mfr.potatolauncher");
 		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "potato_launcher");
 	}
 
 	@Override

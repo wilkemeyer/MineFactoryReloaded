@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
@@ -29,6 +30,7 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 
 		setUnlocalizedName("mfr.rednet.memorycard");
 		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "rednet_memory_card");
 	}
 
 	@Override

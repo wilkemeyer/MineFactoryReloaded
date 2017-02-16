@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
@@ -15,6 +16,7 @@ public class ItemSyringeSlime extends ItemSyringe
 	{
 		setUnlocalizedName("mfr.syringe.slime");
 		setContainerItem(MFRThings.syringeEmptyItem);
+		setRegistryName(MineFactoryReloadedCore.modId, "syringe_slime");
 	}
 
 	@Override

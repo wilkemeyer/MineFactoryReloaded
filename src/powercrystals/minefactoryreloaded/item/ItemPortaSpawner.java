@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -39,6 +40,7 @@ public class ItemPortaSpawner extends ItemFactory {
 
 		setUnlocalizedName("mfr.portaspawner");
 		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "porta_spawner");
 	}
 
 	public static NBTTagCompound getSpawnerTag(ItemStack stack) {

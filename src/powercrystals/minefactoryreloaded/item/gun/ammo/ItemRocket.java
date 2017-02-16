@@ -16,6 +16,7 @@ public class ItemRocket extends ItemMulti {
 		setNames(new String[] {"smart", null});
 		setUnlocalizedName("mfr.rocket");
 		setMaxStackSize(16);
+		setRegistryName(MineFactoryReloadedCore.modId, "rocket");
 	}
 
 	@Override

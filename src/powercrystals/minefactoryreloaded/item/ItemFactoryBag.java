@@ -28,6 +28,7 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 
 		setUnlocalizedName("mfr.plastic.bag");
 		setMaxStackSize(24);
+		setRegistryName(MineFactoryReloadedCore.modId, "plastic_bag");
 	}
 
 	@Override

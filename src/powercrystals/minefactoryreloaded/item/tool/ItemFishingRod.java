@@ -26,6 +26,7 @@ public class ItemFishingRod extends ItemFactoryTool {
 	public ItemFishingRod() {
 		setUnlocalizedName("mfr.fishingrod");
 		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "fishing_rod");
 	}
 
 	@Override

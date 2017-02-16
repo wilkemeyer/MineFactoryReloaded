@@ -53,7 +53,7 @@ public class ItemFactoryFood extends ItemFood implements IInitializer, IModelReg
 	@Override
 	public boolean preInit() {
 
-		MFRRegistry.registerItem(this, getUnlocalizedName());
+		MFRRegistry.registerItem(this);
 		return true;
 	}
 

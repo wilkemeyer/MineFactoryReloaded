@@ -64,7 +64,7 @@ public class ItemFactoryArmor extends ItemArmorCore implements IInitializer, IMo
 	@Override
 	public boolean preInit() {
 
-		MFRRegistry.registerItem(this, getUnlocalizedName());
+		MFRRegistry.registerItem(this);
 		return true;
 	}
 
