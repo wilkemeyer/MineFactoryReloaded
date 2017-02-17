@@ -7,9 +7,16 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import cofh.CoFHCore;
 import cofh.api.core.IInitializer;
 import cofh.core.world.WorldHandler;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -23,6 +30,7 @@ import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMappin
 import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -399,7 +407,8 @@ public class MineFactoryReloadedCore extends BaseMod {
 		MFRPacket.initialize();
 
 		addDispenserBehavior();
-		addChestGenItems();
+
+		MFRLoot.init();
 
 		Zoologist.init();
 
@@ -422,20 +431,25 @@ public class MineFactoryReloadedCore extends BaseMod {
 		//{ Vanilla chests
 		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
+		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
+			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
+
 		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
 			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
 		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
 			new WeightedRandomChestContent(new ItemStack(safariNetJailerItem), 1, 1, 15));
+
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_DISPENSER).addItem(
-			new WeightedRandomChestContent(Zoologist.getHiddenNetStack(), 1, 1, 25));
+
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
 		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
 			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 1), 1, 2, 1));
+
+		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_DISPENSER).addItem(
+			new WeightedRandomChestContent(Zoologist.getHiddenNetStack(), 1, 1, 25));
+
 		if (MFRConfig.enableMassiveTree.getBoolean(true)) {
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(
 				new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 3), 1, 1, 1));
