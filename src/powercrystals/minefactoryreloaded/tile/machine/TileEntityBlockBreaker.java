@@ -37,6 +37,13 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	}
 
 	@Override
+	public void cofh_validate() {
+
+		super.cofh_validate();
+		breakPos = pos.offset(getDirectionFacing());
+	}
+
+	@Override
 	public void onNeighborBlockChange()
 	{
 		if (breakPos != null && !worldObj.isAirBlock(breakPos))

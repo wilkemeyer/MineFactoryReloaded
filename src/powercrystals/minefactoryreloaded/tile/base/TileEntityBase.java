@@ -50,9 +50,15 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		inWorld = true;
 	}
 
+	boolean firstTick = true;
+
 	@Override
 	public void update()
 	{
+		if (firstTick) {
+			cofh_validate();
+			firstTick = false;
+		}
 		markChunkDirty();
 	}
 
