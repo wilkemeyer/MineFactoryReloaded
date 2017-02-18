@@ -21,8 +21,10 @@ import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces.PieceWeight;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import powercrystals.minefactoryreloaded.block.BlockRubberWood;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRLoot;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ComponentZoologistHouse extends StructureVillagePieces.Village
@@ -98,7 +100,6 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		paneState = Block.REGISTRY.getObject(new ResourceLocation(tag.getString("pane"))).getStateFromMeta(blocks[1]);
 	}
 
-	@SuppressWarnings("rawtypes")
 	public static ComponentZoologistHouse buildComponent(PieceWeight villagePiece,
 			Start startPiece, List pieces, Random random, int p1, int p2,
 			int p3, EnumFacing facing, int p5)
@@ -253,7 +254,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			if (sbb.isVecInside(new Vec3i(j, i, k)))
 			{
 				this.hasMadeChest = true;
-				generateChest(world, sbb, random, 1, 1, 4, CHEST_GEN);
+				generateChest(world, sbb, random, 1, 1, 4, MFRLoot.ZOOLOGIST_CHEST);
 			}
 		}
 
@@ -262,8 +263,8 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 	}
 
 	@Override
-	protected int chooseProfession(int villagersSpawnedIn, int currentVillagerProfession)
-	{
-		return MFRConfig.zoologist.getInt();
+	protected VillagerRegistry.VillagerProfession chooseForgeProfession(int count, VillagerRegistry.VillagerProfession prof) {
+		
+		return Zoologist.zoologistProfession;
 	}
 }

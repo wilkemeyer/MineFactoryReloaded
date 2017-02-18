@@ -31,9 +31,10 @@ public class MFRLoot {
 	} 
 	private static final List<String> FISHING_TABLES = ImmutableList.of("junk", "treasure");
 	
-	private	static String CHESTS_PREFIX = "minecraft:chests/";
-	private	static String FISHING_PREFIX = "minecraft:gameplay/fishing/";
-
+	private	static final String CHESTS_PREFIX = "minecraft:chests/";
+	private	static final String FISHING_PREFIX = "minecraft:gameplay/fishing/";
+	public static final ResourceLocation ZOOLOGIST_CHEST = new ResourceLocation(MineFactoryReloadedCore.modId + ":chests/zoologist");
+	
 	private static final MFRLoot INSTANCE = new MFRLoot();
 	private MFRLoot() {}
 
@@ -41,7 +42,7 @@ public class MFRLoot {
 		
 		registerLootTables(CHEST_TABLES, "inject/chests/");
 		registerLootTables(FISHING_TABLES, "inject/gameplay/fishing/");
-		registerLootTables(Collections.singletonList("zoologist"), "chests/");
+		LootTableList.register(ZOOLOGIST_CHEST);
 
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
 	}

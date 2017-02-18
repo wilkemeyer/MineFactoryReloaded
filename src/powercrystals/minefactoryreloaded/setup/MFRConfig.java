@@ -21,7 +21,7 @@ public class MFRConfig {
 	public static Property dropFilledContainers;
 	public static Property autoRegisterHarvestables;
 
-	public static Property zoologist;
+	public static Property zoologist; //TODO remove
 
 	public static Property enableBonemealFertilizing;
 	public static Property conveyorCaptureNonItems;
