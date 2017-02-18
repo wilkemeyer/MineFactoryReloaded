@@ -13,36 +13,65 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MFRLoot {
 
-	private static final List<String> CHEST_TABLES = ImmutableList.of("abandoned_mineshaft", "desert_pyramid", "jungle_temple", "jungle_temple_dispenser", "simple_dungeon");
+	private static final List<String> CHEST_TABLES;
+	static {
+		
+		ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
+		builder.add("abandoned_mineshaft", "desert_pyramid", "jungle_temple", "jungle_temple_dispenser", "simple_dungeon");
+		
+		if (MFRConfig.enableMassiveTree.getBoolean(true)) {
+			builder.add("stronghold_library");
+		}
+		CHEST_TABLES = builder.build();
+	} 
+	private static final List<String> FISHING_TABLES = ImmutableList.of("junk", "treasure");
+	
+	private	static String CHESTS_PREFIX = "minecraft:chests/";
+	private	static String FISHING_PREFIX = "minecraft:gameplay/fishing/";
 
 	private static final MFRLoot INSTANCE = new MFRLoot();
 	private MFRLoot() {}
 
 	public static void init() {
-		for(String s : CHEST_TABLES) {
-			LootTableList.register(new ResourceLocation(MineFactoryReloadedCore.modId, "inject/chests/" + s));
-		}
+		
+		registerLootTables(CHEST_TABLES, "inject/chests/");
+		registerLootTables(FISHING_TABLES, "inject/gameplay/fishing/");
+		registerLootTables(Collections.singletonList("zoologist"), "chests/");
 
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
 	}
 
+	private static void registerLootTables(List<String> list, String prefix) {
+		
+		for(String s : list) {
+			LootTableList.register(new ResourceLocation(MineFactoryReloadedCore.modId, prefix + s));
+		}
+	}
+
 	@SubscribeEvent
 	public void lootLoad(LootTableLoadEvent evt) {
-		String chests_prefix = "minecraft:chests/";
+
+		injectLootPool(evt, CHESTS_PREFIX, CHEST_TABLES);
+		injectLootPool(evt, FISHING_PREFIX, FISHING_TABLES);
+	}
+
+	private void injectLootPool(LootTableLoadEvent evt, String prefix, List<String> list) {
+		
 		String name = evt.getName().toString();
 
-		if(name.startsWith(chests_prefix) && ((CHEST_TABLES.contains(name.substring(chests_prefix.length()))) ||
-				(MFRConfig.enableMassiveTree.getBoolean(true) && "stronghold_library".equals(name.substring(chests_prefix.length()))))) {
+		if(name.startsWith(prefix) && list.contains(name.substring(prefix.length()))) {
 			String file = name.substring("minecraft:".length());
 			evt.getTable().addPool(getInjectPool(file));
 		}
 	}
 
 	private LootPool getInjectPool(String entryName) {
+		
 		return new LootPool(new LootEntry[] {getInjectEntry(entryName, 1)}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "mfr_inject_pool");
 	}
 

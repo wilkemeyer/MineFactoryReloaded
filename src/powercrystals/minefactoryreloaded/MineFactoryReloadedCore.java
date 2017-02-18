@@ -428,32 +428,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 	private void addChestGenItems() {
 
 /*  TODO add loot tables
-		//{ Vanilla chests
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
-
-		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetJailerItem), 1, 1, 15));
-
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 1), 1, 2, 1));
-
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_DISPENSER).addItem(
-			new WeightedRandomChestContent(Zoologist.getHiddenNetStack(), 1, 1, 25));
-
-		if (MFRConfig.enableMassiveTree.getBoolean(true)) {
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(
-				new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 3), 1, 1, 1));
-		}
 		//}
 
 		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.SAPLING, 2), 1, 16, 7) {
@@ -468,9 +442,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		};
 
 		//{ Fishing
-		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(rubberSaplingBlock, 1, 0), 5));
-		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(plasticSheetItem, 1, 0), 10));
-		FishingHooks.addTreasure(new WeightedRandomFishable(Zoologist.getHiddenNetStack(), 1));
+		TODO add implementation for plastic bag with loot defined by loot table - probably just use the loot nbt tag on first open to gen it 
 		FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(plasticBagItem, 1, 0), 1) {
 
 			WeightedRandomChestContent[] loot = {
