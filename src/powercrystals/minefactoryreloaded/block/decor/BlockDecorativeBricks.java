@@ -7,6 +7,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -54,12 +56,37 @@ public class BlockDecorativeBricks extends BlockFactory {
 	}
 
 	@Override
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+
+		boolean ice = isIce(state);
+		return (ice && layer == BlockRenderLayer.TRANSLUCENT) || (!ice && layer == BlockRenderLayer.SOLID);  
+	}
+
+	private boolean isIce(IBlockState state) {
+		
+		Variant variant = state.getValue(VARIANT);
+		return variant == Variant.ICE || variant == Variant.ICE_LARGE;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		
+		return !isIce(state);
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+		
+		return isIce(state) ? 3 : 255;
+	}
+
+	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		Variant variant = state.getValue(VARIANT);
 		return variant == Variant.GLOWSTONE || variant == Variant.GLOWSTONE_LARGE ? 15 : 0;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
 
