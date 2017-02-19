@@ -33,7 +33,7 @@ public class Zoologist
 
 		VillagerCareer zoologist = new VillagerCareer(zoologistProfession, MineFactoryReloadedCore.modId + ":zoologist");
 		zoologist.addTrade(1, new ListItemForEmeralds(MFRThings.safariNetSingleItem, new PriceInfo(1, 1)));
-		zoologist.addTrade(1, new ListItemForEmeralds(MFRThings.safariNetItem, new PriceInfo(1, 1)));
+		zoologist.addTrade(1, new ListItemForEmeralds(MFRThings.safariNetItem, new PriceInfo(3, 1)));
 		zoologist.addTrade(2, new ListItemForEmeraldAndItem(getHiddenNetStack(), MFRThings.safariNetSingleItem));
 		zoologist.addTrade(2, new ListItemForEmeraldAndItem(new ItemStack(MFRThings.rubberSaplingBlock, 8, 0), ItemBlock.getItemFromBlock(Blocks.SAPLING), 8, 6));
 	}
@@ -73,7 +73,7 @@ public class Zoologist
 			ItemStack itemBeingSold;
 
 			itemCost1 = new ItemStack(Items.EMERALD);
-			itemCost2 = new ItemStack(itemToPay, 1, random.nextInt(maxRandomMeta));
+			itemCost2 = new ItemStack(itemToPay, 1, maxRandomMeta == 0 ? 0 : random.nextInt(maxRandomMeta));
 			itemBeingSold = itemToBuy.copy();
 
 			recipeList.add(new MerchantRecipe(itemCost1, itemCost2, itemBeingSold));
