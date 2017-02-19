@@ -125,7 +125,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			boundingBox.offset(0, averageGroundLvl - boundingBox.maxY + 9 - 1, 0);
 		}
 		Block mfrBrickId = MFRThings.factoryDecorativeBrickBlock;
-		IBlockState logState = MFRThings.rubberWoodBlock.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.Z);
+		IBlockState logState = MFRThings.rubberWoodBlock.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.NONE);
 
 		fillWithAir(world, sbb, 1, 1, 1, 7, 5, 4);
 		fillWithBlocks(world, sbb, 0, 0, 0, 8, 0, 5, brickState, brickState, false);
