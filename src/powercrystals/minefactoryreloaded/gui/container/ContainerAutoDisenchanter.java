@@ -10,7 +10,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter
 
 public class ContainerAutoDisenchanter extends ContainerFactoryPowered {
 
-	public static ResourceLocation background;
+	public static String background;
 	private TileEntityAutoDisenchanter _disenchanter;
 
 	public ContainerAutoDisenchanter(TileEntityAutoDisenchanter disenchanter, InventoryPlayer inv)
@@ -30,8 +30,8 @@ public class ContainerAutoDisenchanter extends ContainerFactoryPowered {
 		addSlotToContainer(new SlotRemoveOnly(_te, 2, 8, 56));
 		addSlotToContainer(new SlotRemoveOnly(_te, 3, 26, 56));
 
-		getSlot(1).setBackgroundLocation(background);
-		getSlot(4).setBackgroundLocation(background);
+		getSlot(1).setBackgroundName(background);
+		getSlot(4).setBackgroundName(background);
 		// getSlot is for the slot id (order it was added) not the slot index
 	}
 

@@ -37,8 +37,8 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered {
 		}
 	}
 
-	public static ResourceLocation ingredient;
-	public static ResourceLocation bottle;
+	public static String ingredient;
+	public static String bottle;
 
 	public ContainerAutoBrewer(TileEntityFactoryPowered te, InventoryPlayer inv) {
 
@@ -60,8 +60,8 @@ public class ContainerAutoBrewer extends ContainerFactoryPowered {
 		addSlotToContainer(new SlotAcceptInsertable(_te, 31, 146, 141));
 
 		for (int row = 0; row < 6; row++)
-			getSlot(row * 5 + 1).setBackgroundLocation(ingredient);
-		getSlot(31).setBackgroundLocation(bottle);
+			getSlot(row * 5 + 1).setBackgroundName(ingredient);
+		getSlot(31).setBackgroundName(bottle);
 	}
 
 	@Override

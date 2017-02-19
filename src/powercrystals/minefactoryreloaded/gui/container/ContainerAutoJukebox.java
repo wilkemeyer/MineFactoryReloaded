@@ -10,7 +10,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 
 public class ContainerAutoJukebox extends ContainerFactoryInventory {
 
-	public static ResourceLocation background;
+	public static String background;
 	private TileEntityAutoJukebox _jukebox;
 
 	public ContainerAutoJukebox(TileEntityAutoJukebox tileentity, InventoryPlayer inv) {
@@ -25,8 +25,8 @@ public class ContainerAutoJukebox extends ContainerFactoryInventory {
 		addSlotToContainer(new SlotAcceptRecord(_te, 0, 8, 24));
 		addSlotToContainer(new SlotAcceptBlankRecord(_te, 1, 8, 54));
 
-		getSlot(0).setBackgroundLocation(background);
-		getSlot(1).setBackgroundLocation(background);
+		getSlot(0).setBackgroundName(background);
+		getSlot(1).setBackgroundName(background);
 	}
 
 	@Override

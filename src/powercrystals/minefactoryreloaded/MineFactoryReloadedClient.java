@@ -39,6 +39,12 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Point;
 import powercrystals.minefactoryreloaded.core.IHarvestAreaContainer;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
+import powercrystals.minefactoryreloaded.gui.container.ContainerAutoBrewer;
+import powercrystals.minefactoryreloaded.gui.container.ContainerAutoDisenchanter;
+import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptLaserFocus;
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptReusableSafariNet;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
@@ -99,14 +105,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	public static void init() {
 
 		instance = new MineFactoryReloadedClient();
-
-/*
-		if (syringeEmptyItem instanceof IFluidContainerItem)
-			MinecraftForgeClient.registerItemRenderer(syringeEmptyItem,
-				new RenderFluidOverlayItem(false));
-		//MinecraftForgeClient.registerItemRenderer(MineFactoryReloadedCore.plasticCellItem.itemID,
-		//		new FactoryFluidOverlayRenderer());
-*/
 		
 		MinecraftForge.EVENT_BUS.register(instance);
 		gl14 = GLContext.getCapabilities().OpenGL14; //TODO what is this used for? doesn't seem to have anything referring to it
@@ -136,15 +134,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 		evt.getMap().registerSprite(BlockTankRenderer.BOTTOM_TEXTURE_LOCATION);
 
-/* TODO add code to gen GUI background
-		SlotAcceptReusableSafariNet.background = e.map.registerIcon("minefactoryreloaded:gui/reusablenet");
-		ContainerAutoDisenchanter.background = e.map.registerIcon("minefactoryreloaded:gui/book");
-		ContainerAutoJukebox.background = e.map.registerIcon("minefactoryreloaded:gui/record");
-		SlotAcceptLaserFocus.background = e.map.registerIcon("minefactoryreloaded:gui/laserfocus");
-		ContainerAutoBrewer.ingredient = e.map.registerIcon("minefactoryreloaded:gui/netherwart");
-		ContainerAutoBrewer.bottle = e.map.registerIcon("minefactoryreloaded:gui/bottle");
-		ContainerFisher.background = e.map.registerIcon("minefactoryreloaded:gui/fishingrod");
-*/
+		SlotAcceptReusableSafariNet.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/reusablenet"));
+		ContainerAutoDisenchanter.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/book")).getIconName();
+		ContainerAutoJukebox.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/record")).getIconName();
+		SlotAcceptLaserFocus.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/laserfocus"));
+		ContainerAutoBrewer.ingredient = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/netherwart")).getIconName();
+		ContainerAutoBrewer.bottle = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/bottle")).getIconName();
+		ContainerFisher.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/fishingrod")).getIconName();
 	}
 
 	@SubscribeEvent
