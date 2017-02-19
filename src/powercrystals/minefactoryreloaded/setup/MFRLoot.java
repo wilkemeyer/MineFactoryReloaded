@@ -34,6 +34,7 @@ public class MFRLoot {
 	private	static final String CHESTS_PREFIX = "minecraft:chests/";
 	private	static final String FISHING_PREFIX = "minecraft:gameplay/fishing/";
 	public static final ResourceLocation ZOOLOGIST_CHEST = new ResourceLocation(MineFactoryReloadedCore.modId + ":chests/zoologist");
+	public static final ResourceLocation FACTORY_BAG = new ResourceLocation(MineFactoryReloadedCore.modId + ":factory_bag");
 	
 	private static final MFRLoot INSTANCE = new MFRLoot();
 	private MFRLoot() {}
@@ -43,6 +44,7 @@ public class MFRLoot {
 		registerLootTables(CHEST_TABLES, "inject/chests/");
 		registerLootTables(FISHING_TABLES, "inject/gameplay/fishing/");
 		LootTableList.register(ZOOLOGIST_CHEST);
+		LootTableList.register(FACTORY_BAG);
 
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
 	}

@@ -1,6 +1,9 @@
 package powercrystals.minefactoryreloaded.item;
 
+import codechicken.lib.inventory.InventoryUtils;
 import cofh.api.item.IInventoryContainerItem;
+import cofh.lib.gui.container.InventoryContainerItemWrapper;
+import cofh.lib.util.helpers.InventoryHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.StringHelper;
 
@@ -15,12 +18,17 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTableManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRLoot;
 
 public class ItemFactoryBag extends ItemFactory implements IInventoryContainerItem {
 
@@ -72,16 +80,28 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 		if (stack.stackSize != 1) {
 			if (!world.isRemote)
 				player.addChatMessage(new TextComponentTranslation("chat.info.mfr.bag.stacksize"));
-			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
-		stack.setTagInfo("Accessible", new NBTTagCompound());
-		stack.getTagCompound().removeTag("loot");
+
+		if (!world.isRemote && stack.getTagCompound().hasKey("loot")) {
+			stack = fillWithLoot((WorldServer) world, stack);
+			stack.getTagCompound().removeTag("loot");
+		}
 
 		if (!world.isRemote)
 			player.openGui(MineFactoryReloadedCore.instance(), 2, world, 0, 0, 0);
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 
+	private ItemStack fillWithLoot(WorldServer world, ItemStack stack) {
+		
+		LootTable lootTable = world.getLootTableManager().getLootTableFromLocation(MFRLoot.FACTORY_BAG);
+		InventoryContainerItemWrapper wrapper = new InventoryContainerItemWrapper(stack);
+		lootTable.fillInventory(wrapper, world.rand, new LootContext.Builder(world).build());
+		
+		return wrapper.getContainerStack();
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
