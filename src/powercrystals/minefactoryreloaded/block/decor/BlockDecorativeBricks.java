@@ -8,7 +8,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -97,7 +96,7 @@ public class BlockDecorativeBricks extends BlockFactory {
 	@Override
 	public boolean preInit() {
 
-		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.NAMES));
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.UNLOC_NAMES));
 		return true;
 	}
 
@@ -113,8 +112,8 @@ public class BlockDecorativeBricks extends BlockFactory {
 		ICE(0, "ice"),
 		GLOWSTONE(1, "glowstone"),
 		LAPIS(2, "lapis"),
-		OBSIDIAN(3, "obsidian"), 
-		PAVEDSTONE(4, "pavedstone"), 
+		OBSIDIAN(3, "obsidian"),
+		PAVEDSTONE(4, "pavedstone"),
 		SNOW(5, "snow"),
 		ICE_LARGE(6, "ice_large"),
 		GLOWSTONE_LARGE(7, "glowstone_large"),
@@ -129,8 +128,9 @@ public class BlockDecorativeBricks extends BlockFactory {
 
 		private final int meta;
 		private final String name;
-		
+
 		public static final String[] NAMES;
+		public static final String[] UNLOC_NAMES;
 
 		Variant(int meta, String name) {
 
@@ -151,8 +151,10 @@ public class BlockDecorativeBricks extends BlockFactory {
 		
 		static {
 			NAMES = new String[values().length];
+			UNLOC_NAMES = new String[values().length];
 			for (Variant variant : values()) {
 				NAMES[variant.meta] = variant.name;
+				UNLOC_NAMES[variant.meta] = variant.name.replace("_", "");
 			}
 		}
 	}

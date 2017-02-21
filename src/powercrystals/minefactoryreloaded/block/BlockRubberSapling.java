@@ -48,7 +48,7 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 		setSoundType(SoundType.PLANT);
 		setUnlocalizedName("mfr.rubberwood.sapling");
 		setCreativeTab(MFRCreativeTab.tab);
-		this.setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.REGULAR).withProperty(STAGE, 0));
+		this.setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.NORMAL).withProperty(STAGE, 0));
 		MFRThings.registerInitializer(this);
 		MineFactoryReloadedCore.proxy.addModelRegister(this);
 		setRegistryName(MineFactoryReloadedCore.modId, "rubberwood_sapling");
@@ -84,7 +84,7 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 					return;
 				break;
 			default:
-			case REGULAR:
+			case NORMAL:
 				Biome b = world.getBiome(pos);
 				if (b != null && b.getBiomeName().toLowerCase(Locale.US).contains("mega"))
 					if (rand.nextInt(50) == 0)
@@ -151,7 +151,7 @@ public class BlockRubberSapling extends BlockBush implements IRedNetNoConnection
 
 	private enum Type implements IStringSerializable {
 		
-		REGULAR(0, "regular"),
+		NORMAL(0, "normal"),
 		SACRED_SPRING(1, "sacred_spring"),
 		MEGA(2, "mega"),
 		MASSIVE(3, "massive");

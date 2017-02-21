@@ -60,7 +60,7 @@ tile.mfr.stainedglass.pane.green.name = Stained Porthole (Green)
 tile.mfr.stainedglass.pane.red.name = Stained Porthole (Red)
 tile.mfr.stainedglass.pane.black.name = Stained Porthole (Black)
 
-tile.mfr.plastic.name = Block o' Plastic
+tile.mfr.plastic.plain.name = Block o' Plastic
 
 tile.mfr.decorative.brick.ice.name = Frost Bricks
 tile.mfr.decorative.brick.glowstone.name = Brimstone Bricks
@@ -68,29 +68,29 @@ tile.mfr.decorative.brick.lapis.name = Bricks o' Lāzhward
 tile.mfr.decorative.brick.obsidian.name = Bricks o' Tears
 tile.mfr.decorative.brick.pavedstone.name = Bricks o' Paved Stone
 tile.mfr.decorative.brick.snow.name = Bricks o' Slush
-tile.mfr.decorative.brick.ice_large.name = Large Frost Bricks
-tile.mfr.decorative.brick.glowstone_large.name = Large Brimstone Bricks
-tile.mfr.decorative.brick.lapis_large.name = Large Bricks o' Lāzhward
-tile.mfr.decorative.brick.obsidian_large.name = Large Bricks o' Tears
-tile.mfr.decorative.brick.pavedstone_large.name = Large Bricks o' Paved Stone
-tile.mfr.decorative.brick.snow_large.name = Large Bricks o' Slush
-tile.mfr.decorative.brick.meat.raw.name = Block o' Fresh Meat
-tile.mfr.decorative.brick.meat.cooked.name = Block o' Cooked Meat
-tile.mfr.decorative.brick.brick_large.name = Large Clay Bricks
-tile.mfr.decorative.brick.sugar_charcoal.name = Burnt Block o' Sugarrr
+tile.mfr.decorative.brick.icelarge.name = Large Frost Bricks
+tile.mfr.decorative.brick.glowstonelarge.name = Large Brimstone Bricks
+tile.mfr.decorative.brick.lapislarge.name = Large Bricks o' Lāzhward
+tile.mfr.decorative.brick.obsidianlarge.name = Large Bricks o' Tears
+tile.mfr.decorative.brick.pavedstonelarge.name = Large Bricks o' Paved Stone
+tile.mfr.decorative.brick.snowlarge.name = Large Bricks o' Slush
+tile.mfr.decorative.brick.meatraw.name = Block o' Fresh Meat
+tile.mfr.decorative.brick.meatcooked.name = Block o' Cooked Meat
+tile.mfr.decorative.brick.bricklarge.name = Large Clay Bricks
+tile.mfr.decorative.brick.sugarcharcoal.name = Burnt Block o' Sugarrr
 
-tile.mfr.decorative.stone.black.smooth.name = Smooth Blackstone
-tile.mfr.decorative.stone.black.cobble.name = Flagstone Blackstone
-tile.mfr.decorative.stone.black.brick.small.name = Small Bricks o' Blackstone
-tile.mfr.decorative.stone.black.brick.large.name = Large Bricks o' Blackstone
-tile.mfr.decorative.stone.black.gravel.name = Blackstone Rubble
-tile.mfr.decorative.stone.black.paved.name = Paved Blackstone
-tile.mfr.decorative.stone.white.smooth.name = Smooth Whitestone
-tile.mfr.decorative.stone.white.cobble.name = Flagstone Whitestone
-tile.mfr.decorative.stone.white.brick.small.name = Small Bricks o' Whitestone
-tile.mfr.decorative.stone.white.brick.large.name = Large Bricks o' Whitestone
-tile.mfr.decorative.stone.white.gravel.name = Whitestone Rubble
-tile.mfr.decorative.stone.white.paved.name = Paved Whitestone
+tile.mfr.decorative.stone.blacksmooth.name = Smooth Blackstone
+tile.mfr.decorative.stone.blackcobble.name = Flagstone Blackstone
+tile.mfr.decorative.stone.blackbricksmall.name = Small Bricks o' Blackstone
+tile.mfr.decorative.stone.blackbricklarge.name = Large Bricks o' Blackstone
+tile.mfr.decorative.stone.blackgravel.name = Blackstone Rubble
+tile.mfr.decorative.stone.blackpaved.name = Paved Blackstone
+tile.mfr.decorative.stone.whitesmooth.name = Smooth Whitestone
+tile.mfr.decorative.stone.whitecobble.name = Flagstone Whitestone
+tile.mfr.decorative.stone.whitebricksmall.name = Small Bricks o' Whitestone
+tile.mfr.decorative.stone.whitebricklarge.name = Large Bricks o' Whitestone
+tile.mfr.decorative.stone.whitegravel.name = Whitestone Rubble
+tile.mfr.decorative.stone.whitepaved.name = Paved Whitestone
 
 tile.ice.unmelting.name = Frost (Unmelting)
 
@@ -98,12 +98,12 @@ tile.mfr.vinescaffold.name = Swinger Scaffolding
 
 tile.mfr.farmland.name = Fertile Dirt
 
-tile.mfr.rubberwood.sapling.name = Meager Rubber shrub
+tile.mfr.rubberwood.sapling.normal.name = Meager Rubber shrub
 tile.mfr.rubberwood.sapling.sacred.name = Sacred Rubber shrub
 tile.mfr.rubberwood.sapling.mega.name = Mega Rubber shrub
 tile.mfr.rubberwood.sapling.massive.name = Ship in a Meager shrub
 tile.mfr.rubberwood.log.name = Rubber Timber Logs
-tile.mfr.rubberwood.leaves.name = Leaves o' Rubber
+tile.mfr.rubberwood.leaves.normal.name = Leaves o' Rubber
 tile.mfr.rubberwood.leaves.dry.name = Dry Leaves o' Rubber
 
 tile.mfr.rail.cargo.dropoff.name = Cargo Dropoff Track

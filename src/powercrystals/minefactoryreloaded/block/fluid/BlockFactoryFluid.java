@@ -60,7 +60,6 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 	public BlockFactoryFluid(String liquidName, Material material) {
 
 		super(ensureFluid(liquidName), material, liquidName);
-		setUnlocalizedName("mfr." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
 		setDisplaceFluids(true);
@@ -217,6 +216,6 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 	@Override
 	public String getUnlocalizedName() {
 
-		return "fluid.mfr." + fluidName + ".still";
+		return "fluid.mfr." + fluidName.replace("_", "") + ".still";
 	}
 }
