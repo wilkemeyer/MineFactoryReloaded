@@ -39,7 +39,7 @@ public class ContainerAutoAnvil extends ContainerFactoryPowered
 			public void onSlotChanged() {}
 		});
 
-		getSlot(1).setBackgroundLocation(ContainerAutoDisenchanter.background);
+		getSlot(1).setBackgroundName(ContainerAutoDisenchanter.background);
 	}
 
 	@Override

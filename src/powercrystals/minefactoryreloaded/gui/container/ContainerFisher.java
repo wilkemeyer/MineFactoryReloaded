@@ -10,7 +10,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityFisher;
 
 public class ContainerFisher extends ContainerFactoryPowered {
 
-	public static ResourceLocation background;
+	public static String background;
 
 	public ContainerFisher(TileEntityFactoryPowered te, InventoryPlayer inv) {
 
@@ -22,7 +22,7 @@ public class ContainerFisher extends ContainerFactoryPowered {
 
 		addSlotToContainer(new SlotAcceptValid(_te, 0, 8, 24));
 
-		getSlot(0).setBackgroundLocation(background);
+		getSlot(0).setBackgroundName(background);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.slot;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraft.inventory.IInventory;
@@ -12,7 +13,7 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class SlotAcceptLaserFocus extends Slot {
 
-	public static ResourceLocation background;
+	public static TextureAtlasSprite background;
 
 	public SlotAcceptLaserFocus(IInventory inv, int index, int x, int y) {
 
@@ -26,9 +27,8 @@ public class SlotAcceptLaserFocus extends Slot {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public ResourceLocation getBackgroundLocation() {
-
+	public TextureAtlasSprite getBackgroundSprite() {
+		
 		return background;
 	}
 }

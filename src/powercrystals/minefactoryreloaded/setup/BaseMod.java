@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.setup;
 
 import com.google.common.base.Strings;
+import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 //import net.minecraftforge.fml.common.registry.LanguageRegistry;
@@ -154,10 +155,12 @@ public abstract class BaseMod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadLanguageFile(String lang, Properties langPack) {
 
-		HashMap<String, String> parsedLangFile = new HashMap<String, String>();
+		HashMap<String, String> parsedLangFile = new HashMap<>();
 		parsedLangFile.putAll((Map) langPack); // lovely casting hack
 
-		//LanguageRegistry.instance().injectLanguage(lang.intern(), parsedLangFile);
+		LanguageMap i = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, null, "instance", "field_74817_a");
+		Map m = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, i, "field_74816_c", "languageList");
+		m.putAll(parsedLangFile);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -174,17 +177,16 @@ public abstract class BaseMod {
 
 		String path = "assets/" + getAssetDir() + "/language/";
 		String lang = "en_US";
-		/*
 		try (InputStream is = Loader.getResource(path + lang + ".lang", null).openStream();) {
 			Properties langPack = new Properties();
 			loadLanguageFile(langPack, is);
 
-			StringTranslate i = ObfuscationReflectionHelper.getPrivateValue(StringTranslate.class, null, "instance", "field_74817_a");
-			Map m = ObfuscationReflectionHelper.getPrivateValue(StringTranslate.class, i, "field_74816_c", "languageList");
+			LanguageMap i = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, null, "instance", "field_74817_a");
+			Map m = ObfuscationReflectionHelper.getPrivateValue(LanguageMap.class, i, "field_74816_c", "languageList");
 			m.putAll(langPack);
 		} catch (Throwable t) {
 			_log.catching(Level.INFO, t);
-		}//*/
+		}//
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -207,6 +209,8 @@ public abstract class BaseMod {
 
 		@Override
 		public void onResourceManagerReload(IResourceManager manager) {
+
+			Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(manager);
 
 			String l = null;
 			try {
@@ -237,8 +241,6 @@ public abstract class BaseMod {
 					loadLanguageFile(lang, langPack);
 				}
 			}
-
-			Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(manager);
 		}
 	}
 

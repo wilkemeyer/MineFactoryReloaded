@@ -104,35 +104,35 @@ tile.mfr.decorative.brick.lapis.name = Ladrillos de Lapislázuli
 tile.mfr.decorative.brick.obsidian.name = Ladrillos de Obsidiana
 tile.mfr.decorative.brick.pavedstone.name = Ladrillos de Piedra Pavimentada
 tile.mfr.decorative.brick.snow.name = Ladrillos de Nieve
-tile.mfr.decorative.brick.glowstone_large.name = Ladrillos Grandes de Piedra Luminosa
-tile.mfr.decorative.brick.ice_large.name = Ladrillos Grandes de Hielo
-tile.mfr.decorative.brick.lapis_large.name = Ladrillos Grandes de Lapislázuli
-tile.mfr.decorative.brick.obsidian_large.name = Ladrillos Grandes de Obsidiana
-tile.mfr.decorative.brick.snow_large.name = Ladrillos Grandes de Nieve
+tile.mfr.decorative.brick.glowstonelarge.name = Ladrillos Grandes de Piedra Luminosa
+tile.mfr.decorative.brick.icelarge.name = Ladrillos Grandes de Hielo
+tile.mfr.decorative.brick.lapislarge.name = Ladrillos Grandes de Lapislázuli
+tile.mfr.decorative.brick.obsidianlarge.name = Ladrillos Grandes de Obsidiana
+tile.mfr.decorative.brick.snowlarge.name = Ladrillos Grandes de Nieve
 tile.mfr.machineblock.prc.name = Caja del Controlador Programable RedNet
-tile.mfr.decorative.brick.meat.raw.name = Bloque de Carne Cruda
-tile.mfr.decorative.brick.meat.cooked.name = Bloque de Carne Cocinada
+tile.mfr.decorative.brick.meatraw.name = Bloque de Carne Cruda
+tile.mfr.decorative.brick.meatcooked.name = Bloque de Carne Cocinada
 
-tile.mfr.decorative.stone.black.smooth.name = Piedra Negra Lisa
-tile.mfr.decorative.stone.black.cobble.name = Adoquín de Piedra Negra
-tile.mfr.decorative.stone.black.brick.small.name = Ladrillos Pequeños de Piedra Negra
-tile.mfr.decorative.stone.black.brick.large.name = Ladrillos Grandes de Piedra Negra
-tile.mfr.decorative.stone.black.gravel.name = Grava de Piedra Negra
-tile.mfr.decorative.stone.black.paved.name = Piedra Negra Pavimentada
-tile.mfr.decorative.stone.white.smooth.name = Piedra Blanca Lisa
-tile.mfr.decorative.stone.white.cobble.name = Adoquín de Piedra Blanca
-tile.mfr.decorative.stone.white.brick.small.name = Ladrillos Pequeños de Piedra Blanca
-tile.mfr.decorative.stone.white.brick.large.name = Ladrillos Grandes de Piedra Blanca
-tile.mfr.decorative.stone.white.gravel.name = Grava de Piedra Blanca
-tile.mfr.decorative.stone.white.paved.name = Piedra Blanca Pavimentada
+tile.mfr.decorative.stone.blacksmooth.name = Piedra Negra Lisa
+tile.mfr.decorative.stone.blackcobble.name = Adoquín de Piedra Negra
+tile.mfr.decorative.stone.blackbricksmall.name = Ladrillos Pequeños de Piedra Negra
+tile.mfr.decorative.stone.blackbricklarge.name = Ladrillos Grandes de Piedra Negra
+tile.mfr.decorative.stone.blackgravel.name = Grava de Piedra Negra
+tile.mfr.decorative.stone.blackpaved.name = Piedra Negra Pavimentada
+tile.mfr.decorative.stone.whitesmooth.name = Piedra Blanca Lisa
+tile.mfr.decorative.stone.whitecobble.name = Adoquín de Piedra Blanca
+tile.mfr.decorative.stone.whitebricksmall.name = Ladrillos Pequeños de Piedra Blanca
+tile.mfr.decorative.stone.whitebricklarge.name = Ladrillos Grandes de Piedra Blanca
+tile.mfr.decorative.stone.whitegravel.name = Grava de Piedra Blanca
+tile.mfr.decorative.stone.whitepaved.name = Piedra Blanca Pavimentada
 
 tile.ice.unmelting.name = Hielo (Inderretible)
 
 tile.mfr.vinescaffold.name = Andamiaje de Enredadera
 
-tile.mfr.rubberwood.sapling.name = Retoño de Caucho
+tile.mfr.rubberwood.sapling.normal.name = Retoño de Caucho
 tile.mfr.rubberwood.log.name = Madera de Caucho
-tile.mfr.rubberwood.leaves.name = Hojas de Caucho
+tile.mfr.rubberwood.leaves.normal.name = Hojas de Caucho
 
 tile.mfr.rail.cargo.dropoff.name = Vía para dejar cargamento
 tile.mfr.rail.cargo.pickup.name = Vía para recoger cargamento

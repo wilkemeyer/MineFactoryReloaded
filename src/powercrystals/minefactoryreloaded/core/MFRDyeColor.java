@@ -7,12 +7,12 @@ public enum MFRDyeColor implements IStringSerializable {
 	WHITE(0, "white", "white", 0xf0f0f0),
 	ORANGE(1, "orange", "orange", 0xe36600),
 	MAGENTA(2, "magenta", "magenta", 0xc730a5),
-	LIGHT_BLUE(3, "light_blue", "lightBlue", 0x8da7f6),
+	LIGHT_BLUE(3, "light_blue", "lightblue", 0x8da7f6),
 	YELLOW(4, "yellow", "yellow", 0xd8b920),
 	LIME(5, "lime", "lime", 0x49c14a),
 	PINK(6, "pink", "pink", 0xd881a4),
 	GRAY(7, "gray", "gray", 0x505050),
-	SILVER(8, "silver", "silver", 0xa3a3a3),
+	SILVER(8, "silver", "lightgray", 0xa3a3a3),
 	CYAN(9, "cyan", "cyan", 0x54a69b),
 	PURPLE(10, "purple", "purple", 0x803880),
 	BLUE(11, "blue", "blue", 0x404080),
@@ -23,6 +23,7 @@ public enum MFRDyeColor implements IStringSerializable {
 
 	private static final MFRDyeColor[] META_LOOKUP = new MFRDyeColor[values().length];
 	public static final String[] NAMES = new String[values().length];
+	public static final String[] UNLOC_NAMES = new String[values().length];
 	private final int meta;
 	private final String name;
 	private final String unlocalizedName;
@@ -78,6 +79,7 @@ public enum MFRDyeColor implements IStringSerializable {
 		{
 			META_LOOKUP[color.getMetadata()] = color;
 			NAMES[color.getMetadata()] = color.getName();
+			UNLOC_NAMES[color.getMetadata()] = color.getUnlocalizedName();
 		}
 	}
 }

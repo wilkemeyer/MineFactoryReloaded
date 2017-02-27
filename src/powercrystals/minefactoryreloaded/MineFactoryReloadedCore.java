@@ -24,18 +24,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import org.apache.logging.log4j.Logger;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
 import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
@@ -45,14 +40,10 @@ import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.net.CommonProxy;
 import powercrystals.minefactoryreloaded.net.EntityHandler;
 import powercrystals.minefactoryreloaded.net.MFRPacket;
-import powercrystals.minefactoryreloaded.setup.BaseMod;
-import powercrystals.minefactoryreloaded.setup.BehaviorDispenseSafariNet;
-import powercrystals.minefactoryreloaded.setup.MFRConfig;
-import powercrystals.minefactoryreloaded.setup.MFRLoot;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
-import powercrystals.minefactoryreloaded.setup.MineFactoryReloadedFuelHandler;
+import powercrystals.minefactoryreloaded.setup.*;
 import powercrystals.minefactoryreloaded.setup.recipe.EnderIO;
 import powercrystals.minefactoryreloaded.setup.recipe.Vanilla;
+import powercrystals.minefactoryreloaded.setup.village.VillageCreationHandler;
 import powercrystals.minefactoryreloaded.setup.village.Zoologist;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityUnifier;
 import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
@@ -94,18 +85,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public static final String modelTextureFolder = textureFolder + "itemmodels/";
 	public static final String armorTextureFolder = textureFolder + "armor/";
 	public static final String modelFolder = prefix + "models/";
-
-	public static int renderIdConveyor = 1000;
-	public static int renderIdFactoryGlassPane = 1001;
-	public static int renderIdFluidTank = 1002;
-	public static int renderIdFluidClassic = 1003;
-	public static int renderIdRedNetLogic = 1004;
-	public static int renderIdVineScaffold = 1005;
-	public static int renderIdRedNetPanel = 1006;
-	public static int renderIdFactoryGlass = 1007;
-	public static int renderIdDetCord = 1008;
-	public static int renderIdRedNet = 1009;
-	public static int renderIdPPipe = 1009;
 
 	public static final ResourceLocation CHEST_GEN = new ResourceLocation("mfr:villageZoolologist");
 
@@ -309,6 +288,9 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		Zoologist.init();
 
+		//TODO likely remove, but added here at least for the test
+		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
+
 		WorldHandler.instance.registerFeature(new MineFactoryReloadedWorldGen());
 
 		//UpdateManager.registerUpdater(new UpdateManager(this, null, CoFHProps.DOWNLOAD_URL));
@@ -324,80 +306,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 	private void addChestGenItems() {
 
-/*  TODO add loot tables
-		//{ Vanilla chests
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-		ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
-
-		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-		ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetJailerItem), 1, 1, 15));
-
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 25));
-
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 2), 1, 4, 8));
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(
-			new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 1), 1, 2, 1));
-
-		ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_DISPENSER).addItem(
-			new WeightedRandomChestContent(Zoologist.getHiddenNetStack(), 1, 1, 25));
-
-		if (MFRConfig.enableMassiveTree.getBoolean(true)) {
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(
-				new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock, 1, 3), 1, 1, 1));
-		}
-		//}
-
-		final WeightedRandomChestContent saplings = new WeightedRandomChestContent(new ItemStack(Blocks.SAPLING, 2), 1, 16, 7) {
-
-			@Override
-			public ItemStack[] generateChestContent(Random random, IInventory newInventory) {
-
-				ItemStack item = theItemId.copy();
-				item.setItemDamage(random.nextInt(6));
-				return ChestGenHooks.generateStacks(random, item, theMinimumChanceToGenerateItem, theMaximumChanceToGenerateItem);
-			}
-		};
-
-		//{ Fishing
-		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(rubberSaplingBlock, 1, 0), 5));
-		FishingHooks.addJunk(new WeightedRandomFishable(new ItemStack(plasticSheetItem, 1, 0), 10));
-		FishingHooks.addTreasure(new WeightedRandomFishable(Zoologist.getHiddenNetStack(), 1));
-		FishingHooks.addTreasure(new WeightedRandomFishable(new ItemStack(plasticBagItem, 1, 0), 1) {
-
-			WeightedRandomChestContent[] loot = {
-					new WeightedRandomChestContent(new ItemStack(safariNetSingleItem, 1), 1, 1, 35),
-					new WeightedRandomChestContent(new ItemStack(Blocks.SAND, 4), 1, 16, 20),
-					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 16), 1, 16, 16),
-					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 23), 1, 23, 16),
-					new WeightedRandomChestContent(new ItemStack(plasticSheetItem, 6), 1, 6, 16),
-					new WeightedRandomChestContent(new ItemStack(Items.PAPER), 1, 16, 14),
-					new WeightedRandomChestContent(new ItemStack(spyglassItem, 1), 1, 1, 7),
-					saplings,
-					new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5),
-					new WeightedRandomChestContent(new ItemStack(Items.REEDS, 3), 1, 3, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.PUMPKIN_SEEDS, 1), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.MELON_SEEDS, 1), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.DYE, 1, 4), 1, 1, 2),
-					new WeightedRandomChestContent(new ItemStack(Items.NETHERBRICK, 1), 1, 1, 1),
-			};
-
-			@Override
-			public ItemStack func_150708_a(Random r) {
-
-				ItemStack a = field_150711_b.copy();
-				a.setTagInfo("loot", new NBTTagByte((byte) 1));
-				InventoryContainerItemWrapper w = new InventoryContainerItemWrapper(a);
-				WeightedRandomChestContent.generateChestContents(r, loot, w, 1);
-				return w.getContainerStack();
-			}
-		});
-		//}
+/*  TODO add dim doors loot tables if needed
 
 		//{ DimensionalDoors chestgen compat
 		// reference weights[iron: 160; coal: 120; gold: 80; golden apple: 10]
@@ -411,45 +320,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 		// maybe as a custom dungeon for integration
 		///}
 
-		//{ Villager house loot chest
-		ChestGenHooks.getInfo(CHEST_GEN).setMax(2 * 9);
-		ChestGenHooks.getInfo(CHEST_GEN).setMin(5);
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(safariNetSingleItem), 1, 1, 35));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(safariNetJailerItem), 1, 1, 20));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(safariNetItem), 1, 1, 5));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(
-			new WeightedRandomChestContent(ItemSafariNet.makeMysteryNet(new ItemStack(safariNetSingleItem)), 1, 1, 17));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(
-			new WeightedRandomChestContent(ItemSafariNet.makeMysteryNet(new ItemStack(safariNetJailerItem)), 1, 1, 10));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(
-			new WeightedRandomChestContent(ItemSafariNet.makeMysteryNet(new ItemStack(safariNetItem)), 1, 1, 2));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.LEAD), 1, 17, 10));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.NAME_TAG), 1, 14, 10));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(safariNetLauncherItem), 1, 1, 8));
-
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.PAPER), 1, 16, 14));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.COAL, 1, 1), 1, 16, 14));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(blankRecordItem), 1, 1, 14));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.BOOK), 1, 5, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(spyglassItem), 1, 1, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(rulerItem), 1, 1, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(mobEssenceBucketItem), 1, 1, 6));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(syringeEmptyItem), 1, 4, 6));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(syringeHealthItem), 1, 1, 6));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(syringeGrowthItem), 1, 2, 6));
-
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(factoryHammerItem), 1, 1, 25));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(plasticBootsItem), 1, 1, 25));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(rubberSaplingBlock), 1, 8, 20));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(vineScaffoldBlock), 1, 32, 20));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(plasticSheetItem), 1, 64, 16));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(plasticBagItem), 1, 24, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.REEDS), 1, 16, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.PUMPKIN_SEEDS), 1, 16, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(Items.SNOWBALL), 1, 16, 7));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(saplings);
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(strawItem), 1, 1, 5));
-		ChestGenHooks.getInfo(CHEST_GEN).addItem(new WeightedRandomChestContent(new ItemStack(portaSpawnerItem), 1, 1, 1));
 		//}
 */
 	}

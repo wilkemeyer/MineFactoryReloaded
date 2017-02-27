@@ -104,7 +104,7 @@ tile.mfr.road.light.on.name = 铺路灯
 tile.mfr.road.light.inverted.off.name = 铺路灯(反相)
 tile.mfr.road.light.inverted.on.name = 铺路灯(反相)
 
-tile.mfr.plastic.name = 塑料块
+tile.mfr.plastic.regular.name = 塑料块
 
 tile.mfr.decorative.brick.ice.name = 冰砖块
 tile.mfr.decorative.brick.glowstone.name = 荧光砖块

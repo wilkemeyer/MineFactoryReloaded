@@ -32,13 +32,6 @@ public class ItemBlockFactory extends ItemBlock
 		setNames(names);
 	}
 
-/* TODO doesn't seem to be used - remove
-	public ItemBlockFactory(Block p_i45328_1_, Integer metaOffset, String[] names)
-	{
-		this(p_i45328_1_, names);
-		this.metaOffset = metaOffset.intValue();
-	}
-*/
 	public ItemBlockFactory(Block block, Integer metaOffset)
 	{
 		this(block);

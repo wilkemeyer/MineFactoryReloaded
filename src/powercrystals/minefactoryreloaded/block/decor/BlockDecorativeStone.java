@@ -144,7 +144,7 @@ public class BlockDecorativeStone extends BlockFactory {
 	@Override
 	public boolean preInit() {
 
-		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.NAMES));
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.UNLOC_NAMES));
 		return true;
 	}
 
@@ -174,6 +174,7 @@ public class BlockDecorativeStone extends BlockFactory {
 		private final String name;
 
 		public static final String[] NAMES;
+		public static final String[] UNLOC_NAMES;
 
 		Variant(int meta, String name) {
 
@@ -194,8 +195,10 @@ public class BlockDecorativeStone extends BlockFactory {
 
 		static {
 			NAMES = new String[values().length];
+			UNLOC_NAMES = new String[values().length];
 			for (Variant variant : values()) {
 				NAMES[variant.meta] = variant.name;
+				UNLOC_NAMES[variant.meta] = variant.name.replace("_", "");
 			}
 		}
 	}

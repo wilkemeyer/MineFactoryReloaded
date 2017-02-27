@@ -104,7 +104,7 @@ tile.mfr.road.light.on.name = Luz de Estrada
 tile.mfr.road.light.inverted.off.name = Luz de Estrada (Invertida)
 tile.mfr.road.light.inverted.on.name = Luz de Estrada (Invertida)
 
-tile.mfr.plastic.name = Bloco de Plástico
+tile.mfr.plastic.plain.name = Bloco de Plástico
 
 tile.mfr.decorative.brick.ice.name = Tijolos de Gelo
 tile.mfr.decorative.brick.glowstone.name = Tijolos de Pedra Luminosa
@@ -112,29 +112,29 @@ tile.mfr.decorative.brick.lapis.name = Tijolos de Lápis-Lazúli
 tile.mfr.decorative.brick.obsidian.name = Tijolos de Obsidiana
 tile.mfr.decorative.brick.pavedstone.name = Tijolos de Pedra Pavimentada
 tile.mfr.decorative.brick.snow.name = Tijolos de Neve
-tile.mfr.decorative.brick.ice_large.name = Tijolos Largos de Gelo
-tile.mfr.decorative.brick.glowstone_large.name = Tijolos Largos de Pedra Luminosa
-tile.mfr.decorative.brick.lapis_large.name = Tijolos Largos de Lápis-Lazúli
-tile.mfr.decorative.brick.obsidian_large.name = Tijolos Largos de Obsidiana
-tile.mfr.decorative.brick.pavedstone_large.name = Tijolos Largos de Pedra Pavimentada
-tile.mfr.decorative.brick.snow_large.name = Tijolos Largos de Neve
-tile.mfr.decorative.brick.meat.raw.name = Bloco de Carne Cru
-tile.mfr.decorative.brick.meat.cooked.name = Bloco de Carne Cozido
-tile.mfr.decorative.brick.brick_large.name = Tijolos Largos
-tile.mfr.decorative.brick.sugar_charcoal.name = Bloco de Carvão Vegetal de Açúcar
+tile.mfr.decorative.brick.icelarge.name = Tijolos Largos de Gelo
+tile.mfr.decorative.brick.glowstonelarge.name = Tijolos Largos de Pedra Luminosa
+tile.mfr.decorative.brick.lapislarge.name = Tijolos Largos de Lápis-Lazúli
+tile.mfr.decorative.brick.obsidianlarge.name = Tijolos Largos de Obsidiana
+tile.mfr.decorative.brick.pavedstonelarge.name = Tijolos Largos de Pedra Pavimentada
+tile.mfr.decorative.brick.snowlarge.name = Tijolos Largos de Neve
+tile.mfr.decorative.brick.meatraw.name = Bloco de Carne Cru
+tile.mfr.decorative.brick.meatcooked.name = Bloco de Carne Cozido
+tile.mfr.decorative.brick.bricklarge.name = Tijolos Largos
+tile.mfr.decorative.brick.sugarcharcoal.name = Bloco de Carvão Vegetal de Açúcar
 
-tile.mfr.decorative.stone.black.smooth.name = Pedra-Negra Suave
-tile.mfr.decorative.stone.black.cobble.name = Pedregulho de Pedra-Negra
-tile.mfr.decorative.stone.black.brick.small.name = Tijolos Pequenos de Pedra-Negra
-tile.mfr.decorative.stone.black.brick.large.name = Tijolos Largos de Pedra-Negra
-tile.mfr.decorative.stone.black.gravel.name = Cascalho de Pedra-Negra
-tile.mfr.decorative.stone.black.paved.name = Pedra-Negra Pavimentada
-tile.mfr.decorative.stone.white.smooth.name = Pedra-Branca Suave
-tile.mfr.decorative.stone.white.cobble.name = Pedregulho de Pedra-Branca
-tile.mfr.decorative.stone.white.brick.small.name = Tijolos Pequenos de Pedra-Branca
-tile.mfr.decorative.stone.white.brick.large.name = Tijolos Largos de Pedra-Branca
-tile.mfr.decorative.stone.white.gravel.name = Cascalho de Pedra-Branca
-tile.mfr.decorative.stone.white.paved.name = Pedra-Branca Pavimentada
+tile.mfr.decorative.stone.blacksmooth.name = Pedra-Negra Suave
+tile.mfr.decorative.stone.blackcobble.name = Pedregulho de Pedra-Negra
+tile.mfr.decorative.stone.blackbricksmall.name = Tijolos Pequenos de Pedra-Negra
+tile.mfr.decorative.stone.blackbricklarge.name = Tijolos Largos de Pedra-Negra
+tile.mfr.decorative.stone.blackgravel.name = Cascalho de Pedra-Negra
+tile.mfr.decorative.stone.blackpaved.name = Pedra-Negra Pavimentada
+tile.mfr.decorative.stone.whitesmooth.name = Pedra-Branca Suave
+tile.mfr.decorative.stone.whitecobble.name = Pedregulho de Pedra-Branca
+tile.mfr.decorative.stone.whitebricksmall.name = Tijolos Pequenos de Pedra-Branca
+tile.mfr.decorative.stone.whitebricklarge.name = Tijolos Largos de Pedra-Branca
+tile.mfr.decorative.stone.whitegravel.name = Cascalho de Pedra-Branca
+tile.mfr.decorative.stone.whitepaved.name = Pedra-Branca Pavimentada
 
 tile.mfr.pinkslime.block.name = Bloco de Gosma Rosa
 
@@ -146,12 +146,12 @@ tile.mfr.detcord.name = Corda de Detonação
 
 tile.mfr.farmland.name = Solo Fértil
 
-tile.mfr.rubberwood.sapling.name = Muda de Borracha
+tile.mfr.rubberwood.sapling.normal.name = Muda de Borracha
 tile.mfr.rubberwood.sapling.sacred.name = Muda de Borracha Sagrada
 tile.mfr.rubberwood.sapling.mega.name = Muda de Mega Borracha
 tile.mfr.rubberwood.sapling.massive.name = Muda de Borracha Sagrada
 tile.mfr.rubberwood.log.name = Madeira de Borracha
-tile.mfr.rubberwood.leaves.name = Folhas de Borracha
+tile.mfr.rubberwood.leaves.normal.name = Folhas de Borracha
 tile.mfr.rubberwood.leaves.dry.name = Folhas de Borracha Secas
 
 tile.mfr.rail.cargo.dropoff.name = Trilho de Desembarque de Carga
@@ -168,7 +168,7 @@ tile.mfr.cable.plastic.name = Tubo de Plástico
 tile.mfr.rednet.logic.name = Controlador Programável de RedNet
 tile.mfr.rednet.panel.historian.name = Historiador RedNet
 
-tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.machine = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Encaixe do Controlador Programável de RedNet
 
 tile.mfr.tank.name = Tanque de Plástico

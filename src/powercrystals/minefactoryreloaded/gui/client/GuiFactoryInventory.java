@@ -277,17 +277,4 @@ public class GuiFactoryInventory extends GuiBase {
 		this.zLevel = 0.0F;
 		itemRender.zLevel = 0.0F;
 	}
-
-	@Override
-	public void drawTexturedModalRect(int x, int y, TextureAtlasSprite icon, int w, int h) {
-
-		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION);
-		vertexbuffer.pos(x + 0, y + h, this.zLevel).tex(icon.getMinU(), icon.getInterpolatedV(h)).endVertex();
-		vertexbuffer.pos(x + w, y + h, this.zLevel).tex(icon.getInterpolatedU(w), icon.getInterpolatedV(h)).endVertex();
-		vertexbuffer.pos(x + w, y + 0, this.zLevel).tex(icon.getInterpolatedU(w), icon.getMinV()).endVertex();
-		vertexbuffer.pos(x + 0, y + 0, this.zLevel).tex(icon.getMinU(), icon.getMinV()).endVertex();
-		tessellator.draw();
-	}
 }
