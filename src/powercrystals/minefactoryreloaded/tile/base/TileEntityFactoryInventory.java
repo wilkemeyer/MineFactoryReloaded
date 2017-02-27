@@ -15,21 +15,28 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
+import javax.annotation.Nullable;
+
 public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory {
 
 	protected final static FluidTankCore[] emptyIFluidTank = new FluidTankCore[] { };
 	protected final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
-	protected final static int BUCKET_VOLUME = FluidContainerRegistry.BUCKET_VOLUME;
+	protected final static int BUCKET_VOLUME = Fluid.BUCKET_VOLUME;
 
 	protected List<ItemStack> failedDrops = null;
 	private List<ItemStack> missedDrops = new ArrayList<ItemStack>(5);
@@ -42,12 +49,16 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected boolean internalChange = false;
 
+	protected FactoryBucketableFluidHandler fluidHandler;
+
 	protected TileEntityFactoryInventory(Machine machine) {
 
 		super(machine);
 		_inventory = new ItemStack[getSizeInventory()];
 		_tanks = createTanks();
 		setManageFluids(_tanks != null);
+
+		fluidHandler = (FactoryBucketableFluidHandler) getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 	}
 
 	@Override
@@ -128,48 +139,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return emptyIFluidTank;
 	}
 
-	public int drain(int maxDrain, boolean doDrain, FluidTankCore _tank) {
-
-		if (_tank.getFluidAmount() > 0) {
-			FluidStack drained = _tank.drain(maxDrain, doDrain);
-			if (drained != null) {
-				if (doDrain) {
-					internalChange = true;
-					markDirty();
-					internalChange = false;
-				}
-				return drained.amount;
-			}
-		}
-		return 0;
-	}
-
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-
-		for (FluidTankCore _tank : getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
-		return null;
-	}
-
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-		if (resource != null)
-			for (FluidTankCore _tank : getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
-		return null;
-	}
-
-	public int fill(FluidStack resource, boolean doFill) {
-
-		if (resource != null)
-			for (FluidTankCore _tank : getTanks())
-				if (FluidHelper.isFluidEqualOrNull(_tank.getFluid(), resource))
-					return _tank.fill(resource, doFill);
-		return 0;
-	}
-
 	protected boolean shouldPumpLiquid() {
 
 		return false;
@@ -178,16 +147,6 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	protected boolean shouldPumpTank(IFluidTank tank) {
 
 		return true;
-	}
-
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return false;
-	}
-
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return false;
 	}
 
 	@Override
@@ -599,6 +558,101 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	public void clear() {
 		for(int slot=0; slot < getSizeInventory(); slot++) {
 			removeStackFromSlot(slot);
+		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler());
+		}
+
+		return super.getCapability(capability, facing);
+	}
+
+
+	public class FactoryBucketableFluidHandler implements ITankContainerBucketable {
+
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+
+			FluidTankCore[] tanks = getTanks();
+
+			if (tanks == emptyIFluidTank)
+				return new IFluidTankProperties[0];
+
+			IFluidTankProperties[] tankProps = new IFluidTankProperties[tanks.length];
+			for(int i=0; i<tanks.length; i++) {
+				tankProps[i] = new FluidTankProperties(tanks[i].getFluid(), tanks[i].getCapacity());
+			}
+
+			return tankProps;
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+
+			if (resource != null)
+				for (FluidTankCore tank : getTanks())
+					if (FluidHelper.isFluidEqualOrNull(tank.getFluid(), resource))
+						return tank.fill(resource, doFill);
+			return 0;
+		}
+
+		public int drain(int maxDrain, boolean doDrain, FluidTankCore tank) {
+
+			if (tank.getFluidAmount() > 0) {
+				FluidStack drained = tank.drain(maxDrain, doDrain);
+				if (drained != null) {
+					if (doDrain) {
+						internalChange = true;
+						markDirty();
+						internalChange = false;
+					}
+					return drained.amount;
+				}
+			}
+			return 0;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+			if (resource != null)
+				for (FluidTankCore tank : getTanks())
+					if (resource.isFluidEqual(tank.getFluid()))
+						return tank.drain(resource.amount, doDrain);
+			return null;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+
+			for (FluidTankCore tank : getTanks())
+				if (tank.getFluidAmount() > 0)
+					return tank.drain(maxDrain, doDrain);
+			return null;
+		}
+
+		@Override
+		public boolean allowBucketFill(ItemStack stack) {
+
+			return false;
+		}
+
+		@Override
+		public boolean allowBucketDrain(ItemStack stack) {
+
+			return false;
 		}
 	}
 }

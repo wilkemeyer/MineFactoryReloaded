@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cofh.core.util.CoreUtils;
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,12 +20,10 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.RemoteInventoryCrafting;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquiCrafter;
@@ -32,7 +32,7 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 // slots 0-8 craft grid, 9 craft grid template output, 10 output, 11-28 resources
-public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implements ITankContainerBucketable
+public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 {
 	private boolean _lastRedstoneState;
 	private boolean _resourcesChangedSinceLastFailedCraft = true;
@@ -382,12 +382,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks()
 	{
 		FluidTankCore[] _tanks = new FluidTankCore[9];
@@ -396,49 +390,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 			_tanks[i] = new FluidTankCore(BUCKET_VOLUME * 10);
 		}
 		return _tanks;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		int quantity;
-		int match = findFirstMatchingTank(resource);
-		if (match >= 0)
-		{
-			quantity = _tanks[match].fill(resource, doFill);
-			if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
-			return quantity;
-		}
-		match = findFirstEmptyTank();
-		if (match >= 0)
-		{
-			quantity = _tanks[match].fill(resource, doFill);
-			if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
-			return quantity;
-		}
-		return 0;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		int match = findFirstNonEmptyTank();
-		if (match >= 0) return _tanks[match].drain(maxDrain, doDrain);
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		int match = findFirstMatchingTank(resource);
-		if (match >= 0) return _tanks[match].drain(resource.amount, doDrain);
-		return null;
 	}
 
 	@Override
@@ -572,18 +523,6 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		}
 	}
 
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
-
 	private static class ItemResourceTracker
 	{
 		public ItemResourceTracker(int s, ItemStack stack, int amt)
@@ -609,5 +548,65 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory implement
 		{
 			return "Slot: " + slot + "; Fluid: " + fluid + "; Item: " + item + "; Required: " + required + "; Found: " + found;
 		}
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					int quantity;
+					int match = findFirstMatchingTank(resource);
+					if (match >= 0)
+					{
+						quantity = _tanks[match].fill(resource, doFill);
+						if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
+						return quantity;
+					}
+					match = findFirstEmptyTank();
+					if (match >= 0)
+					{
+						quantity = _tanks[match].fill(resource, doFill);
+						if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
+						return quantity;
+					}
+					return 0;
+				}
+
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					int match = findFirstNonEmptyTank();
+					if (match >= 0) return _tanks[match].drain(maxDrain, doDrain);
+					return null;
+				}
+
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					int match = findFirstMatchingTank(resource);
+					if (match >= 0) return _tanks[match].drain(resource.amount, doDrain);
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

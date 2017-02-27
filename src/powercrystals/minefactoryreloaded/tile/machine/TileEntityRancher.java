@@ -1,6 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,20 +13,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityRancher extends TileEntityFactoryPowered implements ITankContainerBucketable {
+public class TileEntityRancher extends TileEntityFactoryPowered {
 
 	public TileEntityRancher() {
 
@@ -80,7 +81,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 					for (RanchedItem s : drops) {
 						if (s.hasFluid()) {
 							// whitelist fluids? multiple tanks?
-							fill((FluidStack) s.getResult(), true);
+							fluidHandler.fill((FluidStack) s.getResult(), true);
 							didDrop = true;
 							continue;
 						}
@@ -107,45 +108,31 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 
 	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks() {
 
 		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-		return false;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					return 0;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-
-		return true;
-	}
-
 }

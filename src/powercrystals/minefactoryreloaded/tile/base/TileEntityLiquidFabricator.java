@@ -1,22 +1,21 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowered implements ITankContainerBucketable {
+public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowered {
 
 	private FluidStack fluid;
 	private int _liquidFabPerTick;
@@ -66,36 +65,6 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	}
 
 	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		return true;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
@@ -104,5 +73,30 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
 		return new ContainerFactoryPowered(this, inventoryPlayer);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new LiquidFabricatorFluidHandler());
+		}
+
+		return super.getCapability(capability, facing);
+	}
+
+	private class LiquidFabricatorFluidHandler extends FactoryBucketableFluidHandler {
+
+		@Override
+		public boolean allowBucketDrain(ItemStack stack) {
+
+			return true;
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+
+			return 0;
+		}
 	}
 }

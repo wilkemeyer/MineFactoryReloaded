@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,11 +19,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoAnvil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoAnvil;
@@ -29,7 +29,9 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+
+public class TileEntityAutoAnvil extends TileEntityFactoryPowered {
 
 	private float maximumCost;
 	private int stackSizeToBeUsedInRepair;
@@ -124,14 +126,14 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 				return false;
 			}
 
-			if (drain(4, false, _tanks[0]) != 4) {
+			if (fluidHandler.drain(4, false, _tanks[0]) != 4) {
 				return false;
 			}
 			if (stackSizeToBeUsedInRepair > 0 && (_inventory[1] == null || _inventory[1].stackSize < stackSizeToBeUsedInRepair)) {
 				return false;
 			}
 
-			drain(4, true, _tanks[0]);
+			fluidHandler.drain(4, true, _tanks[0]);
 			if (!incrementWorkDone()) return false;
 
 			if (getWorkDone() >= getWorkMax()) {
@@ -434,44 +436,40 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack type, boolean doFill) {
-
-		return fill(type, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return null;
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks() {
 
 		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-		return true;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return true;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-
-		return false;
-	}
 }

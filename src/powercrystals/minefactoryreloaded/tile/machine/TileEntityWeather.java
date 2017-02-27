@@ -1,32 +1,30 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import static net.minecraftforge.fluids.FluidRegistry.WATER;
-
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.FluidHelper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityWeather extends TileEntityFactoryPowered implements ITankContainerBucketable
+import static net.minecraftforge.fluids.FluidRegistry.WATER;
+
+public class TileEntityWeather extends TileEntityFactoryPowered
 {
 	protected int _canSeeSky = 0;
 	protected boolean _canWeather = false, _willSnow = false, _openSky = false;
@@ -152,33 +150,9 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return 0;
-	}
-
-	@Override
 	public boolean shouldPumpLiquid()
 	{
 		return true;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
 	}
 
 	@Override
@@ -188,14 +162,25 @@ public class TileEntityWeather extends TileEntityFactoryPowered implements ITank
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return false;
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return true;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					return 0;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

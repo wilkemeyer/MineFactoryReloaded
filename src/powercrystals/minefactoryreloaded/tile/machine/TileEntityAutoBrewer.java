@@ -2,25 +2,19 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionUtils;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionHelper;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoBrewer;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -30,7 +24,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+
+public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 
 	protected boolean _inventoryDirty;
 
@@ -38,7 +34,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 
 		super(Machine.AutoBrewer);
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("water"));
+		_tanks[0].setLock(FluidRegistry.WATER);
 	}
 
 	private int getProcessSlot(int row) {
@@ -98,8 +94,8 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 					if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null) {
 						ItemStack waterBottle = new ItemStack(Items.POTIONITEM);
 						if (getPotionResult(waterBottle, _inventory[templateSlot]) != waterBottle)
-							if (drain(waterCost, false, _tanks[0]) == waterCost) {
-								drain(waterCost, true, _tanks[0]);
+							if (fluidHandler.drain(waterCost, false, _tanks[0]) == waterCost) {
+								fluidHandler.drain(waterCost, true, _tanks[0]);
 								_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
 								_inventory[processSlot] = new ItemStack(Items.POTIONITEM);
 								didWork = true;
@@ -296,45 +292,39 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered implements IT
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-		return !stack.getItem().equals(Items.POTIONITEM);
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return !stack.getItem().equals(Items.GLASS_BOTTLE);
+				}
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return !stack.getItem().equals(Items.POTIONITEM);
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return !stack.getItem().equals(Items.GLASS_BOTTLE);
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-
-		return true;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-
-		return false;
-	}
-
 }

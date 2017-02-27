@@ -1,18 +1,17 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-
-import java.util.Locale;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import javax.annotation.Nullable;
+import java.util.Locale;
 
-public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter implements ITankContainerBucketable
+public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter
 {
 	public TileEntityAutoDisenchanterFluid()
 	{
@@ -22,9 +21,9 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 	@Override
 	protected boolean incrementWorkDone()
 	{
-		if (drain(4, false, _tanks[0]) != 4)
+		if (fluidHandler.drain(4, false, _tanks[0]) != 4)
 			return false;
-		drain(4, true, _tanks[0]);
+		fluidHandler.drain(4, true, _tanks[0]);
 		return super.incrementWorkDone();
 	}
 
@@ -43,38 +42,33 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 	}
 
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return fill(resource, doFill);
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
-	}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
 
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
 
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
+					return true;
+				}
 
-	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

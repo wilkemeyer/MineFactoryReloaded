@@ -1,10 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -12,16 +8,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IMobSpawnHandler;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoSpawner;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -31,7 +29,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+
+public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 
 	protected static final int _spawnRange = 4;
 
@@ -181,8 +181,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		}
 
 		if (getWorkDone() < getWorkMax()) {
-			if (drain(10, false, _tanks[0]) == 10) {
-				drain(10, true, _tanks[0]);
+			if (fluidHandler.drain(10, false, _tanks[0]) == 10) {
+				fluidHandler.drain(10, true, _tanks[0]);
 				setWorkDone(getWorkDone() + 1);
 				return true;
 			} else {
@@ -270,30 +270,6 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return ItemSafariNet.isSafariNet(itemstack) &&
@@ -329,14 +305,33 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-		return true;
-	}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
 
-		return false;
+					return true;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

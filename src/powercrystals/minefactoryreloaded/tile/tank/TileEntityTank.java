@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.tank;
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,23 +10,25 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import powercrystals.minefactoryreloaded.core.IDelayedValidate;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
-public class TileEntityTank extends TileEntityFactory implements ITankContainerBucketable, IDelayedValidate {
+import javax.annotation.Nullable;
+
+public class TileEntityTank extends TileEntityFactory implements IDelayedValidate {
 
 	public static int CAPACITY = FluidHelper.BUCKET_VOLUME * 4;
 	TankNetwork grid;
@@ -190,62 +191,6 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 	}
 
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		if (grid == null)
-			return 0;
-		return grid.getStorage().fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		if (grid == null)
-			return null;
-		return grid.getStorage().drain(resource, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		if (grid == null)
-			return worldObj.isRemote ? _tank.drain(maxDrain, false) : null;
-		return grid.getStorage().drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-
-		return grid != null;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-
-		return grid != null;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-
-		if (grid == null)
-			return FluidHelper.NULL_TANK_INFO;
-		return new FluidTankInfo[] { grid.getStorage().getInfo() };
-	}
-
-	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return stack.getItem() != MFRThings.plasticTankItem;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
 	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
 
 		if (debug) {
@@ -275,4 +220,61 @@ public class TileEntityTank extends TileEntityFactory implements ITankContainerB
 		}
 	}
 
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new ITankContainerBucketable() {
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return stack.getItem() != MFRThings.plasticTankItem;
+				}
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public IFluidTankProperties[] getTankProperties() {
+
+					if (grid == null)
+						return FluidTankProperties.convert(FluidHelper.NULL_TANK_INFO); //TODO add NULL_TANK_PROPS in core
+					return grid.getStorage().getTankProperties();
+				}
+
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					if (grid == null)
+						return 0;
+					return grid.getStorage().fill(resource, doFill);
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					if (grid == null)
+						return null;
+					return grid.getStorage().drain(resource, doDrain);
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					if (grid == null)
+						return worldObj.isRemote ? _tank.drain(maxDrain, false) : null;
+					return grid.getStorage().drain(maxDrain, doDrain);
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
+	}
 }

@@ -2,32 +2,30 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Map;
-import java.util.Random;
-
-import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.AutoEnchantmentHelper;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoEnchanter;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoEnchanter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements ITankContainerBucketable
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Random;
+
+public class TileEntityAutoEnchanter extends TileEntityFactoryPowered
 {
 	private Random _rand;
 	private int _targetLevel;
@@ -208,10 +206,10 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 			}
 			return true;
 		}
-		else if (drain(4, false, _tanks[0]) == 4)
+		else if (fluidHandler.drain(4, false, _tanks[0]) == 4)
 		{
 			if (!incrementWorkDone()) return false;
-			drain(4, true, _tanks[0]);
+			fluidHandler.drain(4, true, _tanks[0]);
 			return true;
 		}
 		else
@@ -286,44 +284,39 @@ public class TileEntityAutoEnchanter extends TileEntityFactoryPowered implements
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks()
 	{
 		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return true;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

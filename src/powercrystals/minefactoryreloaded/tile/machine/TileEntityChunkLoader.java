@@ -1,30 +1,24 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import gnu.trove.map.hash.TObjectIntHashMap;
-
-import java.lang.reflect.Field;
-import java.util.Set;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiChunkLoader;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerChunkLoader;
@@ -34,7 +28,11 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityChunkLoader extends TileEntityFactoryPowered implements ITankContainerBucketable, IFactoryLaserTarget {
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.Set;
+
+public class TileEntityChunkLoader extends TileEntityFactoryPowered implements IFactoryLaserTarget {
 
 	private static void bypassLimit(Ticket tick) {
 
@@ -125,7 +123,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		else {
 			emptyTicks = Math.min(65535, emptyTicks + 1);
 			FluidStack s = _tanks[0].getFluid();
-			if (drain(1, true, _tanks[0]) == 1) {
+			if (fluidHandler.drain(1, true, _tanks[0]) == 1) {
 				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 				emptyTicks = Math.max(-65535, emptyTicks - 2);
 			}
@@ -170,7 +168,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					else {
 						emptyTicks = Math.min(65535, emptyTicks + 1);
 						FluidStack s = _tanks[0].getFluid();
-						if (drain(Math.min(unactivatedTicks,
+						if (fluidHandler.drain(Math.min(unactivatedTicks,
 							_tanks[0].getFluidAmount()), true, _tanks[0]) == unactivatedTicks) {
 							consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 							consumptionTicks = Math.max(0, consumptionTicks - unactivatedTicks);
@@ -361,51 +359,6 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		return fluidConsumptionRate.containsKey(name);
 	}
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		if (!unableToRequestTicket & resource != null && isFluidFuel(resource))
-			for (FluidTankCore _tank : getTanks())
-				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-					return _tank.fill(resource, doFill);
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return !unableToRequestTicket;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-
-		return !unableToRequestTicket;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-
-		return unableToRequestTicket;
-	}
 
 	protected String getFluidName(FluidStack fluid) {
 
@@ -472,5 +425,52 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	public int addEnergy(EnumFacing from, int energy, boolean simulate) {
 
 		return storeEnergy(energy, !simulate);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					if (!unableToRequestTicket & resource != null && isFluidFuel(resource))
+						for (FluidTankCore _tank : getTanks())
+							if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+								return _tank.fill(resource, doFill);
+					return 0;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return unableToRequestTicket ? null : super.drain(resource, doDrain);
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return !unableToRequestTicket ? null : super.drain(maxDrain, doDrain);
+				}
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return !unableToRequestTicket;
+				}
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

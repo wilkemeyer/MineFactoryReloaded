@@ -1,12 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,13 +8,14 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiBlockSmasher;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -29,7 +24,11 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.world.SmashingWorld;
 
-public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 
 	public static final int MAX_FORTUNE = 3;
 	private int _fortune = 0;
@@ -88,7 +87,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			setWorkDone(0);
 			return false;
 		}
-		if (_shouldWork && _fortune > 0 && (drain(_fortune, false, _tanks[0]) != _fortune)) {
+		if (_shouldWork && _fortune > 0 && (fluidHandler.drain(_fortune, false, _tanks[0]) != _fortune)) {
 			return false;
 		}
 		ItemStack outSlot = _inventory[1];
@@ -125,7 +124,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			}
 		} else {
 			if (!incrementWorkDone()) return false;
-			drain(_fortune, true, _tanks[0]);
+			fluidHandler.drain(_fortune, true, _tanks[0]);
 		}
 		return true;
 	}
@@ -195,30 +194,6 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 
 		if (slot == 1) return true;
 		return false;
-	}
-
-	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
 	}
 
 	@Override
@@ -294,14 +269,33 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-		return true;
-	}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
 
-		return false;
+					return true;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

@@ -1,30 +1,25 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryGrindable;
 import powercrystals.minefactoryreloaded.api.MobDrop;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
@@ -33,7 +28,10 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
 
-public class TileEntityGrinder extends TileEntityFactoryPowered implements ITankContainerBucketable
+import java.util.List;
+import java.util.Random;
+
+public class TileEntityGrinder extends TileEntityFactoryPowered
 {
 	public static final float DAMAGE = 0x1.fffffeP+120f;
 
@@ -217,38 +215,25 @@ public class TileEntityGrinder extends TileEntityFactoryPowered implements ITank
 	}
 
 	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return 0;
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
 
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
-	}
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
 
-	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
-		return true;
-	}
+					return true;
+				}
 
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return false;
-	}
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return true;
+					return 0;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

@@ -16,13 +16,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -57,20 +57,20 @@ public class ItemStraw extends ItemFactoryTool {
 					world.setBlockToAir(pos);
 				} else if (block.hasTileEntity(state)) {
 					TileEntity tile = world.getTileEntity(pos);
-					if (tile instanceof IFluidHandler) {
-						IFluidHandler handler = (IFluidHandler) tile;
-						FluidTankInfo[] info = handler.getTankInfo(result.sideHit);
+					if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, result.sideHit)) {
+						IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, result.sideHit);
+						IFluidTankProperties[] info = handler.getTankProperties();
 						for (int i = info.length; i-- > 0;) {
-							FluidStack fstack = info[i].fluid;
+							FluidStack fstack = info[i].getContents();
 							if (fstack != null) {
 								fluid = fstack.getFluid();
 								if (fluid != null && map.containsKey(fluid.getName()) && fstack.amount >= 1000) {
 									fstack = fstack.copy();
 									fstack.amount = 1000;
-									FluidStack r = handler.drain(result.sideHit, fstack.copy(), false);
+									FluidStack r = handler.drain(fstack.copy(), false);
 									if (r != null && r.amount >= 1000) {
 										map.get(fluid.getName()).onDrink(player);
-										handler.drain(result.sideHit, fstack, true);
+										handler.drain(fstack, true);
 										break;
 									}
 								}
@@ -110,15 +110,15 @@ public class ItemStraw extends ItemFactoryTool {
 				player.setActiveHand(hand);
 			} else if (block.hasTileEntity(state)) {
 				TileEntity tile = world.getTileEntity(pos);
-				if (tile instanceof IFluidHandler) {
-					IFluidHandler handler = (IFluidHandler) tile;
-					FluidTankInfo[] info = handler.getTankInfo(result.sideHit);
+				if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, result.sideHit)) {
+					IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, result.sideHit);
+					IFluidTankProperties[] info = handler.getTankProperties();
 					for (int i = info.length; i-- > 0;) {
-						FluidStack fstack = info[i].fluid;
+						FluidStack fstack = info[i].getContents();
 						if (fstack != null) {
 							fluid = fstack.getFluid();
 							if (fluid != null && map.containsKey(fluid.getName()) && fstack.amount >= 1000) {
-								FluidStack r = handler.drain(result.sideHit, fstack, false);
+								FluidStack r = handler.drain(fstack, false);
 								if (r != null && r.amount >= 1000) {
 									player.setActiveHand(hand);
 									break;
@@ -129,7 +129,7 @@ public class ItemStraw extends ItemFactoryTool {
 				}
 			}
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 
 	@Override
@@ -139,3 +139,4 @@ public class ItemStraw extends ItemFactoryTool {
 		ModelHelper.registerModel(this, "tool", "variant=straw");
 	}
 }
+

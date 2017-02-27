@@ -1,24 +1,23 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Locale;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquidGenerator;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryGenerator;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerator implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+import java.util.Locale;
+
+public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerator {
 	private int _liquidConsumedPerTick;
 	private int _powerProducedPerConsumption;
 
@@ -38,12 +37,13 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 
 	@Override
 	protected boolean consumeFuel() {
-		FluidStack drained = drain(null, _liquidConsumedPerTick, false);
+
+		FluidStack drained = fluidHandler.drain(_liquidConsumedPerTick, false);
 
 		if (drained == null || drained.amount != _liquidConsumedPerTick)
 			return false;
 
-		drain(null, _liquidConsumedPerTick, true);
+		fluidHandler.drain(_liquidConsumedPerTick, true);
 		return true;
 	}
 
@@ -95,36 +95,45 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-		return true;
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new LiquidGeneratorFluidHandler());
+		}
+
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		if (resource != null && isFluidFuel(resource))
-			for (FluidTankCore _tank : getTanks())
-				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-					return _tank.fill(resource, doFill);
-		return 0;
-	}
+	private class LiquidGeneratorFluidHandler extends FactoryBucketableFluidHandler {
 
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return drain(maxDrain, doDrain);
-	}
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
 
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		return drain(resource, doDrain);
-	}
+			if (resource != null && isFluidFuel(resource))
+				for (FluidTankCore tank : getTanks())
+					if (tank.getFluidAmount() == 0 || resource.isFluidEqual(tank.getFluid()))
+						return tank.fill(resource, doFill);
+			return 0;
+		}
 
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-		return true;
-	}
+		@Override
+		public boolean allowBucketFill(ItemStack stack) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-		return false;
+			return true;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+			return null;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+
+			return null;
+		}
 	}
 }

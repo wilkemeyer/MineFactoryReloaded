@@ -1,17 +1,15 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -19,7 +17,9 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityComposter extends TileEntityFactoryPowered implements ITankContainerBucketable
+import javax.annotation.Nullable;
+
+public class TileEntityComposter extends TileEntityFactoryPowered
 {
 	public TileEntityComposter()
 	{
@@ -44,7 +44,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	@Override
 	protected boolean activateMachine()
 	{
-		if(drain(20, false, _tanks[0]) == 20)
+		if(fluidHandler.drain(20, false, _tanks[0]) == 20)
 		{
 			if (!incrementWorkDone()) return false;
 
@@ -53,7 +53,7 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 				doDrop(new ItemStack(MFRThings.fertilizerItem));
 				setWorkDone(0);
 			}
-			drain(20, true, _tanks[0]);
+			fluidHandler.drain(20, true, _tanks[0]);
 			return true;
 		}
 		return false;
@@ -78,30 +78,6 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks()
 	{
 		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
@@ -114,14 +90,32 @@ public class TileEntityComposter extends TileEntityFactoryPowered implements ITa
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
-	}
-}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return true;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
+	}}

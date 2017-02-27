@@ -31,8 +31,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -57,7 +57,7 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 {
 	private static final float SHRINK_AMOUNT = 0.125F;
 	private static final AxisAlignedBB SHRUNK_AABB = new AxisAlignedBB(SHRINK_AMOUNT, SHRINK_AMOUNT, SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT, 1F - SHRINK_AMOUNT);
-	
+
 	protected boolean providesPower;
 
 	protected BlockFactory(float hardness)
@@ -153,23 +153,27 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		{
 			return false;
 		}
-		if (heldItem != null && te instanceof ITankContainerBucketable)
+		if (heldItem != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
 		{
-			boolean isFluidContainer = heldItem.getItem() instanceof IFluidContainerItem;
-			if ((isFluidContainer || FluidContainerRegistry.isEmptyContainer(heldItem)) &&
-					((ITankContainerBucketable)te).allowBucketDrain(heldItem))
+			IFluidHandler fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+			if (fluidHandler instanceof ITankContainerBucketable)
 			{
-				if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, player))
+				if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
 				{
-					return true;
-				}
-			}
-			if ((isFluidContainer || FluidContainerRegistry.isFilledContainer(heldItem)) &&
-					((ITankContainerBucketable)te).allowBucketFill(heldItem))
-			{
-				if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, player))
-				{
-					return true;
+					if (((ITankContainerBucketable)fluidHandler).allowBucketDrain(heldItem))
+					{
+						if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)fluidHandler, player, heldItem))
+						{
+							return true;
+						}
+					}
+					if (((ITankContainerBucketable)fluidHandler).allowBucketFill(heldItem))
+					{
+						if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)fluidHandler, player, heldItem))
+						{
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -189,8 +193,8 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 
 		world.setBlockToAir(pos);
 		if (!returnBlock)
-            for (ItemStack item : list) {
-				UtilInventory.dropStackInAir(world, pos, item);	
+			for (ItemStack item : list) {
+				UtilInventory.dropStackInAir(world, pos, item);
 			}
 		return list;
 	}
@@ -253,14 +257,14 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
-    {
+	{
 		TileEntity te = getTile(world, pos);
 
 		if (te instanceof TileEntityBase)
 		{
 			((TileEntityBase)te).onNeighborTileChange(neighbor);
 		}
-    }
+	}
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos)
@@ -418,19 +422,19 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	}
 
 	@Override
-	public boolean preInit() 
+	public boolean preInit()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean initialize() 
+	public boolean initialize()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean postInit() 
+	public boolean postInit()
 	{
 		return true;
 	}
@@ -438,6 +442,6 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
-		
+
 	}
 }

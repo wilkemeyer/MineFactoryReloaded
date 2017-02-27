@@ -1,22 +1,21 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.CoreUtils;
 import cofh.core.fluid.FluidTankCore;
+import cofh.core.util.CoreUtils;
 import cofh.lib.util.helpers.ItemHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSteamBoiler;
@@ -25,8 +24,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
+import javax.annotation.Nullable;
+
 public class TileEntitySteamBoiler extends TileEntityFactoryInventory
-								implements ITankContainerBucketable
 {
 	public static final int maxTemp = 730;
 	public static final int getItemBurnTime(ItemStack stack)
@@ -143,7 +143,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 			if (_temp > 80)
 			{
-				int i = drain(100, true, _tanks[1]);
+				int i = fluidHandler.drain(100, true, _tanks[1]);
 				_tanks[0].fill(new FluidStack(_liquid, i * 4), true);
 			}
 
@@ -260,63 +260,63 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public boolean allowBucketDrain(ItemStack stack)
-	{
-		return true;
-	}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		if (resource != null && resource.getFluid() == FluidRegistry.WATER)
-		{
-			if (MFRConfig.steamBoilerExplodes.getBoolean(false)) {
-				if (_temp > 80 && _tanks[1].getFluidAmount() == 0) {
-					worldObj.createExplosion(null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, 3, true);
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					if (resource != null)
+					{
+						FluidTankCore _tank = _tanks[0];
+						if (resource.isFluidEqual(_tank.getFluid()))
+							return _tank.drain(resource.amount, doDrain);
+					}
+					return null;
 				}
-			}
-			return _tanks[1].fill(resource, doFill);
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					FluidTankCore _tank = _tanks[0];
+					if (_tank.getFluidAmount() > 0)
+						return _tank.drain(maxDrain, doDrain);
+					return null;
+				}
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					if (resource != null && resource.getFluid() == FluidRegistry.WATER)
+					{
+						if (MFRConfig.steamBoilerExplodes.getBoolean(false)) {
+							if (_temp > 80 && _tanks[1].getFluidAmount() == 0) {
+								worldObj.createExplosion(null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, 3, true);
+							}
+						}
+						return _tanks[1].fill(resource, doFill);
+					}
+					return 0;
+				}
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+			});
 		}
-		return 0;
-	}
 
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		FluidTankCore _tank = _tanks[0];
-		if (_tank.getFluidAmount() > 0)
-			return _tank.drain(maxDrain, doDrain);
-		return null;
+		return super.getCapability(capability, facing);
 	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		if (resource != null)
-		{
-			FluidTankCore _tank = _tanks[0];
-			if (resource.isFluidEqual(_tank.getFluid()))
-				return _tank.drain(resource.amount, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return fluid == null || fluid == FluidRegistry.WATER;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
-	//}
 }

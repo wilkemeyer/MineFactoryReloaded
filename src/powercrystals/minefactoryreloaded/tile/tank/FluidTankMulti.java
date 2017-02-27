@@ -2,19 +2,22 @@ package powercrystals.minefactoryreloaded.tile.tank;
 
 import cofh.core.fluid.FluidTankCore;
 import com.google.common.base.Throwables;
-
-import java.util.Arrays;
-
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidTankMulti implements IFluidTank {
+import java.util.Arrays;
+
+public class FluidTankMulti implements IFluidTank, IFluidHandler {
 
 	FluidTankCore[] tanks = new FluidTankCore[2];
 	int length, index;
 	private FluidStack fluid = null;
 	private TankNetwork grid;
+	private IFluidTankProperties[] tankProperties;
 
 	public FluidTankMulti(TankNetwork network) {
 		grid = network;
@@ -95,6 +98,16 @@ public class FluidTankMulti implements IFluidTank {
 	@Override
 	public FluidTankInfo getInfo() {
 		return new FluidTankInfo(this);
+	}
+
+	@Override
+	public IFluidTankProperties[] getTankProperties() {
+
+		if (this.tankProperties == null)
+		{
+			this.tankProperties = new IFluidTankProperties[] { new FluidTankProperties(getFluid(), getCapacity()) };
+		}
+		return this.tankProperties;
 	}
 
 	@Override

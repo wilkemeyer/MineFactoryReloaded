@@ -7,17 +7,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import powercrystals.minefactoryreloaded.core.IAdvFluidContainerItem;
 import powercrystals.minefactoryreloaded.core.IUseHandler;
 import powercrystals.minefactoryreloaded.core.IUseable;
@@ -26,11 +25,13 @@ import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 public class DefaultUseHandler implements IUseHandler {
 	@Override
 	public boolean canUse(ItemStack bucket, EntityLivingBase entity, EnumHand hand) {
-		IAdvFluidContainerItem item = (IAdvFluidContainerItem)bucket.getItem();
-		FluidStack liquid = item.getFluid(bucket);
+
+		IAdvFluidContainerItem fluidHandler = (IAdvFluidContainerItem) bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+
+		FluidStack liquid = fluidHandler.getTankProperties().length > 0 ? fluidHandler.getTankProperties()[0].getContents() : null;
 		if (liquid == null || liquid.amount <= 0)
-			return item.canBeFilledFromWorld();
-		return item.canPlaceInWorld();
+			return fluidHandler.canBeFilledFromWorld();
+		return fluidHandler.canPlaceInWorld();
 	}
 
 	@Override
@@ -38,14 +39,16 @@ public class DefaultUseHandler implements IUseHandler {
 		EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer)entity : null;
 		if (world.isRemote) return bucket;
 		Item item = bucket.getItem();
-		IAdvFluidContainerItem container = (IAdvFluidContainerItem)item;
+
 		ItemStack q = new ItemStack(Items.BUCKET, 1, 0);
-		FluidStack liquid = container.getFluid(bucket);
+		IAdvFluidContainerItem fluidHandler = (IAdvFluidContainerItem) bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		FluidStack liquid = fluidHandler.getTankProperties().length > 0 ? fluidHandler.getTankProperties()[0].getContents() : null;
 		if (liquid == null || liquid.amount <= 0) {
-			if (!container.canBeFilledFromWorld()) return bucket;
+			if (!fluidHandler.canBeFilledFromWorld()) return bucket;
 			ItemStack bucket2 = bucket.stackSize > 1 ? bucket.copy() : bucket;
+			IAdvFluidContainerItem fluidHandler2 = (IAdvFluidContainerItem) bucket2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 			bucket2.stackSize = 1;
-			RayTraceResult objectPosition = ((IUseable)container).rayTrace(world, entity, false);
+			RayTraceResult objectPosition = ((IUseable)item).rayTrace(world, entity, false);
 			if (objectPosition != null && objectPosition.typeOfHit == Type.BLOCK) {
 				BlockPos pos = objectPosition.getBlockPos();
 				if (canEntityAct(world, entity, pos, objectPosition.sideHit, bucket, false))
@@ -54,11 +57,11 @@ public class DefaultUseHandler implements IUseHandler {
 					if (block instanceof IFluidBlock) {
 						liquid = ((IFluidBlock)block).drain(world, pos, false);
 						if (liquid != null) {
-							if (container.fill(bucket2, liquid, false) == liquid.amount) {
-								container.fill(bucket2, ((IFluidBlock)block).drain(world, pos, true), true);
-								if (!container.shouldReplaceWhenFilled() || bucket2 != bucket)
+							if (fluidHandler2.fill(liquid, false) == liquid.amount) {
+								fluidHandler2.fill(((IFluidBlock)block).drain(world, pos, true), true);
+								if (!fluidHandler.shouldReplaceWhenFilled() || bucket2 != bucket)
 									MFRLiquidMover.disposePlayerItem(bucket, bucket2, player,
-											true, container.shouldReplaceWhenFilled());
+											true, fluidHandler.shouldReplaceWhenFilled());
 								return bucket;
 							}
 						}
@@ -67,17 +70,19 @@ public class DefaultUseHandler implements IUseHandler {
 			}
 			if (player == null) return bucket;
 			q = q.getItem().onItemRightClick(q, world, player, hand).getResult();
-			if (FluidContainerRegistry.isEmptyContainer(q)) return bucket;
-			container.fill(bucket2, FluidContainerRegistry.getFluidForFilledItem(q), true);
-			if (!container.shouldReplaceWhenFilled() || bucket2 != bucket)
-				MFRLiquidMover.disposePlayerItem(bucket, bucket2, player, true, container.shouldReplaceWhenFilled());
+			IFluidTankProperties[] tankProps = q.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties();
+			FluidStack contents = tankProps.length > 0 ? tankProps[0].getContents() : null;
+			if (contents == null || contents.amount == 0) return bucket;
+			fluidHandler2.fill(contents, true);
+			if (!fluidHandler.shouldReplaceWhenFilled() || bucket2 != bucket)
+				MFRLiquidMover.disposePlayerItem(bucket, bucket2, player, true, fluidHandler.shouldReplaceWhenFilled());
 			return bucket;
 		}
-		if (container.canPlaceInWorld()) {
+		if (fluidHandler.canPlaceInWorld()) {
 			if (!liquid.getFluid().canBePlacedInWorld()) return bucket;
 			Block block = liquid.getFluid().getBlock();
 			if (!(block instanceof IFluidBlock)) return bucket;
-			RayTraceResult objectPosition = ((IUseable)container).rayTrace(world, entity, false);
+			RayTraceResult objectPosition = ((IUseable)item).rayTrace(world, entity, false);
 			if (objectPosition != null && objectPosition.typeOfHit == Type.BLOCK) {
 				BlockPos pos = objectPosition.getBlockPos();
 				if (canEntityAct(world, entity, pos, objectPosition.sideHit, bucket, true))
@@ -86,7 +91,7 @@ public class DefaultUseHandler implements IUseHandler {
 					{
 						liquid = ((IFluidBlock)block).drain(world, pos, false);
 						ItemStack drop = bucket.splitStack(1);
-						container.drain(drop, liquid.amount, true);
+						drop.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).drain(liquid.amount, true);
 						if (item.hasContainerItem(drop)) {
 							drop = item.getContainerItem(drop);
 							if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())

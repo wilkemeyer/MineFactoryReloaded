@@ -2,30 +2,23 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.WeightedRandomItemStack;
-import net.minecraft.init.MobEffects;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.WeightedRandom;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.Area;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -33,7 +26,11 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements ITankContainerBucketable
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+
+public class TileEntitySludgeBoiler extends TileEntityFactoryPowered
 {
 	private Random _rand;
 	private int _tick;
@@ -83,10 +80,10 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean activateMachine()
 	{
-		if (drain(10, false, _tanks[0]) == 10)
+		if (fluidHandler.drain(10, false, _tanks[0]) == 10)
 		{
 			if (!incrementWorkDone()) return false;
-			drain(10, true, _tanks[0]);
+			fluidHandler.drain(10, true, _tanks[0]);
 			_tick++;
 
 			if (getWorkDone() >= getWorkMax())
@@ -116,7 +113,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	@Override
 	protected boolean updateIsActive(boolean failedDrops)
 	{
-		return super.updateIsActive(failedDrops) && drain(10, false, _tanks[0]) == 10;
+		return super.updateIsActive(failedDrops) && fluidHandler.drain(10, false, _tanks[0]) == 10;
 	}
 
 	@Override
@@ -144,30 +141,6 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks()
 	{
 		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
@@ -180,14 +153,32 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return true;
-	}
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
-	}
-}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
+
+					return true;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+					return null;
+				}
+
+				@Nullable
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+
+					return null;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
+	}}

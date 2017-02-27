@@ -4,6 +4,13 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,7 +50,7 @@ import powercrystals.minefactoryreloaded.render.model.PlasticCupModel;
 
 import javax.annotation.Nullable;
 
-public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerItem, IUseable {
+public class ItemFactoryCup extends ItemFactory implements IUseable {
 
 	public final static int MELTING_POINT = 523; // melting point of Polyethylene terphthalate
 	public final static IUseHandler defaultUseAction = new DefaultUseHandler();
@@ -121,84 +128,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	public String getFluidName(ItemStack stack) {
 		NBTTagCompound tag = stack.getTagCompound();
 		return tag == null || !tag.hasKey("fluid") ? null : tag.getCompoundTag("fluid").getString("FluidName");
-	}
-
-	@Override
-	public FluidStack getFluid(ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
-		FluidStack fluid = null;
-		if (tag != null && tag.hasKey("fluid")) {
-			fluid = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
-			if (fluid == null)
-				tag.removeTag("fluid");
-		}
-		return fluid;
-	}
-
-	@Override
-	public int getCapacity(ItemStack container) {
-		return FluidContainerRegistry.BUCKET_VOLUME;
-	}
-
-	@Override
-	public int fill(ItemStack stack, FluidStack resource, boolean doFill) {
-		if (resource == null || stack.stackSize != 1)
-			//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
-			return 0;
-		int fillAmount = 0, capacity = getCapacity(stack);
-		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
-		FluidStack fluid = null;
-		if (tag == null || !tag.hasKey("fluid") ||
-				(fluidTag = tag.getCompoundTag("fluid")) == null ||
-				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
-			fillAmount = Math.min(capacity, resource.amount);
-		if (fluid == null) {
-			if (doFill) {
-				fluid = resource.copy();
-				fluid.amount = 0;
-			}
-		} else if (!fluid.isFluidEqual(resource))
-			return 0;
-		else
-			fillAmount = Math.min(capacity - fluid.amount, resource.amount);
-		fillAmount = Math.max(fillAmount, 0);
-		if (doFill) {
-			if (tag == null) {
-				stack.setTagCompound(new NBTTagCompound());
-				tag = stack.getTagCompound();
-			}
-			fluid.amount += fillAmount;
-			tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
-		}
-		return fillAmount;
-	}
-
-	@Override
-	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain) {
-		NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
-		FluidStack fluid = null;
-		if (tag == null || !tag.hasKey("fluid") ||
-				(fluidTag = tag.getCompoundTag("fluid")) == null ||
-				(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
-			return null;
-		int drainAmount = Math.min(maxDrain, fluid.amount);
-		if (doDrain) {
-			tag.removeTag("fluid");
-			tag.setBoolean("drained", true);
-			fluid.amount -= drainAmount;
-			if (fluid.amount > 0)
-				fill(stack, fluid, true);
-			if (tag.hasKey("toDrain")) {
-				drainAmount = tag.getInteger("toDrain");
-				tag.removeTag("toDrain");
-			} else
-				drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
-		} else {
-			drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
-			tag.setInteger("toDrain", drainAmount);
-		}
-		fluid.amount = drainAmount;
-		return fluid;
 	}
 
 	@Override
@@ -296,21 +225,6 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 	}
 
 	@Override
-	public boolean canBeFilledFromWorld() {
-		return true;
-	}
-
-	@Override
-	public boolean canPlaceInWorld() {
-		return false;
-	}
-
-	@Override
-	public boolean shouldReplaceWhenFilled() {
-		return true;
-	}
-
-	@Override
 	public RayTraceResult rayTrace(World world, EntityLivingBase entity, boolean adjacent) {
 		float f1 = entity.rotationPitch;
 		float f2 = entity.rotationYaw;
@@ -340,5 +254,154 @@ public class ItemFactoryCup extends ItemFactory implements IAdvFluidContainerIte
 
 		ModelHelper.registerModel(this, "plastic_cup");
 		MFRModelLoader.registerModel(PlasticCupModel.MODEL_LOCATION, PlasticCupModel.MODEL);
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+
+		return new FactoryCupFluidHandler(stack);
+	}
+
+	private class FactoryCupFluidHandler implements ICapabilityProvider, IAdvFluidContainerItem {
+
+		private ItemStack stack;
+
+		public FactoryCupFluidHandler(ItemStack stack) {
+			this.stack = stack;
+		}
+
+		@Override
+		public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+
+			return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+		}
+
+		@Override
+		public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+
+			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			{
+				return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
+			}
+			return null;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+
+			NBTTagCompound tag = stack.getTagCompound();
+			FluidStack contents = null;
+
+			if (tag != null && tag.hasKey("fluid")) {
+				contents = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
+
+				if (contents == null) {
+					tag.removeTag("fluid");
+				}
+			}
+
+			return new IFluidTankProperties[]{new FluidTankProperties(contents, Fluid.BUCKET_VOLUME)};
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+
+			if (resource == null || stack.stackSize != 1)
+				//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
+				return 0;
+			int fillAmount = 0, capacity = getCapacity(stack);
+			NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
+			FluidStack fluid = null;
+			if (tag == null || !tag.hasKey("fluid") ||
+					(fluidTag = tag.getCompoundTag("fluid")) == null ||
+					(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
+				fillAmount = Math.min(capacity, resource.amount);
+			if (fluid == null) {
+				if (doFill) {
+					fluid = resource.copy();
+					fluid.amount = 0;
+				}
+			} else if (!fluid.isFluidEqual(resource))
+				return 0;
+			else
+				fillAmount = Math.min(capacity - fluid.amount, resource.amount);
+			fillAmount = Math.max(fillAmount, 0);
+			if (doFill) {
+				if (tag == null) {
+					stack.setTagCompound(new NBTTagCompound());
+					tag = stack.getTagCompound();
+				}
+				fluid.amount += fillAmount;
+				tag.setTag("fluid", fluid.writeToNBT(fluidTag == null ? new NBTTagCompound() : fluidTag));
+			}
+			return fillAmount;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+			NBTTagCompound tag = stack.getTagCompound(), fluidTag;
+			FluidStack fluid;
+			if (tag == null || !tag.hasKey("fluid") ||
+					(fluidTag = tag.getCompoundTag("fluid")) == null ||
+					(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null ||
+					!(fluid.getFluid().equals(resource.getFluid())))
+				return null;
+
+			return drain(resource.amount, doDrain, tag, fluid);
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+
+			NBTTagCompound tag = stack.getTagCompound(), fluidTag;
+			FluidStack fluid;
+			if (tag == null || !tag.hasKey("fluid") ||
+					(fluidTag = tag.getCompoundTag("fluid")) == null ||
+					(fluid = FluidStack.loadFluidStackFromNBT(fluidTag)) == null)
+				return null;
+			return drain(maxDrain, doDrain, tag, fluid);
+		}
+
+		private FluidStack drain(int maxDrain, boolean doDrain, NBTTagCompound tag, FluidStack fluid) {
+			int drainAmount = Math.min(maxDrain, fluid.amount);
+			if (doDrain) {
+				tag.removeTag("fluid");
+				tag.setBoolean("drained", true);
+				fluid.amount -= drainAmount;
+				if (fluid.amount > 0)
+					fill(fluid, true);
+				if (tag.hasKey("toDrain")) {
+					drainAmount = tag.getInteger("toDrain");
+					tag.removeTag("toDrain");
+				} else
+					drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
+			} else {
+				drainAmount *= (Math.max(Math.random() - 0.75, 0) + 0.75);
+				tag.setInteger("toDrain", drainAmount);
+			}
+			fluid.amount = drainAmount;
+			return fluid;
+		}
+
+		@Override
+		public boolean canBeFilledFromWorld() {
+
+			return true;
+		}
+
+		@Override
+		public boolean canPlaceInWorld() {
+
+			return false;
+		}
+
+		@Override
+		public boolean shouldReplaceWhenFilled() {
+
+			return true;
+		}
 	}
 }

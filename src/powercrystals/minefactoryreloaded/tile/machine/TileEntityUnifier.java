@@ -1,24 +1,18 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.OreDictionaryArbiter;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -27,7 +21,11 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerUnifier;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityUnifier extends TileEntityFactoryInventory implements ITankContainerBucketable {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class TileEntityUnifier extends TileEntityFactoryInventory {
 
 	private boolean ignoreChange = false;
 	private static FluidStack _biofuel;
@@ -215,37 +213,6 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 		return slot == 1;
 	}
 
-	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		if (resource == null || resource.amount == 0) return 0;
-
-		FluidStack converted = unifierTransformLiquid(resource, doFill);
-
-		if (converted == null || converted.amount == 0) return 0;
-
-		int filled = _tanks[0].fill(converted, doFill);
-
-		if (filled == converted.amount) {
-			return resource.amount;
-		} else {
-			return filled * resource.amount / converted.amount +
-					(resource.amount & _roundingCompensation);
-		}
-	}
-
 	private FluidStack unifierTransformLiquid(FluidStack resource, boolean doFill) {
 
 		if (_ethanol != null & _biofuel != null) {
@@ -258,32 +225,50 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
 	protected FluidTankCore[] createTanks() {
 
 		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-		return true;
-	}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
+				@Override
+				public boolean allowBucketFill(ItemStack stack) {
 
-		return true;
+					return true;
+				}
+
+				@Override
+				public boolean allowBucketDrain(ItemStack stack) {
+
+					return true;
+				}
+
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+
+					if (resource == null || resource.amount == 0) return 0;
+
+					FluidStack converted = unifierTransformLiquid(resource, doFill);
+
+					if (converted == null || converted.amount == 0) return 0;
+
+					int filled = _tanks[0].fill(converted, doFill);
+
+					if (filled == converted.amount) {
+						return resource.amount;
+					} else {
+						return filled * resource.amount / converted.amount +
+								(resource.amount & _roundingCompensation);
+					}
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }
