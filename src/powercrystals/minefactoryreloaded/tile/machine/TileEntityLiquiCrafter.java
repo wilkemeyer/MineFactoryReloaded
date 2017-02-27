@@ -20,10 +20,10 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.RemoteInventoryCrafting;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiLiquiCrafter;
@@ -114,19 +114,14 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		/**
 		 * Tracking
 		 */
-		i: for (int i = 0; i < 9; i++)
-		{
-			if (_inventory[i] != null)
-			{
-				l: if (FluidContainerRegistry.isFilledContainer(_inventory[i]))
-				{
-					FluidStack l = FluidContainerRegistry.getFluidForFilledItem(_inventory[i]);
-					if (l == null) break l;
-
+		for (int i = 0; i < 9; i++) {
+			if (_inventory[i] != null) {
+				FluidStack l = MFRUtil.getFluidContents(_inventory[i]);
+				if (l != null) {
 					ItemResourceTracker t = new ItemResourceTracker(i, l, l.amount);
 					t.item = _inventory[i];
 					requiredItems.add(t);
-					continue i;
+					continue;
 				}
 
 				requiredItems.add(new ItemResourceTracker(i, _inventory[i], 1));
@@ -143,8 +138,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 				int size = item.stackSize;
 				for (ItemResourceTracker t : requiredItems)
 				{
-					if (t.fluid != null && t.fluid.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(item))) {
-						int a = FluidContainerRegistry.getFluidForFilledItem(item).amount;
+					if (t.fluid != null && t.fluid.isFluidEqual(MFRUtil.getFluidContents(item))) {
+						int a = MFRUtil.getFluidContents(item).amount;
 						int f = Math.min(a * size, t.required - t.found);
 						t.found += f;
 						size -= (int) Math.ceil(f / (float)a);
@@ -203,12 +198,12 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 				for (ItemResourceTracker t : requiredItems)
 				{
 					boolean fluid = t.fluid != null &&
-							t.fluid.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(item));
+							t.fluid.isFluidEqual(MFRUtil.getFluidContents(item));
 					if (fluid || ItemHelper.itemsEqualForCrafting(t.item, item))
 					{
 						int use = 0;
 						if (fluid) {
-							use = FluidContainerRegistry.getFluidForFilledItem(item).amount;
+							use = MFRUtil.getFluidContents(item).amount;
 						}
 						if (item.getItem().hasContainerItem(item))
 						{

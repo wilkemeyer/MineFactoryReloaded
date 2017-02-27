@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -45,7 +45,7 @@ public class RanchableCow implements IFactoryRanchable {
 			drops.add(new RanchedItem(Items.MILK_BUCKET));
 			rancher.decrStackSize(bucketIndex, 1);
 		} else {
-			FluidStack milk = FluidRegistry.getFluidStack("milk", FluidContainerRegistry.BUCKET_VOLUME);
+			FluidStack milk = FluidRegistry.getFluidStack("milk", Fluid.BUCKET_VOLUME);
 			drops.add(new RanchedItem(milk));
 		}
 

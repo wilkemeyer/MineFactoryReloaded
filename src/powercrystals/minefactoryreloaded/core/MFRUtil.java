@@ -14,6 +14,8 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.UniversalBucket;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -109,6 +111,18 @@ public class MFRUtil {
 	public static ItemStack getBucketFor(Fluid fluid){
 		
 		return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, fluid);
+	}
+
+	public static FluidStack getFluidContents(ItemStack stack) {
+
+		if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+			IFluidTankProperties[] tankProps = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties();
+
+			if (tankProps.length > 0) {
+				return tankProps[0].getContents();
+			}
+		}
+		return null;
 	}
 
 	public static boolean containsForcedUnicode(String str) {

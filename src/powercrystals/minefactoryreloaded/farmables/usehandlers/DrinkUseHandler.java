@@ -6,7 +6,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
@@ -50,7 +50,7 @@ public class DrinkUseHandler implements IUseHandler {
 			EntityPlayer player = (EntityPlayer)entity;
 			if (!player.capabilities.isCreativeMode) {
 				ItemStack drop = item.splitStack(1);
-				((IFluidContainerItem)item.getItem()).drain(drop, FluidContainerRegistry.BUCKET_VOLUME, true);
+				((IFluidContainerItem)item.getItem()).drain(drop, Fluid.BUCKET_VOLUME, true);
 				if (drop.getItem().hasContainerItem(drop)) {
 					drop = drop.getItem().getContainerItem(drop);
 					if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
@@ -73,7 +73,7 @@ public class DrinkUseHandler implements IUseHandler {
 
 	public String getFluidName(ItemStack item) {
 		FluidStack liquid = ((IFluidContainerItem)item.getItem()).getFluid(item);
-		if (liquid == null || liquid.amount < FluidContainerRegistry.BUCKET_VOLUME) return null;
+		if (liquid == null || liquid.amount < Fluid.BUCKET_VOLUME) return null;
 		return liquid.getFluid().getName();
 	}
 

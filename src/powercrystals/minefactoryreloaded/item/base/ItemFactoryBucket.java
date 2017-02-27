@@ -14,10 +14,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
 public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
@@ -59,7 +58,7 @@ public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
 		b.append('@').append(System.identityHashCode(this)).append('{');
 		b.append("l:").append(getUnlocalizedName()).append(", o:").append(_needsOverlay);
 		//b.append(", b:").append(this.isFull);
-		FluidStack stack = FluidContainerRegistry.getFluidForFilledItem(new ItemStack(this, 1, 0));
+		FluidStack stack = MFRUtil.getFluidContents(new ItemStack(this, 1, 0));
 		Fluid fluid = stack == null ? null : stack.getFluid();
 		b.append(", f:").append(fluid).append(", i:").append(fluid == null ? null : fluid.getStill());
 		b.append(", c:").append(fluid == null ? null : fluid.getClass());

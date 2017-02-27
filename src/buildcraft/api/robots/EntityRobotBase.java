@@ -19,7 +19,7 @@ import buildcraft.api.core.IZone;
 import buildcraft.api.mj.MjAPI;
 import buildcraft.api.mj.MjBattery;
 
-public abstract class EntityRobotBase extends EntityLiving implements IInventory, IFluidHandler {
+public abstract class EntityRobotBase extends EntityLiving implements IInventory {
 
     public static final long MAX_POWER =  5000 * MjAPI.MJ;
     public static final long SAFETY_POWER = MAX_POWER / 5;

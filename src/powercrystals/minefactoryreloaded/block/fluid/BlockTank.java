@@ -29,6 +29,7 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockTank;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
@@ -168,7 +169,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 		BlockBakery.registerItemKeyGenerator(Item.getItemFromBlock(this), stack -> {
 			String key = stack.getItem().getRegistryName().toString();
 			if (stack.getItem() instanceof ItemBlockTank) {
-				FluidStack fluidStack = ((ItemBlockTank) stack.getItem()).getFluid(stack);
+				FluidStack fluidStack = MFRUtil.getFluidContents(stack);
 				if (fluidStack != null) {
 					key += "," + fluidStack.getFluid().getStill().toString();
 				}

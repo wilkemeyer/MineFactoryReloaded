@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,7 +32,6 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -93,6 +91,16 @@ public class ItemFactoryCup extends ItemFactory implements IUseable {
 		if (getFluid(stack) != null)
 			return getUnlocalizedName() + (_prefix ? ".prefix" : ".suffix");
 		return getUnlocalizedName();
+	}
+
+	private FluidStack getFluid(ItemStack stack) {
+
+		IFluidTankProperties[] tankProps = getFluidHandler(stack).getTankProperties();
+		if (tankProps.length > 0) {
+			return tankProps[0].getContents();
+		}
+
+		return null;
 	}
 
 	public String getLocalizedName(String str) {
@@ -162,9 +170,11 @@ public class ItemFactoryCup extends ItemFactory implements IUseable {
 	}
 
 	public boolean hasDrinkableLiquid(ItemStack stack) {
+
+		IFluidTankProperties[] tankProps = getFluidHandler(stack).getTankProperties();
 		return stack.stackSize == 1 &&
 				MFRRegistry.getLiquidDrinkHandlers().containsKey(getFluidName(stack)) &&
-				getFluid(stack).amount == getCapacity(stack);
+				getFluid(stack).amount == tankProps[0].getCapacity();
 	}
 
 	@Nullable
@@ -256,6 +266,11 @@ public class ItemFactoryCup extends ItemFactory implements IUseable {
 		MFRModelLoader.registerModel(PlasticCupModel.MODEL_LOCATION, PlasticCupModel.MODEL);
 	}
 
+	private IAdvFluidContainerItem getFluidHandler(ItemStack stack) {
+
+		return (IAdvFluidContainerItem) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+	}
+
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
 
@@ -309,7 +324,7 @@ public class ItemFactoryCup extends ItemFactory implements IUseable {
 			if (resource == null || stack.stackSize != 1)
 				//|| resource.getFluid().getTemperature(resource) > MELTING_POINT)
 				return 0;
-			int fillAmount = 0, capacity = getCapacity(stack);
+			int fillAmount = 0, capacity = getTankProperties()[0].getCapacity();
 			NBTTagCompound tag = stack.getTagCompound(), fluidTag = null;
 			FluidStack fluid = null;
 			if (tag == null || !tag.hasKey("fluid") ||

@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.ItemBlockTank;
 import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.tile.tank.TileEntityTank;
 
 import java.util.ArrayList;
@@ -141,7 +142,7 @@ public class BlockTankRenderer implements ISimpleBlockBakery {
 
 			String fluid = null;
 			if (stack.getItem() instanceof ItemBlockTank) {
-				FluidStack fluidStack = ((ItemBlockTank) stack.getItem()).getFluid(stack);
+				FluidStack fluidStack = MFRUtil.getFluidContents(stack);
 				if (fluidStack != null) {
 					fluid = fluidStack.getFluid().getStill().toString();
 				}

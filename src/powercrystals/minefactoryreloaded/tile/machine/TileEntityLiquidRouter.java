@@ -1,6 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -11,11 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -24,7 +23,9 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerLiquidRouter;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityLiquidRouter extends TileEntityFactoryInventory implements IFluidHandler
+import javax.annotation.Nullable;
+
+public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 {
 	//TODO this really needs a rewrite - very confusing that the order here doesn't match EnumFacing
 	private static final EnumFacing[] _outputDirections = new EnumFacing[]
@@ -81,10 +82,10 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			{
 				TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[i]));
 				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
-				if(te instanceof IFluidHandler && amountForThisRoute > 0)
+				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite()) && amountForThisRoute > 0)
 				{
-					amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[i].getOpposite(),
-							new FluidStack(resource, amountForThisRoute), doFill);
+					amountRemaining -= te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite())
+							.fill(new FluidStack(resource, amountForThisRoute), doFill);
 					if(amountRemaining <= 0)
 					{
 						break;
@@ -97,10 +98,10 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 		{
 			int outdir = weightedRandomSide(routes);
 			TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[outdir]));
-			if(te instanceof IFluidHandler)
+			if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite()))
 			{
-				amountRemaining -= ((IFluidHandler)te).fill(_outputDirections[outdir].getOpposite(),
-						new FluidStack(resource, amountRemaining), doFill);
+				amountRemaining -= te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite())
+						.fill(new FluidStack(resource, amountRemaining), doFill);
 			}
 		}
 
@@ -152,9 +153,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 			ItemStack stack = _inventory[i];
 			Item item = stack != null ? stack.getItem() : null;
 			if(item != null &&
-					resource.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(_inventory[i])) ||
-					(item instanceof IFluidContainerItem &&
-							resource.isFluidEqual(((IFluidContainerItem)item).getFluid(stack))))
+					resource.isFluidEqual(MFRUtil.getFluidContents(_inventory[i])))
 			{
 				routeWeights[i] = _inventory[i].stackSize;
 			}
@@ -172,7 +171,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 
 		for(int i = 0; i < 6; i++)
 		{
-			if(FluidContainerRegistry.isEmptyContainer(_inventory[i]))
+			if(MFRUtil.getFluidContents(_inventory[i]) == null)
 			{
 				routeWeights[i] = _inventory[i].stackSize;
 			}
@@ -193,28 +192,6 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
 
 		// TODO: save/write items
-	}
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-	{
-		int tankIndex = from.ordinal();
-		if (tankIndex >= _filledDirection.length || _filledDirection[tankIndex]) return 0;
-		int r = pumpLiquid(resource, doFill);
-		_filledDirection[tankIndex] = doFill & r > 0;
-		return r;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-	{
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-	{
-		return null;
 	}
 
 	@Override
@@ -255,14 +232,52 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory implement
 	}
 
 	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid)
-	{
-		return true;
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new LiquidRouterFluidHandler(facing));
+		}
+
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid)
-	{
-		return false;
+	private class LiquidRouterFluidHandler implements IFluidHandler {
+
+		private EnumFacing from;
+
+		public LiquidRouterFluidHandler(EnumFacing from) {
+
+			this.from = from;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+			return null;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+
+			return null;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+
+			return new IFluidTankProperties[0];
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+
+			int tankIndex = from.ordinal();
+			if (tankIndex >= _filledDirection.length || _filledDirection[tankIndex]) return 0;
+			int r = pumpLiquid(resource, doFill);
+			_filledDirection[tankIndex] = doFill & r > 0;
+			return r;
+		}
 	}
 }
