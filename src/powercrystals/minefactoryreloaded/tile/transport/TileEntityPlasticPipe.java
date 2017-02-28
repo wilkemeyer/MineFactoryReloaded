@@ -14,6 +14,11 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,7 +35,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
 import powercrystals.minefactoryreloaded.core.IGridController;
@@ -40,7 +44,9 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
-public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITraceable, ICustomHitBox, IFluidHandler
+import javax.annotation.Nullable;
+
+public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITraceable, ICustomHitBox
 {
 
 	private byte[] sideMode = { 1, 1, 1, 1, 1, 1, 0 };
@@ -203,11 +209,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			} else {
 				sideMode[side.ordinal()] &= ~3;
 			}
-		} else if (tile instanceof IFluidHandler) {
+		} else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
 			//if (((IFluidHandler)tile).canFill(EnumFacing.VALID_DIRECTIONS[side]))
 			{
 				if (handlerCache == null) handlerCache = new IFluidHandler[6];
-				handlerCache[side.ordinal()] = (IFluidHandler) tile;
+				handlerCache[side.ordinal()] = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
 				sideMode[side.ordinal()] |= 1 << 2;
 			}
 		}
@@ -353,67 +359,6 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		}
 	}
 
-	// IFluidHandler
-
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-
-		if (_grid == null | sideMode[6] == 1) return 0;
-		int t = sideMode[from.getOpposite().ordinal()];
-		if (((t & 1) != 0) & isPowered & (t & 2) == 2)
-		{
-			return _grid.storage.fill(resource, doFill);
-		}
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-
-		if (_grid == null | sideMode[6] == 1) return null;
-		int t = sideMode[from.getOpposite().ordinal()];
-		if (((t & 1) != 0) & (t & 2) == 0)
-		{
-			return _grid.storage.drain(resource, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-
-		if (_grid == null | sideMode[6] == 1) return null;
-		int t = sideMode[from.getOpposite().ordinal()];
-		if (((t & 1) != 0) & (t & 2) == 0)
-			return _grid.storage.drain(maxDrain, doDrain);
-		return null;
-	}
-
-	@Override
-	public boolean canFill(EnumFacing from, Fluid fluid) {
-
-		if (sideMode[6] == 1) return false;
-		int t = sideMode[from.getOpposite().ordinal()];
-		return ((t & 1) != 0) & (t & 2) == 2;
-	}
-
-	@Override
-	public boolean canDrain(EnumFacing from, Fluid fluid) {
-
-		if (sideMode[6] == 1) return false;
-		int t = sideMode[from.getOpposite().ordinal()];
-		return ((t & 1) != 0) & (t & 2) == 0;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from)
-	{
-
-		if (_grid == null)
-			return FluidHelper.NULL_TANK_INFO;
-		return new FluidTankInfo[] { _grid.storage.getInfo() };
-	}
-
 	// internal
 
 	public boolean isInterfacing(EnumFacing to) {
@@ -479,12 +424,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			switch (m >> 2) {
 			case 1: // IFluidHandler
 				if (handlerCache != null) {
-					IFluidHandler handlerTile = handlerCache[bSide];
-					if (handlerTile != null && handlerTile.canDrain(side, null))
+					IFluidHandler fluidHandler = handlerCache[bSide];
+					FluidStack e = fluidHandler.drain(TRANSFER_RATE, false);
+					if (e != null && e.amount > 0)
 					{
-						FluidStack e = handlerTile.drain(side, TRANSFER_RATE, false);
-						if (e != null && e.amount > 0)
-							handlerTile.drain(side, tank.fill(e, true), true);
+							fluidHandler.drain(tank.fill(e, true), true);
 					}
 				}
 				break;
@@ -506,9 +450,9 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			switch (m >> 2) {
 			case 1: // IFluidHandler
 				if (handlerCache != null) {
-					IFluidHandler handlerTile = handlerCache[bSide];
-					if (handlerTile != null && handlerTile.canFill(side, f))
-						return handlerTile.fill(side, fluid, true);
+					IFluidHandler fluidHandler = handlerCache[bSide];
+					if (fluidHandler != null && fluidHandler.fill(fluid, false) > 0)
+						return fluidHandler.fill(fluid, true);
 				}
 				break;
 			case 2: // TileEntityRednetCable
@@ -738,5 +682,74 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public void firstTick(IGridController grid) {
 
+	}
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new PlasticPipeFluidHandler(facing));
+		}
+
+		return super.getCapability(capability, facing);
+	}
+
+	private class PlasticPipeFluidHandler implements IFluidHandler {
+
+		private EnumFacing from;
+
+		public PlasticPipeFluidHandler(EnumFacing from) {
+
+			this.from = from;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+
+			if (_grid == null)
+				return FluidTankProperties.convert(FluidHelper.NULL_TANK_INFO);
+			return new IFluidTankProperties[] { new FluidTankProperties(_grid.storage.getFluid(), _grid.storage.getCapacity()) };
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+
+			if (_grid == null | sideMode[6] == 1) return 0;
+			int t = sideMode[from.getOpposite().ordinal()];
+			if (((t & 1) != 0) & isPowered & (t & 2) == 2)
+			{
+				return _grid.storage.fill(resource, doFill);
+			}
+			return 0;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+			if (_grid == null | sideMode[6] == 1) return null;
+			int t = sideMode[from.getOpposite().ordinal()];
+			if (((t & 1) != 0) & (t & 2) == 0)
+			{
+				return _grid.storage.drain(resource, doDrain);
+			}
+			return null;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+
+			if (_grid == null | sideMode[6] == 1) return null;
+			int t = sideMode[from.getOpposite().ordinal()];
+			if (((t & 1) != 0) & (t & 2) == 0)
+				return _grid.storage.drain(maxDrain, doDrain);
+			return null;
+		}
 	}
 }

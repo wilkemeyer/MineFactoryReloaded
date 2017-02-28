@@ -8,8 +8,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.IUseHandler;
 
@@ -43,6 +44,7 @@ public class DrinkUseHandler implements IUseHandler {
 
 	@Override
 	public ItemStack onUse(ItemStack item, EntityLivingBase entity, EnumHand hand) {
+
 		String liquid = getFluidName(item);
 		ItemStack r = item;
 		if (item.stackSize == 1 && liquid != null &&
@@ -50,12 +52,8 @@ public class DrinkUseHandler implements IUseHandler {
 			EntityPlayer player = (EntityPlayer)entity;
 			if (!player.capabilities.isCreativeMode) {
 				ItemStack drop = item.splitStack(1);
-				((IFluidContainerItem)item.getItem()).drain(drop, Fluid.BUCKET_VOLUME, true);
-				if (drop.getItem().hasContainerItem(drop)) {
-					drop = drop.getItem().getContainerItem(drop);
-					if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
-						drop = null;
-				}
+				IFluidHandler fluidHandler = drop.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				fluidHandler.drain(Fluid.BUCKET_VOLUME, true);
 				if (item.stackSize < 1)
 					item = drop;
 				else if (drop != null && !player.inventory.addItemStackToInventory(drop))
@@ -72,9 +70,16 @@ public class DrinkUseHandler implements IUseHandler {
 	}
 
 	public String getFluidName(ItemStack item) {
-		FluidStack liquid = ((IFluidContainerItem)item.getItem()).getFluid(item);
-		if (liquid == null || liquid.amount < Fluid.BUCKET_VOLUME) return null;
-		return liquid.getFluid().getName();
+
+		if (item.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+			IFluidHandler fluidHandler = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			if (fluidHandler.getTankProperties().length > 0) {
+				FluidStack liquid = fluidHandler.getTankProperties()[0].getContents();
+				if (liquid != null && liquid.amount >= Fluid.BUCKET_VOLUME)
+					return liquid.getFluid().getName();
+			}
+		}
+		return null;
 	}
 
 	public boolean isDrinkableLiquid(String name) {
