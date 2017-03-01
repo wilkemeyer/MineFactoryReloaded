@@ -69,7 +69,7 @@ public class VanillaMobProvider implements IRandomMobProvider
 		mobs.add(new RandomMob(MFRUtil.prepareMob(EntityArmorStand.class, world), 15));
 		
 		EntityPig sheep = MFRUtil.prepareMob(EntityPig.class, world);
-		for (EntityAITaskEntry a : (List<EntityAITaskEntry>)sheep.tasks.taskEntries)
+		for (EntityAITaskEntry a : sheep.tasks.taskEntries)
 			if (a.action instanceof EntityAIPanic)
 			{
 				sheep.tasks.removeTask(a.action);

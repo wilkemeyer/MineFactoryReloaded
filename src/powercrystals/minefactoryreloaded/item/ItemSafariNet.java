@@ -120,7 +120,7 @@ public class ItemSafariNet extends ItemFactory implements IColorRegister {
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
-			return EnumActionResult.SUCCESS;
+			return EnumActionResult.PASS;
 		} else if (isEmpty(itemstack)) {
 			return EnumActionResult.SUCCESS;
 		} else {
