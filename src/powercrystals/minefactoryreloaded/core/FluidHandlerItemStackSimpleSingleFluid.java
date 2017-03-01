@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 
 public class FluidHandlerItemStackSimpleSingleFluid extends FluidHandlerItemStackSimple.SwapEmpty {
 
-	private final ItemStack actualContainer;
+	private final ItemStack fullContainer;
 	private Fluid fluid;
 
-	public FluidHandlerItemStackSimpleSingleFluid(ItemStack actualContainer, ItemStack fullContainer, ItemStack emptyContainer, Fluid fluid, int capacity) {
-		super(fullContainer, emptyContainer, capacity);
-		this.actualContainer = actualContainer;
+	public FluidHandlerItemStackSimpleSingleFluid(ItemStack container, ItemStack fullContainer, ItemStack emptyContainer, Fluid fluid, int capacity) {
+		super(container, emptyContainer, capacity);
+		this.fullContainer = fullContainer;
 		this.fluid = fluid;
 	}
 
@@ -23,7 +23,7 @@ public class FluidHandlerItemStackSimpleSingleFluid extends FluidHandlerItemStac
 	@Override
 	public FluidStack getFluid() {
 
-		return container.getItem() == actualContainer.getItem() ? new FluidStack(fluid, capacity) : null;
+		return container.getItem() == fullContainer.getItem() ? new FluidStack(fluid, capacity) : null;
 	}
 
 	@Override
@@ -41,12 +41,12 @@ public class FluidHandlerItemStackSimpleSingleFluid extends FluidHandlerItemStac
 	@Override
 	protected void setContainerToEmpty() {
 
-		actualContainer.deserializeNBT(emptyContainer.serializeNBT());
+		container.deserializeNBT(emptyContainer.serializeNBT());
 	}
 
 	private void setContainerToFull() {
 
-		actualContainer.deserializeNBT(container.serializeNBT());
+		container.deserializeNBT(fullContainer.serializeNBT());
 	}
 
 	@Override

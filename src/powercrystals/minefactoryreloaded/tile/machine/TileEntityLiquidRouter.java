@@ -82,7 +82,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 			{
 				TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[i]));
 				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
-				if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite()) && amountForThisRoute > 0)
+				if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite()) && amountForThisRoute > 0)
 				{
 					amountRemaining -= te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite())
 							.fill(new FluidStack(resource, amountForThisRoute), doFill);
@@ -171,7 +171,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 
 		for(int i = 0; i < 6; i++)
 		{
-			if(MFRUtil.getFluidContents(_inventory[i]) == null)
+			if(_inventory[i] != null && MFRUtil.getFluidContents(_inventory[i]) == null)
 			{
 				routeWeights[i] = _inventory[i].stackSize;
 			}
