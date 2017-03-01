@@ -10,10 +10,12 @@ import javax.annotation.Nullable;
 
 public class FluidHandlerItemStackSimpleSingleFluid extends FluidHandlerItemStackSimple.SwapEmpty {
 
+	private final ItemStack actualContainer;
 	private Fluid fluid;
 
-	public FluidHandlerItemStackSimpleSingleFluid(ItemStack container, ItemStack emptyContainer, Fluid fluid, int capacity) {
-		super(container, emptyContainer, capacity);
+	public FluidHandlerItemStackSimpleSingleFluid(ItemStack actualContainer, ItemStack fullContainer, ItemStack emptyContainer, Fluid fluid, int capacity) {
+		super(fullContainer, emptyContainer, capacity);
+		this.actualContainer = actualContainer;
 		this.fluid = fluid;
 	}
 
@@ -21,7 +23,7 @@ public class FluidHandlerItemStackSimpleSingleFluid extends FluidHandlerItemStac
 	@Override
 	public FluidStack getFluid() {
 
-		return container.getItem() == container.getItem() ? new FluidStack(fluid, capacity) : null;
+		return container.getItem() == actualContainer.getItem() ? new FluidStack(fluid, capacity) : null;
 	}
 
 	@Override
@@ -34,5 +36,40 @@ public class FluidHandlerItemStackSimpleSingleFluid extends FluidHandlerItemStac
 	public boolean canDrainFluidType(FluidStack fluidStack) {
 
 		return fluidStack.getFluid().equals(fluid);
+	}
+
+	@Override
+	protected void setContainerToEmpty() {
+
+		actualContainer.deserializeNBT(emptyContainer.serializeNBT());
+	}
+
+	private void setContainerToFull() {
+
+		actualContainer.deserializeNBT(container.serializeNBT());
+	}
+
+	@Override
+	public int fill(FluidStack resource, boolean doFill) {
+
+		if (container.stackSize != 1 || resource == null || resource.amount <= 0 || !canFillFluidType(resource))
+		{
+			return 0;
+		}
+
+		FluidStack contained = getFluid();
+		if (contained == null)
+		{
+			int fillAmount = Math.min(capacity, resource.amount);
+			if (fillAmount == capacity) {
+				if (doFill) {
+					setContainerToFull();
+				}
+
+				return fillAmount;
+			}
+		}
+
+		return 0;
 	}
 }

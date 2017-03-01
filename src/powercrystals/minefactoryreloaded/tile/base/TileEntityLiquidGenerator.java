@@ -38,13 +38,22 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	@Override
 	protected boolean consumeFuel() {
 
-		FluidStack drained = fluidHandler.drain(_liquidConsumedPerTick, false);
+		FluidStack drained = consumeFuel(_liquidConsumedPerTick, false);
 
 		if (drained == null || drained.amount != _liquidConsumedPerTick)
 			return false;
 
-		fluidHandler.drain(_liquidConsumedPerTick, true);
+		consumeFuel(_liquidConsumedPerTick, true);
 		return true;
+	}
+
+	private FluidStack consumeFuel(int amount, boolean doConsume) {
+
+		for (FluidTankCore tank : getTanks())
+			if (tank.getFluidAmount() > 0)
+				return tank.drain(amount, doConsume);
+
+		return null;
 	}
 
 	@Override

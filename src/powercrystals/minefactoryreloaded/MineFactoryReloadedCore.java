@@ -8,13 +8,16 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
@@ -205,6 +208,14 @@ public class MineFactoryReloadedCore extends BaseMod {
 		Items.WOODEN_DOOR.setMaxStackSize(8);
 		Items.IRON_DOOR.setMaxStackSize(8);
 */
+		//TODO remove once mods actually switch over to fluid caps instead of IFluidContainerItem
+		FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("milk",
+				FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(milkBottleItem), new ItemStack(Items.GLASS_BOTTLE)));
+
+		FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("milk",
+				FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.MILK_BUCKET), new ItemStack(Items.BUCKET)));
+		FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("mushroom_soup",
+				FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.MUSHROOM_STEW), new ItemStack(Items.BOWL)));
 
 		GameRegistry.registerFuelHandler(new MineFactoryReloadedFuelHandler());
 		

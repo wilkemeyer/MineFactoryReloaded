@@ -133,6 +133,12 @@ public class TileEntityTank extends TileEntityFactory implements IDelayedValidat
 	@Override
 	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
+		//TODO this is a hack, it really needs a proper validate in forge or cofh_validate in core
+		if (firstTick) {
+			cofh_validate();
+			firstTick = false;
+		}
+
 		FluidStack fluid = grid.getStorage().drain(1, false); //TODO does this need to be drain instead of simple getFluid??
 		if (fluid != null)
 			tag.setTag("fluid", fluid.writeToNBT(new NBTTagCompound()));
@@ -218,6 +224,12 @@ public class TileEntityTank extends TileEntityFactory implements IDelayedValidat
 			info.add(new TextComponentString("Length: " + grid.getStorage().length + " | Index: " + grid.getStorage().index +
 					" | Reserve: " + grid.getStorage().tanks.length));
 		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	@Override

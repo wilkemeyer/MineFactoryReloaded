@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
+import cofh.lib.util.helpers.FluidHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -81,7 +82,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered {
 					for (RanchedItem s : drops) {
 						if (s.hasFluid()) {
 							// whitelist fluids? multiple tanks?
-							fluidHandler.fill((FluidStack) s.getResult(), true);
+							fillTank((FluidStack) s.getResult());
 							didDrop = true;
 							continue;
 						}
@@ -99,6 +100,15 @@ public class TileEntityRancher extends TileEntityFactoryPowered {
 
 		setIdleTicks(getIdleTicksMax());
 		return false;
+	}
+
+	private int fillTank(FluidStack resource) {
+
+		if (resource != null)
+			for (FluidTankCore tank : getTanks())
+				if (FluidHelper.isFluidEqualOrNull(tank.getFluid(), resource))
+					return tank.fill(resource, true);
+		return 0;
 	}
 
 	@Override

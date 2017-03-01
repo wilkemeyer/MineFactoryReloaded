@@ -103,11 +103,7 @@ public class FluidTankMulti implements IFluidTank, IFluidHandler {
 	@Override
 	public IFluidTankProperties[] getTankProperties() {
 
-		if (this.tankProperties == null)
-		{
-			this.tankProperties = new IFluidTankProperties[] { new FluidTankProperties(getFluid(), getCapacity()) };
-		}
-		return this.tankProperties;
+		return new IFluidTankProperties[] { new FluidTankProperties(getFluid(), getCapacity()) }; //TODO cache and update value
 	}
 
 	@Override

@@ -19,17 +19,22 @@ public class MFRFluids {
 	private MFRFluids() {
 	}
 
+	private static final ItemStack MILK_BOTTLE = new ItemStack(MFRThings.milkBottleItem);
+	private static final ItemStack GLASS_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
+	private static final ItemStack MUSHROOM_STEW = new ItemStack(Items.MUSHROOM_STEW);
+	private static final ItemStack BOWL = new ItemStack(Items.BOWL);
+
 	@SubscribeEvent
 	public void onItemStackConstruct(AttachCapabilitiesEvent.Item evt) {
 
-		Item item = evt.getItemStack().getItem();
+		Item item = evt.getItem();
 		if((item == Items.GLASS_BOTTLE && PotionUtils.getEffectsFromStack(evt.getItemStack()).isEmpty()) || item == MFRThings.milkBottleItem) {
 			evt.addCapability(new ResourceLocation(MineFactoryReloadedCore.modId + ":milk_bottle_cap"),
-					new FluidHandlerItemStackSimpleSingleFluid(new ItemStack(MFRThings.milkBottleItem), new ItemStack(Items.GLASS_BOTTLE),
+					new FluidHandlerItemStackSimpleSingleFluid(evt.getItemStack(), MILK_BOTTLE, GLASS_BOTTLE,
 							FluidRegistry.getFluid("milk"), Fluid.BUCKET_VOLUME));
 		} else if(item == Items.BOWL || item == Items.MUSHROOM_STEW) {
 			evt.addCapability(new ResourceLocation(MineFactoryReloadedCore.modId + ":mushroom_soup_cap"),
-					new FluidHandlerItemStackSimpleSingleFluid(new ItemStack(Items.MUSHROOM_STEW), new ItemStack(Items.BOWL),
+					new FluidHandlerItemStackSimpleSingleFluid(evt.getItemStack(), MUSHROOM_STEW, BOWL,
 							FluidRegistry.getFluid("mushroom_soup"), Fluid.BUCKET_VOLUME));
 		}
 	}

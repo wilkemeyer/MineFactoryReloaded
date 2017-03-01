@@ -81,15 +81,16 @@ public abstract class MFRLiquidMover
 					fluidHandler = containerToDrop.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 				}
 
-				if (fluidHandler.fill(tankLiquid, false) > 0) {
-					int amount = fluidHandler.fill(tankLiquid, true);
+				int amount = fluidHandler.fill(tankLiquid, false);
+				if (amount > 0) {
 					bucketLiquid = new FluidStack(tankLiquid, amount);
 					FluidStack l = itcb.drain(bucketLiquid, false);
 					if (l == null || l.amount < amount)
-						return false;
+						continue;
+					fluidHandler.fill(tankLiquid, true);
 				}
 				else
-					return false;
+					continue;
 
 				if (containerToDrop == null || disposePlayerItem(heldItem, containerToDrop, entityplayer, MFRConfig.dropFilledContainers.getBoolean(true)))
 				{

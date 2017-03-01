@@ -182,12 +182,12 @@ tile.mfr.tank.name = Plastic Tank
 fluid.mfr.milk.still.name = Milk
 fluid.mfr.sludge.still.name = Sludge
 fluid.mfr.sewage.still.name = Sewage
-fluid.mfr.mobessence.still.name = Essence
+fluid.mfr.mob_essence.still.name = Essence
 fluid.mfr.biofuel.still.name = BioFuel
 fluid.mfr.meat.still.name = Meat
-fluid.mfr.pinkslime.still.name = Pink Slime
-fluid.mfr.chocolatemilk.still.name = Chocolate Milk
-fluid.mfr.mushroomsoup.still.name = Mushroom Soup
+fluid.mfr.pink_slime.still.name = Pink Slime
+fluid.mfr.chocolate_milk.still.name = Chocolate Milk
+fluid.mfr.mushroom_soup.still.name = Mushroom Soup
 fluid.mfr.steam.still.name = Steam
 
 entity.MineFactoryReloaded.mfrEntityPinkSlime.name = Pink Slime

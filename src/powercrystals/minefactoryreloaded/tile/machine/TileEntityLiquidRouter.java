@@ -241,7 +241,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 		return super.getCapability(capability, facing);
 	}
 
-	private class LiquidRouterFluidHandler implements IFluidHandler {
+	private class LiquidRouterFluidHandler extends FactoryBucketableFluidHandler {
 
 		private EnumFacing from;
 

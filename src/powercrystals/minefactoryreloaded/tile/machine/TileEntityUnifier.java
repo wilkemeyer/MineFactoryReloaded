@@ -44,7 +44,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory {
 	public static void updateUnifierLiquids() {
 
 		_biofuel = FluidRegistry.getFluidStack("biofuel", 1);
-		_ethanol = FluidRegistry.getFluidStack("bioethanol", 1);
+		_ethanol = FluidRegistry.getFluidStack("bio.ethanol", 1);
 	}
 
 	@Override

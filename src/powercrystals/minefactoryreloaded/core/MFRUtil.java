@@ -115,7 +115,7 @@ public class MFRUtil {
 
 	public static FluidStack getFluidContents(ItemStack stack) {
 
-		if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+		if (stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
 			IFluidTankProperties[] tankProps = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties();
 
 			if (tankProps.length > 0) {
