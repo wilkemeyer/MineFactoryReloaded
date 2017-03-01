@@ -5,7 +5,7 @@
 	},
 	"variants": {
 		"variant": {
-			"regular": {
+			"plain": {
 				"textures": {
 					"all": "minefactoryreloaded:blocks/tile.mfr.plastic"
 				}
