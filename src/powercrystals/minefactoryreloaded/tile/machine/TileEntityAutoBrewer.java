@@ -140,7 +140,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 				}
 				for (int i = 0; i < 3; i++) {
 					int slot = getResourceSlot(row, i);
-					if (ingredient.stackSize <= 0 && !UtilInventory.stacksEqual(_inventory[slot], ingredient)) {
+					if (ingredient.stackSize <= 1 && !UtilInventory.stacksEqual(_inventory[slot], ingredient)) {
 						continue;
 					}
 
@@ -157,7 +157,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 					if (current == newPotion)
 						break;
 
-					if (ingredient.stackSize > 0) {
+					if (ingredient.stackSize > 1) {
 						--ingredient.stackSize;
 						break;
 					}
