@@ -209,7 +209,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			} else {
 				sideMode[side.ordinal()] &= ~3;
 			}
-		} else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
+		} else if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
 			//if (((IFluidHandler)tile).canFill(EnumFacing.VALID_DIRECTIONS[side]))
 			{
 				if (handlerCache == null) handlerCache = new IFluidHandler[6];
@@ -258,11 +258,16 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 	public boolean canInterface(TileEntityPlasticPipe te) {
 
+		//new pipe not connected to anything yet - thus can interface with
+		if (_grid != null && te._grid == null) {
+			return true;
+		}
+
 		if (_grid != null && te._grid != null)
 			if (_grid.storage.getFluid() == te._grid.storage.getFluid())
 				return true;
 			else
-				return FluidHelper.isFluidEqual(_grid.storage.getFluid(), te._grid.storage.getFluid());
+				return FluidHelper.isFluidEqualOrNull(_grid.storage.getFluid(), te._grid.storage.getFluid());
 		return fluidForGrid == te.fluidForGrid || FluidHelper.isFluidEqual(fluidForGrid, te.fluidForGrid);
 	}
 

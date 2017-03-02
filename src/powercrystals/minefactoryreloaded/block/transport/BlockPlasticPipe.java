@@ -80,6 +80,7 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo {
 			l2: if (cable.onPartHit(player, subSide, subHit)) {
 				if (MFRUtil.isHoldingUsableTool(player, pos)) {
 					MFRUtil.usedWrench(player, pos);
+					return true;
 				}
 			}
 			else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_TORCH))) {
