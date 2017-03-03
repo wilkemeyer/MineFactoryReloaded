@@ -321,26 +321,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-
-		switch (pkt.getTileEntityType()) {
-		case 0:
-			super.onDataPacket(net, pkt);
-			break;
-		case 255:
-			handleUpgradePacket(pkt);
-			break;
-		}
-	}
-
-	protected void handleUpgradePacket(SPacketUpdateTileEntity pkt) {
-
-		if (hasHAM()) {
-			getHAM().setUpgradeLevel(pkt.getNbtCompound().getInteger("_upgradeLevel"));
-		}
-	}
-
-	@Override
 	public String getDataType() {
 
 		return _machine.getInternalName() + ".name";

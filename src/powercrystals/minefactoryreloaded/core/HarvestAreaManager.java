@@ -162,13 +162,6 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return _upgradeLevel;
 	}
 
-	public Packet getUpgradePacket()
-	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("_upgradeLevel", _upgradeLevel);
-		return new SPacketUpdateTileEntity(_owner.getPos(), 255, data);
-	}
-
 	public void updateUpgradeLevel(ItemStack stack)
 	{
 		if (stack == null)
