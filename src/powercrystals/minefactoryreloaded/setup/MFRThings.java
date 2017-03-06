@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.setup;
 
 import cofh.api.core.IInitializer;
+import cofh.lib.util.RegistryUtils;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -11,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -345,7 +347,7 @@ public class MFRThings
 					return obj == milkBucket || obj == this;
 				}
 			}.setUnlocalizedName("mfr.bucket.milk").setCreativeTab(CreativeTabs.MISC), "field_151117_aB", "MILK_BUCKET");;
-			//RegistryUtils.overwriteEntry(Item.REGISTRY, new ResourceLocation("minecraft:milk_bucket"), Items.MILK_BUCKET); TODO readd vanilla bucket replacement
+			RegistryUtils.overwriteEntry(Item.REGISTRY, "minecraft:milk_bucket", Items.MILK_BUCKET);
 		}
 
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, MineFactoryReloadedCore.instance(), 160, 5, true);
