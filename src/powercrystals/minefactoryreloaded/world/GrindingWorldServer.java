@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.world;
 
 import java.util.ArrayList;
 
+import cofh.asmhooks.world.WorldServerProxy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -11,8 +12,6 @@ import net.minecraft.world.WorldServer;
 
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityGrinder;
-
-import skyboy.core.world.WorldServerProxy;
 
 public class GrindingWorldServer extends WorldServerProxy
 {

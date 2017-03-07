@@ -16,6 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.*;
 import powercrystals.minefactoryreloaded.block.decor.*;
@@ -332,22 +334,12 @@ public class MFRThings
 		rocketItem = new ItemRocket();
 
 		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true)) {
-			final Item milkBucket = Items.MILK_BUCKET;
-			ReflectionHelper.setFinalValue(Items.class, null, new ItemFactoryBucket(milkLiquid, false) {
-
-				@Override
-				public int hashCode() {
-
-					return milkBucket.hashCode();
-				}
-
-				@Override
-				public boolean equals(Object obj) {
-
-					return obj == milkBucket || obj == this;
-				}
-			}.setUnlocalizedName("mfr.bucket.milk").setCreativeTab(CreativeTabs.MISC), "field_151117_aB", "MILK_BUCKET");;
-			RegistryUtils.overwriteEntry(Item.REGISTRY, "minecraft:milk_bucket", Items.MILK_BUCKET);
+			try {
+				GameRegistry.addSubstitutionAlias("minecraft:milk_bucket", GameRegistry.Type.ITEM, new ItemMFRBucketMilk().setRegistryName("minecraft:milk_bucket"));
+			}
+			catch(ExistingSubstitutionException e) {
+				MineFactoryReloadedCore.log().error("Failed replacing milk bucket. Another mod must have already replaced it");
+			}
 		}
 
 		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, MineFactoryReloadedCore.instance(), 160, 5, true);
