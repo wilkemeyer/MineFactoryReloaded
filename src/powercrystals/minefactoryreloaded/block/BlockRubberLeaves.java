@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.properties.PropertyBool;

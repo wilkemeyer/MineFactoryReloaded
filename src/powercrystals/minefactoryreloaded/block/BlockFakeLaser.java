@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
 import codechicken.lib.model.ModelRegistryHelper;
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.MapColor;

@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;

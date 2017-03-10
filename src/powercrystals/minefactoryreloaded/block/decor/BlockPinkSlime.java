@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

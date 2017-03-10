@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cofh.api.core.IModelRegister;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.server.management.PlayerChunkMap;

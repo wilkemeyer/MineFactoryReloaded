@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.block;
 import java.util.ArrayList;
 import java.util.Random;
 
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;

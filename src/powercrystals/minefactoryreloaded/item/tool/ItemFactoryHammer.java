@@ -73,7 +73,8 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 			if (BlockHelper.canRotate(block)) {
 				player.swingArm(hand);
 				if (player.isSneaking()) {
-					world.setBlockState(pos, BlockHelper.rotateVanillaBlockAlt(world, state, pos), 3);
+					//TODO there used to be an alt rotate in core which rotated in opposite direction - rotateVanillaBlockAlt - get it back
+					world.setBlockState(pos, BlockHelper.rotateVanillaBlock(world, state, pos), 3);
 					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, block.getSoundType(state, world, pos, player).getBreakSound(), SoundCategory.PLAYERS, 1.0F, 0.6F);
 				} else {
 					world.setBlockState(pos, BlockHelper.rotateVanillaBlock(world, state, pos), 3);

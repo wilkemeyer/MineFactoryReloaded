@@ -1,10 +1,5 @@
 package powercrystals.minefactoryreloaded.item.base;
 
-import cofh.lib.render.IFluidOverlayItem;
-import cofh.lib.util.RegistryUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -19,7 +14,8 @@ import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 
-public class ItemFactoryBucket extends ItemBucket implements IFluidOverlayItem {
+//TODO likely just remove unless universal bucket can't do something we need
+public class ItemFactoryBucket extends ItemBucket {
 
 	private boolean _register, _needsOverlay;
 

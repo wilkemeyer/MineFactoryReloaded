@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
-import cofh.api.tileentity.IPortableData;
+import cofh.api.core.IPortableData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;

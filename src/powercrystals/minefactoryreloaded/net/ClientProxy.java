@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cofh.api.core.IModelRegister;
+import cofh.core.render.IModelRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

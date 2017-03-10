@@ -9,7 +9,7 @@ import codechicken.lib.texture.TextureUtils;
 import codechicken.lib.util.TransformUtils;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.uv.IconTransformation;
-import cofh.lib.render.RenderHelper;
+import cofh.lib.util.helpers.RenderHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

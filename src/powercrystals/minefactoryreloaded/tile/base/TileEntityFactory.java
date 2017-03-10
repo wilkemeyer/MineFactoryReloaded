@@ -3,8 +3,8 @@ package powercrystals.minefactoryreloaded.tile.base;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
+import cofh.api.core.IPortableData;
 import cofh.api.tileentity.IInventoryConnection;
-import cofh.api.tileentity.IPortableData;
 import cofh.asm.relauncher.Strippable;
 import com.google.common.base.Strings;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;

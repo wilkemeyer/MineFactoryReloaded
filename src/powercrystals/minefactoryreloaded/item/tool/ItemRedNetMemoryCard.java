@@ -1,6 +1,6 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
-import cofh.api.tileentity.IPortableData;
+import cofh.api.core.IPortableData;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;

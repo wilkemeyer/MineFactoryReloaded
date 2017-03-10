@@ -12,7 +12,7 @@ import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
 import codechicken.lib.vec.uv.IconTransformation;
-import cofh.lib.render.RenderHelper;
+import cofh.lib.util.helpers.RenderHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

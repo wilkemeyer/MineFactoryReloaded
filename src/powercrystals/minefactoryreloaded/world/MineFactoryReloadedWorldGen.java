@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.world;
 
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
-import cofh.api.world.IFeatureGenerator;
+import cofh.lib.world.IFeatureGenerator;
 import com.google.common.primitives.Ints;
 
 import java.util.Arrays;

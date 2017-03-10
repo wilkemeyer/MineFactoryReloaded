@@ -6,7 +6,7 @@ import cofh.api.energy.IEnergyReceiver;
 import cofh.api.item.IAugmentItem;
 import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
-import cofh.lib.util.helpers.AugmentHelper;
+import cofh.core.util.helpers.AugmentHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

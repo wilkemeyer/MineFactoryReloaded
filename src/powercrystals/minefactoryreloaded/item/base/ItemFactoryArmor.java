@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.item.base;
 
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import cofh.core.item.ItemArmorCore;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;

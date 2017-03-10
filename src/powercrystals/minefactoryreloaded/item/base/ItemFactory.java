@@ -1,9 +1,7 @@
 package powercrystals.minefactoryreloaded.item.base;
 
-import cofh.api.core.IInitializer;
-import cofh.api.core.IModelRegister;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
