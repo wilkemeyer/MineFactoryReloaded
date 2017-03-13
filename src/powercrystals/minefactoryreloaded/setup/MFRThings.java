@@ -381,7 +381,7 @@ public class MFRThings
 
 		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true)) {
 			try {
-				GameRegistry.addSubstitutionAlias("minecraft:milk_bucket", GameRegistry.Type.ITEM, new ItemMFRBucketMilk().setRegistryName("minecraft:milk_bucket"));
+				GameRegistry.addSubstitutionAlias("minecraft:milk_bucket", GameRegistry.Type.ITEM, new ItemMFRBucketMilk());
 			}
 			catch(ExistingSubstitutionException e) {
 				MineFactoryReloadedCore.log().error("Failed replacing milk bucket. Another mod must have already replaced it");

@@ -90,6 +90,11 @@ public class MineFactoryReloadedCore extends BaseMod {
 	private static MineFactoryReloadedCore instance;
 	private LinkedList<Vanilla> recipeSets = new LinkedList<Vanilla>();
 	
+	static {
+
+		FluidRegistry.enableUniversalBucket();
+	}
+
 	public static MineFactoryReloadedCore instance() {
 
 		return instance;
@@ -101,8 +106,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 	}
 
 	public static void registerFluids() {
-
-		FluidRegistry.enableUniversalBucket();
 
 		//TODO move this to MFRFluids init
 		milk = registerFluid("milk", 1050, EnumRarity.COMMON);
