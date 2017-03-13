@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.asm;
+package powercrystals.minefactoryreloaded.asm.plugin;
 
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
 
-@IFMLLoadingPlugin.TransformerExclusions({ "powercrystals.minefactoryreloaded.asm." })
+@IFMLLoadingPlugin.TransformerExclusions({ "powercrystals.minefactoryreloaded.asm.plugin" })
 @IFMLLoadingPlugin.SortingIndex(1002)
 @IFMLLoadingPlugin.Name("MFR Loading Plugin")
 public class LoadingPlugin implements IFMLLoadingPlugin {
@@ -14,7 +14,7 @@ public class LoadingPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
 
-		return new String[] { "powercrystals.minefactoryreloaded.asm.MFRClassTransformer" };
+		return new String[] { "powercrystals.minefactoryreloaded.asm.plugin.MFRClassTransformer" };
 	}
 
 	@Override

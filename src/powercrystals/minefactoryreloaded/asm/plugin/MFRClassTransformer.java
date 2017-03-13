@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.asm;
+package powercrystals.minefactoryreloaded.asm.plugin;
 
 import cofh.asm.repack.codechicken.lib.asm.ASMHelper;
 import cofh.asm.repack.codechicken.lib.asm.ModularASMTransformer;
