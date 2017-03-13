@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.asm.hooks;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
@@ -23,10 +22,13 @@ public abstract class WorldServerProxy extends WorldServerShim {
 
 	public WorldServerProxy(WorldServer world) {
 
-		super(world.getMinecraftServer(), world.getSaveHandler(), world.getWorldInfo(), world.provider, world.theProfiler, world.isRemote);
+		super(world.getMinecraftServer(), world.getSaveHandler(), world.getWorldInfo(), world.provider, world.theProfiler,
+				world.isRemote);
 		this.proxiedWorld = world;
-		ReflectionHelper.setPrivateValue(World.class, this, world.getPerWorldStorage(), "perWorldStorage"); // forge-added, no reobf
-		ReflectionHelper.setPrivateValue(World.class, this, world.capturedBlockSnapshots, "capturedBlockSnapshots"); // forge-added, no reobf
+		ReflectionHelper
+				.setPrivateValue(World.class, this, world.getPerWorldStorage(), "perWorldStorage"); // forge-added, no reobf
+		ReflectionHelper.setPrivateValue(World.class, this, world.capturedBlockSnapshots,
+				"capturedBlockSnapshots"); // forge-added, no reobf
 		ReflectionHelper.setPrivateValue(World.class, this, world.loadedEntityList, "field_72996_f", "loadedEntityList");
 		ReflectionHelper.setPrivateValue(World.class, this, world.loadedTileEntityList, "field_147482_g", "loadedTileEntityList");
 		ReflectionHelper.setPrivateValue(World.class, this, world.playerEntities, "field_73010_i", "playerEntities");

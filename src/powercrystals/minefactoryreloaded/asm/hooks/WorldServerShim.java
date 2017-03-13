@@ -13,7 +13,8 @@ import net.minecraft.world.storage.WorldInfo;
  */
 public abstract class WorldServerShim extends WorldServer {
 
-	public WorldServerShim(MinecraftServer server, ISaveHandler saveHandler, WorldInfo info, WorldProvider provider, Profiler profiler, boolean isRemote) {
+	public WorldServerShim(MinecraftServer server, ISaveHandler saveHandler, WorldInfo info, WorldProvider provider,
+			Profiler profiler, boolean isRemote) {
 
 		super(server, saveHandler, info, provider.getDimension(), profiler);
 		throw new IllegalAccessError("WorldServerShim cannot be extended. Extend WorldServerProxy instead.");

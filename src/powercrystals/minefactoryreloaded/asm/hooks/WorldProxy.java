@@ -24,8 +24,10 @@ public abstract class WorldProxy extends World {
 
 		super(world.getSaveHandler(), world.getWorldInfo(), world.provider, world.theProfiler, world.isRemote);
 		this.proxiedWorld = world;
-		ReflectionHelper.setPrivateValue(World.class, this, world.getPerWorldStorage(), "perWorldStorage"); // forge-added, no reobf
-		ReflectionHelper.setPrivateValue(World.class, this, world.capturedBlockSnapshots, "capturedBlockSnapshots"); // forge-added, no reobf
+		ReflectionHelper
+				.setPrivateValue(World.class, this, world.getPerWorldStorage(), "perWorldStorage"); // forge-added, no reobf
+		ReflectionHelper.setPrivateValue(World.class, this, world.capturedBlockSnapshots,
+				"capturedBlockSnapshots"); // forge-added, no reobf
 		ReflectionHelper.setPrivateValue(World.class, this, world.loadedEntityList, "field_72996_f", "loadedEntityList");
 		ReflectionHelper.setPrivateValue(World.class, this, world.loadedTileEntityList, "field_147482_g", "loadedTileEntityList");
 		ReflectionHelper.setPrivateValue(World.class, this, world.playerEntities, "field_73010_i", "playerEntities");
