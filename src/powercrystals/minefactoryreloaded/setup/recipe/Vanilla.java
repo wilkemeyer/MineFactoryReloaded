@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import powercrystals.minefactoryreloaded.block.ItemBlockRedNetLogic;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.setup.recipe.handler.ShapelessMachineTinker;
 
@@ -1269,7 +1269,7 @@ public class Vanilla {
 
 		addRecipe(ShapelessRecipe(stack(fertileSoil), stack(DIRT, 1, 2), stack(fertilizerItem), "listAllmilk"));
 
-		addRecipe(ShapelessRecipe(MFRUtil.getBucketFor(MFRThings.chocolateMilk), "listAllmilk", BUCKET, stack(DYE, 1, 3)));
+		addRecipe(ShapelessRecipe(MFRUtil.getBucketFor(MFRFluids.chocolateMilk), "listAllmilk", BUCKET, stack(DYE, 1, 3)));
 
 		addStorageRecipe(stack(factoryDecorativeBrickBlock, 1, 15), stack(sugarCharcoalItem));
 
@@ -1461,11 +1461,11 @@ public class Vanilla {
 
 		addShapelessRecipe(stack(needlegunAmmoSludgeItem),
 			needlegunAmmoStandardItem, plasticCupItem,
-			MFRUtil.getBucketFor(MFRThings.sludge));
+			MFRUtil.getBucketFor(MFRFluids.sludge));
 
 		addShapelessRecipe(stack(needlegunAmmoSewageItem),
 			needlegunAmmoStandardItem, plasticCupItem,
-				MFRUtil.getBucketFor(MFRThings.sewage));
+				MFRUtil.getBucketFor(MFRFluids.sewage));
 	}
 
 	protected void registerRedNet() {

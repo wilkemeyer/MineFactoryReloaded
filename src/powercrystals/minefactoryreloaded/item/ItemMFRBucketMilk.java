@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemBucketMilk;
@@ -11,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 
 public class ItemMFRBucketMilk extends ItemBucketMilk {
 
@@ -20,7 +19,7 @@ public class ItemMFRBucketMilk extends ItemBucketMilk {
 	public ItemMFRBucketMilk() {
 
 		super();
-		bucketDelegate = new ItemBucket(MFRThings.milkLiquid);
+		bucketDelegate = new ItemBucket(MFRFluids.milkLiquid);
 		setUnlocalizedName("mfr.bucket.milk");
 		setRegistryName(MineFactoryReloadedCore.modId + ":milk_bucket");
 	}

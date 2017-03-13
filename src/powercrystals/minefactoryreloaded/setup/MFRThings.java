@@ -8,84 +8,30 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.block.BlockDetCord;
-import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
-import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
-import powercrystals.minefactoryreloaded.block.BlockFertileSoil;
-import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
-import powercrystals.minefactoryreloaded.block.BlockRedNetPanel;
-import powercrystals.minefactoryreloaded.block.BlockRubberLeaves;
-import powercrystals.minefactoryreloaded.block.BlockRubberSapling;
-import powercrystals.minefactoryreloaded.block.BlockRubberWood;
-import powercrystals.minefactoryreloaded.block.BlockVineScaffold;
-import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeBricks;
-import powercrystals.minefactoryreloaded.block.decor.BlockDecorativeStone;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryDecoration;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlass;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryGlassPane;
-import powercrystals.minefactoryreloaded.block.decor.BlockFactoryPlastic;
-import powercrystals.minefactoryreloaded.block.decor.BlockPinkSlime;
-import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
+import powercrystals.minefactoryreloaded.block.*;
+import powercrystals.minefactoryreloaded.block.decor.*;
 import powercrystals.minefactoryreloaded.block.fluid.BlockTank;
-import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
-import powercrystals.minefactoryreloaded.block.transport.BlockFactoryRoad;
-import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
-import powercrystals.minefactoryreloaded.block.transport.BlockRailCargoDropoff;
-import powercrystals.minefactoryreloaded.block.transport.BlockRailCargoPickup;
-import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerDropoff;
-import powercrystals.minefactoryreloaded.block.transport.BlockRailPassengerPickup;
-import powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable;
+import powercrystals.minefactoryreloaded.block.transport.*;
 import powercrystals.minefactoryreloaded.entity.DebugTracker;
 import powercrystals.minefactoryreloaded.entity.EntityPinkSlime;
-import powercrystals.minefactoryreloaded.item.ItemCeramicDye;
-import powercrystals.minefactoryreloaded.item.ItemFactoryBag;
-import powercrystals.minefactoryreloaded.item.ItemFactoryCup;
-import powercrystals.minefactoryreloaded.item.ItemLogicUpgradeCard;
-import powercrystals.minefactoryreloaded.item.ItemMFRBucketMilk;
-import powercrystals.minefactoryreloaded.item.ItemMilkBottle;
-import powercrystals.minefactoryreloaded.item.ItemPinkSlime;
-import powercrystals.minefactoryreloaded.item.ItemPlasticBoots;
-import powercrystals.minefactoryreloaded.item.ItemPortaSpawner;
-import powercrystals.minefactoryreloaded.item.ItemSafariNet;
-import powercrystals.minefactoryreloaded.item.ItemUpgrade;
-import powercrystals.minefactoryreloaded.item.base.ItemFactory;
-import powercrystals.minefactoryreloaded.item.base.ItemFactoryArmor;
-import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
-import powercrystals.minefactoryreloaded.item.base.ItemFactoryFood;
-import powercrystals.minefactoryreloaded.item.base.ItemMulti;
+import powercrystals.minefactoryreloaded.item.*;
+import powercrystals.minefactoryreloaded.item.base.*;
 import powercrystals.minefactoryreloaded.item.gun.ItemNeedleGun;
 import powercrystals.minefactoryreloaded.item.gun.ItemPotatoCannon;
 import powercrystals.minefactoryreloaded.item.gun.ItemRocketLauncher;
 import powercrystals.minefactoryreloaded.item.gun.ItemSafariNetLauncher;
-import powercrystals.minefactoryreloaded.item.gun.ammo.ItemNeedlegunAmmoAnvil;
-import powercrystals.minefactoryreloaded.item.gun.ammo.ItemNeedlegunAmmoBlock;
-import powercrystals.minefactoryreloaded.item.gun.ammo.ItemNeedlegunAmmoFire;
-import powercrystals.minefactoryreloaded.item.gun.ammo.ItemNeedlegunAmmoStandard;
-import powercrystals.minefactoryreloaded.item.gun.ammo.ItemRocket;
-import powercrystals.minefactoryreloaded.item.syringe.ItemSyringeCure;
-import powercrystals.minefactoryreloaded.item.syringe.ItemSyringeGrowth;
-import powercrystals.minefactoryreloaded.item.syringe.ItemSyringeHealth;
-import powercrystals.minefactoryreloaded.item.syringe.ItemSyringeLiquid;
-import powercrystals.minefactoryreloaded.item.syringe.ItemSyringeSlime;
-import powercrystals.minefactoryreloaded.item.syringe.ItemSyringeZombie;
-import powercrystals.minefactoryreloaded.item.tool.ItemFactoryHammer;
-import powercrystals.minefactoryreloaded.item.tool.ItemFishingRod;
-import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMemoryCard;
-import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
-import powercrystals.minefactoryreloaded.item.tool.ItemRuler;
-import powercrystals.minefactoryreloaded.item.tool.ItemSpyglass;
-import powercrystals.minefactoryreloaded.item.tool.ItemStraw;
-import powercrystals.minefactoryreloaded.item.tool.ItemXpExtractor;
+import powercrystals.minefactoryreloaded.item.gun.ammo.*;
+import powercrystals.minefactoryreloaded.item.syringe.*;
+import powercrystals.minefactoryreloaded.item.tool.*;
 
 import java.util.ArrayList;
 
-public class MFRThings
-{
+public class MFRThings {
+
 	public static TIntObjectMap<Block> machineBlocks = new TIntObjectHashMap<Block>();
 
 	private static ArrayList<IInitializer> initList = new ArrayList<>();
@@ -125,28 +71,6 @@ public class MFRThings
 
 	public static BlockRedNetLogic rednetLogicBlock;
 	public static BlockRedNetPanel rednetPanelBlock;
-
-	public static Fluid milk;
-	public static Fluid sludge;
-	public static Fluid sewage;
-	public static Fluid essence;
-	public static Fluid biofuel;
-	public static Fluid meat;
-	public static Fluid pinkSlime;
-	public static Fluid chocolateMilk;
-	public static Fluid mushroomSoup;
-	public static Fluid steam;
-	
-	public static BlockFactoryFluid milkLiquid;
-	public static BlockFactoryFluid sludgeLiquid;
-	public static BlockFactoryFluid sewageLiquid;
-	public static BlockFactoryFluid essenceLiquid;
-	public static BlockFactoryFluid biofuelLiquid;
-	public static BlockFactoryFluid meatLiquid;
-	public static BlockFactoryFluid pinkSlimeLiquid;
-	public static BlockFactoryFluid chocolateMilkLiquid;
-	public static BlockFactoryFluid mushroomSoupLiquid;
-	public static BlockFactoryFluid steamFluid;
 
 	public static Block plasticTank;
 	public static Item plasticTankItem;
@@ -220,7 +144,6 @@ public class MFRThings
 	public static Item safariNetFancyJailerItem;
 	public static Item potatoLauncherItem;
 
-
 	public static void preInit() {
 
 		MFRThings.machineBlocks.put(0, new BlockFactoryMachine(0));
@@ -254,14 +177,18 @@ public class MFRThings
 		plasticTank = new BlockTank();
 
 		factoryHammerItem = new ItemFactoryHammer();
-		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.HEAD).setModelLocation("armor", "type=helm");
+		plasticHelmetItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.HEAD)
+				.setModelLocation("armor", "type=helm");
 		plasticHelmetItem.setRegistryName(MineFactoryReloadedCore.modId, "plastic_helm");
-		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.CHEST).setModelLocation("armor", "type=chest");
+		plasticChestplateItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.CHEST)
+				.setModelLocation("armor", "type=chest");
 		plasticChestplateItem.setRegistryName(MineFactoryReloadedCore.modId, "plastic_chest");
-		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.LEGS).setModelLocation("armor", "type=legs");
+		plasticLeggingsItem = new ItemFactoryArmor(ItemFactoryArmor.PLASTIC_ARMOR, EntityEquipmentSlot.LEGS)
+				.setModelLocation("armor", "type=legs");
 		plasticLeggingsItem.setRegistryName(MineFactoryReloadedCore.modId, "plastic_legs");
 		plasticBootsItem = new ItemPlasticBoots();
-		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, EntityEquipmentSlot.HEAD).setModelLocation("armor", "type=glass_helm");
+		plasticGlasses = new ItemFactoryArmor(ItemFactoryArmor.GLASS_ARMOR, EntityEquipmentSlot.HEAD)
+				.setModelLocation("armor", "type=glass_helm");
 		plasticGlasses.setRegistryName(MineFactoryReloadedCore.modId, "glass_helm");
 		{
 			int i = MFRConfig.armorStacks.getBoolean(false) ? 4 : 1;
@@ -277,9 +204,11 @@ public class MFRThings
 		rubberBarItem = (new ItemFactory()).setModelLocation("material", "type=rubber_bar").setUnlocalizedName("mfr.rubber.bar")
 				.setRegistryName(MineFactoryReloadedCore.modId, "rubber_bar");
 
-		rawPlasticItem = (new ItemFactory()).setModelLocation("material", "type=plastic_raw").setUnlocalizedName("mfr.plastic.raw")
+		rawPlasticItem = (new ItemFactory()).setModelLocation("material", "type=plastic_raw")
+				.setUnlocalizedName("mfr.plastic.raw")
 				.setRegistryName(MineFactoryReloadedCore.modId, "plastic_raw");
-		plasticSheetItem = (new ItemFactory()).setModelLocation("material", "type=plastic_sheet").setUnlocalizedName("mfr.plastic.sheet").setMaxStackSize(96)
+		plasticSheetItem = (new ItemFactory()).setModelLocation("material", "type=plastic_sheet")
+				.setUnlocalizedName("mfr.plastic.sheet").setMaxStackSize(96)
 				.setRegistryName(MineFactoryReloadedCore.modId, "plastic_sheet");
 
 		upgradeItem = new ItemUpgrade();
@@ -291,19 +220,24 @@ public class MFRThings
 		float meatNuggetSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.1F : 0.2F;
 		float meatIngotSaturation = MFRConfig.meatSaturation.getBoolean(false) ? 0.2F : 0.8F;
 		meatIngotRawItem = (new ItemFactoryFood(4, meatIngotSaturation))
-				.setModelLocation("food", "variant=meat_ingot_raw").setUnlocalizedName("mfr.meat.ingot.raw").setRegistryName(MineFactoryReloadedCore.modId, "meat_ingot_raw");
+				.setModelLocation("food", "variant=meat_ingot_raw").setUnlocalizedName("mfr.meat.ingot.raw")
+				.setRegistryName(MineFactoryReloadedCore.modId, "meat_ingot_raw");
 		meatIngotCookedItem = (new ItemFactoryFood(10, meatIngotSaturation))
-				.setModelLocation("food", "variant=meat_ingot_cooked").setUnlocalizedName("mfr.meat.ingot.cooked").setRegistryName(MineFactoryReloadedCore.modId, "meat_ingot_cooked");
+				.setModelLocation("food", "variant=meat_ingot_cooked").setUnlocalizedName("mfr.meat.ingot.cooked")
+				.setRegistryName(MineFactoryReloadedCore.modId, "meat_ingot_cooked");
 		meatNuggetRawItem = (new ItemFactoryFood(1, meatNuggetSaturation))
-				.setModelLocation("food", "variant=meat_nugget_raw").setUnlocalizedName("mfr.meat.nugget.raw").setRegistryName(MineFactoryReloadedCore.modId, "meat_nugget_raw");
+				.setModelLocation("food", "variant=meat_nugget_raw").setUnlocalizedName("mfr.meat.nugget.raw")
+				.setRegistryName(MineFactoryReloadedCore.modId, "meat_nugget_raw");
 		meatNuggetCookedItem = (new ItemFactoryFood(4, meatNuggetSaturation))
-				.setModelLocation("food", "variant=meat_nugget_cooked").setUnlocalizedName("mfr.meat.nugget.cooked").setRegistryName(MineFactoryReloadedCore.modId, "meat_nugget_cooked");
+				.setModelLocation("food", "variant=meat_nugget_cooked").setUnlocalizedName("mfr.meat.nugget.cooked")
+				.setRegistryName(MineFactoryReloadedCore.modId, "meat_nugget_cooked");
 		pinkSlimeItem = new ItemPinkSlime();
 
 		if (MFRConfig.enableLiquidSyringe.getBoolean(true))
 			syringeEmptyItem = new ItemSyringeLiquid();
 		else
-			syringeEmptyItem = (new ItemFactory()).setModelLocation("syringe", "variant=empty").setUnlocalizedName("mfr.syringe.empty").setRegistryName(MineFactoryReloadedCore.modId, "syringe_empty");
+			syringeEmptyItem = (new ItemFactory()).setModelLocation("syringe", "variant=empty")
+					.setUnlocalizedName("mfr.syringe.empty").setRegistryName(MineFactoryReloadedCore.modId, "syringe_empty");
 		syringeHealthItem = new ItemSyringeHealth();
 		syringeGrowthItem = new ItemSyringeGrowth();
 		syringeZombieItem = new ItemSyringeZombie();
@@ -311,13 +245,17 @@ public class MFRThings
 		syringeCureItem = new ItemSyringeCure();
 
 		safariNetLauncherItem = new ItemSafariNetLauncher();
-		safariNetItem = (new ItemSafariNet(0, true)).setModelLocation("safari_net", "reusable").setUnlocalizedName("mfr.safarinet.reusable")
+		safariNetItem = (new ItemSafariNet(0, true)).setModelLocation("safari_net", "reusable")
+				.setUnlocalizedName("mfr.safarinet.reusable")
 				.setRegistryName(MineFactoryReloadedCore.modId, "safari_net_reusable");
-		safariNetSingleItem = (new ItemSafariNet(0)).setModelLocation("safari_net", "single_use").setUnlocalizedName("mfr.safarinet.singleuse")
+		safariNetSingleItem = (new ItemSafariNet(0)).setModelLocation("safari_net", "single_use")
+				.setUnlocalizedName("mfr.safarinet.singleuse")
 				.setRegistryName(MineFactoryReloadedCore.modId, "safari_net_single_use");
-		safariNetJailerItem = (new ItemSafariNet(1)).setModelLocation("safari_net", "jailer").setUnlocalizedName("mfr.safarinet.jailer")
+		safariNetJailerItem = (new ItemSafariNet(1)).setModelLocation("safari_net", "jailer")
+				.setUnlocalizedName("mfr.safarinet.jailer")
 				.setRegistryName(MineFactoryReloadedCore.modId, "safari_net_jailer");
-		safariNetFancyJailerItem = (new ItemSafariNet(3)).setModelLocation("safari_net", "jailer_fancy").setUnlocalizedName("mfr.safarinet.jailer.fancy")
+		safariNetFancyJailerItem = (new ItemSafariNet(3)).setModelLocation("safari_net", "jailer_fancy")
+				.setUnlocalizedName("mfr.safarinet.jailer.fancy")
 				.setRegistryName(MineFactoryReloadedCore.modId, "safari_net_jailer_fancy");
 
 		portaSpawnerItem = new ItemPortaSpawner();
@@ -336,16 +274,19 @@ public class MFRThings
 		//plasticCellItem = CarbonContainer.cell;
 		plasticBagItem = new ItemFactoryBag();
 
-		sugarCharcoalItem = (new ItemFactory()).setModelLocation("material", "type=sugar_charcoal").setUnlocalizedName("mfr.sugarcharcoal")
+		sugarCharcoalItem = (new ItemFactory()).setModelLocation("material", "type=sugar_charcoal")
+				.setUnlocalizedName("mfr.sugarcharcoal")
 				.setRegistryName(MineFactoryReloadedCore.modId, "sugar_charcoal");
 		fertilizerItem = (new ItemFactory()).setModelLocation("material", "type=fertilizer").setUnlocalizedName("mfr.fertilizer")
 				.setRegistryName(MineFactoryReloadedCore.modId, "fertilizer");
 
 		ceramicDyeItem = new ItemCeramicDye();
-		(laserFocusItem = new ItemFactoryColored()).setModelLocation("laser_focus", "").setUnlocalizedName("mfr.laserfocus").setMaxStackSize(1)
+		(laserFocusItem = new ItemFactoryColored()).setModelLocation("laser_focus", "").setUnlocalizedName("mfr.laserfocus")
+				.setMaxStackSize(1)
 				.setRegistryName(MineFactoryReloadedCore.modId, "laser_focus");
 
-		blankRecordItem = (new ItemFactory()).setModelLocation("material", "type=blank_record").setUnlocalizedName("mfr.record.blank").setMaxStackSize(1)
+		blankRecordItem = (new ItemFactory()).setModelLocation("material", "type=blank_record")
+				.setUnlocalizedName("mfr.record.blank").setMaxStackSize(1)
 				.setRegistryName(MineFactoryReloadedCore.modId, "blank_record");
 		spyglassItem = new ItemSpyglass();
 		rulerItem = new ItemRuler();
@@ -354,7 +295,8 @@ public class MFRThings
 		potatoLauncherItem = new ItemPotatoCannon();
 
 		needlegunItem = new ItemNeedleGun();
-		needlegunAmmoEmptyItem = (new ItemFactory()).setModelLocation("needle_gun_ammo", "variant=empty").setUnlocalizedName("mfr.needlegun.ammo.empty")
+		needlegunAmmoEmptyItem = (new ItemFactory()).setModelLocation("needle_gun_ammo", "variant=empty")
+				.setUnlocalizedName("mfr.needlegun.ammo.empty")
 				.setRegistryName(MineFactoryReloadedCore.modId, "needle_gun_ammo_empty");
 		needlegunAmmoStandardItem = (new ItemNeedlegunAmmoStandard())
 				.setModelLocation("needle_gun_ammo", "variant=standard").setUnlocalizedName("mfr.needlegun.ammo.standard")
@@ -365,10 +307,10 @@ public class MFRThings
 		needlegunAmmoLavaItem = (new ItemNeedlegunAmmoBlock(Blocks.FLOWING_LAVA.getDefaultState(), 3))
 				.setModelLocation("needle_gun_ammo", "variant=lava").setUnlocalizedName("mfr.needlegun.ammo.lava")
 				.setRegistryName(MineFactoryReloadedCore.modId, "needle_gun_ammo_lava");
-		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(sludgeLiquid.getDefaultState(), 6))
+		needlegunAmmoSludgeItem = (new ItemNeedlegunAmmoBlock(MFRFluids.sludgeLiquid.getDefaultState(), 6))
 				.setModelLocation("needle_gun_ammo", "variant=sludge").setUnlocalizedName("mfr.needlegun.ammo.sludge")
 				.setRegistryName(MineFactoryReloadedCore.modId, "needle_gun_ammo_sludge");
-		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(sewageLiquid.getDefaultState(), 6))
+		needlegunAmmoSewageItem = (new ItemNeedlegunAmmoBlock(MFRFluids.sewageLiquid.getDefaultState(), 6))
 				.setModelLocation("needle_gun_ammo", "variant=sewage").setUnlocalizedName("mfr.needlegun.ammo.sewage")
 				.setRegistryName(MineFactoryReloadedCore.modId, "needle_gun_ammo_sewage");
 		needlegunAmmoFireItem = (new ItemNeedlegunAmmoFire()).setUnlocalizedName("mfr.needlegun.ammo.fire")
@@ -379,21 +321,15 @@ public class MFRThings
 		rocketLauncherItem = new ItemRocketLauncher();
 		rocketItem = new ItemRocket();
 
-		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true)) {
-			try {
-				GameRegistry.addSubstitutionAlias("minecraft:milk_bucket", GameRegistry.Type.ITEM, new ItemMFRBucketMilk());
-			}
-			catch(ExistingSubstitutionException e) {
-				MineFactoryReloadedCore.log().error("Failed replacing milk bucket. Another mod must have already replaced it");
-			}
-		}
-
-		EntityRegistry.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, MineFactoryReloadedCore.instance(), 160, 5, true);
+		EntityRegistry
+				.registerModEntity(EntityPinkSlime.class, "mfrEntityPinkSlime", 1, MineFactoryReloadedCore.instance(), 160, 5,
+						true);
 		LootTableList.register(EntityPinkSlime.PINK_SLIME);
 
-		EntityRegistry.registerModEntity(DebugTracker.class, "DebugTracker", 99, MineFactoryReloadedCore.instance(), 250, 10, true);
+		EntityRegistry
+				.registerModEntity(DebugTracker.class, "DebugTracker", 99, MineFactoryReloadedCore.instance(), 250, 10, true);
 
-		for(IInitializer init : initList) {
+		for (IInitializer init : initList) {
 			init.preInit();
 		}
 
@@ -410,14 +346,14 @@ public class MFRThings
 
 	public static void initialize() {
 
-		for(IInitializer init : initList) {
+		for (IInitializer init : initList) {
 			init.initialize();
 		}
 	}
 
 	public static void postInit() {
 
-		for(IInitializer init : initList) {
+		for (IInitializer init : initList) {
 			init.postInit();
 		}
 	}

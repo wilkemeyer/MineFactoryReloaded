@@ -44,7 +44,7 @@ public class MineFactoryReloadedFuelHandler implements IFuelHandler
 		{
 			return 90;
 		}
-		else if (item instanceof UniversalBucket && ItemStack.areItemStacksEqual(MFRUtil.getBucketFor(MFRThings.biofuel), fuel))
+		else if (item instanceof UniversalBucket && ItemStack.areItemStacksEqual(MFRUtil.getBucketFor(MFRFluids.biofuel), fuel))
 		{
 			return 22500;
 		}

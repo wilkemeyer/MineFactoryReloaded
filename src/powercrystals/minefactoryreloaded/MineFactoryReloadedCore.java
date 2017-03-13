@@ -105,78 +105,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 		return instance.getLogger();
 	}
 
-	public static void registerFluids() {
-
-		//TODO move this to MFRFluids init
-		milk = registerFluid("milk", 1050, EnumRarity.COMMON);
-		sludge = registerFluid("sludge", 1700, EnumRarity.COMMON);
-		sewage = registerFluid("sewage", 1200, EnumRarity.COMMON);
-		essence = registerFluid("mob_essence", 400, 9, 310, EnumRarity.EPIC);
-		biofuel = registerFluid("biofuel", 800, EnumRarity.UNCOMMON);
-		meat = registerFluid("meat", 2000, EnumRarity.COMMON);
-		pinkSlime = registerFluid("pink_slime", 3000, EnumRarity.RARE);
-		chocolateMilk = registerFluid("chocolate_milk", 1100, EnumRarity.COMMON);
-		mushroomSoup = registerFluid("mushroom_soup", 1500, EnumRarity.COMMON);
-		steam = registerFluid("steam", -100, 0, 673, EnumRarity.COMMON);
-
-		FluidRegistry.addBucketForFluid(milk);
-		FluidRegistry.addBucketForFluid(sludge);
-		FluidRegistry.addBucketForFluid(sewage);
-		FluidRegistry.addBucketForFluid(essence);
-		FluidRegistry.addBucketForFluid(biofuel);
-		FluidRegistry.addBucketForFluid(meat);
-		FluidRegistry.addBucketForFluid(pinkSlime);
-		FluidRegistry.addBucketForFluid(chocolateMilk);
-		FluidRegistry.addBucketForFluid(mushroomSoup);
-
-		milkLiquid = new BlockFactoryFluid("milk");
-		sludgeLiquid = new BlockFactoryFluid("sludge");
-		sewageLiquid = new BlockFactoryFluid("sewage");
-		essenceLiquid = new BlockFactoryFluid("mob_essence");
-		biofuelLiquid = new BlockExplodingFluid("biofuel");
-		meatLiquid = new BlockFactoryFluid("meat");
-		pinkSlimeLiquid = new BlockPinkSlimeFluid("pink_slime");
-		chocolateMilkLiquid = new BlockFactoryFluid("chocolate_milk");
-		mushroomSoupLiquid = new BlockFactoryFluid("mushroom_soup");
-		steamFluid = new BlockFactoryFluid("steam", BlockFactoryFluid.material);
-
-		registerBlock(milkLiquid, new ItemBlock(milkLiquid));
-		registerBlock(sludgeLiquid, new ItemBlock(sludgeLiquid));
-		registerBlock(sewageLiquid, new ItemBlock(sewageLiquid));
-		registerBlock(essenceLiquid, new ItemBlock(essenceLiquid));
-		registerBlock(biofuelLiquid, new ItemBlock(biofuelLiquid));
-		registerBlock(meatLiquid, new ItemBlock(meatLiquid));
-		registerBlock(pinkSlimeLiquid, new ItemBlock(pinkSlimeLiquid));
-		registerBlock(chocolateMilkLiquid, new ItemBlock(chocolateMilkLiquid));
-		registerBlock(mushroomSoupLiquid, new ItemBlock(mushroomSoupLiquid));
-		registerBlock(steamFluid, new ItemBlock(steamFluid));
-
-	}
-
-	public static Fluid registerFluid(String name, int density, EnumRarity rarity) {
-
-		return registerFluid(name, density, -1, -1, rarity);
-	}
-
-	public static Fluid registerFluid(String name, int density, int lightValue, int temp, EnumRarity rarity) {
-
-		name = name.toLowerCase(Locale.ENGLISH);
-		Fluid fluid = new Fluid(name, new ResourceLocation("minefactoryreloaded:blocks/fluid/fluid.mfr." + name + ".still"), new ResourceLocation("minefactoryreloaded:blocks/fluid/fluid.mfr." + name + ".flowing"));
-		if (!FluidRegistry.registerFluid(fluid))
-			fluid = FluidRegistry.getFluid(name);
-		if (density != 0) {
-			fluid.setDensity(density);
-			fluid.setViscosity(Math.abs(density)); // works for my purposes
-		}
-		if (lightValue >= 0)
-			fluid.setLuminosity(lightValue);
-		if (temp >= 0)
-			fluid.setTemperature(temp);
-		fluid.setUnlocalizedName("mfr." + name + ".still.name");
-		fluid.setRarity(rarity);
-		return fluid;
-	}
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt) throws IOException {
 
@@ -186,8 +114,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 		MFRConfig.loadClientConfig(getClientConfig());
 		MFRConfig.loadCommonConfig(getCommonConfig());
 
-		registerFluids();
-
+		MFRFluids.preInit();
 		MFRThings.preInit();
 
 		if (MFRConfig.vanillaRecipes.getBoolean(true))
@@ -205,7 +132,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		loadLang();
 
-		Blocks.FIRE.setFireInfo(biofuelLiquid, 300, 30);
+		Blocks.FIRE.setFireInfo(MFRFluids.biofuelLiquid, 300, 30);
 
 /* TODO stack sizes for door have changed in 1.8, figure out what this is for and if it needs to be readded
 		Items.WOODEN_DOOR.setMaxStackSize(8);

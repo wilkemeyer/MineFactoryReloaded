@@ -22,7 +22,7 @@ import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
-import powercrystals.minefactoryreloaded.setup.MFRThings;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -123,7 +123,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered
 		int s = Minecraft.getMinecraft().gameSettings.particleSetting;
 		if (s < 2 && isActive())
 		{
-			int color = MFRThings.sludgeLiquid.color;
+			int color = MFRFluids.sludgeLiquid.color;
 			for (int a = 8 >> s, i = 4 >> s;
 					i --> 0; )
 				worldObj.spawnParticle(_rand.nextInt(a) == 0 ? EnumParticleTypes.SPELL_MOB : EnumParticleTypes.SPELL_MOB_AMBIENT,

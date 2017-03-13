@@ -51,6 +51,7 @@ import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 import java.util.HashMap;
@@ -85,16 +86,24 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	public static void preInit() {
 		
 		//fluids
-		ModelHelper.registerModel(MFRThings.milkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "milk"));
-		ModelHelper.registerModel(MFRThings.sludgeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sludge"));
-		ModelHelper.registerModel(MFRThings.sewageLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sewage"));
-		ModelHelper.registerModel(MFRThings.essenceLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mob_essence"));
-		ModelHelper.registerModel(MFRThings.biofuelLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "biofuel"));
-		ModelHelper.registerModel(MFRThings.meatLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "meat"));
-		ModelHelper.registerModel(MFRThings.pinkSlimeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "pink_slime"));
-		ModelHelper.registerModel(MFRThings.chocolateMilkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "chocolate_milk"));
-		ModelHelper.registerModel(MFRThings.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
-		ModelHelper.registerModel(MFRThings.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
+		ModelHelper.registerModel(MFRFluids.milkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "milk"));
+		ModelHelper.registerModel(
+				MFRFluids.sludgeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sludge"));
+		ModelHelper.registerModel(
+				MFRFluids.sewageLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "sewage"));
+		ModelHelper.registerModel(
+				MFRFluids.essenceLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mob_essence"));
+		ModelHelper.registerModel(
+				MFRFluids.biofuelLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "biofuel"));
+		ModelHelper.registerModel(MFRFluids.meatLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "meat"));
+		ModelHelper.registerModel(
+				MFRFluids.pinkSlimeLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "pink_slime"));
+		ModelHelper.registerModel(
+				MFRFluids.chocolateMilkLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "chocolate_milk"));
+		ModelHelper.registerModel(
+				MFRFluids.mushroomSoupLiquid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "mushroom_soup"));
+		ModelHelper.registerModel(
+				MFRFluids.steamFluid, new ModelResourceLocation(MineFactoryReloadedCore.modId + ":fluid", "steam"));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityPinkSlime.class,
 				manager -> new EntityPinkSlimeRenderer(manager, new ModelSlime(16), 0.25F));
@@ -121,16 +130,16 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 	@SubscribeEvent
 	public void onPreTextureStitch(TextureStitchEvent.Pre evt) {
 
-		registerFluidSprites(evt.getMap(), milkLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), sludgeLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), sewageLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), essenceLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), biofuelLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), meatLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), pinkSlimeLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), chocolateMilkLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), mushroomSoupLiquid.getFluid());
-		registerFluidSprites(evt.getMap(), steamFluid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.milkLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.sludgeLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.sewageLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.essenceLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.biofuelLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.meatLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.pinkSlimeLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.chocolateMilkLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.mushroomSoupLiquid.getFluid());
+		registerFluidSprites(evt.getMap(), MFRFluids.steamFluid.getFluid());
 
 		evt.getMap().registerSprite(BlockTankRenderer.BOTTOM_TEXTURE_LOCATION);
 

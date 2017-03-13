@@ -1,7 +1,5 @@
 package powercrystals.minefactoryreloaded.world;
 
-import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
-
 import cofh.lib.world.IFeatureGenerator;
 import com.google.common.primitives.Ints;
 
@@ -16,6 +14,7 @@ import net.minecraft.world.biome.Biome;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 
 public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 {
@@ -100,7 +99,7 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				int lakeX = x - 8 + random.nextInt(16);
 				int lakeY = random.nextInt(world.getActualHeight());
 				int lakeZ = z - 8 + random.nextInt(16);
-				new WorldGenLakesMeta(sludgeLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
+				new WorldGenLakesMeta(MFRFluids.sludgeLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 			}
 
 			rarity = _sewageLakeRarity;
@@ -114,11 +113,11 @@ public class MineFactoryReloadedWorldGen implements IFeatureGenerator
 				String ln = biomeName.toLowerCase(Locale.US);
 				if (ln.contains("mushroom"))
 				{
-					new WorldGenLakesMeta(mushroomSoupLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
+					new WorldGenLakesMeta(MFRFluids.mushroomSoupLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 				}
 				else
 				{
-					new WorldGenLakesMeta(sewageLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
+					new WorldGenLakesMeta(MFRFluids.sewageLiquid.getDefaultState()).generate(world, random, new BlockPos(lakeX, lakeY, lakeZ));
 				}
 			}
 		}
