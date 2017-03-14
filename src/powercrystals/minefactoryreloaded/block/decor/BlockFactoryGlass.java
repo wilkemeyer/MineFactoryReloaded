@@ -56,13 +56,6 @@ public class BlockFactoryGlass extends BlockGlass implements IRedNetDecorative, 
 			CTM_VALUE[i] = Properties.toUnlisted(PropertyInteger.create("ctm_value_" + i, 0, 255));
 	}
 
-	public static final SpriteSheetManager.SpriteSheet spriteSheet = SpriteSheetManager.getSheet(8, 8, new ResourceLocation(MineFactoryReloadedCore.textureFolder + "blocks/tile.mfr.stainedglass.png"));
-
-	static {
-		for(int i=0; i < 64; i++) 
-			spriteSheet.setupSprite(i);
-	}
-	
 	public BlockFactoryGlass()
 	{
 		super(Material.GLASS, false);

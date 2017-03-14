@@ -385,61 +385,59 @@ public class ItemSafariNet extends ItemFactory implements IColorRegister {
 		ModelLoader.registerItemVariants(this, empty, full);
 	}
 
-	@SideOnly(Side.CLIENT)
-	private static Random colorRand = new Random();
-
-	@SideOnly(Side.CLIENT)
-	private static final IItemColor COLOR_HANDLER = new IItemColor() {
-		@Override
-		public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-
-			if (stack.getItemDamage() == 0 && (stack.getTagCompound() == null)) {
-				return 16777215;
-			}
-			if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide")) {
-				World world = Minecraft.getMinecraft().theWorld;
-				colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * tintIndex);
-				if (tintIndex == 2)
-					return colorRand.nextInt();
-				else if (tintIndex == 1)
-					return colorRand.nextInt();
-				else
-					return 16777215;
-			}
-			EntityList.EntityEggInfo egg = getEgg(stack);
-
-			if (egg == null) {
-				return 16777215;
-			} else if (tintIndex == 2) {
-				return egg.primaryColor;
-			} else if (tintIndex == 1) {
-				return egg.secondaryColor;
-			} else {
-				return 16777215;
-			}
-		}
-
-		private EntityList.EntityEggInfo getEgg(ItemStack safariStack) {
-
-			if (safariStack.getTagCompound() == null) {
-				return null;
-			}
-
-			for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
-				EntityList.EntityEggInfo egg = handler.getEgg(safariStack);
-				if (egg != null) {
-					return egg;
-				}
-			}
-
-			return null;
-		}
-	};
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerColorHandlers() {
 
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR_HANDLER, this);
+		final Random colorRand = new Random();
+		final IItemColor colorHandler = new IItemColor() {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+
+				if (stack.getItemDamage() == 0 && (stack.getTagCompound() == null)) {
+					return 16777215;
+				}
+				if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide")) {
+					World world = Minecraft.getMinecraft().theWorld;
+					colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * tintIndex);
+					if (tintIndex == 2)
+						return colorRand.nextInt();
+					else if (tintIndex == 1)
+						return colorRand.nextInt();
+					else
+						return 16777215;
+				}
+				EntityList.EntityEggInfo egg = getEgg(stack);
+
+				if (egg == null) {
+					return 16777215;
+				} else if (tintIndex == 2) {
+					return egg.primaryColor;
+				} else if (tintIndex == 1) {
+					return egg.secondaryColor;
+				} else {
+					return 16777215;
+				}
+			}
+
+			private EntityList.EntityEggInfo getEgg(ItemStack safariStack) {
+
+				if (safariStack.getTagCompound() == null) {
+					return null;
+				}
+
+				for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
+					EntityList.EntityEggInfo egg = handler.getEgg(safariStack);
+					if (egg != null) {
+						return egg;
+					}
+				}
+
+				return null;
+			}
+		};
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, this);
 	}
 }

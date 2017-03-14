@@ -1,12 +1,15 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -67,6 +70,14 @@ public class ItemFishingRod extends ItemFactoryTool {
 
 		ModelHelper.registerModel(this, "tool", "variant=fishing_rod");
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishingRod.class,
-				manager -> new RenderSnowball<>(manager, this, Minecraft.getMinecraft().getRenderItem()));
+				new IRenderFactory<EntityFishingRod>() {
+
+					@Override
+					@SideOnly(Side.CLIENT)
+					public Render<? super EntityFishingRod> createRenderFor(RenderManager manager) {
+
+						return new RenderSnowball<>(manager, ItemFishingRod.this, Minecraft.getMinecraft().getRenderItem());
+					}
+				});
 	}
 }

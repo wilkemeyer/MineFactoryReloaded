@@ -5,6 +5,8 @@ import cofh.lib.util.helpers.ItemHelper;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -13,6 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -110,6 +113,14 @@ public class ItemSafariNetLauncher extends ItemFactoryGun {
 		ModelHelper.registerModel(this, "safari_net_launcher");
 		ModelHelper.registerModel(this, 1, "safari_net_launcher");
 		RenderingRegistry.registerEntityRenderingHandler(EntitySafariNet.class,
-				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
+				new IRenderFactory<EntitySafariNet>() {
+
+					@Override
+					@SideOnly(Side.CLIENT)
+					public Render<? super EntitySafariNet> createRenderFor(RenderManager manager) {
+
+						return new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem());
+					}
+				});
 	}
 }

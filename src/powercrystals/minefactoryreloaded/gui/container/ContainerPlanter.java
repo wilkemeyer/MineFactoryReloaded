@@ -65,7 +65,7 @@ public class ContainerPlanter extends ContainerUpgradeable
 		addSlotToContainer(new SlotFake(_te, 8, 44, 69));
 
 		//upgrade slot
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79, ItemUpgrade.background));
+		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79));
 
 		//resource slots
 		int xStart = 65;

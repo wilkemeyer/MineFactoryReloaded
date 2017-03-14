@@ -20,7 +20,7 @@ public class ContainerUpgradeable extends ContainerFactoryPowered {
 			super.addSlots();
 		}
 
-		addSlotToContainer(new SlotAcceptUpgrade(_te, _te.getUpgradeSlot(), 152, 79, ItemUpgrade.background) {
+		addSlotToContainer(new SlotAcceptUpgrade(_te, _te.getUpgradeSlot(), 152, 79) {
 
 			@Override
 			public int getSlotStackLimit() {

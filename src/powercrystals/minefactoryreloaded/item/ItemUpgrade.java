@@ -19,7 +19,6 @@ import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemUpgrade extends ItemMulti implements IAugmentItem {
 
-	public static ResourceLocation background;
 	private static int NEGATIVE_START = (Short.MIN_VALUE >>> 1) & Short.MAX_VALUE;
 	
 	public ItemUpgrade() {

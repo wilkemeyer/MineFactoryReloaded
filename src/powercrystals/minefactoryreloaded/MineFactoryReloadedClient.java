@@ -45,6 +45,7 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerAutoJukebox;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFisher;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptLaserFocus;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptReusableSafariNet;
+import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
@@ -150,6 +151,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ContainerAutoBrewer.ingredient = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/netherwart")).getIconName();
 		ContainerAutoBrewer.bottle = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/bottle")).getIconName();
 		ContainerFisher.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/fishingrod")).getIconName();
+		SlotAcceptUpgrade.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/upgrade"));
 	}
 
 	@SubscribeEvent

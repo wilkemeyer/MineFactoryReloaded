@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded.item.gun;
 import codechicken.lib.model.ModelRegistryHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -13,10 +15,10 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -151,6 +153,14 @@ public class ItemPotatoCannon extends ItemFactoryGun {
 		ModelHelper.registerModel(this, "potato_launcher");
 		ModelRegistryHelper.register(new ModelResourceLocation(MineFactoryReloadedCore.modId + ":potato_launcher", "inventory"), new PotatoLauncherItemRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlyingItem.class,
-				manager -> new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem()));
+				new IRenderFactory<EntityFlyingItem>() {
+
+					@Override
+					@SideOnly(Side.CLIENT)
+					public Render<? super EntityFlyingItem> createRenderFor(RenderManager manager) {
+
+						return new RenderSafarinet(manager, Minecraft.getMinecraft().getRenderItem());
+					}
+				});
 	}
 }

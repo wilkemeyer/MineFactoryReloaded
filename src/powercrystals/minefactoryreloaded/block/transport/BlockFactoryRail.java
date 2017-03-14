@@ -127,7 +127,8 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer, IMo
 		
 	}
 
-	protected static void registerRailModel(Block railBlock, final String typeVariant) {
+	@SideOnly(Side.CLIENT)
+	static void registerRailModel(Block railBlock, final String typeVariant) {
 		
 		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
 			@Override
