@@ -55,16 +55,16 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 
 		if (getItemStackLimit(stack) == 1) {
 			if (stack.getTagCompound().hasKey("loot")) {
-				infoList.add(MFRUtil.localize("info.cofh.loot", true));
+				infoList.add(MFRUtil.localize("info.mfr.loot", true));
 			} else if (stack.getTagCompound().hasKey("inventory")) {
-				infoList.add(MFRUtil.localize("info.cofh.legacy", true));
+				infoList.add(MFRUtil.localize("info.mfr.legacy", true));
 			} else if (!StringHelper.displayShiftForDetail || MFRUtil.isShiftKeyDown()) {
 				ItemHelper.addInventoryInformation(stack, infoList);
 			} else {
 				infoList.add(MFRUtil.shiftForInfo());
 			}
 		} else {
-			infoList.add(MFRUtil.localize("info.cofh.folded", true));
+			infoList.add(MFRUtil.localize("info.mfr.folded", true));
 		}
 	}
 

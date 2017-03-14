@@ -85,22 +85,22 @@ public class MFRUtil {
 
 	public static String idle() {
 
-		return localize("info.cofh.idle", true);
+		return localize("info.mfr.idle", true);
 	}
 
 	public static String work() {
 
-		return localize("info.cofh.work", true);
+		return localize("info.mfr.work", true);
 	}
 
 	public static String buffer() {
 
-		return localize("info.cofh.buffer", true);
+		return localize("info.mfr.buffer", true);
 	}
 
 	public static String efficiency() {
 
-		return localize("info.cofh.efficiency", true);
+		return localize("info.mfr.efficiency", true);
 	}
 
 	public static String getFluidName(FluidStack fluid) {

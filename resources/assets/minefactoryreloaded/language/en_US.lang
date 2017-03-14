@@ -508,3 +508,14 @@ death.attack.mfr.grinder = %1$s was ground to bits
 death.attack.mfr.grinder.player = %2$s ensured %1$s was ground to bits
 death.attack.mfr.laser = %1$s was disintegrated
 death.attack.mfr.laser.player = %2$s ensured %1$s was disintegrated
+
+info.mfr.work=Work
+info.mfr.idle=Idle
+info.mfr.buffer=Buffer
+info.mfr.efficiency=Efficiency
+info.mfr.template=Template
+info.mfr.output=Output
+info.mfr.preferences=Preferences
+info.mfr.loot=Loot
+info.mfr.legacy=Legacy
+info.mfr.folded=Folded
