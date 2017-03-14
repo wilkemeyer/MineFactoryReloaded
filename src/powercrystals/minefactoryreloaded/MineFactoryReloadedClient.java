@@ -282,45 +282,6 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		GL11.glPopMatrix();
 	}
 
-	@SubscribeEvent
-	public void setArmorModel(SetArmorModel e) {
-
-/* TODO fix armor model
-		ItemStack itemstack = e.getStack();
-
-		if (itemstack != null) {
-			Item item = itemstack.getItem();
-			int par2 = 3 - e.getSlot();
-			//if (item.isValidArmor(itemstack, e.slot, e.entity))
-			if (item == plasticCupItem) {
-				Minecraft.getMinecraft().renderEngine.
-						bindTexture(new ResourceLocation(item.getArmorTexture(itemstack, e.getEntity(), par2, null)));
-				ModelBiped modelbiped = new ModelBiped(1.0F);
-				modelbiped.bipedHead.showModel = par2 == 0;
-				modelbiped.bipedHeadwear.showModel = par2 == 0;
-				modelbiped.bipedBody.showModel = par2 == 1 || par2 == 2;
-				modelbiped.bipedRightArm.showModel = par2 == 1;
-				modelbiped.bipedLeftArm.showModel = par2 == 1;
-				modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
-				modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
-				e.getRenderer().setRenderPassModel(modelbiped);
-				modelbiped.onGround = e.entityLiving.getSwingProgress(e.partialRenderTick);
-				modelbiped.isRiding = e.entity.isRiding();
-				modelbiped.isChild = e.entityLiving.isChild();
-				float f1 = 1.0F;
-				GL11.glColor3f(f1, f1, f1);
-
-				if (itemstack.isItemEnchanted()) {
-					e.result = 15;
-					return;
-				}
-
-				e.result = 1;
-			}
-		}
-*/
-	}
-
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	// first to render, so everything else is overlayed
 	public void renderWorldLast(RenderWorldLastEvent e) {
