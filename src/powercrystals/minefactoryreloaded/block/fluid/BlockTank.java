@@ -54,11 +54,6 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 		@Override public String valueToString(Byte value) {	return value.toString(); }
 	};
 
-
-	/*
-	protected IIcon[] icons = new IIcon[3];
-*/
-
 	public BlockTank() {
 
 		super(0.5f);
@@ -117,8 +112,7 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 	@Override
 	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
-		super.activated(world, pos, player, side, hand, heldItem);
-		return true;
+		return super.activated(world, pos, player, side, hand, heldItem);
 	}
 
 	@Override

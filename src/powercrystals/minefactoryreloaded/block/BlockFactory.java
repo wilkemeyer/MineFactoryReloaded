@@ -160,6 +160,9 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 			{
 				if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
 				{
+					if (world.isRemote)
+						return true;
+
 					if (((ITankContainerBucketable)fluidHandler).allowBucketDrain(heldItem))
 					{
 						if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)fluidHandler, player, heldItem))
