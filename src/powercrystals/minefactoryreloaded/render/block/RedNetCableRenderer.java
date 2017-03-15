@@ -6,7 +6,6 @@ import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCOBJParser;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.buffer.BakingVertexBuffer;
-import codechicken.lib.texture.TextureUtils;
 import codechicken.lib.util.TransformUtils;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Scale;
@@ -23,7 +22,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -55,8 +53,7 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 	protected static CCModel[] caps  = new CCModel[6];
 
 	public static TextureAtlasSprite sprite;
-
-	private static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transformations;
+	private static IconTransformation iconTransform;
 
 	private static boolean brightBand;
 
@@ -97,19 +94,15 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 			calculateSidedModels(caps, p);
 		} catch (Throwable ex) { ex.printStackTrace(); }
 
-		TRSRTransformation thirdPerson = TransformUtils.get(0, 2.5f, 1f, 90, 0, 0, 0.375f);
-		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(0, 0, 0, 30, 135, 0, 0.625f));
-		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 3, 0, 0, 0, 0, 0.25f));
-		builder.put(ItemCameraTransforms.TransformType.FIXED, TransformUtils.get(0, 0, 0, 0, 90, 0, 0.5f));
-		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdPerson);
-		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(3, 1, 0, 60, 0, 0, 0.4f));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(3, 1, 0, 60, 0, 0, 0.4f));
-		transformations = builder.build();
-
 		brightBand = MFRConfig.brightRednetBand.getBoolean(true);
 	}
+
+	public static void setSprite(TextureAtlasSprite textureAtlasSprite) {
+
+		sprite = textureAtlasSprite;
+		iconTransform = new IconTransformation(textureAtlasSprite);
+	}
+
 
 	private RedNetCableRenderer() {
 	}
@@ -128,7 +121,7 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 
 		m.apply(new Translation(0.5, 0.5, 0.5));
 		m.computeNormals();
-		m.computeLighting(LightModel.standardLightModel);
+		//m.computeLighting(LightModel.standardLightModel);
 		m.shrinkUVs(RenderHelper.RENDER_OFFSET);
 	}
 
@@ -144,7 +137,6 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 		CCRenderState ccrs = CCRenderState.instance();
 		ccrs.reset();
 		ccrs.bind(buffer);
-		ccrs.sprite = sprite;
 
 		renderCable(state, ccrs);
 
@@ -157,13 +149,12 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 
 		int brightness = ccrs.brightness;
 		int bandBrightness = brightBand ? 0xd00070 : brightness;
-		IconTransformation texture = new IconTransformation(sprite);
 
-		base.render(ccrs, texture);
+		base.render(ccrs, iconTransform);
 
 		BlockRedNetCable.Variant variant = state.getValue(BlockRedNetCable.VARIANT);
 		if (variant == BlockRedNetCable.Variant.ENERGY || variant == BlockRedNetCable.Variant.ENERGY_GLASS) {
-			cage.render(ccrs, texture);
+			cage.render(ccrs, iconTransform);
 		}
 
 		EnumFacing[] dirs = EnumFacing.VALUES;
@@ -179,32 +170,32 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 				ccrs.brightness = bandBrightness;
 				if (showBand) {
 					band[i].setColour(color);
-					band[i].render(ccrs, texture);
+					band[i].render(ccrs, iconTransform);
 				}
 				if (showPlateFace) {
 					platef[i].setColour(color);
-					platef[i].render(ccrs, texture);
+					platef[i].render(ccrs, iconTransform);
 				}
 				ccrs.brightness = brightness;
 			}
 
 			if (state.getValue(BlockRedNetCable.IFACE[i]))
-				iface[i].render(ccrs, texture);
+				iface[i].render(ccrs, iconTransform);
 
 			if (state.getValue(BlockRedNetCable.GRIP[i]))
-				grip[i].render(ccrs, texture);
+				grip[i].render(ccrs, iconTransform);
 
 			if (state.getValue(BlockRedNetCable.CABLE_CONNECTION[i]))
-				cable[i].render(ccrs, texture);
+				cable[i].render(ccrs, iconTransform);
 
 			if (state.getValue(BlockRedNetCable.PLATE[i]))
-				plate[i].render(ccrs, texture);
+				plate[i].render(ccrs, iconTransform);
 
 			if (state.getValue(BlockRedNetCable.WIRE[i]))
-				wire[i].render(ccrs, texture);
+				wire[i].render(ccrs, iconTransform);
 
 			if (state.getValue(BlockRedNetCable.CAPS[i]))
-				caps[i].render(ccrs, texture);
+				caps[i].render(ccrs, iconTransform);
 		}
 	}
 
@@ -275,16 +266,16 @@ public class RedNetCableRenderer implements ISimpleBlockBakery {
 		ccrs.reset();
 		ccrs.bind(buffer);
 
-		base.render(ccrs);
-		cable[2].render(ccrs);
-		cable[3].render(ccrs);
+		base.render(ccrs, iconTransform);
+		cable[4].render(ccrs, iconTransform);
+		cable[5].render(ccrs, iconTransform);
 		if (stack.getMetadata() == 3 | stack.getMetadata() == 2)
 		{
-			cage.render(ccrs);
-			wire[2].render(ccrs);
-			wire[3].render(ccrs);
-			caps[2].render(ccrs);
-			caps[3].render(ccrs);
+			cage.render(ccrs, iconTransform);
+			wire[4].render(ccrs, iconTransform);
+			wire[5].render(ccrs, iconTransform);
+			caps[4].render(ccrs, iconTransform);
+			caps[5].render(ccrs, iconTransform);
 		}
 
 		buffer.finishDrawing();

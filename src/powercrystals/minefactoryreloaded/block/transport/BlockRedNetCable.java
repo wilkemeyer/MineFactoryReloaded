@@ -24,9 +24,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -34,7 +32,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -209,6 +206,12 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 			builder.add(COLOR[i]);
 		}
 		return builder.build();
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
@@ -535,8 +538,9 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		}
 
 		ModelRegistryHelper.register(RedNetCableRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.redstone") {
-			@Override public TextureAtlasSprite getParticleTexture() {
-				return null; //TODO fix particle texture
+			@Override
+			public TextureAtlasSprite getParticleTexture() {
+				return RedNetCableRenderer.sprite;
 			}
 		});
 		BlockBakery.registerBlockKeyGenerator(this,

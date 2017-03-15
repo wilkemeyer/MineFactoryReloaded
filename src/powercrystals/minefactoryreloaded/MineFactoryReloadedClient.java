@@ -154,7 +154,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ContainerFisher.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/fishingrod")).getIconName();
 		SlotAcceptUpgrade.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/upgrade"));
 
-		RedNetCableRenderer.sprite = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.redstone"));
+		RedNetCableRenderer.setSprite(evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.redstone")));
 	}
 
 	@SubscribeEvent
