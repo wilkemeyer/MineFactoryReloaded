@@ -49,6 +49,7 @@ import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.render.block.BlockTankRenderer;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
+import powercrystals.minefactoryreloaded.render.block.RedNetCableRenderer;
 import powercrystals.minefactoryreloaded.render.entity.EntityPinkSlimeRenderer;
 import powercrystals.minefactoryreloaded.render.model.MFRModelLoader;
 import powercrystals.minefactoryreloaded.render.tileentity.RedNetLogicRenderer;
@@ -152,6 +153,8 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ContainerAutoBrewer.bottle = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/bottle")).getIconName();
 		ContainerFisher.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/fishingrod")).getIconName();
 		SlotAcceptUpgrade.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/upgrade"));
+
+		RedNetCableRenderer.sprite = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.redstone"));
 	}
 
 	@SubscribeEvent

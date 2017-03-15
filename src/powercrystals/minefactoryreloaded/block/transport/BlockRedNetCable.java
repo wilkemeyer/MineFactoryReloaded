@@ -1,15 +1,23 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
 import codechicken.lib.model.ModelRegistryHelper;
+import codechicken.lib.model.blockbakery.BlockBakery;
+import codechicken.lib.model.blockbakery.CCBakeryModel;
+import codechicken.lib.model.blockbakery.IBakeryBlock;
+import codechicken.lib.model.blockbakery.ICustomBlockBakery;
 import codechicken.lib.raytracer.RayTracer;
 import codechicken.lib.vec.Cuboid6;
 import cofh.api.block.IBlockInfo;
 
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -29,6 +37,9 @@ import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,11 +59,35 @@ import powercrystals.minefactoryreloaded.tile.rednet.RedstoneNetwork;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetCable;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetEnergy;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo {
+public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkContainer, IBlockInfo, IRedNetInfo, IBakeryBlock {
 
 	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
+	public static final IUnlistedProperty<Boolean>[] CABLE_CONNECTION = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] IFACE = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] BAND = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] PLATE = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] PLATE_FACE = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] GRIP = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] WIRE = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Boolean>[] CAPS = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<Integer>[] COLOR = new IUnlistedProperty[6];
+
+	static {
+		for (int i=0; i<6; i++) {
+			CABLE_CONNECTION[i] = Properties.toUnlisted(PropertyBool.create("cable_" + i));
+			IFACE[i] = Properties.toUnlisted(PropertyBool.create("iface_" + i));
+			BAND[i] = Properties.toUnlisted(PropertyBool.create("band_" + i));
+			PLATE[i] = Properties.toUnlisted(PropertyBool.create("plate_" + i));
+			PLATE_FACE[i] = Properties.toUnlisted(PropertyBool.create("platef_" + i));
+			GRIP[i] = Properties.toUnlisted(PropertyBool.create("grip_" + i));
+			WIRE[i] = Properties.toUnlisted(PropertyBool.create("wire_" + i));
+			CAPS[i] = Properties.toUnlisted(PropertyBool.create("caps_" + i));
+			COLOR[i] = Properties.toUnlisted(PropertyInteger.create("color_" + i, 0, 16));
+		}
+	}
 
 	public static final String[] NAMES = { null, "glass", "energy", "energyglass" };
 
@@ -158,31 +193,39 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		
-		return new BlockStateContainer(this, VARIANT);
+
+		BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+		builder.add(VARIANT);
+
+		for(int i=0; i < 6; i++) {
+			builder.add(CABLE_CONNECTION[i]);
+			builder.add(IFACE[i]);
+			builder.add(BAND[i]);
+			builder.add(PLATE[i]);
+			builder.add(PLATE_FACE[i]);
+			builder.add(GRIP[i]);
+			builder.add(WIRE[i]);
+			builder.add(CAPS[i]);
+			builder.add(COLOR[i]);
+		}
+		return builder.build();
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		
+
 		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		
+
 		return state.getValue(VARIANT).getMetadata();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
-	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
-		
+
 		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
 	}
 
@@ -196,7 +239,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 			harvesters.set(player);
 			IBlockState state = world.getBlockState(pos);
 			RayTraceResult part = collisionRayTrace(state, world, pos,
-				RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+					RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 			harvesters.set(null);
 			if (part == null)
 				return false;
@@ -235,12 +278,12 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 					if (!world.isRemote) {
 						if (subSide > 6) {
 							EnumFacing dir = EnumFacing.VALUES[subSide - 7];
-							
+
 							TileEntityRedNetCable cable2 = null;
 							if (world.getTileEntity(pos.offset(dir)) instanceof TileEntityRedNetCable) {
 								cable2 = (TileEntityRedNetCable) world.getTileEntity(pos.offset(dir));
 							}
-							
+
 							cable.toggleSide(EnumFacing.VALUES[subSide - 7]);
 							if (cable2 != null) {
 								cable2.toggleSide(EnumFacing.VALUES[1 ^ subSide - 7]);
@@ -289,7 +332,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 						}
 					}
 					MFRUtil.usedWrench(player, pos);
-					return true;					
+					return true;
 				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
 						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());
@@ -337,7 +380,7 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	public boolean canDismantle(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
 
 		RayTraceResult part = collisionRayTrace(state, world, pos,
-			RayTracer.getStartVec(player), RayTracer.getEndVec(player));
+				RayTracer.getStartVec(player), RayTracer.getEndVec(player));
 		if (part == null)
 			return false;
 		int subHit = part.subHit;
@@ -387,10 +430,10 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 
 		switch (state.getValue(VARIANT)) {
 		default:
-			case REDSTONE:
-				return new TileEntityRedNetCable();
-			case ENERGY:
-				return new TileEntityRedNetEnergy();
+		case REDSTONE:
+			return new TileEntityRedNetCable();
+		case ENERGY:
+			return new TileEntityRedNetEnergy();
 		}
 	}
 
@@ -480,16 +523,70 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 
-		ModelResourceLocation rednetCable = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_cable", "inventory");
-		RedNetCableRenderer cableRenderer = new RedNetCableRenderer();
-		Item item = Item.getItemFromBlock(this);
-		ModelLoader.setCustomMeshDefinition(item, stack -> rednetCable);
-		ModelLoader.registerItemVariants(item, rednetCable);
-		ModelRegistryHelper.register(rednetCable, cableRenderer);
-		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(VARIANT).build());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetCable.class, cableRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedNetEnergy.class, cableRenderer);
+		ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+			@Override protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return RedNetCableRenderer.MODEL_LOCATION;
+			}
+		});
 
+		ModelResourceLocation location = new ModelResourceLocation(getRegistryName(), "normal");
+		for (Variant variant : Variant.values()) {
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), variant.getMetadata(), location);
+		}
+
+		ModelRegistryHelper.register(RedNetCableRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.redstone") {
+			@Override public TextureAtlasSprite getParticleTexture() {
+				return null; //TODO fix particle texture
+			}
+		});
+		BlockBakery.registerBlockKeyGenerator(this,
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(VARIANT).getMetadata()
+						+ "," + getBooleanPropertyArrayKey(state, CABLE_CONNECTION)
+						+ "," + getBooleanPropertyArrayKey(state, IFACE)
+						+ "," + getBooleanPropertyArrayKey(state, BAND)
+						+ "," + getBooleanPropertyArrayKey(state, PLATE)
+						+ "," + getBooleanPropertyArrayKey(state, PLATE_FACE)
+						+ "," + getBooleanPropertyArrayKey(state, GRIP)
+						+ "," + getBooleanPropertyArrayKey(state, WIRE)
+						+ "," + getBooleanPropertyArrayKey(state, CAPS)
+						+ "," + getIntegerPropertyArrayKey(state, COLOR)
+		);
+	}
+
+	private String getBooleanPropertyArrayKey(IExtendedBlockState state, IUnlistedProperty<Boolean>[] propertyArray) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for(int i=0; i < propertyArray.length; i++) {
+			sb.append(state.getValue(propertyArray[i]) ? 1 : 0);
+		}
+
+		return sb.toString();
+	}
+
+	private String getIntegerPropertyArrayKey(IExtendedBlockState state, IUnlistedProperty<Integer>[] propertyArray) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for(int i=0; i < propertyArray.length; i++) {
+			if (i > 0)
+				sb.append(",");
+			sb.append(state.getValue(propertyArray[i]));
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		return RedNetCableRenderer.INSTANCE.handleState((IExtendedBlockState) super.getExtendedState(state, world, pos), world.getTileEntity(pos));
+	}
+
+	@Override
+	public ICustomBlockBakery getCustomBakery() {
+
+		return RedNetCableRenderer.INSTANCE;
 	}
 
 	public enum Variant implements IStringSerializable {
@@ -533,3 +630,4 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 		}
 	}
 }
+
