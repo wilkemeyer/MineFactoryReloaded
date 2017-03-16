@@ -19,7 +19,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -154,13 +153,13 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		ContainerFisher.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/fishingrod")).getIconName();
 		SlotAcceptUpgrade.background = evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":items/gui/upgrade"));
 
+		PlasticPipeRenderer.setSprite(evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.plastic")));
 		RedNetCableRenderer.setSprite(evt.getMap().registerSprite(new ResourceLocation(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.cable.redstone")));
 	}
 
 	@SubscribeEvent
 	public void onPostTextureStitch(TextureStitchEvent.Post evt) {
 
-		PlasticPipeRenderer.updateUVT(evt.getMap().getAtlasSprite(PlasticPipeRenderer.textureLocation.toString()));
 		RedNetLogicRenderer.updateUVT(evt.getMap().getAtlasSprite(RedNetLogicRenderer.textureLocation.toString()));
 		BlockTankRenderer.updateSprites(evt.getMap());
 	}
