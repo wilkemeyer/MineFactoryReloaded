@@ -29,7 +29,8 @@ import java.util.Map;
 
 public class PlasticPipeRenderer implements ISimpleBlockBakery {
 
-	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":plastic_pipe", "normal");
+	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(
+			MineFactoryReloadedCore.modId + ":plastic_pipe", "normal");
 	public static final PlasticPipeRenderer INSTANCE = new PlasticPipeRenderer();
 
 	protected static CCModel base;
@@ -128,13 +129,16 @@ public class PlasticPipeRenderer implements ISimpleBlockBakery {
 				break;
 			case INPUT:
 				iface[i].render(ccrs, iconTransform);
-				gripP[i].render(ccrs, iconTransform);
+				gripI[i].render(ccrs, iconTransform);
+				break;
 			case INPUT_POWERED:
 				iface[i].render(ccrs, iconTransform);
-				gripI[i].render(ccrs, iconTransform);
+				gripP[i].render(ccrs, iconTransform);
+				break;
 			case OUTPUT:
 				iface[i].render(ccrs, iconTransform);
 				gripO[i].render(ccrs, iconTransform);
+				break;
 			default:
 			}
 		}

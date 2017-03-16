@@ -9,6 +9,7 @@ import codechicken.lib.raytracer.RayTracer;
 import cofh.api.block.IBlockInfo;
 import cofh.lib.util.helpers.ItemHelper;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -18,6 +19,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
@@ -66,10 +68,27 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 	}
 
 	@Override
+	protected BlockStateContainer createBlockState() {
+
+		BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+
+		for (int i = 0; i < 6; i++) {
+			builder.add(CONNECTION[i]);
+		}
+		return builder.build();
+	}
+
+	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		return PlasticPipeRenderer.INSTANCE
 				.handleState((IExtendedBlockState) super.getExtendedState(state, world, pos), world.getTileEntity(pos));
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
