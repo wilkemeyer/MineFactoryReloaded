@@ -104,6 +104,9 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 	{
 		BlockPos bp = pos.offset(getDirectionFacing());
 
+		if (!worldObj.isBlockLoaded(bp))
+			return null;
+
 		if (!TileEntityLaserDrill.canReplaceBlock(worldObj.getBlockState(bp).getBlock(),
 				worldObj, bp))
 			return null;
