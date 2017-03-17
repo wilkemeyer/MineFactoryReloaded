@@ -15,36 +15,37 @@ import powercrystals.minefactoryreloaded.core.MFRUtil;
 
 import javax.annotation.Nullable;
 
-public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity implements ITickable
-{
+public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity implements ITickable {
+
 	protected String _invName;
 	protected boolean inWorld;
 
-	public void setBlockName(String name)
-	{
-		if (name != null && name.length() == 0)name = null;
+	public void setBlockName(String name) {
+
+		if (name != null && name.length() == 0)
+			name = null;
 		this._invName = name;
 	}
 
-	public String getBlockName()
-	{
+	public String getBlockName() {
+
 		return _invName;
 	}
 
 	@Override
-	public void invalidate()
-	{
+	public void invalidate() {
+
 		super.invalidate();
+		cofh_invalidate();
 	}
 
 	//TODO ASM needed or forge fix
 	public void cofh_invalidate() {
-		
-		invalidate();
+
+		//invalidate();
 		inWorld = false;
 		markChunkDirty();
 	}
-	
 	public void cofh_validate() {
 
 		inWorld = true;
@@ -53,8 +54,8 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	boolean firstTick = true;
 
 	@Override
-	public void update()
-	{
+	public void update() {
+
 		if (firstTick) {
 			cofh_validate();
 			firstTick = false;
@@ -62,59 +63,43 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		markChunkDirty();
 	}
 
-	protected final ITextComponent text(String str)
-	{
+	protected final ITextComponent text(String str) {
+
 		return new TextComponentString(str);
 	}
 
-	public void markChunkDirty()
-	{
+	public void markChunkDirty() {
+
 		worldObj.markChunkDirty(this.pos, this);
 	}
 
-	public void notifyNeighborTileChange()
-	{
-		if (getBlockType() != null)
-		{
+	public void notifyNeighborTileChange() {
+
+		if (getBlockType() != null) {
 			worldObj.updateComparatorOutputLevel(this.pos, this.getBlockType());
 		}
 	}
 
-	public void onNeighborTileChange(BlockPos pos) {}
+	public void onNeighborTileChange(BlockPos pos) {
 
-	public void onNeighborBlockChange() {}
-
-	public void onMatchedNeighborBlockChange() {}
-
-	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {}
-
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
-    @Override
-	@SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
-        return -1D;
-    }
+	public void onNeighborBlockChange() {
 
-    @Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldRenderInPass(int pass)
-    {
-        return pass == 0 && getMaxRenderDistanceSquared() != -1D;
-    }
-*/
+	}
+
+	public void onMatchedNeighborBlockChange() {
+
+	}
+
+	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
+
+	}
 
 	@Nullable
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
-	{
+	public SPacketUpdateTileEntity getUpdatePacket() {
+
 		if (worldObj != null) {
 			return new SPacketUpdateTileEntity(pos, 0, writePacketData(new NBTTagCompound()));
 		}
@@ -122,14 +107,14 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag()
-	{
+	public NBTTagCompound getUpdateTag() {
+
 		return writePacketData(super.getUpdateTag());
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag)
-	{
+	public void handleUpdateTag(NBTTagCompound tag) {
+
 		super.handleUpdateTag(tag);
 		handlePacketData(tag);
 
@@ -137,60 +122,54 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-	{
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+
 		NBTTagCompound data = pkt.getNbtCompound();
-		switch(pkt.getTileEntityType()) {
-			case 0:
-				handlePacketData(data);
-				break;
+		switch (pkt.getTileEntityType()) {
+		case 0:
+			handlePacketData(data);
+			break;
 		}
 
 		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
-	protected NBTTagCompound writePacketData(NBTTagCompound tag)
-	{
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
+
 		return tag;
 	}
 
-	protected void handlePacketData(NBTTagCompound tag)
-	{
+	protected void handlePacketData(NBTTagCompound tag) {
+
 	}
 
-
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		if (tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z"))
-		{
+	public void readFromNBT(NBTTagCompound tag) {
+
+		if (tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z")) {
 			super.readFromNBT(tag);
 		}
 
-		if (tag.hasKey("display"))
-		{
+		if (tag.hasKey("display")) {
 			NBTTagCompound display = tag.getCompoundTag("display");
-			if (display.hasKey("Name"))
-			{
+			if (display.hasKey("Name")) {
 				this.setBlockName(display.getString("Name"));
 			}
 		}
 	}
 
-
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag)
-	{
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+
 		super.writeToNBT(tag);
 		writeItemNBT(tag);
 
 		return tag;
 	}
 
-	public void writeItemNBT(NBTTagCompound tag)
-	{
-		if (_invName != null)
-		{
+	public void writeItemNBT(NBTTagCompound tag) {
+
+		if (_invName != null) {
 			NBTTagCompound display = new NBTTagCompound();
 			display.setString("Name", _invName);
 			tag.setTag("display", display);
@@ -202,18 +181,18 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 
 	@Override
 	public int hashCode() {
-		final int xTransform = (int)((HASH_A * (pos.getX() ^ 0x1AFF2BAD) + HASH_C) & 0xFFFFFFFF);
-		final int zTransform = (int)((HASH_A * (pos.getZ() ^ 0x25C8B353) + HASH_C) & 0xFFFFFFFF);
-		final int yTransform = (int)((HASH_A * (pos.getY() ^ 0x39531FCD) + HASH_C) & 0xFFFFFFFF);
+
+		final int xTransform = (int) ((HASH_A * (pos.getX() ^ 0x1AFF2BAD) + HASH_C) & 0xFFFFFFFF);
+		final int zTransform = (int) ((HASH_A * (pos.getZ() ^ 0x25C8B353) + HASH_C) & 0xFFFFFFFF);
+		final int yTransform = (int) ((HASH_A * (pos.getY() ^ 0x39531FCD) + HASH_C) & 0xFFFFFFFF);
 		return xTransform ^ zTransform ^ yTransform;
 	}
 
 	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof TileEntityBase)
-		{
-			TileEntityBase te = (TileEntityBase)obj;
+	public boolean equals(Object obj) {
+
+		if (obj instanceof TileEntityBase) {
+			TileEntityBase te = (TileEntityBase) obj;
 			return te.getPos().equals(this.getPos()) && worldObj == te.worldObj && te.isInvalid() == isInvalid();
 		}
 		return false;
@@ -221,6 +200,8 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "(x="+pos.getX()+",y="+pos.getY()+",z="+pos.getZ()+")@"+System.identityHashCode(this);
+
+		return getClass().getSimpleName() + "(x=" + pos.getX() + ",y=" + pos.getY() + ",z=" + pos.getZ() + ")@" +
+				System.identityHashCode(this);
 	}
 }
