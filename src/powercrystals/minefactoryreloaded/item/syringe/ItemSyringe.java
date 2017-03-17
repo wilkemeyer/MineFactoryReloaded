@@ -17,12 +17,6 @@ public abstract class ItemSyringe extends ItemFactory implements ISyringe
 	}
 
 	@Override
-	public boolean isFull3D()
-	{
-		return true;
-	}
-
-	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
 	{
 		if (!entity.worldObj.isRemote && canInject(entity.worldObj, entity, stack))

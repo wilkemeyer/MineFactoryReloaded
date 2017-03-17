@@ -149,11 +149,6 @@ public class ItemRedNetMeter extends ItemMulti {
 	}
 
 	@Override
-	public boolean isFull3D() {
-		return true;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 

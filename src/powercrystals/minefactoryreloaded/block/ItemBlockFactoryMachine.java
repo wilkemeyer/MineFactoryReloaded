@@ -32,18 +32,6 @@ public class ItemBlockFactoryMachine extends ItemBlockFactory implements IEnergy
 			names[i] = Machine.getMachineFromIndex(_machineBlockIndex, i).getInternalName();
 		}
 		setNames(names);
-/* TODO figure out a registry for these or named static fields
-		for (int i = 0; i <= highestMeta; i++) {
-			ItemStack item = new ItemStack(this, 1, i);
-			GameRegistry.registerCustomItemStack(item.getUnlocalizedName(), item);
-		}
-*/
-	}
-
-	@Override
-	public boolean isFull3D() {
-
-		return true; // TODO: replace this with a proper renderer so it looks right in 3rd person
 	}
 
 	@Override

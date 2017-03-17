@@ -9,11 +9,6 @@ import net.minecraft.item.ItemStack;
 
 public class ItemFactoryTool extends ItemFactory {
 
-	@Override
-	public boolean isFull3D() {
-		return true;
-	}
-
 	protected int getWeaponDamage(ItemStack stack) {
 		return 0;
 	}
