@@ -1,36 +1,21 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
-import static powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType.None;
-import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
-import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock;
-
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.core.render.hitbox.CustomHitBox;
 import cofh.core.render.hitbox.ICustomHitBox;
+import gnu.trove.set.hash.THashSet;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import gnu.trove.set.hash.THashSet;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.util.StringUtils;
-import net.minecraft.util.EnumFacing;
-
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicPoint;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetConnection;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
@@ -42,6 +27,14 @@ import powercrystals.minefactoryreloaded.item.tool.ItemRedNetMeter;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType.None;
+import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock;
 
 public class TileEntityRedNetCable extends TileEntityBase implements INode, ITraceable, ICustomHitBox {
 
@@ -77,8 +70,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 					System.out.println("Empty or invalid rednet blacklist entry found. Not adding to rednet blacklist.");
 			}
 			List<Integer> wl = Arrays.asList(23, 25, 27, 28, 29, 33, 46, 50, 55, 64, 69, 70, 71, 72, 75,
-				76, 77, 93, 94, 96, 107, 123, 124, 131, 137, 143, 147, 148, 149, 150, 151, 152, 154,
-				157, 158);
+					76, 77, 93, 94, 96, 107, 123, 124, 131, 137, 143, 147, 148, 149, 150, 151, 152, 154,
+					157, 158);
 			int i = 1 + 175; // as of 1.7.10
 			while (i-- > 0)
 				if (!wl.contains(i))
@@ -101,7 +94,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	@Override
 	public void cofh_validate() {
-		
+
 		super.cofh_validate();
 		if (_network == null) {
 			incorporateTiles();
@@ -136,7 +129,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	private void markForRegen() {
 
 		int c = 0;
-		for (int i = 6; i-- > 0;)
+		for (int i = 6; i-- > 0; )
 			if (_connectionState[i].isAllSubnets)
 				++c;
 		if (c > 1)
@@ -153,12 +146,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 	@Override
 	public void update() {
-		
+
 		if (firstTick) {
 			cofh_validate(); //TODO this is here just for rendering test, remove !!!
 			firstTick = false;
 		}
-		
+
 		//TODO again implement non tickable base this can inherit from
 	}
 
@@ -178,7 +171,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		if (_network == null) {
 			for (EnumFacing dir : EnumFacing.VALUES) {
-				if (readFromNBT && (_cableMode[dir.ordinal()] & 1) == 0) continue;
+				if (readFromNBT && (_cableMode[dir.ordinal()] & 1) == 0)
+					continue;
 				if (worldObj.isBlockLoaded(pos.offset(dir))) {
 					TileEntityRedNetCable pipe = MFRUtil.getTile(worldObj, pos.offset(dir), TileEntityRedNetCable.class);
 					if (pipe != null) {
@@ -208,14 +202,15 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	@Override
 	public void updateInternalTypes(IGridController grid) {
 
-		if (grid != RedstoneNetwork.HANDLER) return;
+		if (grid != RedstoneNetwork.HANDLER)
+			return;
 		boolean lastNode = isRSNode;
 		EnumFacing[] dirs = EnumFacing.VALUES;
 		dirty = false;
 		for (EnumFacing d : dirs)
 			updateNearbyNode(d);
 		isRSNode = false;
-		for (int i = _connectionState.length; i-- > 0;) {
+		for (int i = _connectionState.length; i-- > 0; ) {
 			EnumFacing d = dirs[i];
 			BlockPos offsetPos = pos.offset(d);
 			if (worldObj.isBlockLoaded(offsetPos) && !worldObj.getBlockState(offsetPos).getBlock().equals(rednetCableBlock))
@@ -323,12 +318,12 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	public void addTraceableCuboids(List<IndexedCuboid6> list, boolean forTrace, boolean hasTool, boolean offsetCuboids) {
 
 		Vector3 offset = offsetCuboids ? Vector3.fromBlockPos(pos) : new Vector3(0, 0, 0);
-		
+
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
 
 		EnumFacing[] sides = EnumFacing.VALUES;
-		for (int i = sides.length; i-- > 0;) {
+		for (int i = sides.length; i-- > 0; ) {
 			RedNetConnectionType c = getConnectionState(sides[i], true);
 			int o = 2 + i, k = o;
 			if (c.isConnected) {
@@ -337,7 +332,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				else if (c.isCable)
 					if (c.isAllSubnets) {
 						k = 2 + 6 * 3 + i;
-						list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? k + 18 : 1, subSelection[k]).add(offset)); // cable part
+						list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? k + 18 : 1, subSelection[k])
+								.add(offset)); // cable part
 						continue;
 					}
 				k = 2 + 6 * 3 + i;
@@ -346,7 +342,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 				o = k - 6;
 				if (c.isSingleSubnet) // color band
 					list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset));
-			} else if (forTrace & hasTool & _cableMode[6] != 1 && (c = getConnectionState(sides[i], false)).isConnected) { // cable-only
+			} else if (forTrace & hasTool & _cableMode[6] != 1 &&
+					(c = getConnectionState(sides[i], false)).isConnected) { // cable-only
 				if (c.isAllSubnets & c.isCable) {
 					k += 6 * 3;
 					o += 6 * 6;
@@ -360,7 +357,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	@Override
 	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
 
-		return subHit < 2;
+		return true;
 	}
 
 	@Override
@@ -368,15 +365,27 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		final List<IndexedCuboid6> list = new ArrayList<>(7);
 		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, pos), true);
-		IndexedCuboid6 cube = list.get(0);
+		IndexedCuboid6 cube;
+		if (hit > 1) {
+			for (int i = 1; i < list.size(); i++) {
+				cube = list.get(i);
+				if (((Integer) cube.data) == hit) {
+					cube.expand(0.003);
+					Vector3 min = cube.min, max = cube.max.subtract(min);
+					return new CustomHitBox(max.y, max.z, max.x, min.x, min.y, min.z);
+				}
+			}
+		}
+
+		cube = list.get(0);
 		cube.expand(0.003);
 		Vector3 min = cube.min, max = cube.max.subtract(min);
-		CustomHitBox box = new CustomHitBox(max.x, max.y, max.z, min.x, min.y, min.z);
+		CustomHitBox box = new CustomHitBox(max.y, max.z, max.x, min.x, min.y, min.z);
 		for (int i = 1, e = list.size(); i < e; ++i) {
 			cube = list.get(i);
 			cube.subtract(min);
 			int data = (Integer) cube.data;
-			if (shouldRenderCustomHitBox(data, player)) {
+			if (data < 2) {
 				if (cube.min.y < 0)
 					box.sideLength[0] = Math.max(box.sideLength[0], -cube.min.y);
 				if (cube.min.z < 0)
@@ -390,52 +399,54 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 					box.sideLength[3] = Math.max(box.sideLength[3], cube.max.z);
 				if (cube.max.x > 0)
 					box.sideLength[5] = Math.max(box.sideLength[5], cube.max.x);
-			} else switch (BlockRedNetCable._subSideMappings[data]) {
-			default: // no-op
-				break;
-			case 0:
-			case 7:
-				if (cube.min.y < 0)
-					box.sideLength[0] = Math.min(box.sideLength[0], -cube.max.y);
-				break;
-			case 1:
-			case 8:
-				cube.subtract(max);
-				if (cube.max.y > 0)
-					box.sideLength[1] = Math.min(box.sideLength[1], cube.min.y);
-				break;
-			case 2:
-			case 9:
-				if (cube.min.z < 0)
-					box.sideLength[2] = Math.min(box.sideLength[2], -cube.max.z);
-				break;
-			case 3:
-			case 10:
-				cube.subtract(max);
-				if (cube.max.z > 0)
-					box.sideLength[3] = Math.min(box.sideLength[3], cube.min.z);
-				break;
-			case 4:
-			case 11:
-				if (cube.min.x < 0)
-					box.sideLength[4] = Math.min(box.sideLength[4], -cube.max.x);
-				break;
-			case 5:
-			case 12:
-				cube.subtract(max);
-				if (cube.max.x > 0)
-					box.sideLength[5] = Math.min(box.sideLength[5], cube.min.x);
-				break;
-			}
+			} else
+				switch (BlockRedNetCable._subSideMappings[data]) {
+				default: // no-op
+					break;
+				case 0:
+				case 7:
+					if (cube.min.y < 0)
+						box.sideLength[0] = Math.min(box.sideLength[0], -cube.max.y);
+					break;
+				case 1:
+				case 8:
+					cube.subtract(max);
+					if (cube.max.y > 0)
+						box.sideLength[1] = Math.min(box.sideLength[1], cube.min.y);
+					break;
+				case 2:
+				case 9:
+					if (cube.min.z < 0)
+						box.sideLength[2] = Math.min(box.sideLength[2], -cube.max.z);
+					break;
+				case 3:
+				case 10:
+					cube.subtract(max);
+					if (cube.max.z > 0)
+						box.sideLength[3] = Math.min(box.sideLength[3], cube.min.z);
+					break;
+				case 4:
+				case 11:
+					if (cube.min.x < 0)
+						box.sideLength[4] = Math.min(box.sideLength[4], -cube.max.x);
+					break;
+				case 5:
+				case 12:
+					cube.subtract(max);
+					if (cube.max.x > 0)
+						box.sideLength[5] = Math.min(box.sideLength[5], cube.min.x);
+					break;
+				}
 		}
-		for (int i = box.sideLength.length; i-- > 0;)
+		for (int i = box.sideLength.length; i-- > 0; )
 			box.drawSide[i] = box.sideLength[i] > 0;
 		return box;
 	}
 
 	public boolean canInterface(TileEntityRedNetCable with, EnumFacing dir) {
 
-		if ((_cableMode[dir.ordinal()] & 1) == 0) return false;
+		if ((_cableMode[dir.ordinal()] & 1) == 0)
+			return false;
 		return (with._cableMode[dir.getOpposite().ordinal()] & 1) != 0;
 	}
 
@@ -656,7 +667,8 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		byte _mode = tag.getByte("mode");
 		_cableMode = tag.getByteArray("cableMode");
-		if (_cableMode.length < 6) _cableMode = new byte[] { 0, 0, 0, 0, 0, 0, 0 };
+		if (_cableMode.length < 6)
+			_cableMode = new byte[] { 0, 0, 0, 0, 0, 0, 0 };
 		switch (tag.getByte("v")) {
 		case 0:
 			if (_mode == 2)
@@ -667,7 +679,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		case 2:
 			_cableMode[6] = (byte) (_cableMode[6] == 3 ? 1 : 0);
 		case 3:
-			for (int i = 6; i-- > 0;)
+			for (int i = 6; i-- > 0; )
 				_cableMode[i] = (byte) ((_cableMode[i] << 1) | 1);
 		case 4:
 			_cableMode[6] = (byte) (_cableMode[6] > 0 ? 1 : 0);

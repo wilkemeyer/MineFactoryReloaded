@@ -1,43 +1,34 @@
 package powercrystals.minefactoryreloaded.tile.rednet;
 
-import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
-import static powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered.energyPerEU;
-import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork.TRANSFER_RATE;
-
 import appeng.api.implementations.tiles.ICrankable;
-
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyConnection;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
-import cofh.api.energy.IEnergyTransport;
+import cofh.api.energy.*;
 import cofh.asm.relauncher.Strippable;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
 
-@Strippable({"appeng.api.implementations.tiles.ICrankable"})
+import java.util.Arrays;
+import java.util.List;
+
+import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.tile.rednet.RedstoneEnergyNetwork.TRANSFER_RATE;
+
+@Strippable({ "appeng.api.implementations.tiles.ICrankable" })
 public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
-																	IEnergyTransport, ICrankable//, IEnergyInfo
+																  IEnergyTransport, ICrankable//, IEnergyInfo
 {
 
 	private byte[] sideMode = { 1, 1, 1, 1, 1, 1, 0 };
@@ -67,6 +58,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	@Override
 	public void cofh_validate() {
+
 		super.cofh_validate();
 
 		if (worldObj.isRemote)
@@ -83,10 +75,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	}
 
 	boolean firstTick = true;
-	
+
 	@Override
 	public void update() {
-		
+
 		if (firstTick) {
 			cofh_validate();
 			firstTick = false;
@@ -114,7 +106,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	private void markForRegen() {
 
 		int c = 0;
-		for (int i = 6; i-- > 0;)
+		for (int i = 6; i-- > 0; )
 			if ((sideMode[i]) == 9)
 				++c;
 		if (c > 1)
@@ -136,7 +128,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 		if (_grid == null) {
 			for (EnumFacing dir : EnumFacing.VALUES) {
-				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
+				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0)
+					continue;
 				BlockPos offsetPos = pos.offset(dir);
 				if (worldObj.isBlockLoaded(offsetPos)) {
 					TileEntityRedNetEnergy pipe = MFRUtil.getTile(worldObj, pos.offset(dir), TileEntityRedNetEnergy.class);
@@ -168,7 +161,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	private void addCache(TileEntity tile) {
 
-		if (tile == null) return;
+		if (tile == null)
+			return;
 		Vec3i diff = tile.getPos().subtract(pos);
 		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
 	}
@@ -211,11 +205,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 					}
 				}
 				if (tile instanceof IEnergyReceiver) {
-					if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
+					if (receiverCache == null)
+						receiverCache = new IEnergyReceiver[6];
 					receiverCache[side.ordinal()] = (IEnergyReceiver) tile;
 				}
 				if (tile instanceof IEnergyProvider) {
-					if (providerCache == null) providerCache = new IEnergyProvider[6];
+					if (providerCache == null)
+						providerCache = new IEnergyProvider[6];
 					providerCache[side.ordinal()] = (IEnergyProvider) tile;
 				}
 			}
@@ -282,7 +278,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
-		if (from == null) return 0;
+		if (from == null)
+			return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.receiveEnergy(maxReceive, simulate);
 		return 0;
@@ -297,14 +294,16 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
 
-		if (from == null) return false;
+		if (from == null)
+			return false;
 		return (sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null;
 	}
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
 
-		if (from == null) return 0;
+		if (from == null)
+			return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getEnergyStored();
 		return 0;
@@ -313,7 +312,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
 
-		if (from == null) return 0;
+		if (from == null)
+			return 0;
 		if ((sideMode[from.ordinal() ^ 1] & 1) != 0 & _grid != null)
 			return _grid.storage.getMaxEnergyStored();
 		return 0;
@@ -407,7 +407,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	void extract(EnumFacing side, EnergyStorage storage) {
 
-		if (deadCache) return;
+		if (deadCache)
+			return;
 		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
 			switch (sideMode[bSide] >> 1) {
@@ -445,7 +446,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 
 	int transfer(EnumFacing side, int energy) {
 
-		if (deadCache) return 0;
+		if (deadCache)
+			return 0;
 		int bSide = side.ordinal();
 		if ((sideMode[bSide] & 1) != 0) {
 			switch (sideMode[bSide] >> 1) {
@@ -460,7 +462,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				InterfaceType state = getTransportState(side);
 				if (receiverCache != null && state != InterfaceType.RECEIVE) {
 					IEnergyReceiver handlerTile = receiverCache[bSide];
-					if (handlerTile != null && (state == InterfaceType.SEND || handlerTile.getEnergyStored(side) < _grid.storage.getEnergyStored()))
+					if (handlerTile != null &&
+							(state == InterfaceType.SEND || handlerTile.getEnergyStored(side) < _grid.storage.getEnergyStored()))
 						return handlerTile.receiveEnergy(side, energy, false);
 				}
 				break;
@@ -485,8 +488,10 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	public void updateInternalTypes(IGridController grid) {
 
 		super.updateInternalTypes(grid);
-		if (deadCache) return;
-		if (grid != RedstoneEnergyNetwork.HANDLER) return;
+		if (deadCache)
+			return;
+		if (grid != RedstoneEnergyNetwork.HANDLER)
+			return;
 		isNode = false;
 		for (int i = 0; i < 6; i++) {
 			int mode = sideMode[i] >> 1;
@@ -536,12 +541,13 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		list.add(main);
 
 		EnumFacing[] side = EnumFacing.VALUES;
-		for (int i = side.length; i-- > 0;) {
+		for (int i = side.length; i-- > 0; ) {
 			RedNetConnectionType c = getConnectionState(side[i], true);
-			int mode = sideMode[EnumFacing.VALUES[i].getOpposite().ordinal()];
+			int mode = sideMode[i];
 			boolean iface = mode > 1 & ((mode & 1) == 1 | hasTool);
 			int o = 2 + i, k = o;
-			l: if (c.isConnected) {
+			l:
+			if (c.isConnected) {
 				if (c.isPlate)
 					o += 6;
 				else if (c.isCable)
@@ -549,7 +555,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 						if (!iface | !hasTool) {
 							o = 2 + 6 * 3 + i;
 						}
-						list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? k + 6 * 6 : 1, subSelection[o]).add(offset)); // cable part or connection point
+						list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? k + 6 * 6 : 1, subSelection[o])
+								.add(offset)); // cable part or connection point
 						break l;
 					}
 				k = 2 + 6 * 3 + i;
@@ -562,7 +569,8 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 				if (c.isSingleSubnet) // color band
 					list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset));
 				iface = false;
-			} else if (forTrace & hasTool & _cableMode[6] != 1 && (c = getConnectionState(side[i], false)).isConnected) { // cable-only
+			} else if (forTrace & hasTool & _cableMode[6] != 1 &&
+					(c = getConnectionState(side[i], false)).isConnected) { // cable-only
 				if (c.isAllSubnets & c.isCable) {
 					if (!iface) {
 						k += 6 * 3;
