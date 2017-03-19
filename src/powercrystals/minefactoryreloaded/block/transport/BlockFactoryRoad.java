@@ -81,10 +81,8 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 		try {
 			return (Boolean) TRIGGER_WALKING.invoke(e);
 		}
-		catch(IllegalAccessException ex) {
-			throw new RuntimeException(ex);
-		}
-		catch(InvocationTargetException ex) {
+		catch(IllegalAccessException|InvocationTargetException ex) {
+			MineFactoryReloadedCore.log().error("Error getting canTriggerWalking value", ex);
 			throw new RuntimeException(ex);
 		}
 	}
