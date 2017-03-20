@@ -20,7 +20,6 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 group = 'powercrystals' // Your main package.
-version = "${minecraft_version}-${mod_version}"
 archivesBaseName = 'MineFactoryReloaded'
 
 repositories {
@@ -40,20 +39,23 @@ repositories {
 }
 
 dependencies {
-    compile "codechicken:CodeChickenLib:${minecraft_version}-${ccl_version}:deobf"
-    compile "cofh:CoFHCore:${minecraft_version}-${cofhcore_version}:deobf"
+    compile "codechicken:CodeChickenLib:${mc_version}-${ccl_version}:deobf"
+    compile "cofh:CoFHCore:${mc_version}-${cofhcore_version}:deobf"
     compile "net.industrial-craft:industrialcraft-2:${ic2_version}"
-    compile "net.sengir.forestry:forestry_${minecraft_version}:${forestry_version}"
-    //deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
+    compile "net.sengir.forestry:forestry_${mc_version}:${forestry_version}"
+    //deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+version = "${mod_version}." + (System.getenv("BUILD_NUMBER") ?: "1")
 
 minecraft {
-    version = minecraft_version + "-" + forge_version
+    version = mc_version + "-" + forge_version
     mappings = mcp_mappings
     runDir = "run"
+    replace '${mod_version}', mod_version
+    makeObfSourceJar = false
 }
 
 sourceSets {
@@ -68,20 +70,42 @@ sourceSets {
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "project_version", project.version
-    inputs.property "minecraft_version", minecraft_version
+    inputs.property "version", version
+    inputs.property "mc_version", mc_version
 
-    // Replace stuff in mcmod.info and in .lang files, nothing else.
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
-        // Replace version and mcversion.
-        expand 'project_version': project.version, 'minecraft_version': minecraft_version
+        expand 'version': project.version, 'mc_version': mc_version
     }
-
-    // Copy everything else that wasn't replaced.
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+    rename '(.+_at.cfg)', 'META-INF/$1'
 }
+
+version = "${project.minecraft.version}-${project.version}"
+
+def commonManifest = {
+    attributes 'FMLAT': 'MFR_at.cfg'
+}
+
+jar {
+    classifier = 'universal'
+    manifest commonManifest
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest commonManifest
+}
+
+task srcJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+    manifest commonManifest
+}
+
+// Tell the artifact system about our extra jars
+artifacts {
+    archives deobfJar
+    archives srcJar
+}
+
