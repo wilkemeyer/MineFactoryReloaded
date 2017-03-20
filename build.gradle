@@ -18,6 +18,7 @@ buildscript {
 
 // We apply the 'forge' plugin, so ForgeGradle can do it's stuff.
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
 
 group = 'powercrystals' // Your main package.
 archivesBaseName = 'MineFactoryReloaded'
@@ -109,3 +110,35 @@ artifacts {
     archives srcJar
 }
 
+// Configure an upload task.
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (project.hasProperty("local_maven")) {
+                repository(url: "file://${local_maven}")
+                pom {
+                    groupId = project.group
+                    // Force the maven upload to use the <mcversion>-<version> syntax preferred at files
+                    artifactId = project.archivesBaseName
+                    project {
+                        name project.archivesBaseName
+                        packaging 'jar'
+                        description 'MinefactoryReloaded'
+                        url 'https://github.com/P3pp3rF1y/MinefactoryReloaded'
+
+                        scm {
+                            url 'https://github.com/P3pp3rF1y/MinefactoryReloaded'
+                            connection 'scm:git:git://github.com/P3pp3rF1y/MinefactoryReloaded.git'
+                            developerConnection 'scm:git:git@github.com:P3pp3rF1y/MinefactoryReloaded.git'
+                        }
+
+                        issueManagement {
+                            system 'github'
+                            url 'https://github.com/P3pp3rF1y/MinefactoryReloaded/issues'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
