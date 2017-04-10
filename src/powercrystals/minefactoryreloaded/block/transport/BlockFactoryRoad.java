@@ -57,7 +57,7 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity e) {
 
-		if (!canTriggerWalking(e))
+		if (!e.canTriggerWalking())
 			return;
 		if (e.getEntityData().getInteger("mfr:r") == e.ticksExisted)
 			return;
@@ -72,21 +72,6 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 		}
 	}
 
-	private static final Method TRIGGER_WALKING;
-	static {
-		TRIGGER_WALKING = ReflectionHelper.findMethod(Entity.class, null, new String[]{"func_70041_e_", "canTriggerWalking"});
-	}
-	
-	private boolean canTriggerWalking(Entity e) {
-		try {
-			return (Boolean) TRIGGER_WALKING.invoke(e);
-		}
-		catch(IllegalAccessException|InvocationTargetException ex) {
-			MineFactoryReloadedCore.log().error("Error getting canTriggerWalking value", ex);
-			throw new RuntimeException(ex);
-		}
-	}
-	
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, VARIANT);

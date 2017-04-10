@@ -33,24 +33,8 @@ public class ItemSyringeCure extends ItemSyringe
 	@Override
 	public boolean inject(World world, EntityLivingBase entity, ItemStack syringe)
 	{
-		startConversion((EntityZombie)entity, 300);
+		((EntityZombie)entity).startConversion(300);
 		return true;
-	}
-
-	private static final Method START_CONVERSION;
-	static {
-		START_CONVERSION = ReflectionHelper
-				.findMethod(EntityZombie.class, null, new String[]{"func_82228_a", "startConversion"}, int.class);
-	}
-
-	private void startConversion(EntityZombie e, int ticks) {
-		try {
-			START_CONVERSION.invoke(e, ticks);
-		}
-		catch(IllegalAccessException|InvocationTargetException ex) {
-			MineFactoryReloadedCore.log().error("Error starting zombie conversion", ex);
-			throw new RuntimeException(ex);
-		}
 	}
 
 	@Override

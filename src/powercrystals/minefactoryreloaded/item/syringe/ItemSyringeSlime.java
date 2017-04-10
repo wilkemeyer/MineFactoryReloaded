@@ -33,23 +33,8 @@ public class ItemSyringeSlime extends ItemSyringe
 	public boolean inject(World world, EntityLivingBase entity, ItemStack syringe)
 	{
 		EntitySlime slime = (EntitySlime)entity;
-		setSlimeSize(slime, slime.getSlimeSize() << 1);
+		slime.setSlimeSize(slime.getSlimeSize() << 1);
 		return true;
-	}
-
-	private static final Method SET_SLIME_SIZE;
-	static {
-		SET_SLIME_SIZE = ReflectionHelper.findMethod(EntitySlime.class, null, new String[]{"func_70799_a", "setSlimeSize"}, int.class);
-	}
-
-	private void setSlimeSize(EntitySlime e, int slimeSize) {
-		try {
-			SET_SLIME_SIZE.invoke(e, slimeSize);
-		}
-		catch(IllegalAccessException|InvocationTargetException ex) {
-			MineFactoryReloadedCore.log().error("Error setting slime size", ex);
-			throw new RuntimeException(ex);
-		}
 	}
 
 	@Override

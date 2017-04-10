@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.world;
 
 import java.util.List;
 
+import cofh.asm.hooks.world.WorldProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -11,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import powercrystals.minefactoryreloaded.asm.hooks.WorldProxy;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 import javax.annotation.Nullable;
