@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.world;
 
 import java.util.List;
 
-import cofh.asm.hooks.world.WorldProxy;
+import cofh.asmhooks.world.WorldProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
