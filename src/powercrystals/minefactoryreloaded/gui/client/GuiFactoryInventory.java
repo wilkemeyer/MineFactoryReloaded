@@ -1,49 +1,37 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import cofh.core.init.CoreProps;
 import cofh.core.fluid.FluidTankCore;
+import cofh.core.init.CoreProps;
 import cofh.lib.gui.GuiBase;
 import cofh.lib.util.RegistryUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
+import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
+import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
-import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryInventory;
-import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
-import powercrystals.minefactoryreloaded.net.MFRPacket;
-import powercrystals.minefactoryreloaded.net.Packets;
-import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
-
 public class GuiFactoryInventory extends GuiBase {
 
 	protected static DecimalFormat decimal_format = new DecimalFormat();
+
 	{
 		decimal_format.setMaximumFractionDigits(1);
 		decimal_format.setMinimumFractionDigits(1);
 	}
+
 	protected TileEntityFactoryInventory _tileEntity;
 	protected ContainerFactoryInventory _container;
 	protected int _barSizeMax = 60;
@@ -62,7 +50,8 @@ public class GuiFactoryInventory extends GuiBase {
 		drawInventory = drawTitle = false;
 		_tileEntity = tileEntity;
 		if (CoreProps.enableColorBlindTextures) {
-			ResourceLocation t = new ResourceLocation(MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground() + "_cb.png");
+			ResourceLocation t = new ResourceLocation(
+					MineFactoryReloadedCore.guiFolder + _tileEntity.getGuiBackground() + "_cb.png");
 			if (RegistryUtils.textureExists(t))
 				texture = t;
 		}
@@ -83,7 +72,7 @@ public class GuiFactoryInventory extends GuiBase {
 			SlotFake s = (SlotFake) o;
 			if (x >= s.xDisplayPosition && x <= s.xDisplayPosition + 16 && y >= s.yDisplayPosition &&
 					y <= s.yDisplayPosition + 16) {
-				MFRPacket.sendFakeSlotToServer(_tileEntity,	Minecraft.getMinecraft().thePlayer.getEntityId(),
+				MFRPacket.sendFakeSlotToServer(_tileEntity, Minecraft.getMinecraft().thePlayer.getEntityId(),
 						s.slotNumber, (byte) button);
 			}
 		}
@@ -93,17 +82,18 @@ public class GuiFactoryInventory extends GuiBase {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		GL11.glColor4f(1f, 1f, 1f, 1f);
+		GlStateManager.color(1f, 1f, 1f, 1f);
 		fontRendererObj.drawString(_tileEntity.getName(), _xOffset, 6, 4210752);
 		fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), _xOffset, ySize - 96 + 3, 4210752);
 
 		if (_renderTanks) {
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			FluidTankInfo[] tanks = _tileEntity.getTankInfo(null);
 			int n = tanks.length > 3 ? 3 : tanks.length;
 			if (n > 0) {
 				for (int i = 0; i < n; ++i) {
-					if (tanks[i].fluid == null) continue;
+					if (tanks[i].fluid == null)
+						continue;
 					int tankSize = tanks[i].fluid.amount * _tankSizeMax / tanks[i].capacity;
 					drawTank(_tanksOffsetX - (i * 20), _tanksOffsetY + _tankSizeMax, tanks[i].fluid, tankSize);
 				}
@@ -123,8 +113,9 @@ public class GuiFactoryInventory extends GuiBase {
 
 		FluidTankCore[] tanks = _tileEntity.getTanks();
 		int n = tanks.length > 3 ? 3 : tanks.length;
-		tanks: if (n > 0 && isPointInRegion(_tanksOffsetX - ((n - 1) * 20) + 1, _tanksOffsetY + 1,
-			n * 20 - n - 1, _tankSizeMax - 2, mouseX, mouseY)) {
+		tanks:
+		if (n > 0 && isPointInRegion(_tanksOffsetX - ((n - 1) * 20) + 1, _tanksOffsetY + 1,
+				n * 20 - n - 1, _tankSizeMax - 2, mouseX, mouseY)) {
 			int tankX = mouseX - this.guiLeft - _tanksOffsetX + (n - 1) * 20;
 			if (tankX % 20 >= 16)
 				break tanks;
@@ -137,22 +128,25 @@ public class GuiFactoryInventory extends GuiBase {
 	protected final void drawBar(int xOffset, int yOffset, int max, int current, int tOffset) {
 
 		int size = max > 0 ? (int) (current * (long) _barSizeMax / max) : 0;
-		if (size > _barSizeMax) size = max;
-		if (size < 0) size = 0;
+		if (size > _barSizeMax)
+			size = max;
+		if (size < 0)
+			size = 0;
 		bindTexture(texture);
 		drawTexturedModalRect(xOffset, yOffset - size,
-			xSize + tOffset * 8 + tOffset, 60 + _barSizeMax - size,
-			8, size);
+				xSize + tOffset * 8 + tOffset, 60 + _barSizeMax - size,
+				8, size);
 	}
 
 	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level) {
 
-		if (stack == null) return;
+		if (stack == null)
+			return;
 		drawFluid(xOffset, yOffset - level, stack, 16, level);
 	}
 
 	protected void bindTexture() {
-		
+
 		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
@@ -201,10 +195,10 @@ public class GuiFactoryInventory extends GuiBase {
 
 	protected void drawTooltip(List<String> lines, int x, int y) {
 
-		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		GL11.glDisable(GL11.GL_LIGHTING);
+		GlStateManager.pushMatrix();
+		GlStateManager.disableDepth();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.disableLighting();
 
 		int tooltipWidth = 0;
 		int tempWidth;
@@ -241,17 +235,19 @@ public class GuiFactoryInventory extends GuiBase {
 		int color1 = -267386864;
 		drawGradientRect(xStart - 3, yStart - 4, xStart + tooltipWidth + 3, yStart - 3, color1, color1);
 		drawGradientRect(xStart - 3, yStart + tooltipHeight + 3, xStart + tooltipWidth + 3, yStart + tooltipHeight + 4,
-			color1, color1);
+				color1, color1);
 		drawGradientRect(xStart - 3, yStart - 3, xStart + tooltipWidth + 3, yStart + tooltipHeight + 3, color1, color1);
 		drawGradientRect(xStart - 4, yStart - 3, xStart - 3, yStart + tooltipHeight + 3, color1, color1);
 		drawGradientRect(xStart + tooltipWidth + 3, yStart - 3, xStart + tooltipWidth + 4, yStart + tooltipHeight + 3,
-			color1, color1);
+				color1, color1);
 		int color2 = 1347420415;
 		int color3 = (color2 & 16711422) >> 1 | color2 & -16777216;
 		drawGradientRect(xStart - 3, yStart - 3 + 1, xStart - 3 + 1, yStart + tooltipHeight + 3 - 1, color2, color3);
-		drawGradientRect(xStart + tooltipWidth + 2, yStart - 3 + 1, xStart + tooltipWidth + 3, yStart + tooltipHeight + 3 - 1, color2, color3);
+		drawGradientRect(xStart + tooltipWidth + 2, yStart - 3 + 1, xStart + tooltipWidth + 3, yStart + tooltipHeight + 3 - 1,
+				color2, color3);
 		drawGradientRect(xStart - 3, yStart - 3, xStart + tooltipWidth + 3, yStart - 3 + 1, color2, color2);
-		drawGradientRect(xStart - 3, yStart + tooltipHeight + 2, xStart + tooltipWidth + 3, yStart + tooltipHeight + 3, color3, color3);
+		drawGradientRect(xStart - 3, yStart + tooltipHeight + 2, xStart + tooltipWidth + 3, yStart + tooltipHeight + 3, color3,
+				color3);
 
 		for (int stringIndex = 0; stringIndex < lines.size(); ++stringIndex) {
 			String line = lines.get(stringIndex);
@@ -271,8 +267,8 @@ public class GuiFactoryInventory extends GuiBase {
 			yStart += 10;
 		}
 
-		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.popMatrix();
+		GlStateManager.enableDepth();
 
 		this.zLevel = 0.0F;
 		itemRender.zLevel = 0.0F;

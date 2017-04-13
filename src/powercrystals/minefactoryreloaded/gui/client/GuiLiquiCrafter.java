@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import java.util.Arrays;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -42,7 +43,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 
 		FluidTankInfo[] tanks = _crafter.getTankInfo(null);
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		for (int i = 0; i < 9; i++) {
 			FluidStack l = tanks[i].fluid;
 			if (l != null) {
@@ -76,7 +77,7 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY) {
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(texture);
 		int x = (width - xSize - 56) / 2;
 		int y = (height - ySize) / 2;

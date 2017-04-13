@@ -83,7 +83,7 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
 
-		if (!world.isRemote && stack.getTagCompound().hasKey("loot")) {
+		if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("loot")) {
 			stack = fillWithLoot((WorldServer) world, stack);
 			stack.getTagCompound().removeTag("loot");
 		}

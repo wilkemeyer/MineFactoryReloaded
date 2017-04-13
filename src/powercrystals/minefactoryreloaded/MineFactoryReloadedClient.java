@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelSlime;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -240,10 +241,10 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 				mc.renderEngine.bindTexture(targetingRed);
 			}
 
-			GL11.glPushMatrix();
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glTranslatef(center.getX(), center.getY(), 0);
-			GL11.glRotatef(((mc.theWorld.getTotalWorldTime() & 511) * 4) % 360 + partialTicks, 0, 0, 1);
+			GlStateManager.pushMatrix();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.translate(center.getX(), center.getY(), 0);
+			GlStateManager.rotate(((mc.theWorld.getTotalWorldTime() & 511) * 4) % 360 + partialTicks, 0, 0, 1);
 
 			float distance = MineFactoryReloadedClient.instance.getLockTimeRemaining();
 
@@ -252,7 +253,7 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			drawLockonPart(center, distance, 180);
 			drawLockonPart(center, distance, 270);
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -264,24 +265,24 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 
 	private void drawLockonPart(Point center, float distanceFromCenter, int rotation) {
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glRotatef(rotation, 0, 0, 1);
-		GL11.glTranslatef(-8, -13, 0);
-		GL11.glTranslatef(0, -distanceFromCenter, 0);
+		GlStateManager.rotate(rotation, 0, 0, 1);
+		GlStateManager.translate(-8, -13, 0);
+		GlStateManager.translate(0, -distanceFromCenter, 0);
 
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 0);
+		GlStateManager.glBegin(GL11.GL_QUADS);
+		GlStateManager.glTexCoord2f(0, 0);
 		GL11.glVertex2i(0, 0);
-		GL11.glTexCoord2f(0, 1);
+		GlStateManager.glTexCoord2f(0, 1);
 		GL11.glVertex2i(0, 16);
-		GL11.glTexCoord2f(1, 1);
+		GlStateManager.glTexCoord2f(1, 1);
 		GL11.glVertex2i(16, 16);
-		GL11.glTexCoord2f(1, 0);
+		GlStateManager.glTexCoord2f(1, 0);
 		GL11.glVertex2i(16, 0);
-		GL11.glEnd();
+		GlStateManager.glEnd();
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -298,14 +299,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 		float playerOffsetY = -(float) (player.lastTickPosY + (player.posY - player.lastTickPosY) * e.getPartialTicks());
 		float playerOffsetZ = -(float) (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * e.getPartialTicks());
 
-		GL11.glColorMask(true, true, true, true);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.colorMask(true, true, true, true);
+		GlStateManager.enableAlpha();
+		GlStateManager.disableFog();
+		GlStateManager.enableCull();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.disableTexture2D();
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 
 		for (IHarvestAreaContainer c : _areaTileEntities) {
 			if (((TileEntity) c).isInvalid())
@@ -315,14 +316,14 @@ public class MineFactoryReloadedClient implements IResourceManagerReloadListener
 			float g = colorFromCoord(c.getHAM().getOriginY(), 0x85BDBD8C);
 			float b = colorFromCoord(c.getHAM().getOriginZ(), 0x997696BF);
 
-			GL11.glPushMatrix();
-			GL11.glColor4f(r, g, b, 0.4F);
-			GL11.glTranslatef(playerOffsetX, playerOffsetY, playerOffsetZ);
+			GlStateManager.pushMatrix();
+			GlStateManager.color(r, g, b, 0.4F);
+			GlStateManager.translate(playerOffsetX, playerOffsetY, playerOffsetZ);
 			renderAABB(c.getHAM().getHarvestArea().toAxisAlignedBB());
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 	}
 
 	private float colorFromCoord(int c, long h) {

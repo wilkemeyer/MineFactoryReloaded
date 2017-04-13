@@ -7,6 +7,7 @@ import cofh.lib.gui.element.ElementSlider;
 import cofh.lib.gui.element.listbox.IListBoxElement;
 import cofh.lib.gui.element.listbox.SliderHorizontal;
 import cofh.lib.gui.element.listbox.SliderVertical;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -364,15 +365,15 @@ public class GuiRedNetLogic extends GuiBase {
 
 		mouseX = x - guiLeft;
 		mouseY = y - guiTop;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(texture);
 		drawLargeTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft, guiTop, 0.0F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft, guiTop, 0.0F);
 		drawElements(gameTicks, false);
 		drawTabs(gameTicks, false);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void drawLargeTexturedModalRect(int x, int y, int u, int v, int xSize, int ySize) {
