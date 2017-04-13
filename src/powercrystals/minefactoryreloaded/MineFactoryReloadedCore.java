@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
 //this import brought to you by the department of redundancies department, the department that brought you this import
+import codechicken.lib.CodeChickenLib;
 import cofh.CoFHCore;
 import cofh.core.world.WorldHandler;
 import net.minecraft.block.Block;
@@ -9,14 +10,12 @@ import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -31,9 +30,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import org.apache.logging.log4j.Logger;
-import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
-import powercrystals.minefactoryreloaded.block.fluid.BlockFactoryFluid;
-import powercrystals.minefactoryreloaded.block.fluid.BlockPinkSlimeFluid;
 import powercrystals.minefactoryreloaded.farmables.MFRFarmables;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.net.CommonProxy;
@@ -50,7 +46,6 @@ import powercrystals.minefactoryreloaded.world.MineFactoryReloadedWorldGen;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import static powercrystals.minefactoryreloaded.MineFactoryReloadedCore.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
@@ -63,7 +58,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public static final String modId = "minefactoryreloaded";
 	public static final String modName = "MineFactory Reloaded";
 	public static final String version = "2.9.0";
-	public static final String dependencies = CoFHCore.VERSION_GROUP;
+	public static final String dependencies = CoFHCore.VERSION_GROUP + "required-after:CodeChickenLib@[" + CodeChickenLib.version + ",)";
 	public static final String modNetworkChannel = "MFReloaded";
 
 	@SidedProxy(clientSide = "powercrystals.minefactoryreloaded.net.ClientProxy",
