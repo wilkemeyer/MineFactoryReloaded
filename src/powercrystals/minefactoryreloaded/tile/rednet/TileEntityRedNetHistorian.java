@@ -80,6 +80,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	@SideOnly(Side.CLIENT)
 	public void update()
 	{
+		super.update();
 		if (worldObj.isRemote)
 		{
 			_valuesClient.pop();
