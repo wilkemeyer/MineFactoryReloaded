@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
-public abstract class FactoryFruitStandard implements IFactoryFruit
-{
+public abstract class FactoryFruitStandard implements IFactoryFruit  {
+
 	private Block _block;
 	private ReplacementBlock replBlock;
 	
@@ -62,21 +62,12 @@ public abstract class FactoryFruitStandard implements IFactoryFruit
 	{
 		return replBlock;
 	}
-	
-	@Override
-	public void prePick(World world, BlockPos pos)
-	{
-	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
 		return state.getBlock().getDrops(world, pos, state, 0);
 	}
-	
-	@Override
-	public void postPick(World world, BlockPos pos)
-	{
-	}
+
 }

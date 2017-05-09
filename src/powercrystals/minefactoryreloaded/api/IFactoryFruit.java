@@ -64,24 +64,4 @@ public interface IFactoryFruit {
 	 */
 	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos);
 
-	/**
-	 * Called by the Fruit Picker after getDrops, prior to the block being
-	 * replaced/removed.
-	 *
-	 * @param world
-	 *            The world where the fruit is being picked
-	 * @param pos
-	 *            The position of the fruit
-	 */
-	public void prePick(World world, BlockPos pos);
-
-	/**
-	 * Called by the Fruit Picker after the fruit is picked.
-	 *
-	 * @param world
-	 *            The world where the fruit is being picked
-	 * @param pos
-	 *            The position of the fruit
-	 */
-	public void postPick(World world, BlockPos pos);
 }
