@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -8,6 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -58,7 +60,7 @@ public class BlockDecorativeBricks extends BlockFactory {
 	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
 
 		boolean ice = isIce(state);
-		return (ice && layer == BlockRenderLayer.TRANSLUCENT) || (!ice && layer == BlockRenderLayer.SOLID);  
+		return (ice && layer == BlockRenderLayer.TRANSLUCENT) || (!ice && layer == BlockRenderLayer.SOLID);
 	}
 
 	private boolean isIce(IBlockState state) {
@@ -77,6 +79,15 @@ public class BlockDecorativeBricks extends BlockFactory {
 	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
 		
 		return isIce(state) ? 3 : 255;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+
+		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
+		Block block = iblockstate.getBlock();
+
+		return block == this && isIce(blockState) && isIce(iblockstate) ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
 
 	@Override
