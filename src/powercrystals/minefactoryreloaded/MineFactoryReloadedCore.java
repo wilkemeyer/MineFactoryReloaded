@@ -131,10 +131,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		Blocks.FIRE.setFireInfo(MFRFluids.biofuelLiquid, 300, 30);
 
-/* TODO stack sizes for door have changed in 1.8, figure out what this is for and if it needs to be readded
-		Items.WOODEN_DOOR.setMaxStackSize(8);
-		Items.IRON_DOOR.setMaxStackSize(8);
-*/
 		//TODO remove once mods actually switch over to fluid caps instead of IFluidContainerItem
 		FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidRegistry.getFluidStack("milk",
 				FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(milkBottleItem), new ItemStack(Items.GLASS_BOTTLE)));
