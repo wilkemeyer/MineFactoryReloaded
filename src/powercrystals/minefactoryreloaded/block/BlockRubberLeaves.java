@@ -39,13 +39,13 @@ import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
 import powercrystals.minefactoryreloaded.render.IColorRegister;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection, IInitializer, IModelRegister, IColorRegister
-{
+public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection, IInitializer, IModelRegister, IColorRegister {
+
 	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class, input -> input.getMetadata() < 4);
 	public static final PropertyBool FANCY = PropertyBool.create("fancy");
 	
-	public BlockRubberLeaves()
-	{
+	public BlockRubberLeaves() {
+
 		setUnlocalizedName("mfr.rubberwood.leaves");
 		setCreativeTab(MFRCreativeTab.tab);
 		MFRThings.registerInitializer(this);
@@ -56,6 +56,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 
 	@Override
 	protected BlockStateContainer createBlockState() {
+
 		return new BlockStateContainer(this, VARIANT, FANCY, DECAYABLE, CHECK_DECAY);
 	}
 
@@ -69,37 +70,37 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	@Override
 	public BlockRenderLayer getBlockLayer()	{
 		
-		return BlockRenderLayer.CUTOUT; // isOpaqueCube(null) ? BlockRenderLayer.SOLID : BlockRenderLayer.CUTOUT_MIPPED;
+		return Blocks.LEAVES.getBlockLayer();
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state)
-	{
+	public boolean isOpaqueCube(IBlockState state) {
+
 		return Blocks.LEAVES.isOpaqueCube(state);
 	}
 
 	@Override
 	public BlockPlanks.EnumType getWoodType(int i) {
+
 		return null;
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
-	{
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+
 		return Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
 	}
 
 	@Override
-	protected boolean canSilkHarvest()
-	{
+	protected boolean canSilkHarvest() {
 		return false;
 	}
 
 	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
-	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune)
-	{
+	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune) {
+
 		if (updating.get() != null)
 			return;
 		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
@@ -112,7 +113,8 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	private Variant getVariant(int meta) {
-		return Variant.byMetadata((meta & 3) % 4);
+
+		return Variant.byMetadata(meta & 3);
 	}
 	
 	@Override
@@ -131,12 +133,12 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-	{
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
 
-		if (state.getValue(DECAYABLE))
+		if (!state.getValue(DECAYABLE)) // HACK: shears drop saplings AND the block because forge doesn't pay attention to the code they edit
 			return ret;
 
 		int chance = 20 + 15 * state.getValue(VARIANT).getMetadata();
@@ -152,15 +154,13 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
-	{
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+
 		if (world.isRemote)
 			return;
-		if (state.getValue(VARIANT) == Variant.NORMAL && !state.getValue(DECAYABLE))
-		{
+		if (state.getValue(VARIANT) == Variant.NORMAL && !state.getValue(DECAYABLE)) {
 			boolean decay = state.getValue(CHECK_DECAY);
-			if (decay)
-			{
+			if (decay) {
 				updating.set(Boolean.TRUE);
 				super.updateTick(world, pos, state, rand);
 				updating.set(null);
@@ -170,10 +170,9 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 			}
 			int chance = 15;
 			Biome b = world.getBiome(pos);
-			if (b != null)
-			{
+			if (b != null) {
 				float temp = b.getTemperature();
-				float rain = b.getRainfall(); // getFloatRainfall is client only!?
+				float rain = b.getRainfall();
 				boolean t;
 				decay |= (t = rain <= 0.05f);
 				if (t) chance -= 5;
@@ -185,8 +184,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 				else if (temp < 0.8f)
 					chance += 3;
 			}
-			if (decay && rand.nextInt(chance) == 0)
-			{
+			if (decay && rand.nextInt(chance) == 0) {
 				world.setBlockState(pos, state.withProperty(VARIANT, Variant.DRY));
 				return;
 			}
@@ -195,17 +193,15 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		if (updating.get() != null)
-		{
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+
+		if (updating.get() != null) {
 			boolean decay = false;
 			int chance = 15;
 			Biome b = world.getBiome(pos);
-			if (b != null)
-			{
+			if (b != null) {
 				float temp = b.getTemperature();
-				float rain = b.getRainfall(); // getFloatRainfall is client only!?
+				float rain = b.getRainfall();
 				boolean t;
 				decay |= (t = rain <= 0.05f);
 				if (t) chance -= 5;
@@ -223,30 +219,33 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
-	{
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face) {
+
 		return super.getFireSpreadSpeed(world, pos, face) * ((world.getBlockState(pos).getValue(VARIANT).getMetadata()) * 2 + 1);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+
 		boolean cube = isOpaqueCube(state);
 		return cube ? super.shouldSideBeRendered(state, world, pos, side) : true;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubBlocks(Item blockId, CreativeTabs creativeTab, List subTypes)
-	{
+	public void getSubBlocks(Item blockId, CreativeTabs creativeTab, List subTypes) {
+
 		subTypes.add(new ItemStack(blockId, 1, 0));
 		subTypes.add(new ItemStack(blockId, 1, 1));
 	}
 
 	@Override
 	public List<ItemStack> onSheared(ItemStack itemStack, IBlockAccess iBlockAccess, BlockPos blockPos, int i) {
-		return null;
+
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ret.add(new ItemStack(this, 1, this.getMetaFromState(iBlockAccess.getBlockState(blockPos)) & 3));
+		return ret;
 	}
 
 	@Override
@@ -319,6 +318,7 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 	}
 
 	public enum Variant implements IStringSerializable {
+
 		NORMAL (0, "normal"),
 		DRY(1, "dry");
 
@@ -366,4 +366,5 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 		}
 
 	}
+
 }
