@@ -78,11 +78,9 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 					!plantable.canBePlantedHere(worldObj, bp, availableStack))
 				continue;
 
-			plantable.prePlant(worldObj, bp, availableStack);
 			ReplacementBlock block = plantable.getPlantedBlock(worldObj, bp, availableStack);
 			if (block == null || !block.replaceBlock(worldObj, bp, availableStack))
 				continue;
-			plantable.postPlant(worldObj, bp, availableStack);
 			decrStackSize(stackIndex, 1);
 			return true;
 		}

@@ -94,8 +94,6 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj,
 			targetCoords);
 
-		harvestable.prePick(worldObj, targetCoords);
-
 		if (replacement == null) {
 			if (!worldObj.setBlockToAir(targetCoords))
 				return false;
@@ -110,8 +108,6 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 		doDrop(drops);
 
 		// TODO: sludge?
-
-		harvestable.postPick(worldObj, targetCoords);
 
 		return true;
 	}
