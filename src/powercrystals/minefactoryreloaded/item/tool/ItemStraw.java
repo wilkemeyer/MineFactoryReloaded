@@ -53,7 +53,7 @@ public class ItemStraw extends ItemFactoryTool {
 				Block block = state.getBlock();
 				Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
 				if (fluid != null && map.containsKey(fluid.getName())) {
-					map.get(fluid.getName()).onDrink(player);
+					map.get(fluid.getName()).onDrink(player, new FluidStack(fluid, 1000));
 					world.setBlockToAir(pos);
 				} else if (block.hasTileEntity(state)) {
 					TileEntity tile = world.getTileEntity(pos);
@@ -69,7 +69,7 @@ public class ItemStraw extends ItemFactoryTool {
 									fstack.amount = 1000;
 									FluidStack r = handler.drain(fstack.copy(), false);
 									if (r != null && r.amount >= 1000) {
-										map.get(fluid.getName()).onDrink(player);
+										map.get(fluid.getName()).onDrink(player, r);
 										handler.drain(fstack, true);
 										break;
 									}

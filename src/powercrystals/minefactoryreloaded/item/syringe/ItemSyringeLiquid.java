@@ -112,8 +112,8 @@ public class ItemSyringeLiquid extends ItemSyringe
 				get(getFluidName(syringe));
 		if (handler != null)
 		{
-			handler.onDrink(entity);
-			getFluidHandler(syringe).drain(Integer.MAX_VALUE, true);
+			FluidStack stack = getFluidHandler(syringe).drain(Integer.MAX_VALUE, true);
+			handler.onDrink(entity, stack);
 			return true;
 		}
 		return false;

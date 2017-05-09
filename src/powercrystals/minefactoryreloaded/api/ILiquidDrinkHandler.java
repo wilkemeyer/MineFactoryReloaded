@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.api;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.fluids.FluidStack;
 
 public interface ILiquidDrinkHandler {
 
@@ -11,7 +12,6 @@ public interface ILiquidDrinkHandler {
 	 *            The entity that has consumed the fluid this
 	 *            ILiquidDrinkHandler manages
 	 */
-	public void onDrink(EntityLivingBase entity);
-	// TODO: pass in fluidstack
+	public void onDrink(EntityLivingBase entity, FluidStack fluid);
 
 }

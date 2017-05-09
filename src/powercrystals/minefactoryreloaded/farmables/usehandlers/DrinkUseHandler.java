@@ -50,16 +50,20 @@ public class DrinkUseHandler implements IUseHandler {
 		if (item.stackSize == 1 && liquid != null &&
 				entity instanceof EntityPlayer && isDrinkableLiquid(liquid)) {
 			EntityPlayer player = (EntityPlayer)entity;
+			FluidStack stack;
 			if (!player.capabilities.isCreativeMode) {
 				ItemStack drop = item.splitStack(1);
 				IFluidHandler fluidHandler = drop.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-				fluidHandler.drain(Fluid.BUCKET_VOLUME, true);
+				stack = fluidHandler.drain(Fluid.BUCKET_VOLUME, true);
 				if (item.stackSize < 1)
 					item = drop;
 				else if (drop != null && !player.inventory.addItemStackToInventory(drop))
 					player.dropItem(drop, false, true);
+			} else {
+				IFluidHandler fluidHandler = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				stack = fluidHandler.drain(Fluid.BUCKET_VOLUME, false);
 			}
-			MFRRegistry.getLiquidDrinkHandlers().get(liquid).onDrink(player);
+			MFRRegistry.getLiquidDrinkHandlers().get(liquid).onDrink(player, stack);
 		}
 		if (item == null)
 		{

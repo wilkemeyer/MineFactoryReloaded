@@ -10,18 +10,18 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
 
-public class DrinkHandlerWater implements ILiquidDrinkHandler
-{
+public class DrinkHandlerWater implements ILiquidDrinkHandler {
+
 	@Override
-	public void onDrink(EntityLivingBase player)
-	{
+	public void onDrink(EntityLivingBase player, FluidStack fluid) {
+
 		player.extinguish();
 		NBTTagCompound tag = player.getEntityData();
 		World world = player.worldObj;
-		if (tag.hasKey("drankLavaTime") && (world.getTotalWorldTime() - tag.getLong("drankLavaTime")) < 100)
-		{
+		if (tag.hasKey("drankLavaTime") && (world.getTotalWorldTime() - tag.getLong("drankLavaTime")) < 100) {
 			//{
 			EntityItem entityitem = player.entityDropItem(new ItemStack(Blocks.OBSIDIAN), player.getEyeHeight());
             float f = 0.3F;
@@ -39,4 +39,5 @@ public class DrinkHandlerWater implements ILiquidDrinkHandler
 			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 1.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 		}
 	}
+
 }
