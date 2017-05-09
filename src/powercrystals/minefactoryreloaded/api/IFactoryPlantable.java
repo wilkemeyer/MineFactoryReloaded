@@ -52,28 +52,4 @@ public interface IFactoryPlantable {
 	 */
 	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack);
 
-	/**
-	 * Called before planting is performed. Used to till soil, for example.
-	 *
-	 * @param world
-	 *            The world instance this block or item will be placed into.
-	 * @param pos
-	 *            The position.
-	 * @param stack
-	 *            The stack being planted.
-	 */
-	public void prePlant(World world, BlockPos pos, ItemStack stack);
-
-	/**
-	 * Called after planting is performed. Usually empty.
-	 *
-	 * @param world
-	 *            The world instance this block or item will be placed into.
-	 * @param pos
-	 *            The position.
-	 * @param stack
-	 *            The stack being planted.
-	 */
-	public void postPlant(World world, BlockPos pos, ItemStack stack);
-
 }
