@@ -368,18 +368,6 @@ public class BlockFactoryMachine extends BlockFactory implements IRedNetOmniNode
 	}
 
 	@Override
-	public String getHarvestTool(IBlockState state) {
-		
-		return "pickaxe";
-	}
-
-	@Override
-	public int getHarvestLevel(IBlockState state) {
-		
-		return 0;
-	}
-
-	@Override
 	public boolean preInit() {
 
 		MFRRegistry.registerBlock(this, new ItemBlockFactoryMachine(this));
