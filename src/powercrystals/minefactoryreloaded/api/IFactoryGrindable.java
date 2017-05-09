@@ -41,4 +41,5 @@ public interface IFactoryGrindable {
 	 *         already dead)
 	 */
 	public boolean processEntity(EntityLivingBase entity);
+
 }
