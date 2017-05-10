@@ -3,14 +3,12 @@ package powercrystals.minefactoryreloaded.tile.transport;
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.LinkedHashList;
 import cofh.lib.util.helpers.FluidHelper;
-import net.minecraft.util.math.BlockPos;
-
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
 import powercrystals.minefactoryreloaded.core.ArrayHashList;
 import powercrystals.minefactoryreloaded.core.IGrid;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
@@ -20,71 +18,171 @@ public class FluidNetwork implements IGrid {
 
 	public static final int TRANSFER_RATE = 80;
 	public static final int STORAGE = TRANSFER_RATE * 6;
-	static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> HANDLER =
-			GridTickHandler.fluid;
-
-	private ArrayHashList<TileEntityPlasticPipe> nodeSet = new ArrayHashList<TileEntityPlasticPipe>();
-	private LinkedHashList<TileEntityPlasticPipe> conduitSet;
-	private TileEntityPlasticPipe master;
-	private int overflowSelector;
-	private boolean regenerating = false;
 	FluidTankCore storage = new FluidTankCore(320);
 
-	public int distribution;
-	public int distributionSide;
+	private TileEntityPlasticPipe master;
+	private ArrayHashList<TileEntityPlasticPipe> nodeSet = new ArrayHashList<>();
+	private LinkedHashList<TileEntityPlasticPipe> conduitSet = new LinkedHashList<>();
 
-	protected FluidNetwork() {
+	private boolean regenerating = false;
+	private int overflowSelector;
+
+	static final GridTickHandler<FluidNetwork, TileEntityPlasticPipe> HANDLER =	GridTickHandler.fluid;
+
+	private FluidNetwork() {
 		storage.setCapacity(0);
 	}
 
-
-	public FluidNetwork(TileEntityPlasticPipe base) { this();
-		conduitSet = new LinkedHashList<TileEntityPlasticPipe>();
+	public FluidNetwork(TileEntityPlasticPipe base) {
+		this();
 		regenerating = true;
-		addConduit(base);
+		addToGrid(base);
 		regenerating = false;
 	}
 
-	public int getNodeShare(TileEntityPlasticPipe cond) {
-		int size = nodeSet.size();
-		if (size == 1)
-			return storage.getFluidAmount();
-		int amt = 0;
-		if (master == cond) amt = storage.getFluidAmount() % size;
-		return amt + storage.getFluidAmount() / size;
+	public boolean addPipe(TileEntityPlasticPipe pipe) {
+
+		if(pipe.grid == this)
+			return true;
+
+		if (!addToGrid(pipe))
+			return false;
+
+		updateNodeData(pipe);
+
+		return true;
 	}
 
-	public boolean addConduit(TileEntityPlasticPipe cond) {
-		if (conduitSet.add(cond))
-			if (!conduitAdded(cond))
-				return false;
-		if (cond.isNode) {
-			if (nodeSet.add(cond)) {
-				nodeAdded(cond);
-			}
+	public void updateNodeData(TileEntityPlasticPipe pipe) {
+
+		if (pipe.isNode) {
+			addNode(pipe);
 		} else if (!nodeSet.isEmpty()) {
-			int share = getNodeShare(cond);
-			if (nodeSet.remove(cond)) {
-				cond.fluidForGrid = storage.drain(share, true);
-				nodeRemoved(cond);
+			removeNode(pipe);
+		}
+	}
+
+	private void addNode(TileEntityPlasticPipe pipe) {
+
+		if (nodeSet.add(pipe)) {
+			if (!hasMaster()) {
+				setMaster(pipe);
+				HANDLER.addGrid(this);
 			}
+			fillGrid(pipe.fluidForGrid);
+			setPipeFluid(pipe);
+			rebalanceGrid();
+		}
+	}
+
+	private boolean addToGrid(TileEntityPlasticPipe pipe) {
+
+		if (pipe.grid != null) {
+			return mergeGrid(pipe.grid);
+		} else if (pipe.fluidForGrid != null) {
+			if (FluidHelper.isFluidEqualOrNull(pipe.fluidForGrid, storage.getFluid())) {
+				pipe.grid = this;
+				setPipeFluid(pipe);
+				storage.fill(new FluidStack(pipe.fluidForGrid, 0), true);
+			} else {
+				return false;
+			}
+			conduitSet.add(pipe);
+		} else {
+			pipe.grid = this;
+			setPipeFluid(pipe);
+			conduitSet.add(pipe);
 		}
 		return true;
 	}
 
-	public void removeConduit(TileEntityPlasticPipe cond) {
-		conduitSet.remove(cond);
-		if (!nodeSet.isEmpty()) {
-			int share = getNodeShare(cond);
-			if (nodeSet.remove(cond)) {
-				cond.fluidForGrid = storage.drain(share, true);
-				nodeRemoved(cond);
-			} else {
-				cond.fluidForGrid = storage.drain(0, false);
-			}
-		} else {
-			cond.fluidForGrid = storage.drain(0, false);
+	public boolean canMergeGrid(FluidNetwork grid) {
+		if (grid == null) return false;
+		return FluidHelper.isFluidEqualOrNull(grid.storage.getFluid(), storage.getFluid());
+	}
+
+	public boolean mergeGrid(FluidNetwork grid) {
+
+		if (grid == this) return true;
+		if (!canMergeGrid(grid)) return false;
+
+		if (storage.getFluid() == null && grid.storage.getFluid() != null) {
+			return grid.mergeGrid(this);
 		}
+		grid.destroyGrid();
+
+		if (!regenerating && grid.regenerating) {
+			regenerate();
+		}
+
+		boolean eitherRegenerating = regenerating || grid.regenerating;
+		regenerating = true;
+		for (TileEntityPlasticPipe pipe : grid.conduitSet)
+			addPipe(pipe);
+		regenerating = eitherRegenerating;
+
+		grid.conduitSet.clear();
+		grid.nodeSet.clear();
+
+		return true;
+	}
+
+	public int getNodeShare(TileEntityPlasticPipe pipe) {
+		int size = nodeSet.size();
+		if (size == 1)
+			return storage.getFluidAmount();
+		int amt = storage.getFluidAmount() / size;
+		if (isMaster(pipe)) amt += storage.getFluidAmount() % size;
+		return amt;
+	}
+
+	private boolean isMaster(TileEntityPlasticPipe pipe) {
+
+		return master == pipe;
+	}
+
+	public void setMaster(TileEntityPlasticPipe pipe) {
+
+		master = pipe;
+	}
+	private boolean hasMaster() {
+
+		return master != null;
+	}
+
+	public void fillGrid(FluidStack fluid) {
+
+		storage.fill(fluid, true);
+	}
+
+	public void setPipeFluid(TileEntityPlasticPipe pipe) {
+
+		pipe.fluidForGrid = storage.drain(0, false);
+	}
+
+	public void destroyGrid() {
+		master = null;
+		regenerating = true;
+		for (TileEntityPlasticPipe curCond : nodeSet)
+			destroyNode(curCond);
+		for (TileEntityPlasticPipe curCond : conduitSet)
+			destroyConduit(curCond);
+		HANDLER.removeGrid(this);
+	}
+
+	public void destroyNode(TileEntityPlasticPipe cond) {
+		cond.fluidForGrid = storage.drain(getNodeShare(cond), false);
+		cond.grid = null;
+	}
+
+
+	public void destroyConduit(TileEntityPlasticPipe cond) {
+		cond.fluidForGrid = storage.drain(0, false);
+		cond.grid = null;
+	}
+
+	public void rebalanceGrid() {
+		storage.setCapacity(getNodeCount() * STORAGE);
 	}
 
 	public void regenerate() {
@@ -92,8 +190,41 @@ public class FluidNetwork implements IGrid {
 		HANDLER.regenerateGrid(this);
 	}
 
-	public boolean isRegenerating() {
-		return regenerating;
+	public void removePipe(TileEntityPlasticPipe pipe) {
+		conduitSet.remove(pipe);
+		if (!nodeSet.isEmpty()) {
+			if (!removeNode(pipe)) {
+				pipe.fluidForGrid = storage.drain(0, false);
+			}
+		} else {
+			pipe.fluidForGrid = storage.drain(0, false);
+		}
+	}
+
+	private boolean removeNode(TileEntityPlasticPipe node) {
+
+		int share = getNodeShare(node);
+		if (!nodeSet.remove(node))
+			return false;
+
+		node.fluidForGrid = storage.drain(share, true);
+
+		if (isMaster(node)) {
+			if (nodeSet.isEmpty()) {
+				master = null;
+				HANDLER.removeGrid(this);
+			} else {
+				master = nodeSet.get(0);
+			}
+		}
+
+		rebalanceGrid();
+
+		return true;
+	}
+
+	int getNodeCount() {
+		return nodeSet.size();
 	}
 
 	@Override
@@ -104,26 +235,26 @@ public class FluidNetwork implements IGrid {
 		TileEntityPlasticPipe main = conduitSet.poke();
 		LinkedHashList<TileEntityPlasticPipe> oldSet = conduitSet;
 		nodeSet.clear();
-		conduitSet = new LinkedHashList<TileEntityPlasticPipe>(Math.min(oldSet.size() / 6, 5));
+		conduitSet = new LinkedHashList<>(Math.min(oldSet.size() / 6, 5));
 		rebalanceGrid();
 
-		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<TileEntityPlasticPipe>();
-		LinkedHashList<TileEntityPlasticPipe> checked = new LinkedHashList<TileEntityPlasticPipe>();
-		BlockPos bp = new BlockPos(0,0,0);
+		LinkedHashList<TileEntityPlasticPipe> toCheck = new LinkedHashList<>();
+		LinkedHashList<TileEntityPlasticPipe> checked = new LinkedHashList<>();
 		EnumFacing[] dir = EnumFacing.VALUES;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.shift();
-			addConduit(main);
+			addPipe(main);
 			World world = main.getWorld();
 			for (int i = 6; i --> 0; ) {
-				bp = main.getPos().offset(dir[i]);
+				BlockPos bp = main.getPos().offset(dir[i]);
 				if (world.isBlockLoaded(bp)) {
 					TileEntity te = MFRUtil.getTile(world, bp);
 					if (te instanceof TileEntityPlasticPipe) {
 						TileEntityPlasticPipe tep = (TileEntityPlasticPipe)te;
-						if (main.canInterface(tep, dir[i^1]) && checked.add(tep))
+						if (main.canInterface(dir[i].getOpposite())
+								&& FluidHelper.isFluidEqualOrNull(main.fluidForGrid, tep.fluidForGrid) && checked.add(tep))
 							toCheck.add(tep);
 					}
 				}
@@ -141,26 +272,6 @@ public class FluidNetwork implements IGrid {
 		else
 			HANDLER.addGrid(this);
 		regenerating = false;
-	}
-
-	public void destroyGrid() {
-		master = null;
-		regenerating = true;
-		for (TileEntityPlasticPipe curCond : nodeSet)
-			destroyNode(curCond);
-		for (TileEntityPlasticPipe curCond : conduitSet)
-			destroyConduit(curCond);
-		HANDLER.removeGrid(this);
-	}
-
-	public void destroyNode(TileEntityPlasticPipe cond) {
-		cond.fluidForGrid = storage.drain(getNodeShare(cond), false);
-		cond._grid = null;
-	}
-
-	public void destroyConduit(TileEntityPlasticPipe cond) {
-		cond.fluidForGrid = storage.drain(0, false);
-		cond._grid = null;
 	}
 
 	@Override
@@ -189,7 +300,7 @@ public class FluidNetwork implements IGrid {
 			HANDLER.removeGrid(this);
 			return;
 		}
-		FluidTankCore storage = this.storage;
+
 		if (storage.getFluidAmount() <= 0)
 			return;
 		EnumFacing[] directions = EnumFacing.VALUES;
@@ -198,20 +309,14 @@ public class FluidNetwork implements IGrid {
 		int sideDistribute = toDistribute / 6;
 		Fluid fluid = storage.getFluid().getFluid();
 
-		distribution = toDistribute;
-		distributionSide = sideDistribute;
 		FluidStack stack = storage.drain(sideDistribute, false);
 
 		int overflow = overflowSelector = (overflowSelector + 1) % size;
 		TileEntityPlasticPipe master = nodeSet.get(overflow);
 
-		if (sideDistribute > 0) for (TileEntityPlasticPipe cond : nodeSet)
-			if (cond != master) {
-				int e = 0;
-				for (int i = 6; i --> 0; )
-					e += cond.transfer(directions[i], stack, fluid);
-				if (e > 0) storage.drain(e, true);
-			}
+		if (sideDistribute > 0) {
+			transferToNodes(fluid, stack, master);
+		}
 
 		toDistribute += storage.getFluidAmount() % size;
 		sideDistribute = toDistribute / 6;
@@ -233,87 +338,20 @@ public class FluidNetwork implements IGrid {
 		}
 	}
 
-	public boolean canMergeGrid(FluidNetwork grid) {
-		if (grid == null) return false;
-		return FluidHelper.isFluidEqual(grid.storage.getFluid(), storage.getFluid());
-	}
+	private void transferToNodes(Fluid fluid, FluidStack stack, TileEntityPlasticPipe master) {
 
-	public void mergeGrid(FluidNetwork grid) {
-		if (grid == this) return;
-		if (storage.getFluid() == null && grid.storage.getFluid() != null) {
-			grid.mergeGrid(this);
-			return;
-		}
-		boolean r = regenerating | grid.regenerating;
-		grid.destroyGrid();
-		if (!regenerating & r)
-			regenerate();
-
-		regenerating = true;
-		for (TileEntityPlasticPipe cond : grid.conduitSet)
-			addConduit(cond);
-		regenerating = r;
-
-		grid.conduitSet.clear();
-		grid.nodeSet.clear();
-	}
-
-	public void nodeAdded(TileEntityPlasticPipe cond) {
-		if (master == null) {
-			master = cond;
-			HANDLER.addGrid(this);
-		}
-		storage.fill(cond.fluidForGrid, true);
-		cond.fluidForGrid = storage.drain(0, false);
-		rebalanceGrid();
-	}
-
-	public void nodeRemoved(TileEntityPlasticPipe cond) {
-		if (cond == master) {
-			if (nodeSet.isEmpty()) {
-				master = null;
-				HANDLER.removeGrid(this);
-			} else {
-				master = nodeSet.get(0);
+		for (TileEntityPlasticPipe node : nodeSet) {
+			if (node != master) {
+				int toDrain = 0;
+				for (int i = 6; i --> 0; )
+					toDrain += node.transfer(EnumFacing.VALUES[i], stack, fluid);
+				if (toDrain > 0) storage.drain(toDrain, true);
 			}
 		}
-		rebalanceGrid();
-	}
-
-	public boolean conduitAdded(TileEntityPlasticPipe cond) {
-		if (cond._grid != null) {
-			if (cond._grid != this) {
-				conduitSet.remove(cond);
-				if (canMergeGrid(cond._grid)) {
-					mergeGrid(cond._grid);
-				} else
-					return false;
-			} else
-				return false;
-		} else if (cond.fluidForGrid != null) {
-			if (!FluidHelper.isFluidEqualOrNull(cond.fluidForGrid, storage.getFluid())) {
-				conduitSet.remove(cond);
-				return false;
-			} else {
-				cond.setGrid(this);
-				storage.fill(new FluidStack(cond.fluidForGrid, 0), true);
-			}
-		} else {
-			cond.setGrid(this);
-		}
-		return true;
-	}
-
-	public void rebalanceGrid() {
-		storage.setCapacity(getNodeCount() * STORAGE);
 	}
 
 	public int getConduitCount() {
 		return conduitSet.size();
-	}
-
-	public int getNodeCount() {
-		return nodeSet.size();
 	}
 
 	@Override
@@ -321,4 +359,5 @@ public class FluidNetwork implements IGrid {
 		return "FluidNetwork@" + Integer.toString(hashCode()) + "; master:" + master +
 				"; regenerating:" + regenerating + "; isTicking:" + HANDLER.isGridTicking(this);
 	}
+
 }

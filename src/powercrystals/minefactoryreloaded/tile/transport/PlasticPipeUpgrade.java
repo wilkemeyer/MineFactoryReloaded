@@ -1,9 +1,7 @@
-package powercrystals.minefactoryreloaded.tile.transport.refactor;
+package powercrystals.minefactoryreloaded.tile.transport;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
 
 public enum PlasticPipeUpgrade {
 
