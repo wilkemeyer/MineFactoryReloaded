@@ -82,8 +82,8 @@ public class FluidNetwork implements IGrid {
 		} else if (pipe.fluidForGrid != null) {
 			if (FluidHelper.isFluidEqualOrNull(pipe.fluidForGrid, storage.getFluid())) {
 				pipe.grid = this;
-				setPipeFluid(pipe);
 				storage.fill(new FluidStack(pipe.fluidForGrid, 0), true);
+				setPipeFluid(pipe);
 			} else {
 				return false;
 			}
@@ -253,7 +253,7 @@ public class FluidNetwork implements IGrid {
 					TileEntity te = MFRUtil.getTile(world, bp);
 					if (te instanceof TileEntityPlasticPipe) {
 						TileEntityPlasticPipe tep = (TileEntityPlasticPipe)te;
-						if (main.canInterface(dir[i].getOpposite())
+						if (main.canInterface(dir[i])
 								&& FluidHelper.isFluidEqualOrNull(main.fluidForGrid, tep.fluidForGrid) && checked.add(tep))
 							toCheck.add(tep);
 					}

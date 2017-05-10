@@ -473,6 +473,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		return sideConnection[sideOrdinal];
 	}
 
+	public boolean isCableOnly() {
+
+		return cableOnly;
+	}
+
 	private class PlasticPipeFluidHandler implements IFluidHandler {
 
 		private EnumFacing from;

@@ -21,7 +21,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
+import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
+
+import static powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -125,11 +128,11 @@ public class PlasticPipeRenderer implements ISimpleBlockBakery {
 			case CABLE:
 				cable[i].render(ccrs, iconTransform);
 				break;
-			case EXTRACT:
+			case EXTRACT_POWERED:
 				iface[i].render(ccrs, iconTransform);
 				gripI[i].render(ccrs, iconTransform);
 				break;
-			case EXTRACT_POWERED:
+			case EXTRACT:
 				iface[i].render(ccrs, iconTransform);
 				gripP[i].render(ccrs, iconTransform);
 				break;
@@ -148,9 +151,12 @@ public class PlasticPipeRenderer implements ISimpleBlockBakery {
 		TileEntityPlasticPipe pipe = (TileEntityPlasticPipe) tileEntity;
 
 		for (EnumFacing side : EnumFacing.VALUES) {
-			BlockPlasticPipe.ConnectionType connType = pipe.getSideConnection(side.ordinal());
-			if(connType == BlockPlasticPipe.ConnectionType.EXTRACT && pipe.isPowered())
-				connType = BlockPlasticPipe.ConnectionType.EXTRACT_POWERED;
+			ConnectionType connType = pipe.getSideConnection(side.ordinal());
+			if((connType == OUTPUT || connType == EXTRACT || connType == EXTRACT_POWERED) && pipe.isCableOnly())
+				connType = HANDLER_DISCONNECTED;
+			else if(connType == EXTRACT && pipe.isPowered())
+				connType = EXTRACT_POWERED;
+
 			blockState = blockState.withProperty(BlockPlasticPipe.CONNECTION[side.ordinal()], connType);
 		}
 
