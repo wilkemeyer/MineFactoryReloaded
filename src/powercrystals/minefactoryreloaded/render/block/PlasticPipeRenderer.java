@@ -21,7 +21,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
+import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
+
+import static powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -121,17 +124,15 @@ public class PlasticPipeRenderer implements ISimpleBlockBakery {
 		EnumFacing[] dirs = EnumFacing.VALUES;
 
 		for (int i = dirs.length; i-- > 0; ) {
-			EnumFacing f = dirs[i];
-
 			switch (state.getValue(BlockPlasticPipe.CONNECTION[i])) {
 			case CABLE:
 				cable[i].render(ccrs, iconTransform);
 				break;
-			case INPUT:
+			case EXTRACT_POWERED:
 				iface[i].render(ccrs, iconTransform);
 				gripI[i].render(ccrs, iconTransform);
 				break;
-			case INPUT_POWERED:
+			case EXTRACT:
 				iface[i].render(ccrs, iconTransform);
 				gripP[i].render(ccrs, iconTransform);
 				break;
@@ -149,33 +150,14 @@ public class PlasticPipeRenderer implements ISimpleBlockBakery {
 
 		TileEntityPlasticPipe pipe = (TileEntityPlasticPipe) tileEntity;
 
-		EnumFacing[] dirs = EnumFacing.VALUES;
-		for (int i = dirs.length; i-- > 0; ) {
-			EnumFacing f = dirs[i];
-			blockState = blockState.withProperty(BlockPlasticPipe.CONNECTION[i], BlockPlasticPipe.ConnectionType.NONE);
-			if (pipe.isInterfacing(f)) {
-				int side = f.ordinal();
-				switch (pipe.interfaceMode(f)) {
-				case 2: // cable
-					blockState = blockState.withProperty(BlockPlasticPipe.CONNECTION[i], BlockPlasticPipe.ConnectionType.CABLE);
-					break;
-				case 1: // IFluidHandler
-					int state = pipe.getMode(side);
-					if ((state & 2) == 2)
-						if (pipe.isPowered())
-							blockState = blockState
-									.withProperty(BlockPlasticPipe.CONNECTION[i], BlockPlasticPipe.ConnectionType.INPUT);
-						else
-							blockState = blockState
-									.withProperty(BlockPlasticPipe.CONNECTION[i], BlockPlasticPipe.ConnectionType.INPUT_POWERED);
-					else
-						blockState = blockState
-								.withProperty(BlockPlasticPipe.CONNECTION[i], BlockPlasticPipe.ConnectionType.OUTPUT);
-					break;
-				default:
-					break;
-				}
-			}
+		for (EnumFacing side : EnumFacing.VALUES) {
+			ConnectionType connType = pipe.getSideConnection(side.ordinal());
+			if((connType == OUTPUT || connType == EXTRACT || connType == EXTRACT_POWERED) && pipe.isCableOnly())
+				connType = HANDLER_DISCONNECTED;
+			else if(connType == EXTRACT && pipe.isPowered())
+				connType = EXTRACT_POWERED;
+
+			blockState = blockState.withProperty(BlockPlasticPipe.CONNECTION[side.ordinal()], connType);
 		}
 
 		return blockState;

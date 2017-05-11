@@ -42,6 +42,7 @@ import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
+import powercrystals.minefactoryreloaded.tile.transport.PlasticPipeUpgrade;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 import java.util.ArrayList;
@@ -119,39 +120,24 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 					MFRUtil.usedWrench(player, pos);
 					return true;
 				}
-			} else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_TORCH))) {
-				int t = cable.getUpgrade();
-				if (t != 0) {
-					if (t == 1)
-						break l2;
-					if (t == 2)
-						UtilInventory.dropStackInAir(world, pos, new ItemStack(Blocks.REDSTONE_BLOCK));
+			} else if (PlasticPipeUpgrade.isUpgradeItem(heldItem)) {
+				PlasticPipeUpgrade newUpgrade = PlasticPipeUpgrade.getUpgrade(heldItem);
+				PlasticPipeUpgrade currentUpgrade = cable.getUpgrade();
+
+				if (newUpgrade == currentUpgrade) {
+					break l2;
+				}
+
+				if (currentUpgrade.getDrop() != null){
+					UtilInventory.dropStackInAir(world, pos, currentUpgrade.getDrop());
 				}
 				if (!world.isRemote) {
 					if (!player.capabilities.isCreativeMode) {
 						ItemHelper.consumeItem(heldItem);
 					}
-					cable.setUpgrade(1);
+					cable.setUpgrade(newUpgrade);
 					neighborChanged(state, world, pos, Blocks.AIR);
-					player.addChatMessage(new TextComponentTranslation(
-							"chat.info.mfr.fluid.install.torch"));
-				}
-				return true;
-			} else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_BLOCK))) {
-				int t = cable.getUpgrade();
-				if (t != 0) {
-					if (t == 2)
-						break l2;
-					if (t == 1)
-						UtilInventory.dropStackInAir(world, pos, new ItemStack(Blocks.REDSTONE_TORCH));
-				}
-				if (!world.isRemote) {
-					if (!player.capabilities.isCreativeMode)
-						ItemHelper.consumeItem(heldItem);
-					cable.setUpgrade(2);
-					neighborChanged(state, world, pos, Blocks.AIR);
-					player.addChatMessage(new TextComponentTranslation(
-							"chat.info.mfr.fluid.install.block"));
+					player.addChatMessage(new TextComponentTranslation(newUpgrade.getChatMessageKey()));
 				}
 				return true;
 			}
@@ -171,13 +157,9 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityPlasticPipe) {
-			switch (((TileEntityPlasticPipe) te).getUpgrade()) {
-			case 1:
-				drops.add(new ItemStack(Blocks.REDSTONE_TORCH));
-				break;
-			case 2:
-				drops.add(new ItemStack(Blocks.REDSTONE_BLOCK));
-				break;
+			PlasticPipeUpgrade upgrade = ((TileEntityPlasticPipe) te).getUpgrade();
+			if(upgrade.getDrop() != null) {
+				drops.add(upgrade.getDrop());
 			}
 		}
 
@@ -273,9 +255,11 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 
 		NONE,
 		CABLE,
-		INPUT,
-		INPUT_POWERED,
-		OUTPUT;
+		CABLE_DISCONNECTED,
+		EXTRACT,
+		EXTRACT_POWERED,
+		OUTPUT,
+		HANDLER_DISCONNECTED;
 
 		@Override
 		public String getName() {
