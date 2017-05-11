@@ -69,9 +69,9 @@ public class FluidNetwork implements IGrid {
 				setMaster(pipe);
 				HANDLER.addGrid(this);
 			}
+			rebalanceGrid();
 			fillGrid(pipe.fluidForGrid);
 			setPipeFluid(pipe);
-			rebalanceGrid();
 		}
 	}
 
@@ -79,11 +79,12 @@ public class FluidNetwork implements IGrid {
 
 		if (pipe.grid != null) {
 			return mergeGrid(pipe.grid);
-		} else if (pipe.fluidForGrid != null) {
+		}
+
+		if (pipe.fluidForGrid != null) {
 			if (FluidHelper.isFluidEqualOrNull(pipe.fluidForGrid, storage.getFluid())) {
 				pipe.grid = this;
 				storage.fill(new FluidStack(pipe.fluidForGrid, 0), true);
-				setPipeFluid(pipe);
 			} else {
 				return false;
 			}
@@ -165,8 +166,10 @@ public class FluidNetwork implements IGrid {
 		regenerating = true;
 		for (TileEntityPlasticPipe curCond : nodeSet)
 			destroyNode(curCond);
-		for (TileEntityPlasticPipe curCond : conduitSet)
-			destroyConduit(curCond);
+		for (TileEntityPlasticPipe curCond : conduitSet) {
+			if (!curCond.isNode)
+				destroyConduit(curCond);
+		}
 		HANDLER.removeGrid(this);
 	}
 
