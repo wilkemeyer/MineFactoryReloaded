@@ -22,7 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -42,6 +41,7 @@ import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.render.block.PlasticPipeRenderer;
+import powercrystals.minefactoryreloaded.tile.transport.PlasticPipeUpgrade;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
 import java.util.ArrayList;
@@ -51,11 +51,11 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 
 public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBakeryBlock {
 
-	public static final IUnlistedProperty<ConnectionType>[] CONNECTION = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<TileEntityPlasticPipe.ConnectionType>[] CONNECTION = new IUnlistedProperty[6];
 
 	static {
 		for (int i = 0; i < 6; i++) {
-			CONNECTION[i] = Properties.toUnlisted(PropertyEnum.create("connection_" + i, ConnectionType.class));
+			CONNECTION[i] = Properties.toUnlisted(PropertyEnum.create("connection_" + i, TileEntityPlasticPipe.ConnectionType.class));
 		}
 	}
 
@@ -119,39 +119,24 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 					MFRUtil.usedWrench(player, pos);
 					return true;
 				}
-			} else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_TORCH))) {
-				int t = cable.getUpgrade();
-				if (t != 0) {
-					if (t == 1)
-						break l2;
-					if (t == 2)
-						UtilInventory.dropStackInAir(world, pos, new ItemStack(Blocks.REDSTONE_BLOCK));
+			} else if (PlasticPipeUpgrade.isUpgradeItem(heldItem)) {
+				PlasticPipeUpgrade newUpgrade = PlasticPipeUpgrade.getUpgrade(heldItem);
+				PlasticPipeUpgrade currentUpgrade = cable.getUpgrade();
+
+				if (newUpgrade == currentUpgrade) {
+					break l2;
+				}
+
+				if (currentUpgrade.getDrop() != null){
+					UtilInventory.dropStackInAir(world, pos, currentUpgrade.getDrop());
 				}
 				if (!world.isRemote) {
 					if (!player.capabilities.isCreativeMode) {
 						ItemHelper.consumeItem(heldItem);
 					}
-					cable.setUpgrade(1);
+					cable.setUpgrade(newUpgrade);
 					neighborChanged(state, world, pos, Blocks.AIR);
-					player.addChatMessage(new TextComponentTranslation(
-							"chat.info.mfr.fluid.install.torch"));
-				}
-				return true;
-			} else if (heldItem != null && heldItem.isItemEqual(new ItemStack(Blocks.REDSTONE_BLOCK))) {
-				int t = cable.getUpgrade();
-				if (t != 0) {
-					if (t == 2)
-						break l2;
-					if (t == 1)
-						UtilInventory.dropStackInAir(world, pos, new ItemStack(Blocks.REDSTONE_TORCH));
-				}
-				if (!world.isRemote) {
-					if (!player.capabilities.isCreativeMode)
-						ItemHelper.consumeItem(heldItem);
-					cable.setUpgrade(2);
-					neighborChanged(state, world, pos, Blocks.AIR);
-					player.addChatMessage(new TextComponentTranslation(
-							"chat.info.mfr.fluid.install.block"));
+					player.addChatMessage(new TextComponentTranslation(newUpgrade.getChatMessageKey()));
 				}
 				return true;
 			}
@@ -171,13 +156,9 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 
 		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof TileEntityPlasticPipe) {
-			switch (((TileEntityPlasticPipe) te).getUpgrade()) {
-			case 1:
-				drops.add(new ItemStack(Blocks.REDSTONE_TORCH));
-				break;
-			case 2:
-				drops.add(new ItemStack(Blocks.REDSTONE_BLOCK));
-				break;
+			PlasticPipeUpgrade upgrade = ((TileEntityPlasticPipe) te).getUpgrade();
+			if(upgrade.getDrop() != null) {
+				drops.add(upgrade.getDrop());
 			}
 		}
 
@@ -269,18 +250,4 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 		return sb.toString();
 	}
 
-	public enum ConnectionType implements IStringSerializable {
-
-		NONE,
-		CABLE,
-		INPUT,
-		INPUT_POWERED,
-		OUTPUT;
-
-		@Override
-		public String getName() {
-
-			return this.name();
-		}
-	}
 }

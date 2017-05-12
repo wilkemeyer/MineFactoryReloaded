@@ -51,7 +51,7 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		inWorld = true;
 	}
 
-	boolean firstTick = true;
+	protected boolean firstTick = true;
 
 	@Override
 	public void update() {

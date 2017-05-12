@@ -1,8 +1,5 @@
 package powercrystals.minefactoryreloaded.tile.transport;
 
-import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
-import static powercrystals.minefactoryreloaded.tile.transport.FluidNetwork.TRANSFER_RATE;
-
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.core.render.hitbox.CustomHitBox;
@@ -10,33 +7,24 @@ import cofh.core.render.hitbox.ICustomHitBox;
 import cofh.core.util.CoreUtils;
 import cofh.lib.util.helpers.FluidHelper;
 import cofh.lib.util.helpers.StringHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidTank;
-
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.core.ITraceable;
@@ -45,22 +33,29 @@ import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityBase;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe.ConnectionType.*;
+import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
+import static powercrystals.minefactoryreloaded.tile.transport.FluidNetwork.TRANSFER_RATE;
 
 public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITraceable, ICustomHitBox
 {
+	FluidNetwork grid;
 
-	private byte[] sideMode = { 1, 1, 1, 1, 1, 1, 0 };
-	private IFluidHandler[] handlerCache = null;
-	private byte upgradeItem = 0;
-	private boolean deadCache = true;
-
-	private boolean readFromNBT = false;
-
+	private ConnectionType[] sideConnection = {NONE, NONE, NONE, NONE, NONE, NONE};
 	private boolean isPowered = false;
+	private boolean cableOnly = false;
 	boolean isNode = false;
 	FluidStack fluidForGrid = null;
 
-	FluidNetwork _grid;
+	private IFluidHandler[] handlerCache = null;
+	private PlasticPipeUpgrade upgrade = PlasticPipeUpgrade.NONE;
+	private boolean deadCache = true;
+
+	private boolean initialized = false;
 
 	public TileEntityPlasticPipe() {
 
@@ -76,80 +71,112 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public void invalidate() {
 
-		if (_grid != null) {
+		if (grid != null) {
 			removeFromGrid();
 		}
 		super.invalidate();
 	}
 
+	@Override
+	public void onChunkUnload() {
+
+		if (grid != null) {
+			removeFromGrid();
+		}
+		super.onChunkUnload();
+	}
+
 	private void removeFromGrid() {
 
-		_grid.removeConduit(this);
+		grid.removePipe(this);
 		markForRegen();
 		deadCache = true;
-		_grid = null;
+		grid = null;
 	}
 
 	private void markForRegen() {
-
-		int c = 0;
-		for (int i = 6; i-- > 0;)
-			if (sideMode[i] == ((2 << 2) | 1))
-				++c;
-		if (c > 1)
-			_grid.regenerate();
+		int cableConnections = 0;
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			if (sideConnection[facing.ordinal()] == CABLE) {
+				++cableConnections;
+				if (cableConnections > 1) {
+					grid.regenerate();
+					return;
+				}
+			}
+		}
 	}
 
-	boolean firstTick = true;
-	
-	@Override
-	public void update() {
-		
-		//TODO remove in favor of ASM
-		if (firstTick) {
-			cofh_validate();
-			firstTick = false;
+	private void updateCache() {
+
+		for (EnumFacing side : EnumFacing.VALUES) {
+			BlockPos offsetPos = pos.offset(side);
+			updateSideCache(offsetPos, side);
 		}
-		
-		//TODO yet again needs a non tickable base TE
+
+		deadCache = false;
+		FluidNetwork.HANDLER.addConduitForUpdate(this);
+
+		if (grid == null) {
+			grid = new FluidNetwork(this);
+		}
+
+		initialized = true;
+	}
+
+	private void updateSideCache(BlockPos sidePos, EnumFacing side) {
+
+		if (handlerCache != null)
+			handlerCache[side.ordinal()] = null;
+		ConnectionType lastConnection = sideConnection[side.ordinal()];
+
+		if (worldObj.isBlockLoaded(sidePos)) {
+			TileEntity te = MFRUtil.getTile(worldObj, sidePos);
+			if (te instanceof TileEntityPlasticPipe) {
+				if(!initialized || sideConnection[side.ordinal()] != CABLE_DISCONNECTED) {
+					TileEntityPlasticPipe pipe = (TileEntityPlasticPipe) te;
+					if (pipe.grid != null) {
+						if(pipe.grid.addPipe(this)) {
+							sideConnection[side.ordinal()] = CABLE;
+						} else {
+							sideConnection[side.ordinal()] = CABLE_DISCONNECTED;
+						}
+					}
+				}
+			} else if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
+				if (handlerCache == null) handlerCache = new IFluidHandler[6];
+				handlerCache[side.ordinal()] = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+				if (!initialized || (sideConnection[side.ordinal()] != EXTRACT && sideConnection[side.ordinal()] != OUTPUT)) {
+					sideConnection[side.ordinal()] = OUTPUT;
+				}
+			} else if (initialized) {
+				sideConnection[side.ordinal()] = NONE;
+			}
+		}
+
+		if (!deadCache && lastConnection != sideConnection[side.ordinal()])
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
 	@Override
 	public void onNeighborBlockChange() {
 
 		boolean last = isPowered;
-		switch (upgradeItem) {
-		case 0:
-			isPowered = CoreUtils.isRedstonePowered(this);
-			break;
-		case 1:
-			isPowered = !CoreUtils.isRedstonePowered(this);
-			break;
-		case 2:
-			isPowered = true;
-		}
+		isPowered = upgrade.getPowered(CoreUtils.isRedstonePowered(this));
 		if (last != isPowered)
 			MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
 
-	private void reCache() {
+	@Override
+	public void update() {
 
-		if (deadCache) {
-			for (EnumFacing dir : EnumFacing.VALUES)
-				if (worldObj.isBlockLoaded(pos.offset(dir)))
-					addCache(MFRUtil.getTile(worldObj, pos.offset(dir)));
-			deadCache = false;
-			FluidNetwork.HANDLER.addConduitForUpdate(this);
+		//TODO remove in favor of ASM
+		if (firstTick) {
+			cofh_validate();
+			firstTick = false;
 		}
-	}
 
-	public void onMerge() {
-
-		markChunkDirty();
-		notifyNeighborTileChange();
-		deadCache = true;
-		reCache();
-		MFRUtil.notifyBlockUpdate(worldObj, pos);
+		//TODO yet again needs a non tickable base TE
 	}
 
 	@Override
@@ -159,14 +186,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		deadCache = true;
 		handlerCache = null;
 		if (worldObj.isRemote) return;
-		if (_grid == null) {
-			incorporateTiles();
-			if (_grid == null) {
-				setGrid(new FluidNetwork(this));
-			}
-		}
-		readFromNBT = true;
-		reCache();
+		updateCache();
 		markDirty();
 		MFRUtil.notifyBlockUpdate(worldObj, pos);
 	}
@@ -174,334 +194,17 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public void onNeighborTileChange(BlockPos neighborPos) {
 
-		if (worldObj.isRemote | deadCache)
+		if (worldObj.isRemote || deadCache)
 			return;
-		TileEntity tile = worldObj.isBlockLoaded(neighborPos) ? worldObj.getTileEntity(neighborPos) : null;
 
-		Vec3i diff = pos.subtract(neighborPos);
-		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
+		Vec3i diff = neighborPos.subtract(pos);
+		updateSideCache(neighborPos, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
+		FluidNetwork.HANDLER.addConduitForUpdate(this);
 	}
 
-	private void addCache(TileEntity tile) {
+	public boolean canInterface(EnumFacing dir) {
 
-		if (tile == null) return;
-		Vec3i diff = pos.subtract(tile.getPos());
-		addCache(tile, EnumFacing.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ()));
-	}
-
-	private void addCache(TileEntity tile, EnumFacing side) {
-
-		if (handlerCache != null)
-			handlerCache[side.ordinal()] = null;
-		int lastMode = sideMode[side.ordinal()];
-		sideMode[side.ordinal()] &= 3;
-		if (tile instanceof TileEntityPlasticPipe) {
-			TileEntityPlasticPipe cable = (TileEntityPlasticPipe) tile;
-			sideMode[side.ordinal()] &= ~2;
-			sideMode[side.ordinal()] |= (2 << 2);
-			if (cable.isInterfacing(side)) {
-				if (_grid == null && cable._grid != null) {
-					cable._grid.addConduit(this);
-				}
-				if (cable._grid == _grid) {
-					sideMode[side.ordinal()] |= 1; // always enable
-				}
-			} else {
-				sideMode[side.ordinal()] &= ~3;
-			}
-		} else if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
-			//if (((IFluidHandler)tile).canFill(EnumFacing.VALID_DIRECTIONS[side]))
-			{
-				if (handlerCache == null) handlerCache = new IFluidHandler[6];
-				handlerCache[side.ordinal()] = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
-				sideMode[side.ordinal()] |= 1 << 2;
-			}
-		}
-		if (!deadCache) {
-			FluidNetwork.HANDLER.addConduitForUpdate(this);
-			if (lastMode != sideMode[side.ordinal()])
-				MFRUtil.notifyBlockUpdate(worldObj, pos);
-		}
-	}
-
-	private void incorporateTiles() {
-
-		if (_grid == null) {
-			boolean hasGrid = false;
-			for (EnumFacing dir : EnumFacing.VALUES) {
-				if (readFromNBT && (sideMode[dir.getOpposite().ordinal()] & 1) == 0) continue;
-				if (worldObj.isBlockLoaded(pos.offset(dir))) {
-					TileEntityPlasticPipe pipe = MFRUtil.getTile(worldObj, pos.offset(dir), TileEntityPlasticPipe.class);
-					if (pipe != null) {
-						if (pipe._grid != null &&
-								(readFromNBT ? pipe.couldInterface(this) : pipe.canInterface(this))) {
-							if (hasGrid) {
-								pipe._grid.mergeGrid(_grid);
-							} else {
-								if (pipe._grid.addConduit(this)) {
-									hasGrid = true;
-									mergeWith(pipe, dir.ordinal());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public boolean canInterface(TileEntityPlasticPipe te, EnumFacing dir) {
-
-		if ((sideMode[dir.ordinal()] & 1) == 0) return false;
-		return canInterface(te);
-	}
-
-	public boolean canInterface(TileEntityPlasticPipe te) {
-
-		//new pipe not connected to anything yet - thus can interface with
-		if (_grid != null && te._grid == null) {
-			return true;
-		}
-
-		if (_grid != null && te._grid != null)
-			if (_grid.storage.getFluid() == te._grid.storage.getFluid())
-				return true;
-			else
-				return FluidHelper.isFluidEqualOrNull(_grid.storage.getFluid(), te._grid.storage.getFluid());
-		return fluidForGrid == te.fluidForGrid || FluidHelper.isFluidEqual(fluidForGrid, te.fluidForGrid);
-	}
-
-	public boolean couldInterface(TileEntityPlasticPipe te) {
-
-		if (_grid != null && te._grid != null)
-			if (_grid.storage.getFluid() == te._grid.storage.getFluid())
-				return true;
-			else
-				return FluidHelper.isFluidEqualOrNull(_grid.storage.getFluid(), te._grid.storage.getFluid());
-		return fluidForGrid == te.fluidForGrid || FluidHelper.isFluidEqualOrNull(fluidForGrid, te.fluidForGrid);
-	}
-
-	private void mergeWith(TileEntityPlasticPipe te, int side) {
-
-		if (_grid != null && te._grid != null && couldInterface(te)) {
-			te._grid.mergeGrid(_grid);
-			final byte one = 1;
-			setMode(side, one);
-			te.setMode(side ^ 1, one);
-		}
-	}
-
-	@Override
-	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
-
-		tag.setInteger("mode[0]", (sideMode[0] & 0xFF) | ((sideMode[1] & 0xFF) << 8) | ((sideMode[2] & 0xFF) << 16) |
-				((sideMode[3] & 0xFF) << 24));
-		tag.setInteger("mode[1]", (sideMode[4] & 0xFF) | ((sideMode[5] & 0xFF) << 8) | ((sideMode[6] & 0xFF) << 16) |
-				(isPowered ? 1 << 24 : 0));
-		tag.setByte("upgrade", upgradeItem);
-
-		return super.writePacketData(tag);
-	}
-
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-
-		if (deadCache)
-			return null;
-
-		return super.getUpdatePacket();
-	}
-
-	@Override
-	protected void handlePacketData(NBTTagCompound tag) {
-
-		super.handlePacketData(tag);
-
-		int mode = tag.getInteger("mode[0]");
-		sideMode[0] = (byte) ((mode >> 0) & 0xFF);
-		sideMode[1] = (byte) ((mode >> 8) & 0xFF);
-		sideMode[2] = (byte) ((mode >> 16) & 0xFF);
-		sideMode[3] = (byte) ((mode >> 24) & 0xFF);
-		mode = tag.getInteger("mode[1]");
-		sideMode[4] = (byte) ((mode >> 0) & 0xFF);
-		sideMode[5] = (byte) ((mode >> 8) & 0xFF);
-		sideMode[6] = (byte) ((mode >> 16) & 0xFF);
-		isPowered = (mode >> 24) > 0;
-		upgradeItem = tag.getByte("upgrade");
-	}
-
-	public void setUpgrade(int i) {
-
-		upgradeItem = (byte) i;
-	}
-
-	public int getUpgrade() {
-
-		return upgradeItem;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setModes(byte[] modes) {
-
-		sideMode = modes;
-	}
-
-	public byte getMode(int subSide) {
-
-		return (byte) (sideMode[subSide < 6 ? EnumFacing.VALUES[subSide].getOpposite().ordinal() : 6] & 3);
-	}
-
-	public void setMode(int subSide, byte mode) {
-
-		subSide = subSide < 6 ? subSide ^ 1 : 6;
-		mode &= 3;
-		int t = sideMode[subSide];
-		boolean mustUpdate = (mode != (t & 3));
-		sideMode[subSide] = (byte) ((t & ~3) | mode);
-		if (mustUpdate)
-		{
-			FluidNetwork.HANDLER.addConduitForUpdate(this);
-		}
-	}
-
-	// internal
-
-	public boolean isInterfacing(EnumFacing to) {
-
-		int bSide = to.ordinal() ^ 1;
-		int mode = sideMode[bSide] >> 2;
-		return ((sideMode[bSide] & 1) != 0) & (sideMode[6] == 1 ? mode == 2 : mode != 0);
-	}
-
-	public int interfaceMode(EnumFacing to) {
-
-		int bSide = to.ordinal() ^ 1;
-		int mode = sideMode[bSide] >> 2;
-		return (sideMode[bSide] & 1) != 0 ? mode : 0;
-	}
-
-	public boolean isPowered() {
-
-		return isPowered;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-
-		super.readFromNBT(nbt);
-		readFromNBT = true;
-		upgradeItem = nbt.getByte("Upgrade");
-		isPowered = nbt.getBoolean("Power");
-		sideMode = nbt.getByteArray("SideMode");
-		if (sideMode.length != 7)
-			sideMode = new byte[] { 1, 1, 1, 1, 1, 1, 0 };
-		if (nbt.hasKey("Fluid"))
-			fluidForGrid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("Fluid"));
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-
-		super.writeToNBT(nbt);
-		nbt.setByte("Upgrade", upgradeItem);
-		nbt.setBoolean("Power", isPowered);
-		nbt.setByteArray("SideMode", sideMode);
-		if (_grid != null) {
-			if (isNode) {
-				fluidForGrid = _grid.storage.drain(_grid.getNodeShare(this), false);
-			} else {
-				fluidForGrid = _grid.storage.drain(0, false);
-			}
-			if (fluidForGrid != null)
-				nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
-		} else if (fluidForGrid != null)
-			nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
-
-		return nbt;
-	}
-
-	void extract(EnumFacing side, IFluidTank tank) {
-
-		if (deadCache) return;
-		int bSide = side.ordinal();
-		int m = sideMode[bSide];
-		if (isPowered & ((m & 1) != 0) & (m & 2) == 2) {
-			switch (m >> 2) {
-			case 1: // IFluidHandler
-				if (handlerCache != null) {
-					IFluidHandler fluidHandler = handlerCache[bSide];
-					FluidStack e = fluidHandler.drain(TRANSFER_RATE, false);
-					if (e != null && e.amount > 0)
-					{
-							fluidHandler.drain(tank.fill(e, true), true);
-					}
-				}
-				break;
-			case 2: // TileEntityPlasticPipe
-				break;
-			case 0: // no mode
-				// no-op
-				break;
-			}
-		}
-	}
-
-	int transfer(EnumFacing side, FluidStack fluid, Fluid f) {
-
-		if (deadCache) return 0;
-		int bSide = side.ordinal();
-		int m = sideMode[bSide];
-		if (((m & 1) != 0) & (m & 2) == 0) {
-			switch (m >> 2) {
-			case 1: // IFluidHandler
-				if (handlerCache != null) {
-					IFluidHandler fluidHandler = handlerCache[bSide];
-					if (fluidHandler != null && fluidHandler.fill(fluid, false) > 0)
-						return fluidHandler.fill(fluid, true);
-				}
-				break;
-			case 2: // TileEntityRednetCable
-			case 0: // no mode
-				// no-op
-				break;
-			}
-		}
-		return 0;
-	}
-
-	public void setGrid(FluidNetwork newGrid) {
-
-		if (fluidForGrid == null)
-			fluidForGrid = newGrid.storage.drain(0, false);
-		_grid = newGrid;
-	}
-
-	@Override
-	public void updateInternalTypes(IGridController grid) {
-
-		if (grid != FluidNetwork.HANDLER) return;
-		if (deadCache) {
-			reCache();
-			return;
-		}
-		boolean node = false;
-		if (sideMode[6] != 1) {
-			for (int i = 0; i < 6; i++) {
-				final int t = sideMode[i];
-				final int mode = t >> 2;
-				node = ((t & 1) != 0) & (mode != 0) & (mode != 2) | node;
-			}
-		}
-		isNode = node;
-		if (_grid != null)
-			_grid.addConduit(this);
-		Packets.sendToAllPlayersWatching(this);
-	}
-
-	@Override
-	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
-
-		return subHit < 2;
+		return sideConnection[dir.ordinal()] == CABLE;
 	}
 
 	@Override
@@ -538,74 +241,184 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
+	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
+
+		return subHit < 2;
+	}
+
+	public void setUpgrade(PlasticPipeUpgrade upgrade) {
+
+		this.upgrade = upgrade;
+	}
+
+	public PlasticPipeUpgrade getUpgrade() {
+
+		return upgrade;
+	}
+
+	public void updateState() {
+
+		markChunkDirty();
+		notifyNeighborTileChange();
+		deadCache = true;
+		updateCache();
+		MFRUtil.notifyBlockUpdate(worldObj, pos);
+	}
+
+	@Override
 	public boolean onPartHit(EntityPlayer player, int subSide, int subHit) {
 
 		if (subHit >= 0 && subHit < (2 + 6 * 2)) {
 			if (MFRUtil.isHoldingUsableTool(player, pos)) {
 				if (!worldObj.isRemote) {
 					EnumFacing side = subSide < 6 ? EnumFacing.VALUES[subSide] : null;
-					int data = sideMode[side != null ? side.getOpposite().ordinal() : 6] >> 2;
-					byte mode = getMode(subSide);
-					if (++mode == 2) ++mode;
-					if (data == 2) {
-						if (mode > 1)
-							mode = 0;
+					if (side != null && (sideConnection[side.ordinal()] == CABLE || sideConnection[side.ordinal()] == CABLE_DISCONNECTED)) {
 						TileEntityPlasticPipe cable = MFRUtil.getTile(worldObj, pos.offset(side), TileEntityPlasticPipe.class);
-						if (!isInterfacing(side)) {
-							if (couldInterface(cable)) {
-								mergeWith(cable, subSide);
-								cable.onMerge();
-								onMerge();
+						if (!canInterface(side)) {
+							if (cable.grid.mergeGrid(grid)) {
+								sideConnection[side.ordinal()] = CABLE;
+								FluidNetwork.HANDLER.addConduitForUpdate(this);
+								cable.sideConnection[side.getOpposite().ordinal()] = CABLE;
+								FluidNetwork.HANDLER.addConduitForUpdate(cable);
+								updateState();
+								cable.updateState();
 							}
 						} else {
 							removeFromGrid();
-							final byte zero = 0;
-							setMode(subSide, zero);
-							cable.onMerge();
-							onMerge();
-							if (_grid == null)
-								setGrid(new FluidNetwork(this));
+							sideConnection[side.ordinal()] = CABLE_DISCONNECTED;
+							cable.sideConnection[side.getOpposite().ordinal()] = CABLE_DISCONNECTED;
+							cable.updateState();
+							updateState();
+							if (grid == null)
+								grid = new FluidNetwork(this);
 						}
 						return true;
 					}
 					else if (side == null) {
-						if (mode > 1)
-							mode = 0;
-						setMode(subSide, mode);
+						cableOnly = !cableOnly;
+						FluidNetwork.HANDLER.addConduitForUpdate(this);
 						markDirty();
-						switch (mode) {
-						case 0:
-							player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.tile.standard"));
-							break;
-						case 1:
+						if (cableOnly) {
 							player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.tile.cableonly"));
-							break;
-						default:
+						} else {
+							player.addChatMessage(new TextComponentTranslation("chat.info.mfr.rednet.tile.standard"));
 						}
 						return true;
 					}
-					if (mode > 3) {
-						mode = 0;
-					}
-					setMode(subSide, mode);
-					markDirty();
-					switch (mode) {
-					case 0:
-						player.addChatMessage(new TextComponentTranslation("chat.info.mfr.fluid.connection.disabled"));
+					String messageKey;
+					switch (sideConnection[side.ordinal()]) {
+					case HANDLER_DISCONNECTED:
+						sideConnection[side.ordinal()] = OUTPUT;
+						messageKey = "chat.info.mfr.fluid.connection.output";
 						break;
-					case 1:
-						player.addChatMessage(new TextComponentTranslation("chat.info.mfr.fluid.connection.output"));
-						break;
-					case 3:
-						player.addChatMessage(new TextComponentTranslation("chat.info.mfr.fluid.connection.extract"));
+					case EXTRACT:
+						sideConnection[side.ordinal()] = HANDLER_DISCONNECTED;
+						messageKey = "chat.info.mfr.fluid.connection.disabled";
 						break;
 					default:
+						sideConnection[side.ordinal()] = EXTRACT;
+						messageKey = "chat.info.mfr.fluid.connection.extract";
 					}
+					FluidNetwork.HANDLER.addConduitForUpdate(this);
+					markDirty();
+					player.addChatMessage(new TextComponentTranslation(messageKey));
 				}
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public boolean isPowered() {
+
+		return isPowered;
+	}
+
+	@Override
+	public void updateInternalTypes(IGridController gridController) {
+
+		if (gridController != FluidNetwork.HANDLER) return;
+		if (deadCache) {
+			updateCache();
+			return;
+		}
+		boolean node = false;
+		if (!cableOnly) {
+			for (EnumFacing side : EnumFacing.VALUES) {
+				if (sideConnection[side.ordinal()] == OUTPUT || sideConnection[side.ordinal()] == EXTRACT) {
+					node = true;
+					break;
+				}
+			}
+		}
+		isNode = node;
+		if (grid != null)
+			grid.updateNodeData(this);
+		Packets.sendToAllPlayersWatching(this);
+	}
+
+	void extract(EnumFacing side, IFluidTank tank) {
+
+		if (deadCache) return;
+		if (isPowered && sideConnection[side.ordinal()] == EXTRACT) {
+			if (handlerCache != null) {
+				IFluidHandler fluidHandler = handlerCache[side.ordinal()];
+				FluidStack e = fluidHandler.drain(TRANSFER_RATE, false);
+				if (e != null && e.amount > 0)
+				{
+					fluidHandler.drain(tank.fill(e, true), true);
+				}
+			}
+		}
+	}
+
+	int transfer(EnumFacing side, FluidStack fluid, Fluid f) {
+
+		if (deadCache) return 0;
+		if (sideConnection[side.ordinal()] == OUTPUT) {
+			if (handlerCache != null) {
+				IFluidHandler fluidHandler = handlerCache[side.ordinal()];
+				if (fluidHandler != null && fluidHandler.fill(fluid, false) > 0)
+					return fluidHandler.fill(fluid, true);
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
+
+		if (grid != null) {
+			info.add(text("Powered: " + isPowered));
+			/* TODO: advanced monitoring
+			if (isNode) {
+				info.add("Throughput All: " + _grid.distribution);
+				info.add("Throughput Side: " + _grid.distributionSide);
+			} else//*/
+			if (!debug) {
+				info.add(text("Contains: " + StringHelper.getFluidName(grid.storage.getFluid(), "<Empty>")));
+				info.add(text("Saturation: " +
+						(Math.ceil(grid.storage.getFluidAmount() /
+								(float) grid.storage.getCapacity() * 1000) / 10f)));
+			}
+		} else if (!debug)
+			info.add(text("Null Grid"));
+		if (debug) {
+			if (grid != null) {
+				info.add(text("Grid:" + grid));
+				info.add(text("    Conduits: " + grid.getConduitCount() + ", Nodes: " + grid.getNodeCount()));
+				info.add(text("    Grid Max: " + grid.storage.getCapacity() + ", Grid Cur: " +
+						grid.storage.getFluidAmount()));
+				info.add(text("    Contains: " + StringHelper.getFluidName(grid.storage.getFluid(), "<Empty>")));
+			} else {
+				info.add(text("Grid: Null"));
+			}
+			info.add(text("Cache: (" + Arrays.toString(handlerCache) + ")"));
+			info.add(text("FluidForGrid: " + fluidForGrid));
+			info.add(text("SideConnections: " + Arrays.toString(sideConnection)));
+			info.add(text("Node: " + isNode));
+			return;
+		}
 	}
 
 	@Override
@@ -616,28 +429,24 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		IndexedCuboid6 main = new IndexedCuboid6(0, subSelection[0]); // main body
 		list.add(main);
 
-		EnumFacing[] sides = EnumFacing.VALUES;
-		boolean cableMode = sideMode[6] == 1;
-		for (int i = sides.length; i-- > 0;) {
-			int mode = sideMode[sides[i].getOpposite().ordinal()] >> 2;
-			boolean iface = (mode > 0) & mode != 2;
+		for (EnumFacing side : EnumFacing.VALUES) {
+			int i = side.ordinal();
+			ConnectionType connType = sideConnection[i];
 			int o = 2 + i;
-			if (((sideMode[sides[i].getOpposite().ordinal()] & 1) != 0) & mode > 0) {
-				if (mode == 2) {
-					o = 2 + 6 * 3 + i;
-					list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? 2 + i : 1,
-							subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
-					continue;
-				}
-				if (cableMode) continue;
+			if (connType == CABLE) {
+				o = 2 + 6 * 3 + i;
+				list.add((IndexedCuboid6) new IndexedCuboid6(hasTool ? 2 + i : 1,
+						subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
+			}
+			else if (!cableOnly && (connType == EXTRACT || connType == OUTPUT)) {
 				list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point
 				o = 2 + 6 * 3 + i;
 				list.add((IndexedCuboid6) new IndexedCuboid6(1, subSelection[o]).add(offset)); // cable part
 			}
-			else if (forTrace & hasTool) {
-				if (!cableMode & iface) {
+			else if (forTrace && hasTool) {
+				if (!cableOnly && connType == HANDLER_DISCONNECTED) {
 					list.add((IndexedCuboid6) new IndexedCuboid6(o, subSelection[o]).add(offset)); // connection point (raytrace)
-				} else if (mode == 2) {
+				} else if (connType == CABLE_DISCONNECTED) {
 					o = 2 + 6 * 3 + i;
 					list.add((IndexedCuboid6) new IndexedCuboid6(2 + i,
 							subSelection[o]).setSide(i, i & 1).add(offset)); // cable part
@@ -649,45 +458,10 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	}
 
 	@Override
-	public void getTileInfo(List<ITextComponent> info, EnumFacing side, EntityPlayer player, boolean debug) {
-
-		if (_grid != null) {
-			info.add(text("Powered: " + isPowered));
-			/* TODO: advanced monitoring
-			if (isNode) {
-				info.add("Throughput All: " + _grid.distribution);
-				info.add("Throughput Side: " + _grid.distributionSide);
-			} else//*/
-			if (!debug) {
-				info.add(text("Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>")));
-				info.add(text("Saturation: " +
-						(Math.ceil(_grid.storage.getFluidAmount() /
-								(float) _grid.storage.getCapacity() * 1000) / 10f)));
-			}
-		} else if (!debug)
-			info.add(text("Null Grid"));
-		if (debug) {
-			if (_grid != null) {
-				info.add(text("Grid:" + _grid));
-				info.add(text("    Conduits: " + _grid.getConduitCount() + ", Nodes: " + _grid.getNodeCount()));
-				info.add(text("    Grid Max: " + _grid.storage.getCapacity() + ", Grid Cur: " +
-						_grid.storage.getFluidAmount()));
-				info.add(text("    Contains: " + StringHelper.getFluidName(_grid.storage.getFluid(), "<Empty>")));
-			} else {
-				info.add(text("Grid: Null"));
-			}
-			info.add(text("Cache: (" + Arrays.toString(handlerCache) + ")"));
-			info.add(text("FluidForGrid: " + fluidForGrid));
-			info.add(text("SideType: " + Arrays.toString(sideMode)));
-			info.add(text("Node: " + isNode));
-			return;
-		}
-	}
-
-	@Override
 	public void firstTick(IGridController grid) {
 
 	}
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
@@ -698,10 +472,36 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new PlasticPipeFluidHandler(facing));
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new TileEntityPlasticPipe.PlasticPipeFluidHandler(facing));
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	public ConnectionType getSideConnection(int sideOrdinal) {
+		return sideConnection[sideOrdinal];
+	}
+
+	public boolean isCableOnly() {
+
+		return cableOnly;
+	}
+
+	public enum ConnectionType implements IStringSerializable {
+
+		NONE,
+		CABLE,
+		CABLE_DISCONNECTED,
+		EXTRACT,
+		EXTRACT_POWERED,
+		OUTPUT,
+		HANDLER_DISCONNECTED;
+
+		@Override
+		public String getName() {
+
+			return this.name();
+		}
 	}
 
 	private class PlasticPipeFluidHandler implements IFluidHandler {
@@ -716,19 +516,19 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		@Override
 		public IFluidTankProperties[] getTankProperties() {
 
-			if (_grid == null)
+			if (grid == null)
 				return FluidTankProperties.convert(FluidHelper.NULL_TANK_INFO);
-			return new IFluidTankProperties[] { new FluidTankProperties(_grid.storage.getFluid(), _grid.storage.getCapacity()) };
+			return new IFluidTankProperties[] { new FluidTankProperties(grid.storage.getFluid(), grid.storage.getCapacity()) };
 		}
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill) {
 
-			if (_grid == null | sideMode[6] == 1) return 0;
-			int t = sideMode[from.getOpposite().ordinal()];
-			if (((t & 1) != 0) & isPowered & (t & 2) == 2)
+			if (grid == null || cableOnly) return 0;
+			ConnectionType connType = sideConnection[from.ordinal()];
+			if (connType == EXTRACT && isPowered)
 			{
-				return _grid.storage.fill(resource, doFill);
+				return grid.storage.fill(resource, doFill);
 			}
 			return 0;
 		}
@@ -737,11 +537,11 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain) {
 
-			if (_grid == null | sideMode[6] == 1) return null;
-			int t = sideMode[from.getOpposite().ordinal()];
-			if (((t & 1) != 0) & (t & 2) == 0)
+			if (grid == null || cableOnly) return null;
+			ConnectionType connType = sideConnection[from.ordinal()];
+			if (connType == OUTPUT)
 			{
-				return _grid.storage.drain(resource, doDrain);
+				return grid.storage.drain(resource, doDrain);
 			}
 			return null;
 		}
@@ -750,11 +550,93 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain) {
 
-			if (_grid == null | sideMode[6] == 1) return null;
-			int t = sideMode[from.getOpposite().ordinal()];
-			if (((t & 1) != 0) & (t & 2) == 0)
-				return _grid.storage.drain(maxDrain, doDrain);
+			if (grid == null || cableOnly) return null;
+			ConnectionType connType = sideConnection[from.ordinal()];
+			if (connType == OUTPUT)
+				return grid.storage.drain(maxDrain, doDrain);
 			return null;
 		}
+	}
+
+	@Override
+	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
+
+		tag.setByteArray("SideConnections", serializeSideConnections());
+		tag.setBoolean("cableOnly", cableOnly);
+		tag.setBoolean("isPowered", isPowered);
+		tag.setByte("upgrade", (byte) upgrade.ordinal());
+
+		return super.writePacketData(tag);
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+
+		if (deadCache)
+			return null;
+
+		return super.getUpdatePacket();
+	}
+
+	@Override
+	protected void handlePacketData(NBTTagCompound tag) {
+
+		super.handlePacketData(tag);
+
+		deserializeSideConnections(tag.getByteArray("SideConnections"));
+		cableOnly = tag.getBoolean("cableOnly");
+		isPowered = tag.getBoolean("isPowered");
+		upgrade = PlasticPipeUpgrade.values()[tag.getByte("upgrade")];
+	}
+
+	// internal
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+
+		super.readFromNBT(nbt);
+		initialized = true;
+		upgrade = PlasticPipeUpgrade.values()[nbt.getByte("Upgrade")];
+		isPowered = nbt.getBoolean("Power");
+		deserializeSideConnections(nbt.getByteArray("SideConnections"));
+		if (nbt.hasKey("Fluid"))
+			fluidForGrid = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("Fluid"));
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+
+		super.writeToNBT(nbt);
+		nbt.setByte("Upgrade", (byte) upgrade.ordinal());
+		nbt.setBoolean("Power", isPowered);
+		nbt.setByteArray("SideConnections", serializeSideConnections());
+		if (grid != null) {
+			if (isNode) {
+				fluidForGrid = grid.storage.drain(grid.getNodeShare(this), false);
+			} else {
+				fluidForGrid = grid.storage.drain(0, false);
+			}
+			if (fluidForGrid != null)
+				nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
+		} else if (fluidForGrid != null)
+			nbt.setTag("Fluid", fluidForGrid.writeToNBT(new NBTTagCompound()));
+
+		return nbt;
+	}
+
+	private void deserializeSideConnections(byte[] serializedData) {
+
+		for (int i=0; i<6; i++) {
+			sideConnection[i] = ConnectionType.values()[serializedData[i]];
+		}
+	}
+
+	private byte[] serializeSideConnections() {
+
+		byte[] ret = new byte[6];
+		for (int i=0; i<6; i++) {
+			ret[i] = (byte) sideConnection[i].ordinal();
+		}
+		return ret;
 	}
 }
