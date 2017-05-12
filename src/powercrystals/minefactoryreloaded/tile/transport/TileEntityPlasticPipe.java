@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
@@ -24,7 +25,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.INode;
 import powercrystals.minefactoryreloaded.core.ITraceable;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType.*;
+import static powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe.ConnectionType.*;
 import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable.subSelection;
 import static powercrystals.minefactoryreloaded.tile.transport.FluidNetwork.TRANSFER_RATE;
 
@@ -45,7 +45,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 {
 	FluidNetwork grid;
 
-	private BlockPlasticPipe.ConnectionType[] sideConnection = {NONE, NONE, NONE, NONE, NONE, NONE};
+	private ConnectionType[] sideConnection = {NONE, NONE, NONE, NONE, NONE, NONE};
 	private boolean isPowered = false;
 	private boolean cableOnly = false;
 	boolean isNode = false;
@@ -75,6 +75,15 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 			removeFromGrid();
 		}
 		super.invalidate();
+	}
+
+	@Override
+	public void onChunkUnload() {
+
+		if (grid != null) {
+			removeFromGrid();
+		}
+		super.onChunkUnload();
 	}
 
 	private void removeFromGrid() {
@@ -119,7 +128,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		if (handlerCache != null)
 			handlerCache[side.ordinal()] = null;
-		BlockPlasticPipe.ConnectionType lastConnection = sideConnection[side.ordinal()];
+		ConnectionType lastConnection = sideConnection[side.ordinal()];
 
 		if (worldObj.isBlockLoaded(sidePos)) {
 			TileEntity te = MFRUtil.getTile(worldObj, sidePos);
@@ -422,7 +431,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		for (EnumFacing side : EnumFacing.VALUES) {
 			int i = side.ordinal();
-			BlockPlasticPipe.ConnectionType connType = sideConnection[i];
+			ConnectionType connType = sideConnection[i];
 			int o = 2 + i;
 			if (connType == CABLE) {
 				o = 2 + 6 * 3 + i;
@@ -469,13 +478,30 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		return super.getCapability(capability, facing);
 	}
 
-	public BlockPlasticPipe.ConnectionType getSideConnection(int sideOrdinal) {
+	public ConnectionType getSideConnection(int sideOrdinal) {
 		return sideConnection[sideOrdinal];
 	}
 
 	public boolean isCableOnly() {
 
 		return cableOnly;
+	}
+
+	public enum ConnectionType implements IStringSerializable {
+
+		NONE,
+		CABLE,
+		CABLE_DISCONNECTED,
+		EXTRACT,
+		EXTRACT_POWERED,
+		OUTPUT,
+		HANDLER_DISCONNECTED;
+
+		@Override
+		public String getName() {
+
+			return this.name();
+		}
 	}
 
 	private class PlasticPipeFluidHandler implements IFluidHandler {
@@ -499,7 +525,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		public int fill(FluidStack resource, boolean doFill) {
 
 			if (grid == null || cableOnly) return 0;
-			BlockPlasticPipe.ConnectionType connType = sideConnection[from.ordinal()];
+			ConnectionType connType = sideConnection[from.ordinal()];
 			if (connType == EXTRACT && isPowered)
 			{
 				return grid.storage.fill(resource, doFill);
@@ -512,7 +538,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		public FluidStack drain(FluidStack resource, boolean doDrain) {
 
 			if (grid == null || cableOnly) return null;
-			BlockPlasticPipe.ConnectionType connType = sideConnection[from.ordinal()];
+			ConnectionType connType = sideConnection[from.ordinal()];
 			if (connType == OUTPUT)
 			{
 				return grid.storage.drain(resource, doDrain);
@@ -525,7 +551,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 		public FluidStack drain(int maxDrain, boolean doDrain) {
 
 			if (grid == null || cableOnly) return null;
-			BlockPlasticPipe.ConnectionType connType = sideConnection[from.ordinal()];
+			ConnectionType connType = sideConnection[from.ordinal()];
 			if (connType == OUTPUT)
 				return grid.storage.drain(maxDrain, doDrain);
 			return null;
@@ -601,7 +627,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	private void deserializeSideConnections(byte[] serializedData) {
 
 		for (int i=0; i<6; i++) {
-			sideConnection[i] = BlockPlasticPipe.ConnectionType.values()[serializedData[i]];
+			sideConnection[i] = ConnectionType.values()[serializedData[i]];
 		}
 	}
 

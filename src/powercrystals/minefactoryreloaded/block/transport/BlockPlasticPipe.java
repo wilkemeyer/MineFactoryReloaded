@@ -22,7 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -52,11 +51,11 @@ import static powercrystals.minefactoryreloaded.block.transport.BlockRedNetCable
 
 public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBakeryBlock {
 
-	public static final IUnlistedProperty<ConnectionType>[] CONNECTION = new IUnlistedProperty[6];
+	public static final IUnlistedProperty<TileEntityPlasticPipe.ConnectionType>[] CONNECTION = new IUnlistedProperty[6];
 
 	static {
 		for (int i = 0; i < 6; i++) {
-			CONNECTION[i] = Properties.toUnlisted(PropertyEnum.create("connection_" + i, ConnectionType.class));
+			CONNECTION[i] = Properties.toUnlisted(PropertyEnum.create("connection_" + i, TileEntityPlasticPipe.ConnectionType.class));
 		}
 	}
 
@@ -251,20 +250,4 @@ public class BlockPlasticPipe extends BlockFactory implements IBlockInfo, IBaker
 		return sb.toString();
 	}
 
-	public enum ConnectionType implements IStringSerializable {
-
-		NONE,
-		CABLE,
-		CABLE_DISCONNECTED,
-		EXTRACT,
-		EXTRACT_POWERED,
-		OUTPUT,
-		HANDLER_DISCONNECTED;
-
-		@Override
-		public String getName() {
-
-			return this.name();
-		}
-	}
 }

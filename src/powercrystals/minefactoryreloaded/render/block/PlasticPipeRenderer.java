@@ -21,10 +21,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
-import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe.ConnectionType;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
-import static powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe.ConnectionType.*;
+import static powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe.ConnectionType.*;
 
 import java.util.Collections;
 import java.util.List;
