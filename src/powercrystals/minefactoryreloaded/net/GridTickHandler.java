@@ -89,6 +89,27 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			tickEnd();
 	}
 
+	public void clear() {
+
+		clearSetSynchronized(tickingGridsToRegenerate);
+		clearSetSynchronized(tickingGridsToAdd);
+		clearSetSynchronized(tickingGrids);
+		clearSetSynchronized(tickingGridsToRemove);
+
+		clearSetSynchronized(conduit);
+		clearSetSynchronized(conduitToAdd);
+		clearSetSynchronized(conduitToUpd);
+	}
+
+	private void clearSetSynchronized(LinkedHashSet set) {
+
+		if(!set.isEmpty()) {
+			synchronized (set) {
+				set.clear();
+			}
+		}
+	}
+
 	public void tickStart() {
 
 		//{ Grids that have had significant conduits removed and need to rebuild/split

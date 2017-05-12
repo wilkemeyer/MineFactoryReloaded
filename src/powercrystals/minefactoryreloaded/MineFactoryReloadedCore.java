@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -34,6 +35,7 @@ import powercrystals.minefactoryreloaded.farmables.MFRFarmables;
 import powercrystals.minefactoryreloaded.gui.MFRGUIHandler;
 import powercrystals.minefactoryreloaded.net.CommonProxy;
 import powercrystals.minefactoryreloaded.net.EntityHandler;
+import powercrystals.minefactoryreloaded.net.GridTickHandler;
 import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.setup.*;
 import powercrystals.minefactoryreloaded.setup.recipe.EnderIO;
@@ -310,6 +312,14 @@ public class MineFactoryReloadedCore extends BaseMod {
 	public void remap(FMLModIdMappingEvent evt) {
 
 		powercrystals.minefactoryreloaded.core.OreDictionaryArbiter.bake();
+	}
+
+	@EventHandler
+	public void serverStopped(FMLServerStoppedEvent evt) {
+
+		GridTickHandler.fluid.clear();
+		GridTickHandler.energy.clear();
+		GridTickHandler.redstone.clear();
 	}
 
 	@Override
