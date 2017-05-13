@@ -8,6 +8,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -24,7 +25,11 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 
+import javax.annotation.Nullable;
+
 public class BlockDecorativeBricks extends BlockFactory {
+
+	public static final SoundType GLASS_LIKE = new SoundType(1.0F, 0.9F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_GLASS_STEP, SoundEvents.BLOCK_GLASS_PLACE, SoundEvents.BLOCK_GLASS_HIT, SoundEvents.BLOCK_GLASS_FALL);
 
 	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 	
@@ -118,35 +123,51 @@ public class BlockDecorativeBricks extends BlockFactory {
 		ModelHelper.registerModel(this, "variant", Variant.NAMES);
 	}
 
+	@Override
+	public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity) {
+
+		SoundType soundType = state.getValue(VARIANT).soundType;
+		if (soundType != null)
+			return soundType;
+		return this.getSoundType();
+	}
+
 	public enum Variant implements IStringSerializable {
 
-		ICE(0, "ice"),
-		GLOWSTONE(1, "glowstone"),
-		LAPIS(2, "lapis"),
-		OBSIDIAN(3, "obsidian"),
-		PAVEDSTONE(4, "pavedstone"),
-		SNOW(5, "snow"),
-		ICE_LARGE(6, "ice_large"),
-		GLOWSTONE_LARGE(7, "glowstone_large"),
-		LAPIS_LARGE(8, "lapis_large"),
-		OBSIDIAN_LARGE(9, "obsidian_large"),
-		PAVEDSTONE_LARGE(10, "pavedstone_large"),
-		SNOW_LARGE(11, "snow_large"),
-		MEAT_RAW(12, "meat_raw"),
-		MEAT_COOKED(13, "meat_cooked"),
-		BRICK_LARGE(14, "brick_large"),
-		SUGAR_CHARCOAL(15, "sugar_charcoal");
+		ICE("ice", GLASS_LIKE),
+		GLOWSTONE("glowstone", GLASS_LIKE),
+		LAPIS("lapis"),
+		OBSIDIAN("obsidian"),
+		PAVEDSTONE("pavedstone"),
+		SNOW("snow", SoundType.SNOW),
+		ICE_LARGE("ice_large", GLASS_LIKE),
+		GLOWSTONE_LARGE("glowstone_large", GLASS_LIKE),
+		LAPIS_LARGE("lapis_large"),
+		OBSIDIAN_LARGE("obsidian_large"),
+		PAVEDSTONE_LARGE("pavedstone_large"),
+		SNOW_LARGE("snow_large", SoundType.SNOW),
+		MEAT_RAW("meat_raw", SoundType.SLIME),
+		MEAT_COOKED("meat_cooked", SoundType.SLIME),
+		BRICK_LARGE("brick_large"),
+		SUGAR_CHARCOAL("sugar_charcoal");
 
 		private final int meta;
 		private final String name;
+		private final SoundType soundType;
 
 		public static final String[] NAMES;
 		public static final String[] UNLOC_NAMES;
 
-		Variant(int meta, String name) {
+		Variant(String name) {
 
-			this.meta = meta;
+			this(name, null);
+		}
+
+		Variant(String name, SoundType sound) {
+
+			this.meta = ordinal();
 			this.name = name;
+			this.soundType = sound;
 		}
 
 		@Override
