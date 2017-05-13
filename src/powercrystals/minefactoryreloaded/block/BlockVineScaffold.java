@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.block;
 import cofh.core.util.core.IInitializer;
 import cofh.core.render.IModelRegister;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.block.SoundType;
@@ -62,18 +63,31 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative, IInit
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
 		float shrinkAmount = 1f / 45f;
+		float oneTenComp = world.isRemote ? 0 : 0.12f; // sync the player's server desync so they don't float on the client and get kicked
 		if (entity.getEntityBoundingBox().minY >= pos.getY() + (1f - shrinkAmount) ||
-				entity.getEntityBoundingBox().maxY <= pos.getY() + shrinkAmount)
+				entity.getEntityBoundingBox().maxY <= pos.getY() + shrinkAmount + oneTenComp)
 			return;
 		entity.fallDistance = 0;
 		if (entity.isCollidedHorizontally) {
 			entity.motionY = 0.2D;
 		} else if (entity.isSneaking()) {
 			double diff = entity.prevPosY - entity.posY;
-			entity.motionY = 0.0D;
+			entity.setEntityBoundingBox(entity.getEntityBoundingBox().offset(0, diff, 0));
+			entity.posY = entity.prevPosY;
+			{
+				// induced by post 1.7 network changes on the player.
+				// player gets offset downward a small amount causing a slight stutter when they try to move up now
+				entity.motionY = 0;
+			}
 		} else {
 			entity.motionY = -0.12D;
 		}
+		/** TODO: apparently we need a packet now for 100% functionality,
+		 *  player's server packet handler now resets their position every tick after calling the movement code
+		 *  and the values that store that position are private, wirtten only by a single private function called
+		 *  in places that cannot be tricked into being invoked. used to be modifying the AABB would keep the data
+		 *  perfectly synced, but in making that write-only mojang has discarded the possibility of blocks like this
+		**/
 	}
 
 	@Nullable
@@ -157,6 +171,11 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative, IInit
 			}
 		}
 		return false;
+	}
+
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+
+		updateTick(worldIn, pos, state, random);
 	}
 
 	@Override
