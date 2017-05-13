@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,6 +27,8 @@ import powercrystals.minefactoryreloaded.block.BlockFactory;
 import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
 import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
+
+import javax.annotation.Nullable;
 
 public class BlockDecorativeStone extends BlockFactory {
 
@@ -155,20 +158,32 @@ public class BlockDecorativeStone extends BlockFactory {
 		ModelHelper.registerModel(this, "variant", Variant.NAMES);
 	}
 
+	@Override
+	public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity) {
+
+		switch (state.getValue(VARIANT).meta) {
+		case 8:
+		case 9:
+			return SoundType.GROUND;
+		default:
+			return this.getSoundType();
+		}
+	}
+
 	public enum Variant implements IStringSerializable{
 
-		BLACK_SMOOTH(0, "black_smooth"),
-		WHITE_SMOOTH(1, "white_smooth"),
-		BLACK_COBBLE(2, "black_cobble"),
-		WHITE_COBBLE(3, "white_cobble"),
-		BLACK_BRICK_LARGE(4, "black_brick_large"),
-		WHITE_BRICK_LARGE(5, "white_brick_large"),
-		BLACK_BRICK_SMALL(6, "black_brick_small"),
-		WHITE_BRICK_SMALL(7, "white_brick_small"),
-		BLACK_GRAVEL(8, "black_gravel"),
-		WHITE_GRAVEL(9, "white_gravel"),
-		BLACK_PAVED(10, "black_paved"),
-		WHITE_PAVED(11, "white_paved");
+		BLACK_SMOOTH("black_smooth"),
+		WHITE_SMOOTH("white_smooth"),
+		BLACK_COBBLE("black_cobble"),
+		WHITE_COBBLE("white_cobble"),
+		BLACK_BRICK_LARGE("black_brick_large"),
+		WHITE_BRICK_LARGE("white_brick_large"),
+		BLACK_BRICK_SMALL("black_brick_small"),
+		WHITE_BRICK_SMALL("white_brick_small"),
+		BLACK_GRAVEL("black_gravel"),
+		WHITE_GRAVEL("white_gravel"),
+		BLACK_PAVED("black_paved"),
+		WHITE_PAVED("white_paved");
 
 		private final int meta;
 		private final String name;
@@ -176,9 +191,9 @@ public class BlockDecorativeStone extends BlockFactory {
 		public static final String[] NAMES;
 		public static final String[] UNLOC_NAMES;
 
-		Variant(int meta, String name) {
+		Variant(String name) {
 
-			this.meta = meta;
+			this.meta = ordinal();
 			this.name = name;
 		}
 
@@ -202,7 +217,5 @@ public class BlockDecorativeStone extends BlockFactory {
 			}
 		}
 	}
-
-	// TODO: step sounds require forge hook
 
 }
