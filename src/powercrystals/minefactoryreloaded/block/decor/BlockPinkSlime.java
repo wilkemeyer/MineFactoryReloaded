@@ -4,9 +4,11 @@ import cofh.core.util.core.IInitializer;
 import cofh.core.render.IModelRegister;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,12 +26,10 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import javax.annotation.Nullable;
 
 public class BlockPinkSlime extends BlockBreakable implements IInitializer, IModelRegister {
-
-	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.875D, 1D);
 	
 	public BlockPinkSlime() {
 
-		super(Material.CLAY, false);
+		super(Material.CLAY, false, MapColor.PINK);
 		setCreativeTab(MFRCreativeTab.tab);
 		setUnlocalizedName("mfr.pinkslime.block");
 		slipperiness = 0.8f;
@@ -46,42 +46,47 @@ public class BlockPinkSlime extends BlockBreakable implements IInitializer, IMod
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
-	@Nullable
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-		
-		return COLLISION_AABB;
-	}
+	/**
+	 * Block's chance to react to a living entity falling on it.
+	 */
+	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
 
-	@Override
-	public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
-
-		if (entity.isSneaking())
-			super.onFallenUpon(world, pos, entity, fallDistance);
-		else {
-			entity.fallDistance = 0;
-			if (entity.motionY < 0) // FIXME: this has its own method in 1.8 (applies to non-living)
-				entity.getEntityData().setDouble("mfr:slime", -entity.motionY);
+		if (entityIn.isSneaking()) {
+			super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+		} else {
+			entityIn.fall(fallDistance, 0.0F);
 		}
 	}
 
-	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+	/**
+	 * Called when an Entity lands on this Block. This method *must* update motionY because the entity will not do that
+	 * on its own
+	 */
+	public void onLanded(World worldIn, Entity entityIn) {
 
-		NBTTagCompound data = entity.getEntityData();
-		if (data.hasKey("mfr:slime")) 
-		{
-			entity.motionY = data.getDouble("mfr:slime");
-			data.removeTag("mfr:slime");
+		if (entityIn.isSneaking()) {
+			super.onLanded(worldIn, entityIn);
+		} else if (entityIn.motionY < 0.0D) {
+			entityIn.motionY = -entityIn.motionY;
+
+			if (!(entityIn instanceof EntityLivingBase)) {
+				entityIn.motionY *= 0.8D;
+			}
+		}
+	}
+
+	/**
+	 * Triggered whenever an entity collides with this block (enters into the block)
+	 */
+	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
+
+		if (Math.abs(entityIn.motionY) < 0.1D && !entityIn.isSneaking()) {
+			double d0 = 0.4D + Math.abs(entityIn.motionY) * 0.2D;
+			entityIn.motionX *= d0;
+			entityIn.motionZ *= d0;
 		}
 
-		if (Math.abs(entity.motionY) < 0.1 && !entity.isSneaking()) 
-		{
-			double d = 0.4 + Math.abs(entity.motionY) * 0.2;
-			entity.motionX *= d;
-			entity.motionZ *= d;
-		}
-		super.onEntityCollidedWithBlock(world, pos, state, entity);
+		super.onEntityWalk(worldIn, pos, entityIn);
 	}
 
 	@Override
