@@ -26,7 +26,7 @@ public class BlockPinkSlimeFluid extends BlockFactoryFluid
 				world.spawnEntityInWorld(s);
 				return;
 			}
-			world.scheduleBlockUpdate(pos, this, tickRate, 1);
+			world.scheduleBlockUpdate(pos, this, tickRate, 1); // Does not run immediately if that flag is set. Can't stack overflow.
 		}
 		super.updateTick(world, pos, state, rand);
 	}
