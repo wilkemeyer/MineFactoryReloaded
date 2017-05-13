@@ -66,6 +66,9 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ICo
 	private static final AxisAlignedBB CONVEYOR_SELECTION_AABB = new AxisAlignedBB(0.05D, 0.0D, 0.05D, 0.95D, 0.1D, 0.95D);
 	private static final AxisAlignedBB HILL_CONVEYOR_SELECTION_AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.1D, 0.9D);
 
+	/**
+	 * TODO: conveyors facing north and west going uphill need fixed for how entities do collision
+	**/
 	public BlockConveyor() {
 
 		super(Material.CIRCUITS);
@@ -317,11 +320,9 @@ public class BlockConveyor extends BlockFactory implements IRedNetInputNode, ICo
 			}
 			double eY = yO != 0 ? ent.prevPosY : ent.posY;
 			double xT = ent.lastTickPosX, yT = ent.lastTickPosY, zT = ent.lastTickPosZ;
-			if (ent instanceof EntityLivingBase) {
-				ent.setPositionAndUpdate(ent.prevPosX + xO, eY + yO, ent.prevPosZ + zO);
-			} else {
-				ent.setLocationAndAngles(ent.prevPosX + xO, eY + yO, ent.prevPosZ + zO, ent.rotationYaw, ent.rotationPitch);
-			}
+
+			ent.setPositionAndUpdate(ent.prevPosX + xO, eY + yO, ent.prevPosZ + zO);
+
 			ent.lastTickPosX = xT;
 			ent.lastTickPosY = yT;
 			ent.lastTickPosZ = zT;
