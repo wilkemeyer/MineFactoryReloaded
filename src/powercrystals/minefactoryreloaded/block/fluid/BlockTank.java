@@ -112,7 +112,8 @@ public class BlockTank extends BlockFactory implements IBlockInfo, IBakeryBlock 
 	@Override
 	protected boolean activated(World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, ItemStack heldItem) {
 
-		return super.activated(world, pos, player, side, hand, heldItem);
+		super.activated(world, pos, player, side, hand, heldItem);
+		return true; // don't allow accidentally placing fluids/tanks off us
 	}
 
 	@Override
