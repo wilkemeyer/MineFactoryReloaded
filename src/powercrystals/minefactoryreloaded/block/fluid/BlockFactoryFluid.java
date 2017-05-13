@@ -21,6 +21,7 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -132,7 +133,7 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 
 		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
-		l: if (world.getBiome(pos) == Biomes.HELL)
+		l: if (BiomeDictionary.isBiomeOfType(world.getBiome(pos), BiomeDictionary.Type.NETHER))
 		{
 			if (!isSourceBlock(world, pos)) {
 				if (world.setBlockToAir(pos))
