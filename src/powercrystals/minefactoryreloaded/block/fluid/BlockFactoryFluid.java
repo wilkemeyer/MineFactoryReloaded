@@ -136,7 +136,7 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 		l: if (BiomeDictionary.isBiomeOfType(world.getBiome(pos), BiomeDictionary.Type.NETHER))
 		{
 			if (!isSourceBlock(world, pos)) {
-				if (world.setBlockToAir(pos))
+				if (world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2))
 					return;
 				break l;
 			}
