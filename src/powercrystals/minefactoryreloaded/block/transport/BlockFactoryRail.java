@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.core.util.core.IInitializer;
 import cofh.core.render.IModelRegister;
+import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.SoundType;
@@ -29,15 +30,38 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class BlockFactoryRail extends BlockRailBase implements IInitializer, IModelRegister {
 
-	protected boolean canSlope;
-	public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, 
-			dir -> dir != EnumRailDirection.NORTH_EAST && dir != EnumRailDirection.NORTH_WEST 
-					&& dir != EnumRailDirection.SOUTH_EAST && dir != EnumRailDirection.SOUTH_WEST);
+	private static IProperty[] containerData = null;
+	private static boolean generateContainerData(boolean powered, boolean slopes) {
+
+		containerData = new IProperty[1 + (powered ? 1 : 0)];
+		containerData[0] = powered ? (!slopes ? SHAPE_STRAIGHT_FLAT : SHAPE_STRAIGHT) : (!slopes ? SHAPE_FLAT : SHAPE);
+		if (powered)
+			containerData[1] = POWERED;
+		return powered;
+	}
+
+	private static final Predicate<BlockRailBase.EnumRailDirection> straight = dir ->
+			dir != EnumRailDirection.NORTH_EAST && dir != EnumRailDirection.NORTH_WEST &&
+					dir != EnumRailDirection.SOUTH_EAST && dir != EnumRailDirection.SOUTH_WEST;
+	private static final Predicate<BlockRailBase.EnumRailDirection> no_slope = dir ->
+			dir != EnumRailDirection.ASCENDING_EAST && dir != EnumRailDirection.ASCENDING_WEST &&
+					dir != EnumRailDirection.ASCENDING_NORTH && dir != EnumRailDirection.ASCENDING_SOUTH;
+
+	public static final PropertyEnum<EnumRailDirection> SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class);
+	public static final PropertyEnum<EnumRailDirection> SHAPE_STRAIGHT = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, straight);
+	public static final PropertyEnum<EnumRailDirection> SHAPE_FLAT = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, no_slope);
+	public static final PropertyEnum<EnumRailDirection> SHAPE_STRAIGHT_FLAT = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class, dir ->
+			straight.apply(dir) && no_slope.apply(dir));
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
 
-	public BlockFactoryRail(boolean par2, boolean slopes) {
+	protected boolean canSlope;
+	protected final IProperty<EnumRailDirection> shapeProperty;
 
-		super(par2);
+	public BlockFactoryRail(boolean powered, boolean slopes) {
+
+		super(generateContainerData(powered, slopes));
+		shapeProperty = (IProperty<EnumRailDirection>) blockState.getProperty("shape");
+		containerData = null;
 		setHardness(0.5F);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MFRCreativeTab.tab);
@@ -49,19 +73,46 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer, IMo
 	@Override
 	protected BlockStateContainer createBlockState() {
 
-		return new BlockStateContainer(this, SHAPE, POWERED);
+		/**
+		 * static property used here because this is called by Block(), as such isPowered and canSlope will not yet have been set
+		 */
+		IProperty[] data = containerData == null ? new IProperty[] { SHAPE } : containerData;
+		return new BlockStateContainer(this, data);
+	}
+
+	/**
+	 * allows for powered not-sloping rails that can curve
+	 */
+	private int getShapeMeta(int meta, boolean forLookup) {
+
+		if (canSlope) {
+			return meta % (isPowered ? 6 : 15);
+		}
+		if (forLookup) {
+			return meta > 1 ? meta + 4 : meta;
+		} else {
+			return meta > 5 ? meta - 4 : meta;
+		}
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 
-		return this.getDefaultState().withProperty(SHAPE, BlockRailBase.EnumRailDirection.byMetadata(meta & 7)).withProperty(POWERED, (meta & 8) > 0);
+		IBlockState r = getDefaultState().withProperty(shapeProperty, BlockRailBase.EnumRailDirection.byMetadata(getShapeMeta(meta, true)));
+		if (isPowered) {
+			r = r.withProperty(POWERED, (meta & 8) > 0);
+		}
+		return r;
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
 
-		return state.getValue(SHAPE).getMetadata() | (state.getValue(POWERED) ? 0 : 8);
+		int meta = getShapeMeta(state.getValue(shapeProperty).getMetadata(), false);
+		if (isPowered) {
+			meta |= (state.getValue(POWERED) ? 0 : 8);
+		}
+		return meta;
 	}
 
 	@Override
@@ -72,24 +123,18 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer, IMo
 
 	public boolean isPowered(World world, BlockPos pos) {
 
+		if (!isPowered) {
+			return false;
+		}
 		return world.getBlockState(pos).getValue(POWERED);
-	}
-
-	@Override
-	public float getRailMaxSpeed(World world, EntityMinecart cart, BlockPos pos) {
-
-		return 0.4f;
-	}
-
-	@Override
-	// correct argument naming
-	public void onMinecartPass(World world, EntityMinecart minecart, BlockPos pos) {
-
 	}
 
 	@Override
 	protected void updateState(IBlockState state, World world, BlockPos pos, Block neighor) {
 
+		if (!isPowered) {
+			return;
+		}
 		boolean newPowered = world.isBlockIndirectlyGettingPowered(pos) > 0;
 		boolean oldPowered = state.getValue(POWERED);
 		if (newPowered != oldPowered) {
@@ -99,7 +144,8 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer, IMo
 
 	@Override
 	public IProperty<EnumRailDirection> getShapeProperty() {
-		return SHAPE;
+
+		return shapeProperty;
 	}
 
 	@Override
@@ -128,12 +174,13 @@ public class BlockFactoryRail extends BlockRailBase implements IInitializer, IMo
 	}
 
 	@SideOnly(Side.CLIENT)
-	static void registerRailModel(Block railBlock, final String typeVariant) {
+	static void registerRailModel(final BlockRailBase railBlock, final String typeVariant) {
 		
 		ModelLoader.setCustomStateMapper(railBlock, new StateMapperBase() {
 			@Override
 			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail", "shape=" + state.getValue(BlockFactoryRail.SHAPE) + ",type=" + typeVariant);
+				return new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rail",
+						"shape=" + state.getValue(railBlock.getShapeProperty()) + ",type=" + typeVariant);
 			}
 		});
 
