@@ -273,8 +273,8 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
 					if (!world.isRemote) {
 						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());
-						return true;
 					}
+					return true;
 				}
 			} else if (subHit >= 0 && subHit < (2 + 6 * 2) || subHit >= (2 + 6 * 5)) {
 				l: if (MFRUtil.isHoldingUsableTool(player, pos)) {
@@ -337,11 +337,11 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 					MFRUtil.usedWrench(player, pos);
 					return true;
 				} else if (heldItem != null && heldItem.getItem().equals(Items.DYE)) {
-					if (!world.isRemote) {
+					if (!world.isRemote && subSide < 6) {
 						cable.setSideColor(EnumFacing.VALUES[subSide], 15 - heldItem.getItemDamage());
 						MFRUtil.notifyBlockUpdate(world, pos, state);
-						return true;
 					}
+					return subSide < 6;
 				}
 			}
 		}
