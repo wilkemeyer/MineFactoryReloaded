@@ -349,6 +349,12 @@ public class BlockRedNetCable extends BlockFactory implements IRedNetNetworkCont
 	}
 
 	@Override
+	public boolean isFullyOpaque(IBlockState state) {
+
+		return true; // HACK: forge fucked up. lots of places where this shouldn't be called
+	}
+
+	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
