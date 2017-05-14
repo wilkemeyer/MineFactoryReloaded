@@ -147,11 +147,8 @@ public class TileEntityTank extends TileEntityFactory implements IDelayedValidat
 	@Override
 	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
-		//TODO this is a hack, it really needs a proper validate in forge or cofh_validate in core
-		if (firstTick) {
-			cofh_validate();
-			firstTick = false;
-		}
+		if (grid == null)
+			return super.writePacketData(tag);
 
 		FluidStack fluid = grid.getStorage().drain(1, false); //TODO does this need to be drain instead of simple getFluid??
 		if (fluid != null)
