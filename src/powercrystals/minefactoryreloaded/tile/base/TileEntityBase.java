@@ -46,6 +46,13 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 		inWorld = false;
 		markChunkDirty();
 	}
+
+	@Override
+	public void onChunkUnload() {
+
+		cofh_invalidate();
+	}
+
 	public void cofh_validate() {
 
 		inWorld = true;

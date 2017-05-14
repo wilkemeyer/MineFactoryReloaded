@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.EnumFacing;
@@ -55,11 +56,19 @@ public class TileEntityTank extends TileEntityFactory implements IDelayedValidat
 	@Override
 	public void invalidate() {
 
+		removeTankFromGrid(false);
+
+		super.invalidate();
+	}
+
+	private void removeTankFromGrid(boolean chunkUnloaded) {
+
 		if (grid != null) {
 			for (EnumFacing to : EnumFacing.VALUES) {
-				if ((sides & (1 << to.ordinal())) == 0)
+				BlockPos offsetPos = pos.offset(to);
+				if ((sides & (1 << to.ordinal())) == 0 || (chunkUnloaded && !worldObj.isBlockLoaded(offsetPos)))
 					continue;
-				TileEntityTank tank = MFRUtil.getTile(worldObj, pos.offset(to), TileEntityTank.class);
+				TileEntityTank tank = MFRUtil.getTile(worldObj, offsetPos, TileEntityTank.class);
 				if (tank != null)
 					tank.part(to.getOpposite());
 			}
@@ -67,8 +76,13 @@ public class TileEntityTank extends TileEntityFactory implements IDelayedValidat
 				grid.removeNode(this);
 			grid = null;
 		}
+	}
 
-		super.invalidate();
+	@Override
+	public void onChunkUnload() {
+
+		removeTankFromGrid(true);
+		super.onChunkUnload();
 	}
 
 	@Override

@@ -94,6 +94,15 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 		super.invalidate();
 	}
 
+	@Override
+	public void onChunkUnload() {
+
+		if (_grid != null) {
+			removeFromGrid();
+		}
+		super.onChunkUnload();
+	}
+
 	private void removeFromGrid() {
 
 		_grid.removeConduit(this);

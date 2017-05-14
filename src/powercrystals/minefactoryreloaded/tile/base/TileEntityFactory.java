@@ -81,10 +81,22 @@ public abstract class TileEntityFactory extends TileEntityBase
 	@Override
 	public void invalidate() {
 
+		removeTileFromAreaList();
+		super.invalidate();
+	}
+
+	private void removeTileFromAreaList() {
+
 		if (worldObj != null && worldObj.isRemote && hasHAM()) {
 			MineFactoryReloadedClient.removeTileFromAreaList(this);
 		}
-		super.invalidate();
+	}
+
+	@Override
+	public void onChunkUnload() {
+
+		removeTileFromAreaList();
+		super.onChunkUnload();
 	}
 
 	/**

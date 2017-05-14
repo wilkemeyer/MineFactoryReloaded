@@ -117,6 +117,15 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 		super.invalidate();
 	}
 
+	@Override
+	public void onChunkUnload() {
+
+		if (_network != null) {
+			removeFromGrid();
+		}
+		super.onChunkUnload();
+	}
+
 	private void removeFromGrid() {
 
 		markForRegen();

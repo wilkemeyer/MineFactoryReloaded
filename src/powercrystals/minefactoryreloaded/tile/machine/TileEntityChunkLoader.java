@@ -100,6 +100,16 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		}
 	}
 
+	@Override
+	public void onChunkUnload() {
+
+		if (_ticket != null) {
+			unforceChunks();
+			ForgeChunkManager.releaseTicket(_ticket);
+		}
+		super.onChunkUnload();
+	}
+
 	public void setRadius(short r) {
 
 		int maxR = 38;
