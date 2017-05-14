@@ -32,7 +32,6 @@ import java.lang.reflect.Method;
 
 public class BlockFactoryRoad extends Block implements IInitializer, IModelRegister {
 
-	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D - 1/128D, 1D);
 	private static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 	
 	public BlockFactoryRoad() {
@@ -49,19 +48,8 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-
-        return COLLISION_AABB;
-    }
-
-	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity e) {
-
-		if (!e.canTriggerWalking())
-			return;
-		if (e.getEntityData().getInteger("mfr:r") == e.ticksExisted)
-			return;
-		e.getEntityData().setInteger("mfr:r", e.ticksExisted);
+	// TODO: continue to verify this is called every tick by walking entities (last check: 1.10.2)
+	public void onEntityWalk(World world, BlockPos pos, Entity e) {
 
 		final double boost = .99 * slipperiness;
 		final double minSpeed = 1e-9;
@@ -74,6 +62,7 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 
 	@Override
 	protected BlockStateContainer createBlockState() {
+
 		return new BlockStateContainer(this, VARIANT);
 	}
 
@@ -118,6 +107,7 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 
 	@Override
 	public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type) {
+
 		return false;
 	}
 
@@ -134,7 +124,7 @@ public class BlockFactoryRoad extends Block implements IInitializer, IModelRegis
 			case LIGHT_INVERTED_OFF:
 				return Variant.LIGHT_INVERTED_ON.getMetadata();
 			default:
-				return Variant.NORMAL.getMetadata();
+				return variant.getMetadata();
 		}
 	}
 
