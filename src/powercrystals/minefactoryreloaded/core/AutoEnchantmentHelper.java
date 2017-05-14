@@ -140,7 +140,7 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 								{
 									iter.remove();
 									break;
-								} // TODO: this inner loop probably isn't needed
+								}
 						}
 
 						if(!enchantDatas.isEmpty())
@@ -159,36 +159,4 @@ public class AutoEnchantmentHelper extends EnchantmentHelper
 		}
 	}
 
-/* TODO test that this can really be replaced by EnchantmentHelper.getEnchantmentDatas in which case just remove
-	public static Map<Integer, EnchantmentData> mapEnchantmentData(int targetEnchantability, ItemStack stack)
-	{
-		HashMap<Integer, EnchantmentData> enchantmentMap = null;
-		boolean isBook = stack.getItem().equals(Items.BOOK);
-
-		for(int var7 = 0; var7 < Enchantment.enchantmentsList.length; ++var7)
-		{
-			Enchantment enchantment = Enchantment.enchantmentsList[var7];
-
-			if(enchantment != null && (isBook || enchantment.canApplyAtEnchantingTable(stack)))
-			{
-				for(int enchLevel = enchantment.getMinLevel(); enchLevel <= enchantment.getMaxLevel(); ++enchLevel)
-				{
-					if(targetEnchantability >= enchantment.getMinEnchantability(enchLevel) &&
-							targetEnchantability <= enchantment.getMaxEnchantability(enchLevel))
-					{
-						if(enchantmentMap == null)
-						{
-							enchantmentMap = new HashMap<Integer, EnchantmentData>();
-						}
-
-						enchantmentMap.put(Integer.valueOf(enchantment),
-								new EnchantmentData(enchantment, enchLevel));
-					}
-				}
-			}
-		}
-
-		return enchantmentMap;
-	}
-*/
 }
