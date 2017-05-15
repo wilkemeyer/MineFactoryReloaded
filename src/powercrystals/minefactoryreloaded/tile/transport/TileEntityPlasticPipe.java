@@ -212,13 +212,25 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 
 		final List<IndexedCuboid6> list = new ArrayList<>(7);
 		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, pos), true);
-		IndexedCuboid6 cube = list.get(0);
+		IndexedCuboid6 cube;
+		if (hit > 1) {
+			for (int i = 1; i < list.size(); i++) {
+				cube = list.get(i);
+				if (((Integer) cube.data) == hit) {
+					cube.expand(0.003);
+					Vector3 min = cube.min, max = cube.max.subtract(min);
+					return new CustomHitBox(max.y, max.z, max.x, min.x, min.y, min.z);
+				}
+			}
+		}
+
+		cube = list.get(0);
 		cube.expand(0.003);
 		Vector3 min = cube.min, max = cube.max.subtract(min);
 		CustomHitBox box = new CustomHitBox(max.x, max.y, max.z, min.x, min.y, min.z);
 		for (int i = 1, e = list.size(); i < e; ++i) {
 			cube = list.get(i);
-			if (shouldRenderCustomHitBox((Integer) cube.data, player)) {
+			if ((Integer) cube.data < 2) {
 				cube.subtract(min);
 				if (cube.min.y < 0)
 					box.sideLength[0] = Math.max(box.sideLength[0], -cube.min.y);
@@ -243,7 +255,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
 
-		return subHit < 2;
+		return true;
 	}
 
 	public void setUpgrade(PlasticPipeUpgrade upgrade) {
