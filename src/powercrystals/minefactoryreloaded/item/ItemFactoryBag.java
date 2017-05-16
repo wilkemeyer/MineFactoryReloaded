@@ -43,7 +43,7 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 	public int getItemStackLimit(ItemStack stack) {
 
 		NBTTagCompound tag = stack.getTagCompound();
-		if (tag != null && (tag.hasKey("inventory") || tag.hasKey("Inventory")))
+		if (tag != null && (tag.hasKey("inventory") || tag.hasKey("Inventory") || tag.hasKey("loot")))
 			return 1;
 		return maxStackSize;
 	}
