@@ -84,7 +84,7 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 		}
 
 		if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey("loot")) {
-			stack = fillWithLoot((WorldServer) world, stack);
+			stack = fillWithLoot((WorldServer) world, player, stack);
 			stack.getTagCompound().removeTag("loot");
 		}
 
@@ -93,11 +93,11 @@ public class ItemFactoryBag extends ItemFactory implements IInventoryContainerIt
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 
-	private ItemStack fillWithLoot(WorldServer world, ItemStack stack) {
+	private ItemStack fillWithLoot(WorldServer world, EntityPlayer player, ItemStack stack) {
 		
 		LootTable lootTable = world.getLootTableManager().getLootTableFromLocation(MFRLoot.FACTORY_BAG);
 		InventoryContainerItemWrapper wrapper = new InventoryContainerItemWrapper(stack);
-		lootTable.fillInventory(wrapper, world.rand, new LootContext.Builder(world).build());
+		lootTable.fillInventory(wrapper, world.rand, new LootContext.Builder(world).withLuck(player.getLuck()).build());
 		
 		return wrapper.getContainerStack();
 	}
