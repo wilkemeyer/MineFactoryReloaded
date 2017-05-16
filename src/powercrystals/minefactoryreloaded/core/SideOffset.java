@@ -118,12 +118,16 @@ public enum SideOffset {
     	lookup = new TUnmodifiableIntObjectMap<SideOffset>(a);//ImmutableMap.copyOf(a);
     }
 
-	public final Vec3i offset;
+	public final int offsetX;
+	public final int offsetY;
+	public final int offsetZ;
     public final int flag;
 
 	SideOffset(int x, int y, int z) {
 
-		offset = new Vec3i(x, y, z);
+		offsetX = x;
+		offsetY = y;
+		offsetZ = z;
 		int f = ((y & 3) << 0) | ((z & 3) << 2) | ((x & 3) << 4);
 		f ^= (f & 21) & ((f & 42) >> 1); // unset low bits that also have a set high bit (negative values)
 		flag = f;

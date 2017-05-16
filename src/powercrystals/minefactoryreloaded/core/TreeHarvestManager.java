@@ -76,9 +76,9 @@ public class TreeHarvestManager implements IHarvestManager {
 
 		for (SideOffset side : sides) {
 			cur = BlockPool.getNext(
-					bn.x + side.offset.getX(),
-					bn.y + side.offset.getY(),
-					bn.z + side.offset.getZ()
+					bn.x + side.offsetX,
+					bn.y + side.offsetY,
+					bn.z + side.offsetZ
 			);
 			addIfValid(getType(cur, harvestables), cur);
 		}
