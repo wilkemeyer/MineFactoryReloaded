@@ -78,7 +78,6 @@ public class EntityFishingRod extends EntityThrowable {
 			IBlockState state = worldObj.getBlockState(new BlockPos((int) Math.floor(posX), (int) Math.floor(posY + 0.25), (int) Math.floor(posZ)));
 			Block block = state.getBlock();
 			if (block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER)) {
-				String p = "blockdust_" + Block.getIdFromBlock(Blocks.WATER) + "_" + (0xFFFFFF);
 				double f = 0.75;
 				for (int j = 60; j --> 0; ) {
 					double y = MathHelper.cos(j * Math.PI / 180) * 0.75;
@@ -86,7 +85,8 @@ public class EntityFishingRod extends EntityThrowable {
 					for (int i = 60; i --> 0; ) {
 						double x = MathHelper.cos((i * 6) * Math.PI / 180) * m;
 						double z = MathHelper.sin((i * 6) * Math.PI / 180) * m;
-						worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, posX, posY + 0.25, posZ, x * f, y * f, z * f, Block.getStateId(Blocks.WATER.getDefaultState()));
+						worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, posX, posY + 0.25, posZ, x * f, y * f, z * f,
+								Block.getStateId(Blocks.WATER.getDefaultState()));
 					}
 				}
 			}
@@ -104,7 +104,8 @@ public class EntityFishingRod extends EntityThrowable {
 					if (block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER))
 						if (rand.nextInt(rate) == 0) {
 							LootContext.Builder builder = new LootContext.Builder((WorldServer)this.worldObj);
-							Iterator iterator = this.worldObj.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING_FISH).generateLootForPools(rand, builder.build()).iterator();
+							Iterator iterator = this.worldObj.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING_FISH).
+									generateLootForPools(rand, builder.build()).iterator();
 
 							while (iterator.hasNext()) {
 								ItemStack stack = (ItemStack) iterator.next();
