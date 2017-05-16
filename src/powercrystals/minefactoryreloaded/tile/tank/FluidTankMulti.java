@@ -57,7 +57,7 @@ public class FluidTankMulti implements IFluidTank, IFluidHandler {
 			}
 		}
 
-		if (index >= i) --index;
+		if (index >= i && index > 0) --index;
 
 		FluidStack r = tank.getFluid();
 		if (r != null) {
