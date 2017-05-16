@@ -7,6 +7,9 @@ import cofh.api.item.IAugmentItem;
 import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
 import cofh.core.util.helpers.AugmentHelper;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -332,5 +335,58 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	public boolean canCrankAttach(EnumFacing directionToCrank) {
 
 		return true;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new IEnergyStorage() {
+
+				@Override
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+
+					return TileEntityFactoryPowered.this.receiveEnergy(facing, maxReceive, simulate);
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return 0;
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityFactoryPowered.this.getEnergyStored();
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityFactoryPowered.this.getMaxEnergyStored(facing);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return false;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return true;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

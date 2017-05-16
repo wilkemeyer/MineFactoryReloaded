@@ -12,6 +12,9 @@ import net.minecraft.util.EnumFacing;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import powercrystals.minefactoryreloaded.core.ForgeEnergyHandler;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInventory
@@ -81,7 +84,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 		if (energy <= 0)
 			return 0;
 
-		if (receiverCache != null)
+		if (receiverCache != null) {
 			for (int i = receiverCache.length; i --> 0; ) {
 				IEnergyReceiver tile = receiverCache[i];
 				if (tile == null)
@@ -93,6 +96,7 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 				if (energy <= 0)
 					return 0;
 			}
+		}
 
 		return energy;
 	}
@@ -151,6 +155,11 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
 				receiverCache[side.ordinal()] = (IEnergyReceiver)tile;
 			}
+		} else if (EnergyHelper.isEnergyHandler(tile, side)) {
+			if (tile.getCapability(CapabilityEnergy.ENERGY, side).canReceive()) {
+				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
+				receiverCache[side.ordinal()] = new ForgeEnergyHandler.Receiver(tile);
+			}
 		}
 	}
 
@@ -204,5 +213,59 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
 		return _energyMax;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
+
+				@Override
+				public int
+				receiveEnergy(int maxReceive, boolean simulate) {
+
+					return 0;
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return TileEntityFactoryGenerator.this.extractEnergy(facing, maxExtract, simulate);
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityFactoryGenerator.this.getEnergyStored(facing);
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityFactoryGenerator.this.getMaxEnergyStored(facing);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return true;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return false;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

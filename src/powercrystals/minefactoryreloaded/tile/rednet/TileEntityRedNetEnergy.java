@@ -4,7 +4,9 @@ import appeng.api.implementations.tiles.ICrankable;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Vector3;
 import cofh.api.energy.*;
+import cofh.api.energy.EnergyStorage;
 import cofh.asm.relauncher.Strippable;
+import cofh.lib.util.helpers.EnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -13,12 +15,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.*;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.RedNetConnectionType;
 import powercrystals.minefactoryreloaded.core.IGridController;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.Packets;
+import powercrystals.minefactoryreloaded.core.ForgeEnergyHandler;
 
 import java.util.Arrays;
 import java.util.List;
@@ -223,7 +229,19 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 						providerCache = new IEnergyProvider[6];
 					providerCache[side.ordinal()] = (IEnergyProvider) tile;
 				}
+			} else if (EnergyHelper.isEnergyHandler(tile, side)) {
+				IEnergyStorage energyCap = tile.getCapability(CapabilityEnergy.ENERGY, side);
+				if (energyCap.canReceive()) {
+					if (receiverCache == null)
+						receiverCache = new IEnergyReceiver[6];
+					receiverCache[side.ordinal()] = new ForgeEnergyHandler.Receiver(tile);
+				} else if (energyCap.canExtract()) {
+					if (providerCache == null)
+						providerCache = new IEnergyProvider[6];
+					providerCache[side.ordinal()] = new ForgeEnergyHandler.Provider(tile);
+				}
 			}
+
 		}
 		if (!deadCache) {
 			if (lastMode != sideMode[side.ordinal()]) {
@@ -631,5 +649,58 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 			info.add(text("Node: " + isNode + ", Energy: " + energyForGrid));
 			return;
 		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new IEnergyStorage() {
+
+				@Override
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+
+					return TileEntityRedNetEnergy.this.receiveEnergy(facing, maxReceive, simulate);
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return TileEntityRedNetEnergy.this.extractEnergy(facing, maxExtract, simulate);
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityRedNetEnergy.this.getEnergyStored(facing);
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityRedNetEnergy.this.getMaxEnergyStored(facing);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return TileEntityRedNetEnergy.this.canConnectEnergy(facing);
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return TileEntityRedNetEnergy.this.canConnectEnergy(facing);
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }
