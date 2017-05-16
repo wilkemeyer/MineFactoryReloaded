@@ -129,7 +129,7 @@ public class MFRFarmables {
 		MFRRegistry.registerSafariNetHandler(new SlimeHandler());
 
 		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
-		MFRRegistry.registerSafariNetBlacklist(EntityWither.class);
+		MFRRegistry.registerSafariNetBlacklist(EntityWither.class); // TODO: Entity now has isNonBoss (probably should be isNormalMob)
 		MFRRegistry.registerSafariNetBlacklist(EntityDragon.class);
 
 		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
