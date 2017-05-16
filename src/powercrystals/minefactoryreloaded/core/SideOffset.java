@@ -5,8 +5,8 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.util.math.Vec3i;
 
-public enum SideOffset
-{
+public enum SideOffset {
+
 	UNKNOWN(0, 0, 0),
 
 	/** +Y */
@@ -109,8 +109,7 @@ public enum SideOffset
 	public static SideOffset[] SIDES = {NORTH, SOUTH, WEST, EAST};
 
     public static final TIntObjectMap<SideOffset> lookup;
-    static
-    {
+    static {
     	TIntObjectHashMap<SideOffset> a = new TIntObjectHashMap<SideOffset>();
     	for (int i = 0x40; i --> 0;)
     		a.put(i, UNKNOWN);
@@ -122,20 +121,20 @@ public enum SideOffset
 	public final Vec3i offset;
     public final int flag;
 
-	SideOffset(int x, int y, int z)
-	{
+	SideOffset(int x, int y, int z) {
+
 		offset = new Vec3i(x, y, z);
 		int f = ((y & 3) << 0) | ((z & 3) << 2) | ((x & 3) << 4);
 		f ^= (f & 21) & ((f & 42) >> 1); // unset low bits that also have a set high bit (negative values)
 		flag = f;
 	}
-	
-/* TODO remove if not used
-    public SideOffset getOpposite()
-    {
+
+    public SideOffset getOpposite() {
+
 		int f = ~flag & 0x3F;
 		int t = (f & 21) & ((f & 42) >> 1);
 		f &= ~(t | (t << 1)); // unset fields with high&low bits set (invalid state)
         return lookup.get(f);
-    }*/
+    }
+
 }
