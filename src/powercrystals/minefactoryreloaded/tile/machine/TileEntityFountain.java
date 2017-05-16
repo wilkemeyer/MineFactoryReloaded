@@ -63,12 +63,14 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 			if (_reverse ? _tanks[0].getSpace() >= BUCKET_VOLUME :
 					(_tanks[0].getFluidAmount() >= BUCKET_VOLUME &&
 					_tanks[0].getFluid().getFluid().canBePlacedInWorld())) {
-				BlockPos fillPos = pos.up();
+				BlockPos fillPos;
 				if (_fillingManager != null) {
 					if (_fillingManager.getIsDone())
 						onFactoryInventoryChanged();
 					fillPos = _fillingManager.getNextBlock();
 					_fillingManager.moveNext();
+				} else {
+					fillPos = pos.up();
 				}
 				if (!worldObj.isBlockLoaded(fillPos)) break l;
 
