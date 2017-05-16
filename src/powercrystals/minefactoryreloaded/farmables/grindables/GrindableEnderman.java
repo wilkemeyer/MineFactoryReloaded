@@ -32,7 +32,7 @@ public class GrindableEnderman implements IFactoryGrindable
 		if (state != null)
 			state.getBlock();
 		if (block != null && !block.equals(Blocks.AIR))
-			drops.add(new MobDrop(10, new ItemStack(block, 1, block.getMetaFromState(state))));
+			drops.add(new MobDrop(10, new ItemStack(block, 1, block.damageDropped(state))));
 		return drops;
 	}
 
