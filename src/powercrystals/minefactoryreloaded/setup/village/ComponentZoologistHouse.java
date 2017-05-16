@@ -253,6 +253,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			{
 				this.hasMadeChest = true;
 				generateChest(world, sbb, random, 1, 1, 4, MFRLoot.ZOOLOGIST_CHEST);
+				// TODO: loot table shit is broken, needs ASM in net.minecraft.world.storage.loot.LootTable.shuffleItems to fix
 			}
 		}
 
