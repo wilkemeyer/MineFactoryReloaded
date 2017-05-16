@@ -366,7 +366,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	@Override
 	public boolean shouldRenderCustomHitBox(int subHit, EntityPlayer player) {
 
-		return true;
+		return subHit < 2;
 	}
 
 	@Override
@@ -374,19 +374,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 
 		final List<IndexedCuboid6> list = new ArrayList<>(7);
 		addTraceableCuboids(list, true, MFRUtil.isHoldingUsableTool(player, pos), true);
-		IndexedCuboid6 cube;
-		if (hit > 1) {
-			for (int i = 1; i < list.size(); i++) {
-				cube = list.get(i);
-				if (((Integer) cube.data) == hit) {
-					cube.expand(0.003);
-					Vector3 min = cube.min, max = cube.max.subtract(min);
-					return new CustomHitBox(max.y, max.z, max.x, min.x, min.y, min.z);
-				}
-			}
-		}
-
-		cube = list.get(0);
+		IndexedCuboid6 cube = list.get(0);
 		cube.expand(0.003);
 		Vector3 min = cube.min, max = cube.max.subtract(min);
 		CustomHitBox box = new CustomHitBox(max.y, max.z, max.x, min.x, min.y, min.z);

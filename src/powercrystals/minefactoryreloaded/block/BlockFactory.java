@@ -353,13 +353,10 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
 		EntityPlayer player = event.getPlayer();
 		World world = player.worldObj;
-		RayTraceResult rayTraceResult = event.getTarget();
-		harvesters.set(player);
-		RayTraceResult mop = rayTraceResult;//RayTracer.reTrace(world, player);
-		harvesters.set(null);
+		RayTraceResult mop = event.getTarget();
 		if (mop == null)
 			return;
-		if (mop.typeOfHit != RayTraceResult.Type.BLOCK || rayTraceResult.typeOfHit != RayTraceResult.Type.BLOCK)
+		if (mop.typeOfHit != RayTraceResult.Type.BLOCK)
 			return;
 		TileEntity te = getTile(world, mop.getBlockPos());
 		if (te instanceof ITraceable) {
@@ -374,8 +371,9 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 					return;
 				}
 			}
-			event.getContext().drawSelectionBox(player, mop, 0, event.getPartialTicks());
-			event.setCanceled(true);
+			// CCL captures and renders this for us now
+			//event.getContext().drawSelectionBox(player, mop, 0, event.getPartialTicks());
+			//event.setCanceled(true);
 		}
 	}
 
