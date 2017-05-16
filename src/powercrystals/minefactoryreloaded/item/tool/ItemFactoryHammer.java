@@ -168,8 +168,7 @@ public class ItemFactoryHammer extends ItemFactoryTool implements IMFRHammer, IT
 	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
 
 		IBlockState state = player.worldObj.getBlockState(pos);
-		Block block = state.getBlock();
-		if (block.getBlockHardness(state, player.worldObj, pos) > 2.9f) {
+		if (state.getBlockHardness(player.worldObj, pos) > 2.9f) {
 			Random rnd = player.getRNG();
 			player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.8F + rnd.nextFloat() * 0.4F, 0.4F);
 
