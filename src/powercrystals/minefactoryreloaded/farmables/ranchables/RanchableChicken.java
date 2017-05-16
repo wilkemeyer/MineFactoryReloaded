@@ -37,7 +37,7 @@ public class RanchableChicken implements IFactoryRanchable {
 			chicken.timeUntilNextEgg = chicken.getRNG().nextInt(6000) + 7800;
 			if (rand.nextInt(4) != 0) {
 				drops.add(new RanchedItem(Items.EGG));
-			} else {
+			} else { // TODO: search rancher for shears(?), always drop feathers
 				int k = chicken.getRNG().nextInt(4) + 1;
 				drops.add(new RanchedItem(Items.FEATHER, k));
 			}
