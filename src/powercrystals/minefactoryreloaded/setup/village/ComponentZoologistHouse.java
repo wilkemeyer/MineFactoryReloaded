@@ -49,7 +49,7 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 		if (brickMeta > 6) ++brickMeta; // 7 is glowstone large bricks
 		if (brickMeta > 11) // 12 & 13 are meat
 			brickMeta += 2;
-		if (brickMeta == 15) // 15 is unused
+		if (brickMeta == 15) // 15 is sugar charcoal, but we don't build houses out of charcoal
 		{
 			brickId = Blocks.BRICK_BLOCK; // because large red bricks are also an option
 			brickMeta = 0; // no need for weird meta, and makes lights correct size
@@ -66,7 +66,6 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 
 		brickState = brickId.getStateFromMeta(brickMeta);
 		paneState = Blocks.GLASS_PANE.getDefaultState();
-		// getBiomeSpecificBlock
 		if (getBiomeSpecificBlockState(paneState).equals(paneState))
 		{
 			paneState = MFRThings.factoryGlassPaneBlock.getDefaultState(); 
@@ -242,7 +241,6 @@ public class ComponentZoologistHouse extends StructureVillagePieces.Village
 			{
 				clearCurrentPositionBlocksUpwards(world, i1, 9, l, sbb);
 				replaceAirAndLiquidDownwards(world, brickState, i1, -1, l, sbb);
-				// fillCurrentPositionBlocksDownwards ^
 			}
 		}
 		if (!this.hasMadeChest)
