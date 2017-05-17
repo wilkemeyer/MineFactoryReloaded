@@ -79,6 +79,7 @@ public class Vanilla {
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.WHEAT_SEEDS, Blocks.WHEAT));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.CARROT, Blocks.CARROTS));
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.POTATO, Blocks.POTATOES));
+		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.BEETROOT_SEEDS, Blocks.BEETROOTS));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
 		MFRRegistry.registerPlantable(new PlantableCocoa(Items.DYE, Blocks.COCOA, 3));
 
@@ -104,6 +105,7 @@ public class Vanilla {
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.WHEAT, 7));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.CARROTS, 7));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.POTATOES, 7));
+		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.BEETROOTS, 3));
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.NETHER_WART, 3));
 		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.VINE));
 		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.COCOA));
@@ -112,6 +114,7 @@ public class Vanilla {
 		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.WHEAT, 7));
 		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.CARROTS, 7));
 		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.POTATOES, 7));
+		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.BEETROOTS, 3));
 		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.BROWN_MUSHROOM));
 		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.RED_MUSHROOM));
 		MFRRegistry.registerFertilizable(new FertilizableStemPlants((IGrowable) Blocks.PUMPKIN_STEM));
