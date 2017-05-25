@@ -82,6 +82,7 @@ public class Vanilla {
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.BEETROOT_SEEDS, Blocks.BEETROOTS));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
 		MFRRegistry.registerPlantable(new PlantableCocoa(Items.DYE, Blocks.COCOA, 3));
+		MFRRegistry.registerPlantable(new PlantableStandard(Blocks.CHORUS_FLOWER));
 
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.LOG));
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.LOG2));
@@ -109,6 +110,8 @@ public class Vanilla {
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.NETHER_WART, 3));
 		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.VINE));
 		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.COCOA));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.CHORUS_FLOWER, HarvestType.Chorus));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.CHORUS_PLANT, HarvestType.Chorus));
 
 		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.SAPLING));
 		MFRRegistry.registerFertilizable(new FertilizableCropPlant((IGrowable) Blocks.WHEAT, 7));

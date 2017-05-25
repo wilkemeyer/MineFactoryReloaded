@@ -51,6 +51,10 @@ public enum HarvestType {
 	 * e.g. cocoa
 	 * The tree is not searched for.
 	 */
-	TreeFruit
+	TreeFruit,
+	/**
+	 * This block is part of Chorus plant.
+	 */
+	Chorus
 
 }
