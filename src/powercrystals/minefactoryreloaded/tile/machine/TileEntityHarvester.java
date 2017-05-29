@@ -265,7 +265,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 		while (!chorusManager.getIsDone()) {
 			BlockPos bp = chorusManager.getNextBlock();
 			chorusManager.moveNext();
-			if (!worldObj.isBlockLoaded(bp)) {
+			if (bp == null || !worldObj.isBlockLoaded(bp)) {
 				return null;
 			}
 			block = worldObj.getBlockState(bp).getBlock();

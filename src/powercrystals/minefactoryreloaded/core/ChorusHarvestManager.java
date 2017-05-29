@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.core;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockChorusFlower;
 import net.minecraft.block.BlockChorusPlant;
 import net.minecraft.block.properties.IProperty;
@@ -18,7 +19,9 @@ import java.util.Stack;
 
 public class ChorusHarvestManager implements IHarvestManager {
 
-	private Stack<BlockPos> blocks;
+	private static final EnumFacing[] SEARCH_SIDES = new EnumFacing[] {EnumFacing.UP, EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH};
+
+	private Stack<BlockPos> blocks = new Stack<>();
 	private BlockPos origin;
 	private World world;
 	private boolean isDone = false;
@@ -27,13 +30,16 @@ public class ChorusHarvestManager implements IHarvestManager {
 
 		if (tag instanceof NBTTagCompound)
 			readFromNBT((NBTTagCompound) tag);
-		blocks = new Stack<>();
+
+		if (origin == null) {
+			origin = new BlockPos(0,0,0);
+		}
+
 	}
 
 	public ChorusHarvestManager(World world, Area area) {
 
 		reset(world, area, HarvestMode.HarvestTree, null);
-		blocks = new Stack<>();
 	}
 
 	@Override
@@ -55,11 +61,15 @@ public class ChorusHarvestManager implements IHarvestManager {
 
 	private void searchForChorusBlocks(BlockPos pos) {
 
-		Stack<BlockPos> blocksToHarvest = new Stack<>();
-		getBranchHarvestableBlocks(pos, EnumFacing.DOWN, blocksToHarvest);
+		blocks = new Stack<>();
+		getBranchHarvestableBlocks(pos, blocks);
 	}
 
-	private boolean getBranchHarvestableBlocks(BlockPos currentPos, EnumFacing avoidDirection, Stack<BlockPos> blocksToHarvest) {
+	private boolean getBranchHarvestableBlocks(BlockPos currentPos, Stack<BlockPos> blocksToHarvest) {
+
+		return getBranchHarvestableBlocks(currentPos, new ArrayList<>(), blocksToHarvest);
+	}
+	private boolean getBranchHarvestableBlocks(BlockPos currentPos, List<BlockPos> alreadySearched, Stack<BlockPos> blocksToHarvest) {
 
 		boolean continueSearch;
 
@@ -67,6 +77,7 @@ public class ChorusHarvestManager implements IHarvestManager {
 			continueSearch = false;
 
 			if (world.isBlockLoaded(currentPos)) {
+				alreadySearched.add(currentPos);
 				IBlockState state = world.getBlockState(currentPos);
 				if (state.getBlock() == Blocks.CHORUS_FLOWER) {
 					if (state.getValue(BlockChorusFlower.AGE) == 5) {
@@ -81,7 +92,7 @@ public class ChorusHarvestManager implements IHarvestManager {
 				if (state.getBlock() == Blocks.CHORUS_PLANT) {
 					blocksToHarvest.push(currentPos);
 
-					List<EnumFacing> connectedSides = getConnectedSides(avoidDirection, state);
+					List<EnumFacing> connectedSides = getConnectedSides(currentPos, alreadySearched);
 
 					if (connectedSides.size() == 1) {
 						continueSearch = true;
@@ -89,7 +100,7 @@ public class ChorusHarvestManager implements IHarvestManager {
 					} else if (connectedSides.size() > 1) {
 						//multiple branches attached
 						Stack<BlockPos> branchBlocks = new Stack<>();
-						boolean allBranchesHarvestable = getConnectedBranchesBlocks(currentPos, connectedSides, branchBlocks);
+						boolean allBranchesHarvestable = getConnectedBranchesBlocks(currentPos, connectedSides, branchBlocks, alreadySearched);
 
 						if (!allBranchesHarvestable)
 							blocksToHarvest.clear();
@@ -110,24 +121,25 @@ public class ChorusHarvestManager implements IHarvestManager {
 	}
 
 	private boolean getConnectedBranchesBlocks(BlockPos currentPos, List<EnumFacing> connectedSides,
-			Stack<BlockPos> branchBlocks) {
+			Stack<BlockPos> branchBlocks, List<BlockPos> alreadySearched) {
 
 		boolean allBranchesHarvestable = true;
 
 		for (EnumFacing side : connectedSides) {
 			Stack<BlockPos> harvestableBlocks = new Stack<>();
-			allBranchesHarvestable &= getBranchHarvestableBlocks(currentPos.offset(side), side.getOpposite(), harvestableBlocks);
+			allBranchesHarvestable &= getBranchHarvestableBlocks(currentPos.offset(side), alreadySearched, harvestableBlocks);
 			branchBlocks.addAll(harvestableBlocks);
 		}
 		return allBranchesHarvestable;
 	}
 
-	private List<EnumFacing> getConnectedSides(EnumFacing avoidDirection, IBlockState state) {
+	private List<EnumFacing> getConnectedSides(BlockPos pos, List<BlockPos> alreadySearched) {
 
 		List<EnumFacing> connectedSides = new ArrayList<>();
-		for (EnumFacing facing : EnumFacing.VALUES) {
-			if (facing != avoidDirection) {
-				if (plantIsConnectedOnSide(state, facing)) {
+		for (EnumFacing facing : SEARCH_SIDES) {
+			BlockPos currentPos = pos.offset(facing);
+			if (!alreadySearched.contains(currentPos)) {
+				if (plantIsConnectedOnSide(pos, facing)) {
 					connectedSides.add(facing);
 				}
 			}
@@ -136,41 +148,22 @@ public class ChorusHarvestManager implements IHarvestManager {
 		return connectedSides;
 	}
 
-	private boolean plantIsConnectedOnSide(IBlockState state, EnumFacing side) {
+	private boolean plantIsConnectedOnSide(BlockPos pos, EnumFacing side) {
 
-		IProperty<Boolean> property;
-		switch (side) {
-		case UP:
-			property = BlockChorusPlant.UP;
-			break;
-		case DOWN:
-			property = BlockChorusPlant.DOWN;
-			break;
-		case NORTH:
-			property = BlockChorusPlant.NORTH;
-			break;
-		case SOUTH:
-			property = BlockChorusPlant.SOUTH;
-			break;
-		case WEST:
-			property = BlockChorusPlant.WEST;
-			break;
-		default:
-			property = BlockChorusPlant.EAST;
-		}
-
-		return state.getValue(property);
+		Block block  = world.getBlockState(pos.offset(side)).getBlock();
+		return block == Blocks.CHORUS_PLANT || block == Blocks.CHORUS_FLOWER;
 	}
 
 	@Override
 	public BlockPos getOrigin() {
 
-		return null;
+		return origin;
 	}
 
 	@Override
 	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> settings) {
 
+		setWorld(world);
 		origin = area.getOrigin();
 		isDone = false;
 	}
@@ -203,7 +196,6 @@ public class ChorusHarvestManager implements IHarvestManager {
 		}
 
 		tag.setIntArray("blocks", blockCoordinates);
-
 	}
 
 	@Override

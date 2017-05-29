@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.modhelpers.vanilla;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.CustomProperty;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -64,6 +67,8 @@ import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableEnderm
 import powercrystals.minefactoryreloaded.farmables.spawnhandlers.SpawnableHorse;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
+import java.util.*;
+
 @Mod(modid = "MineFactoryReloaded|CompatVanilla", name = "MFR Compat: Vanilla", version = MineFactoryReloadedCore.version, dependencies = "after:MineFactoryReloaded",
 		customProperties = @CustomProperty(k = "cofhversion", v = "true"))
 public class Vanilla {
@@ -110,7 +115,11 @@ public class Vanilla {
 		MFRRegistry.registerHarvestable(new HarvestableCropPlant(Blocks.NETHER_WART, 3));
 		MFRRegistry.registerHarvestable(new HarvestableVine(Blocks.VINE));
 		MFRRegistry.registerHarvestable(new HarvestableCocoa(Blocks.COCOA));
-		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.CHORUS_FLOWER, HarvestType.Chorus));
+		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.CHORUS_FLOWER, HarvestType.Chorus) {
+			@Override public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos) {
+				return Collections.singletonList(new ItemStack(Item.getItemFromBlock(Blocks.CHORUS_FLOWER)));
+			}
+		});
 		MFRRegistry.registerHarvestable(new HarvestableStandard(Blocks.CHORUS_PLANT, HarvestType.Chorus));
 
 		MFRRegistry.registerFertilizable(new FertilizableStandard((IGrowable) Blocks.SAPLING));
