@@ -138,12 +138,24 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 
 	@Override
 	public void onNeighborTileChange(BlockPos pos) {
+
 		TileEntity tile = worldObj.getTileEntity(pos);
 
-		Vec3i vec = pos.subtract(this.pos);
-		EnumFacing side = EnumFacing.getFacingFromVector(vec.getX(), vec.getY(), vec.getZ());
+		int xCoord = this.pos.getX(), yCoord = this.pos.getY(), zCoord = this.pos.getZ();
+		int x = pos.getX(), y = pos.getY(), z = pos.getZ();
 
-		addCache(tile, side);
+		if (x < xCoord)
+				addCache(tile, EnumFacing.EAST);
+		else if (x > xCoord)
+				addCache(tile, EnumFacing.WEST);
+		else if (z < zCoord)
+				addCache(tile, EnumFacing.SOUTH);
+		else if (z > zCoord)
+				addCache(tile, EnumFacing.NORTH);
+		else if (y < yCoord)
+				addCache(tile, EnumFacing.UP);
+		else if (y > yCoord)
+				addCache(tile, EnumFacing.DOWN);
 	}
 
 	private void addCache(TileEntity tile, EnumFacing side) {
@@ -165,7 +177,9 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
+
+		tag = super.writeToNBT(tag);
+
 		if (_ticksSinceLastConsumption > 0)
 			tag.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
 
