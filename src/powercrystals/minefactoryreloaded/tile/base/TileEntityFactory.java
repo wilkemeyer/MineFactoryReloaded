@@ -203,7 +203,9 @@ public abstract class TileEntityFactory extends TileEntityBase
 	public void rotateDirectlyTo(int rotation) {
 
 		EnumFacing p = _forwardDirection;
-		_forwardDirection = EnumFacing.VALUES[rotation];
+		if (rotation < EnumFacing.VALUES.length)
+			_forwardDirection = EnumFacing.VALUES[rotation];
+
 		if (worldObj != null && p != _forwardDirection) {
 			onRotate();
 		}
@@ -241,8 +243,7 @@ public abstract class TileEntityFactory extends TileEntityBase
 				!worldObj.isRemote && _lastActive < worldObj.getTotalWorldTime()) {
 			_lastActive = worldObj.getTotalWorldTime() + _activeSyncTimeout;
 			_prevActive = _isActive;
-			MFRUtil.notifyBlockUpdate(worldObj, pos); //TODO either remove this as unnecessary or do something with the timeout above,
-			// perhaps this should have timeout for active==false only?
+			MFRUtil.notifyBlockUpdate(worldObj, pos);
 		}
 		_isActive = isActive;
 	}
@@ -299,10 +300,12 @@ public abstract class TileEntityFactory extends TileEntityBase
 
 	protected NBTTagCompound writePacketData(NBTTagCompound tag) {
 
+		tag = super.writePacketData(tag);
+
 		tag.setByte("r", (byte) _forwardDirection.ordinal());
 		tag.setBoolean("a", _isActive);
 
-		return super.writePacketData(tag);
+		return tag;
 	}
 
 	protected void handlePacketData(NBTTagCompound tag) {
@@ -324,15 +327,6 @@ public abstract class TileEntityFactory extends TileEntityBase
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-
-		if (worldObj != null && _lastActive < worldObj.getTotalWorldTime()) {
-			return super.getUpdatePacket();
-		}
-		return null;
-	}
-
-	@Override
 	public String getDataType() {
 
 		return _machine.getInternalName() + ".name";
@@ -351,7 +345,8 @@ public abstract class TileEntityFactory extends TileEntityBase
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
+
 		tag.setInteger("rotation", getDirectionFacing().ordinal());
 		if (!Strings.isNullOrEmpty(_owner))
 			tag.setString("owner", _owner);
@@ -421,4 +416,5 @@ public abstract class TileEntityFactory extends TileEntityBase
 			return ConnectOverride.CONNECT;
 		return ConnectOverride.DEFAULT;
 	}
+
 }

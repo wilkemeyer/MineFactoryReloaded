@@ -168,7 +168,7 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		writeItemNBT(tag);
 
 		return tag;
