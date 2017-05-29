@@ -107,7 +107,7 @@ public abstract class TileEntityBase extends net.minecraft.tileentity.TileEntity
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 
-		if (worldObj != null) {
+		if (worldObj != null && !isInvalid()) {
 			return new SPacketUpdateTileEntity(pos, 0, writePacketData(new NBTTagCompound()));
 		}
 		return null;
