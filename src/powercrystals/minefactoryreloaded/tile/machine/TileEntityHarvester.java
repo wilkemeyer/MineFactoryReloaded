@@ -429,25 +429,21 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					return 0;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
+	}
+
 }

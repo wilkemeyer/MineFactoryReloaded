@@ -24,14 +24,14 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 import static net.minecraftforge.fluids.FluidRegistry.WATER;
 
-public class TileEntityWeather extends TileEntityFactoryPowered
-{
+public class TileEntityWeather extends TileEntityFactoryPowered {
+
 	protected int _canSeeSky = 0;
 	protected boolean _canWeather = false, _willSnow = false, _openSky = false;
 	protected Biome _biome = null;
 
-	public TileEntityWeather()
-	{
+	public TileEntityWeather() {
+
 		super(Machine.WeatherCollector);
 		setManageSolids(true);
 		_tanks[0].setLock(WATER);
@@ -39,41 +39,41 @@ public class TileEntityWeather extends TileEntityFactoryPowered
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 50;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 600;
 	}
 
 	@Override
-	public boolean activateMachine()
-	{
-		if (worldObj.getWorldInfo().isRaining())
-		{
-			l: {
+	public boolean activateMachine() {
+
+		if (worldObj.getWorldInfo().isRaining()) {
+			l:
+			{
 				Biome bgb = worldObj.getBiome(pos);
 
-				if (_canWeather && _biome == bgb) break l;
+				if (_canWeather && _biome == bgb)
+					break l;
 				_biome = bgb;
-				if (!bgb.canRain() && !bgb.getEnableSnow())
-				{
+				if (!bgb.canRain() && !bgb.getEnableSnow()) {
 					_canWeather = false;
 					setIdleTicks(getIdleTicksMax());
 					return false;
@@ -81,32 +81,25 @@ public class TileEntityWeather extends TileEntityFactoryPowered
 				_canWeather = true;
 				_willSnow = bgb.getFloatTemperature(pos) < 0.15F;
 			}
-			if (!canSeeSky())
-			{
+			if (!canSeeSky()) {
 				setIdleTicks(getIdleTicksMax());
 				return false;
 			}
-			if (!incrementWorkDone()) return false;
-			if (getWorkDone() >= getWorkMax())
-			{
-				if (!_willSnow)
-				{
+			if (!incrementWorkDone())
+				return false;
+			if (getWorkDone() >= getWorkMax()) {
+				if (!_willSnow) {
 					if (_tanks[0].getSpace() >= BUCKET_VOLUME &&
-							_tanks[0].fill(FluidHelper.WATER, true) > 0)
-					{
+							_tanks[0].fill(FluidHelper.WATER, true) > 0) {
 						setWorkDone(0);
 						setIdleTicks(3);
 						return true;
-					}
-					else
-					{
+					} else {
 						setWorkDone(getWorkMax());
 						setIdleTicks(10);
 						return false;
 					}
-				}
-				else
-				{
+				} else {
 					doDrop(new ItemStack(Items.SNOWBALL, 3));
 					setWorkDone(0);
 					setIdleTicks(1);
@@ -119,19 +112,19 @@ public class TileEntityWeather extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public EnumFacing getDropDirection()
-	{
+	public EnumFacing getDropDirection() {
+
 		return EnumFacing.DOWN;
 	}
 
-	private boolean canSeeSky()
-	{
-		if (--_canSeeSky > 0) return _openSky;
+	private boolean canSeeSky() {
+
+		if (--_canSeeSky > 0)
+			return _openSky;
 		_canSeeSky = 70;
 		int h = BlockHelper.getHighestY(worldObj, pos.getX(), pos.getZ());
 		_openSky = true;
-		for (int y = pos.getY() + 1; y < h; y++)
-		{
+		for (int y = pos.getY() + 1; y < h; y++) {
 			BlockPos offsetPos = new BlockPos(pos.getX(), y, pos.getZ());
 			IBlockState state = worldObj.getBlockState(offsetPos);
 			Block block = state.getBlock();
@@ -144,43 +137,39 @@ public class TileEntityWeather extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
-	public boolean shouldPumpLiquid()
-	{
+	public boolean shouldPumpLiquid() {
+
 		return true;
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
-		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					return 0;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
+	}
+
 }

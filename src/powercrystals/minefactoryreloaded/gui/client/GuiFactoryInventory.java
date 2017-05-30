@@ -88,7 +88,7 @@ public class GuiFactoryInventory extends GuiBase {
 
 		if (_renderTanks) {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			FluidTankInfo[] tanks = _tileEntity.getTankInfo(null);
+			FluidTankInfo[] tanks = _tileEntity.getTankInfo();
 			int n = tanks.length > 3 ? 3 : tanks.length;
 			if (n > 0) {
 				for (int i = 0; i < n; ++i) {

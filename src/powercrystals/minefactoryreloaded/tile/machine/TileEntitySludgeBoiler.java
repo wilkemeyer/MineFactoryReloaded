@@ -30,14 +30,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntitySludgeBoiler extends TileEntityFactoryPowered
-{
+public class TileEntitySludgeBoiler extends TileEntityFactoryPowered {
+
 	private Random _rand;
 	private int _tick;
 	private Area _area;
 
-	public TileEntitySludgeBoiler()
-	{
+	public TileEntitySludgeBoiler() {
+
 		super(Machine.SludgeBoiler);
 		setManageSolids(true);
 		_activeSyncTimeout = 5;
@@ -47,59 +47,56 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	public void validate()
-	{
+	public void validate() {
+
 		super.validate();
 		_area = new Area(pos, 3, 3, 3);
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 100;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 1;
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
-		if (fluidHandler.drain(10, false, _tanks[0]) == 10)
-		{
-			if (!incrementWorkDone()) return false;
-			fluidHandler.drain(10, true, _tanks[0]);
+	protected boolean activateMachine() {
+
+		if (drain(10, false, _tanks[0]) == 10) {
+			if (!incrementWorkDone())
+				return false;
+			drain(10, true, _tanks[0]);
 			_tick++;
 
-			if (getWorkDone() >= getWorkMax())
-			{
-				ItemStack s = ((WeightedRandomItemStack)WeightedRandom.getRandomItem(_rand, MFRRegistry.getSludgeDrops())).getStack();
+			if (getWorkDone() >= getWorkMax()) {
+				ItemStack s = ((WeightedRandomItemStack) WeightedRandom.getRandomItem(_rand, MFRRegistry.getSludgeDrops())).getStack();
 
 				doDrop(s);
 
 				setWorkDone(0);
 			}
 
-			if (_tick >= 23)
-			{
+			if (_tick >= 23) {
 				List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _area.toAxisAlignedBB());
-				for (EntityLivingBase ent : entities)
-				{
+				for (EntityLivingBase ent : entities) {
 					ent.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 20 * 20, 0));
 					ent.addPotionEffect(new PotionEffect(MobEffects.POISON, 6 * 20, 0));
 				}
@@ -111,21 +108,20 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered
 	}
 
 	@Override
-	protected boolean updateIsActive(boolean failedDrops)
-	{
-		return super.updateIsActive(failedDrops) && fluidHandler.drain(10, false, _tanks[0]) == 10;
+	protected boolean updateIsActive(boolean failedDrops) {
+
+		return super.updateIsActive(failedDrops) && drain(10, false, _tanks[0]) == 10;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void machineDisplayTick()
-	{
+	protected void machineDisplayTick() {
+
 		int s = Minecraft.getMinecraft().gameSettings.particleSetting;
-		if (s < 2 && isActive())
-		{
+		if (s < 2 && isActive()) {
 			int color = MFRFluids.sludgeLiquid.color;
 			for (int a = 8 >> s, i = 4 >> s;
-					i --> 0; )
+				 i-- > 0; )
 				worldObj.spawnParticle(_rand.nextInt(a) == 0 ? EnumParticleTypes.SPELL_MOB : EnumParticleTypes.SPELL_MOB_AMBIENT,
 						_area.xMin + _rand.nextFloat() * (_area.xMax - _area.xMin),
 						_area.yMin + _rand.nextFloat() * (_area.yMax - _area.yMin),
@@ -135,50 +131,47 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered
 	}
 
 	@Override
-	public EnumFacing getDropDirection()
-	{
+	public EnumFacing getDropDirection() {
+
 		return EnumFacing.DOWN;
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
-		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+		return true;
+	}
 
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
 
-					return true;
-				}
+		return false;
+	}
 
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
 
-					return null;
-				}
+		return null;
+	}
 
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
 
-					return null;
-				}
-			});
-		}
+		return null;
+	}
 
-		return super.getCapability(capability, facing);
-	}}
+}

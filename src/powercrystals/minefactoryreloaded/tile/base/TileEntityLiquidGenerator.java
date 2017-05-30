@@ -18,11 +18,13 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerator {
+
 	private int _liquidConsumedPerTick;
 	private int _powerProducedPerConsumption;
 
 	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick,
 			int ticksBetweenConsumption) {
+
 		this(machine, liquidConsumedPerTick,
 				machine.getActivationEnergy() * ticksBetweenConsumption,
 				ticksBetweenConsumption);
@@ -30,6 +32,7 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 
 	public TileEntityLiquidGenerator(Machine machine, int liquidConsumedPerTick,
 			int powerProducedPerConsumption, int ticksBetweenConsumption) {
+
 		super(machine, ticksBetweenConsumption);
 		_powerProducedPerConsumption = powerProducedPerConsumption;
 		_liquidConsumedPerTick = liquidConsumedPerTick;
@@ -38,36 +41,30 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	@Override
 	protected boolean consumeFuel() {
 
-		FluidStack drained = consumeFuel(_liquidConsumedPerTick, false);
+		int drained = drain(_liquidConsumedPerTick, false, _tanks[0]);
 
-		if (drained == null || drained.amount != _liquidConsumedPerTick)
+		if (drained != _liquidConsumedPerTick)
 			return false;
 
-		consumeFuel(_liquidConsumedPerTick, true);
+		drain(_liquidConsumedPerTick, true, _tanks[0]);
 		return true;
-	}
-
-	private FluidStack consumeFuel(int amount, boolean doConsume) {
-
-		for (FluidTankCore tank : getTanks())
-			if (tank.getFluidAmount() > 0)
-				return tank.drain(amount, doConsume);
-
-		return null;
 	}
 
 	@Override
 	protected boolean hasFuel() {
+
 		return _tanks[0].getFluidAmount() != 0;
 	}
 
 	@Override
 	protected boolean canConsumeFuel(int space) {
+
 		return space >= _powerProducedPerConsumption;
 	}
 
 	@Override
 	protected int produceEnergy() {
+
 		return _powerProducedPerConsumption;
 	}
 
@@ -75,10 +72,12 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 
 	@Override
 	protected FluidTankCore[] createTanks() {
+
 		return new FluidTankCore[] {new FluidTankCore(BUCKET_VOLUME * 4)};
 	}
 
 	protected String getFluidName(FluidStack fluid) {
+
 		if (fluid == null || fluid.getFluid() == null)
 			return null;
 		String name = fluid.getFluid().getName();
@@ -90,59 +89,56 @@ public abstract class TileEntityLiquidGenerator extends TileEntityFactoryGenerat
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiLiquidGenerator(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
 	public ContainerFactoryGenerator getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryGenerator(this, inventoryPlayer);
 	}
 
 	@Override
 	public String getGuiBackground() {
+
 		return "fluidgenerator";
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new LiquidGeneratorFluidHandler());
-		}
-
-		return super.getCapability(capability, facing);
+		if (resource != null && isFluidFuel(resource))
+			for (FluidTankCore tank : getTanks())
+				if (tank.getFluidAmount() == 0 || resource.isFluidEqual(tank.getFluid()))
+					return tank.fill(resource, doFill);
+		return 0;
 	}
 
-	private class LiquidGeneratorFluidHandler extends FactoryBucketableFluidHandler {
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		@Override
-		public int fill(FluidStack resource, boolean doFill) {
-
-			if (resource != null && isFluidFuel(resource))
-				for (FluidTankCore tank : getTanks())
-					if (tank.getFluidAmount() == 0 || resource.isFluidEqual(tank.getFluid()))
-						return tank.fill(resource, doFill);
-			return 0;
-		}
-
-		@Override
-		public boolean allowBucketFill(ItemStack stack) {
-
-			return true;
-		}
-
-		@Nullable
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-			return null;
-		}
-
-		@Nullable
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
-
-			return null;
-		}
+		return true;
 	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }

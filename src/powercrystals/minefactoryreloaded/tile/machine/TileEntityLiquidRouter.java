@@ -25,81 +25,102 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 import javax.annotation.Nullable;
 
-public class TileEntityLiquidRouter extends TileEntityFactoryInventory
-{
+public class TileEntityLiquidRouter extends TileEntityFactoryInventory {
+
 	//TODO this really needs a rewrite - very confusing that the order here doesn't match EnumFacing
 	private static final EnumFacing[] _outputDirections = new EnumFacing[]
 			{ EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST };
 
 	protected boolean[] _filledDirection = new boolean[6];
 
-	public TileEntityLiquidRouter()
-	{
+	public TileEntityLiquidRouter() {
+
 		super(Machine.LiquidRouter);
-		for(int i = 0; i < 6; i++)
-		{
+		for (int i = 0; i < 6; i++) {
 			_filledDirection[i] = false;
 		}
 		setManageFluids(true);
 	}
 
 	@Override
-	public void update()
-	{
+	public void update() {
+
 		super.update();
-		for(int i = 0; i < 6; i++)
-		{
+		for (int i = 0; i < 6; i++) {
 			_filledDirection[i] = false;
 		}
 	}
 
-	private int pumpLiquid(FluidStack resource, boolean doFill)
-	{
-		if(resource == null || resource.amount <= 0) return 0;
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
+	@Override
+	public IFluidTankProperties[] getTankProperties(EnumFacing facing) {
+
+		return emptyIFluidTankProperties;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		int tankIndex = facing.ordinal();
+		if (tankIndex >= _filledDirection.length || _filledDirection[tankIndex])
+			return 0;
+		int r = pumpLiquid(resource, doFill);
+		_filledDirection[tankIndex] = doFill & r > 0;
+		return r;
+	}
+
+	private int pumpLiquid(FluidStack resource, boolean doFill) {
+
+		if (resource == null || resource.amount <= 0)
+			return 0;
 
 		int amountRemaining = resource.amount;
 		int[] routes = getRoutesForLiquid(resource);
 		int[] defaultRoutes = getDefaultRoutes();
 
-		if(hasRoutes(routes))
-		{
+		if (hasRoutes(routes)) {
 			amountRemaining = weightedRouteLiquid(resource, routes, amountRemaining, doFill);
-		}
-		else if(hasRoutes(defaultRoutes))
-		{
+		} else if (hasRoutes(defaultRoutes)) {
 			amountRemaining = weightedRouteLiquid(resource, defaultRoutes, amountRemaining, doFill);
 		}
 
 		return resource.amount - amountRemaining;
 	}
 
-	private int weightedRouteLiquid(FluidStack resource, int[] routes, int amountRemaining, boolean doFill)
-	{
-		if(amountRemaining >= totalWeight(routes))
-		{
+	private int weightedRouteLiquid(FluidStack resource, int[] routes, int amountRemaining, boolean doFill) {
+
+		if (amountRemaining >= totalWeight(routes)) {
 			int startingAmount = amountRemaining;
-			for(int i = 0; i < routes.length; i++)
-			{
+			for (int i = 0; i < routes.length; i++) {
 				TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[i]));
 				int amountForThisRoute = startingAmount * routes[i] / totalWeight(routes);
-				if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite()) && amountForThisRoute > 0)
-				{
+				if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite()) && amountForThisRoute > 0) {
 					amountRemaining -= te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[i].getOpposite())
 							.fill(new FluidStack(resource, amountForThisRoute), doFill);
-					if(amountRemaining <= 0)
-					{
+					if (amountRemaining <= 0) {
 						break;
 					}
 				}
 			}
 		}
 
-		if(0 < amountRemaining && amountRemaining < totalWeight(routes))
-		{
+		if (0 < amountRemaining && amountRemaining < totalWeight(routes)) {
 			int outdir = weightedRandomSide(routes);
 			TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[outdir]));
-			if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite()))
-			{
+			if (te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite())) {
 				amountRemaining -= te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite())
 						.fill(new FluidStack(resource, amountRemaining), doFill);
 			}
@@ -108,14 +129,12 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 		return amountRemaining;
 	}
 
-	private int weightedRandomSide(int[] routeWeights)
-	{
+	private int weightedRandomSide(int[] routeWeights) {
+
 		int random = worldObj.rand.nextInt(totalWeight(routeWeights));
-		for(int i = 0; i < routeWeights.length; i++)
-		{
+		for (int i = 0; i < routeWeights.length; i++) {
 			random -= routeWeights[i];
-			if(random < 0)
-			{
+			if (random < 0) {
 				return i;
 			}
 		}
@@ -123,60 +142,50 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 		return -1;
 	}
 
-	private int totalWeight(int[] routeWeights)
-	{
+	private int totalWeight(int[] routeWeights) {
+
 		int total = 0;
 
-		for(int weight : routeWeights)
-		{
+		for (int weight : routeWeights) {
 			total += weight;
 		}
 		return total;
 	}
 
-	private boolean hasRoutes(int[] routeWeights)
-	{
-		for(int weight : routeWeights)
-		{
-			if(weight > 0) return true;
+	private boolean hasRoutes(int[] routeWeights) {
+
+		for (int weight : routeWeights) {
+			if (weight > 0)
+				return true;
 		}
 		return false;
 	}
 
+	private int[] getRoutesForLiquid(FluidStack resource) {
 
-	private int[] getRoutesForLiquid(FluidStack resource)
-	{
 		int[] routeWeights = new int[6];
 
-		for(int i = 0; i < 6; i++)
-		{
+		for (int i = 0; i < 6; i++) {
 			ItemStack stack = _inventory[i];
 			Item item = stack != null ? stack.getItem() : null;
-			if(item != null &&
-					resource.isFluidEqual(MFRUtil.getFluidContents(_inventory[i])))
-			{
+			if (item != null &&
+					resource.isFluidEqual(MFRUtil.getFluidContents(_inventory[i]))) {
 				routeWeights[i] = _inventory[i].stackSize;
-			}
-			else
-			{
+			} else {
 				routeWeights[i] = 0;
 			}
 		}
 		return routeWeights;
 	}
 
-	private int[] getDefaultRoutes()
-	{
+	private int[] getDefaultRoutes() {
+
 		int[] routeWeights = new int[6];
 
-		for(int i = 0; i < 6; i++)
-		{
-			if(_inventory[i] != null && MFRUtil.getFluidContents(_inventory[i]) == null)
-			{
+		for (int i = 0; i < 6; i++) {
+			if (_inventory[i] != null && MFRUtil.getFluidContents(_inventory[i]) == null) {
 				routeWeights[i] = _inventory[i].stackSize;
-			}
-			else
-			{
+			} else {
 				routeWeights[i] = 0;
 			}
 		}
@@ -195,89 +204,40 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 6;
 	}
 
 	@Override
-	public boolean shouldDropSlotWhenBroken(int slot)
-	{
+	public boolean shouldDropSlotWhenBroken(int slot) {
+
 		return false;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiLiquidRouter(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerLiquidRouter getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerLiquidRouter getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerLiquidRouter(this, inventoryPlayer);
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side)
-	{
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
+
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
-	{
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
+
 		return false;
 	}
 
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new LiquidRouterFluidHandler(facing));
-		}
-
-		return super.getCapability(capability, facing);
-	}
-
-	private class LiquidRouterFluidHandler extends FactoryBucketableFluidHandler {
-
-		private EnumFacing from;
-
-		public LiquidRouterFluidHandler(EnumFacing from) {
-
-			this.from = from;
-		}
-
-		@Nullable
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-			return null;
-		}
-
-		@Nullable
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
-
-			return null;
-		}
-
-		@Override
-		public IFluidTankProperties[] getTankProperties() {
-
-			return new IFluidTankProperties[0];
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill) {
-
-			int tankIndex = from.ordinal();
-			if (tankIndex >= _filledDirection.length || _filledDirection[tankIndex]) return 0;
-			int r = pumpLiquid(resource, doFill);
-			_filledDirection[tankIndex] = doFill & r > 0;
-			return r;
-		}
-	}
 }

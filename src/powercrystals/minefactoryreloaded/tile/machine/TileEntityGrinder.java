@@ -31,16 +31,16 @@ import powercrystals.minefactoryreloaded.world.GrindingWorldServer;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntityGrinder extends TileEntityFactoryPowered
-{
+public class TileEntityGrinder extends TileEntityFactoryPowered {
+
 	public static final float DAMAGE = 0x1.fffffeP+120f;
 
 	protected Random _rand;
 	protected GrindingWorldServer _grindingWorld;
 	protected GrindingDamage _damageSource;
 
-	protected TileEntityGrinder(Machine machine)
-	{
+	protected TileEntityGrinder(Machine machine) {
+
 		super(machine);
 		createEntityHAM(this);
 		_rand = new Random();
@@ -49,129 +49,116 @@ public class TileEntityGrinder extends TileEntityFactoryPowered
 		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
-	public TileEntityGrinder()
-	{
+	public TileEntityGrinder() {
+
 		this(Machine.Grinder);
 		_damageSource = new GrindingDamage();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	public void setWorldObj(World world)
-	{
+	public void setWorldObj(World world) {
+
 		super.setWorldObj(world);
-		if(_grindingWorld != null)
-		{
+		if (_grindingWorld != null) {
 			_grindingWorld.clearReferences();
 			_grindingWorld.setMachine(null);
 		}
-		if(this.worldObj instanceof WorldServer)
-			_grindingWorld = new GrindingWorldServer((WorldServer)this.worldObj, this);
+		if (this.worldObj instanceof WorldServer)
+			_grindingWorld = new GrindingWorldServer((WorldServer) this.worldObj, this);
 	}
 
 	@Override
-	public void onChunkUnload()
-	{
+	public void onChunkUnload() {
+
 		super.onChunkUnload();
-		if(_grindingWorld != null)
-		{
+		if (_grindingWorld != null) {
 			_grindingWorld.clearReferences();
 			_grindingWorld.setMachine(null);
 		}
 		_grindingWorld = null;
 	}
 
-	public Random getRandom()
-	{
+	public Random getRandom() {
+
 		return _rand;
 	}
 
 	@Override
-	protected boolean shouldPumpLiquid()
-	{
+	protected boolean shouldPumpLiquid() {
+
 		return true;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 1;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 200;
 	}
 
 	@Override
-	public boolean activateMachine()
-	{
+	public boolean activateMachine() {
+
 		_grindingWorld.cleanReferences();
 		List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 
-		entityList: for(EntityLivingBase e : entities)
-		{
-			if(e instanceof EntityAgeable && ((EntityAgeable)e).getGrowingAge() < 0 || e.isEntityInvulnerable(_damageSource) || e.getHealth() <= 0)
-			{
+		entityList:
+		for (EntityLivingBase e : entities) {
+			if (e instanceof EntityAgeable && ((EntityAgeable) e).getGrowingAge() < 0 || e.isEntityInvulnerable(_damageSource) || e.getHealth() <= 0) {
 				continue;
 			}
 
 			processEntity:
 			{
-				if(MFRRegistry.getGrindables().containsKey(e.getClass()))
-				{
+				if (MFRRegistry.getGrindables().containsKey(e.getClass())) {
 					IFactoryGrindable r = MFRRegistry.getGrindables().get(e.getClass());
 					List<MobDrop> drops = r.grind(e.worldObj, e, getRandom());
-					if(drops != null && drops.size() > 0 && WeightedRandom.getTotalWeight(drops) > 0)
-					{
+					if (drops != null && drops.size() > 0 && WeightedRandom.getTotalWeight(drops) > 0) {
 						ItemStack drop = WeightedRandom.getRandomItem(_rand, drops).getStack();
 						doDrop(drop);
 					}
-					if(r.processEntity(e))
-					{
-						if(e.getHealth() <= 0)
-						{
+					if (r.processEntity(e)) {
+						if (e.getHealth() <= 0) {
 							continue entityList;
 						}
 						break processEntity;
 					}
 				}
 
-				for(Class<?> t : MFRRegistry.getGrinderBlacklist())
-				{
-					if(t.isInstance(e))
-					{
+				for (Class<?> t : MFRRegistry.getGrinderBlacklist()) {
+					if (t.isInstance(e)) {
 						continue entityList;
 					}
 				}
 			}
 
-			if(!_grindingWorld.addEntityForGrinding(e))
-			{
+			if (!_grindingWorld.addEntityForGrinding(e)) {
 				continue entityList;
 			}
 
 			damageEntity(e);
-			if(e.getHealth() <= 0)
-			{
+			if (e.getHealth() <= 0) {
 				//fillTank(_tanks[0], "mob_essence", 1);
 				setIdleTicks(20);
-			}
-			else
-			{
+			} else {
 				setIdleTicks(10);
 			}
 			return true;
@@ -180,60 +167,56 @@ public class TileEntityGrinder extends TileEntityFactoryPowered
 		return false;
 	}
 
-	protected void setRecentlyHit(EntityLivingBase entity, int t)
-	{
+	protected void setRecentlyHit(EntityLivingBase entity, int t) {
+
 		entity.recentlyHit = t;
 	}
 
-	protected void damageEntity(EntityLivingBase entity)
-	{
+	protected void damageEntity(EntityLivingBase entity) {
+
 		setRecentlyHit(entity, 100);
 		entity.attackEntityFrom(_damageSource, DAMAGE);
 	}
 
-	public void acceptXPOrb(EntityXPOrb orb)
-	{
+	public void acceptXPOrb(EntityXPOrb orb) {
+
 		MFRLiquidMover.fillTankWithXP(_tanks[0], orb);
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
-	protected void fillTank(FluidTankCore tank, String fluid, float amount)
-	{
-		tank.fill(FluidRegistry.getFluidStack(fluid, (int)(100 * amount)), true);
+	protected void fillTank(FluidTankCore tank, String fluid, float amount) {
+
+		tank.fill(FluidRegistry.getFluidStack(fluid, (int) (100 * amount)), true);
 		markDirty();
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
-		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					return 0;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
+	}
+
 }

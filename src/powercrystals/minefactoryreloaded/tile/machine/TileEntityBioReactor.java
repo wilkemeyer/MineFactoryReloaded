@@ -196,25 +196,21 @@ public class TileEntityBioReactor extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	protected boolean canFillTank(EnumFacing facing, int index) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					return 0;
-				}
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return false;
 	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
 }

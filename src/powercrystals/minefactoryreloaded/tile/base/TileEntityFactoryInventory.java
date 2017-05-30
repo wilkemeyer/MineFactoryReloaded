@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
@@ -30,12 +31,14 @@ import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory {
+public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory, ITankContainerBucketable {
 
-	protected final static FluidTankCore[] emptyIFluidTank = new FluidTankCore[] { };
-	protected final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
+	public final static FluidTankCore[] emptyIFluidTank = new FluidTankCore[] { };
+	public final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
+	public final static IFluidTankProperties[] emptyIFluidTankProperties = new IFluidTankProperties[] { };
 	protected final static int BUCKET_VOLUME = Fluid.BUCKET_VOLUME;
 
 	protected List<ItemStack> failedDrops = null;
@@ -49,16 +52,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected boolean internalChange = false;
 
-	protected FactoryBucketableFluidHandler fluidHandler;
-
 	protected TileEntityFactoryInventory(Machine machine) {
 
 		super(machine);
 		_inventory = new ItemStack[getSizeInventory()];
 		_tanks = createTanks();
 		setManageFluids(_tanks != null);
-
-		fluidHandler = (FactoryBucketableFluidHandler) getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 	}
 
 	@Override
@@ -116,7 +115,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		onDisassembled();
 	}
 
-	public FluidTankInfo[] getTankInfo(EnumFacing from) {
+	public FluidTankInfo[] getTankInfo() {
 
 		IFluidTank[] tanks = getTanks();
 		if (tanks.length == 0)
@@ -127,6 +126,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return r;
 	}
 
+	@Nullable
 	protected FluidTankCore[] createTanks() {
 
 		return null;
@@ -139,6 +139,80 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return emptyIFluidTank;
 	}
 
+	@Override
+	public IFluidTankProperties[] getTankProperties(EnumFacing facing) {
+
+		FluidTankCore[] tanks = getTanks();
+
+		if (tanks.length == 0)
+			return emptyIFluidTankProperties;
+
+		IFluidTankProperties[] tankProps = new IFluidTankProperties[tanks.length];
+		for(int i=0; i<tanks.length; i++) {
+			tankProps[i] = new FluidTankProperties(tanks[i].getFluid(), tanks[i].getCapacity(),
+					canFillTank(facing, i), canDrainTank(facing, i));
+		}
+
+		return tankProps;
+	}
+
+	public int drain(int maxDrain, boolean doDrain, FluidTankCore tank) {
+
+		if (tank.getFluidAmount() > 0) {
+			FluidStack drained = tank.drain(maxDrain, doDrain);
+			if (drained != null) {
+				if (doDrain) {
+					internalChange = true;
+					markDirty();
+					internalChange = false;
+				}
+				return drained.amount;
+			}
+		}
+		return 0;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		if (resource != null)
+			for (FluidTankCore tank : getTanks())
+				if (resource.isFluidEqual(tank.getFluid()))
+					return tank.drain(resource.amount, doDrain);
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		for (FluidTankCore tank : getTanks())
+			if (tank.getFluidAmount() > 0)
+				return tank.drain(maxDrain, doDrain);
+		return null;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		if (resource != null)
+			for (FluidTankCore tank : getTanks())
+				if (FluidHelper.isFluidEqualOrNull(tank.getFluid(), resource))
+					return tank.fill(resource, doFill);
+		return 0;
+	}
+
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return true;
+	}
+
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return true;
+	}
+
 	protected boolean shouldPumpLiquid() {
 
 		return false;
@@ -147,6 +221,18 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	protected boolean shouldPumpTank(IFluidTank tank) {
 
 		return true;
+	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return false;
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return false;
 	}
 
 	@Override
@@ -328,7 +414,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int slot, @Nullable ItemStack itemstack) {
 
 		int start = getStartInventorySide(null);
 		if (slot < start ||
@@ -449,8 +535,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 					nbttagcompound1.setByte("Tank", (byte) i);
 
-					FluidStack l = _tanks[i].getFluid();
-					l.writeToNBT(nbttagcompound1);
+					fluid.writeToNBT(nbttagcompound1);
 					tanks.appendTag(nbttagcompound1);
 				}
 			}
@@ -494,13 +579,13 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
+	public boolean canInsertItem(int slot, @Nullable ItemStack itemstack, EnumFacing side) {
 
 		return itemstack == null || this.isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
+	public boolean canExtractItem(int slot, @Nullable ItemStack itemstack, EnumFacing side) {
 
 		return true;
 	}
@@ -564,95 +649,62 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return manageFluids();
+
+		return super.hasCapability(capability, facing);
 	}
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler());
+			if (manageFluids())
+				return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryFluidHandler(this, facing));
+			return null; // no external overriding via events
 		}
 
 		return super.getCapability(capability, facing);
 	}
 
 
-	public class FactoryBucketableFluidHandler implements ITankContainerBucketable {
+	public static class FactoryFluidHandler implements IFluidHandler {
+
+		private ITankContainerBucketable tile;
+		private EnumFacing facing;
+
+		public FactoryFluidHandler(ITankContainerBucketable tile, EnumFacing facing) {
+
+			this.tile = tile;
+			this.facing = facing;
+		}
 
 		@Override
 		public IFluidTankProperties[] getTankProperties() {
 
-			FluidTankCore[] tanks = getTanks();
-
-			if (tanks == emptyIFluidTank)
-				return new IFluidTankProperties[0];
-
-			IFluidTankProperties[] tankProps = new IFluidTankProperties[tanks.length];
-			for(int i=0; i<tanks.length; i++) {
-				tankProps[i] = new FluidTankProperties(tanks[i].getFluid(), tanks[i].getCapacity());
-			}
-
-			return tankProps;
+			return tile.getTankProperties(facing);
 		}
 
 		@Override
 		public int fill(FluidStack resource, boolean doFill) {
 
-			if (resource != null)
-				for (FluidTankCore tank : getTanks())
-					if (FluidHelper.isFluidEqualOrNull(tank.getFluid(), resource))
-						return tank.fill(resource, doFill);
-			return 0;
-		}
-
-		public int drain(int maxDrain, boolean doDrain, FluidTankCore tank) {
-
-			if (tank.getFluidAmount() > 0) {
-				FluidStack drained = tank.drain(maxDrain, doDrain);
-				if (drained != null) {
-					if (doDrain) {
-						internalChange = true;
-						markDirty();
-						internalChange = false;
-					}
-					return drained.amount;
-				}
-			}
-			return 0;
+			return tile.fill(facing, resource, doFill);
 		}
 
 		@Nullable
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain) {
 
-			if (resource != null)
-				for (FluidTankCore tank : getTanks())
-					if (resource.isFluidEqual(tank.getFluid()))
-						return tank.drain(resource.amount, doDrain);
-			return null;
+			return tile.drain(facing, resource, doDrain);
 		}
 
 		@Nullable
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain) {
 
-			for (FluidTankCore tank : getTanks())
-				if (tank.getFluidAmount() > 0)
-					return tank.drain(maxDrain, doDrain);
-			return null;
+			return tile.drain(facing, maxDrain, doDrain);
 		}
 
-		@Override
-		public boolean allowBucketFill(ItemStack stack) {
-
-			return false;
-		}
-
-		@Override
-		public boolean allowBucketDrain(ItemStack stack) {
-
-			return false;
-		}
 	}
+
 }

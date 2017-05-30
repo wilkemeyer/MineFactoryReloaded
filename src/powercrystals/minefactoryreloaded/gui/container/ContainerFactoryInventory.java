@@ -50,7 +50,7 @@ public class ContainerFactoryInventory extends ContainerBase {
 
 		super.detectAndSendChanges();
 
-		FluidTankInfo[] tank = _te.getTankInfo(null);
+		FluidTankInfo[] tank = _te.getTankInfo();
 		int n = tank.length;
 		for (int i = 0; i < listeners.size(); i++) {
 			listeners.get(i).sendProgressBarUpdate(this, 33, (_te.hasDrops() ? 1 : 0) |

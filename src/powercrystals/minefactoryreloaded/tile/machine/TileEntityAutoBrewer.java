@@ -94,8 +94,8 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 					if (row == 0 || _inventory[getTemplateSlot(row - 1)] == null) {
 						ItemStack waterBottle = new ItemStack(Items.POTIONITEM);
 						if (getPotionResult(waterBottle, _inventory[templateSlot]) != waterBottle)
-							if (fluidHandler.drain(waterCost, false, _tanks[0]) == waterCost) {
-								fluidHandler.drain(waterCost, true, _tanks[0]);
+							if (drain(waterCost, false, _tanks[0]) == waterCost) {
+								drain(waterCost, true, _tanks[0]);
 								_inventory[31] = ItemHelper.consumeItem(_inventory[31]);
 								_inventory[processSlot] = new ItemStack(Items.POTIONITEM);
 								didWork = true;
@@ -274,7 +274,7 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 	public void setInventorySlotContents(int slot, ItemStack itemstack) {
 
 		if (itemstack != null && !shouldDropSlotWhenBroken(slot))
-			itemstack.stackSize = 1;
+			itemstack.stackSize = 0; // ghost item; stack size (0, 1) also used to reduce resource consumption
 		super.setInventorySlotContents(slot, itemstack);
 	}
 
@@ -292,39 +292,35 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					return null;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					return null;
-				}
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return !stack.getItem().equals(Items.GLASS_BOTTLE);
-				}
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return !stack.getItem().equals(Items.POTIONITEM);
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return !stack.getItem().equals(Items.GLASS_BOTTLE);
 	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return !stack.getItem().equals(Items.POTIONITEM);
+	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }

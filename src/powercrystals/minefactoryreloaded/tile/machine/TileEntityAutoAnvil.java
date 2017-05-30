@@ -126,14 +126,14 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered {
 				return false;
 			}
 
-			if (fluidHandler.drain(4, false, _tanks[0]) != 4) {
+			if (drain(4, false, _tanks[0]) != 4) {
 				return false;
 			}
 			if (stackSizeToBeUsedInRepair > 0 && (_inventory[1] == null || _inventory[1].stackSize < stackSizeToBeUsedInRepair)) {
 				return false;
 			}
 
-			fluidHandler.drain(4, true, _tanks[0]);
+			drain(4, true, _tanks[0]);
 			if (!incrementWorkDone()) return false;
 
 			if (getWorkDone() >= getWorkMax()) {
@@ -435,41 +435,36 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered {
 		return 30;
 	}
 
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
 	@Override
 	protected FluidTankCore[] createTanks() {
 
 		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					return null;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					return null;
-				}
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
 	}
 
 }

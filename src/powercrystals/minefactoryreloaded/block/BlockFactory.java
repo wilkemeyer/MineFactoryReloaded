@@ -153,29 +153,25 @@ public class BlockFactory extends Block implements IRedNetConnection, IDismantle
 		{
 			return false;
 		}
-		if (heldItem != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
+		if (heldItem != null && te instanceof ITankContainerBucketable)
 		{
-			IFluidHandler fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
-			if (fluidHandler instanceof ITankContainerBucketable)
+			if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
 			{
-				if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
-				{
-					if (world.isRemote)
-						return true;
+				if (world.isRemote)
+					return true;
 
-					if (((ITankContainerBucketable)fluidHandler).allowBucketDrain(heldItem))
+				if (((ITankContainerBucketable)te).allowBucketDrain(side, heldItem))
+				{
+					if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)te, side, player, heldItem))
 					{
-						if (MFRLiquidMover.manuallyDrainTank((ITankContainerBucketable)fluidHandler, player, heldItem))
-						{
-							return true;
-						}
+						return true;
 					}
-					if (((ITankContainerBucketable)fluidHandler).allowBucketFill(heldItem))
+				}
+				if (((ITankContainerBucketable)te).allowBucketFill(side, heldItem))
+				{
+					if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)te, side, player, heldItem))
 					{
-						if (MFRLiquidMover.manuallyFillTank((ITankContainerBucketable)fluidHandler, player, heldItem))
-						{
-							return true;
-						}
+						return true;
 					}
 				}
 			}

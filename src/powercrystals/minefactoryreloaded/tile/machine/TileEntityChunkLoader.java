@@ -133,7 +133,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		else {
 			emptyTicks = Math.min(65535, emptyTicks + 1);
 			FluidStack s = _tanks[0].getFluid();
-			if (fluidHandler.drain(1, true, _tanks[0]) == 1) {
+			if (drain(1, true, _tanks[0]) == 1) {
 				consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 				emptyTicks = Math.max(-65535, emptyTicks - 2);
 			}
@@ -178,7 +178,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 					else {
 						emptyTicks = Math.min(65535, emptyTicks + 1);
 						FluidStack s = _tanks[0].getFluid();
-						if (fluidHandler.drain(Math.min(unactivatedTicks,
+						if (drain(Math.min(unactivatedTicks,
 							_tanks[0].getFluidAmount()), true, _tanks[0]) == unactivatedTicks) {
 							consumptionTicks = fluidConsumptionRate.get(getFluidName(s));
 							consumptionTicks = Math.max(0, consumptionTicks - unactivatedTicks);
@@ -403,6 +403,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 		return _radius;
 	}
 
+	// reflection related helper for other mods
 	public boolean getUnableToWork() {
 
 		return unableToRequestTicket;
@@ -438,49 +439,51 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					if (!unableToRequestTicket & resource != null && isFluidFuel(resource))
-						for (FluidTankCore _tank : getTanks())
-							if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
-								return _tank.fill(resource, doFill);
-					return 0;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					return unableToRequestTicket ? null : super.drain(resource, doDrain);
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					return !unableToRequestTicket ? null : super.drain(maxDrain, doDrain);
-				}
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return !unableToRequestTicket;
-				}
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		if (!unableToRequestTicket & resource != null && isFluidFuel(resource))
+			for (FluidTankCore _tank : getTanks())
+				if (_tank.getFluidAmount() == 0 || resource.isFluidEqual(_tank.getFluid()))
+					return _tank.fill(resource, doFill);
+		return 0;
 	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return !unableToRequestTicket;
+	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return unableToRequestTicket;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return !unableToRequestTicket ? null : super.drain(facing, resource, doDrain);
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return !unableToRequestTicket ? null : super.drain(facing, maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return !unableToRequestTicket;
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
 }

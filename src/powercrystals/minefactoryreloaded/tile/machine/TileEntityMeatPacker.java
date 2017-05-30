@@ -19,51 +19,45 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 import javax.annotation.Nullable;
 
-public class TileEntityMeatPacker extends TileEntityFactoryPowered
-{
-	public TileEntityMeatPacker()
-	{
+public class TileEntityMeatPacker extends TileEntityFactoryPowered {
+
+	public TileEntityMeatPacker() {
+
 		super(Machine.MeatPacker);
 		setManageSolids(true);
-
-		fluidHandler = (FactoryBucketableFluidHandler) getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
-		if (fluidHandler.drain(2, false, _tanks[0]) == 2)
-		{
-			if (!incrementWorkDone()) return false;
+	protected boolean activateMachine() {
 
-			if (getWorkDone() >= getWorkMax())
-			{
+		if (drain(2, false, _tanks[0]) == 2) {
+			if (!incrementWorkDone())
+				return false;
+
+			if (getWorkDone() >= getWorkMax()) {
 				ItemStack item;
-				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
-				{
+				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1))) {
 					item = new ItemStack(MFRThings.meatIngotRawItem);
-				}
-				else
-				{
+				} else {
 					item = new ItemStack(MFRThings.meatNuggetRawItem);
 				}
 
@@ -71,76 +65,68 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered
 
 				setWorkDone(0);
 			}
-			fluidHandler.drain(2, true, _tanks[0]);
+			drain(2, true, _tanks[0]);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 50;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 0;
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
-		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	protected boolean canDrainTank(EnumFacing facing, int index) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					return null;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					return null;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					if (resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
-							resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1))))
-					{
-						return 0;
-					}
-					else
-					{
-						if (drain(2, false, _tanks[0]) == 1)
-						{
-							drain(1, true, _tanks[0]);
-						}
-						return _tanks[0].fill(resource, doFill);
-					}
-				}
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return false;
 	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		if (resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
+				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1)))) {
+			return 0;
+		} else {
+			if (drain(2, false, _tanks[0]) == 1) {
+				drain(1, true, _tanks[0]);
+			}
+			return _tanks[0].fill(resource, doFill);
+		}
+	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
 }

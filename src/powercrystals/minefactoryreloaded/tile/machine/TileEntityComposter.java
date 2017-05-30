@@ -19,10 +19,10 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 import javax.annotation.Nullable;
 
-public class TileEntityComposter extends TileEntityFactoryPowered
-{
-	public TileEntityComposter()
-	{
+public class TileEntityComposter extends TileEntityFactoryPowered {
+
+	public TileEntityComposter() {
+
 		super(Machine.Composter);
 		setManageSolids(true);
 		_tanks[0].setLock(FluidRegistry.getFluid("sewage"));
@@ -30,92 +30,88 @@ public class TileEntityComposter extends TileEntityFactoryPowered
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
-		if(fluidHandler.drain(20, false, _tanks[0]) == 20)
-		{
-			if (!incrementWorkDone()) return false;
+	protected boolean activateMachine() {
 
-			if(getWorkDone() >= getWorkMax())
-			{
+		if (drain(20, false, _tanks[0]) == 20) {
+			if (!incrementWorkDone())
+				return false;
+
+			if (getWorkDone() >= getWorkMax()) {
 				doDrop(new ItemStack(MFRThings.fertilizerItem));
 				setWorkDone(0);
 			}
-			fluidHandler.drain(20, true, _tanks[0]);
+			drain(20, true, _tanks[0]);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public EnumFacing getDropDirection()
-	{
+	public EnumFacing getDropDirection() {
+
 		return EnumFacing.UP;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 100;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 1;
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
-		return new FluidTankCore[]{new FluidTankCore(4 * BUCKET_VOLUME)};
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
+		return true;
+	}
 
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
 
-					return true;
-				}
+		return false;
+	}
 
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
 
-					return null;
-				}
+		return null;
+	}
 
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
 
-					return null;
-				}
-			});
-		}
+		return null;
+	}
 
-		return super.getCapability(capability, facing);
-	}}
+}

@@ -87,7 +87,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 			setWorkDone(0);
 			return false;
 		}
-		if (_shouldWork && _fortune > 0 && (fluidHandler.drain(_fortune, false, _tanks[0]) != _fortune)) {
+		if (_shouldWork && _fortune > 0 && (drain(_fortune, false, _tanks[0]) != _fortune)) {
 			return false;
 		}
 		ItemStack outSlot = _inventory[1];
@@ -124,7 +124,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 			}
 		} else {
 			if (!incrementWorkDone()) return false;
-			fluidHandler.drain(_fortune, true, _tanks[0]);
+			drain(_fortune, true, _tanks[0]);
 		}
 		return true;
 	}
@@ -269,33 +269,29 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					return null;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					return null;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }

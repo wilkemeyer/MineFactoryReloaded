@@ -82,7 +82,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered {
 					for (RanchedItem s : drops) {
 						if (s.hasFluid()) {
 							// whitelist fluids? multiple tanks?
-							fillTank((FluidStack) s.getResult());
+							super.fill(null, (FluidStack) s.getResult(), true);
 							didDrop = true;
 							continue;
 						}
@@ -102,15 +102,6 @@ public class TileEntityRancher extends TileEntityFactoryPowered {
 		return false;
 	}
 
-	private int fillTank(FluidStack resource) {
-
-		if (resource != null)
-			for (FluidTankCore tank : getTanks())
-				if (FluidHelper.isFluidEqualOrNull(tank.getFluid(), resource))
-					return tank.fill(resource, true);
-		return 0;
-	}
-
 	@Override
 	public int getSizeInventory() {
 
@@ -124,25 +115,21 @@ public class TileEntityRancher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					return 0;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
+	}
+
 }

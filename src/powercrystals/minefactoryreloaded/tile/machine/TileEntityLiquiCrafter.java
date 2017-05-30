@@ -32,8 +32,8 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 // slots 0-8 craft grid, 9 craft grid template output, 10 output, 11-28 resources
-public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
-{
+public class TileEntityLiquiCrafter extends TileEntityFactoryInventory {
+
 	private boolean _lastRedstoneState;
 	private boolean _resourcesChangedSinceLastFailedCraft = true;
 
@@ -42,34 +42,34 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 	protected ArrayList<ItemStack> outputs = new ArrayList<ItemStack>();
 	protected List<ItemResourceTracker> requiredItems = new LinkedList<ItemResourceTracker>();
 
-	public TileEntityLiquiCrafter()
-	{
+	public TileEntityLiquiCrafter() {
+
 		super(Machine.LiquiCrafter);
 		setManageSolids(true);
 	}
 
 	@Override
-	public boolean shouldDropSlotWhenBroken(int slot)
-	{
+	public boolean shouldDropSlotWhenBroken(int slot) {
+
 		return slot > 9;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiLiquiCrafter(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerLiquiCrafter getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerLiquiCrafter getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerLiquiCrafter(this, inventoryPlayer);
 	}
 
 	@Override
-	public void update()
-	{
+	public void update() {
+
 		super.update();
 		if (worldObj.isRemote)
 			return;
@@ -85,15 +85,14 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 			}
 		}
 
-
 		boolean redstoneState = _rednetState != 0 || CoreUtils.isRedstonePowered(this);
 
 		if (redstoneState && !_lastRedstoneState) {
 			if (_resourcesChangedSinceLastFailedCraft && recipe != null &&
 					_inventory[9] != null &&
 					(_inventory[10] == null ||
-						(_inventory[10].stackSize + _inventory[9].stackSize <= _inventory[9].getMaxStackSize() &&
-							ItemHelper.itemsEqualWithMetadata(_inventory[9], _inventory[10], true))))
+							(_inventory[10].stackSize + _inventory[9].stackSize <= _inventory[9].getMaxStackSize() &&
+									ItemHelper.itemsEqualWithMetadata(_inventory[9], _inventory[10], true))))
 				checkResources();
 		}
 
@@ -101,13 +100,13 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean hasDrops()
-	{
+	public boolean hasDrops() {
+
 		return outputs.size() != 0;
 	}
 
-	private void checkResources()
-	{
+	private void checkResources() {
+
 		List<ItemResourceTracker> requiredItems = this.requiredItems;
 		requiredItems.clear();
 
@@ -131,21 +130,17 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		/**
 		 * Checking
 		 */
-		for (int i = 11; i < 29; i++)
-		{
+		for (int i = 11; i < 29; i++) {
 			ItemStack item = _inventory[i];
 			if (item != null) {
 				int size = item.stackSize;
-				for (ItemResourceTracker t : requiredItems)
-				{
+				for (ItemResourceTracker t : requiredItems) {
 					if (t.fluid != null && t.fluid.isFluidEqual(MFRUtil.getFluidContents(item))) {
 						int a = MFRUtil.getFluidContents(item).amount;
 						int f = Math.min(a * size, t.required - t.found);
 						t.found += f;
-						size -= (int) Math.ceil(f / (float)a);
-					}
-					else if (ItemHelper.itemsEqualForCrafting(t.item, item))
-					{
+						size -= (int) Math.ceil(f / (float) a);
+					} else if (ItemHelper.itemsEqualForCrafting(t.item, item)) {
 						int f = Math.min(size, t.required - t.found);
 						t.found += f;
 						size -= f;
@@ -156,17 +151,14 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 			}
 		}
 
-		for (int i = 0; i < _tanks.length; i++)
-		{
+		for (int i = 0; i < _tanks.length; i++) {
 			FluidStack l = _tanks[i].getFluid();
 			if (l == null || l.amount == 0)
 				continue;
 
 			int amt = l.amount;
-			for (ItemResourceTracker t : requiredItems)
-			{
-				if (l.isFluidEqual(t.fluid))
-				{
+			for (ItemResourceTracker t : requiredItems) {
+				if (l.isFluidEqual(t.fluid)) {
 					t.found += Math.min(amt, t.required - t.found);
 					amt -= t.found;
 					if (amt <= 0)
@@ -178,10 +170,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		/**
 		 * Abort if check failed
 		 */
-		for (ItemResourceTracker t : requiredItems)
-		{
-			if (t.found < t.required)
-			{
+		for (ItemResourceTracker t : requiredItems) {
+			if (t.found < t.required) {
 				_resourcesChangedSinceLastFailedCraft = false;
 				return;
 			}
@@ -190,48 +180,39 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		/**
 		 * Consuming
 		 */
-		for (int i = 11; i < 29; i++)
-		{
+		for (int i = 11; i < 29; i++) {
 			ItemStack item = _inventory[i];
-			if (item != null)
-			{
-				for (ItemResourceTracker t : requiredItems)
-				{
+			if (item != null) {
+				for (ItemResourceTracker t : requiredItems) {
 					boolean fluid = t.fluid != null &&
 							t.fluid.isFluidEqual(MFRUtil.getFluidContents(item));
-					if (fluid || ItemHelper.itemsEqualForCrafting(t.item, item))
-					{
+					if (fluid || ItemHelper.itemsEqualForCrafting(t.item, item)) {
 						int use = 0;
 						if (fluid) {
 							use = MFRUtil.getFluidContents(item).amount;
 						}
-						if (item.getItem().hasContainerItem(item))
-						{
+						if (item.getItem().hasContainerItem(item)) {
 							if (!fluid)
 								use = 1;
 							ItemStack container = item.getItem().getContainerItem(_inventory[i]);
 							boolean nul = true;
-							l: {
+							l:
+							{
 								if (container == null)
 									break l;
 								if (!container.isItemStackDamageable() ||
-										container.getItemDamage() <= container.getMaxDamage())
-								{
+										container.getItemDamage() <= container.getMaxDamage()) {
 									_inventory[i] = container;
 									nul = false;
 								}
 							}
 							if (nul)
 								_inventory[i] = null;
-						}
-						else if (fluid)
-						{
-							int use2 = Math.min((int)Math.ceil(t.required / (float)use), item.stackSize);
+						} else if (fluid) {
+							int use2 = Math.min((int) Math.ceil(t.required / (float) use), item.stackSize);
 							item.stackSize -= use2;
 							use = Math.min(use * use2, t.required);
-						}
-						else
-						{
+						} else {
 							use = Math.min(t.required, item.stackSize);
 							item.stackSize -= use;
 						}
@@ -240,8 +221,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 						if (item.stackSize <= 0)
 							_inventory[i] = null;
 
-						if (t.required == 0)
-						{
+						if (t.required == 0) {
 							craft.setInventorySlotContents(t.slot, ItemHelper.cloneStack(item, use));
 							requiredItems.remove(t);
 							--i;
@@ -252,26 +232,22 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 			}
 		}
 
-		for (int i = 0; i < _tanks.length; i++)
-		{
+		for (int i = 0; i < _tanks.length; i++) {
 			FluidStack l = _tanks[i].getFluid();
 			if (l == null || l.amount == 0)
 				continue;
 
-			for (ItemResourceTracker t : requiredItems)
-			{
-				if (t.required != 0 && l.isFluidEqual(t.fluid))
-				{
+			for (ItemResourceTracker t : requiredItems) {
+				if (t.required != 0 && l.isFluidEqual(t.fluid)) {
 					int use = Math.min(t.required, l.amount);
 					_tanks[i].drain(use, true);
 					t.required -= use;
 
-					if (t.required == 0)
-					{
+					if (t.required == 0) {
 						craft.setInventorySlotContents(t.slot, ItemHelper.cloneStack(_inventory[t.slot]));
 						requiredItems.remove(t);
-						 --i;
-						 break;
+						--i;
+						break;
 					}
 				}
 			}
@@ -290,12 +266,9 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		if (_inventory[9] == null)
 			return;
 
-		if (_inventory[10] == null)
-		{
+		if (_inventory[10] == null) {
 			_inventory[10] = ItemHelper.cloneStack(_inventory[9]);
-		}
-		else
-		{
+		} else {
 			if (ItemHelper.itemsEqualWithMetadata(_inventory[10], _inventory[9], true))
 				_inventory[10].stackSize += _inventory[9].stackSize;
 			else
@@ -303,105 +276,157 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		}
 	}
 
-	private void calculateOutput()
-	{
+	private void calculateOutput() {
+
 		_inventory[9] = findMatchingRecipe();
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 29;
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+
 		_inventory[slot] = stack;
-		if(slot < 9) calculateOutput();
+		if (slot < 9)
+			calculateOutput();
 		onFactoryInventoryChanged();
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int size)
-	{
+	public ItemStack decrStackSize(int slot, int size) {
+
 		ItemStack result = super.decrStackSize(slot, size);
-		if(slot < 9) calculateOutput();
+		if (slot < 9)
+			calculateOutput();
 		onFactoryInventoryChanged();
 		return result;
 	}
 
 	@Override
-	public int getInventoryStackLimit()
-	{
+	public int getInventoryStackLimit() {
+
 		return 64;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
+	public boolean isUseableByPlayer(EntityPlayer player) {
+
 		return player.getDistanceSq(pos) <= 64D;
 	}
 
 	@Override
-	public int getStartInventorySide(EnumFacing side)
-	{
+	public int getStartInventorySide(EnumFacing side) {
+
 		return 10;
 	}
 
 	@Override
-	public int getSizeInventorySide(EnumFacing side)
-	{
+	public int getSizeInventorySide(EnumFacing side) {
+
 		return 19;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side)
-	{
-		if (slot > 10) return true;
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
+
+		if (slot > 10)
+			return true;
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
-	{
-		if (slot == 10) return true;
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
+
+		if (slot == 10)
+			return true;
 		return false;
 	}
 
 	@Override
-	protected void onFactoryInventoryChanged()
-	{
+	protected void onFactoryInventoryChanged() {
+
 		_resourcesChangedSinceLastFailedCraft = true;
 		super.onFactoryInventoryChanged();
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
+	protected FluidTankCore[] createTanks() {
+
 		FluidTankCore[] _tanks = new FluidTankCore[9];
-		for (int i = 0; i < 9; i++)
-		{
+		for (int i = 0; i < 9; i++) {
 			_tanks[i] = new FluidTankCore(BUCKET_VOLUME * 10);
 		}
 		return _tanks;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(EnumFacing from)
-	{
+	public FluidTankInfo[] getTankInfo() {
+
 		FluidTankInfo[] r = new FluidTankInfo[_tanks.length];
-		for (int i = _tanks.length; i --> 0; )
+		for (int i = _tanks.length; i-- > 0; )
 			r[i] = _tanks[i].getInfo();
 		return r;
 	}
 
-	private int findFirstEmptyTank()
-	{
-		for (int i = 0; i < 9; i++)
-		{
-			if (_tanks[i].getFluid() == null || _tanks[i].getFluid().amount == 0)
-			{
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		int quantity;
+		int match = findFirstMatchingTank(resource);
+		if (match >= 0) {
+			quantity = _tanks[match].fill(resource, doFill);
+			if (quantity > 0)
+				_resourcesChangedSinceLastFailedCraft = true;
+			return quantity;
+		}
+		match = findFirstEmptyTank();
+		if (match >= 0) {
+			quantity = _tanks[match].fill(resource, doFill);
+			if (quantity > 0)
+				_resourcesChangedSinceLastFailedCraft = true;
+			return quantity;
+		}
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		int match = findFirstNonEmptyTank();
+		if (match >= 0)
+			return _tanks[match].drain(maxDrain, doDrain);
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		int match = findFirstMatchingTank(resource);
+		if (match >= 0)
+			return _tanks[match].drain(resource.amount, doDrain);
+		return null;
+	}
+
+	private int findFirstEmptyTank() {
+
+		for (int i = 0; i < 9; i++) {
+			if (_tanks[i].getFluid() == null || _tanks[i].getFluid().amount == 0) {
 				return i;
 			}
 		}
@@ -409,12 +434,10 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		return -1;
 	}
 
-	private int findFirstNonEmptyTank()
-	{
-		for (int i = 0; i < 9; i++)
-		{
-			if (_tanks[i].getFluid() != null && _tanks[i].getFluid().amount > 0)
-			{
+	private int findFirstNonEmptyTank() {
+
+		for (int i = 0; i < 9; i++) {
+			if (_tanks[i].getFluid() != null && _tanks[i].getFluid().amount > 0) {
 				return i;
 			}
 		}
@@ -422,17 +445,14 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		return -1;
 	}
 
-	private int findFirstMatchingTank(FluidStack liquid)
-	{
-		if (liquid == null)
-		{
+	private int findFirstMatchingTank(FluidStack liquid) {
+
+		if (liquid == null) {
 			return -1;
 		}
 
-		for (int i = 0; i < 9; i++)
-		{
-			if (liquid.isFluidEqual(_tanks[i].getFluid()))
-			{
+		for (int i = 0; i < 9; i++) {
+			if (liquid.isFluidEqual(_tanks[i].getFluid())) {
 				return i;
 			}
 		}
@@ -440,24 +460,21 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		return -1;
 	}
 
-	private ItemStack findMatchingRecipe()
-	{
-		for (int i = 0; i < 9; i++)
-		{
+	private ItemStack findMatchingRecipe() {
+
+		for (int i = 0; i < 9; i++) {
 			craft.setInventorySlotContents(i, (_inventory[i] == null ? null : _inventory[i].copy()));
 		}
 
 		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-		for (int i = 0, e = recipes.size(); i < e; ++i)
-        {
-            IRecipe irecipe = recipes.get(i);
+		for (int i = 0, e = recipes.size(); i < e; ++i) {
+			IRecipe irecipe = recipes.get(i);
 
-            if (irecipe.matches(craft, worldObj))
-            {
-            	recipe = irecipe;
-                return irecipe.getCraftingResult(craft);
-            }
-        }
+			if (irecipe.matches(craft, worldObj)) {
+				recipe = irecipe;
+				return irecipe.getCraftingResult(craft);
+			}
+		}
 
 		recipe = null;
 		return null;
@@ -475,15 +492,13 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag)
-	{
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+
 		super.writeToNBT(tag);
 
-		if (outputs.size() != 0)
-		{
+		if (outputs.size() != 0) {
 			NBTTagList dropItems = new NBTTagList();
-			for (ItemStack item : outputs)
-			{
+			for (ItemStack item : outputs) {
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				item.writeToNBT(nbttagcompound1);
 				dropItems.appendTag(nbttagcompound1);
@@ -496,21 +511,18 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		calculateOutput();
 
-		if (tag.hasKey("OutItems"))
-		{
+		if (tag.hasKey("OutItems")) {
 			ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
 			NBTTagList nbttaglist = tag.getTagList("OutItems", 10);
-			for (int i = nbttaglist.tagCount(); i --> 0; )
-			{
+			for (int i = nbttaglist.tagCount(); i-- > 0; ) {
 				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 				ItemStack item = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-				if (item != null && item.stackSize > 0)
-				{
+				if (item != null && item.stackSize > 0) {
 					drops.add(item);
 				}
 			}
@@ -518,20 +530,22 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		}
 	}
 
-	private static class ItemResourceTracker
-	{
-		public ItemResourceTracker(int s, ItemStack stack, int amt)
-		{
+	private static class ItemResourceTracker {
+
+		public ItemResourceTracker(int s, ItemStack stack, int amt) {
+
 			slot = s;
 			item = stack;
 			required = amt;
 		}
-		public ItemResourceTracker(int s, FluidStack resource, int amt)
-		{
+
+		public ItemResourceTracker(int s, FluidStack resource, int amt) {
+
 			slot = s;
 			fluid = resource;
 			required = amt;
 		}
+
 		public FluidStack fluid;
 		public ItemStack item;
 		public int required;
@@ -539,69 +553,10 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory
 		public int slot;
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
+
 			return "Slot: " + slot + "; Fluid: " + fluid + "; Item: " + item + "; Required: " + required + "; Found: " + found;
 		}
 	}
 
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					int quantity;
-					int match = findFirstMatchingTank(resource);
-					if (match >= 0)
-					{
-						quantity = _tanks[match].fill(resource, doFill);
-						if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
-						return quantity;
-					}
-					match = findFirstEmptyTank();
-					if (match >= 0)
-					{
-						quantity = _tanks[match].fill(resource, doFill);
-						if (quantity > 0) _resourcesChangedSinceLastFailedCraft = true;
-						return quantity;
-					}
-					return 0;
-				}
-
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					int match = findFirstNonEmptyTank();
-					if (match >= 0) return _tanks[match].drain(maxDrain, doDrain);
-					return null;
-				}
-
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					int match = findFirstMatchingTank(resource);
-					if (match >= 0) return _tanks[match].drain(resource.amount, doDrain);
-					return null;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
-	}
 }

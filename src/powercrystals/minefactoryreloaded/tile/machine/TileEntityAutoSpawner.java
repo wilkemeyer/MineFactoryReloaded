@@ -95,17 +95,14 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 			r += t + t / 3;
 
 			for (int j = 0; j < el.inventoryArmor.length; ++j) {
-				if (el.inventoryArmor[j] != null && el.inventoryArmorDropChances[j] <= 1.0F)
-				{
-					r += 1+ 4;
+				if (el.inventoryArmor[j] != null && el.inventoryArmorDropChances[j] <= 1.0F) {
+					r += 1 + 4;
 				}
 			}
 
-			for (int k = 0; k < el.inventoryHands.length; ++k)
-			{
-				if (el.inventoryHands[k] != null && el.inventoryHandsDropChances[k] <= 1.0F)
-				{
-					r += 1+ 4;
+			for (int k = 0; k < el.inventoryHands.length; ++k) {
+				if (el.inventoryHands[k] != null && el.inventoryHandsDropChances[k] <= 1.0F) {
+					r += 1 + 4;
 				}
 			}
 
@@ -129,7 +126,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 		if (_spawn == null) {
 			String entityID = itemTag.getString("id");
 			boolean isBlackListed = MFRRegistry.getAutoSpawnerBlacklist().contains(entityID);
-			blackList: if (!isBlackListed) {
+			blackList:
+			if (!isBlackListed) {
 				Class<?> e = (Class<?>) EntityList.NAME_TO_CLASS.get(entityID);
 				if (e == null) {
 					isBlackListed = true;
@@ -181,15 +179,14 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 		}
 
 		if (getWorkDone() < getWorkMax()) {
-			if (fluidHandler.drain(10, false, _tanks[0]) == 10) {
-				fluidHandler.drain(10, true, _tanks[0]);
+			if (drain(10, false, _tanks[0]) == 10) {
+				drain(10, true, _tanks[0]);
 				setWorkDone(getWorkDone() + 1);
 				return true;
 			} else {
 				return false;
 			}
-		}
-		else {
+		} else {
 			Entity spawnedEntity = _spawn;
 			_spawn = null;
 
@@ -294,7 +291,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 
 		super.writeItemNBT(tag);
 		if (_spawnExact)
-			tag.setBoolean("spawnExact", _spawnExact);
+			tag.setBoolean("spawnExact", true);
 	}
 
 	@Override
@@ -305,33 +302,29 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					return null;
-				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					return null;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }

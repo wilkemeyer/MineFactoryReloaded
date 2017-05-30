@@ -21,6 +21,7 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 	private int _liquidFabPerTick;
 
 	protected TileEntityLiquidFabricator(Fluid liquid, int liquidFabPerTick, Machine machine) {
+
 		super(machine, machine.getActivationEnergy() * liquidFabPerTick);
 		_liquidFabPerTick = liquidFabPerTick;
 		if (liquid != null)
@@ -31,6 +32,7 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 
 	@Override
 	protected boolean activateMachine() {
+
 		if (fluid != null && _tanks[0].getSpace() >= _liquidFabPerTick)
 			if (_tanks[0].fill(fluid, true) > 0)
 				return true;
@@ -41,62 +43,57 @@ public abstract class TileEntityLiquidFabricator extends TileEntityFactoryPowere
 
 	@Override
 	public int getWorkMax() {
+
 		return 0;
 	}
 
 	@Override
 	public int getIdleTicksMax() {
+
 		return 200;
 	}
 
 	@Override
 	protected boolean shouldPumpLiquid() {
+
 		return true;
 	}
 
 	@Override
 	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
 	protected FluidTankCore[] createTanks() {
+
 		return new FluidTankCore[] {new FluidTankCore(BUCKET_VOLUME)};
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
 	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new LiquidFabricatorFluidHandler());
-		}
-
-		return super.getCapability(capability, facing);
-	}
-
-	private class LiquidFabricatorFluidHandler extends FactoryBucketableFluidHandler {
-
-		@Override
-		public boolean allowBucketDrain(ItemStack stack) {
-
-			return true;
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill) {
-
-			return 0;
-		}
-	}
 }

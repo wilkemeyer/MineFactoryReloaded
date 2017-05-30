@@ -118,7 +118,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 								break l;
 						}
 					if (worldObj.setBlockState(fillPos, getFlowingState(_tanks[0].getFluid()), 11)) {// TODO: when forge supports NBT fluid blocks, adapt this
-						fluidHandler.drain(BUCKET_VOLUME, true, _tanks[0]);
+						drain(BUCKET_VOLUME, true, _tanks[0]);
 						setIdleTicks(1);
 						return true;
 					}
@@ -220,25 +220,27 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return !_reverse;
 	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return _reverse;
+	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return !_reverse;
+	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return _reverse;
+	}
+
 }

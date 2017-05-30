@@ -26,11 +26,11 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
 import javax.annotation.Nullable;
 
-public class TileEntitySteamBoiler extends TileEntityFactoryInventory
-{
+public class TileEntitySteamBoiler extends TileEntityFactoryInventory {
+
 	public static final int maxTemp = 730;
-	public static final int getItemBurnTime(ItemStack stack)
-	{
+
+	public static final int getItemBurnTime(ItemStack stack) {
 		// TODO: special-case some items (e.g., TE's dynamo)
 		return TileEntityFurnace.getItemBurnTime(stack) / 2;
 	}
@@ -41,8 +41,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	private int _totalBurningTime;
 	private float _temp;
 
-	public TileEntitySteamBoiler()
-	{
+	public TileEntitySteamBoiler() {
+
 		super(Machine.SteamBoiler);
 		setManageSolids(true);
 		_liquid = FluidRegistry.getFluid("steam");
@@ -52,67 +52,65 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiSteamBoiler(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerSteamBoiler getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerSteamBoiler getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerSteamBoiler(this, inventoryPlayer);
 	}
 
-	public float getTemp()
-	{
+	public float getTemp() {
+
 		return _temp;
 	}
 
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return _ticksUntilConsumption;
 	}
 
-	public int getWorkDone()
-	{
+	public int getWorkDone() {
+
 		return _ticksSinceLastConsumption;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public int getFuelConsumptionPerTick()
-	{
+	public int getFuelConsumptionPerTick() {
+
 		return 1 + (Math.abs(Math.max(_totalBurningTime, -180)) + 1063) / 1064;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setTemp(int temp)
-	{
+	public void setTemp(int temp) {
+
 		_temp = (temp / 10f);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setWorkDone(int a)
-	{
+	public void setWorkDone(int a) {
+
 		_ticksSinceLastConsumption = a;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setWorkMax(int a)
-	{
+	public void setWorkMax(int a) {
+
 		_ticksUntilConsumption = a;
 	}
 
 	@Override
-	public void update()
-	{
+	public void update() {
+
 		super.update();
-		if (!worldObj.isRemote)
-		{
+		if (!worldObj.isRemote) {
 			boolean active = _ticksSinceLastConsumption < _ticksUntilConsumption;
 			setIsActive(active);
 
-			if (_ticksUntilConsumption > 0)
-			{
+			if (_ticksUntilConsumption > 0) {
 				int inc = 1 + (Math.abs(_totalBurningTime) + 1063) / 1064;
 				_ticksSinceLastConsumption = Math.min(_ticksSinceLastConsumption + inc, _ticksUntilConsumption);
 			}
@@ -120,30 +118,26 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 			if (active)
 				_totalBurningTime = Math.max(Math.min(_totalBurningTime + 1, 10649), -180);
-			else if (_temp != 0)
-			{
+			else if (_temp != 0) {
 				_totalBurningTime = Math.max(_totalBurningTime - 16, -(10649 * 2));
 				_ticksUntilConsumption = 0;
 			}
 
-			if (_temp == 0 && _inventory[3] == null)
-			{
+			if (_temp == 0 && _inventory[3] == null) {
 				if ((worldObj.getTotalWorldTime() & 0x6F) == 0 && !(_rednetState != 0 || CoreUtils.isRedstonePowered(this)))
 					mergeFuel();
 				return; // we're not burning anything and not changing the temp
 			}
 
-			if (_temp == maxTemp ? _totalBurningTime < 0 : (_totalBurningTime > 0 ? true : _temp != 0))
-			{
-				float diff = (float)Math.sqrt(Math.abs(_totalBurningTime)) / 103f;
+			if (_temp == maxTemp ? _totalBurningTime < 0 : (_totalBurningTime > 0 ? true : _temp != 0)) {
+				float diff = (float) Math.sqrt(Math.abs(_totalBurningTime)) / 103f;
 				diff = Math.copySign(diff, _totalBurningTime) / 1.26f;
 
 				_temp = Math.max(Math.min(_temp + (diff * diff * diff) / 50f, maxTemp), 0);
 			}
 
-			if (_temp > 80)
-			{
-				int i = fluidHandler.drain(100, true, _tanks[1]);
+			if (_temp > 80) {
+				int i = drain(100, true, _tanks[1]);
 				_tanks[0].fill(new FluidStack(_liquid, i * 4), true);
 			}
 
@@ -157,27 +151,25 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 		}
 	}
 
-	protected void mergeFuel()
-	{
+	protected void mergeFuel() {
+
 		if (_inventory[3] != null)
-			for (int i = 0; _inventory[3].stackSize < _inventory[3].getMaxStackSize() && i < 3; ++i)
-			{
+			for (int i = 0; _inventory[3].stackSize < _inventory[3].getMaxStackSize() && i < 3; ++i) {
 				UtilInventory.mergeStacks(_inventory[3], _inventory[i]);
 				if (_inventory[i] != null && _inventory[i].stackSize == 0)
 					_inventory[i] = null;
 			}
 		else
 			for (int i = 0; i < 3; ++i)
-				if (_inventory[i] != null)
-				{
+				if (_inventory[i] != null) {
 					_inventory[3] = _inventory[i];
 					_inventory[i] = null;
 					break;
 				}
 	}
 
-	protected boolean consumeFuel()
-	{
+	protected boolean consumeFuel() {
+
 		if (_inventory[3] == null)
 			return false;
 
@@ -193,8 +185,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag)
-	{
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+
 		super.writeToNBT(tag);
 
 		tag.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
@@ -206,8 +198,8 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 
 		_ticksSinceLastConsumption = tag.getInteger("ticksSinceLastConsumption");
@@ -218,14 +210,14 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 
 	//{ Solids
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 4;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side)
-	{
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
+
 		if (stack != null)
 			return getItemBurnTime(stack) > 0;
 
@@ -233,90 +225,91 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
-	{
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
+
 		return getItemBurnTime(_inventory[slot]) <= 0;
 	}
 	//}
 
 	//{ Fluids
 	@Override
-	protected boolean shouldPumpLiquid()
-	{
+	protected boolean shouldPumpLiquid() {
+
 		return true;
 	}
 
 	@Override
-	protected boolean shouldPumpTank(IFluidTank tank)
-	{
+	protected boolean shouldPumpTank(IFluidTank tank) {
+
 		return tank == _tanks[0];
 	}
 
 	@Override
-	protected FluidTankCore[] createTanks()
-	{
-		return new FluidTankCore[] {new FluidTankCore(BUCKET_VOLUME * 32),
-				new FluidTankCore(BUCKET_VOLUME * 16)};
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(BUCKET_VOLUME * 32),
+				new FluidTankCore(BUCKET_VOLUME * 16) };
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		if (resource != null) {
+			FluidTankCore _tank = _tanks[0];
+			if (resource.isFluidEqual(_tank.getFluid()))
+				return _tank.drain(resource.amount, doDrain);
+		}
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		FluidTankCore _tank = _tanks[0];
+		if (_tank.getFluidAmount() > 0)
+			return _tank.drain(maxDrain, doDrain);
+		return null;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Nullable
-				@Override
-				public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-					if (resource != null)
-					{
-						FluidTankCore _tank = _tanks[0];
-						if (resource.isFluidEqual(_tank.getFluid()))
-							return _tank.drain(resource.amount, doDrain);
-					}
-					return null;
+		if (resource != null && resource.getFluid() == FluidRegistry.WATER) {
+			if (MFRConfig.steamBoilerExplodes.getBoolean(false)) {
+				if (_temp > 80 && _tanks[1].getFluidAmount() == 0) {
+					worldObj.createExplosion(null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, 3, true);
 				}
-
-				@Nullable
-				@Override
-				public FluidStack drain(int maxDrain, boolean doDrain) {
-
-					FluidTankCore _tank = _tanks[0];
-					if (_tank.getFluidAmount() > 0)
-						return _tank.drain(maxDrain, doDrain);
-					return null;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					if (resource != null && resource.getFluid() == FluidRegistry.WATER)
-					{
-						if (MFRConfig.steamBoilerExplodes.getBoolean(false)) {
-							if (_temp > 80 && _tanks[1].getFluidAmount() == 0) {
-								worldObj.createExplosion(null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, 3, true);
-							}
-						}
-						return _tanks[1].fill(resource, doFill);
-					}
-					return 0;
-				}
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-			});
+			}
+			return _tanks[1].fill(resource, doFill);
 		}
-
-		return super.getCapability(capability, facing);
+		return 0;
 	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return index == 1;
+	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return index == 0;
+	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+	//}
+
 }

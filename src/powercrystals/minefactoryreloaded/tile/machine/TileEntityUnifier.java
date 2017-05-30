@@ -102,14 +102,14 @@ public class TileEntityUnifier extends TileEntityFactoryInventory {
 
 		if (_inventory[1] == null) {
 			amt = Math.min(Math.min(getInventoryStackLimit(), source.getMaxStackSize()),
-				source.stackSize);
+					source.stackSize);
 		} else if (!UtilInventory.stacksEqual(source, _inventory[1], false)) {
 			return;
 		} else if (source.getTagCompound() != null || _inventory[1].getTagCompound() != null) {
 			return;
 		} else {
 			amt = Math.min(source.stackSize,
-				_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
+					_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
 		}
 
 		if (_inventory[1] == null) {
@@ -231,44 +231,36 @@ public class TileEntityUnifier extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryBucketableFluidHandler() {
-
-				@Override
-				public boolean allowBucketFill(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public boolean allowBucketDrain(ItemStack stack) {
-
-					return true;
-				}
-
-				@Override
-				public int fill(FluidStack resource, boolean doFill) {
-
-					if (resource == null || resource.amount == 0) return 0;
-
-					FluidStack converted = unifierTransformLiquid(resource, doFill);
-
-					if (converted == null || converted.amount == 0) return 0;
-
-					int filled = _tanks[0].fill(converted, doFill);
-
-					if (filled == converted.amount) {
-						return resource.amount;
-					} else {
-						return filled * resource.amount / converted.amount +
-								(resource.amount & _roundingCompensation);
-					}
-				}
-			});
-		}
-
-		return super.getCapability(capability, facing);
+		return true;
 	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		if (resource == null || resource.amount == 0)
+			return 0;
+
+		FluidStack converted = unifierTransformLiquid(resource, doFill);
+
+		if (converted == null || converted.amount == 0)
+			return 0;
+
+		int filled = _tanks[0].fill(converted, doFill);
+
+		if (filled == converted.amount) {
+			return resource.amount;
+		} else {
+			return filled * resource.amount / converted.amount +
+					(resource.amount & _roundingCompensation);
+		}
+	}
+
 }
