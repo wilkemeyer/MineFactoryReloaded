@@ -492,7 +492,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		if (_inventory.length > 0) {
 			NBTTagList items = new NBTTagList();
 			for (int i = 0; i < _inventory.length; i++) {

@@ -221,7 +221,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		if (_workDone > 0)
 			tag.setInteger("workDone", _workDone);
@@ -389,4 +389,5 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 
 		return super.getCapability(capability, facing);
 	}
+
 }
