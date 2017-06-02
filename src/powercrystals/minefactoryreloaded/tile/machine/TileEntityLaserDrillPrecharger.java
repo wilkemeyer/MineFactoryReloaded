@@ -21,87 +21,79 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered implements IFactoryLaserSource
-{
-	public TileEntityLaserDrillPrecharger()
-	{
+public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered implements IFactoryLaserSource {
+
+	public TileEntityLaserDrillPrecharger() {
+
 		super(Machine.LaserDrillPrecharger);
 		setCanRotate(true);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
+	protected boolean activateMachine() {
+
 		IFactoryLaserTarget drill = getDrill();
-		if (drill == null)
-		{
+		if (drill == null) {
 			setIdleTicks(getIdleTicksMax());
-		}
-		else
-		{
+		} else {
 			int energy = getActivationEnergy();
 			EnumFacing facing = getDirectionFacing().getOpposite();
-			if (drill.canFormBeamWith(facing))
-			{
+			if (drill.canFormBeamWith(facing)) {
 				stripBlock(false);
 				int excess = drill.addEnergy(facing, energy, true);
-				if (excess == 0)
-				{
+				if (excess == 0) {
 					drill.addEnergy(facing, energy, false);
 					return true;
-				}
-				else
-				{
+				} else {
 					excess = drill.addEnergy(facing, energy, false);
 					drainEnergy(energy - excess);
 					return false; // energy is manually drained because it's less than activation energy
 				}
-			}
-			else
+			} else
 				stripBlock(true);
 		}
 		return false;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 1;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 200;
 	}
 
-	public boolean shouldDrawBeam()
-	{
+	public boolean shouldDrawBeam() {
+
 		IFactoryLaserTarget drill = getDrill();
 		return drill != null && drill.canFormBeamWith(getDirectionFacing().getOpposite());
 	}
 
-	protected IFactoryLaserTarget getDrill()
-	{
+	protected IFactoryLaserTarget getDrill() {
+
 		BlockPos bp = pos.offset(getDirectionFacing());
 
 		if (!worldObj.isBlockLoaded(bp))
@@ -115,16 +107,16 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 
 		TileEntity te = worldObj.getTileEntity(bp);
 		if (te instanceof IFactoryLaserTarget)
-			return ((IFactoryLaserTarget)te);
+			return ((IFactoryLaserTarget) te);
 
 		return null;
 	}
 
 	private int stripTick = 0;
-	protected void stripBlock(boolean set)
-	{
-		if (stripTick > 0)
-		{
+
+	protected void stripBlock(boolean set) {
+
+		if (stripTick > 0) {
 			--stripTick;
 			return;
 		}
@@ -139,8 +131,8 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 	}
 
 	@Override
-	public boolean canFormBeamFrom(EnumFacing from)
-	{
+	public boolean canFormBeamFrom(EnumFacing from) {
+
 		if (from != getDirectionFacing().getOpposite())
 			return false;
 		IFactoryLaserTarget drill = getDrill();
@@ -149,15 +141,16 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
+	public AxisAlignedBB getRenderBoundingBox() {
+
 		return INFINITE_EXTENT_AABB;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public double getMaxRenderDistanceSquared()
-	{
+	public double getMaxRenderDistanceSquared() {
+
 		return 65536;
 	}
+
 }
