@@ -13,44 +13,42 @@ import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityCollector extends TileEntityFactoryInventory implements IEntityCollidable
-{
+public class TileEntityCollector extends TileEntityFactoryInventory implements IEntityCollidable {
+
 	protected boolean canStuff;
 
-	public TileEntityCollector()
-	{
+	public TileEntityCollector() {
+
 		super(Machine.ItemCollector);
 		setManageSolids(true);
 		canStuff = false;
 	}
 
 	@Override
-	public void onEntityCollided(Entity entity)
-	{
+	public void onEntityCollided(Entity entity) {
+
 		if (failedDrops == null && entity instanceof EntityItem)
-			addToChests((EntityItem)entity);
+			addToChests((EntityItem) entity);
 	}
 
-	protected void addToChests(EntityItem i)
-	{
+	protected void addToChests(EntityItem i) {
+
 		if (i.isDead)
 			return;
 
 		ItemStack s = addToChests(i.getEntityItem());
-		if (s == null)
-		{
+		if (s == null) {
 			i.setDead();
 			return;
 		}
 		i.setEntityItemStack(s);
 	}
 
-	protected ItemStack addToChests(ItemStack s)
-	{
+	protected ItemStack addToChests(ItemStack s) {
+
 		s = UtilInventory.dropStack(this, s,
 				MFRUtil.directionsWithoutConveyors(worldObj, pos), null);
-		if (canStuff & failedDrops == null & s != null)
-		{
+		if (canStuff & failedDrops == null & s != null) {
 			doDrop(s);
 			s = null;
 		}
@@ -58,48 +56,49 @@ public class TileEntityCollector extends TileEntityFactoryInventory implements I
 	}
 
 	@Override
-	public boolean hasWorldObj()
-	{
+	public boolean hasWorldObj() {
+
 		return worldObj != null & failedDrops != null;
 	}
 
 	@Override
-	public int getComparatorOutput()
-	{
+	public int getComparatorOutput() {
+
 		return failedDrops != null ? 15 : 0;
 	}
 
 	@Override
-	public EnumFacing getDropDirection()
-	{
+	public EnumFacing getDropDirection() {
+
 		return null;
 	}
 
 	@Override
-	public EnumFacing[] getDropDirections()
-	{
+	public EnumFacing[] getDropDirections() {
+
 		return MFRUtil.directionsWithoutConveyors(worldObj, pos);
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
-	public void writeItemNBT(NBTTagCompound tag)
-	{
+	public void writeItemNBT(NBTTagCompound tag) {
+
 		super.writeItemNBT(tag);
 		if (canStuff)
 			tag.setBoolean("hasTinkerStuff", true);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
+	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 		canStuff = tag.getBoolean("hasTinkerStuff");
 		setIsActive(canStuff);
 	}
+
 }
