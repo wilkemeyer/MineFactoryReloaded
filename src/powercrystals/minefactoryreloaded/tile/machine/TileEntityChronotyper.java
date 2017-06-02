@@ -56,6 +56,7 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered {
 			if ((a.getGrowingAge() < 0 && !_moveOld) || (a.getGrowingAge() >= 0 && _moveOld)) {
 				BlockPos bp = pos.offset(getDirectionFacing().getOpposite());
 				a.setPosition(bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5);
+				// TODO: take entity size into account so they don't clip inside the chronotyper
 
 				return true;
 			}
