@@ -50,9 +50,9 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public void validate() {
+	public void cofh_validate() {
 
-		super.validate();
+		super.cofh_validate();
 		if (_rand == null) {
 			_rand = new Random(worldObj.getSeed() ^ worldObj.rand.nextLong());
 		}
@@ -81,7 +81,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	@Override
 	public boolean activateMachine() {
 
-		if (worldObj.getTotalWorldTime() % 137 == 0) {
+		if (_isJammed || worldObj.getTotalWorldTime() % 137 == 0) {
 			validateLocation();
 		}
 		if (_isJammed | _needItem)
@@ -109,25 +109,30 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 
 		Area fishingHole = _areaManager.getHarvestArea();
 		int extraBlocks = 0;
+		int xCoord = pos.getX(), zCoord = pos.getZ();
 		for (BlockPos bp : fishingHole.getPositionsBottomFirst()) {
-			if (!isValidBlock(bp)) {
+			int x = bp.getX(), y = bp.getY(), z = bp.getZ();
+
+			if (!isValidBlock(x, y, z)) {
 				_isJammed = true;
 				setIdleTicks(getIdleTicksMax());
 				return;
-			} else if (isValidBlock(bp.down())) {
+			} else if (isValidBlock(x, y - 1, z)) {
 				++extraBlocks;
 			}
-			//TODO clean up this BlockPos mess
-			if ((bp.getX() != pos.getX()) | bp.getZ() != pos.getZ()) {
-				if (isValidBlock(new BlockPos(bp.getX() - (pos.getX() - bp.getX()), bp.getY(), bp.getZ() - (pos.getZ() - bp.getZ())))) {
+			if ((x != xCoord) | z != zCoord) {
+				int xMod = x - (xCoord - x), zMod = z - (zCoord - z);
+
+				if (isValidBlock(xMod, y, zMod)) {
 					++extraBlocks;
-				} else if (isFisher(new BlockPos(bp.getX() - (pos.getX() - bp.getX()), bp.getY(), bp.getZ() - (pos.getZ() - bp.getZ()))))
+				} else if (isFisher(xMod, y, zMod))
 					extraBlocks -= 18;
-				if (isFisher(new BlockPos(bp.getX() - (pos.getX() - bp.getX()), bp.getY(), bp.getZ())))
+				if (isFisher(xMod, y, z))
 					extraBlocks -= 18;
-				if (isFisher(new BlockPos(bp.getX(), bp.getY(), bp.getZ() - (pos.getZ() - bp.getZ()))))
+				if (isFisher(x, y, zMod))
 					extraBlocks -= 18;
-			} else if (isValidBlock(new BlockPos(bp.getX(), bp.getY() - 2, bp.getZ()))) {
+
+			} else if (isValidBlock(x, y - 2, z)) {
 				++extraBlocks;
 			}
 		}
@@ -135,11 +140,10 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		_isJammed = false;
 	}
 
-	protected boolean isFisher(BlockPos fisherPos) {
+	protected boolean isFisher(int x, int y, int z) {
 
-		if (fisherPos.getY() == pos.getY() - 1 && !(fisherPos.getX() == pos.getX() && fisherPos.getZ() == pos.getZ())) {
-			BlockPos posToCheck = new BlockPos(fisherPos.getX(), pos.getY(), fisherPos.getZ());
-			IBlockState state = worldObj.getBlockState(posToCheck);
+		if (y == pos.getY() - 1 && !(x == pos.getX() && z == pos.getZ())) {
+			IBlockState state = worldObj.getBlockState(new BlockPos(x, pos.getY(), z));
 			if (state.getBlock() == _machine.getBlock()
 					&& state.getValue(BlockFactoryMachine.TYPE) == BlockFactoryMachine.Type.FISHER)
 				return true;
@@ -147,11 +151,12 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 		return false;
 	}
 
-	protected boolean isValidBlock(BlockPos pos) {
+	protected boolean isValidBlock(int x, int y, int z) {
 
-		if (!worldObj.isBlockLoaded(pos) || isFisher(pos))
+		BlockPos loc = new BlockPos(x, y, z);
+		if (!worldObj.isBlockLoaded(loc) || isFisher(x, y, z))
 			return false;
-		IBlockState state = worldObj.getBlockState(pos);
+		IBlockState state = worldObj.getBlockState(loc);
 		if (state.getBlock() != Blocks.WATER || state.getValue(BlockFluidBase.LEVEL) != 0) return false;
 		Block block = state.getBlock();
 		return block.isAssociatedBlock(Blocks.WATER) || block.isAssociatedBlock(Blocks.FLOWING_WATER);
@@ -218,7 +223,7 @@ public class TileEntityFisher extends TileEntityFactoryPowered {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setInteger("workNeeded", _workNeeded);
 		tag.setBoolean("jam", _isJammed);
 		if (_Random_seed != null)
