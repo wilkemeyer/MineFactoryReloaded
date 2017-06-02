@@ -37,7 +37,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	protected boolean _ignoreDamage = true;
 
 	protected boolean _hasItems = false;
-	protected EnumFacing[] _pullDirections = { };
+	protected EnumFacing[] _pullDirections = {};
 
 	public TileEntityEjector() {
 
@@ -69,16 +69,18 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 			final EnumFacing facing = getDirectionFacing();
 			Map<EnumFacing, IInventory> chests = UtilInventory.
 					findChests(worldObj, pos, _pullDirections);
-			inv: for (Entry<EnumFacing, IInventory> chest : chests.entrySet()) {
+			inv:
+			for (Entry<EnumFacing, IInventory> chest : chests.entrySet()) {
 				if (chest.getKey() == facing) {
 					continue;
 				}
 
 				IInventoryManager inventory = InventoryManager.create(chest.getValue(),
-					chest.getKey().getOpposite());
+						chest.getKey().getOpposite());
 				Map<Integer, ItemStack> contents = inventory.getContents();
 
-				set: for (Entry<Integer, ItemStack> stack : contents.entrySet()) {
+				set:
+				for (Entry<Integer, ItemStack> stack : contents.entrySet()) {
 					ItemStack itemstack = stack.getValue();
 					if (itemstack == null || itemstack.stackSize < 1 || !inventory.canRemoveItem(itemstack, stack.getKey()))
 						continue;
@@ -86,20 +88,21 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 					boolean hasMatch = false;
 
 					int amt = 1;
-					for (int i = getSizeItemList(); i-- > 0;)
+					for (int i = getSizeItemList(); i-- > 0; )
 						if (itemMatches(_inventory[i], itemstack)) {
 							hasMatch = true;
 							amt = Math.max(1, _inventory[i].stackSize);
 							break;
 						}
 
-					if (_whitelist != hasMatch) continue set;
+					if (_whitelist != hasMatch)
+						continue set;
 
 					ItemStack stackToDrop = itemstack.copy();
 					amt = Math.min(itemstack.stackSize, amt);
 					stackToDrop.stackSize = amt;
 					ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
-						facing, facing);
+							facing, facing);
 
 					// remaining == null if dropped successfully.
 					if (remaining == null || remaining.stackSize < amt) {
@@ -125,8 +128,10 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 				return false;
 
 		if (_matchNBT) {
-			if (itemA.getTagCompound() == null && itemB.getTagCompound() == null) return true;
-			if (itemA.getTagCompound() == null || itemB.getTagCompound() == null) return false;
+			if (itemA.getTagCompound() == null && itemB.getTagCompound() == null)
+				return true;
+			if (itemA.getTagCompound() == null || itemB.getTagCompound() == null)
+				return false;
 			return itemA.getTagCompound().equals(itemB.getTagCompound());
 		}
 
@@ -137,7 +142,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	protected void onFactoryInventoryChanged() {
 
 		super.onFactoryInventoryChanged();
-		for (int i = getSizeItemList(); i-- > 0;)
+		for (int i = getSizeItemList(); i-- > 0; )
 			if (_inventory[i] != null) {
 				_hasItems = true;
 				return;
@@ -224,7 +229,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setBoolean("redstone", _lastRedstoneState);
 
 		return tag;
@@ -286,4 +291,5 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 			return super.overridePipeConnection(type, with);
 		return ConnectOverride.DISCONNECT;
 	}
+
 }
