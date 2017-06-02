@@ -205,6 +205,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 			if (!worldObj.checkNoEntityCollision(spawnedLiving.getEntityBoundingBox()) ||
 					!worldObj.getCollisionBoxes(spawnedLiving, spawnedLiving.getEntityBoundingBox()).isEmpty() ||
 					(worldObj.containsAnyLiquid(spawnedLiving.getEntityBoundingBox()) != (spawnedLiving instanceof EntityWaterMob))) {
+				// TODO: mob valid spawn location logic shifted to mob, but includes random shit too. need to review the logic
 				setIdleTicks(10);
 				return false;
 			}
