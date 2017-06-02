@@ -133,7 +133,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		if ((_inventory[2] == null) & _storedItem != null & _storedQuantity > 0) {
 			_inventory[2] = _storedItem.copy();
 			_inventory[2].stackSize = Math.min(_storedQuantity,
-				Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
+					Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
 			_storedQuantity -= _inventory[2].stackSize;
 		} else if (_inventory[2] != null & _storedQuantity > 0 &&
 				_inventory[2].stackSize < _inventory[2].getMaxStackSize() &&
@@ -146,7 +146,8 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 	private void checkInput(int slot) {
 
-		l: if (_inventory[slot] != null) {
+		l:
+		if (_inventory[slot] != null) {
 			if (_storedItem == null) {
 				_storedItem = _inventory[slot].copy();
 				_storedItem.stackSize = 1;
@@ -221,9 +222,11 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 		if (_passingItem)
 			return false;
-		if (slot >= 2) return false;
+		if (slot >= 2)
+			return false;
 		ItemStack stored = _storedItem;
-		if (stored == null) stored = _inventory[2];
+		if (stored == null)
+			stored = _inventory[2];
 		return stored == null || (UtilInventory.stacksEqual(stored, stack) && (getMaxStoredCount() - stored.getMaxStackSize()) > _storedQuantity);
 	}
 
@@ -263,7 +266,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 		ItemStack o = _inventory[2];
 		_inventory[2] = null;
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		_inventory[2] = o;
 		writeItemNBT(tag);
 
@@ -360,4 +363,5 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 		return Integer.MAX_VALUE;
 	}
+
 }
