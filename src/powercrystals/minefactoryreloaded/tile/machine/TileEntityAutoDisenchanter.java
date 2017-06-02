@@ -199,4 +199,5 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 		super.readFromNBT(tag);
 		_repeatDisenchant = tag.getBoolean("repeatDisenchant");
 	}
+
 }
