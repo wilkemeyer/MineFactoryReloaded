@@ -137,7 +137,8 @@ public class TileEntityGrinder extends TileEntityFactoryPowered {
 					}
 					if (r.processEntity(e)) {
 						if (e.getHealth() <= 0) {
-							continue entityList;
+							setIdleTicks(20);
+							return true;
 						}
 						break processEntity;
 					}
