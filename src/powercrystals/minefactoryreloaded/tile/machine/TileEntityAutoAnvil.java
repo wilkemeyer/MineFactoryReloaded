@@ -378,6 +378,20 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered {
 			}
 
 			if (outputItem != null) {
+				int newRepairCost = outputItem.getRepairCost();
+
+				if (addedItem != null && newRepairCost < addedItem.getRepairCost()) {
+					newRepairCost = addedItem.getRepairCost();
+				}
+				if (totalEnchCost > (outputItem.hasDisplayName() ? 1 : 0)) {
+					// vanilla parity: named items immune to small changes
+					newRepairCost = newRepairCost * 2 + 1;
+				}
+
+				if (newRepairCost > 0) {
+					// vanilla enchancement: don't write a 0. if it's not there, it's a 0 anyway.
+					outputItem.setRepairCost(newRepairCost);
+				}
 				EnchantmentHelper.setEnchantments(existingEnchantments, outputItem);
 			}
 
