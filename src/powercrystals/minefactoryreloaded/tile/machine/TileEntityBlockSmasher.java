@@ -225,7 +225,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setBoolean("shouldWork", _shouldWork);
 		if (_lastInput != null)
 			tag.setTag("stack", _lastInput.writeToNBT(new NBTTagCompound()));

@@ -339,7 +339,7 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		tag.setShort("radius", _radius);
 		tag.setInteger("empty", emptyTicks);
@@ -368,7 +368,6 @@ public class TileEntityChunkLoader extends TileEntityFactoryPowered implements I
 			return false;
 		return fluidConsumptionRate.containsKey(name);
 	}
-
 
 	protected String getFluidName(FluidStack fluid) {
 
