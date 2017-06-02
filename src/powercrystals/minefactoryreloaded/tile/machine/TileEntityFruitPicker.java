@@ -88,11 +88,9 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 		IFactoryFruit harvestable = MFRRegistry.getFruits().get(harvestedBlock);
 
-		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand,
-			targetCoords);
+		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, targetCoords);
 
-		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj,
-			targetCoords);
+		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj, targetCoords);
 
 		if (replacement == null) {
 			if (!worldObj.setBlockToAir(targetCoords))
@@ -195,4 +193,5 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 		return getDirectionFacing().getOpposite();
 	}
+
 }
