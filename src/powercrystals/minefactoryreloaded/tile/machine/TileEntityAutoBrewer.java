@@ -2,10 +2,12 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
@@ -289,6 +291,17 @@ public class TileEntityAutoBrewer extends TileEntityFactoryPowered {
 	public boolean shouldDropSlotWhenBroken(int slot) {
 
 		return slot % 5 != 1 || slot == 31;
+	}
+
+	@Override
+	public void writePortableData(EntityPlayer player, NBTTagCompound tag) {
+
+		// TODO: read/write template slots
+	}
+
+	@Override
+	public void readPortableData(EntityPlayer player, NBTTagCompound tag) {
+
 	}
 
 	@Override
