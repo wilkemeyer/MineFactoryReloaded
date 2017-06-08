@@ -12,15 +12,10 @@ import powercrystals.minefactoryreloaded.core.HarvestMode;
 
 public interface IHarvestManager
 {
-	public void moveNext();
-	public BlockPos getNextBlock();
-	public BlockPos getOrigin();
-	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> settings);
-	public void setWorld(World world);
-	public boolean getIsDone();
-	public void writeToNBT(NBTTagCompound tag);
-	public void readFromNBT(NBTTagCompound tag);
-	public void free();
-	BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings);
+	BlockPos getOrigin();
+	void writeToNBT(NBTTagCompound tag);
+	void readFromNBT(NBTTagCompound tag);
+	void free();
+	BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings);
 	boolean supportsType(HarvestType type);
 }

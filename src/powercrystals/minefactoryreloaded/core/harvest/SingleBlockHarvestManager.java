@@ -7,8 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
-import powercrystals.minefactoryreloaded.core.Area;
-import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 import java.util.Map;
@@ -17,55 +15,30 @@ public abstract class SingleBlockHarvestManager implements IHarvestManager {
 
 	protected World world;
 
-	public void moveNext() {
-
-		//noop
-	}
-
-	public BlockPos getNextBlock() {
-
-		//noop
-		return null;
-	}
-
+	@Override
 	public BlockPos getOrigin() {
 
 		//noop
 		return null;
 	}
 
-	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> settings) {
-
-		//noop
-	}
-
-	public void setWorld(World world) {
-
-		this.world = world;
-	}
-
-	public boolean getIsDone() {
-
-		return true;
-	}
-
+	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 
 		//noop
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 
 		//noop
 	}
 
+	@Override
 	public void free() {
 
 		//noop
 	}
-
-	@Override
-	public abstract BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings);
 
 	public static class Adjacent extends SingleBlockHarvestManager {
 
@@ -79,7 +52,7 @@ public abstract class SingleBlockHarvestManager implements IHarvestManager {
 		}
 
 		@Override
-		public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+		public BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
 
 			for (EnumFacing side : EnumFacing.HORIZONTALS) {
 				BlockPos offsetPos = pos.offset(side);
@@ -108,7 +81,7 @@ public abstract class SingleBlockHarvestManager implements IHarvestManager {
 		}
 
 		@Override
-		public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+		public BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
 
 			int highestBlockOffset = -1;
 			int maxBlockOffset = MFRConfig.verticalHarvestSearchMaxVertical.getInt();
@@ -150,7 +123,7 @@ public abstract class SingleBlockHarvestManager implements IHarvestManager {
 		}
 
 		@Override
-		public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+		public BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
 
 			return pos;
 		}

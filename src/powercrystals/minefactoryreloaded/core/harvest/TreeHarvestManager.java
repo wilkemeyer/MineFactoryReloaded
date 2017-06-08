@@ -35,37 +35,29 @@ public class TreeHarvestManager implements IHarvestManager {
 	private Area _area;
 	private World _world;
 
-	public TreeHarvestManager(NBTTagCompound tag, Map<String, Boolean> s) {
+	public TreeHarvestManager(Area treeArea) {
 
-		readFromNBT(tag);
-		_settings = s;
-	}
-
-	public TreeHarvestManager(World world, Area treeArea,Map<String, Boolean> s) {
-
-		reset(world, treeArea, s);
+		_area = treeArea;
 		_isDone = true;
 	}
 
-	@Override
-	public BlockPos getNextBlock() {
+	private BlockPos getNextBlock() {
 
 		BlockNode bn = _blocks.shift();
-		searchForTreeBlocks(bn, harvestMode);
+		searchForTreeBlocks(bn);
 		BlockPos bp = bn.pos;
 		bn.free();
 		return bp;
 	}
 
-	@Override
-	public void moveNext() {
+	private void moveNext() {
 
 		if (_blocks.size() == 0) {
 			_isDone = true;
 		}
 	}
 
-	private void searchForTreeBlocks(BlockNode bn, HarvestMode harvestMode) {
+	private void searchForTreeBlocks(BlockNode bn) {
 
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
@@ -74,7 +66,7 @@ public class TreeHarvestManager implements IHarvestManager {
 		if (type == null || type == HarvestType.TreeFruit)
 			return;
 
-		SideOffset[] sides = !harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
+		SideOffset[] sides = !_harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
 				SideOffset.ADJACENT_CUBE_INVERTED;
 
 		for (SideOffset side : sides) {
@@ -119,10 +111,9 @@ public class TreeHarvestManager implements IHarvestManager {
 		return null;
 	}
 
-	@Override
-	public void reset(World world, Area treeArea, Map<String, Boolean> settings) {
+	private void reset(World world, Area treeArea, Map<String, Boolean> settings) {
 
-		setWorld(world);
+		_world = world;
 		_area = treeArea;
 		free();
 		_isDone = false;
@@ -130,18 +121,6 @@ public class TreeHarvestManager implements IHarvestManager {
 		BlockPos bp = treeArea.getOrigin();
 		_blocks.push(BlockPool.getNext(bp));
 		_settings = settings;
-	}
-
-	@Override
-	public void setWorld(World world) {
-
-		_world = world;
-	}
-
-	@Override
-	public boolean getIsDone() {
-
-		return _isDone;
 	}
 
 	@Override
@@ -153,12 +132,11 @@ public class TreeHarvestManager implements IHarvestManager {
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 
-		NBTTagCompound data = new NBTTagCompound();
-		data.setBoolean("done", _isDone);
-		data.setInteger("mode", _harvestMode.ordinal());
+		tag.setBoolean("done", _isDone);
+		tag.setInteger("mode", _harvestMode.ordinal());
 		BlockPos o = getOrigin();
-		data.setIntArray("area", new int[] { o.getX() - _area.xMin, o.getY() - _area.yMin, _area.yMax - o.getY() });
-		data.setIntArray("origin", new int[] { o.getX(), o.getY(), o.getZ() });
+		tag.setIntArray("area", new int[] { o.getX() - _area.xMin, o.getY() - _area.yMin, _area.yMax - o.getY() });
+		tag.setIntArray("origin", new int[] { o.getX(), o.getY(), o.getZ() });
 		NBTTagSmartByteArray list = new NBTTagSmartByteArray(_blocks.size() * 3 * 3);
 		BlockNode bn = _blocks.poke();
 		list.addVarInt(_blocks.size());
@@ -166,8 +144,7 @@ public class TreeHarvestManager implements IHarvestManager {
 			list.addVarInt(bn.pos.getX()).addVarInt(bn.pos.getY()).addVarInt(bn.pos.getZ());
 			bn = bn.next;
 		}
-		data.setTag("curPos", list);
-		tag.setTag("harvestManager", data);
+		tag.setTag("curPos", list);
 	}
 
 	@Override
@@ -176,17 +153,16 @@ public class TreeHarvestManager implements IHarvestManager {
 		free();
 		_blocks = new BlockPool();
 
-		NBTTagCompound data = tag.getCompoundTag("harvestManager");
-		_isDone = data.getBoolean("done");
-		_harvestMode = HarvestMode.values()[data.getInteger("mode")];
-		int[] area = data.getIntArray("area"), o = data.getIntArray("origin");
+		_isDone = tag.getBoolean("done");
+		_harvestMode = HarvestMode.values()[tag.getInteger("mode")];
+		int[] area = tag.getIntArray("area"), o = tag.getIntArray("origin");
 		if (area == null | o == null || o.length < 3 | area.length < 3) {
 			_area = new Area(new BlockPos(0, -1, 0), 0, 0, 0);
 			_isDone = true;
 			return;
 		}
 		_area = new Area(new BlockPos(o[0], o[1], o[2]), area[0], area[1], area[2]);
-		NBTBase baseList = data.getTag("curPos");
+		NBTBase baseList = tag.getTag("curPos");
 		if (baseList.getId() == Constants.NBT.TAG_BYTE_ARRAY) {
 			PacketCoFHBase tempPacket = new PacketCoFHBase(((NBTTagByteArray)baseList).getByteArray()){
 				@Override public void handlePacket(EntityPlayer player, boolean isServer) {}
@@ -221,12 +197,12 @@ public class TreeHarvestManager implements IHarvestManager {
 	}
 
 	@Override
-	public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+	public BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
 
 		Block block;
 		_settings.put("isHarvestingTree", true);
 
-		if (!pos.equals(getOrigin()) || getIsDone()) {
+		if (!pos.equals(getOrigin()) || _isDone) {
 			int lowerBound = 0;
 			int upperBound = MFRConfig.treeSearchMaxVertical.getInt();
 			if (harvestable.getHarvestType() == HarvestType.TreeFlipped) {
@@ -237,11 +213,11 @@ public class TreeHarvestManager implements IHarvestManager {
 			Area a = new Area(pos, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
 
 			_harvestMode = harvestable.getHarvestType() == HarvestType.TreeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree;
-			reset(_world, a, settings);
+			reset(world, a, settings);
 		}
 
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
-		while (!getIsDone()) {
+		while (!_isDone) {
 			BlockPos bp = getNextBlock();
 			moveNext();
 			if (!_world.isBlockLoaded(bp)) {

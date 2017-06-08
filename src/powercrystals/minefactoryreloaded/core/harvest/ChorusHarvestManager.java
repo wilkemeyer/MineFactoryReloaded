@@ -13,7 +13,6 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 import powercrystals.minefactoryreloaded.core.Area;
-import powercrystals.minefactoryreloaded.core.HarvestMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +39,14 @@ public class ChorusHarvestManager implements IHarvestManager {
 
 	}
 
-	public ChorusHarvestManager(World world, Area area) {
+	public ChorusHarvestManager() {}
 
-		reset(world, area, HarvestMode.HarvestTree, null);
-	}
-
-	@Override
 	public void moveNext() {
 
 		if (blocks.empty())
 			isDone = true;
 	}
 
-	@Override
 	public BlockPos getNextBlock() {
 
 		if (blocks.empty()) {
@@ -163,24 +157,11 @@ public class ChorusHarvestManager implements IHarvestManager {
 		return origin;
 	}
 
-	@Override
-	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> settings) {
-
-		setWorld(world);
-		origin = area.getOrigin();
-		isDone = false;
-	}
-
-	@Override
-	public void setWorld(World world) {
+	private void reset(World world, Area area) {
 
 		this.world = world;
-	}
-
-	@Override
-	public boolean getIsDone() {
-
-		return isDone;
+		origin = area.getOrigin();
+		isDone = false;
 	}
 
 	@Override
@@ -222,17 +203,17 @@ public class ChorusHarvestManager implements IHarvestManager {
 	}
 
 	@Override
-	public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+	public BlockPos getNextHarvest(World theWorld, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
 
 		Block block;
 
-		if (!pos.equals(origin) || getIsDone()) {
+		if (!pos.equals(origin) || isDone) {
 			Area a = new Area(pos, 0, 0, 0);
-			reset(world, a, HarvestMode.HarvestTree, settings);
+			reset(theWorld, a);
 		}
 
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
-		while (!getIsDone()) {
+		while (!isDone) {
 			BlockPos bp = getNextBlock();
 			moveNext();
 			if (bp == null || !world.isBlockLoaded(bp)) {

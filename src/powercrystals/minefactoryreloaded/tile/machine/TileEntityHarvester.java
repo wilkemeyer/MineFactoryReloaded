@@ -203,19 +203,15 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 		_settings.put("isHarvestingTree", false);
 
-		set harvest manager world / maybe add that to reading from NBT where it's currently missing
-
-
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(search);
 		HarvestType type = harvestable.getHarvestType();
 		if (type == HarvestType.Gourd || harvestable.canBeHarvested(worldObj, _immutableSettings, bp)) {
 
 			if (harvestManager == null || !harvestManager.supportsType(type)) {
-				harvestManager == HarvestFactory.getHarvestManager(type, world, _areaManager, )
+				harvestManager = HarvestFactory.getHarvestManager(type, _areaManager.getHarvestArea());
 			}
-			check for null and the types supported by current harvestManager and get new instance if needed
 
-			return harvestManager.getNextHarvest(bp, harvestable, _immutableSettings);
+			return harvestManager.getNextHarvest(worldObj, bp, harvestable, _immutableSettings);
 		}
 
 		return null;
@@ -275,9 +271,12 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 		super.writeToNBT(tag);
 
-		harvestManager.writeToNBT(tag);
-
-		write harvest type to NBT
+		if (harvestManager != null) {
+			NBTTagCompound harvestManagerData = new NBTTagCompound();
+			harvestManager.writeToNBT(harvestManagerData);
+			tag.setTag("harvestManager", harvestManagerData);
+			tag.setByte("harvestType", (byte) currentHarvestType.ordinal());
+		}
 
 		tag.setInteger("bpos", _areaManager.getPosition());
 
@@ -297,12 +296,17 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 				_settings.put(s.intern(), b);
 			}
 		}
-		read harvest type
-
-		get harvest manager instance deserialized based on type
 
 		_areaManager.getHarvestArea();
 		_areaManager.setPosition(tag.getInteger("bpos"));
+
+		if (tag.hasKey("harvestType")) {
+			currentHarvestType = HarvestType.values()[tag.getByte("harvestType")];
+
+			NBTTagCompound harvestManagerTag = tag.getCompoundTag("harvestManager");
+			harvestManager = HarvestFactory.getHarvestManager(currentHarvestType, _areaManager.getHarvestArea());
+			harvestManager.readFromNBT(harvestManagerTag);
+		}
 	}
 
 	@Override

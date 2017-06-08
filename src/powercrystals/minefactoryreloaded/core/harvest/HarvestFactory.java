@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class HarvestFactory {
 
-	public static IHarvestManager getHarvestManager(HarvestType harvestType, World world, Area area, HarvestMode harvestMode, Map<String, Boolean> settings) {
+	public static IHarvestManager getHarvestManager(HarvestType harvestType, Area area) {
 
 		switch (harvestType) {
 		case Normal:
@@ -23,9 +23,9 @@ public class HarvestFactory {
 		case Tree:
 		case TreeFlipped:
 		case TreeLeaf:
-			return new TreeHarvestManager(world, area, harvestMode, settings);
+			return new TreeHarvestManager(area);
 		case Chorus:
-			return new ChorusHarvestManager(world, area);
+			return new ChorusHarvestManager();
 		}
 		return null;
 	}
