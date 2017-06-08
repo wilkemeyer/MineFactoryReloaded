@@ -20,7 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
-import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFountain;
@@ -30,7 +29,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityFountain extends TileEntityFactoryPowered {
 
-	private IHarvestManager _fillingManager;
+	private FluidFillingManager _fillingManager;
 	private boolean _reverse;
 
 	public TileEntityFountain() {
@@ -160,7 +159,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 				if (_fillingManager == null)
 					_fillingManager = new FluidFillingManager(worldObj, area);
 				else
-					_fillingManager.reset(worldObj, area, null, null);
+					_fillingManager.reset(worldObj, area);
 			} else if (r < 0) {
 				_reverse = true;
 				r = -r;
@@ -170,7 +169,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 					if (_fillingManager == null)
 						_fillingManager = new FluidFillingManager(worldObj, area);
 					else
-						_fillingManager.reset(worldObj, area, null, null);
+						_fillingManager.reset(worldObj, area);
 				}
 			} else {
 				_fillingManager = null;

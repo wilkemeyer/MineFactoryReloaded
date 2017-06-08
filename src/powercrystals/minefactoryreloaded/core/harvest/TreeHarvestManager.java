@@ -1,4 +1,4 @@
-package powercrystals.minefactoryreloaded.core;
+package powercrystals.minefactoryreloaded.core.harvest;
 
 import cofh.core.network.PacketCoFHBase;
 import cofh.core.util.nbt.NBTTagSmartByteArray;
@@ -18,7 +18,12 @@ import net.minecraftforge.common.util.Constants;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
+import powercrystals.minefactoryreloaded.core.Area;
+import powercrystals.minefactoryreloaded.core.BlockPool;
 import powercrystals.minefactoryreloaded.core.BlockPool.BlockNode;
+import powercrystals.minefactoryreloaded.core.HarvestMode;
+import powercrystals.minefactoryreloaded.core.SideOffset;
+import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
 public class TreeHarvestManager implements IHarvestManager {
 
@@ -36,9 +41,9 @@ public class TreeHarvestManager implements IHarvestManager {
 		_settings = s;
 	}
 
-	public TreeHarvestManager(World world, Area treeArea, HarvestMode harvestMode, Map<String, Boolean> s) {
+	public TreeHarvestManager(World world, Area treeArea,Map<String, Boolean> s) {
 
-		reset(world, treeArea, harvestMode, s);
+		reset(world, treeArea, s);
 		_isDone = true;
 	}
 
@@ -46,7 +51,7 @@ public class TreeHarvestManager implements IHarvestManager {
 	public BlockPos getNextBlock() {
 
 		BlockNode bn = _blocks.shift();
-		searchForTreeBlocks(bn);
+		searchForTreeBlocks(bn, harvestMode);
 		BlockPos bp = bn.pos;
 		bn.free();
 		return bp;
@@ -60,7 +65,7 @@ public class TreeHarvestManager implements IHarvestManager {
 		}
 	}
 
-	private void searchForTreeBlocks(BlockNode bn) {
+	private void searchForTreeBlocks(BlockNode bn, HarvestMode harvestMode) {
 
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
@@ -69,11 +74,10 @@ public class TreeHarvestManager implements IHarvestManager {
 		if (type == null || type == HarvestType.TreeFruit)
 			return;
 
-		SideOffset[] sides = !_harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
+		SideOffset[] sides = !harvestMode.isInverted ? SideOffset.ADJACENT_CUBE :
 				SideOffset.ADJACENT_CUBE_INVERTED;
 
-		for (int i = 0, e = sides.length; i < e; ++i) {
-			SideOffset side = sides[i];
+		for (SideOffset side : sides) {
 			cur = BlockPool.getNext(bn.pos.add(side.offset));
 			addIfValid(getType(cur, harvestables), cur);
 		}
@@ -116,10 +120,9 @@ public class TreeHarvestManager implements IHarvestManager {
 	}
 
 	@Override
-	public void reset(World world, Area treeArea, HarvestMode harvestMode, Map<String, Boolean> settings) {
+	public void reset(World world, Area treeArea, Map<String, Boolean> settings) {
 
 		setWorld(world);
-		_harvestMode = harvestMode;
 		_area = treeArea;
 		free();
 		_isDone = false;
@@ -215,5 +218,52 @@ public class TreeHarvestManager implements IHarvestManager {
 		if (_blocks != null) while (_blocks.poke() != null)
 			_blocks.shift().free();
 		_isDone = true;
+	}
+
+	@Override
+	public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+
+		Block block;
+		_settings.put("isHarvestingTree", true);
+
+		if (!pos.equals(getOrigin()) || getIsDone()) {
+			int lowerBound = 0;
+			int upperBound = MFRConfig.treeSearchMaxVertical.getInt();
+			if (harvestable.getHarvestType() == HarvestType.TreeFlipped) {
+				lowerBound = upperBound;
+				upperBound = 0;
+			}
+
+			Area a = new Area(pos, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
+
+			_harvestMode = harvestable.getHarvestType() == HarvestType.TreeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree;
+			reset(_world, a, settings);
+		}
+
+		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+		while (!getIsDone()) {
+			BlockPos bp = getNextBlock();
+			moveNext();
+			if (!_world.isBlockLoaded(bp)) {
+				return null;
+			}
+			block = _world.getBlockState(bp).getBlock();
+
+			if (harvestables.containsKey(block)) {
+				IFactoryHarvestable obj = harvestables.get(block);
+				HarvestType t = obj.getHarvestType();
+				if (t == HarvestType.Tree | t == HarvestType.TreeFlipped |
+						t == HarvestType.TreeLeaf | t == HarvestType.TreeFruit)
+					if (obj.canBeHarvested(_world, settings, bp))
+						return bp;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean supportsType(HarvestType type) {
+
+		return type == HarvestType.Tree || type == HarvestType.TreeFlipped || type == HarvestType.TreeLeaf;
 	}
 }

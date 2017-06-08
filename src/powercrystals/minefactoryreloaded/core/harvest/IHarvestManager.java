@@ -1,10 +1,14 @@
-package powercrystals.minefactoryreloaded.core;
+package powercrystals.minefactoryreloaded.core.harvest;
 
 import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
+import powercrystals.minefactoryreloaded.core.Area;
+import powercrystals.minefactoryreloaded.core.HarvestMode;
 
 public interface IHarvestManager
 {
@@ -17,4 +21,6 @@ public interface IHarvestManager
 	public void writeToNBT(NBTTagCompound tag);
 	public void readFromNBT(NBTTagCompound tag);
 	public void free();
+	BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings);
+	boolean supportsType(HarvestType type);
 }

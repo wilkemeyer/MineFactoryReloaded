@@ -1,26 +1,17 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 import powercrystals.minefactoryreloaded.core.Area;
-import powercrystals.minefactoryreloaded.core.FruitHarvestManager;
-import powercrystals.minefactoryreloaded.core.HarvestMode;
-import powercrystals.minefactoryreloaded.core.IHarvestManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
@@ -28,11 +19,16 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
-	private IHarvestManager _treeManager;
-
 	private Random _rand;
+
+	private List<BlockPos> _treeBlocks;
+	private int _currentBlock;
 
 	public TileEntityFruitPicker() {
 
@@ -41,17 +37,6 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 		_rand = new Random();
 		setManageSolids(true);
 		setCanRotate(true);
-	}
-
-	@Override
-	public void validate() {
-
-		super.validate();
-		if (!worldObj.isRemote) {
-			_treeManager = new FruitHarvestManager(worldObj,
-					new Area(pos, 0, 0, 0),
-					HarvestMode.FruitTree);
-		}
 	}
 
 	@Override
@@ -141,25 +126,24 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 		Block block;
 
-		if (_treeManager.getIsDone() || !_treeManager.getOrigin().equals(pos)) {
+		if (_treeBlocks == null || _currentBlock >= _treeBlocks.size()) {
 			int lowerBound = 0;
 			int upperBound = MFRConfig.fruitTreeSearchMaxVertical.getInt();
 
-			Area a = new Area(pos, MFRConfig.fruitTreeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
-
-			_treeManager.reset(worldObj, a, HarvestMode.FruitTree, null);
+			_currentBlock = 0;
+			_treeBlocks = (new Area(pos, MFRConfig.fruitTreeSearchMaxHorizontal.getInt(), lowerBound, upperBound)).getPositionsBottomFirst();
 		}
 
 		Map<Block, IFactoryFruit> fruits = MFRRegistry.getFruits();
-		while (!_treeManager.getIsDone()) {
-			BlockPos bp = _treeManager.getNextBlock();
+		while (_currentBlock < _treeBlocks.size()) {
+			BlockPos bp = _treeBlocks.get(_currentBlock);
 			block = worldObj.getBlockState(bp).getBlock();
 			IFactoryFruit fruit = fruits.containsKey(block) ? fruits.get(block) : null;
 
 			if (fruit != null && fruit.canBePicked(worldObj, bp))
 				return bp;
 
-			_treeManager.moveNext();
+			_currentBlock++;;
 		}
 		return null;
 	}

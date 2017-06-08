@@ -1,9 +1,7 @@
-package powercrystals.minefactoryreloaded.core;
+package powercrystals.minefactoryreloaded.core.harvest;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChorusFlower;
-import net.minecraft.block.BlockChorusPlant;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTBase;
@@ -11,6 +9,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.api.HarvestType;
+import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
+import powercrystals.minefactoryreloaded.core.Area;
+import powercrystals.minefactoryreloaded.core.HarvestMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,5 +219,41 @@ public class ChorusHarvestManager implements IHarvestManager {
 	public void free() {
 
 		blocks.clear();
+	}
+
+	@Override
+	public BlockPos getNextHarvest(BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
+
+		Block block;
+
+		if (!pos.equals(origin) || getIsDone()) {
+			Area a = new Area(pos, 0, 0, 0);
+			reset(world, a, HarvestMode.HarvestTree, settings);
+		}
+
+		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
+		while (!getIsDone()) {
+			BlockPos bp = getNextBlock();
+			moveNext();
+			if (bp == null || !world.isBlockLoaded(bp)) {
+				return null;
+			}
+			block = world.getBlockState(bp).getBlock();
+
+			if (harvestables.containsKey(block)) {
+				IFactoryHarvestable obj = harvestables.get(block);
+				HarvestType t = obj.getHarvestType();
+				if (t == HarvestType.Chorus)
+					if (obj.canBeHarvested(world, settings, bp))
+						return bp;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean supportsType(HarvestType type) {
+
+		return type == HarvestType.Chorus;
 	}
 }

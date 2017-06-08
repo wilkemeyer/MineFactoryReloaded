@@ -2,18 +2,15 @@ package powercrystals.minefactoryreloaded.core;
 
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Map;
-
 import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.core.Area;
+import powercrystals.minefactoryreloaded.core.BlockPool;
 import powercrystals.minefactoryreloaded.core.BlockPool.BlockNode;
 
-public class FluidFillingManager implements IHarvestManager
+public class FluidFillingManager
 {
 	private BlockPool _blocks;
 	private boolean _isDone;
@@ -23,18 +20,16 @@ public class FluidFillingManager implements IHarvestManager
 
 	public FluidFillingManager(World world, Area area)
 	{
-		reset(world, area, null, null);
+		reset(world, area);
 		_isDone = true;
 	}
 
-	@Override
 	public BlockPos getNextBlock()
 	{
 		BlockNode bn = _blocks.poke();
 		return bn.pos;
 	}
 
-	@Override
 	public void moveNext()
 	{
 		searchForFreeBlocks(_blocks.shift());
@@ -73,8 +68,7 @@ public class FluidFillingManager implements IHarvestManager
 		return block.isReplaceable(_world, bp.pos);
 	}
 
-	@Override
-	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> s)
+	public void reset(World world, Area area)
 	{
 		setWorld(world);
 		_area = area;
@@ -84,72 +78,16 @@ public class FluidFillingManager implements IHarvestManager
 		_blocks.push(BlockPool.getNext(area.getOrigin()));
 	}
 
-	@Override
 	public void setWorld(World world)
 	{
 		_world = world;
 	}
 
-	@Override
 	public boolean getIsDone()
 	{
 		return _isDone;
 	}
 
-	@Override
-	public BlockPos getOrigin()
-	{
-		return _area.getOrigin();
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setBoolean("done", _isDone);
-		BlockPos o = getOrigin();
-		data.setIntArray("area", new int[] {o.getX() - _area.xMin, o.getY() - _area.yMin, _area.yMax - o.getY()});
-		data.setIntArray("origin", new int[] {o.getX(), o.getY(), o.getZ()});
-		NBTTagList list = new NBTTagList();
-		BlockNode bn = _blocks.poke();
-		while (bn != null)
-		{
-			NBTTagCompound p = new NBTTagCompound();
-			p.setInteger("x", bn.pos.getX());
-			p.setInteger("y", bn.pos.getY());
-			p.setInteger("z", bn.pos.getZ());
-			list.appendTag(p);
-			bn = bn.next;
-		}
-		data.setTag("curPos", list);
-		tag.setTag("harvestManager", data);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		free();
-		_blocks = new BlockPool();
-
-		NBTTagCompound data = tag.getCompoundTag("harvestManager");
-		_isDone = data.getBoolean("done");
-		int[] area = data.getIntArray("area"), o = data.getIntArray("origin");
-		if (area == null | o == null || o.length < 3 | area.length < 3)
-		{
-			_area = new Area(new BlockPos(0,-1,0),0,0,0);
-			_isDone = true;
-			return;
-		}
-		_area = new Area(new BlockPos(o[0], o[1], o[2]), area[0], area[1], area[2]);
-		NBTTagList list = (NBTTagList)data.getTag("curPos");
-		for (int i = 0, e = list.tagCount(); i < e; ++i)
-		{
-			NBTTagCompound p = list.getCompoundTagAt(i);
-			_blocks.push(BlockPool.getNext(new BlockPos(p.getInteger("x"), p.getInteger("y"), p.getInteger("z"))));
-		}
-	}
-
-	@Override
 	public void free()
 	{
 		if (_blocks != null) while (_blocks.poke() != null)

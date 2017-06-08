@@ -21,6 +21,10 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.HarvestType;
 import powercrystals.minefactoryreloaded.api.IFactoryHarvestable;
 import powercrystals.minefactoryreloaded.core.*;
+import powercrystals.minefactoryreloaded.core.harvest.ChorusHarvestManager;
+import powercrystals.minefactoryreloaded.core.harvest.HarvestFactory;
+import powercrystals.minefactoryreloaded.core.harvest.IHarvestManager;
+import powercrystals.minefactoryreloaded.core.harvest.TreeHarvestManager;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiHarvester;
 import powercrystals.minefactoryreloaded.gui.container.ContainerHarvester;
@@ -54,9 +58,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 	private Random _rand;
 
-	private IHarvestManager _treeManager;
-	private ChorusHarvestManager chorusManager;
-	private BlockPos _lastTree;
+	private IHarvestManager harvestManager;
+	private HarvestType currentHarvestType;
 
 	public TileEntityHarvester() {
 
@@ -64,7 +67,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 		createHAM(this, 1);
 		setManageSolids(true);
 
-		_settings = new HashMap<String, Boolean>();
+		_settings = new HashMap<>();
 		_settings.putAll(DEFAULT_SETTINGS);
 		_immutableSettings = java.util.Collections.unmodifiableMap(_settings);
 
@@ -78,11 +81,8 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 	public void onChunkUnload() {
 
 		super.onChunkUnload();
-		if (_treeManager != null)
-			_treeManager.free();
-		if (chorusManager != null)
-			chorusManager.free();
-		_lastTree = null;
+		if (harvestManager != null)
+			harvestManager.free();
 	}
 
 	@Override
@@ -92,19 +92,6 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 		if (!worldObj.isRemote) {
 			createHAM(this, 1);
 			onFactoryInventoryChanged();
-			if (_treeManager != null && _areaManager.getHarvestArea().contains(_treeManager.getOrigin())) {
-				_treeManager.setWorld(worldObj);
-			} else {
-				_treeManager = new TreeHarvestManager(worldObj,
-						new Area(pos, 0, 0, 0),
-						HarvestMode.FruitTree, _immutableSettings);
-			}
-			if (chorusManager != null && _areaManager.getHarvestArea().contains(chorusManager.getOrigin())) {
-				chorusManager.setWorld(worldObj);
-			} else {
-				chorusManager = new ChorusHarvestManager(worldObj,
-						new Area(pos, 0, 0, 0));
-			}
 		}
 	}
 
@@ -198,14 +185,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 	private BlockPos getNextHarvest() {
 
-		if (!_treeManager.getIsDone())
-			return getNextTreeSegment(_lastTree, false);
-
-		if (!chorusManager.getIsDone())
-			return getNextChorusSegment(_lastTree);
-
 		BlockPos bp = _areaManager.getNextBlock();
-		_lastTree = null;
 		if (skip) {
 			int extra = getExtraIdleTime(10);
 			if (extra > 0 && extra > _rand.nextInt(15))
@@ -218,141 +198,26 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 		Block search = worldObj.getBlockState(bp).getBlock();
 
 		if (!MFRRegistry.getHarvestables().containsKey(search)) {
-			_lastTree = null;
 			return null;
 		}
 
 		_settings.put("isHarvestingTree", false);
 
+		set harvest manager world / maybe add that to reading from NBT where it's currently missing
+
+
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(search);
 		HarvestType type = harvestable.getHarvestType();
 		if (type == HarvestType.Gourd || harvestable.canBeHarvested(worldObj, _immutableSettings, bp)) {
-			switch (type) {
-			case Gourd:
-				return getNextAdjacent(bp, harvestable);
-			case Column:
-			case LeaveBottom:
-				return getNextVertical(bp, type == HarvestType.Column ? 0 : 1, harvestable);
-			case Tree:
-			case TreeFlipped:
-			case TreeLeaf:
-				return getNextTreeSegment(bp, type == HarvestType.TreeFlipped);
-			case Chorus:
-				return getNextChorusSegment(bp); //TODO figure out what to do when null is returned
-			// - unlike other crops/trees existence of block isn't enough and only if branch is fully formed it can be harvested
-			//   thus there can be a lot of matches of Chorus block that return no block to harvest
-			case TreeFruit:
-			case Normal:
-				return bp;
+
+			if (harvestManager == null || !harvestManager.supportsType(type)) {
+				harvestManager == HarvestFactory.getHarvestManager(type, world, _areaManager, )
 			}
-		}
-		return null;
-	}
+			check for null and the types supported by current harvestManager and get new instance if needed
 
-	private BlockPos getNextChorusSegment(BlockPos pos) {
-
-		Block block;
-
-		if (!pos.equals(_lastTree) || chorusManager.getIsDone()) {
-			_lastTree = new BlockPos(pos);
-
-			Area a = new Area(_lastTree, 0, 0, 0);
-
-			chorusManager.reset(worldObj, a, HarvestMode.HarvestTree, _immutableSettings);
+			return harvestManager.getNextHarvest(bp, harvestable, _immutableSettings);
 		}
 
-		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
-		while (!chorusManager.getIsDone()) {
-			BlockPos bp = chorusManager.getNextBlock();
-			chorusManager.moveNext();
-			if (bp == null || !worldObj.isBlockLoaded(bp)) {
-				return null;
-			}
-			block = worldObj.getBlockState(bp).getBlock();
-
-			if (harvestables.containsKey(block)) {
-				IFactoryHarvestable obj = harvestables.get(block);
-				HarvestType t = obj.getHarvestType();
-				if (t == HarvestType.Chorus)
-					if (obj.canBeHarvested(worldObj, _immutableSettings, bp))
-						return bp;
-			}
-		}
-		return null;
-	}
-
-	private BlockPos getNextAdjacent(BlockPos pos, IFactoryHarvestable harvestable) {
-
-		for (EnumFacing side : EnumFacing.HORIZONTALS) {
-			BlockPos offsetPos = pos.offset(side);
-			if (worldObj.isBlockLoaded(offsetPos) && harvestable.canBeHarvested(worldObj, _immutableSettings, offsetPos))
-				return offsetPos;
-		}
-		return null;
-	}
-
-	private BlockPos getNextVertical(BlockPos pos, int startOffset, IFactoryHarvestable harvestable) {
-
-		int highestBlockOffset = -1;
-		int maxBlockOffset = MFRConfig.verticalHarvestSearchMaxVertical.getInt();
-
-		Block plant = harvestable.getPlant();
-		for (int currentYoffset = startOffset; currentYoffset < maxBlockOffset; ++currentYoffset) {
-			BlockPos offsetPos = pos.offset(EnumFacing.UP, currentYoffset);
-			Block block = worldObj.getBlockState(offsetPos).getBlock();
-			if (!block.equals(plant) ||
-					!harvestable.canBeHarvested(worldObj, _immutableSettings, offsetPos))
-				break;
-
-			highestBlockOffset = currentYoffset;
-		}
-
-		if (highestBlockOffset >= 0)
-			return pos.offset(EnumFacing.UP, highestBlockOffset);
-
-		return null;
-	}
-
-	private BlockPos getNextTreeSegment(BlockPos pos, boolean treeFlipped) {
-
-		Block block;
-		_settings.put("isHarvestingTree", true);
-
-		if (!pos.equals(_lastTree) || _treeManager.getIsDone()) {
-			int lowerBound = 0;
-			int upperBound = MFRConfig.treeSearchMaxVertical.getInt();
-			if (treeFlipped) {
-				lowerBound = upperBound;
-				upperBound = 0;
-			}
-
-			_lastTree = new BlockPos(pos);
-
-			Area a = new Area(_lastTree, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
-
-			_treeManager.reset(worldObj, a,
-				treeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree,
-				_immutableSettings);
-		}
-
-		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
-		while (!_treeManager.getIsDone()) {
-			BlockPos bp = _treeManager.getNextBlock();
-			_treeManager.moveNext();
-			if (!worldObj.isBlockLoaded(bp)) {
-				return null;
-			}
-			block = worldObj.getBlockState(bp).getBlock();
-
-			if (harvestables.containsKey(block)) {
-				IFactoryHarvestable obj = harvestables.get(block);
-				HarvestType t = obj.getHarvestType();
-				if (t == HarvestType.Tree | t == HarvestType.TreeFlipped |
-						t == HarvestType.TreeLeaf | t == HarvestType.TreeFruit)
-					if (obj.canBeHarvested(worldObj, _immutableSettings, bp))
-						return bp;
-			}
-		}
 		return null;
 	}
 
@@ -410,12 +275,10 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 		super.writeToNBT(tag);
 
-		_treeManager.writeToNBT(tag);
-		if (!chorusManager.getIsDone()) {
-			NBTTagCompound chorusNBT = new NBTTagCompound();
-			chorusManager.writeToNBT(chorusNBT);
-			tag.setTag("chorus", chorusNBT);
-		}
+		harvestManager.writeToNBT(tag);
+
+		write harvest type to NBT
+
 		tag.setInteger("bpos", _areaManager.getPosition());
 
 		return tag;
@@ -434,14 +297,9 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 				_settings.put(s.intern(), b);
 			}
 		}
-		if (_treeManager != null)
-			_treeManager.free();
-		_treeManager = new TreeHarvestManager(tag, _immutableSettings);
-		if (!_treeManager.getIsDone())
-			_lastTree = _treeManager.getOrigin();
-		chorusManager = new ChorusHarvestManager(tag.hasKey("chorus") ? tag.getTag("chorus") : null);
-		if (!chorusManager.getIsDone())
-			_lastTree = chorusManager.getOrigin();
+		read harvest type
+
+		get harvest manager instance deserialized based on type
 
 		_areaManager.getHarvestArea();
 		_areaManager.setPosition(tag.getInteger("bpos"));
