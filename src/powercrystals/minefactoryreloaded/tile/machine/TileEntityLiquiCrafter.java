@@ -180,6 +180,8 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory {
 		/**
 		 * Consuming
 		 */
+		// TODO: this stage needs broken apart; cloning into the <tt>craft</tt> object, then getCraftingResult, then call IRecipie.getRemainingItems
+		// afterwards we can then consume items and process the outputs correctly; extra outputs should be done after the main crafting output logic to ensure ordering consistency
 		for (int i = 11; i < 29; i++) {
 			ItemStack item = _inventory[i];
 			if (item != null) {
