@@ -163,10 +163,8 @@ public class WorldGenMassiveTree extends WorldGenerator {
 		leafNodesLength = var4;
 	}
 
-	private void genLeafLayer(BlockPos pos, final int size) {
+	private void genLeafLayer(int x, int y, int z, final int size) {
 
-		int x = pos.getX();
-		int z = pos.getZ();
 		int t;
 		final int X = x;
 		final int Z = z;
@@ -185,15 +183,15 @@ public class WorldGenMassiveTree extends WorldGenerator {
 					t = -1;
 					do {
 						z = Z + zMod * t;
-						BlockPos placementPos = new BlockPos(x, pos.getY(), z);
+						BlockPos placementPos = placement.setPos(x, y, z);
 						IBlockState state = worldObj.getBlockState(placementPos);
 						Block block = state.getBlock();
 
-						if (safeGrowth ? (worldObj.isAirBlock(placementPos) ||
+						if (safeGrowth ? (block.isAir(state, worldObj, placementPos) ||
 								block.isLeaves(state, worldObj, placementPos) ||
 								block.canBeReplacedByLeaves(state, worldObj, placementPos)) :
 								block != Blocks.BEDROCK) {
-							this.setBlockAndNotifyAdequately(worldObj, placementPos, leaves.getDefaultState());
+							this.setBlockAndNotifyAdequately(worldObj, x, y, z, leaves.getDefaultState());
 						}
 
 						if (t == 1) break;
@@ -219,7 +217,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 			for (int var5 = y + leafDistanceLimit; y < var5; ++y) {
 				int size = (y != 0) & y != leafDistanceLimit - 1 ? 3 : 2;
-				genLeafLayer(new BlockPos(x, yO++, z), size);
+				genLeafLayer(x, yO++, z, size);
 			}
 		}
 	}
@@ -273,7 +271,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 					}
 				}
 
-				this.setBlockAndNotifyAdequately(worldObj, new BlockPos(var14[0], var14[1], var14[2]), state.withProperty(BlockRubberWood.LOG_AXIS, axis));
+				this.setBlockAndNotifyAdequately(worldObj, var14[0], var14[1], var14[2], state.withProperty(BlockRubberWood.LOG_AXIS, axis));
 			}
 		}
 	}
@@ -282,16 +280,15 @@ public class WorldGenMassiveTree extends WorldGenerator {
 	 * Places the trunk for the big tree that is being generated. Able to generate double-sized trunks by changing a
 	 * field that is always 1 to 2.
 	 */
-	private void generateTrunk() {
+	private void generateTrunk(BlockPos base) {
 
 		int x = basePos[0];
 		int y = basePos[1];
-		int maxX = basePos[1] + height;
+		int maxY = basePos[1] + height;
 		int z = basePos[2];
-		BlockPos pos = new BlockPos(x, y, z);
 
 		int[] bottomPoint = new int[] { x, y, z };
-		int[] topPoint = new int[] { x, maxX, z };
+		int[] topPoint = new int[] { x, maxY, z };
 
 		double lim = 400f / trunkSize;
 
@@ -308,11 +305,11 @@ public class WorldGenMassiveTree extends WorldGenerator {
 						topPoint[1] = y + sinc2(lim * i, lim * j, height) - (rand.nextInt(3) - 1);
 
 					this.placeBlockLine(bottomPoint, topPoint, log.getDefaultState());
-					this.setBlockAndNotifyAdequately(worldObj, new BlockPos(topPoint[0], topPoint[1], topPoint[2]),
+					this.setBlockAndNotifyAdequately(worldObj, topPoint[0], topPoint[1], topPoint[2],
 							log.getDefaultState().withProperty(BlockRubberWood.LOG_AXIS, BlockLog.EnumAxis.NONE));
-					BlockPos placementPos = new BlockPos(bottomPoint[0], bottomPoint[1] - 1, bottomPoint[2]);
+					BlockPos placementPos = placement.setPos(bottomPoint[0], bottomPoint[1] - 1, bottomPoint[2]);
 					IBlockState state = worldObj.getBlockState(placementPos);
-					state.getBlock().onPlantGrow(state, worldObj, placementPos, pos);
+					state.getBlock().onPlantGrow(state, worldObj, placementPos, base);
 				}
 			}
 		}
@@ -391,7 +388,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 				var13[var5] = par1[var5] + var14;
 				var13[var6] = MathHelper.floor_float(par1[var6] + var14 * var9);
 				var13[var7] = MathHelper.floor_float(par1[var7] + var14 * var11);
-				BlockPos pos = new BlockPos(var13[0], var13[1], var13[2]);
+				BlockPos pos = placement.setPos(var13[0], var13[1], var13[2]);
 				IBlockState state = worldObj.getBlockState(pos);
 				Block block = state.getBlock();
 
@@ -420,12 +417,11 @@ public class WorldGenMassiveTree extends WorldGenerator {
 			return false;
 		heightLimit = newHeight;
 
-		BlockPos pos = new BlockPos(basePos[0], basePos[1] - 1, basePos[2]);
+		BlockPos pos = placement.setPos(basePos[0], basePos[1] - 1, basePos[2]);
 		IBlockState state = worldObj.getBlockState(pos);
 		Block block = state.getBlock();
 
-		if (!block.canSustainPlant(state, worldObj, pos,
-			EnumFacing.UP, MFRThings.rubberSaplingBlock))
+		if (!block.canSustainPlant(state, worldObj, pos, EnumFacing.UP, MFRThings.rubberSaplingBlock))
 			return false;
 		else {
 			int[] var5 = new int[] { basePos[0], basePos[1], basePos[2] };
@@ -563,7 +559,7 @@ public class WorldGenMassiveTree extends WorldGenerator {
 			//long leaves = System.nanoTime();
 			this.generateLeafNodeBases();
 			//long bases = System.nanoTime();
-			this.generateTrunk();
+			this.generateTrunk(pos);
 			//long trunk = System.nanoTime();
 			//time = System.nanoTime() - time;
 			//logger.info("Generated massive rubber tree in: " + time + "ns");
@@ -584,18 +580,15 @@ public class WorldGenMassiveTree extends WorldGenerator {
 	//private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger("Tree logger");
 	//private int blocksAdded = 0;
 	private TLongObjectHashMap<Chunk> chunkMap;
+	private BlockPos.MutableBlockPos placement = new BlockPos.MutableBlockPos();
 
-	@Override
-	public void setBlockAndNotifyAdequately(World world, BlockPos blockPos, IBlockState state) {
-
-		int x = blockPos.getX();
-		int y = blockPos.getY();
-		int z = blockPos.getZ();
+	public void setBlockAndNotifyAdequately(World world, int x, int y, int z, IBlockState state) {
 
 		if ((y < 0) | y > 255)
 			return;
 		//++blocksAdded;
 		long pos = ((x & 0xFFFFFFF0L) << 32) | (z & 0xFFFFFFF0L);
+		BlockPos blockPos = placement.setPos(x, y, z);
 
 		Chunk chunk = chunkMap.get(pos);
 		if (chunk == null) {
@@ -616,6 +609,12 @@ public class WorldGenMassiveTree extends WorldGenerator {
 
 		subChunk.set(x, y, z, state);
 		subChunk.setExtBlocklightValue(x, y, z, 0);
+	}
+
+	@Override
+	@Deprecated
+	public void setBlockAndNotifyAdequately(World world, BlockPos pos, IBlockState state) {
+
 	}
 
 }
