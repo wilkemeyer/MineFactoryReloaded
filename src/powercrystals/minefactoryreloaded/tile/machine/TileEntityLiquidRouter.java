@@ -120,7 +120,7 @@ public class TileEntityLiquidRouter extends TileEntityFactoryInventory {
 		if (0 < amountRemaining && amountRemaining < totalWeight(routes)) {
 			int outdir = weightedRandomSide(routes);
 			TileEntity te = MFRUtil.getTile(worldObj, pos.offset(_outputDirections[outdir]));
-			if (te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite())) {
+			if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite())) {
 				amountRemaining -= te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, _outputDirections[outdir].getOpposite())
 						.fill(new FluidStack(resource, amountRemaining), doFill);
 			}
