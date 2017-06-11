@@ -163,7 +163,7 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		nbttagcompound = super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("subnet", _currentSubnet);
 
 		return nbttagcompound;

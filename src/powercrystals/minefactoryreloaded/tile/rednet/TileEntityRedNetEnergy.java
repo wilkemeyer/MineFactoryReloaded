@@ -418,7 +418,7 @@ public class TileEntityRedNetEnergy extends TileEntityRedNetCable implements
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
-		super.writeToNBT(nbt);
+		nbt = super.writeToNBT(nbt);
 		nbt.setByteArray("SideMode", sideMode);
 		if (_grid != null) {
 			if (isNode) {

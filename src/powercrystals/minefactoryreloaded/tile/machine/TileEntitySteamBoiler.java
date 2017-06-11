@@ -187,7 +187,7 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		tag.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
 		tag.setInteger("ticksUntilConsumption", _ticksUntilConsumption);

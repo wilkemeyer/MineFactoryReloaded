@@ -496,7 +496,7 @@ public class TileEntityLiquiCrafter extends TileEntityFactoryInventory {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		if (outputs.size() != 0) {
 			NBTTagList dropItems = new NBTTagList();

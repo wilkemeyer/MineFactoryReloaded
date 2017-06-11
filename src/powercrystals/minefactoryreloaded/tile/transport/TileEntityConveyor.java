@@ -265,7 +265,7 @@ public class TileEntityConveyor extends TileEntityBase
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		tag.setInteger("dyeColor", _dye == null ? -1 : _dye.getMetadata());
 		tag.setBoolean("isReversed", _isReversed);

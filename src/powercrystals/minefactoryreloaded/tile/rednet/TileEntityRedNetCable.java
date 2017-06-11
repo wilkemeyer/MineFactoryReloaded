@@ -646,7 +646,7 @@ public class TileEntityRedNetCable extends TileEntityBase implements INode, ITra
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setIntArray("sideSubnets", _sideColors);
 		tag.setByte("v", (byte) 5);
 		tag.setByteArray("cableMode", _cableMode);

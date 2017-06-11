@@ -416,7 +416,7 @@ public class TileEntityRedNetLogic extends TileEntityBase implements IRotateable
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		tag.setByte("p_rot", (byte) -1);
 		tag.setIntArray("vars", _buffers[13]);

@@ -362,7 +362,7 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		_treeManager.writeToNBT(tag);
 		tag.setInteger("bpos", _areaManager.getPosition());

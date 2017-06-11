@@ -130,7 +130,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		tag.setBoolean("jammed", _jammed);
 		tag.setByte("tick", (byte) _tick);

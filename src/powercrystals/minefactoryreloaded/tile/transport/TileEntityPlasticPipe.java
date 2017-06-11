@@ -606,7 +606,7 @@ public class TileEntityPlasticPipe extends TileEntityBase implements INode, ITra
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 
-		super.writeToNBT(nbt);
+		nbt = super.writeToNBT(nbt);
 		nbt.setByte("Upgrade", (byte) upgrade.ordinal());
 		nbt.setBoolean("Power", isPowered);
 		nbt.setByteArray("SideConnections", serializeSideConnections());
