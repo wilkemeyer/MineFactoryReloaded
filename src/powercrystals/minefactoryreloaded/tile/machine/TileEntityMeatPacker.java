@@ -55,6 +55,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered {
 
 			if (getWorkDone() >= getWorkMax()) {
 				ItemStack item;
+				// TODO: should track the weighted 'quantity' of meat consumed and output an appropriate amount of ingots/nuggets
 				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1))) {
 					item = new ItemStack(MFRThings.meatIngotRawItem);
 				} else {
