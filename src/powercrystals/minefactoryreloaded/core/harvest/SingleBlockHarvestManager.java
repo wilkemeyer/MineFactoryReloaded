@@ -40,6 +40,18 @@ public abstract class SingleBlockHarvestManager implements IHarvestManager {
 		//noop
 	}
 
+	@Override
+	public boolean getIsDone() {
+
+		return true;
+	}
+
+	@Override
+	public BlockPos getNextHarvest(World world, Map<String, Boolean> settings) {
+
+		return null; //doesn't support multiple blocks and thus can't report next block from list to harvest
+	}
+
 	public static class Adjacent extends SingleBlockHarvestManager {
 
 		private static final Adjacent INSTANCE = new Adjacent();

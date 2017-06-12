@@ -185,17 +185,21 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 	private BlockPos getNextHarvest() {
 
-		BlockPos bp = _areaManager.getNextBlock();
+		if (harvestManager != null && !harvestManager.getIsDone()) {
+			return harvestManager.getNextHarvest(worldObj, _settings);
+		}
+
+		BlockPos bn = _areaManager.getNextBlock();
 		if (skip) {
 			int extra = getExtraIdleTime(10);
 			if (extra > 0 && extra > _rand.nextInt(15))
 				return null;
 		}
-		if (!worldObj.isBlockLoaded(bp)) {
+		if (!worldObj.isBlockLoaded(bn)) {
 			return null;
 		}
 
-		Block search = worldObj.getBlockState(bp).getBlock();
+		Block search = worldObj.getBlockState(bn).getBlock();
 
 		if (!MFRRegistry.getHarvestables().containsKey(search)) {
 			return null;
@@ -205,13 +209,14 @@ public class TileEntityHarvester extends TileEntityFactoryPowered {
 
 		IFactoryHarvestable harvestable = MFRRegistry.getHarvestables().get(search);
 		HarvestType type = harvestable.getHarvestType();
-		if (type == HarvestType.Gourd || harvestable.canBeHarvested(worldObj, _immutableSettings, bp)) {
+		if (type == HarvestType.Gourd || harvestable.canBeHarvested(worldObj, _immutableSettings, bn)) {
 
 			if (harvestManager == null || !harvestManager.supportsType(type)) {
 				harvestManager = HarvestFactory.getHarvestManager(type, _areaManager.getHarvestArea());
+				currentHarvestType = type;
 			}
 
-			return harvestManager.getNextHarvest(worldObj, bp, harvestable, _immutableSettings);
+			return harvestManager.getNextHarvest(worldObj, bn, harvestable, _settings);
 		}
 
 		return null;

@@ -17,5 +17,7 @@ public interface IHarvestManager
 	void readFromNBT(NBTTagCompound tag);
 	void free();
 	BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings);
+	BlockPos getNextHarvest(World world, Map<String, Boolean> settings);
 	boolean supportsType(HarvestType type);
+	boolean getIsDone();
 }

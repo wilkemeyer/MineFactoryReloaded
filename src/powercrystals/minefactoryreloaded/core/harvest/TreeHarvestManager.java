@@ -30,7 +30,6 @@ public class TreeHarvestManager implements IHarvestManager {
 	private BlockPool _blocks;
 	private boolean _isDone;
 
-	private Map<String, Boolean> _settings;
 	private HarvestMode _harvestMode;
 	private Area _area;
 	private World _world;
@@ -39,12 +38,13 @@ public class TreeHarvestManager implements IHarvestManager {
 
 		_area = treeArea;
 		_isDone = true;
+		_harvestMode = HarvestMode.HarvestTree;
 	}
 
-	private BlockPos getNextBlock() {
+	private BlockPos getNextBlock(Map<String, Boolean> settings) {
 
 		BlockNode bn = _blocks.shift();
-		searchForTreeBlocks(bn);
+		searchForTreeBlocks(bn, settings);
 		BlockPos bp = bn.pos;
 		bn.free();
 		return bp;
@@ -57,12 +57,12 @@ public class TreeHarvestManager implements IHarvestManager {
 		}
 	}
 
-	private void searchForTreeBlocks(BlockNode bn) {
+	private void searchForTreeBlocks(BlockNode bn, Map<String, Boolean> settings) {
 
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		BlockNode cur;
 
-		HarvestType type = getType(bn, harvestables);
+		HarvestType type = getType(bn, harvestables, settings);
 		if (type == null || type == HarvestType.TreeFruit)
 			return;
 
@@ -71,7 +71,7 @@ public class TreeHarvestManager implements IHarvestManager {
 
 		for (SideOffset side : sides) {
 			cur = BlockPool.getNext(bn.pos.add(side.offset));
-			addIfValid(getType(cur, harvestables), cur);
+			addIfValid(getType(cur, harvestables, settings), cur);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class TreeHarvestManager implements IHarvestManager {
 		node.free();
 	}
 
-	private HarvestType getType(BlockNode bp, Map<Block, IFactoryHarvestable> harvestables) {
+	private HarvestType getType(BlockNode bp, Map<Block, IFactoryHarvestable> harvestables, Map<String, Boolean> settings) {
 
 		Area area = _area;
 		if (bp.pos.getX() < area.xMin || bp.pos.getX() > area.xMax ||
@@ -104,14 +104,14 @@ public class TreeHarvestManager implements IHarvestManager {
 		Block block = _world.getBlockState(bp.pos).getBlock();
 		if (harvestables.containsKey(block)) {
 			IFactoryHarvestable h = harvestables.get(block);
-			if (h.canBeHarvested(_world, _settings, bp.pos)) {
+			if (h.canBeHarvested(_world, settings, bp.pos)) {
 				return h.getHarvestType();
 			}
 		}
 		return null;
 	}
 
-	private void reset(World world, Area treeArea, Map<String, Boolean> settings) {
+	private void reset(World world, Area treeArea) {
 
 		_world = world;
 		_area = treeArea;
@@ -120,7 +120,6 @@ public class TreeHarvestManager implements IHarvestManager {
 		_blocks = new BlockPool();
 		BlockPos bp = treeArea.getOrigin();
 		_blocks.push(BlockPool.getNext(bp));
-		_settings = settings;
 	}
 
 	@Override
@@ -197,10 +196,17 @@ public class TreeHarvestManager implements IHarvestManager {
 	}
 
 	@Override
+	public BlockPos getNextHarvest(World world, Map<String, Boolean> settings) {
+
+		_world = world;
+		return _isDone ? null : getNextHarvest(world, _area.getOrigin(), null, settings);
+	}
+
+	@Override
 	public BlockPos getNextHarvest(World world, BlockPos pos, IFactoryHarvestable harvestable, Map<String, Boolean> settings) {
 
 		Block block;
-		_settings.put("isHarvestingTree", true);
+		settings.put("isHarvestingTree", true);
 
 		if (!pos.equals(getOrigin()) || _isDone) {
 			int lowerBound = 0;
@@ -213,12 +219,12 @@ public class TreeHarvestManager implements IHarvestManager {
 			Area a = new Area(pos, MFRConfig.treeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
 
 			_harvestMode = harvestable.getHarvestType() == HarvestType.TreeFlipped ? HarvestMode.HarvestTreeInverted : HarvestMode.HarvestTree;
-			reset(world, a, settings);
+			reset(world, a);
 		}
 
 		Map<Block, IFactoryHarvestable> harvestables = MFRRegistry.getHarvestables();
 		while (!_isDone) {
-			BlockPos bp = getNextBlock();
+			BlockPos bp = getNextBlock(settings);
 			moveNext();
 			if (!_world.isBlockLoaded(bp)) {
 				return null;
@@ -241,5 +247,11 @@ public class TreeHarvestManager implements IHarvestManager {
 	public boolean supportsType(HarvestType type) {
 
 		return type == HarvestType.Tree || type == HarvestType.TreeFlipped || type == HarvestType.TreeLeaf;
+	}
+
+	@Override
+	public boolean getIsDone() {
+
+		return _isDone;
 	}
 }

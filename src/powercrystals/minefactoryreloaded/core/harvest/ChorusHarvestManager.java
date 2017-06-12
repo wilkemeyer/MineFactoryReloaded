@@ -175,8 +175,8 @@ public class ChorusHarvestManager implements IHarvestManager {
 			int arrayIndex = i * 3;
 			BlockPos currentPos = blocks.get(i);
 			blockCoordinates[arrayIndex] = currentPos.getX();
-			blockCoordinates[arrayIndex + 1] = currentPos.getX();
-			blockCoordinates[arrayIndex + 2] = currentPos.getX();
+			blockCoordinates[arrayIndex + 1] = currentPos.getY();
+			blockCoordinates[arrayIndex + 2] = currentPos.getZ();
 		}
 
 		tag.setIntArray("blocks", blockCoordinates);
@@ -200,6 +200,14 @@ public class ChorusHarvestManager implements IHarvestManager {
 	public void free() {
 
 		blocks.clear();
+	}
+
+	@Override
+	public BlockPos getNextHarvest(World theWorld, Map<String, Boolean> settings) {
+
+		world = theWorld;
+
+		return isDone ? null : getNextHarvest(theWorld, origin, null, settings);
 	}
 
 	@Override
@@ -236,5 +244,11 @@ public class ChorusHarvestManager implements IHarvestManager {
 	public boolean supportsType(HarvestType type) {
 
 		return type == HarvestType.Chorus;
+	}
+
+	@Override
+	public boolean getIsDone() {
+
+		return isDone;
 	}
 }
