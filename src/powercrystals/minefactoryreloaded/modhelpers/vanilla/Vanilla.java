@@ -35,6 +35,7 @@ import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableNet
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStandard;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizableStemPlants;
 import powercrystals.minefactoryreloaded.farmables.fertilizables.FertilizerStandard;
+import powercrystals.minefactoryreloaded.farmables.fruits.FruitChorus;
 import powercrystals.minefactoryreloaded.farmables.fruits.FruitCocoa;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableEnderman;
 import powercrystals.minefactoryreloaded.farmables.grindables.GrindableSlime;
@@ -50,11 +51,7 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableStemP
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeLeaves;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableVine;
 import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableWood;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCocoa;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableCropPlant;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableNetherWart;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
-import powercrystals.minefactoryreloaded.farmables.plantables.PlantableStandard;
+import powercrystals.minefactoryreloaded.farmables.plantables.*;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableChicken;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableCow;
 import powercrystals.minefactoryreloaded.farmables.ranchables.RanchableMooshroom;
@@ -82,6 +79,7 @@ public class Vanilla {
 		MFRRegistry.registerPlantable(new PlantableCropPlant(Items.BEETROOT_SEEDS, Blocks.BEETROOTS));
 		MFRRegistry.registerPlantable(new PlantableNetherWart());
 		MFRRegistry.registerPlantable(new PlantableCocoa(Items.DYE, Blocks.COCOA, 3));
+		MFRRegistry.registerPlantable(new PlantableChorus());
 
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.LOG));
 		MFRRegistry.registerHarvestable(new HarvestableWood(Blocks.LOG2));
@@ -209,7 +207,11 @@ public class Vanilla {
 		MFRRegistry.registerLiquidDrinkHandler("lava", new DrinkHandlerLava());
 
 		MFRRegistry.registerFruitLogBlock(Blocks.LOG);
+		MFRRegistry.registerFruitLogBlock(Blocks.CHORUS_FLOWER);
+		MFRRegistry.registerFruitLogBlock(Blocks.CHORUS_PLANT);
 		MFRRegistry.registerFruit(new FruitCocoa(Blocks.COCOA));
+		MFRRegistry.registerFruit(new FruitChorus(Blocks.CHORUS_FLOWER));
+		MFRRegistry.registerFruit(new FruitChorus(Blocks.CHORUS_PLANT));
 
 		MFRRegistry.registerSpawnHandler(new SpawnableHorse());
 		MFRRegistry.registerSpawnHandler(new SpawnableEnderman());

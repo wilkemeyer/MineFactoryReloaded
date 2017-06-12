@@ -21,6 +21,7 @@ import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.FruitHarvestManager;
 import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
+import powercrystals.minefactoryreloaded.farmables.fruits.FruitChorus;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
@@ -119,19 +120,19 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 		Block search = worldObj.getBlockState(bp).getBlock();
 
+		IFactoryFruit f = MFRRegistry.getFruits().get(search);
 		if (!MFRRegistry.getFruitLogBlocks().contains(search)) {
-			IFactoryFruit f = MFRRegistry.getFruits().get(search);
 			return f != null && f.canBePicked(worldObj, bp) ? bp : null;
 		}
 
-		BlockPos temp = getNextTreeSegment(bp);
+		BlockPos temp = getNextTreeSegment(bp, f instanceof FruitChorus);
 		if (temp != null)
 			_areaManager.rewindBlock();
 
 		return temp;
 	}
 
-	private BlockPos getNextTreeSegment(BlockPos pos) {
+	private BlockPos getNextTreeSegment(BlockPos pos, boolean invertedSearch) {
 
 		Block block;
 
@@ -141,7 +142,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 			Area a = new Area(pos, MFRConfig.fruitTreeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
 
-			_treeManager.reset(worldObj, a, HarvestMode.FruitTree, null);
+			_treeManager.reset(worldObj, a, invertedSearch ? HarvestMode.FruitTreeInverted : HarvestMode.FruitTree, null);
 		}
 
 		Map<Block, IFactoryFruit> fruits = MFRRegistry.getFruits();

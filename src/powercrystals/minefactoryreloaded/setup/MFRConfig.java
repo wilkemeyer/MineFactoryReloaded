@@ -168,9 +168,9 @@ public class MFRConfig {
 		passengerRailSearchMaxVertical.setComment("When searching for players or dropoff locations, how far up to search");
 		passengerRailSearchMaxHorizontal = c.get(CATEGORY_GENERAL + ".SearchDistance", "PassengerRail.MaxHorizontal", 3);
 		passengerRailSearchMaxHorizontal.setComment("When searching for players or dropoff locations, how far out to the sides (radius) to search");
-		fruitTreeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + ".SearchDistance", "FruitTree.MaxHoriztonal", 5);
+		fruitTreeSearchMaxHorizontal = c.get(CATEGORY_GENERAL + ".SearchDistance", "FruitTree.MaxHoriztonal", 7);
 		fruitTreeSearchMaxHorizontal.setComment("When searching for parts of a fruit tree, how far out to the sides (radius) to search");
-		fruitTreeSearchMaxVertical = c.get(CATEGORY_GENERAL + ".SearchDistance", "FruitTree.MaxVertical", 20);
+		fruitTreeSearchMaxVertical = c.get(CATEGORY_GENERAL + ".SearchDistance", "FruitTree.MaxVertical", 25);
 		fruitTreeSearchMaxVertical.setComment("When searching for parts of a fruit tree, how far up to search");
 		//}
 
