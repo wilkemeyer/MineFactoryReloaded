@@ -189,14 +189,4 @@ public class IC2Crop implements IFactoryHarvestable, IFactoryFertilizable, IFact
 	public void postHarvest(World world, BlockPos pos)
 	{
 	}
-
-	@Override
-	public void prePick(World world, BlockPos pos)
-	{
-	}
-
-	@Override
-	public void postPick(World world, BlockPos pos)
-	{
-	}
 }

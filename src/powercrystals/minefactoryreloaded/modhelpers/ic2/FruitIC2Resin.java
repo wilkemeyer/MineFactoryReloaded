@@ -81,12 +81,6 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 	}
 
 	@Override
-	public void prePick(World world, BlockPos pos)
-	{
-
-	}
-
-	@Override
 	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
@@ -94,12 +88,6 @@ public class FruitIC2Resin implements IFactoryFruit, IFactoryFertilizable
 		a.stackSize = 1 + rand.nextInt(3);
 		list.add(a);
 		return list;
-	}
-
-	@Override
-	public void postPick(World world, BlockPos pos)
-	{
-
 	}
 
 }

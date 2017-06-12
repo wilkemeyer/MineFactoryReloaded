@@ -112,14 +112,4 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	public void postHarvest(World world, BlockPos pos)
 	{
 	}
-
-	@Override
-	public void prePick(World world, BlockPos pos)
-	{
-	}
-
-	@Override
-	public void postPick(World world, BlockPos pos)
-	{
-	}
 }

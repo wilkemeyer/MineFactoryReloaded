@@ -83,11 +83,6 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 		return repl;
 	}
 
-	@Override
-	public void prePick(World world, BlockPos pos)
-	{
-	}
-
 	@Override // HARVESTER
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
@@ -105,10 +100,5 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 			return prod;
 		}
 		return null;
-	}
-
-	@Override
-	public void postPick(World world, BlockPos pos)
-	{
 	}
 }

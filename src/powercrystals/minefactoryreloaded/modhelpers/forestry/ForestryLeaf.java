@@ -82,11 +82,6 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		return repl;
 	}
 
-	@Override
-	public void prePick(World world, BlockPos pos)
-	{
-	}
-
 	@Override // HARVESTER
 	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
@@ -165,6 +160,7 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 		}
 	}
 
+/* TODO: take care of this now that there's no postPick
 	@Override
 	public void postPick(World world, BlockPos pos)
 	{
@@ -175,4 +171,5 @@ public class ForestryLeaf extends HarvestableTreeLeaves implements IFactoryFruit
 			fruit.addRipeness(-fruit.getRipeness());
 		}
 	}
+*/
 }
