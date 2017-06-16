@@ -59,7 +59,7 @@ public class MineFactoryReloadedCore extends BaseMod {
 	static{FluidRegistry.enableUniversalBucket();}
 	public static final String modId = "minefactoryreloaded";
 	public static final String modName = "MineFactory Reloaded";
-	public static final String version = "2.9.0";
+	public static final String version = "2.9.0B1";
 	public static final String dependencies = CoFHCore.VERSION_GROUP + "required-after:CodeChickenLib@[" + CodeChickenLib.version + ",)";
 	public static final String modNetworkChannel = "MFReloaded";
 
