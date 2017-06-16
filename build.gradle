@@ -118,10 +118,16 @@ curseforge {
     apiKey = project.hasProperty('CF_API_TOKEN') ? project.CF_API_TOKEN : '0'
     project {
         id = project.hasProperty('CF_MOD_ID') ? project.CF_MOD_ID : -1
-        displayName = 'MineFactoryReloaded-[${project.minecraft.version}]${mod_version}-' + (System.getenv("BUILD_NUMBER") ?: "CUSTOM_BUILD")
         changelog = ''
-        releaseType = 'alpha'
 
-        mainArtifact jar
+        mainArtifact(jar) {
+			displayName = 'MineFactoryReloaded-[${project.minecraft.version}]${mod_version}-' + (System.getenv("BUILD_NUMBER") ?: "CUSTOM_BUILD")
+			releaseType = 'alpha'
+			relations {
+				requiredLibrary 'cofhcore'
+				requiredLibrary 'cofhlib'
+				requiredLibrary 'codechickenlib'
+			}
+		}
     }
 }
