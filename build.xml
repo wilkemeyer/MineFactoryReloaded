@@ -1,12 +1,12 @@
 <project name="MineFactoryReloaded" default="install" basedir=".">
 	<property environment="env"/>
-	
+
 	<!-- Basic directories -->
 	<property name="src.dir" value="src"/>
 	<property name="build.dir" value="build"/>
 	<property name="resources.dir" value="resources"/>
 	<property name="download.dir" value="${build.dir}/downloads"/>
-	
+
 	<!-- Project information -->
 	<property name="build.name" value="${ant.project.name}"/>
 	<property name="class.pckg" value="powercrystals/minefactoryreloaded"/>
@@ -21,12 +21,12 @@
 	<property name="forge.patch" value="3"/>
 	<property name="forge.build" value="2185"/>
 	<property name="mcp.mapping" value="20161111"/>
-	
+
 	<!-- Packaging -->
 	<property name="dist.dir" value="${build.dir}/dist"/>
 	<property name="classes.dir" value="${build.dir}/packaging"/>
 	<property name="apiclasses.dir" value="${build.dir}/api-packaging"/>
-	
+
 	<!-- Forge paths -->
 	<property name="forge.version" value="${mc.version}-${forge.major}.${forge.minor}.${forge.patch}.${forge.build}"/>
 	<property name="forge.dir" value="${build.dir}/forge"/>
@@ -39,9 +39,9 @@
 	<property name="forge.stsh" value="${build.dir}/.gradle/caches/minecraft/net/minecraftforge/forge/${forge.version}"/>
 	<property name="mcp.stsh" value="${mcp.dir}/mcp_snapshot/${mcp.mapping}"/>
 	<property name="forge.jar" value="${forge.stsh}/forgeSrc-${forge.version}.jar"/>
-	<property name="reobf.cmd" value="${download.dir}/bon.jar"/>
+	<property name="reobf.cmd" value="${download.dir}/bon5.jar"/>
 	<property name="forge.url" value="http://files.minecraftforge.net/maven/net/minecraftforge/forge/${forge.version}/forge-${forge.version}-mdk.zip"/>
-	
+
 	<!-- Classpaths -->
 	<path id="compiledeps"/>
 	<path id="mcp.classpath">
@@ -64,7 +64,7 @@
 			<include name="modules*/files*/com.google.code.gson/**/*.jar"/>
 		</fileset>
 	</path>
-	
+
 	<!-- Task skipping -->
 	<target name="properties">
 		<!-- Enforce some paths -->
@@ -79,7 +79,7 @@
 		</condition>
 		<available property="maven.exists" file="${download.dir}/maven.jar"/>
 	</target>
-	
+
 	<!-- Dependency downloading -->
 
 	<target name="download-core" depends="properties" unless="forge.exists">
@@ -107,18 +107,19 @@
 
 			<dependency groupId="cofh" artifactId="CoFHCore" version="${mc.version}-4.1.4.7" classifier="deobf"/>
 			<dependency groupId="codechicken" artifactId="CodeChickenLib" version="${mc.version}-2.5.7.241" classifier="deobf"/>
+			<!--
 			<dependency groupId="net.sengir.forestry" artifactId="forestry_${mc.version}" version="5.2.17.376" classifier=""/>
-			<dependency groupId="net.industrial-craft" artifactId="industrialcraft-2" version="2.6.149-ex110" classifier=""/>
+			<dependency groupId="net.industrial-craft" artifactId="industrialcraft-2" version="2.6.149-ex110" classifier=""/>-->
 		</dependencies>
 	</target>
-	
+
 	<macrodef name="move-transformers"><sequential>
-		
+
 		<copy file="${download.dir}/CoFHCore-master/src/main/resources/cofh_at.cfg" tofile="${transformers.dir}/CoFH_at.cfg"/>
 		<copy file="${resources.dir}/MFR_at.cfg" tofile="${transformers.dir}/MFR_at.cfg"/>
-		
+
 	</sequential></macrodef>
-	
+
 	<!-- Building process -->
 	<target name="install" depends="upload">
 		<!-- Cleanup -->
@@ -144,9 +145,12 @@
 				<fileset dir="${resources.dir}"/>
 			</copy>
 			<echo file="${classes.dir}/vers.prop">${build.full}${build.number}</echo>
+			<manifest file="${build.dir}/MANIFEST.MF">
+				<attribute name="CoFHAT" value="MFR_at.cfg"/>
+			</manifest>
 			<jar destfile="${dist.dir}/${build.name}${build.full}@{build}.jar"
-				compress="true" level="9" basedir="${classes.dir}"
-				manifest="${classes.dir}/META-INF/MANIFEST.MF"/>
+				 compress="true" level="9" basedir="${classes.dir}"
+				 manifest="${build.dir}/MANIFEST.MF"/>
 		</sequential>
 	</macrodef>
 
@@ -154,18 +158,20 @@
 		<!-- Recompile -->
 		<echo message="Compiling..."/>
 		<mkdir dir="${compile.dir}"/>
-		
+
 		<depend srcdir="${sources.dir}" destdir="${compile.dir}"
-			cache="${forgebuild.dir}/tmp/depcache" closure="true">
+				cache="${forgebuild.dir}/tmp/depcache" closure="true">
 			<include name="**/*.java"/>
 		</depend>
 		<javac srcdir="${sources.dir}" destdir="${compile.dir}" target="1.8" source="1.8"
 			   debug="true" debuglevel="lines,source" includeAntRuntime="false">
 			<include name="**/*.java"/>
+			<exclude name="**/modhelpers/forestry/*.java"/>
+			<exclude name="**/modhelpers/ic2/*.java"/>
 			<classpath refid="mcp.classpath"/>
 			<classpath refid="compiledeps"/>
 		</javac>
-		
+
 		<!-- Dev jar -->
 		<echo message="Building jar..."/>
 		<local name="build"/><property name="build" value="${build.number}-dev"/>
@@ -210,7 +216,7 @@
 				<include name="forge-${forge.version}-src.zip"/>
 			</fileset>
 		</unzip>
-		
+
 		<!-- Cleanup -->
 		<delete>
 			<fileset dir="${forge.dir}">
@@ -221,7 +227,7 @@
 		<delete dir="${forge.dir}/eclipse" failonerror="false"/>
 		<delete dir="${forge.dir}/src/main/java" failonerror="false"/>
 		<replaceregexp file="${forge.dir}/build.gradle" match="(&quot;snapshot_)\d+(&quot;)" replace="\1${mcp.mapping}\2"/>
-		
+
 		<!-- Change executables' permissions -->
 		<chmod file="${forge.dir}/gradlew" perm="+x"/>
 
@@ -251,10 +257,10 @@
 			</fileset>
 		</unzip>
 		<javac srcdir="${forgebuild.dir}/tmp/recompSrc" destdir="${compile.dir}" target="1.7" source="1.7"
-			classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false"
-			fork="true" memoryinitialsize="512m" memorymaximumsize="2048m"/>
+			   classpathref="mcp.classpath" debug="true" debuglevel="lines,source" includeAntRuntime="false"
+			   fork="true" memoryinitialsize="512m" memorymaximumsize="2048m"/>
 		<jar destfile="${forge.jar}1" compress="true" level="9" basedir="${compile.dir}"/>
-		
+
 		<echo message="Reobfuscating..."/>
 		<move-transformers/>
 		<java classpath="${reobf.cmd}" classname="immibis.bon.cui.MCPRemap"
@@ -297,10 +303,10 @@
 		<echo message="Downloading Maven Ant Tasks..."/>
 		<get src="http://central.maven.org/maven2/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar" dest="${download.dir}/maven.jar"/>
 	</target>
-	
+
 	<target name="setup-bon" depends="properties" unless="bon.exists">
 		<echo message="Downloading BON..."/>
-		<get src="https://github.com/skyboy/bearded-octo-nemesis/releases/download/1.3/BON.jar" dest="${reobf.cmd}"/>
+		<get src="https://github.com/skyboy/bearded-octo-nemesis/releases/download/1.5/BON.jar" dest="${reobf.cmd}"/>
 	</target>
 
 	<target name="get-cf-token" depends="cf-token-there" unless="curse.maven.token">
@@ -311,7 +317,7 @@
 	<target name="cf-token-there" if="env.CF_MAVEN_TOKEN" unless="curse.maven.token">
 		<property name="curse.maven.token" value="${env.CF_MAVEN_TOKEN}"/>
 	</target>
-	
+
 	<target name="upload" depends="build" if="CF_API_TOKEN">
 		<echo message="Uploading to CurseForge..."/><local name="fileout"/>
 		<script language="javascript" classpathref="gson"><![CDATA[
@@ -433,7 +439,7 @@
 		]]></script>
 		<echo message="${fileout}"/>
 	</target>
-	
+
 	<target name="verify-version">
 		<script language="javascript"><![CDATA[
 			var name = project.getProperty("build.full");
@@ -460,7 +466,7 @@
 			
 			project.setProperty("grep.out", matches[1]);
 		]]></script>
-		
+
 		<!-- Split mod&mc version, update mcmod -->
 		<script language="javascript" classpathref="gson"><![CDATA[
 			
