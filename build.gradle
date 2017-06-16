@@ -30,7 +30,7 @@ repositories {
     }
     maven {
         name = "CoFH Maven"
-        url = "http://maven.podgeweb.com/"
+        url = "http://maven.covers1624.net/"
     }
     maven {
         name = "Player's Maven"
@@ -111,34 +111,14 @@ artifacts {
 }
 
 // Configure an upload task.
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            if (project.hasProperty("local_maven")) {
-                repository(url: "file://${local_maven}")
-                pom {
-                    groupId = project.group
-                    // Force the maven upload to use the <mcversion>-<version> syntax preferred at files
-                    artifactId = project.archivesBaseName
-                    project {
-                        name project.archivesBaseName
-                        packaging 'jar'
-                        description 'MinefactoryReloaded'
-                        url 'https://github.com/P3pp3rF1y/MinefactoryReloaded'
+curseforge {
+    apiKey = project.hasProperty('CF_API_TOKEN') ? project.CF_API_TOKEN : '0'
+    project {
+        id = project.hasProperty('CF_MOD_ID') ? project.CF_MOD_ID : -1
+        displayName = 'MineFactoryReloaded-[${project.minecraft.version}]${mod_version}-' + (System.getenv("BUILD_NUMBER") ?: "CUSTOM_BUILD")
+        changelog = ''
+        releaseType = 'alpha'
 
-                        scm {
-                            url 'https://github.com/P3pp3rF1y/MinefactoryReloaded'
-                            connection 'scm:git:git://github.com/P3pp3rF1y/MinefactoryReloaded.git'
-                            developerConnection 'scm:git:git@github.com:P3pp3rF1y/MinefactoryReloaded.git'
-                        }
-
-                        issueManagement {
-                            system 'github'
-                            url 'https://github.com/P3pp3rF1y/MinefactoryReloaded/issues'
-                        }
-                    }
-                }
-            }
-        }
+        mainArtifact jar
     }
 }
