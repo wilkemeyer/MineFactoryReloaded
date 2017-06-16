@@ -15,13 +15,13 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+plugins {
+  id 'com.matthewprenger.cursegradle' version '1.0.8'
+}
 
 // We apply the 'forge' plugin, so ForgeGradle can do it's stuff.
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
-plugins {
-  id 'com.matthewprenger.cursegradle' version '1.0.8'
-}
 
 group = 'powercrystals' // Your main package.
 archivesBaseName = 'MineFactoryReloaded'
