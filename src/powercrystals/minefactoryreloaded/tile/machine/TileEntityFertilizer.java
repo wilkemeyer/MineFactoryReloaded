@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 import java.util.Random;
@@ -11,7 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -53,15 +53,15 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 	@Override
 	public boolean activateMachine() {
 
-		BlockPosition bp = _areaManager.getNextBlock();
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
+		BlockPos bp = _areaManager.getNextBlock();
+		if (!worldObj.isBlockLoaded(bp)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 
 		Map<Block, IFactoryFertilizable> fertalizables = MFRRegistry.getFertilizables();
 
-		Block target = worldObj.getBlock(bp.x, bp.y, bp.z);
+		Block target = worldObj.getBlockState(bp).getBlock();
 		if (!fertalizables.containsKey(target)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
@@ -79,13 +79,13 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 
 			if (type == FertilizerType.None)
 				continue;
-			if (!fertilizable.canFertilize(worldObj, bp.x, bp.y, bp.z, type))
+			if (!fertilizable.canFertilize(worldObj, bp, type))
 				continue;
 
-			if (fertilizable.fertilize(worldObj, _rand, bp.x, bp.y, bp.z, type)) {
+			if (fertilizable.fertilize(worldObj, _rand, bp, type)) {
 				fertilizer.consume(fertStack);
 				if (MFRConfig.playSounds.getBoolean(true)) // particles
-					worldObj.playAuxSFXAtEntity(null, 2005, bp.x, bp.y, bp.z, _rand.nextInt(10) + 5);
+					worldObj.playEvent(null, 2005, bp, _rand.nextInt(10) + 5);
 				if (fertStack.stackSize <= 0)
 					setInventorySlotContents(stackIndex, null);
 
@@ -116,13 +116,13 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 0;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 9;
 	}
@@ -134,7 +134,7 @@ public class TileEntityFertilizer extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack != null) {
 			if (slot < 9) {

@@ -1,15 +1,20 @@
 package powercrystals.minefactoryreloaded.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.BlockFence;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityList.EntityEggInfo;
@@ -22,14 +27,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Facing;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IMobEggHandler;
 import powercrystals.minefactoryreloaded.api.IRandomMobProvider;
 import powercrystals.minefactoryreloaded.api.ISafariNetHandler;
@@ -37,15 +44,13 @@ import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
-import powercrystals.minefactoryreloaded.setup.village.VillageTradeHandler;
+import powercrystals.minefactoryreloaded.setup.village.Zoologist;
 
-public class ItemSafariNet extends ItemFactory {
+public class ItemSafariNet extends ItemFactory implements IColorRegister {
 
-	private IIcon _iconEmpty;
-	private IIcon _iconBack;
-	private IIcon _iconMid;
-	private IIcon _iconFront;
 	private final boolean multiuse;
 	private final int type;
 
@@ -59,6 +64,12 @@ public class ItemSafariNet extends ItemFactory {
 		this.multiuse = multiuse;
 		this.type = type;
 		setMaxStackSize(multiuse ? 12 : 1);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return super.getUnlocalizedName();
 	}
 
 	@Override
@@ -76,11 +87,11 @@ public class ItemSafariNet extends ItemFactory {
 
 		int type = ((ItemSafariNet) stack.getItem()).type;
 		if (1 == (type & 1)) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.persistent"));
+			infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.persistent"));
 		}
 
 		if (2 == (type & 2)) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.nametag"));
+			infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.nametag"));
 		}
 
 		if (stack.getTagCompound() == null) {
@@ -88,11 +99,11 @@ public class ItemSafariNet extends ItemFactory {
 		}
 
 		if (stack.getTagCompound().getBoolean("hide")) {
-			infoList.add(StatCollector.translateToLocal("tip.info.mfr.safarinet.mystery"));
+			infoList.add(I18n.translateToLocal("tip.info.mfr.safarinet.mystery"));
 		} else {
 			infoList.add(MFRUtil.localize("entity.", stack.getTagCompound().getString("id")));
 			// See Entity.getEntityName()
-			Class<?> c = (Class<?>) EntityList.stringToClassMapping.get(stack.getTagCompound().getString("id"));
+			Class<?> c = EntityList.NAME_TO_CLASS.get(stack.getTagCompound().getString("id"));
 			if (c == null) {
 				return;
 			}
@@ -104,139 +115,59 @@ public class ItemSafariNet extends ItemFactory {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public IIcon getIcon(ItemStack stack, int pass) {
-
-		if (isEmpty(stack)) return _iconEmpty;
-		if (pass == 0)
-			return _iconBack;
-		else if (pass == 1)
-			return _iconMid;
-		else if (pass == 2) return _iconFront;
-		return null;
-	}
-
-	@Override
-	public void registerIcons(IIconRegister ir) {
-
-		_iconEmpty = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".empty");
-		_iconBack = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".back");
-		_iconMid = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".mid");
-		_iconFront = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".front");
-
-		itemIcon = _iconEmpty;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean requiresMultipleRenderPasses() {
-
-		return true;
-	}
-
-	@Override
-	public int getRenderPasses(int metadata) {
-
-		return 3;
-	}
-
-	private Random colorRand = new Random();
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getColorFromItemStack(ItemStack stack, int pass) {
-
-		if (stack.getItemDamage() == 0 && (stack.getTagCompound() == null)) {
-			return 16777215;
-		}
-		if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide")) {
-			World world = Minecraft.getMinecraft().theWorld;
-			colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * pass);
-			if (pass == 2)
-				return colorRand.nextInt();
-			else if (pass == 1)
-				return colorRand.nextInt();
-			else
-				return 16777215;
-		}
-		EntityEggInfo egg = getEgg(stack);
-
-		if (egg == null) {
-			return 16777215;
-		} else if (pass == 2) {
-			return egg.primaryColor;
-		} else if (pass == 1) {
-			return egg.secondaryColor;
-		} else {
-			return 16777215;
-		}
-	}
-
-	private EntityEggInfo getEgg(ItemStack safariStack) {
-
-		if (safariStack.getTagCompound() == null) {
-			return null;
-		}
-
-		for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
-			EntityEggInfo egg = handler.getEgg(safariStack);
-			if (egg != null) {
-				return egg;
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+	public EnumActionResult onItemUse(ItemStack itemstack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
-			return true;
+			return EnumActionResult.PASS;
 		} else if (isEmpty(itemstack)) {
-			return true;
+			return EnumActionResult.SUCCESS;
 		} else {
-			if (player != null && player.capabilities.isCreativeMode)
+			if (player != null && player.capabilities.isCreativeMode) {
 				itemstack = itemstack.copy();
-			return releaseEntity(itemstack, world, x, y, z, side) != null;
+				NBTTagCompound tag = itemstack.getTagCompound();
+				if (tag != null) {
+					tag.removeTag("UUID");
+					tag.removeTag("UUIDMost");
+					tag.removeTag("UUIDLeast");
+				}
+			}
+			return releaseEntity(itemstack, world, pos, side) != null ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 		}
 	}
 
-	public static Entity releaseEntity(ItemStack itemstack, World world, int x, int y, int z, int side) {
+	public static Entity releaseEntity(ItemStack itemstack, World world, BlockPos pos, EnumFacing side) {
 
 		if (world.isRemote) {
 			return null;
 		}
 
 		Entity spawnedCreature;
-		Block block = world.getBlock(x, y, z);
-		x += Facing.offsetsXForSide[side];
-		y += Facing.offsetsYForSide[side];
-		z += Facing.offsetsZForSide[side];
+		Block block = world.getBlockState(pos).getBlock();
+		pos = pos.offset(side);
 		double spawnOffsetY = 0.0D;
 
-		if (side == 1 && block.getRenderType() == 11) {
+		if (side == EnumFacing.UP && block instanceof BlockFence) {
 			spawnOffsetY = 0.5D;
 		}
 
 		if (itemstack.getItemDamage() != 0) {
-			spawnedCreature = spawnCreature(world, itemstack.getItemDamage(), x + 0.5D, y + spawnOffsetY, z + 0.5D);
+			spawnedCreature = spawnCreature(world, itemstack.getItemDamage(), pos.getX() + 0.5D, pos.getY() + spawnOffsetY, pos.getZ() + 0.5D);
 		} else {
-			spawnedCreature = spawnCreature(world, itemstack.getTagCompound(), x + 0.5D, y + spawnOffsetY, z + 0.5D, side);
+			spawnedCreature = spawnCreature(world, itemstack.getTagCompound(), pos.getX() + 0.5D, pos.getY() + spawnOffsetY, pos.getZ() + 0.5D, side);
 		}
 
 		if (spawnedCreature != null) {
 			if ((spawnedCreature instanceof EntityLiving)) {
 				int type = ((ItemSafariNet) itemstack.getItem()).type;
 				if (1 == (type & 1)) {
-					((EntityLiving) spawnedCreature).func_110163_bv();
+					((EntityLiving) spawnedCreature).enablePersistence();
 				}
 				if (itemstack.hasDisplayName()) {
-					((EntityLiving) spawnedCreature).setCustomNameTag(itemstack.getDisplayName());
+					spawnedCreature.setCustomNameTag(itemstack.getDisplayName());
 					if (2 == (type & 2))
-						((EntityLiving) spawnedCreature).setAlwaysRenderNameTag(true);
+						spawnedCreature.setAlwaysRenderNameTag(true);
 				}
 			}
 
@@ -251,7 +182,7 @@ public class ItemSafariNet extends ItemFactory {
 		return spawnedCreature;
 	}
 
-	private static Entity spawnCreature(World world, NBTTagCompound mobTag, double x, double y, double z, int side) {
+	private static Entity spawnCreature(World world, NBTTagCompound mobTag, double x, double y, double z, EnumFacing side) {
 
 		Entity e;
 		if (mobTag.getBoolean("hide")) {
@@ -260,27 +191,24 @@ public class ItemSafariNet extends ItemFactory {
 			for (IRandomMobProvider p : MFRRegistry.getRandomMobProviders()) {
 				mobs.addAll(p.getRandomMobs(world));
 			}
-			RandomMob mob = ((RandomMob) WeightedRandom.getRandomItem(world.rand, mobs));
+			RandomMob mob = WeightedRandom.getRandomItem(world.rand, mobs);
 			e = mob.getMob();
 			if (e instanceof EntityLiving && mob.shouldInit)
-				((EntityLiving) e).onSpawnWithEgg(null);
+				((EntityLiving) e).onInitialSpawn(world.getDifficultyForLocation(e.getPosition()), null);
 		} else {
 			NBTTagList pos = mobTag.getTagList("Pos", 6);
-			pos.func_150304_a(0, new NBTTagDouble(x));
-			pos.func_150304_a(1, new NBTTagDouble(y));
-			pos.func_150304_a(2, new NBTTagDouble(z));
+			pos.set(0, new NBTTagDouble(x));
+			pos.set(1, new NBTTagDouble(y));
+			pos.set(2, new NBTTagDouble(z));
 
 			e = EntityList.createEntityFromNBT(mobTag, world);
-			if (e != null) {
-				e.readFromNBT(mobTag);
-			}
 		}
 
 		if (e != null) {
-			int offsetX = Facing.offsetsXForSide[side];
-			int offsetY = side == 0 ? -1 : 0;
-			int offsetZ = Facing.offsetsZForSide[side];
-			AxisAlignedBB bb = e.boundingBox;
+			int offsetX = side.getFrontOffsetX();
+			int offsetY = side == EnumFacing.DOWN ? -1 : 0;
+			int offsetZ = side.getFrontOffsetZ();
+			AxisAlignedBB bb = e.getEntityBoundingBox();
 
 			e.setLocationAndAngles(x + (bb.maxX - bb.minX) * 0.5 * offsetX,
 				y + (bb.maxY - bb.minY) * 0.5 * offsetY,
@@ -292,7 +220,7 @@ public class ItemSafariNet extends ItemFactory {
 				((EntityLiving) e).playLivingSound();
 			}
 
-			Entity riddenByEntity = e.riddenByEntity;
+			Entity riddenByEntity = e.isBeingRidden() ? e.getPassengers().get(0) : null;
 			while (riddenByEntity != null) {
 				riddenByEntity.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360.0F, 0.0F);
 
@@ -301,7 +229,7 @@ public class ItemSafariNet extends ItemFactory {
 					((EntityLiving) riddenByEntity).playLivingSound();
 				}
 
-				riddenByEntity = riddenByEntity.riddenByEntity;
+				riddenByEntity = riddenByEntity.isBeingRidden() ? riddenByEntity.getPassengers().get(0) : null;
 			}
 		}
 
@@ -310,7 +238,7 @@ public class ItemSafariNet extends ItemFactory {
 
 	private static Entity spawnCreature(World world, int mobId, double x, double y, double z) {
 
-		if (!EntityList.entityEggs.containsKey(Integer.valueOf(mobId))) {
+		if (!EntityList.ENTITY_EGGS.containsKey(Integer.valueOf(mobId))) {
 			return null;
 		} else {
 			Entity e = EntityList.createEntityByID(mobId, world);
@@ -318,7 +246,7 @@ public class ItemSafariNet extends ItemFactory {
 			if (e != null) {
 				e.setLocationAndAngles(x, y, z, world.rand.nextFloat() * 360.0F, 0.0F);
 				if (e instanceof EntityLiving)
-					((EntityLiving) e).onSpawnWithEgg(null);
+					((EntityLiving) e).onInitialSpawn(world.getDifficultyForLocation(e.getPosition()), null);
 				world.spawnEntityInWorld(e);
 				if (e instanceof EntityLiving)
 					((EntityLiving) e).playLivingSound();
@@ -329,17 +257,17 @@ public class ItemSafariNet extends ItemFactory {
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity) {
+	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity, EnumHand hand) {
 
-		return captureEntity(itemstack, entity, player);
+		return captureEntity(itemstack, entity, player, hand);
 	}
 
 	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity) {
 
-		return captureEntity(itemstack, entity, null);
+		return captureEntity(itemstack, entity, null, null);
 	}
 
-	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity, EntityPlayer player) {
+	public static boolean captureEntity(ItemStack itemstack, EntityLivingBase entity, EntityPlayer player, EnumHand hand) {
 
 		if (entity.worldObj.isRemote) {
 			return false;
@@ -353,7 +281,7 @@ public class ItemSafariNet extends ItemFactory {
 			boolean flag = player != null && player.capabilities.isCreativeMode;
 			NBTTagCompound c = new NBTTagCompound();
 
-			synchronized (entity) {
+			synchronized (entity) { //TODO why is this block synchronized? as far as I can see it runs in the main thread
 				entity.writeToNBT(c);
 
 				c.setString("id", EntityList.getEntityString(entity));
@@ -365,7 +293,7 @@ public class ItemSafariNet extends ItemFactory {
 					entity.setDead();
 				if (flag | entity.isDead) {
 					flag = false;
-					if (--itemstack.stackSize > 0) {
+					if (--itemstack.stackSize > 0) { //TODO why is there this logic here and the one below to add to inventory when nets can't stack?
 						flag = true;
 						itemstack = itemstack.copy();
 					}
@@ -375,8 +303,10 @@ public class ItemSafariNet extends ItemFactory {
 						UtilInventory.dropStackInAir(entity.worldObj, entity, itemstack);
 					else if (flag) {
 						player.openContainer.detectAndSendChanges();
-						((EntityPlayerMP) player).sendContainerAndContentsToPlayer(player.openContainer,
+						((EntityPlayerMP) player).updateCraftingInventory(player.openContainer,
 							player.openContainer.getInventory());
+					} else if (player != null && hand != null){
+						player.setHeldItem(hand, itemstack);
 					}
 
 					return true;
@@ -419,14 +349,14 @@ public class ItemSafariNet extends ItemFactory {
 			return null;
 		if (s.getItemDamage() != 0) {
 			int mobId = s.getItemDamage();
-			if (!EntityList.entityEggs.containsKey(Integer.valueOf(mobId)))
+			if (!EntityList.ENTITY_EGGS.containsKey(Integer.valueOf(mobId)))
 				return null;
-			return (Class<?>) EntityList.IDtoClassMapping.get(mobId);
+			return (Class<?>) EntityList.ID_TO_CLASS.get(mobId);
 		} else {
 			String mobId = s.getTagCompound().getString("id");
-			if (!EntityList.stringToClassMapping.containsKey(mobId))
+			if (!EntityList.NAME_TO_CLASS.containsKey(mobId))
 				return null;
-			return (Class<?>) EntityList.stringToClassMapping.get(mobId);
+			return (Class<?>) EntityList.NAME_TO_CLASS.get(mobId);
 		}
 	}
 
@@ -435,8 +365,79 @@ public class ItemSafariNet extends ItemFactory {
 
 		super.getSubItems(item, subTypes);
 		if (item.equals(MFRThings.safariNetSingleItem)) {
-			subTypes.add(VillageTradeHandler.getHiddenNetStack());
+			subTypes.add(Zoologist.getHiddenNetStack());
 		}
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelResourceLocation empty = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":safari_net", "variant=" + variant + "_empty");
+		ModelResourceLocation full = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":safari_net", "variant=" + variant);
+
+		ModelLoader.setCustomMeshDefinition(this, stack -> {
+
+			if (ItemSafariNet.isEmpty(stack))
+				return empty;
+			return full;
+		});
+		ModelLoader.registerItemVariants(this, empty, full);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		final Random colorRand = new Random();
+		final IItemColor colorHandler = new IItemColor() {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+
+				if (stack.getItemDamage() == 0 && (stack.getTagCompound() == null)) {
+					return 16777215;
+				}
+				if (stack.getTagCompound() != null && stack.getTagCompound().getBoolean("hide")) {
+					World world = Minecraft.getMinecraft().theWorld;
+					colorRand.setSeed(world.getSeed() ^ (world.getTotalWorldTime() / (7 * 20)) * tintIndex);
+					if (tintIndex == 2)
+						return colorRand.nextInt();
+					else if (tintIndex == 1)
+						return colorRand.nextInt();
+					else
+						return 16777215;
+				}
+				EntityList.EntityEggInfo egg = getEgg(stack);
+
+				if (egg == null) {
+					return 16777215;
+				} else if (tintIndex == 2) {
+					return egg.primaryColor;
+				} else if (tintIndex == 1) {
+					return egg.secondaryColor;
+				} else {
+					return 16777215;
+				}
+			}
+
+			private EntityList.EntityEggInfo getEgg(ItemStack safariStack) {
+
+				if (safariStack.getTagCompound() == null) {
+					return null;
+				}
+
+				for (IMobEggHandler handler : MFRRegistry.getModMobEggHandlers()) {
+					EntityList.EntityEggInfo egg = handler.getEgg(safariStack);
+					if (egg != null) {
+						return egg;
+					}
+				}
+
+				return null;
+			}
+		};
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, this);
+	}
 }

@@ -2,108 +2,124 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockRailPassengerDropoff extends BlockFactoryRail {
 
 	public BlockRailPassengerDropoff() {
 
 		super(true, false);
-		setBlockName("mfr.rail.passenger.dropoff");
+		setUnlocalizedName("mfr.rail.passenger.dropoff");
+		setRegistryName(MineFactoryReloadedCore.modId, "rail_passenger_dropoff");
 	}
 
 	@Override
-	public void onMinecartPass(World world, EntityMinecart minecart, int x, int y, int z) {
+	public void onMinecartPass(World world, EntityMinecart minecart, BlockPos pos) {
 
-		if (world.isRemote)
+		if (world.isRemote || minecart.getPassengers().size() < 1)
 			return;
 
-		Class<? extends EntityLivingBase> target = isPowered(world, x, y, z) ? EntityLiving.class : EntityPlayer.class;
-		if (!target.isInstance(minecart.riddenByEntity))
-			return;
+		Class<? extends EntityLivingBase> target = isPowered(world, pos) ? EntityLiving.class : EntityPlayer.class;
+		for (int i = minecart.getPassengers().size(); i-- > 0; ) {
+			Entity entity = minecart.getPassengers().get(i);
+			if (!target.isInstance(entity))
+				continue;
 
-		Entity player = minecart.riddenByEntity;
-		AxisAlignedBB dropCoords = findSpaceForPlayer(player, x, y, z, world);
-		if (dropCoords == null)
-			return;
+			AxisAlignedBB dropCoords = findSpaceForEntity(entity, pos, world);
+			if (dropCoords == null)
+				continue;
 
-		player.mountEntity(null);
-		MineFactoryReloadedCore.proxy.movePlayerToCoordinates((EntityLivingBase) player,
-			dropCoords.minX + (dropCoords.maxX - dropCoords.minX) / 2,
-			dropCoords.minY,
-			dropCoords.minZ + (dropCoords.maxZ - dropCoords.minZ) / 2);
+			entity.dismountRidingEntity();
+			entity.setPositionAndUpdate(dropCoords.minX, dropCoords.minY, dropCoords.minZ);
+		}
 	}
 
-	private AxisAlignedBB findSpaceForPlayer(Entity entity, int x, int y, int z, World world) {
+	private AxisAlignedBB findSpaceForEntity(Entity entity, BlockPos pos, World world) {
 
-		final int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt();
+		final int searchX = MFRConfig.passengerRailSearchMaxHorizontal.getInt() * 2;
 		final int searchY = MFRConfig.passengerRailSearchMaxVertical.getInt() * 2;
 
-		AxisAlignedBB bb = entity.boundingBox.getOffsetBoundingBox(0, 0, 0);
+		AxisAlignedBB bb = entity.getEntityBoundingBox();
 
 		final double halfX = (bb.maxX - bb.minX) / 2;
 		final double halfZ = (bb.maxZ - bb.minZ) / 2;
 
-		bb.offset(x - bb.minX + .5 - halfX, y - bb.minY + 0.05, z - bb.minZ + .5 - halfZ);
+		bb = bb.offset(
+				pos.getX() - bb.minX + .5 - halfX,
+				pos.getY() - bb.minY + 0.09375,
+				pos.getZ() - bb.minZ + .5 - halfZ
+		); // center on a block, raise by 3/32
 
-		AxisAlignedBB home = bb.copy();
-
-		bb.offset(0, -(searchY >> 1), 0);
+		bb = bb.offset(0, -(searchY >> 1), 0);
 		for (int offsetY = -searchY; offsetY <= searchY; offsetY++) {
-			bb.offset(-searchX, 0, 0);
+			bb = bb.offset(-(searchX >> 1), 0, 0);
 			for (int offsetX = -searchX; offsetX <= searchX; offsetX++) {
-				bb.offset(0, 0, -searchX);
+				bb = bb.offset(0, 0, -(searchX >> 1));
 				for (int offsetZ = -searchX; offsetZ <= searchX; offsetZ++) {
 
-					if (world.func_147461_a(bb).isEmpty()
-							&& !isBadBlockToStandIn(world, bb)
-							&& !world.isAnyLiquid(bb)) {
+					if (!isBadBlockToStandIn(world, bb, entity) &&
+							world.getEntitiesWithinAABBExcludingEntity(entity, bb).isEmpty()) {
 						int targetX = MathHelper.floor_double(bb.minX + halfX);
 						int targetY = MathHelper.floor_double(bb.minY);
 						int targetZ = MathHelper.floor_double(bb.minZ + halfZ);
 
-						if (!isBadBlockToStandOn(world, targetX, targetY - 1, targetZ))
-							return bb;
+						if (!isBadBlockToStandOn(world, new BlockPos(targetX, targetY, targetZ))) // may be on top of a slab or other thin block
+							return bb.offset(halfX, 0, halfZ);
+
+						targetY = MathHelper.floor_double(bb.minY - 0.15625);
+						if (!isBadBlockToStandOn(world, new BlockPos(targetX, targetY, targetZ)))
+							return bb.offset(halfX, 0, halfZ);
 					}
-					bb.offset(0, 0, 1);
+					bb = bb.offset(0, 0, 0.5);
 				}
-				bb.offset(1, 0, -searchX - 1);
+				bb = bb.offset(0.5, 0, -(searchX >> 1) - 0.5);
 			}
-			bb.offset(-searchX - 1, 0.5, 0);
+			bb = bb.offset(-(searchX >> 1) - 0.5, 0.5, 0);
 		}
 
 		return null;
 	}
 
-	private boolean isBadBlockToStandOn(World world, int x, int y, int z) {
+	private boolean isBadBlockToStandOn(World world, BlockPos pos) {
 
-		Block block = world.getBlock(x, y, z);
-		if (block.isAir(world, x, y, z)
-				|| null == block.getCollisionBoundingBoxFromPool(world, x, y, z)) {
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		if (block.isAir(state, world, pos) ||
+				block.isBurning(world, pos) ||
+				BlockRailBase.isRailBlock(state) ||
+				NULL_AABB == state.getCollisionBoundingBox(world, pos)) {
 			return true;
 		}
 		return false;
 	}
 
-	private boolean isBadBlockToStandIn(World world, AxisAlignedBB bb) {
+	private List<AxisAlignedBB> collisionList = new ArrayList<>();
+
+	private boolean isBadBlockToStandIn(World world, AxisAlignedBB bb, Entity entity) {
 
 		int i = MathHelper.floor_double(bb.minX);
-		int j = MathHelper.floor_double(bb.maxX + 1.0D);
-		int k = MathHelper.floor_double(bb.minY);
-		int l = MathHelper.floor_double(bb.maxY + 1.0D);
+		int j = MathHelper.floor_double(bb.maxX) + 1;
+		int k = MathHelper.floor_double(bb.minY) - 1; // fences.
+		int l = MathHelper.floor_double(bb.maxY) + 1;
 		int i1 = MathHelper.floor_double(bb.minZ);
-		int j1 = MathHelper.floor_double(bb.maxZ + 1.0D);
+		int j1 = MathHelper.floor_double(bb.maxZ) + 1;
 
 		if (bb.minX < 0.0D) {
 			--i;
@@ -116,24 +132,40 @@ public class BlockRailPassengerDropoff extends BlockFactoryRail {
 		if (bb.minZ < 0.0D) {
 			--i1;
 		}
+		BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
 
 		for (int k1 = i; k1 < j; ++k1) {
 			for (int l1 = k; l1 < l; ++l1) {
 				for (int i2 = i1; i2 < j1; ++i2) {
-					Block block = world.getBlock(k1, l1, i2);
+					IBlockState state = world.getBlockState(pos.setPos(k1, l1, i2));
+					Block block = state.getBlock();
 
-					if (block == Blocks.fire ||
-							block.getMaterial().isLiquid() ||
-							block.isBurning(world, k1, l1, i2) ||
-							BlockRailBase.func_150051_a(block)) {
+					if (block == Blocks.FIRE ||
+							state.getMaterial().isLiquid() ||
+							block.isBurning(world, pos) ||
+							BlockRailBase.isRailBlock(state)) {
+						pos.release();
+						return true;
+					}
 
+					state.addCollisionBoxToList(world, pos, bb, collisionList, entity);
+					if (!collisionList.isEmpty()) {
+						collisionList.clear();
+						pos.release();
 						return true;
 					}
 				}
 			}
 		}
 
+		pos.release();
 		return false;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		registerRailModel(this, "passenger_dropoff");
+	}
 }

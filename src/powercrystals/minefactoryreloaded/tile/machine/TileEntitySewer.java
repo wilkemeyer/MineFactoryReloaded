@@ -1,14 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.MathHelper;
-import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.List;
-
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -17,13 +11,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSewer;
@@ -31,7 +29,9 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerSewer;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntitySewer extends TileEntityFactoryInventory implements ITankContainerBucketable {
+import java.util.List;
+
+public class TileEntitySewer extends TileEntityFactoryInventory {
 
 	private boolean _jammed;
 	private int _tick;
@@ -41,7 +41,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 
 		super(Machine.Sewer);
 		createHAM(this, 0, 1, 0, false);
-		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		_areaManager.setOverrideDirection(EnumFacing.UP);
 		_tanks[0].setLock(FluidRegistry.getFluid("sewage"));
 	}
 
@@ -65,21 +65,22 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 		if (worldObj.isRemote) {
 			return;
 		}
 		_tick++;
 
 		if (_nextSewerCheckTick <= worldObj.getTotalWorldTime()) {
-			Area a = new Area(BlockPosition.fromRotateableTile(this), _areaManager.getRadius(), 2, 2);
+			Area a = new Area(pos, _areaManager.getRadius(), 2, 2);
 			_jammed = false;
-			for (BlockPosition bp : a.getPositionsBottomFirst()) {
-				if (worldObj.getBlock(bp.x, bp.y, bp.z).equals(_machine.getBlock()) &&
-						worldObj.getBlockMetadata(bp.x, bp.y, bp.z) == _machine.getMeta() &&
-						!(bp.x == xCoord && bp.y == yCoord && bp.z == zCoord)) {
+			for (BlockPos bp : a.getPositionsBottomFirst()) {
+				IBlockState state = worldObj.getBlockState(bp);
+				if (state.getBlock().equals(_machine.getBlock()) &&
+						state.getValue(BlockFactoryMachine.TYPE).getMeta() == _machine.getMeta() &&
+						!(bp.equals(pos))) {
 					_jammed = true;
 					break;
 				}
@@ -93,7 +94,8 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 			double massFound = 0;
 			long worldTime = worldObj.getTotalWorldTime();
 			AxisAlignedBB box = _areaManager.getHarvestArea().toAxisAlignedBB();
-			l: {
+			l:
+			{
 				int maxAmount = _tanks[1].getSpace();
 				if (maxAmount <= 0) {
 					break l;
@@ -115,7 +117,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 						continue;
 					}
 					o.getEntityData().setLong("mfr:sewerTime", worldTime + 30);
-					massFound += Math.pow(o.boundingBox.getAverageEdgeLength(), 2);
+					massFound += Math.pow(o.getEntityBoundingBox().getAverageEdgeLength(), 2);
 				}
 			}
 
@@ -126,13 +128,15 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		tag.setBoolean("jammed", _jammed);
 		tag.setByte("tick", (byte) _tick);
 		tag.setLong("next", _nextSewerCheckTick);
+
+		return tag;
 	}
 
 	@Override
@@ -146,34 +150,10 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	protected FluidTankCore[] createTanks() {
 
-		return 0;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	protected FluidTankAdv[] createTanks() {
-
-		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME),
-				new FluidTankAdv(BUCKET_VOLUME * 4) };
+		return new FluidTankCore[] { new FluidTankCore(BUCKET_VOLUME),
+				new FluidTankCore(BUCKET_VOLUME * 4) };
 	}
 
 	@Override
@@ -183,33 +163,39 @@ public class TileEntitySewer extends TileEntityFactoryInventory implements ITank
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-
-		return false;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-
-		return true;
-	}
-
-	@Override
 	public int getUpgradeSlot() {
 
 		return 0;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return slot == 0 && isUsableAugment(itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return true;
+	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		return 0;
 	}
 
 }

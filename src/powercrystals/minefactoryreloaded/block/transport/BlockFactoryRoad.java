@@ -1,54 +1,55 @@
 package powercrystals.minefactoryreloaded.block.transport;
 
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import cofh.core.util.CoreUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactoryRoad;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockFactoryRoad extends Block {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-	private IIcon _iconRoad;
-	private IIcon _iconRoadOff;
-	private IIcon _iconRoadOn;
+public class BlockFactoryRoad extends Block implements IInitializer, IModelRegister {
 
+	private static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
+	
 	public BlockFactoryRoad() {
 
-		super(Material.rock);
+		super(Material.ROCK);
 		setHardness(2.0F);
-		setBlockName("mfr.road");
+		setUnlocalizedName("mfr.road");
 		setResistance(25.0F);
-		setStepSound(Blocks.stone.stepSound);
+		setSoundType(SoundType.STONE);
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "road");
 	}
 
-    @Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-
-        final float f = 1 / 128f;
-        return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1 - f, z + 1);
-    }
-
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity e) {
-
-		if (!e.canTriggerWalking())
-			return;
-		if (e.getEntityData().getInteger("mfr:r") == e.ticksExisted)
-			return;
-		e.getEntityData().setInteger("mfr:r", e.ticksExisted);
+	// TODO: continue to verify this is called every tick by walking entities (last check: 1.10.2)
+	public void onEntityWalk(World world, BlockPos pos, Entity e) {
 
 		final double boost = .99 * slipperiness;
 		final double minSpeed = 1e-9;
@@ -60,97 +61,161 @@ public class BlockFactoryRoad extends Block {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	protected BlockStateContainer createBlockState() {
 
-		_iconRoad = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-		_iconRoadOff = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".light.off");
-		_iconRoadOn = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".light.on");
+		return new BlockStateContainer(this, VARIANT);
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta) {
-
-		switch (meta) {
-		case 1:
-		case 3:
-			return _iconRoadOff;
-		case 2:
-		case 4:
-			return _iconRoadOn;
-		default:
-			return _iconRoad;
-		}
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(VARIANT).getMetadata();
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
 
 		if (!world.isRemote) {
-			int meta = world.getBlockMetadata(x, y, z);
-			boolean isPowered = CoreUtils.isRedstonePowered(world, x, y, z);
-			int newMeta = -1;
+			Variant variant = state.getValue(VARIANT);
+			boolean isPowered = CoreUtils.isRedstonePowered(world, pos);
+			Variant newVariant = null;
 
-			if (meta == 1 && isPowered) {
-				newMeta = 2;
+			if (variant == Variant.LIGHT_OFF && isPowered) {
+				newVariant = Variant.LIGHT_ON;
 			}
-			else if (meta == 2 && !isPowered) {
-				newMeta = 1;
+			else if (variant == Variant.LIGHT_ON && !isPowered) {
+				newVariant = Variant.LIGHT_OFF;
 			}
-			else if (meta == 3 && !isPowered) {
-				newMeta = 4;
+			else if (variant == Variant.LIGHT_INVERTED_OFF && !isPowered) {
+				newVariant = Variant.LIGHT_INVERTED_ON;
 			}
-			else if (meta == 4 && isPowered) {
-				newMeta = 3;
+			else if (variant == Variant.LIGHT_INVERTED_ON && isPowered) {
+				newVariant = Variant.LIGHT_INVERTED_OFF;
 			}
 
-			if (newMeta >= 0) {
-				world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+			if (newVariant != null) {
+				world.setBlockState(pos, state.withProperty(VARIANT, newVariant));
 			}
 		}
 	}
 
 	@Override
-	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {
+	public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type) {
 
 		return false;
 	}
 
 	@Override
-	public int damageDropped(int meta) {
+	public int damageDropped(IBlockState state) {
 
-		switch (meta) {
-		case 1:
-		case 2:
-			return 1;
-		case 3:
-		case 4:
-			return 4;
-		default:
-			return 0;
+		Variant variant = state.getValue(VARIANT);
+
+		switch (variant) {
+			case LIGHT_OFF:
+			case LIGHT_ON:
+				return Variant.LIGHT_OFF.getMetadata();
+			case LIGHT_INVERTED_ON:
+			case LIGHT_INVERTED_OFF:
+				return Variant.LIGHT_INVERTED_ON.getMetadata();
+			default:
+				return variant.getMetadata();
 		}
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		int meta = world.getBlockMetadata(x, y, z);
-		return meta == 2 | meta == 4 ? 15 : 0;
+		Variant variant = state.getValue(VARIANT);
+		return variant == Variant.LIGHT_ON || variant == Variant.LIGHT_INVERTED_ON ? 15 : 0;
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		onNeighborBlockChange(world, x, y, z, this);
+		neighborChanged(state, world, pos, this);
 	}
 
 	@Override
-	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
 
 		if (entity instanceof EntityDragon) {
 			return false;
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactoryRoad(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "variant", Variant.NAMES);
+	}
+
+	public enum Variant implements IStringSerializable {
+		
+		NORMAL(0, "normal"),
+		LIGHT_OFF(1, "light_off"),
+		LIGHT_ON(2, "light_on"),
+		LIGHT_INVERTED_OFF(3, "light_inverted_off"),
+		LIGHT_INVERTED_ON(4, "light_inverted_on");
+
+		private final int meta;
+		private final String name;
+
+		private static final Variant[] META_LOOKUP = new Variant[values().length];
+		public static final String[] NAMES = new String[values().length]; 
+		
+		Variant(int meta, String name) {
+
+			this.meta = meta;
+			this.name = name;
+		}
+
+		public static Variant byMetadata(int meta) {
+			return META_LOOKUP[meta];
+		}
+		
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		private int getMetadata() {
+			
+			return meta;
+		}
+
+		static {
+			for (Variant variant : values()) {
+				META_LOOKUP[variant.getMetadata()] = variant;
+				NAMES[variant.meta] = variant.name;
+			}
+		}
 	}
 }

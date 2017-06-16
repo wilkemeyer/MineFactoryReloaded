@@ -1,6 +1,5 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-
 import cofh.lib.gui.slot.SlotViewOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,7 +62,7 @@ public class ContainerNeedlegun extends Container
 		if (UtilInventory.stacksEqual(player.inventory.mainInventory[_nsi], _ncw.getStack(), false))
 			player.inventory.mainInventory[_nsi] = _ncw.getStack();
 		else
-			player.func_146097_a(((Slot)inventorySlots.get(0)).getStack(), false, true);
+			player.dropItem(inventorySlots.get(0).getStack(), false, true);
 		super.onContainerClosed(player);
 	}
 }

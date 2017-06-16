@@ -4,24 +4,26 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.IUseHandler;
 
 public class DrinkUseHandler implements IUseHandler {
 	@Override
-	public boolean canUse(ItemStack item, EntityLivingBase entity) {
+	public boolean canUse(ItemStack item, EntityLivingBase entity, EnumHand hand) {
 		return entity instanceof EntityPlayer && isUsable(item);
 	}
 
 	@Override
-	public ItemStack onTryUse(ItemStack item, World world, EntityLivingBase entity) {
-		if (canUse(item, entity))
-			((EntityPlayer)entity).setItemInUse(item, item.getMaxItemUseDuration());
+	public ItemStack onTryUse(ItemStack item, World world, EntityLivingBase entity, EnumHand hand) {
+		if (canUse(item, entity, hand))
+			entity.setActiveHand(hand);
 		return item;
 	}
 
@@ -37,30 +39,31 @@ public class DrinkUseHandler implements IUseHandler {
 
 	@Override
 	public EnumAction useAction(ItemStack item) {
-		return isUsable(item) ? EnumAction.drink : EnumAction.none;
+		return isUsable(item) ? EnumAction.DRINK : EnumAction.NONE;
 	}
 
 	@Override
-	public ItemStack onUse(ItemStack item, EntityLivingBase entity) {
+	public ItemStack onUse(ItemStack item, EntityLivingBase entity, EnumHand hand) {
+
 		String liquid = getFluidName(item);
 		ItemStack r = item;
 		if (item.stackSize == 1 && liquid != null &&
 				entity instanceof EntityPlayer && isDrinkableLiquid(liquid)) {
 			EntityPlayer player = (EntityPlayer)entity;
+			FluidStack stack;
 			if (!player.capabilities.isCreativeMode) {
 				ItemStack drop = item.splitStack(1);
-				((IFluidContainerItem)item.getItem()).drain(drop, FluidContainerRegistry.BUCKET_VOLUME, true);
-				if (drop.getItem().hasContainerItem(drop)) {
-					drop = drop.getItem().getContainerItem(drop);
-					if (drop != null && drop.isItemStackDamageable() && drop.getItemDamage() > drop.getMaxDamage())
-						drop = null;
-				}
+				IFluidHandler fluidHandler = drop.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				stack = fluidHandler.drain(Fluid.BUCKET_VOLUME, true);
 				if (item.stackSize < 1)
 					item = drop;
 				else if (drop != null && !player.inventory.addItemStackToInventory(drop))
-					player.func_146097_a(drop, false, true);
+					player.dropItem(drop, false, true);
+			} else {
+				IFluidHandler fluidHandler = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				stack = fluidHandler.drain(Fluid.BUCKET_VOLUME, false);
 			}
-			MFRRegistry.getLiquidDrinkHandlers().get(liquid).onDrink(player);
+			MFRRegistry.getLiquidDrinkHandlers().get(liquid).onDrink(player, stack);
 		}
 		if (item == null)
 		{
@@ -71,9 +74,16 @@ public class DrinkUseHandler implements IUseHandler {
 	}
 
 	public String getFluidName(ItemStack item) {
-		FluidStack liquid = ((IFluidContainerItem)item.getItem()).getFluid(item);
-		if (liquid == null || liquid.amount < FluidContainerRegistry.BUCKET_VOLUME) return null;
-		return liquid.getFluid().getName();
+
+		if (item.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+			IFluidHandler fluidHandler = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			if (fluidHandler.getTankProperties().length > 0) {
+				FluidStack liquid = fluidHandler.getTankProperties()[0].getContents();
+				if (liquid != null && liquid.amount >= Fluid.BUCKET_VOLUME)
+					return liquid.getFluid().getName();
+			}
+		}
+		return null;
 	}
 
 	public boolean isDrinkableLiquid(String name) {

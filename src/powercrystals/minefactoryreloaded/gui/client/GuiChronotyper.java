@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChronotyper;
 
@@ -43,7 +44,7 @@ public class GuiChronotyper extends GuiFactoryPowered
 	{
 		if(button.id == 1)
 		{
-			Packets.sendToServer(Packets.ChronotyperButton, _tileEntity);
+			MFRPacket.sendChronotyperButtonToServer(_tileEntity);
 		}
 	}
 }

@@ -6,13 +6,22 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import net.minecraft.world.storage.loot.LootTableList;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
+import javax.annotation.Nullable;
+
 public class EntityPinkSlime extends EntitySlime
 {
+
+	public static final ResourceLocation PINK_SLIME = new ResourceLocation(MineFactoryReloadedCore.modId + ":entities/pink_slime");
+
 	public EntityPinkSlime(World world)
 	{
 		super(world);
@@ -25,11 +34,12 @@ public class EntityPinkSlime extends EntitySlime
 		return this.rand.nextInt(10) + 5;
 	}
 
+	@Nullable
 	@Override
-	protected Item getDropItem()
-	{
+	protected ResourceLocation getLootTable() {
+
 		boolean drop = MFRConfig.largeSlimesDrop.getBoolean() ? getSlimeSize() > 1 : getSlimeSize() == 1;
-		return drop ? MFRThings.pinkSlimeItem : Item.getItemById(0);
+		return drop ? PINK_SLIME : LootTableList.EMPTY;
 	}
 
 	@Override
@@ -57,9 +67,9 @@ public class EntityPinkSlime extends EntitySlime
 	}
 
 	@Override
-	protected String getSlimeParticle()
-	{
-		return "";
+	protected boolean spawnCustomParticles() {
+		
+		return true;
 	}
 
 	@Override

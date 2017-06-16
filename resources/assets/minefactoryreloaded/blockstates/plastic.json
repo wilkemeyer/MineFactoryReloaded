@@ -1,0 +1,45 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all"
+	},
+	"variants": {
+		"variant": {
+			"plain": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic"
+				}
+			},
+			"paver": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic.paver"
+				}
+			},
+			"column": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic.column"
+				}
+			},
+			"bricks_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic.bricks_large"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic.chiseled"
+				}
+			},
+			"road": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic.road"
+				}
+			},
+			"bricks": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.plastic.bricks"
+				}
+			}
+		}
+	}
+}

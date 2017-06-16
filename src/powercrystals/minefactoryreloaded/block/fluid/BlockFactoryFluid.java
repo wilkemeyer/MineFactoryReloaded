@@ -1,53 +1,47 @@
 package powercrystals.minefactoryreloaded.block.fluid;
 
-import cofh.core.fluid.BlockFluidCoFHBase;
-import cofh.lib.util.RegistryUtils;
+import cofh.core.fluid.BlockFluidCore;
 import cofh.lib.util.WeightedRandomItemStack;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.core.UtilInventory;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDecorative { // TODO: convert to BlockFluidFinite
+import java.util.Random;
+
+public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorative { // TODO: convert to BlockFluidFinite
 
 	private static DamageSource steam = new DamageSource("steam"); {
 		steam.setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
 		steam.setDamageIsAbsolute();
 	}
-	public static final Material material = new MaterialLiquid(MapColor.waterColor);
+	public static final Material material = new MaterialLiquid(MapColor.WATER);
 
-	@SideOnly(Side.CLIENT)
-	protected IIcon _iconFlowing;
-	@SideOnly(Side.CLIENT)
-	protected IIcon _iconStill;
-	@SideOnly(Side.CLIENT)
 	public int color;
 	protected String fluidName;
 
@@ -61,23 +55,23 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 
 	public BlockFactoryFluid(String liquidName) {
 
-		this(liquidName, Material.water);
+		this(liquidName, Material.WATER);
 	}
 
 	public BlockFactoryFluid(String liquidName, Material material) {
 
 		super(ensureFluid(liquidName), material, liquidName);
-		setBlockName("mfr." + liquidName + ".still");
 		setHardness(100.0F);
 		setLightOpacity(3);
 		setDisplaceFluids(true);
 		fluidName = liquidName;
+		setRegistryName(MineFactoryReloadedCore.modId, liquidName + "_fluid");
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+		super.onEntityCollidedWithBlock(world, pos, state, entity);
 
 		if (entity instanceof EntityLivingBase) {
 			NBTTagCompound data = entity.getEntityData();
@@ -87,99 +81,99 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 			data.setLong("mfr:fluidTimer" + fluidName, world.getTotalWorldTime() + 40);
 
 			EntityLivingBase ent = (EntityLivingBase) entity;
-			if (this == MFRThings.milkLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 6 * 20, 0, true));
+			if (this == MFRFluids.milkLiquid) {
+				ent.addPotionEffect(new PotionEffect(MobEffects.HASTE, 6 * 20, 0, true, false));
 			}
-			else if (this == MFRThings.sludgeLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.wither.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.weakness.id, 12 * 20, 0, true));
-				ent.addPotionEffect(new PotionEffect(Potion.confusion.id, 16 * 20, 0, true));
+			else if (this == MFRFluids.sludgeLiquid) {
+				ent.addPotionEffect(new PotionEffect(MobEffects.WITHER, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 12 * 20, 0, true, false));
+				ent.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 16 * 20, 0, true, false));
 			}
-			else if (this == MFRThings.sewageLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.hunger.id, 12 * 20, 0, true));
-				ent.addPotionEffect(new PotionEffect(Potion.poison.id, 12 * 20, 0));
-				ent.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 12 * 20, 0, true));
+			else if (this == MFRFluids.sewageLiquid) {
+				ent.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 12 * 20, 0, true, false));
+				ent.addPotionEffect(new PotionEffect(MobEffects.POISON, 12 * 20, 0));
+				ent.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 12 * 20, 0, true, false));
 			}
-			else if (this == MFRThings.essenceLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.nightVision.id, 60 * 20, 0, true));
+			else if (this == MFRFluids.essenceLiquid) {
+				ent.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 60 * 20, 0, true, false));
 			}
-			else if (this == MFRThings.biofuelLiquid) {
-				ent.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 12 * 20, 0, true));
+			else if (this == MFRFluids.biofuelLiquid) {
+				ent.addPotionEffect(new PotionEffect(MobEffects.SPEED, 12 * 20, 0, true, false));
 			}
-			else if (this == MFRThings.steamFluid) {
+			else if (this == MFRFluids.steamFluid) {
 				ent.attackEntityFrom(steam, 6);
 			}
 		}
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		int light = super.getLightValue(world, x, y, z);
+		int light = super.getLightValue(state, world, pos);
 		if (maxScaledLight != 0)
 			light = Math.max(light, 2);
 		return light;
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		super.onBlockAdded(world, x, y, z);
-		checkCanStay(world, x, y, z, world.rand);
+		super.onBlockAdded(world, pos, state);
+		checkCanStay(world, pos, world.rand);
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) {
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
-		checkCanStay(world, x, y, z, rand);
-		super.updateTick(world, x, y, z, rand);
+		checkCanStay(world, pos, rand);
+		super.updateTick(world, pos, state, rand);
 	}
 
-	protected void checkCanStay(World world, int x, int y, int z, Random rand) {
+	protected void checkCanStay(World world, BlockPos pos, Random rand) {
 
 		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
-		l: if (world.provider.isHellWorld)
+		l: if (BiomeDictionary.isBiomeOfType(world.getBiome(pos), BiomeDictionary.Type.NETHER))
 		{
-			if (!isSourceBlock(world, x, y, z)) {
-				if (world.setBlockToAir(x, y, z))
+			if (!isSourceBlock(world, pos)) {
+				if (world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2))
 					return;
 				break l;
 			}
 			ItemStack drop = null;
-			Block block = Blocks.air;
-			if (this == MFRThings.milkLiquid) {
+			Block block = Blocks.AIR;
+			if (this == MFRFluids.milkLiquid) {
 				if (rand.nextInt(50) == 0)
-					drop = new ItemStack(Items.dye, rand.nextInt(2), 15);
+					drop = new ItemStack(Items.DYE, rand.nextInt(2), 15);
 			}
-			else if (this == MFRThings.sludgeLiquid) {
+			else if (this == MFRFluids.sludgeLiquid) {
 				drop = ((WeightedRandomItemStack) WeightedRandom.
 						getRandomItem(rand, MFRRegistry.getSludgeDrops())).getStack();
 			}
-			else if (this == MFRThings.sewageLiquid) {
+			else if (this == MFRFluids.sewageLiquid) {
 				drop = new ItemStack(MFRThings.fertilizerItem, 1 + rand.nextInt(2));
 			}
-			else if (this == MFRThings.essenceLiquid) {
-				if (world.setBlockToAir(x, y, z)) {
+			else if (this == MFRFluids.essenceLiquid) {
+				if (world.setBlockToAir(pos)) {
 					int i = rand.nextInt(5) + 10;
 					while (i > 0) {
 						int j = EntityXPOrb.getXPSplit(i);
 						i -= j;
 						world.spawnEntityInWorld(new EntityXPOrb(world,
-								x + rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(), j));
+								pos.getX() + rand.nextDouble(), pos.getY() + rand.nextDouble(), pos.getZ() + rand.nextDouble(), j));
 					}
-					fizz(world, x, y, z, rand);
+					fizz(world, pos, rand);
 					return;
 				}
 				break l;
 			}
-			else if (this == MFRThings.meatLiquid) {
+			else if (this == MFRFluids.meatLiquid) {
 				if (rand.nextInt(5) != 0)
 					drop = new ItemStack(MFRThings.meatIngotRawItem, rand.nextInt(2));
 				else
 					drop = new ItemStack(MFRThings.meatIngotCookedItem, rand.nextInt(2));
 			}
-			else if (this == MFRThings.pinkSlimeLiquid) {
+			else if (this == MFRFluids.pinkSlimeLiquid) {
 				if (rand.nextBoolean())
 					drop = new ItemStack(MFRThings.pinkSlimeItem, rand.nextInt(3));
 				else if (rand.nextInt(5) != 0)
@@ -187,35 +181,35 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 				else
 					drop = new ItemStack(MFRThings.meatNuggetCookedItem, rand.nextInt(2));
 			}
-			else if (this == MFRThings.chocolateMilkLiquid) {
+			else if (this == MFRFluids.chocolateMilkLiquid) {
 				if (rand.nextBoolean())
-					drop = new ItemStack(Items.dye, rand.nextInt(2), 3);
+					drop = new ItemStack(Items.DYE, rand.nextInt(2), 3);
 			}
-			else if (this == MFRThings.mushroomSoupLiquid) {
+			else if (this == MFRFluids.mushroomSoupLiquid) {
 				if (rand.nextInt(5) == 0)
-					block = (rand.nextBoolean() ? Blocks.brown_mushroom : Blocks.red_mushroom);
+					block = (rand.nextBoolean() ? Blocks.BROWN_MUSHROOM : Blocks.RED_MUSHROOM);
 				else if (rand.nextBoolean())
-					drop = new ItemStack(Blocks.brown_mushroom, rand.nextInt(2));
+					drop = new ItemStack(Blocks.BROWN_MUSHROOM, rand.nextInt(2));
 				else
-					drop = new ItemStack(Blocks.red_mushroom, rand.nextInt(2));
+					drop = new ItemStack(Blocks.RED_MUSHROOM, rand.nextInt(2));
 			}
-			if (world.setBlock(x, y, z, block, 0, 3)) {
-				if (drop != null && drop.stackSize > 0)
-					this.dropBlockAsItem(world, x, y, z, drop);
+			if (world.setBlockState(pos, block.getDefaultState(), 3)) {
+				if (drop != null && drop.stackSize > 0) {
+					UtilInventory.dropStackInAir(world, pos, drop);
+				}
 
-				fizz(world, x, y, z, rand);
+				fizz(world, pos, rand);
 				return;
 			}
 		}
 	}
 
-	protected void fizz(World world, int x, int y, int z, Random rand) {
+	protected void fizz(World world, BlockPos pos, Random rand) {
 
-		world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D,
-			"random.fizz", 0.5F, 2.6F + (rand.nextFloat() - rand.nextFloat()) * 0.8F);
+		world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (rand.nextFloat() - rand.nextFloat()) * 0.8F);
 		for (int l = 0; l < 8; ++l) {
-			world.spawnParticle("largesmoke",
-				x + rand.nextDouble(), y + rand.nextDouble(), z + rand.nextDouble(),
+			world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
+				pos.getX() + rand.nextDouble(), pos.getY() + rand.nextDouble(), pos.getZ() + rand.nextDouble(),
 				0.0D, 0.0D, 0.0D);
 		}
 	}
@@ -223,33 +217,6 @@ public class BlockFactoryFluid extends BlockFluidCoFHBase implements IRedNetDeco
 	@Override
 	public String getUnlocalizedName() {
 
-		return "fluid." + this.unlocalizedName;
+		return "fluid.mfr." + fluidName.replace("_", "") + ".still";
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		String pre = "minefactoryreloaded:", name = getUnlocalizedName();
-		if (!RegistryUtils.blockTextureExists(pre + name)) {
-			pre += "fluid/";
-		}
-		setIcons(ir.registerIcon(name = pre + name), ir.registerIcon(name.replace(".still", ".flowing")));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setIcons(IIcon still, IIcon flowing) {
-
-		_iconStill = still;
-		_iconFlowing = flowing;
-		setParticleColor(color = RegistryUtils.getBlockTextureColor(still.getIconName()));
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-
-		return side <= 1 ? _iconStill : _iconFlowing;
-	}
-
 }

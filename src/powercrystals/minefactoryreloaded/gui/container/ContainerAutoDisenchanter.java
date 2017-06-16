@@ -4,14 +4,13 @@ import cofh.lib.gui.slot.SlotAcceptValid;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.IIcon;
 
+import net.minecraft.util.ResourceLocation;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoDisenchanter;
 
 public class ContainerAutoDisenchanter extends ContainerFactoryPowered {
 
-	public static IIcon background;
+	public static String background;
 	private TileEntityAutoDisenchanter _disenchanter;
 
 	public ContainerAutoDisenchanter(TileEntityAutoDisenchanter disenchanter, InventoryPlayer inv)
@@ -31,8 +30,8 @@ public class ContainerAutoDisenchanter extends ContainerFactoryPowered {
 		addSlotToContainer(new SlotRemoveOnly(_te, 2, 8, 56));
 		addSlotToContainer(new SlotRemoveOnly(_te, 3, 26, 56));
 
-		getSlot(1).setBackgroundIcon(background);
-		getSlot(4).setBackgroundIcon(background);
+		getSlot(1).setBackgroundName(background);
+		getSlot(4).setBackgroundName(background);
 		// getSlot is for the slot id (order it was added) not the slot index
 	}
 
@@ -40,9 +39,9 @@ public class ContainerAutoDisenchanter extends ContainerFactoryPowered {
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, _disenchanter.getRepeatDisenchant() ? 1 : 0);
+			listeners.get(i).sendProgressBarUpdate(this, 100, _disenchanter.getRepeatDisenchant() ? 1 : 0);
 		}
 	}
 

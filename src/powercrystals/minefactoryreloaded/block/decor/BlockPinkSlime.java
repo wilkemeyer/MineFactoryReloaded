@@ -1,97 +1,117 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import net.minecraft.block.Block;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.BlockBreakable;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockPinkSlime extends BlockBreakable {
+import javax.annotation.Nullable;
 
-	public static Block.SoundType slime = new SoundType("slime", 1f, 1f);
-
+public class BlockPinkSlime extends BlockBreakable implements IInitializer, IModelRegister {
+	
 	public BlockPinkSlime() {
 
-		super("minefactoryreloaded:tile.mfr.pinkslime.block", Material.clay, false); // FIXME: this doesn't take a string in 1.8
+		super(Material.CLAY, false, MapColor.PINK);
 		setCreativeTab(MFRCreativeTab.tab);
-		setBlockName("mfr.pinkslime.block");
-		setBlockTextureName("minefactoryreloaded:" + getUnlocalizedName());
+		setUnlocalizedName("mfr.pinkslime.block");
 		slipperiness = 0.8f;
 		setHardness(0.5f);
 		setHarvestLevel("shovel", 0);
-		setStepSound(slime);
+		setSoundType(SoundType.SLIME);
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "pink_slime_block");
 	}
 
 	@Override
-	public int getRenderBlockPass() {
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.TRANSLUCENT;
+	}
 
-		return 1;
+	/**
+	 * Block's chance to react to a living entity falling on it.
+	 */
+	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+
+		if (entityIn.isSneaking()) {
+			super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+		} else {
+			entityIn.fall(fallDistance, 0.0F);
+		}
+	}
+
+	/**
+	 * Called when an Entity lands on this Block. This method *must* update motionY because the entity will not do that
+	 * on its own
+	 */
+	public void onLanded(World worldIn, Entity entityIn) {
+
+		if (entityIn.isSneaking()) {
+			super.onLanded(worldIn, entityIn);
+		} else if (entityIn.motionY < 0.0D) {
+			entityIn.motionY = -entityIn.motionY;
+
+			if (!(entityIn instanceof EntityLivingBase)) {
+				entityIn.motionY *= 0.8D;
+			}
+		}
+	}
+
+	/**
+	 * Triggered whenever an entity collides with this block (enters into the block)
+	 */
+	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
+
+		if (Math.abs(entityIn.motionY) < 0.1D && !entityIn.isSneaking()) {
+			double d0 = 0.4D + Math.abs(entityIn.motionY) * 0.2D;
+			entityIn.motionX *= d0;
+			entityIn.motionZ *= d0;
+		}
+
+		super.onEntityWalk(worldIn, pos, entityIn);
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+	public boolean preInit() {
 
-		final float f = 0.125F;
-		return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1 - f, z + 1);
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this));
+		return true;
+	}
+	
+	@Override
+	public boolean initialize() {
+		
+		return true;
 	}
 
 	@Override
-	public void onFallenUpon(World world, int x, int y, int z, Entity entity, float fallDistance) {
-
-		if (entity.isSneaking())
-			super.onFallenUpon(world, x, y, z, entity, fallDistance);
-		else {
-			entity.fallDistance = 0;
-			if (entity.motionY < 0) // FIXME: this has its own method in 1.8 (applies to non-living)
-				entity.getEntityData().setDouble("mfr:slime", -entity.motionY);
-		}
+	public boolean postInit() {
+		
+		return true;
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
 
-		NBTTagCompound data = entity.getEntityData();
-		if (data.hasKey("mfr:slime")) {
-			entity.motionY = data.getDouble("mfr:slime");
-			data.removeTag("mfr:slime");
-		}
-
-		if (Math.abs(entity.motionY) < 0.1 && !entity.isSneaking()) {
-			double d = 0.4 + Math.abs(entity.motionY) * 0.2;
-			entity.motionX *= d;
-			entity.motionZ *= d;
-		}
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+		ModelHelper.registerModel(this);
 	}
-
-	public static class SoundType extends Block.SoundType {
-
-		public SoundType(String name, float volume, float frequency) {
-
-			super(name, volume, frequency);
-		}
-
-		@Override
-		public String getBreakSound() {
-
-			return "mob.slime.big";
-		}
-
-		@Override
-		public String getStepResourcePath() {
-
-			return "mob.slime.big";
-		}
-
-		@Override
-		public String func_150496_b() {
-
-			return "mob.slime.small";
-		}
-	}
-
 }

@@ -1,10 +1,10 @@
 package powercrystals.minefactoryreloaded.core;
 
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public interface IAdvFluidContainerItem extends IFluidContainerItem
+public interface IAdvFluidContainerItem extends IFluidHandler
 {
-	public boolean canBeFilledFromWorld();
-	public boolean canPlaceInWorld();
-	public boolean shouldReplaceWhenFilled();
+	boolean canBeFilledFromWorld();
+	boolean canPlaceInWorld();
+	boolean shouldReplaceWhenFilled();
 }

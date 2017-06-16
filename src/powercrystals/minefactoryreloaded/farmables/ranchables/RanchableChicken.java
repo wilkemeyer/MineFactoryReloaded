@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -30,15 +31,15 @@ public class RanchableChicken implements IFactoryRanchable {
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
 		EntityChicken chicken = ((EntityChicken) entity);
 		if (chicken.timeUntilNextEgg < 500) {
-			chicken.playSound("mob.chicken.plop", 1.0F, (chicken.getRNG().nextFloat() - chicken.getRNG().nextFloat()) * 0.2F + 1.0F);
+			chicken.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (chicken.getRNG().nextFloat() - chicken.getRNG().nextFloat()) * 0.2F + 1.0F);
 			chicken.attackEntityFrom(DamageSource.generic, 0);
 			chicken.setRevengeTarget(chicken); // panic
 			chicken.timeUntilNextEgg = chicken.getRNG().nextInt(6000) + 7800;
 			if (rand.nextInt(4) != 0) {
-				drops.add(new RanchedItem(Items.egg));
-			} else {
+				drops.add(new RanchedItem(Items.EGG));
+			} else { // TODO: search rancher for shears(?), always drop feathers
 				int k = chicken.getRNG().nextInt(4) + 1;
-				drops.add(new RanchedItem(Items.feather, k));
+				drops.add(new RanchedItem(Items.FEATHER, k));
 			}
 		}
 		return drops;

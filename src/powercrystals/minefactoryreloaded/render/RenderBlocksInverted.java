@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.render;
 
 import net.minecraft.block.Block;
@@ -7,7 +8,6 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
 
 public class RenderBlocksInverted
 {
@@ -1754,7 +1754,7 @@ public class RenderBlocksInverted
 		float f17 = f5;
 		float f18 = f6;
 		
-		if(par1Block != Blocks.grass)
+		if(par1Block != Blocks.GRASS)
 		{
 			f10 = f3 * par5;
 			f11 = f5 * par5;
@@ -2481,5 +2481,8 @@ public class RenderBlocksInverted
 			tessellator.addVertexWithUV(d11, d12, d15, d8, d10);
 		}
 	}
-//*/
+/*/
+/*//*
+
 }
+*/

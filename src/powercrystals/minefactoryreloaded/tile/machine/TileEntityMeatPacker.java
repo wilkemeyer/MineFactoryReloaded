@@ -1,17 +1,15 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -19,49 +17,48 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IFluidHandler
-{
-	public TileEntityMeatPacker()
-	{
+import javax.annotation.Nullable;
+
+public class TileEntityMeatPacker extends TileEntityFactoryPowered {
+
+	public TileEntityMeatPacker() {
+
 		super(Machine.MeatPacker);
 		setManageSolids(true);
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
-		if (drain(_tanks[0], 2, false) == 2)
-		{
-			if (!incrementWorkDone()) return false;
+	protected boolean activateMachine() {
 
-			if (getWorkDone() >= getWorkMax())
-			{
+		if (drain(2, false, _tanks[0]) == 2) {
+			if (!incrementWorkDone())
+				return false;
+
+			if (getWorkDone() >= getWorkMax()) {
 				ItemStack item;
-				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1)))
-				{
+				// TODO: should track the weighted 'quantity' of meat consumed and output an appropriate amount of ingots/nuggets
+				if (_tanks[0].getFluid().equals(FluidRegistry.getFluidStack("meat", 1))) {
 					item = new ItemStack(MFRThings.meatIngotRawItem);
-				}
-				else
-				{
+				} else {
 					item = new ItemStack(MFRThings.meatNuggetRawItem);
 				}
 
@@ -69,75 +66,68 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered implements IF
 
 				setWorkDone(0);
 			}
-			drain(_tanks[0], 2, true);
+			drain(2, true, _tanks[0]);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 50;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 0;
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return false;
+	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
 		if (resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
-				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1))))
-		{
+				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1)))) {
 			return 0;
-		}
-		else
-		{
-			if (drain(_tanks[0], 2, false) == 1)
-			{
-				drain(_tanks[0], 1, true);
+		} else {
+			if (drain(2, false, _tanks[0]) == 1) {
+				drain(1, true, _tanks[0]);
 			}
 			return _tanks[0].fill(resource, doFill);
 		}
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return null;
-	}
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return null;
-	}
-
-	@Override
-	protected FluidTankAdv[] createTanks()
-	{
-		return new FluidTankAdv[]{new FluidTankAdv(4 * BUCKET_VOLUME)};
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
 		return true;
 	}
 
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return false;
-	}
 }

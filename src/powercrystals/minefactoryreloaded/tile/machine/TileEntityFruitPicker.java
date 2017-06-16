@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Map;
@@ -12,14 +12,16 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.FruitHarvestManager;
 import powercrystals.minefactoryreloaded.core.HarvestMode;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
+import powercrystals.minefactoryreloaded.farmables.fruits.FruitChorus;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerUpgradeable;
@@ -48,7 +50,7 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 		super.validate();
 		if (!worldObj.isRemote) {
 			_treeManager = new FruitHarvestManager(worldObj,
-					new Area(new BlockPosition(this), 0, 0, 0),
+					new Area(pos, 0, 0, 0),
 					HarvestMode.FruitTree);
 		}
 	}
@@ -75,35 +77,30 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 	@Override
 	protected boolean activateMachine() {
 
-		BlockPosition targetCoords = getNextTree();
+		BlockPos targetCoords = getNextTree();
 
 		if (targetCoords == null) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
 
-		Block harvestedBlock = worldObj.getBlock(targetCoords.x, targetCoords.y, targetCoords.z);
-		int harvestedBlockMetadata = worldObj.getBlockMetadata(targetCoords.x, targetCoords.y, targetCoords.z);
+		IBlockState targetState = worldObj.getBlockState(targetCoords);
+		Block harvestedBlock = targetState.getBlock();
 
 		IFactoryFruit harvestable = MFRRegistry.getFruits().get(harvestedBlock);
 
-		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand,
-			targetCoords.x, targetCoords.y, targetCoords.z);
+		List<ItemStack> drops = harvestable.getDrops(worldObj, _rand, targetCoords);
 
-		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj,
-			targetCoords.x, targetCoords.y, targetCoords.z);
-
-		harvestable.prePick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
+		ReplacementBlock replacement = harvestable.getReplacementBlock(worldObj, targetCoords);
 
 		if (replacement == null) {
-			if (!worldObj.setBlockToAir(targetCoords.x, targetCoords.y, targetCoords.z))
+			if (!worldObj.setBlockToAir(targetCoords))
 				return false;
 			if (MFRConfig.playSounds.getBoolean(true)) {
-				worldObj.playAuxSFXAtEntity(null, 2001, targetCoords.x, targetCoords.y, targetCoords.z,
-					Block.getIdFromBlock(harvestedBlock) + (harvestedBlockMetadata << 12));
+				worldObj.playEvent(null, 2001, targetCoords, Block.getStateId(targetState));
 			}
 		} else {
-			if (!replacement.replaceBlock(worldObj, targetCoords.x, targetCoords.y, targetCoords.z, null))
+			if (!replacement.replaceBlock(worldObj, targetCoords, null))
 				return false;
 		}
 
@@ -111,33 +108,31 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 
 		// TODO: sludge?
 
-		harvestable.postPick(worldObj, targetCoords.x, targetCoords.y, targetCoords.z);
-
 		return true;
 	}
 
-	private BlockPosition getNextTree() {
+	private BlockPos getNextTree() {
 
-		BlockPosition bp = _areaManager.getNextBlock();
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
+		BlockPos bp = _areaManager.getNextBlock();
+		if (!worldObj.isBlockLoaded(bp)) {
 			return null;
 		}
 
-		Block search = worldObj.getBlock(bp.x, bp.y, bp.z);
+		Block search = worldObj.getBlockState(bp).getBlock();
 
+		IFactoryFruit f = MFRRegistry.getFruits().get(search);
 		if (!MFRRegistry.getFruitLogBlocks().contains(search)) {
-			IFactoryFruit f = MFRRegistry.getFruits().get(search);
-			return f != null && f.canBePicked(worldObj, bp.x, bp.y, bp.z) ? bp : null;
+			return f != null && f.canBePicked(worldObj, bp) ? bp : null;
 		}
 
-		BlockPosition temp = getNextTreeSegment(bp);
+		BlockPos temp = getNextTreeSegment(bp, f instanceof FruitChorus);
 		if (temp != null)
 			_areaManager.rewindBlock();
 
 		return temp;
 	}
 
-	private BlockPosition getNextTreeSegment(BlockPosition pos) {
+	private BlockPos getNextTreeSegment(BlockPos pos, boolean invertedSearch) {
 
 		Block block;
 
@@ -145,18 +140,18 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 			int lowerBound = 0;
 			int upperBound = MFRConfig.fruitTreeSearchMaxVertical.getInt();
 
-			Area a = new Area(pos.copy(), MFRConfig.fruitTreeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
+			Area a = new Area(pos, MFRConfig.fruitTreeSearchMaxHorizontal.getInt(), lowerBound, upperBound);
 
-			_treeManager.reset(worldObj, a, HarvestMode.FruitTree, null);
+			_treeManager.reset(worldObj, a, invertedSearch ? HarvestMode.FruitTreeInverted : HarvestMode.FruitTree, null);
 		}
 
 		Map<Block, IFactoryFruit> fruits = MFRRegistry.getFruits();
 		while (!_treeManager.getIsDone()) {
-			BlockPosition bp = _treeManager.getNextBlock();
-			block = worldObj.getBlock(bp.x, bp.y, bp.z);
+			BlockPos bp = _treeManager.getNextBlock();
+			block = worldObj.getBlockState(bp).getBlock();
 			IFactoryFruit fruit = fruits.containsKey(block) ? fruits.get(block) : null;
 
-			if (fruit != null && fruit.canBePicked(worldObj, bp.x, bp.y, bp.z))
+			if (fruit != null && fruit.canBePicked(worldObj, bp))
 				return bp;
 
 			_treeManager.moveNext();
@@ -177,13 +172,13 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return slot == 0 && isUsableAugment(itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}
@@ -195,8 +190,9 @@ public class TileEntityFruitPicker extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public ForgeDirection getDropDirection() {
+	public EnumFacing getDropDirection() {
 
 		return getDirectionFacing().getOpposite();
 	}
+
 }

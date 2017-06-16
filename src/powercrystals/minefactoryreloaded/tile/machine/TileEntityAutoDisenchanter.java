@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -9,7 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoDisenchanter;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -57,26 +57,26 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 4;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack == null)
 			return false;
 		if (slot == 0) {
-			return stack.getEnchantmentTagList() != null || stack.getItem().equals(Items.enchanted_book);
+			return stack.getEnchantmentTagList() != null || stack.getItem().equals(Items.ENCHANTED_BOOK);
 		} else if (slot == 1) {
-			return stack.getItem().equals(Items.book);
+			return stack.getItem().equals(Items.BOOK);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		if (slot == 2 || slot == 3) return true;
 		return false;
@@ -95,13 +95,13 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 		}
 
 		ItemStack stack = _inventory[4];
-		boolean isBook = stack.getItem().equals(Items.enchanted_book);
-		NBTTagList list = isBook ? Items.enchanted_book.func_92110_g(stack) : stack.getEnchantmentTagList();
+		boolean isBook = stack.getItem().equals(Items.ENCHANTED_BOOK);
+		NBTTagList list = isBook ? Items.ENCHANTED_BOOK.getEnchantments(stack) : stack.getEnchantmentTagList();
 		if ((list == null || list.tagCount() <= 0) && _inventory[2] == null) {
 			_inventory[2] = stack;
 			setInventorySlotContents(4, null);
 		} else if ((list != null && list.tagCount() > 0) &&
-				(_inventory[1] != null && _inventory[1].getItem().equals(Items.book)) &
+				(_inventory[1] != null && _inventory[1].getItem().equals(Items.BOOK)) &
 				_inventory[2] == null &
 				_inventory[3] == null) {
 			if (getWorkDone() >= getWorkMax()) {
@@ -112,7 +112,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 					enchTag = list.getCompoundTagAt(0);
 					list.removeTag(0);
 					if (list.tagCount() == 0) {
-						_inventory[4] = new ItemStack(Items.book, 1);
+						_inventory[4] = new ItemStack(Items.BOOK, 1);
 					}
 				} else {
 					int enchIndex = worldObj.rand.nextInt(list.tagCount());
@@ -141,7 +141,7 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 					_inventory[4] = null;
 				}
 
-				setInventorySlotContents(3, new ItemStack(Items.enchanted_book, 1));
+				setInventorySlotContents(3, new ItemStack(Items.ENCHANTED_BOOK, 1));
 
 				NBTTagCompound baseTag = new NBTTagCompound();
 				NBTTagList enchList = new NBTTagList();
@@ -199,4 +199,5 @@ public class TileEntityAutoDisenchanter extends TileEntityFactoryPowered {
 		super.readFromNBT(tag);
 		_repeatDisenchant = tag.getBoolean("repeatDisenchant");
 	}
+
 }

@@ -3,14 +3,13 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import buildcraft.api.transport.IPipeTile.PipeType;
 
 import cofh.asm.relauncher.Strippable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.ArrayQueue;
 import powercrystals.minefactoryreloaded.net.Packets;
@@ -32,26 +31,30 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	protected NBTTagCompound writePacketData(NBTTagCompound tag)
 	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("facing", getDirectionFacing().ordinal());
-		data.setInteger("subnet", _currentSubnet);
-		data.setInteger("current", _lastValues[_currentSubnet]);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, data);
-		return packet;
+		tag.setInteger("subnet", _currentSubnet);
+		tag.setInteger("current", _lastValues[_currentSubnet]);
+
+		return super.writePacketData(tag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	protected void handlePacketData(NBTTagCompound tag)
 	{
-		NBTTagCompound data = pkt.func_148857_g();
-		switch (pkt.func_148853_f())
+		super.handlePacketData(tag);
+		_currentSubnet = tag.getInteger("subnet");
+		_currentValueClient = tag.getInteger("current");
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound data = pkt.getNbtCompound();
+		switch (pkt.getTileEntityType())
 		{
 		case 0:
-			_currentSubnet = data.getInteger("subnet");
-			_currentValueClient = data.getInteger("current");
-			rotateDirectlyTo(data.getInteger("facing"));
+			super.onDataPacket(net, pkt);
 			break;
 		case 1:
 			_currentValueClient = data.getInteger("value");
@@ -68,23 +71,16 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 		}
 		else
 		{
-			_valuesClient = new ArrayQueue<Integer>(100);
+			_valuesClient = new ArrayQueue<>(100);
 			_currentValueClient = 0;
 		}
 	}
 
 	@Override
-	@SideOnly(Side.SERVER)
-	public boolean canUpdate()
-	{
-		return false;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		if (worldObj.isRemote)
 		{
 			_valuesClient.pop();
@@ -137,8 +133,8 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	{
 		NBTTagCompound data = new NBTTagCompound();
 		data.setInteger("value", value);
-		Packets.sendToAllPlayersInRange(worldObj, xCoord, yCoord, zCoord, 50,
-				new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, data));
+		Packets.sendToAllPlayersInRange(worldObj, pos, 50,
+				new SPacketUpdateTileEntity(pos, 1, data));
 	}
 
 	public int getSelectedSubnet()
@@ -165,15 +161,17 @@ public class TileEntityRedNetHistorian extends TileEntityFactory
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound)
 	{
-		super.writeToNBT(nbttagcompound);
+		nbttagcompound = super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("subnet", _currentSubnet);
+
+		return nbttagcompound;
 	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+	public ConnectOverride overridePipeConnection(PipeType type, EnumFacing with) {
 		return ConnectOverride.DISCONNECT;
 	}
 

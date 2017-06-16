@@ -1,31 +1,41 @@
 package powercrystals.minefactoryreloaded.render.block;
 
-import cofh.lib.render.RenderHelper;
-import cofh.repack.codechicken.lib.lighting.LightModel;
-import cofh.repack.codechicken.lib.render.CCModel;
-import cofh.repack.codechicken.lib.render.CCRenderState;
-import cofh.repack.codechicken.lib.render.uv.IconTransformation;
-import cofh.repack.codechicken.lib.vec.Rotation;
-import cofh.repack.codechicken.lib.vec.Scale;
-import cofh.repack.codechicken.lib.vec.Translation;
-import cofh.repack.codechicken.lib.vec.Vector3;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-
-import java.util.Map;
-
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
-
+import codechicken.lib.model.blockbakery.ISimpleBlockBakery;
+import codechicken.lib.render.CCModel;
+import codechicken.lib.render.CCOBJParser;
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.buffer.BakingVertexBuffer;
+import codechicken.lib.vec.Rotation;
+import codechicken.lib.vec.Scale;
+import codechicken.lib.vec.Translation;
+import codechicken.lib.vec.Vector3;
+import codechicken.lib.vec.uv.IconTransformation;
+import cofh.lib.util.helpers.RenderHelper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.block.transport.BlockPlasticPipe;
+import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe.ConnectionType;
 import powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe;
 
-public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
+import static powercrystals.minefactoryreloaded.tile.transport.TileEntityPlasticPipe.ConnectionType.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+public class PlasticPipeRenderer implements ISimpleBlockBakery {
+
+	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(
+			MineFactoryReloadedCore.modId + ":plastic_pipe", "normal");
+	public static final PlasticPipeRenderer INSTANCE = new PlasticPipeRenderer();
+
 	protected static CCModel base;
 	protected static CCModel[] cable = new CCModel[6];
 	protected static CCModel[] iface = new CCModel[6];
@@ -33,13 +43,14 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 	protected static CCModel[] gripI = new CCModel[6];
 	protected static CCModel[] gripP = new CCModel[6];
 
-	public static IconTransformation uvt;
+	public static TextureAtlasSprite sprite;
+	private static IconTransformation iconTransform;
 
 	static {
 		try {
-			Map<String, CCModel> cableModels = CCModel.parseObjModels(MineFactoryReloadedCore.class.
-					getResourceAsStream("/powercrystals/minefactoryreloaded/models/PlasticPipe.obj"),
-					7, new Scale(1/16f));
+			Map<String, CCModel> cableModels = CCOBJParser.parseObjModels(MineFactoryReloadedCore.class.
+							getResourceAsStream("/powercrystals/minefactoryreloaded/models/PlasticPipe.obj"),
+					7, new Scale(1 / 16f));
 			Vector3 p = new Vector3(0, 0, 0);
 			base = cableModels.get("base").backfacedCopy();
 			compute(base);
@@ -58,10 +69,11 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 
 			gripP[5] = cableModels.get("gripP").backfacedCopy();
 			calculateSidedModels(gripP, p);
-		} catch (Throwable _) { _.printStackTrace(); }
+		} catch (Throwable ex) { ex.printStackTrace(); }
 	}
 
 	private static void calculateSidedModels(CCModel[] m, Vector3 p) {
+
 		compute(m[4] = m[5].copy().apply(new Rotation(Math.PI * 1.0, 0, 1, 0)));
 		compute(m[3] = m[5].copy().apply(new Rotation(Math.PI * -.5, 0, 1, 0)));
 		compute(m[2] = m[5].copy().apply(new Rotation(Math.PI * 0.5, 0, 1, 0)));
@@ -71,89 +83,100 @@ public class PlasticPipeRenderer implements ISimpleBlockRenderingHandler {
 	}
 
 	private static void compute(CCModel m) {
+
 		m.computeNormals();
 		m.apply(new Translation(0.5, 0.5, 0.5));
-		m.computeLighting(LightModel.standardLightModel);
 		m.shrinkUVs(RenderHelper.RENDER_OFFSET);
 	}
 
-	public static void updateUVT(IIcon icon) {
-		uvt = new IconTransformation(icon);
+	public static void setSprite(TextureAtlasSprite textureAtlasSprite) {
+
+		sprite = textureAtlasSprite;
+		iconTransform = new IconTransformation(textureAtlasSprite);
+	}
+
+	private PlasticPipeRenderer() {
+
 	}
 
 	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
-		CCRenderState.reset();
-		CCRenderState.useNormals = true;
-		Tessellator tess = Tessellator.instance;
+	public List<BakedQuad> bakeQuads(EnumFacing face, IExtendedBlockState state) {
 
-		GL11.glTranslatef(-.5f, -.5f, -.5f);
-		tess.startDrawingQuads();
-		base.render(uvt);
-		cable[2].render(uvt);
-		cable[3].render(uvt);
-		tess.draw();
-	}
-
-	private ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
-
-	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
-			Block block, int modelId, RenderBlocks renderer) {
-		CCRenderState.reset();
-		CCRenderState.useNormals = true;
-		CCRenderState.alphaOverride = 0xff;
-		TileEntityPlasticPipe _cable = (TileEntityPlasticPipe)world.getTileEntity(x, y, z);
-		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
-
-		Tessellator tess = Tessellator.instance;
-		tess.setColorOpaque_F(1,1,1);
-		tess.setBrightness(brightness);
-
-		tess.addTranslation(x, y, z);
-
-		base.render(uvt);
-		ForgeDirection[] dirs = this.dirs;
-
-		for (int i = dirs.length; i --> 0; ) {
-			ForgeDirection f = dirs[i];
-			if (_cable.isInterfacing(f))
-			{
-				int side = f.ordinal();
-				switch (_cable.interfaceMode(f)) {
-				case 2: // cable
-					cable[side].render(uvt);
-					break;
-				case 1: // IFluidHandler
-					iface[side].render(uvt);
-					int state = _cable.getMode(side);
-					if ((state & 2) == 2)
-						if (_cable.isPowered())
-							gripI[side].render(uvt);
-						else
-							gripP[side].render(uvt);
-					else
-						gripO[side].render(uvt);
-					break;
-				default:
-					break;
-				}
-			}
+		if (face != null) {
+			return Collections.emptyList();
 		}
 
-		tess.addTranslation(-x, -y, -z);
+		BakingVertexBuffer buffer = BakingVertexBuffer.create();
+		buffer.begin(7, DefaultVertexFormats.ITEM);
+		CCRenderState ccrs = CCRenderState.instance();
+		ccrs.reset();
+		ccrs.bind(buffer);
 
-		return true;
+		renderCable(state, ccrs);
+
+		buffer.finishDrawing();
+		return buffer.bake();
+	}
+
+	private void renderCable(IExtendedBlockState state, CCRenderState ccrs) {
+
+		base.render(ccrs, iconTransform);
+		EnumFacing[] dirs = EnumFacing.VALUES;
+
+		for (int i = dirs.length; i-- > 0; ) {
+			switch (state.getValue(BlockPlasticPipe.CONNECTION[i])) {
+			case CABLE:
+				cable[i].render(ccrs, iconTransform);
+				break;
+			case EXTRACT_POWERED:
+				iface[i].render(ccrs, iconTransform);
+				gripI[i].render(ccrs, iconTransform);
+				break;
+			case EXTRACT:
+				iface[i].render(ccrs, iconTransform);
+				gripP[i].render(ccrs, iconTransform);
+				break;
+			case OUTPUT:
+				iface[i].render(ccrs, iconTransform);
+				gripO[i].render(ccrs, iconTransform);
+				break;
+			default:
+			}
+		}
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory(int modelId) {
-		return true;
+	public IExtendedBlockState handleState(IExtendedBlockState blockState, TileEntity tileEntity) {
+
+		TileEntityPlasticPipe pipe = (TileEntityPlasticPipe) tileEntity;
+
+		for (EnumFacing side : EnumFacing.VALUES) {
+			ConnectionType connType = pipe.getSideConnection(side.ordinal());
+			if((connType == OUTPUT || connType == EXTRACT || connType == EXTRACT_POWERED) && pipe.isCableOnly())
+				connType = HANDLER_DISCONNECTED;
+			else if(connType == EXTRACT && pipe.isPowered())
+				connType = EXTRACT_POWERED;
+
+			blockState = blockState.withProperty(BlockPlasticPipe.CONNECTION[side.ordinal()], connType);
+		}
+
+		return blockState;
 	}
 
 	@Override
-	public int getRenderId() {
-		return MineFactoryReloadedCore.renderIdPPipe;
-	}
+	public List<BakedQuad> bakeItemQuads(EnumFacing face, ItemStack stack) {
 
+		BakingVertexBuffer buffer = BakingVertexBuffer.create();
+		buffer.begin(7, DefaultVertexFormats.ITEM);
+		CCRenderState ccrs = CCRenderState.instance();
+		ccrs.reset();
+		ccrs.bind(buffer);
+
+		base.render(ccrs, iconTransform);
+		cable[4].render(ccrs, iconTransform);
+		cable[5].render(ccrs, iconTransform);
+
+		buffer.finishDrawing();
+		return buffer.bake();
+	}
 }

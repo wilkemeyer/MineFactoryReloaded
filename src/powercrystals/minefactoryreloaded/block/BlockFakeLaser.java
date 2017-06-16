@@ -1,30 +1,48 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.Random;
-
+import codechicken.lib.model.ModelRegistryHelper;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialTransparent;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
-public class BlockFakeLaser extends Block implements IRedNetNoConnection {
+import java.util.Random;
 
-	public static Material laser = new MaterialTransparent(MapColor.airColor);
+import static powercrystals.minefactoryreloaded.setup.MFRThings.fakeLaserBlock;
+
+public class BlockFakeLaser extends Block implements IRedNetNoConnection, IInitializer, IModelRegister {
+
+	public static final PropertyDirection FACING = BlockDirectional.FACING;
+	private static final AxisAlignedBB NO_AABB = new AxisAlignedBB(0D, 0D, 0D, 0D, 0D, 0D);
+	
+	public static Material laser = new MaterialTransparent(MapColor.AIR);
 	private static GrindingDamage laserDamage = new GrindingDamage("mfr.laser");
 
 	public BlockFakeLaser() {
@@ -32,18 +50,44 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 		super(laser);
 		setHardness(-1);
 		setResistance(Float.POSITIVE_INFINITY);
-		setBlockBounds(0F, 0F, 0F, 0F, 0F, 0F);
-		setBlockName("mfr.laserair");
+		setUnlocalizedName("mfr.laserair");
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "fake_laser");
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-
-		return null;
+	protected BlockStateContainer createBlockState() {
+		
+		return new BlockStateContainer(this, FACING);
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	public IBlockState getStateFromMeta(int meta) {
+		
+		return getDefaultState().withProperty(FACING, EnumFacing.VALUES[meta]);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		
+		return state.getValue(FACING).getIndex();
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		
+		return NO_AABB;
+	}
+
+	@Override
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
 		if (world.isRemote)
 			return;
@@ -60,88 +104,98 @@ public class BlockFakeLaser extends Block implements IRedNetNoConnection {
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		return 15;
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean renderAsNormalBlock() {
-
-		return false;
-	}
-
-	@Override
-	public boolean isAir(IBlockAccess world, int x, int y, int z) {
+	public boolean isFullCube(IBlockState state) {
 
 		return true;
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public boolean isAir(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		world.scheduleBlockUpdate(x, y, z, this, 1);
+		return true;
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block id) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 
-		world.scheduleBlockUpdate(x, y, z, this, 1);
+		world.scheduleBlockUpdate(pos, this, 1, 1);
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+
+		world.scheduleBlockUpdate(pos, this, 1, 1);
+	}
+
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
 		if (world.isRemote) return;
 
-		int meta = world.getBlockMetadata(x, y, z);
-		l: if (meta != 0) {
-			ForgeDirection dir = ForgeDirection.getOrientation(meta - 1);
-			if (world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).equals(this))
-				if (world.getBlockMetadata(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == meta)
+		EnumFacing facing = state.getValue(FACING);
+		l: if (facing != EnumFacing.DOWN) {
+			IBlockState neighborState = world.getBlockState(pos.offset(facing));
+			if (neighborState.getBlock().equals(this))
+				if (neighborState.getValue(FACING) == facing)
 					return;
 				else
 					break l;
-			TileEntity te = world.getTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-			if (te instanceof IFactoryLaserSource && ((IFactoryLaserSource) te).canFormBeamFrom(dir))
+			TileEntity te = world.getTileEntity(pos.offset(facing));
+			if (te instanceof IFactoryLaserSource && ((IFactoryLaserSource) te).canFormBeamFrom(facing))
 				return;
-			world.setBlockMetadataWithNotify(x, y, z, 0, 0);
+			state.withProperty(FACING, EnumFacing.DOWN);
 		}
 
-		Block upperId = world.getBlock(x, y + 1, z);
-		if (!upperId.equals(this) && !(world.getTileEntity(x, y + 1, z) instanceof TileEntityLaserDrill)) {
-			world.setBlockToAir(x, y, z);
+		Block upperBlock = world.getBlockState(pos.up()).getBlock();
+		if (!upperBlock.equals(this) && !(world.getTileEntity(pos.up()) instanceof TileEntityLaserDrill)) {
+			world.setBlockToAir(pos);
 			return;
 		}
 
-		Block lowerId = world.getBlock(x, y - 1, z);
-		if ((!lowerId.equals(this) || world.getBlockMetadata(x, y - 1, z) != 0) &&
-				TileEntityLaserDrill.canReplaceBlock(lowerId, world, x, y - 1, z)) {
-			world.setBlock(x, y - 1, z, this);
+		Block lowerBlock = world.getBlockState(pos.down()).getBlock();
+		if ((!lowerBlock.equals(this) || world.getBlockState(pos.down()).getValue(FACING) != EnumFacing.DOWN) &&
+				TileEntityLaserDrill.canReplaceBlock(lowerBlock, world, pos.down())) {
+			world.setBlockState(pos.down(), this.getDefaultState());
 		}
 	}
 
 	@Override
-	public boolean canRenderInPass(int pass) {
+	public boolean preInit() {
 
-		return false;
-	}
-
-	@Override
-	public int getRenderType() {
-
-		return -1;
+		MFRRegistry.registerBlock(this, null);
+		return true;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
+	public void registerModels() {
 
+		final ModelResourceLocation fakeLaserLocation = new ModelResourceLocation(fakeLaserBlock.getRegistryName(), "normal");
+		ModelLoader.setCustomStateMapper(fakeLaserBlock, new StateMap.Builder().ignore(BlockFakeLaser.FACING).build());
+		ModelRegistryHelper.register(fakeLaserLocation, ModelHelper.DUMMY_MODEL);
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
 	}
 }

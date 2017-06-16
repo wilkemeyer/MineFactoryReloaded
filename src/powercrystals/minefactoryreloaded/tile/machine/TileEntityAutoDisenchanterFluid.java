@@ -1,80 +1,70 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
-
-import java.util.Locale;
-
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import javax.annotation.Nullable;
+import java.util.Locale;
 
-public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter implements ITankContainerBucketable
-{
-	public TileEntityAutoDisenchanterFluid()
-	{
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter {
+
+	public TileEntityAutoDisenchanterFluid() {
+
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	@Override
-	protected boolean incrementWorkDone()
-	{
-		if (drain(_tanks[0], 4, false) != 4)
+	protected boolean incrementWorkDone() {
+
+		if (drain(4, false, _tanks[0]) != 4)
 			return false;
-		drain(_tanks[0], 4, true);
+		drain(4, true, _tanks[0]);
 		return super.incrementWorkDone();
 	}
 
 	@Override
-	public String getGuiBackground()
-	{
+	public String getGuiBackground() {
+
 		if (_machine == null)
 			return null;
 		return _machine.getName().toLowerCase(Locale.US) + "2";
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks()
-	{
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		return fill(resource, doFill);
-	}
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
 		return true;
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack)
-	{
-		return true;
-	}
+	protected boolean canDrainTank(EnumFacing facing, int index) {
 
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
 		return false;
 	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }

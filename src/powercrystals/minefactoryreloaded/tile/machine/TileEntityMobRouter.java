@@ -2,9 +2,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import static powercrystals.minefactoryreloaded.item.ItemSafariNet.*;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -87,9 +87,8 @@ public class TileEntityMobRouter extends TileEntityFactoryPowered {
 				match = false;
 			}
 			if (match ^ _blacklist) {
-				BlockPosition bp = BlockPosition.fromRotateableTile(this);
-				bp.moveBackwards(1);
-				entity.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
+				BlockPos bp = pos.offset(getDirectionFacing().getOpposite());
+				entity.setPosition(bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5);
 
 				return true;
 			}

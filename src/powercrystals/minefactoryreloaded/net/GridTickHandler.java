@@ -1,9 +1,9 @@
 package powercrystals.minefactoryreloaded.net;
 
 import com.google.common.base.Throwables;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -87,6 +87,27 @@ public class GridTickHandler<G extends IGrid, N extends INode> implements IGridC
 			tickStart();
 		else
 			tickEnd();
+	}
+
+	public void clear() {
+
+		clearSetSynchronized(tickingGridsToRegenerate);
+		clearSetSynchronized(tickingGridsToAdd);
+		clearSetSynchronized(tickingGrids);
+		clearSetSynchronized(tickingGridsToRemove);
+
+		clearSetSynchronized(conduit);
+		clearSetSynchronized(conduitToAdd);
+		clearSetSynchronized(conduitToUpd);
+	}
+
+	private void clearSetSynchronized(LinkedHashSet set) {
+
+		if(!set.isEmpty()) {
+			synchronized (set) {
+				set.clear();
+			}
+		}
 	}
 
 	public void tickStart() {

@@ -1,8 +1,12 @@
 package powercrystals.minefactoryreloaded.item.tool;
 
-import cofh.api.tileentity.IPortableData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.api.core.IPortableData;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,11 +17,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.item.base.ItemFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 
 public class ItemRedNetMemoryCard extends ItemFactory {
+
+	public ItemRedNetMemoryCard() {
+
+		setUnlocalizedName("mfr.rednet.memorycard");
+		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "rednet_memory_card");
+	}
 
 	@Override
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
@@ -46,14 +60,14 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side,
 			float xOffset, float yOffset, float zOffset) {
 
 		if (world.isRemote) {
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		NBTTagCompound tag = stack.getTagCompound();
 		boolean read = tag == null || !tag.hasKey("Type"), special = false;
 		if (tag == null)
@@ -79,16 +93,16 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 			}
 			stack.setTagCompound(tag);
 
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 		else if (te instanceof TileEntityRedNetLogic) {
 			if (special)
 				((IPortableData) te).readPortableData(player, tag);
 
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 	@Override
@@ -99,4 +113,10 @@ public class ItemRedNetMemoryCard extends ItemFactory {
 		return tag != null && (tag.hasKey("Type") || tag.hasKey("circuits", 9));
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "memory_card");
+	}
 }

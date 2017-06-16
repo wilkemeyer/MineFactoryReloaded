@@ -1,10 +1,12 @@
 package powercrystals.minefactoryreloaded.render.entity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -12,6 +14,10 @@ import org.lwjgl.opengl.GL11;
 import powercrystals.minefactoryreloaded.entity.DebugTracker;
 
 public class EntityDebugTrackerRenderer extends Render {
+
+	protected EntityDebugTrackerRenderer(RenderManager renderManager) {
+		super(renderManager);
+	}
 
 	@Override
 	public void doRender(Entity p_76986_1_, double x, double y, double z, float yaw, float partialTicks) {
@@ -23,16 +29,16 @@ public class EntityDebugTrackerRenderer extends Render {
 		float playerOffsetZ = -(float)(player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks);
 
 		DebugTracker ent = (DebugTracker) p_76986_1_;
-		GL11.glColorMask(true, true, true, true);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.colorMask(true, true, true, true);
+		GlStateManager.enableAlpha();
+		GlStateManager.disableFog();
+		GlStateManager.enableCull();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.disableTexture2D();
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		x = ent.posX;
 		y = ent.posY;
 		z = ent.posZ;
@@ -42,18 +48,18 @@ public class EntityDebugTrackerRenderer extends Render {
 			float g = colorFromCoord(Float.floatToIntBits((float) x), 0x85BDBD8C);
 			float b = colorFromCoord(Float.floatToIntBits((float) y), 0x997696BF);
 
-			GL11.glPushMatrix();
-			GL11.glColor4f(r, g, b, 0.4F);
-			GL11.glTranslatef(playerOffsetX, playerOffsetY, playerOffsetZ);
+			GlStateManager.pushMatrix();
+			GlStateManager.color(r, g, b, 0.4F);
+			GlStateManager.translate(playerOffsetX, playerOffsetY, playerOffsetZ);
 			AxisAlignedBB bb = ent.getPrjBB();
-			float q = ent.getDataWatcher().getWatchableObjectFloat(14);
-			float w = ent.getDataWatcher().getWatchableObjectFloat(15);
-			float e = ent.getDataWatcher().getWatchableObjectFloat(16);
+			float q = ent.getDataManager().get(DebugTracker.PROJECTILE_MOTION_X);
+			float w = ent.getDataManager().get(DebugTracker.PROJECTILE_MOTION_Y);
+			float e = ent.getDataManager().get(DebugTracker.PROJECTILE_MOTION_Z);
 			for (int i = 3; i --> 0; ) {
-				renderAABB(bb);
+				renderOffsetAABB(bb, 0, 0, 0);
 				bb.offset(q, w, e);
 			}
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
 		{
@@ -61,21 +67,21 @@ public class EntityDebugTrackerRenderer extends Render {
 			float g = colorFromCoord(Float.floatToIntBits((float) y), 0x85BDBD8C);
 			float b = colorFromCoord(Float.floatToIntBits((float) z), 0x997696BF);
 
-			GL11.glPushMatrix();
-			GL11.glColor4f(r, g, b, 0.4F);
-			GL11.glTranslatef(playerOffsetX, playerOffsetY, playerOffsetZ);
+			GlStateManager.pushMatrix();
+			GlStateManager.color(r, g, b, 0.4F);
+			GlStateManager.translate(playerOffsetX, playerOffsetY, playerOffsetZ);
 			AxisAlignedBB bb = ent.getSrcBB();
-			renderAABB(bb);
-			float e = ent.getDataWatcher().getWatchableObjectFloat(17);
-			bb.minY += e;
-			bb.maxY = bb.minY + (1/8f);
-			renderAABB(bb.expand(0.006, 0, 0.006));
-			GL11.glPopMatrix();
+			renderOffsetAABB(bb, 0, 0, 0);
+			float e = ent.getDataManager().get(DebugTracker.ENTITY_EYE_HEIGHT);
+			double minY = bb.minY + e;
+			bb = new AxisAlignedBB(bb.minX, minY, bb.minZ, bb.maxX, minY + (1/8D), bb.maxZ);
+			renderOffsetAABB(bb.expand(0.006, 0, 0.006), 0, 0, 0);
+			GlStateManager.popMatrix();
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 
 	}
 

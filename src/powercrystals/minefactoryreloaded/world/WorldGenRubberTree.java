@@ -5,10 +5,13 @@ import cofh.lib.util.helpers.BlockHelper;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.block.BlockRubberWood;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class WorldGenRubberTree extends WorldGenerator {
@@ -28,7 +31,11 @@ public class WorldGenRubberTree extends WorldGenerator {
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, int x, int retries, int z) {
+	public boolean generate(World world, Random rand, BlockPos pos) {
+
+		int x = pos.getX();
+		int retries = pos.getY();
+		int z = pos.getZ();
 
 		for (int c = 0; c < retries; c++) {
 			int y = BlockHelper.getSurfaceBlockY(world, x, z);
@@ -46,16 +53,17 @@ public class WorldGenRubberTree extends WorldGenerator {
 	public boolean growTree(World world, Random rand, int x, int y, int z) {
 
 		int treeHeight = rand.nextInt(3) + 5, worldHeight = world.getHeight();
-		Block block;
 
 		if (y >= 1 && y + treeHeight + 1 <= worldHeight) {
 			int xOffset;
 			int yOffset;
 			int zOffset;
 
-			block = world.getBlock(x, y - 1, z);
+			BlockPos pos = new BlockPos(x, y - 1, z);
+			IBlockState state = world.getBlockState(pos);
+			Block block = state.getBlock();
 
-			if ((block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, MFRThings.rubberSaplingBlock)) &&
+			if ((block.canSustainPlant(state, world, pos, EnumFacing.UP, MFRThings.rubberSaplingBlock)) &&
 					y < worldHeight - treeHeight - 1) {
 				for (yOffset = y; yOffset <= y + 1 + treeHeight; ++yOffset) {
 					byte radius;
@@ -68,10 +76,12 @@ public class WorldGenRubberTree extends WorldGenerator {
 
 					if (yOffset >= 0 & yOffset < worldHeight) {
 						if (radius == 0) {
-							block = world.getBlock(x, yOffset, z);
-							if (!(block.isLeaves(world, x, yOffset, z) ||
-									block.isAir(world, x, yOffset, z) ||
-									block.isReplaceable(world, x, yOffset, z) || block.canBeReplacedByLeaves(world, x, yOffset, z))) {
+							pos = new BlockPos(x, yOffset, z);
+							state = world.getBlockState(pos);
+							block = state.getBlock();
+							if (!(block.isLeaves(state, world, pos) ||
+									block.isAir(state, world, pos) ||
+									block.isReplaceable(world, pos) || block.canBeReplacedByLeaves(state, world, pos))) {
 								return false;
 							}
 
@@ -79,9 +89,9 @@ public class WorldGenRubberTree extends WorldGenerator {
 								radius = 1;
 								for (xOffset = x - radius; xOffset <= x + radius; ++xOffset) {
 									for (zOffset = z - radius; zOffset <= z + radius; ++zOffset) {
-										block = world.getBlock(xOffset, yOffset, zOffset);
+										state = world.getBlockState(new BlockPos(xOffset, yOffset, zOffset));
 
-										if (block.getMaterial().isLiquid()) {
+										if (state.getMaterial().isLiquid()) {
 											return false;
 										}
 									}
@@ -90,10 +100,12 @@ public class WorldGenRubberTree extends WorldGenerator {
 						} else {
 							for (xOffset = x - radius; xOffset <= x + radius; ++xOffset) {
 								for (zOffset = z - radius; zOffset <= z + radius; ++zOffset) {
-									block = world.getBlock(xOffset, yOffset, zOffset);
+									pos = new BlockPos(xOffset, yOffset, zOffset);
+									state = world.getBlockState(pos);
+									block = state.getBlock();
 
-									if (!(block.isLeaves(world, xOffset, yOffset, zOffset) ||
-											block.isAir(world, xOffset, yOffset, zOffset) || block.canBeReplacedByLeaves(world, xOffset, yOffset, zOffset))) {
+									if (!(block.isLeaves(state, world, pos) ||
+											block.isAir(state, world, pos) || block.canBeReplacedByLeaves(state, world, pos))) {
 										return false;
 									}
 								}
@@ -104,11 +116,13 @@ public class WorldGenRubberTree extends WorldGenerator {
 					}
 				}
 
-				block = world.getBlock(x, y - 1, z);
-				if (!block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, MFRThings.rubberSaplingBlock)) {
+				pos = new BlockPos(x, y - 1, z);
+				state = world.getBlockState(pos);
+				block = state.getBlock();
+				if (!block.canSustainPlant(state, world, pos, EnumFacing.UP, MFRThings.rubberSaplingBlock)) {
 					return false; // another chunk generated and invalidated our location
 				}
-				block.onPlantGrow(world, x, y - 1, z, x, y, z);
+				block.onPlantGrow(state, world, pos, new BlockPos(x, y, z));
 
 				for (yOffset = y - 3 + treeHeight; yOffset <= y + treeHeight; ++yOffset) {
 					int var12 = yOffset - (y + treeHeight), center = 1 - var12 / 2;
@@ -121,28 +135,32 @@ public class WorldGenRubberTree extends WorldGenerator {
 							int zPos = zOffset - z;
 							zPos = (zPos + (t = zPos >> 31)) ^ t;
 
-							block = world.getBlock(xOffset, yOffset, zOffset);
+							pos = new BlockPos(xOffset, yOffset, zOffset);
+							state = world.getBlockState(pos);
+							block = state.getBlock();
 
 							if (((xPos != center | zPos != center) ||
 									rand.nextInt(2) != 0 && var12 != 0) &&
-									(block == null || block.isLeaves(world, xOffset, yOffset, zOffset) ||
-											block.isAir(world, xOffset, yOffset, zOffset) ||
-									block.canBeReplacedByLeaves(world, xOffset, yOffset, zOffset))) {
+									(block == null || block.isLeaves(state, world, pos) ||
+											block.isAir(state, world, pos) ||
+									block.canBeReplacedByLeaves(state, world, pos))) {
 
-								this.setBlockAndNotifyAdequately(world, xOffset, yOffset, zOffset, MFRThings.rubberLeavesBlock, 0);
+								this.setBlockAndNotifyAdequately(world, pos, MFRThings.rubberLeavesBlock.getDefaultState());
 							}
 						}
 					}
 				}
 
 				for (yOffset = 0; yOffset < treeHeight; ++yOffset) {
-					block = world.getBlock(x, y + yOffset, z);
+					pos = new BlockPos(x, y + yOffset, z);
+					state = world.getBlockState(pos);
+					block = state.getBlock();
 
-					if (block == null || block.isAir(world, x, y + yOffset, z) ||
-							block.isLeaves(world, x, y + yOffset, z) ||
-							block.isReplaceable(world, x, y + yOffset, z)) { // replace snow
+					if (block == null || block.isAir(state, world, pos) ||
+							block.isLeaves(state, world, pos) ||
+							block.isReplaceable(world, pos)) { // replace snow
 
-						this.setBlockAndNotifyAdequately(world, x, y + yOffset, z, MFRThings.rubberWoodBlock, 1);
+						this.setBlockAndNotifyAdequately(world, pos, MFRThings.rubberWoodBlock.getDefaultState());
 					}
 				}
 
@@ -152,17 +170,11 @@ public class WorldGenRubberTree extends WorldGenerator {
 		return false;
 	}
 
-	@Override
-	protected void func_150515_a(World world, int x, int y, int z, Block block) {
-
-		this.setBlockAndNotifyAdequately(world, x, y, z, block, 0);
-	}
-
 	/*
 	 * Local override provided to ensure immunity to ASM that may destructively interfere with our data
 	 */
 	@Override
-	protected void setBlockAndNotifyAdequately(World world, int x, int y, int z, Block block, int meta) {
+	protected void setBlockAndNotifyAdequately(World world, BlockPos pos, IBlockState state) {
 
 		final int flag;
 		if (this.doBlockNotify) {
@@ -170,9 +182,6 @@ public class WorldGenRubberTree extends WorldGenerator {
 		} else {
 			flag = 2;
 		}
-		if (world.setBlock(x, y, z, block, meta, flag)) {
-			world.setBlockMetadataWithNotify(x, y, z, meta, 2); // sometimes interaction with setblock will invalidate our metadata
-		}
+		world.setBlockState(pos, state, flag);
 	}
-
 }

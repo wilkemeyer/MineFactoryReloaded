@@ -1,23 +1,23 @@
 package powercrystals.minefactoryreloaded.modhelpers.ae;
 
-import cofh.mod.ChildMod;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import net.minecraft.item.ItemStack;
 
+import net.minecraftforge.fml.common.Mod;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatAppliedEnergistics",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatAppliedEnergistics",
 		name = "MFR Compat: Applied Energistics",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:appliedenergistics2",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class AppliedEnergistics {
 
 	@EventHandler

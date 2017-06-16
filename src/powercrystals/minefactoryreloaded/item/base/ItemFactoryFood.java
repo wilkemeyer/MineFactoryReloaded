@@ -1,34 +1,36 @@
 package powercrystals.minefactoryreloaded.item.base;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.core.render.IModelRegister;
+import cofh.core.util.core.IInitializer;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemFactoryFood extends ItemFood {
+public class ItemFactoryFood extends ItemFood implements IInitializer, IModelRegister {
+
+	private String modelName;
+	private String variant;
 
 	public ItemFactoryFood(int foodRestored, float sustenance) {
 
 		super(foodRestored, sustenance, false);
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	@Override
 	public Item setUnlocalizedName(String name) {
 
 		super.setUnlocalizedName(name);
-		MFRRegistry.registerItem(this, getUnlocalizedName());
 		return this;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister ir) {
-
-		itemIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
 	}
 
 	@Override
@@ -41,4 +43,37 @@ public class ItemFactoryFood extends ItemFood {
 		return b.toString();
 	}
 
+	public ItemFactoryFood setModelLocation(String modelName, String variant) {
+
+		this.modelName = modelName;
+		this.variant = variant;
+
+		return this;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerItem(this);
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, modelName, variant);
+	}
 }

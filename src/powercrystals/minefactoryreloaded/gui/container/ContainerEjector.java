@@ -1,10 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityEjector;
@@ -40,9 +39,9 @@ public class ContainerEjector extends ContainerFactoryInventory
 		int data = (_ejector.getIsWhitelist() ? 1 : 0) |
 				(_ejector.getIsNBTMatch() ? 2 : 0) |
 				(_ejector.getIsIDMatch() ? 4 : 0);
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, data);
+			listeners.get(i).sendProgressBarUpdate(this, 100, data);
 		}
 	}
 	

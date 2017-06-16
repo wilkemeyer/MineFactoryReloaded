@@ -8,8 +8,13 @@ import cofh.lib.util.helpers.EnergyHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import powercrystals.minefactoryreloaded.core.ForgeEnergyHandler;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInventory
@@ -41,8 +46,8 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 		if (!worldObj.isRemote) {
 			if (deadCache) reCache();
 
@@ -79,18 +84,19 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 		if (energy <= 0)
 			return 0;
 
-		if (receiverCache != null)
+		if (receiverCache != null) {
 			for (int i = receiverCache.length; i --> 0; ) {
 				IEnergyReceiver tile = receiverCache[i];
 				if (tile == null)
 					continue;
 
-				ForgeDirection from = ForgeDirection.VALID_DIRECTIONS[i];
+				EnumFacing from = EnumFacing.VALUES[i];
 				if (tile.receiveEnergy(from, energy, true) > 0)
 					energy -= tile.receiveEnergy(from, energy, false);
 				if (energy <= 0)
 					return 0;
 			}
+		}
 
 		return energy;
 	}
@@ -113,59 +119,71 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 		return EnergyHelper.isEnergyContainerItem(itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 		return _inventory[0] != null && EnergyHelper.insertEnergyIntoContainer(_inventory[0], 2, true) < 2;
 	}
 
 	private void reCache() {
 		if (deadCache) {
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				onNeighborTileChange(xCoord + dir.offsetX,
-						yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			for (EnumFacing dir : EnumFacing.VALUES)
+				onNeighborTileChange(pos.offset(dir));
 			deadCache = false;
 		}
 	}
 
 	@Override
-	public void onNeighborTileChange(int x, int y, int z) {
-		TileEntity tile = worldObj.getTileEntity(x, y, z);
+	public void onNeighborTileChange(BlockPos pos) {
+
+		TileEntity tile = worldObj.getTileEntity(pos);
+
+		int xCoord = this.pos.getX(), yCoord = this.pos.getY(), zCoord = this.pos.getZ();
+		int x = pos.getX(), y = pos.getY(), z = pos.getZ();
 
 		if (x < xCoord)
-			addCache(tile, 5);
+				addCache(tile, EnumFacing.EAST);
 		else if (x > xCoord)
-			addCache(tile, 4);
+				addCache(tile, EnumFacing.WEST);
 		else if (z < zCoord)
-			addCache(tile, 3);
+				addCache(tile, EnumFacing.SOUTH);
 		else if (z > zCoord)
-			addCache(tile, 2);
+				addCache(tile, EnumFacing.NORTH);
 		else if (y < yCoord)
-			addCache(tile, 1);
+				addCache(tile, EnumFacing.UP);
 		else if (y > yCoord)
-			addCache(tile, 0);
+				addCache(tile, EnumFacing.DOWN);
 	}
 
-	private void addCache(TileEntity tile, int side) {
+	private void addCache(TileEntity tile, EnumFacing side) {
 		if (receiverCache != null)
-			receiverCache[side] = null;
+			receiverCache[side.ordinal()] = null;
 
 		if (tile instanceof IEnergyReceiver) {
-			if (((IEnergyReceiver)tile).canConnectEnergy(ForgeDirection.VALID_DIRECTIONS[side])) {
+			if (((IEnergyReceiver)tile).canConnectEnergy(side)) {
 				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
-				receiverCache[side] = (IEnergyReceiver)tile;
+				receiverCache[side.ordinal()] = (IEnergyReceiver)tile;
+			}
+		} else if (EnergyHelper.isEnergyHandler(tile, side)) {
+			if (tile.getCapability(CapabilityEnergy.ENERGY, side).canReceive()) {
+				if (receiverCache == null) receiverCache = new IEnergyReceiver[6];
+				receiverCache[side.ordinal()] = new ForgeEnergyHandler.Receiver(tile);
 			}
 		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
-		super.writeToNBT(tag);
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+
+		tag = super.writeToNBT(tag);
+
 		if (_ticksSinceLastConsumption > 0)
 			tag.setInteger("ticksSinceLastConsumption", _ticksSinceLastConsumption);
+
+		return tag;
 	}
 
 	@Override
@@ -187,12 +205,12 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	// TE methods
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 		return true;
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		maxExtract = Math.min(_energy, Math.min(_outputPulseSize, maxExtract));
 		if (maxExtract <= 0) return 0;
 
@@ -202,12 +220,66 @@ public abstract class TileEntityFactoryGenerator extends TileEntityFactoryInvent
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return _energy;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return _energyMax;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
+
+				@Override
+				public int
+				receiveEnergy(int maxReceive, boolean simulate) {
+
+					return 0;
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return TileEntityFactoryGenerator.this.extractEnergy(facing, maxExtract, simulate);
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityFactoryGenerator.this.getEnergyStored(facing);
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityFactoryGenerator.this.getMaxEnergyStored(facing);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return true;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return false;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

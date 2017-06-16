@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.block.transport;
 
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Map.Entry;
 
@@ -10,8 +10,11 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 
 public class BlockRailCargoDropoff extends BlockFactoryRail
@@ -19,16 +22,17 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 	public BlockRailCargoDropoff()
 	{
 		super(true, false);
-		setBlockName("mfr.rail.cargo.dropoff");
+		setUnlocalizedName("mfr.rail.cargo.dropoff");
+		setRegistryName(MineFactoryReloadedCore.modId, "rail_cargo_dropoff");
 	}
 
 	@Override
-	public void onMinecartPass(World world, EntityMinecart entity, int x, int y, int z)
+	public void onMinecartPass(World world, EntityMinecart entity, BlockPos pos)
 	{
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create(entity, ForgeDirection.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, null);
 
 		for (Entry<Integer, ItemStack> contents : minecart.getContents().entrySet())
 		{
@@ -38,7 +42,7 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 			}
 
 			ItemStack stackToAdd = contents.getValue().copy();
-			ItemStack remaining = UtilInventory.dropStack(world, new BlockPosition(x, y, z), contents.getValue(), ForgeDirection.VALID_DIRECTIONS, ForgeDirection.UNKNOWN);
+			ItemStack remaining = UtilInventory.dropStack(world, pos, contents.getValue(), EnumFacing.values(), null);
 
 			if (remaining != null)
 			{
@@ -47,5 +51,12 @@ public class BlockRailCargoDropoff extends BlockFactoryRail
 
 			minecart.removeItem(stackToAdd.stackSize, stackToAdd);
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		registerRailModel(this, "cargo_dropoff");
 	}
 }

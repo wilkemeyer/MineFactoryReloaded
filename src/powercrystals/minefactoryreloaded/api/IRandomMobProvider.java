@@ -15,5 +15,6 @@ public interface IRandomMobProvider {
 	 *         be spawned in the world with no additional method calls.
 	 */
 	public List<RandomMob> getRandomMobs(World world);
+	// TODO: Predicate? Function? need to delay creation of entities
 
 }

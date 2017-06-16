@@ -1,29 +1,31 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.core.fluid.FluidTankCore;
+import cofh.lib.util.helpers.FluidHelper;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryRanchable;
 import powercrystals.minefactoryreloaded.api.RanchedItem;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityRancher extends TileEntityFactoryPowered implements ITankContainerBucketable {
+public class TileEntityRancher extends TileEntityFactoryPowered {
 
 	public TileEntityRancher() {
 
@@ -80,7 +82,7 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 					for (RanchedItem s : drops) {
 						if (s.hasFluid()) {
 							// whitelist fluids? multiple tanks?
-							fill((FluidStack) s.getResult(), true);
+							super.fill(null, (FluidStack) s.getResult(), true);
 							didDrop = true;
 							continue;
 						}
@@ -107,45 +109,27 @@ public class TileEntityRancher extends TileEntityFactoryPowered implements ITank
 	}
 
 	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
 		return true;
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	protected FluidTankAdv[] createTanks() {
-
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	protected boolean canFillTank(EnumFacing facing, int index) {
 
 		return false;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
-		return true;
+		return 0;
 	}
 
 }

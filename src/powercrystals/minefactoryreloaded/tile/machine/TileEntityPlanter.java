@@ -1,14 +1,14 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IFactoryPlantable;
@@ -28,8 +28,8 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 
 		super(Machine.Planter);
 		createHAM(this, 1);
-		_areaManager.setOverrideDirection(ForgeDirection.UP);
-		_areaManager.setOriginOffset(0, 1, 0);
+		_areaManager.setOverrideDirection(EnumFacing.UP);
+		_areaManager.setOriginOffset(new BlockPos(0, 1, 0));
 		setManageSolids(true);
 	}
 
@@ -49,8 +49,8 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	@Override
 	public boolean activateMachine() {
 
-		BlockPosition bp = _areaManager.getNextBlock();
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z)) {
+		BlockPos bp = _areaManager.getNextBlock();
+		if (!worldObj.isBlockLoaded(bp)) {
 			setIdleTicks(getIdleTicksMax());
 			return false;
 		}
@@ -75,14 +75,12 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 			IFactoryPlantable plantable = MFRRegistry.getPlantables().get(availableStack.getItem());
 
 			if (!plantable.canBePlanted(availableStack, false) ||
-					!plantable.canBePlantedHere(worldObj, bp.x, bp.y, bp.z, availableStack))
+					!plantable.canBePlantedHere(worldObj, bp, availableStack))
 				continue;
 
-			plantable.prePlant(worldObj, bp.x, bp.y, bp.z, availableStack);
-			ReplacementBlock block = plantable.getPlantedBlock(worldObj, bp.x, bp.y, bp.z, availableStack);
-			if (block == null || !block.replaceBlock(worldObj, bp.x, bp.y, bp.z, availableStack))
+			ReplacementBlock block = plantable.getPlantedBlock(worldObj, bp, availableStack);
+			if (block == null || !block.replaceBlock(worldObj, bp, availableStack))
 				continue;
-			plantable.postPlant(worldObj, bp.x, bp.y, bp.z, availableStack);
 			decrStackSize(stackIndex, 1);
 			return true;
 		}
@@ -129,7 +127,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 		if (!a.hasTagCompound()) {
 			return true;
 		}
-		NBTTagCompound tagA = (NBTTagCompound) a.getTagCompound().copy(), tagB = (NBTTagCompound) b.getTagCompound().copy();
+		NBTTagCompound tagA = a.getTagCompound().copy(), tagB = b.getTagCompound().copy();
 		tagA.removeTag("display");
 		tagB.removeTag("display");
 		tagA.removeTag("ench");
@@ -141,11 +139,11 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 
 	//assumes a 3x3 grid in inventory slots 0-8
 	//slot 0 is northwest, slot 2 is northeast, etc
-	protected int getPlanterSlotIdFromBp(BlockPosition bp) {
+	protected int getPlanterSlotIdFromBp(BlockPos bp) {
 
 		int radius = _areaManager.getRadius();
-		int xAdjusted = Math.round(1.49F * (bp.x - this.xCoord) / radius);
-		int zAdjusted = Math.round(1.49F * (bp.z - this.zCoord) / radius);
+		int xAdjusted = Math.round(1.49F * (bp.getX() - pos.getX()) / radius);
+		int zAdjusted = Math.round(1.49F * (bp.getZ() - pos.getZ()) / radius);
 		return 4 + xAdjusted + 3 * zAdjusted;
 	}
 
@@ -178,7 +176,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 9;
 	}
@@ -190,7 +188,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 17;
 	}
@@ -202,7 +200,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack != null) {
 			if (slot > 9) {
@@ -216,7 +214,7 @@ public class TileEntityPlanter extends TileEntityFactoryPowered {
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		if (slot >= 10) return true;
 		return false;

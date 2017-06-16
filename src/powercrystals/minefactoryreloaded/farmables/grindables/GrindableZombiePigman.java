@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
@@ -26,13 +27,13 @@ public class GrindableZombiePigman implements IFactoryGrindable
 			"Battlesign boost", 10D, 0)).setSaved(false);
 	public static final ItemStack sign;
 	static {
-		sign = new ItemStack(Items.sign);
-		sign.addEnchantment(Enchantment.sharpness, 4);
-		sign.addEnchantment(Enchantment.knockback, 2);
-		sign.addEnchantment(Enchantment.fireAspect, 1);
+		sign = new ItemStack(Items.SIGN);
+		sign.addEnchantment(Enchantments.SHARPNESS, 4);
+		sign.addEnchantment(Enchantments.KNOCKBACK, 2);
+		sign.addEnchantment(Enchantments.FIRE_ASPECT, 1);
 		NBTTagList list = new NBTTagList();
 		list.appendTag(MFRUtil.writeModifierToNBT(
-				SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), modifier));
+				SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(), modifier));
 		sign.setTagInfo("AttributeModifiers", list);
 	}
 

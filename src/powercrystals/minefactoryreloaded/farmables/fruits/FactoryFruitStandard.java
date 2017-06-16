@@ -4,21 +4,23 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.IFactoryFruit;
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
 
-public abstract class FactoryFruitStandard implements IFactoryFruit
-{
+public abstract class FactoryFruitStandard implements IFactoryFruit  {
+
 	private Block _block;
 	private ReplacementBlock replBlock;
 	
 	public FactoryFruitStandard(Block block, ReplacementBlock replacement)
 	{
-		if (block.equals(Blocks.air))
+		if (block.equals(Blocks.AIR))
 			throw new IllegalArgumentException("Passed air FactoryFruitStandard");
 
 		_block = block;
@@ -47,7 +49,7 @@ public abstract class FactoryFruitStandard implements IFactoryFruit
 	}
 	
 	@Override
-	public abstract boolean canBePicked(World world, int x, int y, int z);
+	public abstract boolean canBePicked(World world, BlockPos pos);
 
 	@Override
 	public boolean breakBlock()
@@ -56,24 +58,16 @@ public abstract class FactoryFruitStandard implements IFactoryFruit
 	}
 	
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return replBlock;
 	}
-	
+
 	@Override
-	public void prePick(World world, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().getDrops(world, pos, state, 0);
 	}
-	
-	@Override
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
-	{
-		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-	}
-	
-	@Override
-	public void postPick(World world, int x, int y, int z)
-	{
-	}
+
 }

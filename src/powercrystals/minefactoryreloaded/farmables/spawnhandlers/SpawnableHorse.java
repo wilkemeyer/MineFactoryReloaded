@@ -1,12 +1,12 @@
 package powercrystals.minefactoryreloaded.farmables.spawnhandlers;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-
 import java.lang.reflect.Method;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityHorse;
 
+import net.minecraft.entity.passive.HorseArmorType;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import powercrystals.minefactoryreloaded.api.IMobSpawnHandler;
 
 public class SpawnableHorse implements IMobSpawnHandler {
@@ -33,7 +33,7 @@ public class SpawnableHorse implements IMobSpawnHandler {
 			m.invoke(entity);
 		} catch (Throwable e) {
 			e.printStackTrace();
-			if (ent.isChested() || ent.isHorseSaddled() || ent.func_110241_cb() > 0)
+			if (ent.isChested() || ent.isHorseSaddled() || ent.getHorseArmorType() != HorseArmorType.NONE)
 				entity.setDead();
 		}
 	}

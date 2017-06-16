@@ -1,9 +1,9 @@
+/*
 package powercrystals.minefactoryreloaded.render;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import net.minecraft.util.IIcon;
 
 public class IconOverlay implements IIcon {
 
@@ -87,7 +87,8 @@ public class IconOverlay implements IIcon {
 		return ret;
 	}
 
-	/*@Override
+	*/
+/*@Override
 	@SideOnly(Side.CLIENT)
 	public int getOriginX() {
 		return (int)(this.getMinU() * overlayIcon.getSheetWidth());
@@ -97,7 +98,9 @@ public class IconOverlay implements IIcon {
 	@SideOnly(Side.CLIENT)
 	public int getOriginY() {
 		return (int)(this.getMinV() * overlayIcon.getSheetHeight());
-	}//*/
+	}/*/
+/*//*
+
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -158,3 +161,4 @@ public class IconOverlay implements IIcon {
 	}
 
 }
+*/

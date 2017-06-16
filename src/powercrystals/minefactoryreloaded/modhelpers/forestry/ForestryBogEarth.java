@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import forestry.core.blocks.BlockBogEarth;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -27,8 +30,8 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	{
 		super(block);
 		_plantedBlock.setMeta(true);
-		repl = new ReplacementBlock(Blocks.dirt);
-		dirt = Item.getItemFromBlock(Blocks.dirt);
+		repl = new ReplacementBlock(Blocks.DIRT);
+		dirt = Item.getItemFromBlock(Blocks.DIRT);
 	}
 
 	@Override
@@ -50,45 +53,48 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	}
 
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
-		return fertilizerType == FertilizerType.GrowPlant && (world.getBlockMetadata(x, y, z) & 3) == 1;
+		return fertilizerType == FertilizerType.GrowPlant && 
+				BlockBogEarth.SoilType.fromMaturity(world.getBlockState(pos).getValue(BlockBogEarth.MATURITY)) != BlockBogEarth.SoilType.PEAT;
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
-		return world.getBlockMetadata(x, y, z) == 13;
+		return BlockBogEarth.SoilType.fromMaturity(world.getBlockState(pos).getValue(BlockBogEarth.MATURITY)) == BlockBogEarth.SoilType.PEAT;
 	}
 
 	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> settings, int x, int y, int z)
+	public boolean canBeHarvested(World world, Map<String, Boolean> settings, BlockPos pos)
 	{
-		return world.getBlockMetadata(x, y, z) == 13;
+		return BlockBogEarth.SoilType.fromMaturity(world.getBlockState(pos).getValue(BlockBogEarth.MATURITY)) == BlockBogEarth.SoilType.PEAT;
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		return world.setBlockMetadataWithNotify(x, y, z, 13, 3);
+		return world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockBogEarth.MATURITY, 3), 3);
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
-		return world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().getDrops(world, pos, state, 0);
 	}
 
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return repl;
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
-		List<ItemStack> list = world.getBlock(x, y, z).getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		IBlockState state = world.getBlockState(pos);
+		List<ItemStack> list = state.getBlock().getDrops(world, pos, state, 0);
 		for (ItemStack a : list)
 			if (a.getItem() == dirt) {
 				list.remove(a);
@@ -98,22 +104,12 @@ public class ForestryBogEarth extends PlantableSoil implements IFactoryFertiliza
 	}
 
 	@Override
-	public void preHarvest(World world, int x, int y, int z)
+	public void preHarvest(World world, BlockPos pos)
 	{
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z)
-	{
-	}
-
-	@Override
-	public void prePick(World world, int x, int y, int z)
-	{
-	}
-
-	@Override
-	public void postPick(World world, int x, int y, int z)
+	public void postHarvest(World world, BlockPos pos)
 	{
 	}
 }

@@ -1,21 +1,22 @@
 package powercrystals.minefactoryreloaded.gui.config;
 
 import cofh.CoFHCore;
-import cpw.mods.fml.client.config.DummyConfigElement.DummyCategoryElement;
-import cpw.mods.fml.client.config.IConfigElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.client.config.DummyConfigElement.DummyCategoryElement;
+import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class GuiConfig extends cpw.mods.fml.client.config.GuiConfig {
+public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig {
 
 	public GuiConfig(GuiScreen parentScreen) {
 
-		super(parentScreen, getConfigElements(parentScreen), CoFHCore.modId, false, false, CoFHCore.modName);
+		super(parentScreen, getConfigElements(parentScreen), CoFHCore.MOD_ID, false, false, CoFHCore.MOD_NAME);
 	}
 
 	private static List<IConfigElement> getConfigElements(GuiScreen parent) {
@@ -23,7 +24,7 @@ public class GuiConfig extends cpw.mods.fml.client.config.GuiConfig {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
 
 		{
-			MinecraftServer server = MinecraftServer.getServer();
+			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 			if (server == null || !server.isServerRunning()) {
 				list.add(new DummyCategoryElement("Child Mods", "config.childMods", getClientConfigElements()));
 			}

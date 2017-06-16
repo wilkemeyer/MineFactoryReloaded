@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptLaserFocus;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityLaserDrill;
 
@@ -28,12 +27,12 @@ public class ContainerLaserDrill extends ContainerFactoryInventory
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, ((TileEntityLaserDrill)_te).getWorkDone());
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, ((TileEntityLaserDrill)_te).getWorkDone() >> 16);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 102, ((TileEntityLaserDrill)_te).getEnergyStored());
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 103, ((TileEntityLaserDrill)_te).getEnergyStored() >> 16);
+			listeners.get(i).sendProgressBarUpdate(this, 100, ((TileEntityLaserDrill)_te).getWorkDone());
+			listeners.get(i).sendProgressBarUpdate(this, 101, ((TileEntityLaserDrill)_te).getWorkDone() >> 16);
+			listeners.get(i).sendProgressBarUpdate(this, 102, ((TileEntityLaserDrill)_te).getEnergyStored());
+			listeners.get(i).sendProgressBarUpdate(this, 103, ((TileEntityLaserDrill)_te).getEnergyStored() >> 16);
 		}
 	}
 	

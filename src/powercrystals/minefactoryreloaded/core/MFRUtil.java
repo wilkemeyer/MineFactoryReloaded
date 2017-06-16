@@ -1,14 +1,23 @@
 package powercrystals.minefactoryreloaded.core;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 import static org.lwjgl.input.Keyboard.*;
 
 import buildcraft.api.tools.IToolWrench;
 
 import cofh.api.item.IToolHammer;
 import cofh.lib.util.helpers.StringHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.UniversalBucket;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,9 +31,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.input.Keyboard;
@@ -43,7 +54,7 @@ public class MFRUtil {
 	@SideOnly(Side.CLIENT)
 	public static boolean isCtrlKeyDown() { // logic lifted from net.minecraft.client.gui.GuiScreen.isCtrlKeyDown()
 
-		if (Minecraft.isRunningOnMac)
+		if (Minecraft.IS_RUNNING_ON_MAC)
 			return Keyboard.isKeyDown(KEY_LMETA) || Keyboard.isKeyDown(KEY_RMETA);
 		return Keyboard.isKeyDown(KEY_LCONTROL) || Keyboard.isKeyDown(KEY_RCONTROL);
 	}
@@ -55,14 +66,6 @@ public class MFRUtil {
 	}
 
 	//
-	public static final int[] COLORS_DYE = { 0x1e1e1e, 0xb62222, 0x47691D, 0x804020, 0x404080, 0x803880,
-			0x54a69b, 0xa3a3a3, 0x505050, 0xd881a4, 0x49c14a, 0xd8b920, 0x8da7f6, 0xc730a5, 0xe36600, 0xf0f0f0 };
-	public static final int[] COLORS;
-	static {
-		COLORS = new int[16];
-		for (int i = 16, o = 0; i-- > 0; ++o)
-			COLORS[o] = COLORS_DYE[i];
-	}
 	private static final String mojangString = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000";
 
 	public static String shiftForInfo() {
@@ -82,27 +85,44 @@ public class MFRUtil {
 
 	public static String idle() {
 
-		return localize("info.cofh.idle", true);
+		return localize("info.mfr.idle", true);
 	}
 
 	public static String work() {
 
-		return localize("info.cofh.work", true);
+		return localize("info.mfr.work", true);
 	}
 
 	public static String buffer() {
 
-		return localize("info.cofh.buffer", true);
+		return localize("info.mfr.buffer", true);
 	}
 
 	public static String efficiency() {
 
-		return localize("info.cofh.efficiency", true);
+		return localize("info.mfr.efficiency", true);
 	}
 
 	public static String getFluidName(FluidStack fluid) {
 
 		return StringHelper.getFluidName(fluid);
+	}
+	
+	public static ItemStack getBucketFor(Fluid fluid){
+		
+		return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, fluid);
+	}
+
+	public static FluidStack getFluidContents(ItemStack stack) {
+
+		if (stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+			IFluidTankProperties[] tankProps = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties();
+
+			if (tankProps.length > 0) {
+				return tankProps[0].getContents();
+			}
+		}
+		return null;
 	}
 
 	public static boolean containsForcedUnicode(String str) {
@@ -130,17 +150,17 @@ public class MFRUtil {
 
 	public static String localize(String s, boolean exists, String def) {
 
-		if (!StatCollector.canTranslate(s))
+		if (!I18n.canTranslate(s))
 			return exists ? def :
-					StatCollector.canTranslate(def) ? localize(StatCollector.translateToLocal(def), true) : def;
-		return StatCollector.translateToLocal(s);
+					I18n.canTranslate(def) ? localize(I18n.translateToLocal(def), true) : def;
+		return I18n.translateToLocal(s);
 	}
 
 	public static String localize(String s, Object... data) {
 
-		if (!StatCollector.canTranslate(s))
+		if (!I18n.canTranslate(s))
 			return s;
-		return StatCollector.translateToLocalFormatted(s, data);
+		return I18n.translateToLocalFormatted(s, data);
 	}
 
 	private static enum Numeral {
@@ -172,8 +192,8 @@ public class MFRUtil {
 	public static String toNumerals(short i) {
 
 		String s = "potion.potency." + i;
-		if (StatCollector.canTranslate(s))
-			return StatCollector.translateToLocal(s);
+		if (I18n.canTranslate(s))
+			return I18n.translateToLocal(s);
 		StringBuilder r = new StringBuilder();
 		if (i < 0) {
 			i = (short) -i;
@@ -187,9 +207,9 @@ public class MFRUtil {
 		return r.toString();
 	}
 
-	public static final List<ForgeDirection> VALID_DIRECTIONS = Arrays.asList(ForgeDirection.VALID_DIRECTIONS);
+	public static final List<EnumFacing> VALID_DIRECTIONS = Arrays.asList(EnumFacing.VALUES);
 
-	public static boolean isHoldingUsableTool(EntityPlayer player, int x, int y, int z) {
+	public static boolean isHoldingUsableTool(EntityPlayer player, BlockPos pos) {
 
 		if (player == null) {
 			return false;
@@ -199,19 +219,19 @@ public class MFRUtil {
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammer) {
-			return ((IToolHammer) currentItem).isUsable(player.inventory.getCurrentItem(), player, x, y, z);
+			return ((IToolHammer) currentItem).isUsable(player.inventory.getCurrentItem(), player, pos);
 		}
 		else if (currentItem instanceof IMFRHammer) {
 			return true;
 		}
-		else if (bcWrenchExists && canHandleBCWrench(currentItem, player, x, y, z)) {
+		else if (bcWrenchExists && canHandleBCWrench(currentItem, player, pos)) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public static void usedWrench(EntityPlayer player, int x, int y, int z) {
+	public static void usedWrench(EntityPlayer player, BlockPos pos) {
 
 		if (player == null) {
 			return;
@@ -221,13 +241,13 @@ public class MFRUtil {
 		}
 		Item currentItem = player.inventory.getCurrentItem().getItem();
 		if (currentItem instanceof IToolHammer) {
-			((IToolHammer) currentItem).toolUsed(player.inventory.getCurrentItem(), player, x, y, z);
+			((IToolHammer) currentItem).toolUsed(player.inventory.getCurrentItem(), player, pos);
 		}
 		else if (currentItem instanceof IMFRHammer) {
 			;
 		}
 		else if (bcWrenchExists) {
-			bcWrenchUsed(currentItem, player, x, y, z);
+			bcWrenchUsed(currentItem, player, pos);
 		}
 	}
 
@@ -240,14 +260,14 @@ public class MFRUtil {
 		}
 	}
 
-	private static boolean canHandleBCWrench(Item item, EntityPlayer p, int x, int y, int z) {
+	private static boolean canHandleBCWrench(Item item, EntityPlayer p, BlockPos pos) {
 
-		return item instanceof IToolWrench && ((IToolWrench) item).canWrench(p, x, y, z);
+		return item instanceof IToolWrench && ((IToolWrench) item).canWrench(p, pos);
 	}
 
-	private static void bcWrenchUsed(Item item, EntityPlayer p, int x, int y, int z) {
+	private static void bcWrenchUsed(Item item, EntityPlayer p, BlockPos pos) {
 
-		if (item instanceof IToolWrench) ((IToolWrench) item).wrenchUsed(p, x, y, z);
+		if (item instanceof IToolWrench) ((IToolWrench) item).wrenchUsed(p, pos);
 	}
 
 	public static boolean isHoldingHammer(EntityPlayer player) {
@@ -266,16 +286,16 @@ public class MFRUtil {
 		return false;
 	}
 
-	public static boolean isHolding(EntityPlayer player, Class<? extends Item> itemClass) {
+	public static boolean isHolding(EntityPlayer player, Item item, EnumHand hand) {
 
 		if (player == null) {
 			return false;
 		}
-		if (player.inventory.getCurrentItem() == null) {
+		if (player.getHeldItem(hand) == null) {
 			return false;
 		}
-		Item currentItem = player.inventory.getCurrentItem().getItem();
-		if (currentItem != null && itemClass.isAssignableFrom(currentItem.getClass())) {
+		Item currentItem = player.getHeldItem(hand).getItem();
+		if (currentItem != null && item == currentItem) {
 			return true;
 		}
 		return false;
@@ -293,67 +313,82 @@ public class MFRUtil {
 		return null;
 	}
 
-	public static final TileEntity getTile(World world, int x, int y, int z) {
+	public static TileEntity getTile(IBlockAccess world, BlockPos pos) {
 
-		return world.getChunkFromBlockCoords(x, z).getTileEntityUnsafe(x & 15, y, z & 15);
+		if (world instanceof World) {
+			return ((World) world).getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+		}
+		return world.getTileEntity(pos);
 	}
 
-	public static ForgeDirection[] directionsWithoutConveyors(World world, int x, int y, int z) {
+	public static <T extends TileEntity> T getTile(IBlockAccess world, BlockPos pos, Class<T> type) {
 
-		ArrayList<ForgeDirection> nonConveyors = new ArrayList<ForgeDirection>();
+		TileEntity te = getTile(world, pos);
+
+		if (type.isInstance(te))
+			return (T) te;
+
+		return null;
+	}
+
+	public static EnumFacing[] directionsWithoutConveyors(World world, BlockPos pos) {
+
+		ArrayList<EnumFacing> nonConveyors = new ArrayList<EnumFacing>();
 		Block id = MFRThings.conveyorBlock;
 
-		for (int i = 0, e = ForgeDirection.VALID_DIRECTIONS.length; i < e; ++i) {
-			ForgeDirection direction = ForgeDirection.VALID_DIRECTIONS[i];
-			if (!world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ).equals(id))
+		for (EnumFacing direction : EnumFacing.VALUES) {
+			if (!world.getBlockState(pos.offset(direction)).getBlock().equals(id))
 				nonConveyors.add(direction);
 		}
 
-		return nonConveyors.toArray(new ForgeDirection[nonConveyors.size()]);
+		return nonConveyors.toArray(new EnumFacing[nonConveyors.size()]);
 	}
 
-	public static void notifyNearbyBlocks(World world, int x, int y, int z, Block block) {
+	public static void notifyBlockUpdate(World world, BlockPos pos) {
 
-		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
-		if (world.blockExists(x, y, z)) {
-			for (int j = 0; j < 6; ++j) {
-				ForgeDirection d2 = dirs[j];
-				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-				if (world.blockExists(x2, y2, z2))
-					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+		IBlockState state = world.getBlockState(pos);
+		notifyBlockUpdate(world, pos, state);
+	}
+
+	public static void notifyBlockUpdate(World world, BlockPos pos, IBlockState state) {
+
+		world.notifyBlockUpdate(pos, state, state, 3);
+	}
+
+	public static void notifyNearbyBlocks(World world, BlockPos pos, Block block) {
+
+		if (world.isBlockLoaded(pos)) {
+			for (EnumFacing facing : EnumFacing.VALUES) {
+				if (world.isBlockLoaded(pos.offset(facing)))
+					world.notifyBlockOfStateChange(pos.offset(facing), block);
 			}
 		}
 	}
 
-	public static void notifyNearbyBlocksExcept(World world, int x, int y, int z, Block block) {
+	public static void notifyNearbyBlocksExcept(World world, BlockPos pos, Block block) {
 
-		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
-		if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {
-			world.notifyBlockOfNeighborChange(x, y, z, block);
-			for (int j = 0; j < 6; ++j) {
-				ForgeDirection d2 = dirs[j];
-				int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-				if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
-					world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+		if (world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() != block) {
+			world.notifyBlockOfStateChange(pos, block);
+			for (EnumFacing d2 : EnumFacing.VALUES) {
+				BlockPos neighborPos = pos.offset(d2);
+				if (world.isBlockLoaded(neighborPos) && world.getBlockState(neighborPos).getBlock() != block)
+					world.notifyBlockOfStateChange(neighborPos, block);
 			}
 		}
 	}
 
-	public static void wideNotifyNearbyBlocksExcept(World world, int X, int Y, int Z, Block block) {
+	public static void wideNotifyNearbyBlocksExcept(World world, BlockPos pos, Block block) {
 
-		ForgeDirection[] dirs = ForgeDirection.VALID_DIRECTIONS;
-		for (int i = 0; i < 6; ++i) {
-			ForgeDirection d = dirs[i];
-			int x = X + d.offsetX, y = Y + d.offsetY, z = Z + d.offsetZ;
-			if (world.blockExists(x, y, z) && world.getBlock(x, y, z) != block) {
-				world.notifyBlockOfNeighborChange(x, y, z, block);
-				for (int j = 0; j < 6; ++j) {
-					if ((j ^ 1) == i)
+		for (EnumFacing d : EnumFacing.VALUES) {
+			BlockPos firstPos = pos.offset(d);
+			if (world.isBlockLoaded(firstPos) && world.getBlockState(firstPos).getBlock() != block) {
+				world.notifyNeighborsOfStateChange(firstPos, block);
+				for (EnumFacing d2 : EnumFacing.VALUES) {
+					if (d2.getOpposite() == d)
 						continue;
-					ForgeDirection d2 = dirs[j];
-					int x2 = x + d2.offsetX, y2 = y + d2.offsetY, z2 = z + d2.offsetZ;
-					if (world.blockExists(x2, y2, z2) && world.getBlock(x2, y2, z2) != block)
-						world.notifyBlockOfNeighborChange(x2, y2, z2, block);
+					BlockPos secondPos = firstPos.offset(d2);
+					if (world.isBlockLoaded(secondPos) && world.getBlockState(secondPos).getBlock() != block)
+						world.notifyNeighborsOfStateChange(secondPos, block);
 				}
 			}
 		}

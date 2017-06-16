@@ -1,6 +1,12 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import cofh.core.render.IModelRegister;
+import net.minecraft.block.Block;
+import net.minecraft.network.play.server.SPacketChunkData;
+import net.minecraft.server.management.PlayerChunkMap;
+import net.minecraft.server.management.PlayerChunkMapEntry;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -9,9 +15,6 @@ import java.util.List;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S21PacketChunkData;
-import net.minecraft.server.management.PlayerManager;
-import net.minecraft.server.management.PlayerManager.PlayerInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -22,7 +25,9 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
+import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
 public class CommonProxy implements LoadingCallback
@@ -35,7 +40,7 @@ public class CommonProxy implements LoadingCallback
 		int y = ticket.getModData().getInteger("Y");
 		int z = ticket.getModData().getInteger("Z");
 
-		TileEntity tile = ticket.world.getTileEntity(x, y, z);
+		TileEntity tile = ticket.world.getTileEntity(new BlockPos(x, y, z));
 		if (!(tile instanceof TileEntityChunkLoader))
 		{
 			ForgeChunkManager.releaseTicket(ticket);
@@ -59,6 +64,8 @@ public class CommonProxy implements LoadingCallback
 		return null;
 	}
 
+	public void preInit() {}
+	
 	public void init()
 	{
 		FMLCommonHandler.instance().bus().register(GridTickHandler.energy);
@@ -68,12 +75,16 @@ public class CommonProxy implements LoadingCallback
 		ForgeChunkManager.setForcedChunkLoadingCallback(MineFactoryReloadedCore.instance(), this);
 	}
 
+	public void addModelRegister(IModelRegister register) {}
+	
+	public void addColorRegister(IColorRegister register) {}
+
 	public void movePlayerToCoordinates(EntityLivingBase e, double x, double y, double z)
 	{
 		if (e instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)e;
-			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.cameraYaw, ep.cameraPitch);
+			ep.connection.setPlayerLocation(x, y, z, ep.cameraYaw, ep.cameraPitch);
 		}
 		e.setPositionAndUpdate(x, y, z);
 	}
@@ -92,20 +103,20 @@ public class CommonProxy implements LoadingCallback
 					a.set(0, 0, 0, 0);
 					a.set(0, 0, 0, 15);
 					//}
-					Arrays.fill(a.data, (byte)0);
+					Arrays.fill(a.getData(), (byte)0);
 				}
 			chunk.resetRelightChecks();
-			chunk.isModified = true;
-			World world = chunk.worldObj;
+			chunk.setModified(true);
+			World world = chunk.getWorld();
 			if (world instanceof WorldServer)
 			{
-				PlayerManager manager = ((WorldServer)world).getPlayerManager();
-				if (manager == null)
+				PlayerChunkMap chunkMap = ((WorldServer) world).getPlayerChunkMap();
+				if (chunkMap == null)
 					return;
-				PlayerInstance watcher = manager.
-						getOrCreateChunkWatcher(chunk.xPosition, chunk.zPosition, false);
-				if (watcher != null)
-					watcher.sendToAllPlayersWatchingChunk(new S21PacketChunkData(chunk, false, -1));
+				PlayerChunkMapEntry entry = chunkMap.getEntry(chunk.xPosition, chunk.zPosition);
+
+				if (entry != null)
+					entry.sendPacket(new SPacketChunkData(chunk, -1));
 			}
 		}
 	}

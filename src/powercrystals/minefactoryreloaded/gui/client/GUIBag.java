@@ -1,13 +1,14 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
-import static cofh.core.CoFHProps.PATH_GUI_STORAGE;
+import static cofh.core.init.CoreProps.PATH_GUI_STORAGE;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,7 +17,7 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerBag;
 @SideOnly(Side.CLIENT)
 public class GUIBag extends GuiContainer
 {
-    private static final ResourceLocation guiTextures = new ResourceLocation(PATH_GUI_STORAGE + "Storage5.png");
+    private static final ResourceLocation guiTextures = new ResourceLocation(PATH_GUI_STORAGE + "storage_5.png");
     private ContainerBag bag;
 
     public GUIBag(ContainerBag container)
@@ -34,7 +35,7 @@ public class GUIBag extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         fontRendererObj.drawString(this.bag.getInventoryName(), 8, 6, 4210752);
-        fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+        fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
     }
 
     /**
@@ -43,7 +44,7 @@ public class GUIBag extends GuiContainer
     @Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(guiTextures);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;

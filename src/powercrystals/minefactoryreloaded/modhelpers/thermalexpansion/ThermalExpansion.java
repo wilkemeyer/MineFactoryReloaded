@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.modhelpers.thermalexpansion;
 
-import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +28,11 @@ import powercrystals.minefactoryreloaded.api.RandomMob;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatThermalExpansion",
 		name = "MFR Compat: ThermalExpansion",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:ThermalExpansion",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class ThermalExpansion implements IRandomMobProvider {
 
 	@EventHandler
@@ -75,12 +75,12 @@ public class ThermalExpansion implements IRandomMobProvider {
 		EntityCreeper creeper = MFRUtil.prepareMob(EntityCreeper.class, world);
 		creeper.setCustomNameTag("Exploding Zeldo");
 		creeper.setAlwaysRenderNameTag(true);
-		creeper.func_110163_bv();
+		creeper.enablePersistence();
 		ItemStack armor = new ItemStack(MFRThings.plasticBootsItem);
 		armor.setStackDisplayName("Zeldo's Ruby Slippers");
-		int i = EntityLiving.getArmorPosition(armor);
-		creeper.setCurrentItemOrArmor(i, armor);
-		creeper.setEquipmentDropChance(i, 2);
+		EntityEquipmentSlot slot = EntityLiving.getSlotForItemStack(armor);
+		creeper.setItemStackToSlot(slot, armor);
+		creeper.setDropChance(slot, 2);
 		mobs.add(new RandomMob(creeper, 20));
 
 		return mobs;

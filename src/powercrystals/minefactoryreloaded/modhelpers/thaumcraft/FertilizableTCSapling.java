@@ -1,3 +1,4 @@
+/*
 package powercrystals.minefactoryreloaded.modhelpers.thaumcraft;
 
 import java.lang.reflect.Method;
@@ -37,7 +38,7 @@ public class FertilizableTCSapling extends FertilizableBase
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		try {
 			switch (world.getBlockMetadata(x, y, z))
@@ -59,3 +60,4 @@ public class FertilizableTCSapling extends FertilizableBase
 		return world.getBlock(x, y, z) != getPlant();
 	}
 }
+*/

@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.setup;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 import static powercrystals.minefactoryreloaded.setup.Machine.Side.*;
 
-import cofh.core.CoFHProps;
+import cofh.core.init.CoreProps;
 import cofh.lib.util.RegistryUtils;
 import cofh.lib.util.helpers.StringHelper;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -20,13 +20,11 @@ import java.util.Locale;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -83,7 +81,7 @@ import powercrystals.minefactoryreloaded.tile.machine.TileEntityWeather;
 
 public class Machine {
 
-	public static final Material MATERIAL = new MachineMaterial(MapColor.ironColor);
+	public static final Material MATERIAL = new MachineMaterial(MapColor.IRON);
 	protected static List<Machine> _machines = new LinkedList<Machine>();
 	protected static TIntObjectHashMap<Machine> _machineMappings = new TIntObjectHashMap<Machine>();
 	protected static TIntArrayList _highestMetas = new TIntArrayList();
@@ -126,8 +124,8 @@ public class Machine {
 				if (storedItem != null & storedQuantity > 0) {
 					info.add(String.format(MFRUtil.localize("tip.info.mfr.dsu.contains", true),
 						storedQuantity + " " + storedItem.getDisplayName() +
-								(adv ? " (" + Item.itemRegistry.getIDForObject(storedItem.getItem()) + ":" +
-										storedItem.getItemDamageForDisplay() + ")" : "")));
+								(adv ? " (" + storedItem.getItem().getRegistryName() + ":" +
+										storedItem.getItemDamage() + ")" : "")));
 				}
 			}
 			super.addInformation(stack, player, info, adv);
@@ -183,9 +181,6 @@ public class Machine {
 	protected final int _blockIndex;
 	protected final int _meta;
 	protected final int _machineIndex;
-
-	protected IIcon[] _iconsActive = new IIcon[6];
-	protected IIcon[] _iconsIdle = new IIcon[6];
 
 	protected final String _name;
 	protected final String _internalName;
@@ -269,15 +264,6 @@ public class Machine {
 		return _machines;
 	}
 
-	public static void LoadTextures(int blockIndex, IIconRegister ir) {
-
-		for (Machine m : _machines) {
-			if (m.getBlockIndex() == blockIndex) {
-				m.loadIcons(ir);
-			}
-		}
-	}
-
 	private String getTooltipText() {
 
 		return "tip.info.mfr." + _name.toLowerCase(Locale.US);
@@ -285,16 +271,16 @@ public class Machine {
 
 	public boolean hasTooltip(ItemStack stack) {
 
-		if (stack.stackTagCompound != null)
-			if (_energyStoredMax > 0 && stack.stackTagCompound.hasKey("energyStored"))
+		if (stack.getTagCompound() != null)
+			if (_energyStoredMax > 0 && stack.getTagCompound().hasKey("energyStored"))
 				return true;
-		return _activationEnergy > 0 || StatCollector.canTranslate(getTooltipText());
+		return _activationEnergy > 0 || I18n.canTranslate(getTooltipText());
 	}
 
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> info, boolean adv) {
 
-		if (stack.stackTagCompound != null) {
-			NBTTagCompound tag = stack.stackTagCompound;
+		if (stack.getTagCompound() != null) {
+			NBTTagCompound tag = stack.getTagCompound();
 			if (_energyStoredMax > 0 && tag.hasKey("energyStored")) {
 				String max = StringHelper.getScaledNumber(_energyStoredMax);
 				String cur = StringHelper.getScaledNumber(Math.min(_energyStoredMax, tag.getInteger("energyStored")));
@@ -309,8 +295,8 @@ public class Machine {
 				info.add(MFRUtil.localize("info.cofh.energyConsume", true) + ": " + RED + _activationEnergy + " RF/Wk" + RESET);
 		}
 		String s = getTooltipText();
-		if (StatCollector.canTranslate(s)) {
-			s = StatCollector.translateToLocal(s);
+		if (I18n.canTranslate(s)) {
+			s = I18n.translateToLocal(s);
 			if (s.contains("\n"))
 				info.addAll(Arrays.asList(s.split("\n")));
 			else
@@ -396,12 +382,10 @@ public class Machine {
 				_activationEnergy = c.get("Machine." + _name, "ActivationCostRF", getActivationEnergy(),
 					comment + ", in units of **1** RF").setRequiresMcRestart(true).getInt();
 		}
-
-		MFRThings.machineBlocks.get(_blockIndex).setHarvestLevel("pickaxe", 0, _meta);
-		GameRegistry.registerTileEntity(_tileEntityClass, _tileEntityName);
 	}
 
-	public IIcon getIcon(int side, boolean isActive) {
+/* TODO remove when not needed
+	public IIcon getIcon(EnumFacing side, boolean isActive) {
 
 		return (isActive ? _iconsActive : _iconsIdle)[side];
 	}
@@ -421,6 +405,7 @@ public class Machine {
 		_iconsIdle[4] = ir.registerIcon(loadIcon(left, false));
 		_iconsIdle[5] = ir.registerIcon(loadIcon(right, false));
 	}
+*/
 
 	protected String loadIcon(Side side, boolean active) {
 
@@ -428,7 +413,7 @@ public class Machine {
 		final String a = side.getMain(active);
 		final String name = getInternalName() + ".";
 		String t;
-		if (CoFHProps.enableColorBlindTextures) {
+		if (CoreProps.enableColorBlindTextures) {
 			final String cb = ".cb";
 			if (RegistryUtils.blockTextureExists(t = base + name + a + cb))
 				return t;
@@ -455,6 +440,16 @@ public class Machine {
 			return t;
 		else
 			return base + "tile.mfr.machine.0." + side.alt;
+	}
+
+	public String getTileEntityName() {
+		
+		return _tileEntityName;
+	}
+
+	public Class<? extends TileEntityFactory> getTileEntityClass() {
+		
+		return _tileEntityClass;
 	}
 
 	protected static enum Side {

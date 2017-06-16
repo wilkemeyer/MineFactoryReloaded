@@ -7,7 +7,11 @@ import cofh.lib.gui.element.ElementSlider;
 import cofh.lib.gui.element.listbox.IListBoxElement;
 import cofh.lib.gui.element.listbox.SliderHorizontal;
 import cofh.lib.gui.element.listbox.SliderVertical;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +30,7 @@ import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedClient;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.IRedNetLogicCircuit;
+import powercrystals.minefactoryreloaded.block.BlockRedNetLogic;
 import powercrystals.minefactoryreloaded.circuits.Noop;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.client.font.PrcFontRenderer;
@@ -33,6 +38,7 @@ import powercrystals.minefactoryreloaded.gui.control.ButtonLogicBufferSelect;
 import powercrystals.minefactoryreloaded.gui.control.ButtonLogicPinSelect;
 import powercrystals.minefactoryreloaded.gui.control.ListBoxElementCircuit;
 import powercrystals.minefactoryreloaded.gui.control.LogicButtonType;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic;
 import powercrystals.minefactoryreloaded.tile.rednet.TileEntityRedNetLogic.PinMapping;
@@ -136,8 +142,7 @@ public class GuiRedNetLogic extends GuiBase {
 			@Override
 			protected void onElementClicked(IListBoxElement newElement) {
 
-				Packets.sendToServer(Packets.LogicSetCircuit, _logic,
-					_selectedCircuit, newElement.getValue().getClass().getName());
+				MFRPacket.requestLogicSetCircuitFromServer(_logic, _selectedCircuit, newElement.getValue().getClass().getName());
 			}
 
 			@Override
@@ -193,7 +198,7 @@ public class GuiRedNetLogic extends GuiBase {
 				if (_selectedCircuit < 0) {
 					_selectedCircuit = _logic.getCircuitCount() - 1;
 				}
-				MineFactoryReloadedClient.prcPages.put(new BlockPosition(_logic), _selectedCircuit);
+				MineFactoryReloadedClient.prcPages.put(_logic.getPos(), _selectedCircuit);
 				requestCircuit();
 				_listNeedsUpdated = true;
 			}
@@ -208,7 +213,7 @@ public class GuiRedNetLogic extends GuiBase {
 				if (_selectedCircuit >= _logic.getCircuitCount()) {
 					_selectedCircuit = 0;
 				}
-				MineFactoryReloadedClient.prcPages.put(new BlockPosition(_logic), _selectedCircuit);
+				MineFactoryReloadedClient.prcPages.put(_logic.getPos(), _selectedCircuit);
 				requestCircuit();
 				_listNeedsUpdated = true;
 			}
@@ -237,8 +242,7 @@ public class GuiRedNetLogic extends GuiBase {
 			@Override
 			public void onClick() {
 
-				Packets.sendToServer(Packets.LogicReinitialize, _logic,
-					Minecraft.getMinecraft().thePlayer.getEntityId());
+				MFRPacket.sendLogicReinitializeToServer(_logic,	Minecraft.getMinecraft().thePlayer.getEntityId());
 				_reinitCountdown = 0;
 				_listNeedsUpdated = true;
 			}
@@ -249,7 +253,7 @@ public class GuiRedNetLogic extends GuiBase {
 
 		_reinitConfirm.setVisible(false);
 
-		int rotation = _logic.getWorldObj().getBlockMetadata(_logic.xCoord, _logic.yCoord, _logic.zCoord);
+		EnumFacing rotation = _logic.getWorld().getBlockState(_logic.getPos()).getValue(BlockRedNetLogic.FACING);
 
 		for (int i = 0; i < _inputIOPinButtons.length; i++) {
 			_inputIOBufferButtons[i] = new ButtonLogicBufferSelect(this, 25, 16 + i * pinOffset, i, LogicButtonType.Input,
@@ -266,7 +270,7 @@ public class GuiRedNetLogic extends GuiBase {
 			addElement(_outputIOPinButtons[i].setVisible(false));
 		}
 
-		Integer lastPage = MineFactoryReloadedClient.prcPages.get(new BlockPosition(_logic));
+		Integer lastPage = MineFactoryReloadedClient.prcPages.get(_logic.getPos());
 		if (lastPage != null && lastPage < _logic.getCircuitCount()) {
 			_selectedCircuit = lastPage;
 		}
@@ -361,27 +365,28 @@ public class GuiRedNetLogic extends GuiBase {
 
 		mouseX = x - guiLeft;
 		mouseY = y - guiTop;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(texture);
 		drawLargeTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft, guiTop, 0.0F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft, guiTop, 0.0F);
 		drawElements(gameTicks, false);
 		drawTabs(gameTicks, false);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void drawLargeTexturedModalRect(int x, int y, int u, int v, int xSize, int ySize) {
 
 		float uScale = 1.0F / 384.0F;
 		float vScale = 1.0F / 256.0F;
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + ySize, this.zLevel, (u + 0) * uScale, (v + ySize) * vScale);
-		tessellator.addVertexWithUV(x + xSize, y + ySize, this.zLevel, (u + xSize) * uScale, (v + ySize) * vScale);
-		tessellator.addVertexWithUV(x + xSize, y + 0, this.zLevel, (u + xSize) * uScale, (v + 0) * vScale);
-		tessellator.addVertexWithUV(x + 0, y + 0, this.zLevel, (u + 0) * uScale, (v + 0) * vScale);
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexbuffer.pos(x + 0, y + ySize, this.zLevel).tex((u + 0) * uScale, (v + ySize) * vScale).endVertex();
+		vertexbuffer.pos(x + xSize, y + ySize, this.zLevel).tex((u + xSize) * uScale, (v + ySize) * vScale).endVertex();
+		vertexbuffer.pos(x + xSize, y + 0, this.zLevel).tex((u + xSize) * uScale, (v + 0) * vScale).endVertex();
+		vertexbuffer.pos(x + 0, y + 0, this.zLevel).tex((u + 0) * uScale, (v + 0) * vScale).endVertex();
 		tessellator.draw();
 	}
 
@@ -397,20 +402,17 @@ public class GuiRedNetLogic extends GuiBase {
 
 	private void requestCircuit() {
 
-		Packets.sendToServer(Packets.CircuitDefinition, _logic,
-			_selectedCircuit);
+		MFRPacket.requestCircuitDefinitionFromServer(_logic, _selectedCircuit);
 	}
 
 	public void setInputPinMapping(int index, int buffer, int pin) {
 
-		Packets.sendToServer(Packets.LogicSetPin, _logic,
-			(byte) 0, _selectedCircuit, index, buffer, pin);
+		MFRPacket.sendLogicSetPinToServer(_logic, (byte) 0, _selectedCircuit, index, buffer, pin);
 	}
 
 	public void setOutputPinMapping(int index, int buffer, int pin) {
 
-		Packets.sendToServer(Packets.LogicSetPin, _logic,
-			(byte) 1, _selectedCircuit, index, buffer, pin);
+		MFRPacket.sendLogicSetPinToServer(_logic, (byte) 1, _selectedCircuit, index, buffer, pin);
 	}
 
 	public int getVariableCount() {

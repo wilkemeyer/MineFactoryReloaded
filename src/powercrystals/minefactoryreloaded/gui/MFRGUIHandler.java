@@ -1,11 +1,14 @@
 package powercrystals.minefactoryreloaded.gui;
 
-import cpw.mods.fml.common.network.IGuiHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.network.IGuiHandler;
 import powercrystals.minefactoryreloaded.gui.client.GUIBag;
 import powercrystals.minefactoryreloaded.gui.client.GuiNeedlegun;
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
@@ -23,7 +26,7 @@ public class MFRGUIHandler implements IGuiHandler
 	{
 		if(ID == 0)
 		{
-			TileEntity te = world.getTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 			if(te instanceof TileEntityFactory)
 			{
 				return ((TileEntityFactory)te).getContainer(player.inventory);
@@ -35,29 +38,42 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 1)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.needlegunItem))
+			ItemStack stack = getCorrectStackFromEitherHand(MFRThings.needlegunItem, player);
+			if(stack != null)
 			{
-				return new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory);
+				return new ContainerNeedlegun(new NeedlegunContainerWrapper(stack), player.inventory);
 			}
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
+			ItemStack stack = getCorrectStackFromEitherHand(MFRThings.plasticBagItem, player);
+			if(stack != null)
 			{
-				return new ContainerBag(player.getCurrentEquippedItem(), player.inventory);
+				return new ContainerBag(stack, player.inventory);
 			}
 		}
 		return null;
 	}
 
+	private ItemStack getCorrectStackFromEitherHand(Item item, EntityPlayer player) {
+		
+		for(EnumHand hand : EnumHand.values()) {
+			
+			ItemStack stack = player.getHeldItem(hand);
+			
+			if (stack != null && stack.getItem() == item) {
+				return stack;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		if(ID == 0)
 		{
-			TileEntity te = world.getTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 			if(te instanceof TileEntityFactory)
 			{
 				return ((TileEntityFactory)te).getGui(player.inventory);
@@ -69,18 +85,18 @@ public class MFRGUIHandler implements IGuiHandler
 		}
 		else if(ID == 1)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.needlegunItem))
+			ItemStack stack = getCorrectStackFromEitherHand(MFRThings.needlegunItem, player);
+			if(stack != null)
 			{
-				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(player.getCurrentEquippedItem()), player.inventory), player.getCurrentEquippedItem());
+				return new GuiNeedlegun(new ContainerNeedlegun(new NeedlegunContainerWrapper(stack), player.inventory), stack);
 			}
 		}
 		else if(ID == 2)
 		{
-			if(player.getCurrentEquippedItem() != null &&
-					player.getCurrentEquippedItem().getItem().equals(MFRThings.plasticBagItem))
+			ItemStack stack = getCorrectStackFromEitherHand(MFRThings.plasticBagItem, player);
+			if(stack != null)
 			{
-				return new GUIBag(new ContainerBag(player.getCurrentEquippedItem(), player.inventory));
+				return new GUIBag(new ContainerBag(stack, player.inventory));
 			}
 		}
 		return null;

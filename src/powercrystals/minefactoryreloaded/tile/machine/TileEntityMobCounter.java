@@ -1,53 +1,45 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 
-public class TileEntityMobCounter extends TileEntityFactory
-{
+public class TileEntityMobCounter extends TileEntityFactory {
+
 	private int _lastMobCount;
 
-	public TileEntityMobCounter()
-	{
+	public TileEntityMobCounter() {
+
 		super(Machine.MobCounter);
 		createEntityHAM(this);
 		setCanRotate(true);
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
+	public void update() {
 
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
+		super.update();
 
-		if (worldObj == null)
-		{
+		if (worldObj == null) {
 			return;
 		}
 
 		int mobCount = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, _areaManager.getHarvestArea().toAxisAlignedBB()).size();
-		if (mobCount != _lastMobCount)
-		{
+		if (mobCount != _lastMobCount) {
 			_lastMobCount = mobCount;
-			if (!worldObj.isRemote)
-			{
-				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, MFRThings.machineBlocks.get(Machine.MobCounter.getBlockIndex()));
+			if (!worldObj.isRemote) {
+				worldObj.notifyNeighborsOfStateChange(pos, this._machine.getBlock());
 			}
 		}
 	}
 
 	@Override
-	public int getRedNetOutput(ForgeDirection side)
-	{
+	public int getRedNetOutput(EnumFacing side) {
+
 		return _lastMobCount;
 	}
+
 }

@@ -1,7 +1,10 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -18,8 +21,8 @@ public class ItemBlockDetCord extends ItemBlock
 	}
 
 	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
-			int side, float hitX, float hitY, float hitZ, int metadata)
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
+			EnumFacing side, float hitX, float hitY, float hitZ, IBlockState state)
 	{
 		return false; // temporary
 	}

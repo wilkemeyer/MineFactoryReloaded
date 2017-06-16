@@ -1,0 +1,70 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all"
+	},
+	"variants": {
+		"variant": {
+			"black_smooth": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.black_smooth"
+				}
+			},
+			"white_smooth": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.white_smooth"
+				}
+			},
+			"black_cobble": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.black_cobble"
+				}
+			},
+			"white_cobble": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.white_cobble"
+				}
+			},
+			"black_brick_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.black_brick_large"
+				}
+			},
+			"white_brick_large": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.white_brick_large"
+				}
+			},
+			"black_brick_small": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.black_brick_small"
+				}
+			},
+			"white_brick_small": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.white_brick_small"
+				}
+			},
+			"black_gravel": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.black_gravel"
+				}
+			},
+			"white_gravel": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.white_gravel"
+				}
+			},
+			"black_paved": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.black_paved"
+				}
+			},
+			"white_paved": {
+				"textures": {
+					"all": "minefactoryreloaded:blocks/tile.mfr.decorative.stone.white_paved"
+				}
+			}
+		}
+	}
+}

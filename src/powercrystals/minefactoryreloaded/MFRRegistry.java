@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded;
 
 import cofh.lib.util.WeightedRandomItemStack;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 
@@ -383,15 +383,8 @@ public abstract class MFRRegistry {
 	private static Map<String, Block> blocks = new HashMap<String, Block>();
 	private static Map<String, Item> items = new HashMap<String, Item>();
 	static {
-		remaps.put("liquid", null);
-		remaps.put("armor", null);
-		remaps.put("decorative", null);
-
-		remaps.put("tile.mfr.decorativebrick", "brick");
-		remaps.put("tile.mfr.decorativestone", "stone");
-		remaps.put("item.mfr.bucket.plasticcup", "plastic.cup");
-		remaps.put("item.mfr.armor.boots.plastic", "plastic.boots");
-		remaps.put("item.mfr.pinkslimeball", "pinkslime");
+		//This is where remaps should go if needed in the future
+		//remaps.put("tile.mfr.decorativebrick", "brick");
 	}
 
 	private static String remapPhrase(String s) {
@@ -430,19 +423,39 @@ public abstract class MFRRegistry {
 	static Block remapBlock(String id) {
 
 		Block block = blocks.get(id);
-		if (block == null)
-			block = GameRegistry.findBlock("MineFactoryReloaded", remapName(id));
+		if (block == null) {
+			id = remapName(id);
+			if (id != null)
+				block = GameRegistry.findBlock("MineFactoryReloaded", id);
+		}
+
 		return block;
 	}
 
 	static Item remapItem(String id) {
 
 		Item item = items.get(id);
-		if (item == null)
-			item = GameRegistry.findItem("MineFactoryReloaded", remapName(id));
+		if (item == null) {
+			id = remapName(id);
+			if (id != null)
+				item = GameRegistry.findItem("MineFactoryReloaded", id);
+		}
 		return item;
 	}
 
+	public static void registerBlock(Block block, ItemBlock itemBlock) {
+
+		String name = block.getRegistryName().getResourcePath();
+		blocks.put(name, block);
+
+		GameRegistry.register(block);
+		if (itemBlock != null) {
+			GameRegistry.register(itemBlock.setRegistryName(block.getRegistryName()));
+			items.put(name, Item.getItemFromBlock(block));
+		}
+	}
+	
+	@Deprecated
 	static void registerBlock(Block block, Class<? extends ItemBlock> item, Object... args) {
 
 		String name = block.getUnlocalizedName();
@@ -450,17 +463,16 @@ public abstract class MFRRegistry {
 
 		name = remapName(name);
 
-		GameRegistry.registerBlock(block, item, name, args);
+		block.setRegistryName(MineFactoryReloadedCore.modId, name);
+		GameRegistry.registerBlock(block, item, MineFactoryReloadedCore.modId + ":" + name, args);
 		if (item != null)
 			items.put(block.getUnlocalizedName(), Item.getItemFromBlock(block));
 	}
 
-	public static void registerItem(Item item, String name) {
+	public static void registerItem(Item item) {
 
-		items.put(name, item);
+		items.put(item.getRegistryName().getResourcePath(), item);
 
-		name = remapName(name);
-
-		GameRegistry.registerItem(item, name);
+		GameRegistry.register(item);
 	}
 }

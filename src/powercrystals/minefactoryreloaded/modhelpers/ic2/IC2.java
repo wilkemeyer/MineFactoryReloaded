@@ -1,15 +1,14 @@
 package powercrystals.minefactoryreloaded.modhelpers.ic2;
 
 import cofh.asm.relauncher.Strippable;
-import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import ic2.api.item.IC2Items;
 import ic2.api.recipe.ISemiFluidFuelManager.BurnProperty;
@@ -32,19 +31,19 @@ import powercrystals.minefactoryreloaded.farmables.harvestables.HarvestableTreeL
 import powercrystals.minefactoryreloaded.farmables.plantables.PlantableSapling;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatIC2",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatIC2",
 		name = "MFR Compat: IC2",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:IC2",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class IC2 {
 
 	@EventHandler
 	public static void postLoad(FMLPostInitializationEvent evt) {
 
-		ItemArmor boots = net.minecraft.init.Items.leather_boots;
+		ItemArmor boots = net.minecraft.init.Items.LEATHER_BOOTS;
 		ItemStack booties = new ItemStack(boots, 64, 0);
-		boots.func_82813_b(booties, 0x3479F2);
+		boots.setColor(booties, 0x3479F2);
 		OreDictionary.registerOre("greggy_greg_do_please_kindly_stuff_a_sock_in_it", booties);
 	}
 
@@ -100,7 +99,7 @@ public class IC2 {
 			ItemStack item = new ItemStack(MFRThings.rubberSaplingBlock);
 			rubber.stackSize = 1;
 			try {
-				Recipes.extractor.addRecipe(new RecipeInputItemStack(item), null, rubber);
+				Recipes.extractor.addRecipe(new RecipeInputItemStack(item), null, false, rubber);
 			} catch (Throwable $) {
 				ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 				LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);

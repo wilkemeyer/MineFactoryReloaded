@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.gui.control;
 
 import cofh.lib.gui.element.ElementButtonOption;
 
+import net.minecraft.util.EnumFacing;
 import powercrystals.minefactoryreloaded.gui.client.GuiRedNetLogic;
 
 public class ButtonLogicBufferSelect extends ElementButtonOption
@@ -12,7 +13,7 @@ public class ButtonLogicBufferSelect extends ElementButtonOption
 	private boolean _ignoreChanges;
 	private int _lastValue;
 	
-	public ButtonLogicBufferSelect(GuiRedNetLogic containerScreen, int x, int y, int pinIndex, LogicButtonType buttonType, int rotation)
+	public ButtonLogicBufferSelect(GuiRedNetLogic containerScreen, int x, int y, int pinIndex, LogicButtonType buttonType, EnumFacing rotation)
 	{
 		super(containerScreen, x, y, 30, 14);
 		_logicScreen = containerScreen;
@@ -22,7 +23,7 @@ public class ButtonLogicBufferSelect extends ElementButtonOption
 		char[] dir = {'L','B','R','F',};
 		char[] dirMap = new char[4];
 		for (int i = 0; i < 4; ++i)
-			dirMap[(i + rotation) & 3] = dir[i];
+			dirMap[(i + rotation.getIndex()) & 3] = dir[i];
 		
 		_ignoreChanges = true;
 		if(_buttonType == LogicButtonType.Input)

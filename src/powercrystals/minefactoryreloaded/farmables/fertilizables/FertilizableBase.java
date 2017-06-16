@@ -3,6 +3,8 @@ package powercrystals.minefactoryreloaded.farmables.fertilizables;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -31,13 +33,13 @@ public abstract class FertilizableBase implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
-		return fertilizerType == validFertilizer && canFertilize(world.getBlockMetadata(x, y, z));
+		return fertilizerType == validFertilizer && canFertilize(world.getBlockState(pos));
 	}
 	
-	protected abstract boolean canFertilize(int metadata);
+	protected abstract boolean canFertilize(IBlockState state);
 
 	@Override
-	public abstract boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType);
+	public abstract boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType);
 }

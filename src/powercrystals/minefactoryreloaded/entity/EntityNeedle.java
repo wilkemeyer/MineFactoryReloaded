@@ -1,8 +1,10 @@
 package powercrystals.minefactoryreloaded.entity;
 
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import io.netty.buffer.ByteBuf;
 
@@ -13,10 +15,9 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -32,7 +33,6 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 	public EntityNeedle(World world) {
 
 		super(world);
-		renderDistanceWeight = 10.0D;
 		setSize(0.5F, 0.5F);
 	}
 
@@ -40,18 +40,28 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 
 		this(world);
 
-		_owner = owner.getCommandSenderName();
+		_owner = owner.getName();
 		_ammoSource = ammoSource;
 
 		setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw, owner.rotationPitch);
 		setPosition(posX, posY, posZ);
-		yOffset = 0.0F;
 		motionX = (-MathHelper.sin(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI));
 		motionZ = (MathHelper.cos(rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float) Math.PI));
 		motionY = (-MathHelper.sin(rotationPitch / 180.0F * (float) Math.PI));
 		setThrowableHeading(motionX, motionY, motionZ, 3.25F, spread);
 		distance = 0;
 		//world.spawnEntityInWorld(new DebugTracker(world, owner, this));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance) {
+		double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+		if(Double.isNaN(d0)) {
+			d0 = 1.0D;
+		}
+
+		d0 = d0 * 64.0D * getRenderDistanceWeight();
+		return distance < d0 * d0;
 	}
 
 	@Override
@@ -70,8 +80,10 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 
 	@Override
 	protected void entityInit() {
-
+		
+/* TODO no idea why this is set here and not used at all after, just delete if it really has no use anywhere
 		dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+*/
 	}
 
 	@Override
@@ -97,7 +109,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int unknown) {
+	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
 
 		setPosition(x, y, z);
 		setRotation(yaw, pitch);
@@ -133,19 +145,19 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 		}
 
 		++ticksInAir;
-		Vec3 pos = Vec3.createVectorHelper(posX, posY, posZ);
-		Vec3 nextPos = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
-		MovingObjectPosition hit = worldObj.func_147447_a(pos, nextPos, false, true, false);
-		pos = Vec3.createVectorHelper(posX, posY, posZ);
-		nextPos = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
+		Vec3d pos = new Vec3d(posX, posY, posZ);
+		Vec3d nextPos = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
+		RayTraceResult hit = worldObj.rayTraceBlocks(pos, nextPos, false, true, false);
+		pos = new Vec3d(posX, posY, posZ);
+		nextPos = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
 
 		if (hit != null) {
-			nextPos = Vec3.createVectorHelper(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord);
+			nextPos = new Vec3d(hit.hitVec.xCoord, hit.hitVec.yCoord, hit.hitVec.zCoord);
 		}
 
 		Entity entityHit = null;
 		List<?> list = worldObj.getEntitiesWithinAABBExcludingEntity(this,
-			boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+			getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
 		double closestRange = 0.0D;
 		double collisionRange = 0.3D;
 		EntityPlayer owner = _owner == null ? null : worldObj.getPlayerEntityByName(_owner);
@@ -154,8 +166,8 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 			Entity e = (Entity) list.get(l);
 
 			if ((e != owner | ticksInAir >= 2) && e.canBeCollidedWith()) {
-				AxisAlignedBB entitybb = e.boundingBox.expand(collisionRange, collisionRange, collisionRange);
-				MovingObjectPosition entityHitPos = entitybb.calculateIntercept(pos, nextPos);
+				AxisAlignedBB entitybb = e.getEntityBoundingBox().expand(collisionRange, collisionRange, collisionRange);
+				RayTraceResult entityHitPos = entitybb.calculateIntercept(pos, nextPos);
 
 				if (entityHitPos != null) {
 					double range = pos.distanceTo(entityHitPos.hitVec);
@@ -169,7 +181,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 		}
 
 		if (entityHit != null) {
-			hit = new MovingObjectPosition(entityHit);
+			hit = new RayTraceResult(entityHit);
 		}
 
 		if (hit != null && hit.entityHit != null && hit.entityHit instanceof EntityPlayer) {
@@ -190,7 +202,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 						owner, hit.entityHit, distance);
 				} else {
 					MFRRegistry.getNeedleAmmoTypes().get(_ammoSource.getItem()).onHitBlock(_ammoSource,
-						owner, worldObj, hit.blockX, hit.blockY, hit.blockZ, hit.sideHit, distance);
+						owner, worldObj, hit.getBlockPos(), hit.sideHit, distance);
 				}
 			}
 			setDead();
@@ -232,7 +244,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 		if (isInWater()) {
 			double particleOffset = 0.25D;
 			for (int i = 0; i < 4; ++i) {
-				worldObj.spawnParticle("bubble", posX - motionX * particleOffset, posY - motionY *
+				worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * particleOffset, posY - motionY *
 						particleOffset, posZ - motionZ * particleOffset, motionX, motionY, motionZ);
 			}
 
@@ -243,7 +255,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 		motionY *= speedDropoff;
 		motionZ *= speedDropoff;
 		setPosition(posX, posY, posZ);
-		func_145775_I();
+		doBlockCollisions();
 	}
 
 	@Override
@@ -275,14 +287,7 @@ public class EntityNeedle extends Entity implements IProjectile, IEntityAddition
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public float getShadowSize() {
-
-		return 0.0F;
-	}
-
-	@Override
-	public boolean canAttackWithItem() {
+	public boolean canBeAttackedWithItem() {
 
 		return false;
 	}

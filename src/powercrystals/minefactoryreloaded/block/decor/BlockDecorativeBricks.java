@@ -1,62 +1,193 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.BlockFactory;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
-public class BlockDecorativeBricks extends BlockFactory
-{
-	public static final String[] _names = new String [] { "ice", "glowstone", "lapis", "obsidian", "pavedstone", "snow",
-		"ice_large", "glowstone_large", "lapis_large", "obsidian_large", "pavedstone_large", "snow_large",
-		"meat.raw", "meat.cooked", "brick_large", "sugar_charcoal" };
-	private IIcon[] _icons = new IIcon[_names.length];
+import javax.annotation.Nullable;
 
-	public BlockDecorativeBricks()
-	{
-		super(Material.rock);
+public class BlockDecorativeBricks extends BlockFactory {
+
+	public static final SoundType GLASS_LIKE = new SoundType(1.0F, 0.9F, SoundEvents.BLOCK_GLASS_BREAK, SoundEvents.BLOCK_GLASS_STEP, SoundEvents.BLOCK_GLASS_PLACE, SoundEvents.BLOCK_GLASS_HIT, SoundEvents.BLOCK_GLASS_FALL);
+
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
+	
+	public BlockDecorativeBricks() {
+		
+		super(Material.ROCK);
 		setHardness(2.0F);
 		setResistance(10.0F);
-		setStepSound(Blocks.stone.stepSound);
-		setBlockName("mfr.decorative.brick");
+		setSoundType(SoundType.STONE);
+		setUnlocalizedName("mfr.decorative.brick");
 		providesPower = false;
+		setRegistryName(MineFactoryReloadedCore.modId, "brick");
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-		return meta == 1 | meta == 7 ? 15 : 0;
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, VARIANT);
 	}
 
 	@Override
-	public float getExplosionResistance(Entity e, World world, int x, int y, int z, double eX, double eY, double eZ)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-		return meta == 3 | meta == 9 ? Blocks.obsidian.getExplosionResistance(e) : getExplosionResistance(e);
+	public IBlockState getStateFromMeta(int meta) {
+
+		return getDefaultState().withProperty(VARIANT, Variant.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		return state.getValue(VARIANT).meta;
+	}
+
+	@Override
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+
+		boolean ice = isIce(state);
+		return (ice && layer == BlockRenderLayer.TRANSLUCENT) || (!ice && layer == BlockRenderLayer.SOLID);
+	}
+
+	private boolean isIce(IBlockState state) {
+		
+		Variant variant = state.getValue(VARIANT);
+		return variant == Variant.ICE || variant == Variant.ICE_LARGE;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		
+		return !isIce(state);
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+		
+		return isIce(state) ? 3 : 255;
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		for(int i = 0; i < _icons.length; i++)
-		{
-			_icons[i] = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + "." + _names[i]);
-		}
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+
+		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
+		Block block = iblockstate.getBlock();
+
+		return block == this && isIce(blockState) && isIce(iblockstate) ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		return _icons[Math.min(meta, _icons.length - 1)];
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		Variant variant = state.getValue(VARIANT);
+		return variant == Variant.GLOWSTONE || variant == Variant.GLOWSTONE_LARGE ? 15 : 0;
+	}
+	
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
+
+		Variant variant = world.getBlockState(pos).getValue(VARIANT);
+		return variant == Variant.OBSIDIAN || variant == Variant.OBSIDIAN_LARGE ? Blocks.OBSIDIAN.getExplosionResistance(exploder) : getExplosionResistance(exploder);
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, Variant.UNLOC_NAMES));
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, "variant", Variant.NAMES);
+	}
+
+	@Override
+	public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity) {
+
+		SoundType soundType = state.getValue(VARIANT).soundType;
+		if (soundType != null)
+			return soundType;
+		return this.getSoundType();
+	}
+
+	public enum Variant implements IStringSerializable {
+
+		ICE("ice", GLASS_LIKE),
+		GLOWSTONE("glowstone", GLASS_LIKE),
+		LAPIS("lapis"),
+		OBSIDIAN("obsidian"),
+		PAVEDSTONE("pavedstone"),
+		SNOW("snow", SoundType.SNOW),
+		ICE_LARGE("ice_large", GLASS_LIKE),
+		GLOWSTONE_LARGE("glowstone_large", GLASS_LIKE),
+		LAPIS_LARGE("lapis_large"),
+		OBSIDIAN_LARGE("obsidian_large"),
+		PAVEDSTONE_LARGE("pavedstone_large"),
+		SNOW_LARGE("snow_large", SoundType.SNOW),
+		MEAT_RAW("meat_raw", SoundType.SLIME),
+		MEAT_COOKED("meat_cooked", SoundType.SLIME),
+		BRICK_LARGE("brick_large"),
+		SUGAR_CHARCOAL("sugar_charcoal");
+
+		private final int meta;
+		private final String name;
+		private final SoundType soundType;
+
+		public static final String[] NAMES;
+		public static final String[] UNLOC_NAMES;
+
+		Variant(String name) {
+
+			this(name, null);
+		}
+
+		Variant(String name, SoundType sound) {
+
+			this.meta = ordinal();
+			this.name = name;
+			this.soundType = sound;
+		}
+
+		@Override
+		public String getName() {
+			
+			return name;
+		}
+
+		public static Variant byMetadata(int meta) {
+
+			return values()[meta];
+		}
+		
+		static {
+			NAMES = new String[values().length];
+			UNLOC_NAMES = new String[values().length];
+			for (Variant variant : values()) {
+				NAMES[variant.meta] = variant.name;
+				UNLOC_NAMES[variant.meta] = variant.name.replace("_", "");
+			}
+		}
 	}
 }

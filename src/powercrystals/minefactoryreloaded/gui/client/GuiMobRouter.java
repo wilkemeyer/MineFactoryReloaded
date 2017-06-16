@@ -3,6 +3,7 @@ package powercrystals.minefactoryreloaded.gui.client;
 import net.minecraft.client.gui.GuiButton;
 
 import powercrystals.minefactoryreloaded.gui.container.ContainerMobRouter;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityMobRouter;
 
@@ -68,6 +69,6 @@ public class GuiMobRouter extends GuiFactoryPowered
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		Packets.sendToServer(Packets.RouterButton, _tileEntity, button.id);
+		MFRPacket.sendRouterButtonToServer(_tileEntity, button.id);
 	}
 }

@@ -6,13 +6,16 @@ import cofh.api.energy.IEnergyReceiver;
 import cofh.api.item.IAugmentItem;
 import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
-import cofh.lib.util.helpers.AugmentHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.core.util.helpers.AugmentHelper;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.setup.Machine;
 
@@ -70,9 +73,9 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 
 		_energyStored = Math.min(_energyStored, getEnergyStoredMax());
 
@@ -118,8 +121,8 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		ItemStack stack = getStackInSlot(i);
 		if (AugmentHelper.isAugmentItem(stack)) {
 			IAugmentItem item = (IAugmentItem) stack.getItem();
-			int level = item.getAugmentLevel(stack, "machineSpeed");
-			if (level >= 0) {
+			if ("machineSpeed".equals(item.getAugmentIdentifier(stack))) {
+				int level = item.getAugmentType(stack) == IAugmentItem.AugmentType.BASIC ? 1 : 2; //TODO this needs review
 				_workTicks = (int) Math.pow(2, level);
 				int e = _machine.getActivationEnergy();
 				setActivationEnergy(_workTicks * (e + ((e * level) >> 1)));
@@ -135,7 +138,7 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	@Override
 	protected boolean canUseUpgrade(ItemStack stack, IAugmentItem item) {
 
-		return super.canUseUpgrade(stack, item) || item.getAugmentLevel(stack, "machineSpeed") > 0;
+		return super.canUseUpgrade(stack, item) || "machineSpeed".equals(item.getAugmentIdentifier(stack));
 	}
 
 	protected boolean updateIsActive(boolean failedDrops) {
@@ -216,15 +219,17 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 
 		if (_workDone > 0)
 			tag.setInteger("workDone", _workDone);
 
 		if (_idleTicks > 0)
 			tag.setInteger("idleDone", _idleTicks);
+
+		return tag;
 	}
 
 	@Override
@@ -289,25 +294,25 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 		}//*/
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
 		return storeEnergy(maxReceive, !simulate);
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 
 		return true;
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 
 		return getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 
 		return getEnergyStoredMax();
 	}
@@ -327,8 +332,62 @@ public abstract class TileEntityFactoryPowered extends TileEntityFactoryInventor
 	}
 
 	@Override
-	public boolean canCrankAttach(ForgeDirection directionToCrank) {
+	public boolean canCrankAttach(EnumFacing directionToCrank) {
 
 		return true;
 	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new IEnergyStorage() {
+
+				@Override
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+
+					return TileEntityFactoryPowered.this.receiveEnergy(facing, maxReceive, simulate);
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return 0;
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityFactoryPowered.this.getEnergyStored();
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityFactoryPowered.this.getMaxEnergyStored(facing);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return false;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return true;
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
+	}
+
 }

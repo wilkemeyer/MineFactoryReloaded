@@ -1,16 +1,16 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.IIcon;
+import net.minecraft.inventory.IContainerListener;
 
+import net.minecraft.util.ResourceLocation;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptBlankRecord;
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptRecord;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityAutoJukebox;
 
 public class ContainerAutoJukebox extends ContainerFactoryInventory {
 
-	public static IIcon background;
+	public static String background;
 	private TileEntityAutoJukebox _jukebox;
 
 	public ContainerAutoJukebox(TileEntityAutoJukebox tileentity, InventoryPlayer inv) {
@@ -25,18 +25,18 @@ public class ContainerAutoJukebox extends ContainerFactoryInventory {
 		addSlotToContainer(new SlotAcceptRecord(_te, 0, 8, 24));
 		addSlotToContainer(new SlotAcceptBlankRecord(_te, 1, 8, 54));
 
-		getSlot(0).setBackgroundIcon(background);
-		getSlot(1).setBackgroundIcon(background);
+		getSlot(0).setBackgroundName(background);
+		getSlot(1).setBackgroundName(background);
 	}
 
 	@Override
 	public void detectAndSendChanges() {
 
 		super.detectAndSendChanges();
-		for (int i = 0; i < crafters.size(); i++) {
-			ICrafting crafter = (ICrafting) crafters.get(i);
-			if (crafter != null) {
-				crafter.sendProgressBarUpdate(this, 100, (_jukebox.getCanCopy() ? 1 : 0) | (_jukebox.getCanPlay() ? 2 : 0));
+		for (int i = 0; i < listeners.size(); i++) {
+			IContainerListener listener = listeners.get(i);
+			if (listener != null) {
+				listener.sendProgressBarUpdate(this, 100, (_jukebox.getCanCopy() ? 1 : 0) | (_jukebox.getCanPlay() ? 2 : 0));
 			}
 		}
 	}

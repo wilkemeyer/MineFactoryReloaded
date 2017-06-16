@@ -1,32 +1,61 @@
 package powercrystals.minefactoryreloaded.block.decor;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.List;
-
-import net.minecraft.block.Block;
+import codechicken.lib.model.ModelRegistryHelper;
+import codechicken.lib.model.blockbakery.BlockBakery;
+import codechicken.lib.model.blockbakery.CCBakeryModel;
+import codechicken.lib.model.blockbakery.IBakeryBlock;
+import codechicken.lib.model.blockbakery.ICustomBlockBakery;
+import cofh.core.render.IModelRegister;
+import cofh.core.util.core.IInitializer;
 import net.minecraft.block.BlockPane;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.item.Item;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Tuple;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
-import powercrystals.minefactoryreloaded.core.MFRUtil;
+import powercrystals.minefactoryreloaded.block.ItemBlockFactory;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
-import powercrystals.minefactoryreloaded.render.IconOverlay;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassPaneRenderer;
+import powercrystals.minefactoryreloaded.render.block.FactoryGlassRenderer;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative
+import java.util.HashMap;
+import java.util.Map;
+
+public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorative, IBakeryBlock, IInitializer, IModelRegister, IColorRegister
 {
-	protected IIcon _iconSide;
+	public static final PropertyEnum<MFRDyeColor> COLOR = PropertyEnum.create("color", MFRDyeColor.class); //TODO move properties to one place
+	public static final IUnlistedProperty<Integer>[] CTM_VALUE = new IUnlistedProperty[4];
+	public static final IUnlistedProperty<Integer> FACES = Properties.toUnlisted(PropertyInteger.create("faces", 0, 16384));
+
+	static {
+		for (int i = 0; i < 4; i++)
+			CTM_VALUE[i] = Properties.toUnlisted(PropertyInteger.create("ctm_value_" + i, 0, 255));
+	}
 
 	public BlockFactoryGlassPane()
 	{
@@ -35,228 +64,222 @@ public class BlockFactoryGlassPane extends BlockPane implements IRedNetDecorativ
 
 	public BlockFactoryGlassPane(boolean mfr)
 	{
-		super("", "", Material.glass, false);
+		super(Material.GLASS, false);
 		setHardness(0.3F);
-		setStepSound(soundTypeGlass);
+		setSoundType(SoundType.GLASS);
 		if (mfr)
 		{
 			setCreativeTab(MFRCreativeTab.tab);
-			setBlockName("mfr.stainedglass.pane");
+			setUnlocalizedName("mfr.stainedglass.pane");
 		}
 		else
-			setCreativeTab(CreativeTabs.tabDecorations);
+			setCreativeTab(CreativeTabs.DECORATIONS);
+
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "stained_glass_pane");
 	}
 
 	@Override
-	public int damageDropped(int par1)
+	public int damageDropped(IBlockState state)
 	{
-		return par1;
+		return getMetaFromState(state);
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+
+		IExtendedBlockState extState = (IExtendedBlockState) state;
+
+		MFRDyeColor color = extState.getValue(COLOR);
+		Map<Integer, Tuple<Boolean, Boolean>> connections = getConnections(world, pos, color);
+
+		for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+			extState = extState.withProperty(CTM_VALUE[facing.getHorizontalIndex()], getCTMValue(connections, facing));
+		}
+
+		extState = extState.withProperty(FACES, getFacesValue(connections));
+
+		return extState;
+	}
+
+	private int getFacesValue(Map<Integer, Tuple<Boolean, Boolean>> connections) {
+
+		int facesValue = 0;
+
+		for(int i=0; i<10; i++) {
+			facesValue |= (connections.get(i).getSecond() ? 1 : 0) << i;
+		}
+
+		for(int i=14; i<18; i++) {
+			facesValue |= (connections.get(i).getSecond() ? 1 : 0) << (i - 4);
+		}
+
+		return facesValue;
+	}
+
+	private Map<Integer, Tuple<Boolean, Boolean>> getConnections(IBlockAccess world, BlockPos pos, MFRDyeColor color)
+	{
+		Map<Integer, Tuple<Boolean, Boolean>> connections = new HashMap<>();
+
+		for(EnumFacing facing : EnumFacing.VALUES) {
+			updateSideConnection(world, pos, color, connections, facing);
+		}
+
+		for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+			updateDiagonalConnection(world, pos, connections, facing, EnumFacing.UP, 6);
+			updateDiagonalConnection(world, pos, connections, facing, EnumFacing.HORIZONTALS[(facing.getHorizontalIndex() + 1) % 4], 10);
+			updateDiagonalConnection(world, pos, connections, facing, EnumFacing.DOWN, 14);
+		}
+
+		return connections;
+	}
+
+	private void updateDiagonalConnection(IBlockAccess world, BlockPos pos, Map<Integer, Tuple<Boolean, Boolean>> connections, EnumFacing facing,
+			EnumFacing secondFacing, int initialIndex)
+	{
+		boolean showFace = !(secondFacing != EnumFacing.UP && secondFacing != EnumFacing.DOWN) && !canPaneConnectTo(world, pos.offset(secondFacing), facing);
+		if(connections.get(secondFacing.ordinal()).getFirst() && connections.get(facing.ordinal()).getFirst()) {
+			IBlockState neighborState = world.getBlockState(pos.offset(secondFacing).offset(facing));
+			connections.put(initialIndex + facing.getHorizontalIndex(),	new Tuple<>(neighborState.getBlock() == this, showFace));
+		} else {
+			connections.put(initialIndex + facing.getHorizontalIndex(), new Tuple<>(false, showFace));
+		}
+	}
+
+	private void updateSideConnection(IBlockAccess world, BlockPos pos, MFRDyeColor color, Map<Integer, Tuple<Boolean, Boolean>> connections, EnumFacing facing)
+	{
+		IBlockState stateNeigbor = world.getBlockState(pos.offset(facing));
+		connections.put(facing.ordinal(), new Tuple<>(stateNeigbor.getBlock() == this, stateNeigbor.getBlock() == this && stateNeigbor.getValue(COLOR) != color));
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+		builder.add(COLOR);
+		builder.add(NORTH);
+		builder.add(SOUTH);
+		builder.add(EAST);
+		builder.add(WEST);
+		for (int i = 0; i < 4; i++) {
+			builder.add(CTM_VALUE[i]);
+		}
+		builder.add(FACES);
+		return builder.build();
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState().withProperty(COLOR, MFRDyeColor.byMetadata(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(COLOR).getMetadata();
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.TRANSLUCENT;
+	}
+
+	private int getCTMValue(Map<Integer, Tuple<Boolean, Boolean>> connections, EnumFacing side)
+	{
+		boolean[] sides = new boolean[8];
+		EnumFacing left = EnumFacing.HORIZONTALS[(side.getHorizontalIndex() + 1) % 4];
+		EnumFacing right = left.getOpposite();
+
+		sides[0] = connections.get(right.ordinal()).getFirst(); //right
+		sides[4] = connections.get(14 + right.getHorizontalIndex()).getFirst(); //right down
+		sides[1] = connections.get(EnumFacing.DOWN.ordinal()).getFirst(); //down
+		sides[5] = connections.get(14 + left.getHorizontalIndex()).getFirst(); //left down
+		sides[3] = connections.get(left.ordinal()).getFirst(); //left
+		sides[6] = connections.get(6 + left.getHorizontalIndex()).getFirst(); //left up
+		sides[2] = connections.get(EnumFacing.UP.ordinal()).getFirst(); //up
+		sides[7] = connections.get(6 + right.getHorizontalIndex()).getFirst(); //right up
+
+		return toInt(sides) & 255;
+	}
+
+	private static int toInt(boolean ...flags) {
+		int ret = 0;
+		for (int i = flags.length; i --> 0;)
+			ret |= (flags[i] ? 1 : 0) << i;
+		return ret;
+	}
+
+	@Override
+	public ICustomBlockBakery getCustomBakery() {
+		
+		return FactoryGlassPaneRenderer.INSTANCE;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockFactory(this, MFRDyeColor.UNLOC_NAMES));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+		return true;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		// This space intentionally left blank.
-	}
+	public void registerModels() {
 
-	@Override
-	public int getRenderBlockPass()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getRenderColor(int meta)
-	{
-		return MFRUtil.COLORS[Math.min(Math.max(meta, 0), 15)];
-	}
-
-	@Override
-	public boolean recolourBlock(World world, int x, int y, int z, ForgeDirection side, int colour)
-	{
-		int meta = world.getBlockMetadata(x, y, z);
-		if (meta != colour)
-		{
-			return world.setBlockMetadataWithNotify(x, y, z, colour, 3);
-		}
-		return false;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		meta /= 16;
-		switch (meta)
-		{
-		case 2:
-			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 0, 0);
-		case 1:
-			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 6, 7);
-		case 0:
-		default:
-			return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 7, 7);
-		}
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-	{
-		BlockPosition bp = new BlockPosition(x, y, z, ForgeDirection.VALID_DIRECTIONS[side]);
-		boolean[] sides = new boolean[8];
-		bp.moveRight(1);
-		sides[0] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveDown(1);
-		sides[4] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveLeft(1);
-		sides[1] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveLeft(1);
-		sides[5] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveUp(1);
-		sides[3] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveUp(1);
-		sides[6] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveRight(1);
-		sides[2] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		bp.moveRight(1);
-		sides[7] = world.getBlock(bp.x,bp.y,bp.z).equals(this);
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, sides);
-	}
-
-	@Override
-	public IIcon func_150097_e()
-	{
-		return new IconOverlay(BlockFactoryGlass._texture, 8, 8, 5, 7);
-	}
-
-	@Override
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return !(canPaneConnectTo(world, x, y, z, ForgeDirection.getOrientation(side)) ||
-				!super.shouldSideBeRendered(world, x, y, z, side));
-	}
-
-	@Override
-	public boolean canPaneConnectTo(IBlockAccess world, int x, int y, int z, ForgeDirection dir)
-	{
-		Block block = world.getBlock(x, y, z);
-		return block.func_149730_j() ||
-				block instanceof BlockPane ||
-				block.getMaterial() == Material.glass ||
-				world.isSideSolid(x, y, z, dir.getOpposite(), false);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-	{
-		float xStart = 0.4375F;
-		float zStart = 0.5625F;
-		float xStop = 0.4375F;
-		float zStop = 0.5625F;
-		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, ForgeDirection.NORTH);
-		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, ForgeDirection.SOUTH);
-		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, ForgeDirection.WEST);
-		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, ForgeDirection.EAST);
-
-		if ((!connectedWest || !connectedEast) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
-		{
-			if (connectedWest && !connectedEast)
-			{
-				xStart = 0.0F;
+		ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return FactoryGlassPaneRenderer.MODEL_LOCATION;
 			}
-			else if (!connectedWest && connectedEast)
-			{
-				zStart = 1.0F;
+		});
+		ModelRegistryHelper.register(FactoryGlassPaneRenderer.MODEL_LOCATION, new CCBakeryModel(MineFactoryReloadedCore.modId + ":blocks/tile.mfr.stainedglass") {
+			@Override public TextureAtlasSprite getParticleTexture() {
+				return FactoryGlassRenderer.spriteSheet.getSprite(FactoryGlassRenderer.FULL_FRAME);
 			}
-		}
-		else
-		{
-			xStart = 0.0F;
-			zStart = 1.0F;
-		}
+		});
+		BlockBakery.registerBlockKeyGenerator(this,
+				state -> state.getBlock().getRegistryName().toString() + "," + state.getValue(BlockFactoryGlassPane.COLOR).getMetadata()
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[0])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[1])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[2])
+						+ "," + state.getValue(BlockFactoryGlassPane.CTM_VALUE[3])
+						+ "," + state.getValue(BlockFactoryGlassPane.FACES)
+						+ "," + (state.getValue(BlockPane.NORTH) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.SOUTH) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.WEST) ? 1 : 0)
+						+ "," + (state.getValue(BlockPane.EAST) ? 1 : 0)
+		);
+		ModelResourceLocation glassPaneItemModel = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":stained_glass_pane", "inventory");
+		Item item = Item.getItemFromBlock(this);
+		ModelLoader.setCustomMeshDefinition(item, stack -> glassPaneItemModel);
+		ModelLoader.registerItemVariants(item, glassPaneItemModel);
 
-		if ((!connectedNorth || !connectedSouth) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
-		{
-			if (connectedNorth && !connectedSouth)
-			{
-				xStop = 0.0F;
-			}
-			else if (!connectedNorth && connectedSouth)
-			{
-				zStop = 1.0F;
-			}
-		}
-		else
-		{
-			xStop = 0.0F;
-			zStop = 1.0F;
-		}
-
-		this.setBlockBounds(xStart, 0.0F, xStop, zStart, 1.0F, zStop);
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List blockList, Entity e)
-	{
-		boolean connectedNorth = this.canPaneConnectTo(world, x, y, z - 1, ForgeDirection.NORTH);
-		boolean connectedSouth = this.canPaneConnectTo(world, x, y, z + 1, ForgeDirection.SOUTH);
-		boolean connectedWest = this.canPaneConnectTo(world, x - 1, y, z, ForgeDirection.WEST);
-		boolean connectedEast = this.canPaneConnectTo(world, x + 1, y, z, ForgeDirection.EAST);
-
-		if ((!connectedWest || !connectedEast) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
-		{
-			if (connectedWest && !connectedEast)
-			{
-				this.setBlockBounds(0.0F, 0.0F, 0.4375F, 0.5F, 1.0F, 0.5625F);
-				addCollidingBlockToList_do(world, x, y, z, aabb, blockList, e);
-			}
-			else if (!connectedWest && connectedEast)
-			{
-				this.setBlockBounds(0.5F, 0.0F, 0.4375F, 1.0F, 1.0F, 0.5625F);
-				addCollidingBlockToList_do(world, x, y, z, aabb, blockList, e);
-			}
-		}
-		else
-		{
-			this.setBlockBounds(0.0F, 0.0F, 0.4375F, 1.0F, 1.0F, 0.5625F);
-			addCollidingBlockToList_do(world, x, y, z, aabb, blockList, e);
-		}
-
-		if ((!connectedNorth || !connectedSouth) && (connectedWest || connectedEast || connectedNorth || connectedSouth))
-		{
-			if (connectedNorth && !connectedSouth)
-			{
-				this.setBlockBounds(0.4375F, 0.0F, 0.0F, 0.5625F, 1.0F, 0.5F);
-				addCollidingBlockToList_do(world, x, y, z, aabb, blockList, e);
-			}
-			else if (!connectedNorth && connectedSouth)
-			{
-				this.setBlockBounds(0.4375F, 0.0F, 0.5F, 0.5625F, 1.0F, 1.0F);
-				addCollidingBlockToList_do(world, x, y, z, aabb, blockList, e);
-			}
-		}
-		else
-		{
-			this.setBlockBounds(0.4375F, 0.0F, 0.0F, 0.5625F, 1.0F, 1.0F);
-			addCollidingBlockToList_do(world, x, y, z, aabb, blockList, e);
-		}
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void addCollidingBlockToList_do(World world, int x, int y, int z, AxisAlignedBB aabb, List blockList, Entity e)
-	{
-		AxisAlignedBB newAABB = this.getCollisionBoundingBoxFromPool(world, x, y, z);
-
-		if (newAABB != null && aabb.intersectsWith(newAABB))
-		{
-			blockList.add(newAABB);
-		}
 	}
 
 	@Override
-	public int getRenderType()
-	{
-		return MineFactoryReloadedCore.renderIdFactoryGlassPane;
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+
+			if (tintIndex != 0 || stack.getMetadata() > 15 || stack.getMetadata() < 0)
+				return 0xFFFFFF;
+
+			return MFRDyeColor.byMetadata(stack.getMetadata()).getColor();
+		}, this);
 	}
 }

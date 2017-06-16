@@ -2,9 +2,14 @@ package powercrystals.minefactoryreloaded.farmables.plantables;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockOldLog;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
@@ -22,15 +27,15 @@ public class PlantableCocoa extends PlantableStandard
 		super(source, plantedBlock, validMeta);
 		_plantedBlock = new ReplacementBlock(_block) {
 			@Override
-			public int getMeta(World world, int x, int y, int z, ItemStack stack)
+			public int getMeta(World world, BlockPos pos, ItemStack stack)
 			{
-				int meta = 3; // NORTH
-				if (isGoodLog(world, x-1, y, z))
-					meta = 1; // SOUTH
-				else if (isGoodLog(world, x, y, z+1))
-					meta = 0; // EAST
-				else if (isGoodLog(world, x, y, z-1))
-					meta = 2; // WEST
+				int meta = EnumFacing.EAST.getHorizontalIndex();
+				if (isGoodLog(world, pos.west()))
+					meta = EnumFacing.WEST.getHorizontalIndex();
+				else if (isGoodLog(world, pos.south()))
+					meta = EnumFacing.SOUTH.getHorizontalIndex();
+				else if (isGoodLog(world, pos.north()))
+					meta = EnumFacing.NORTH.getHorizontalIndex();
 
 				return meta;
 			}
@@ -38,25 +43,28 @@ public class PlantableCocoa extends PlantableStandard
 	}
 
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
-		if (!world.isAirBlock(x, y, z))
+		if (!world.isAirBlock(pos))
 			return false;
 
-		return isNextToAcceptableLog(world, x, y, z);
+		return isNextToAcceptableLog(world, pos);
 	}
 
-	protected boolean isNextToAcceptableLog(World world, int x, int y, int z)
+	protected boolean isNextToAcceptableLog(World world, BlockPos pos)
 	{
-		return isGoodLog(world, x+1, y, z) ||
-				isGoodLog(world, x-1, y, z) ||
-				isGoodLog(world, x, y, z+1) ||
-				isGoodLog(world, x, y, z-1);
+		for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+			if (isGoodLog(world, pos.offset(facing)))
+				return true;
+		}
+		
+		return false;
 	}
 
-	protected boolean isGoodLog(World world, int x, int y, int z)
+	protected boolean isGoodLog(World world, BlockPos pos)
 	{
-		return world.getBlock(x, y, z).equals(Blocks.log) &&
-				BlockLog.func_150165_c(world.getBlockMetadata(x, y, z)) == 3;
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().equals(Blocks.LOG) &&
+				state.getValue(BlockOldLog.VARIANT) == BlockPlanks.EnumType.JUNGLE;
 	}
 }

@@ -3,7 +3,9 @@ package powercrystals.minefactoryreloaded.farmables.fertilizables;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCocoa;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -21,9 +23,9 @@ public class FertilizableCocoa extends FertilizableCropPlant
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		world.setBlockMetadataWithNotify(x, y, z, 8 | BlockDirectional.getDirection(world.getBlockMetadata(x, y, z)), 2);
+		world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockCocoa.AGE, 2));
 		return true;
 	}
 }

@@ -32,4 +32,5 @@ public interface IMobSpawnHandler {
 	 *            & etc. here
 	 */
 	public void onMobExactSpawn(EntityLivingBase entity);
+
 }

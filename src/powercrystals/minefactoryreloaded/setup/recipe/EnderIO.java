@@ -3,11 +3,11 @@ package powercrystals.minefactoryreloaded.setup.recipe;
 import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.MissingModsException;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.versioning.ArtifactVersion;
-import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.MissingModsException;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 
 import java.util.Collections;
 
@@ -66,7 +66,7 @@ public class EnderIO extends Vanilla {
 
 		if (!Loader.isModLoaded(EIO)) {
 			MineFactoryReloadedCore.log().fatal("EnderIO is required for EnderIO recipes to be enabled.");
-			throw new MissingModsException(Collections.singleton((ArtifactVersion) new DefaultArtifactVersion(EIO)));
+			throw new MissingModsException(Collections.singleton((ArtifactVersion) new DefaultArtifactVersion(EIO)), MineFactoryReloadedCore.modId, MineFactoryReloadedCore.modName);
 		}
 
 		/* Items */
@@ -135,8 +135,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.flower_pot,
-				'S', Blocks.piston,
+				'T', Items.FLOWER_POT,
+				'S', Blocks.PISTON,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
 				'C', zombieController,
@@ -147,8 +147,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.fishing_rod,
-				'S', Items.bucket,
+				'T', Items.FISHING_ROD,
+				'S', Items.BUCKET,
 				'F', chassis,
 				'O', prefix + "Iron",
 				'C', zombieController
@@ -159,7 +159,7 @@ public class EnderIO extends Vanilla {
 				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'S', Items.shears,
+				'S', Items.SHEARS,
 				'T', dsAxe,
 				'F', chassis,
 				'O', prefix + "Gold",
@@ -172,7 +172,7 @@ public class EnderIO extends Vanilla {
 				"OCO",
 				'P', "sheetPlastic",
 				'T', conduitLiquid,
-				'S', Items.shears,
+				'S', Items.SHEARS,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
 				'C', zombieController
@@ -183,8 +183,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.glass_bottle,
-				'S', Items.leather,
+				'T', Items.GLASS_BOTTLE,
+				'S', Items.LEATHER,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
 				'C', zombieController
@@ -207,7 +207,7 @@ public class EnderIO extends Vanilla {
 				"PCP",
 				'P', "sheetPlastic",
 				'F', chassis,
-				'C', Blocks.chest
+				'C', Blocks.CHEST
 		});
 
 		registerMachine(Machine.BlockBreaker, new Object[] {
@@ -218,7 +218,7 @@ public class EnderIO extends Vanilla {
 				'T', prefix + "ElectricalSteel",
 				'S', dsPick,
 				'F', chassis,
-				'A', Items.iron_shovel,
+				'A', Items.IRON_SHOVEL,
 				'O', prefix + "Iron",
 				'C', redstone
 		});
@@ -228,8 +228,8 @@ public class EnderIO extends Vanilla {
 				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'B', Blocks.iron_bars,
-				'T', Items.bucket,
+				'B', Blocks.IRON_BARS,
+				'T', Items.BUCKET,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
 				'C', redstone
@@ -240,8 +240,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.bucket,
-				'S', Blocks.furnace,
+				'T', Items.BUCKET,
+				'S', Blocks.FURNACE,
 				'F', chassis,
 				'O', prefix + "Iron",
 				'C', redstone
@@ -252,8 +252,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"SQS",
 				'P', "sheetPlastic",
-				'T', Items.bucket,
-				'S', Items.brick,
+				'T', Items.BUCKET,
+				'S', Items.BRICK,
 				'F', chassis,
 				'Q', reservoir,
 		});
@@ -263,10 +263,10 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.furnace,
-				'S', Blocks.piston,
+				'T', Blocks.FURNACE,
+				'S', Blocks.PISTON,
 				'F', chassis,
-				'O', Items.brick,
+				'O', Items.BRICK,
 				'C', redstone
 		});
 
@@ -275,8 +275,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.golden_apple,
-				'S', Items.golden_carrot,
+				'T', Items.GOLDEN_APPLE,
+				'S', Items.GOLDEN_CARROT,
 				'F', chassis,
 				'O', "dyePurple",
 				'C', zombieElectrode
@@ -288,7 +288,7 @@ public class EnderIO extends Vanilla {
 				"SCS",
 				'P', "sheetPlastic",
 				'T', dsSword,
-				'O', Items.book,
+				'O', Items.BOOK,
 				'F', chassis,
 				'S', prefix + "ElectricalSteel",
 				'C', conduitLiquid
@@ -299,8 +299,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.obsidian,
-				'S', Items.book,
+				'T', Blocks.OBSIDIAN,
+				'S', Items.BOOK,
 				'F', chassis,
 				'O', "gemDiamond",
 				'C', xpRod
@@ -322,7 +322,7 @@ public class EnderIO extends Vanilla {
 				" T ",
 				"OFO",
 				'P', "sheetPlastic",
-				'T', Blocks.hopper,
+				'T', Blocks.HOPPER,
 				'F', chassis,
 				'O', redstone
 		});
@@ -332,10 +332,10 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"PHP",
 				'P', "sheetPlastic",
-				'T', Blocks.chest,
+				'T', Blocks.CHEST,
 				'S', probe,
 				'F', chassis,
-				'H', Blocks.hopper
+				'H', Blocks.HOPPER
 		});
 
 		registerMachine(Machine.LiquidRouter, 8, new Object[] {
@@ -346,7 +346,7 @@ public class EnderIO extends Vanilla {
 				'T', conduitLiquid,
 				'S', probe,
 				'F', chassis,
-				'H', Blocks.hopper
+				'H', Blocks.HOPPER
 		});
 
 		int dsuCount = MFRConfig.craftSingleDSU.getBoolean(false) ? 1 : 4;
@@ -375,10 +375,10 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.crafting_table,
+				'T', Blocks.CRAFTING_TABLE,
 				'S', tank,
 				'F', chassis,
-				'O', Items.book,
+				'O', Items.BOOK,
 				'C', crafter
 		});
 
@@ -387,10 +387,10 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.obsidian,
-				'S', Items.magma_cream,
+				'T', Blocks.OBSIDIAN,
+				'S', Items.MAGMA_CREAM,
 				'F', chassis,
-				'O', Items.blaze_rod,
+				'O', Items.BLAZE_ROD,
 				'C', redstone
 		});
 
@@ -401,14 +401,14 @@ public class EnderIO extends Vanilla {
 				'P', "sheetPlastic",
 				'T', tankPressurized,
 				'B', Machine.SludgeBoiler.getItemStack(),
-				'O', Blocks.nether_brick
+				'O', Blocks.NETHER_BRICK
 		});
 
 		registerMachine(Machine.AutoJukebox, new Object[] {
 				"PJP",
 				"PFP",
 				'P', "sheetPlastic",
-				'J', Blocks.jukebox,
+				'J', Blocks.JUKEBOX,
 				'F', chassis
 		});
 
@@ -418,10 +418,10 @@ public class EnderIO extends Vanilla {
 				"SCS",
 				'P', "sheetPlastic",
 				'T', probe,
-				'O', Items.comparator,
+				'O', Items.COMPARATOR,
 				'F', chassis,
 				'S', prefix + "ElectricalSteel",
-				'C', Items.book
+				'C', Items.BOOK
 		});
 
 		registerMachine(Machine.AutoSpawner, new Object[] {
@@ -429,8 +429,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.nether_wart,
-				'S', Items.magma_cream,
+				'T', Items.NETHER_WART,
+				'S', Items.MAGMA_CREAM,
 				'F', chassis,
 				'O', "gemEmerald",
 				'C', zombieController
@@ -441,11 +441,11 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.fermented_spider_eye,
+				'T', Items.FERMENTED_SPIDER_EYE,
 				'S', "slimeball",
 				'F', chassis,
-				'O', Items.brick,
-				'C', Items.sugar
+				'O', Items.BRICK,
+				'C', Items.SUGAR
 		});
 
 		registerMachine(Machine.BioFuelGenerator, new Object[] {
@@ -453,11 +453,11 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.furnace,
-				'S', Blocks.piston,
+				'T', Blocks.FURNACE,
+				'S', Blocks.PISTON,
 				'F', chassis,
-				'O', Items.blaze_rod,
-				'C', Blocks.piston
+				'O', Items.BLAZE_ROD,
+				'C', Blocks.PISTON
 		});
 
 		registerMachine(Machine.AutoDisenchanter, new Object[] {
@@ -465,8 +465,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.nether_brick,
-				'S', Items.book,
+				'T', Blocks.NETHER_BRICK,
+				'S', Items.BOOK,
 				'F', chassis,
 				'O', "gemDiamond",
 				'C', xpObelisk
@@ -489,7 +489,7 @@ public class EnderIO extends Vanilla {
 				"BFB",
 				"BCB",
 				'G', "sheetPlastic",
-				'B', Blocks.brick_block,
+				'B', Blocks.BRICK_BLOCK,
 				'S', fireWaterBucket,
 				'F', chassis,
 				'C', redstone
@@ -500,8 +500,8 @@ public class EnderIO extends Vanilla {
 				"SFS",
 				"PSP",
 				'P', "sheetPlastic",
-				'B', Items.book,
-				'S', Items.repeater,
+				'B', Items.BOOK,
+				'S', Items.REPEATER,
 				'F', chassis
 		});
 
@@ -533,7 +533,7 @@ public class EnderIO extends Vanilla {
 				"AFA",
 				"OCO",
 				'G', "sheetPlastic",
-				'A', Blocks.anvil,
+				'A', Blocks.ANVIL,
 				'F', chassis,
 				'C', darkSteelAnvil,
 				'O', prefix + "Iron"
@@ -544,9 +544,9 @@ public class EnderIO extends Vanilla {
 				"HFH",
 				"BCB",
 				'G', "sheetPlastic",
-				'P', Blocks.piston,
+				'P', Blocks.PISTON,
 				'H', factoryHammerItem,
-				'B', Items.book,
+				'B', Items.BOOK,
 				'F', chassis,
 				'C', redstone
 		});
@@ -556,7 +556,7 @@ public class EnderIO extends Vanilla {
 				"CFC",
 				'G', "sheetPlastic",
 				'C', "cableRedNet",
-				'N', Blocks.noteblock,
+				'N', Blocks.NOTEBLOCK,
 				'F', chassis
 		});
 
@@ -566,8 +566,8 @@ public class EnderIO extends Vanilla {
 				"RPR",
 				'G', "sheetPlastic",
 				'C', conduitLiquid,
-				'B', Items.brewing_stand,
-				'R', Items.repeater,
+				'B', Items.BREWING_STAND,
+				'R', Items.REPEATER,
 				'F', chassis,
 				'P', redstone
 		});
@@ -578,7 +578,7 @@ public class EnderIO extends Vanilla {
 				"OCO",
 				'G', "sheetPlastic",
 				'X', dsAxe,
-				'S', Items.shears,
+				'S', Items.SHEARS,
 				'F', chassis,
 				'C', zombieController,
 				'O', prefix + "ElectricalSteel"
@@ -589,7 +589,7 @@ public class EnderIO extends Vanilla {
 				"DMD",
 				"GSG",
 				'G', "sheetPlastic",
-				'D', Blocks.dispenser,
+				'D', Blocks.DISPENSER,
 				'S', redstone,
 				'M', chassis,
 		});
@@ -599,8 +599,8 @@ public class EnderIO extends Vanilla {
 				"RCR",
 				"SMS",
 				'G', "sheetPlastic",
-				'R', Items.repeater,
-				'C', Items.comparator,
+				'R', Items.REPEATER,
+				'C', Items.COMPARATOR,
 				'S', probe,
 				'M', chassis,
 		});
@@ -611,7 +611,7 @@ public class EnderIO extends Vanilla {
 				"OCO",
 				'P', "sheetPlastic",
 				'T', combustionGen,
-				'S', Blocks.piston,
+				'S', Blocks.PISTON,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
 				'C', gear
@@ -647,7 +647,7 @@ public class EnderIO extends Vanilla {
 				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'B', Blocks.iron_bars,
+				'B', Blocks.IRON_BARS,
 				'T', tank,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
@@ -659,7 +659,7 @@ public class EnderIO extends Vanilla {
 				"BRB",
 				"OCO",
 				'P', "sheetPlastic",
-				'B', Blocks.iron_bars,
+				'B', Blocks.IRON_BARS,
 				'R', Machine.ItemRouter.getItemStack(),
 				'O', "dyeOrange",
 				'C', Machine.Chronotyper.getItemStack(),
@@ -683,9 +683,9 @@ public class EnderIO extends Vanilla {
 				"WBW",
 				"STS",
 				"WBW",
-				'W', Items.wheat,
-				'B', new ItemStack(Items.dye, 1, 15),
-				'S', Items.string,
+				'W', Items.WHEAT,
+				'B', new ItemStack(Items.DYE, 1, 15),
+				'S', Items.STRING,
 				'T', "stickWood",
 		}));
 
@@ -707,7 +707,7 @@ public class EnderIO extends Vanilla {
 					'G', prefix + "ElectricalSteel",
 					'L', "blockGlass",
 					'D', "ingotVibrantAlloy",
-					'N', Items.nether_star
+					'N', Items.NETHER_STAR
 			}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(detCordBlock, 12), new Object[] {
@@ -715,7 +715,7 @@ public class EnderIO extends Vanilla {
 				"PTP",
 				"PPP",
 				'P', "itemRubber",
-				'T', Blocks.tnt,
+				'T', Blocks.TNT,
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fishingRodItem, 1), new Object[] {
@@ -723,8 +723,8 @@ public class EnderIO extends Vanilla {
 				"DFD",
 				"TDD",
 				'D', "wireExplosive",
-				'F', Items.fishing_rod,
-				'T', Blocks.redstone_torch
+				'F', Items.FISHING_ROD,
+				'T', Blocks.REDSTONE_TORCH
 		}));
 	}
 
@@ -756,7 +756,7 @@ public class EnderIO extends Vanilla {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rednetCableBlock, 6, 2), new Object[] {
 				"ingotGold",
 				"ingotGold",
-				Blocks.redstone_block,
+				Blocks.REDSTONE_BLOCK,
 				new ItemStack(rednetCableBlock),
 				new ItemStack(rednetCableBlock),
 				new ItemStack(rednetCableBlock),
@@ -765,7 +765,7 @@ public class EnderIO extends Vanilla {
 				new ItemStack(rednetCableBlock),
 		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineItem, 1, 1), new Object[] {
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineBlock, 1, 1), new Object[] {
 				"PRP",
 				"RGR",
 				"PIP",
@@ -779,7 +779,7 @@ public class EnderIO extends Vanilla {
 				"RDR",
 				"LGL",
 				"PHP",
-				'H', new ItemStack(machineItem, 1, 1),
+				'H', new ItemStack(machineBlock, 1, 1),
 				'P', "sheetPlastic",
 				'G', "ingotGold",
 				'L', "gemLapis",
@@ -852,8 +852,8 @@ public class EnderIO extends Vanilla {
 				"KPK",
 				'P', "sheetPlastic",
 				'C', rednetCableBlock,
-				'B', Blocks.bookshelf,
-				'K', new ItemStack(Items.dye, 1, 0)
+				'B', Blocks.BOOKSHELF,
+				'K', new ItemStack(Items.DYE, 1, 0)
 		}));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(rednetMemoryCardItem, 1, 0), new ItemStack(rednetMemoryCardItem, 1, 0));

@@ -16,6 +16,6 @@ public class ContainerFountain extends ContainerUpgradeable
 	@Override
 	protected void addSlots()
 	{
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 0, 152, 79, ItemUpgrade.background));
+		addSlotToContainer(new SlotAcceptUpgrade(_te, 0, 152, 79));
 	}
 }

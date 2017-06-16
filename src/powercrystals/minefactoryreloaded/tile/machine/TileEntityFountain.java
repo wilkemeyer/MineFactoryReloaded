@@ -1,34 +1,34 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.api.item.IAugmentItem;
-import cofh.core.util.fluid.FluidTankAdv;
-import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.BlockFluidClassic;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.core.Area;
 import powercrystals.minefactoryreloaded.core.FluidFillingManager;
 import powercrystals.minefactoryreloaded.core.IHarvestManager;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiUpgradeable;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFountain;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityFountain extends TileEntityFactoryPowered implements ITankContainerBucketable {
+public class TileEntityFountain extends TileEntityFactoryPowered {
 
 	private IHarvestManager _fillingManager;
 	private boolean _reverse;
@@ -37,7 +37,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 
 		super(Machine.Fountain);
 		createHAM(this, 0, 0, 0, false);
-		_areaManager.setOverrideDirection(ForgeDirection.UP);
+		_areaManager.setOverrideDirection(EnumFacing.UP);
 		_areaManager.setUpgradeVertical(true);
 		_reverse = false;
 	}
@@ -63,64 +63,62 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 			if (_reverse ? _tanks[0].getSpace() >= BUCKET_VOLUME :
 					(_tanks[0].getFluidAmount() >= BUCKET_VOLUME &&
 					_tanks[0].getFluid().getFluid().canBePlacedInWorld())) {
-				int x = xCoord, y = yCoord + 1, z = zCoord;
+				BlockPos fillPos;
 				if (_fillingManager != null) {
 					if (_fillingManager.getIsDone())
 						onFactoryInventoryChanged();
-					BlockPosition bp = _fillingManager.getNextBlock();
-					x = bp.x;
-					y = bp.y;
-					z = bp.z;
+					fillPos = _fillingManager.getNextBlock();
 					_fillingManager.moveNext();
+				} else {
+					fillPos = pos.up();
 				}
-				if (!worldObj.blockExists(x, y, z)) break l;
+				if (!worldObj.isBlockLoaded(fillPos)) break l;
 
-				Block block = worldObj.getBlock(x, y, z);
+				IBlockState state = worldObj.getBlockState(fillPos);
+				Block block = state.getBlock();
 				if (_reverse) {
 					idleTicks = 10;
-					l2: if (block != null && block.getMaterial().isLiquid())
+					l2: if (block != null && state.getMaterial().isLiquid())
 						if (block instanceof IFluidBlock) {
 							IFluidBlock fluidBlock = ((IFluidBlock) block);
-							if (!fluidBlock.canDrain(worldObj, x, y, z))
+							if (!fluidBlock.canDrain(worldObj, fillPos))
 								break l;
-							FluidStack fluid = fluidBlock.drain(worldObj, x, y, z, false);
+							FluidStack fluid = fluidBlock.drain(worldObj, fillPos, false);
 							int amt = _tanks[0].fill(fluid, false);
 							if (amt != fluid.amount) break l2;
-							_tanks[0].fill(fluidBlock.drain(worldObj, x, y, z, true), true);
+							_tanks[0].fill(fluidBlock.drain(worldObj, fillPos, true), true);
 							setIdleTicks(5);
 							return true;
 						}
 						else if (block instanceof BlockLiquid) {
-							if (worldObj.getBlockMetadata(x, y, z) != 0)
+							if (state.getValue(BlockLiquid.LEVEL) != 0)
 								break l;
 							boolean drained = false;
-							if (block.equals(Blocks.water) || block.equals(Blocks.flowing_water)) {
+							if (block.equals(Blocks.WATER) || block.equals(Blocks.FLOWING_WATER)) {
 								if (_tanks[0].fill(new FluidStack(FluidRegistry.WATER, BUCKET_VOLUME), true) != 0)
 									drained = true;
-							} else if (block.equals(Blocks.lava) || block.equals(Blocks.flowing_lava))
+							} else if (block.equals(Blocks.LAVA) || block.equals(Blocks.FLOWING_LAVA))
 								if (_tanks[0].fill(new FluidStack(FluidRegistry.LAVA, BUCKET_VOLUME), true) != 0)
 									drained = true;
 							if (drained) {
-								worldObj.setBlockToAir(x, y, z);
+								worldObj.setBlockToAir(fillPos);
 								setIdleTicks(5);
 								return true;
 							}
 						}
 				}
-				else if (block == null || block.isReplaceable(worldObj, x, y, z)) {
-					if (block != null && block.getMaterial().isLiquid())
+				else if (block == null || block.isReplaceable(worldObj, fillPos)) {
+					if (block != null && state.getMaterial().isLiquid())
 						if (block instanceof BlockFluidClassic) {
-							if (((BlockFluidClassic) block).isSourceBlock(worldObj, x, y, z))
+							if (((BlockFluidClassic) block).isSourceBlock(worldObj, fillPos))
 								break l;
 						}
 						else if (block instanceof BlockLiquid) {
-							if (worldObj.getBlockMetadata(x, y, z) == 0)
+							if (state.getValue(BlockLiquid.LEVEL) == 0)
 								break l;
 						}
-					block = _tanks[0].getFluid().getFluid().getBlock();
-					if (worldObj.setBlock(x, y, z, block)) {// TODO: when forge supports NBT fluid blocks, adapt this
-						worldObj.notifyBlockOfNeighborChange(x, y, z, block);
-						drain(_tanks[0], BUCKET_VOLUME, true);
+					if (worldObj.setBlockState(fillPos, getFlowingState(_tanks[0].getFluid()), 11)) {// TODO: when forge supports NBT fluid blocks, adapt this
+						drain(BUCKET_VOLUME, true, _tanks[0]);
 						setIdleTicks(1);
 						return true;
 					}
@@ -134,10 +132,20 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 		return false;
 	}
 
-	@Override
-	protected FluidTankAdv[] createTanks() {
+	private IBlockState getFlowingState(FluidStack fluid) {
+		
+		if (fluid.getFluid() == FluidRegistry.LAVA)
+			return Blocks.FLOWING_LAVA.getDefaultState();
+		else if (fluid.getFluid() == FluidRegistry.WATER)
+			return Blocks.FLOWING_WATER.getDefaultState();
+		
+		return fluid.getFluid().getBlock().getDefaultState();
+	}
 
-		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME * 32) };
+	@Override
+	protected FluidTankCore[] createTanks() {
+
+		return new FluidTankCore[] { new FluidTankCore(BUCKET_VOLUME * 32) };
 	}
 
 	@Override
@@ -147,10 +155,10 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 		_reverse = false;
 		if (isUsableAugment(_inventory[0])) {
 			IAugmentItem upgrade = (IAugmentItem) _inventory[0].getItem();
-			int r = upgrade.getAugmentLevel(_inventory[0], "radius");
+			int r = "radius".equals(upgrade.getAugmentIdentifier(_inventory[0])) ? ((ItemUpgrade)upgrade).getAugmentLevel(_inventory[0], "radius") : 0;
 			if (r > 0) {
 				_areaManager.setUpgradeLevel(r);
-				Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+				Area area = new Area(pos.up(), r, 0, r * 2);
 				if (_fillingManager == null)
 					_fillingManager = new FluidFillingManager(worldObj, area);
 				else
@@ -160,7 +168,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 				r = -r;
 				if (r > 1) {
 					_areaManager.setUpgradeLevel(r - 1);
-					Area area = new Area(new BlockPosition(xCoord, yCoord + 1, zCoord), r, 0, r * 2);
+					Area area = new Area(pos.up(), r, 0, r * 2);
 					if (_fillingManager == null)
 						_fillingManager = new FluidFillingManager(worldObj, area);
 					else
@@ -174,48 +182,6 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 			_fillingManager = null;
 			_areaManager.setUpgradeLevel(0);
 		}
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-
-		return true;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-
-		return true;
 	}
 
 	@Override
@@ -243,7 +209,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (stack != null) {
 			if (slot == 0) {
@@ -252,4 +218,29 @@ public class TileEntityFountain extends TileEntityFactoryPowered implements ITan
 		}
 		return false;
 	}
+
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
+
+		return !_reverse;
+	}
+
+	@Override
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
+
+		return _reverse;
+	}
+
+	@Override
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return !_reverse;
+	}
+
+	@Override
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return _reverse;
+	}
+
 }

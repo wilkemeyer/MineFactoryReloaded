@@ -1,18 +1,18 @@
 package powercrystals.minefactoryreloaded.core;
 
 import cofh.api.item.IAugmentItem;
-import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-import cofh.lib.util.position.IRotateableTile;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 {
@@ -21,9 +21,9 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 	private int _originX;
 	private int _originY;
 	private int _originZ;
-	private ForgeDirection _originOrientation;
+	private EnumFacing _originOrientation;
 
-	private ForgeDirection _overrideDirection;
+	private EnumFacing _overrideDirection;
 	private Area _harvestArea;
 	private int _radius;
 	private int _areaUp;
@@ -33,7 +33,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 	private int _originOffsetY;
 	private int _originOffsetZ;
 
-	private List<BlockPosition> _harvestedBlocks;
+	private List<BlockPos> _harvestedBlocks;
 	private int _currentBlock;
 	private boolean _usesBlocks;
 	private boolean _upgradeVertical;
@@ -45,15 +45,15 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 			int harvestAreaUp, int harvestAreaDown, float upgradeModifier, boolean usesBlocks)
 	{
 		_owner = owner;
-		_overrideDirection = ForgeDirection.UNKNOWN;
+		_overrideDirection = null;
 		_radius = harvestRadius;
 		_areaUp = harvestAreaUp;
 		_areaDown = harvestAreaDown;
 		_upgradeModifier = upgradeModifier;
 
-		_originX = owner.xCoord;
-		_originY = owner.yCoord;
-		_originZ = owner.zCoord;
+		_originX = owner.getPos().getX();
+		_originY = owner.getPos().getY();
+		_originZ = owner.getPos().getZ();
 		_originOrientation = owner.getDirectionFacing();
 		_usesBlocks = usesBlocks;
 		_upgradeVertical = false;
@@ -65,11 +65,11 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return String.format("%s-> %s:%s:%s:%s", _owner, _upgradeLevel, _usesBlocks, _upgradeVertical, _upgradeModifier);
 	}
 
-	public void setOriginOffset(int x, int y, int z)
+	public void setOriginOffset(BlockPos pos)
 	{
-		_originOffsetX = x;
-		_originOffsetY = y;
-		_originOffsetZ = z;
+		_originOffsetX = pos.getX();
+		_originOffsetY = pos.getY();
+		_originOffsetZ = pos.getZ();
 		checkRecalculate();
 	}
 
@@ -99,10 +99,10 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return _radius + _upgradeLevel;
 	}
 
-	public BlockPosition getNextBlock()
+	public BlockPos getNextBlock()
 	{
 		checkRecalculate();
-		BlockPosition next = _harvestedBlocks.get(_currentBlock);
+		BlockPos next = _harvestedBlocks.get(_currentBlock);
 		_currentBlock++;
 		if(_currentBlock >= _harvestedBlocks.size())
 		{
@@ -131,7 +131,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return _currentBlock;
 	}
 
-	public void setOverrideDirection(ForgeDirection dir)
+	public void setOverrideDirection(EnumFacing dir)
 	{
 		_overrideDirection = dir;
 	}
@@ -162,13 +162,6 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		return _upgradeLevel;
 	}
 
-	public Packet getUpgradePacket()
-	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setInteger("_upgradeLevel", _upgradeLevel);
-		return new S35PacketUpdateTileEntity(_owner.xCoord, _owner.yCoord, _owner.zCoord, 255, data);
-	}
-
 	public void updateUpgradeLevel(ItemStack stack)
 	{
 		if (stack == null)
@@ -182,7 +175,7 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 		if (stack.getItem() instanceof IAugmentItem)
 		{
 			IAugmentItem upgrade = (IAugmentItem)stack.getItem();
-			int r = upgrade.getAugmentLevel(stack, "radius");
+			int r = "radius".equals(upgrade.getAugmentIdentifier(stack)) ? ((ItemUpgrade)upgrade).getAugmentLevel(stack, "radius") : 0;
 			if (r != 0)
 				newUpgradeLevel = (int)(r * _upgradeModifier);
 		}
@@ -199,11 +192,11 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 			return;
 		}
 
-		if(		(_overrideDirection != ForgeDirection.UNKNOWN && _originOrientation != _overrideDirection)
-				|| (_overrideDirection == ForgeDirection.UNKNOWN && _originOrientation != _owner.getDirectionFacing())
-				|| _originX != _owner.xCoord + _originOffsetX
-				|| _originY != _owner.yCoord + _originOffsetY
-				|| _originZ != _owner.zCoord + _originOffsetZ)
+		if(		(_overrideDirection != null && _originOrientation != _overrideDirection)
+				|| (_overrideDirection == null && _originOrientation != _owner.getDirectionFacing())
+				|| _originX != _owner.getPos().getX() + _originOffsetX
+				|| _originY != _owner.getPos().getY() + _originOffsetY
+				|| _originZ != _owner.getPos().getZ() + _originOffsetZ)
 		{
 			recalculateArea();
 		}
@@ -211,38 +204,37 @@ public class HarvestAreaManager <T extends TileEntity & IRotateableTile>
 
 	private void recalculateArea()
 	{
-		BlockPosition ourpos = BlockPosition.fromRotateableTile(_owner);
-		if (_overrideDirection != ForgeDirection.UNKNOWN)
+		BlockPos ourpos = _owner.getPos();
+		EnumFacing facing = _owner.getDirectionFacing();
+		if (_overrideDirection != null)
 		{
-			ourpos.orientation = _overrideDirection;
+			facing = _overrideDirection;
 		}
 
-		_originX = ourpos.x + _originOffsetX;
-		_originY = ourpos.y + _originOffsetY;
-		_originZ = ourpos.z + _originOffsetZ;
-		_originOrientation = ourpos.orientation;
+		_originX = ourpos.getX() + _originOffsetX;
+		_originY = ourpos.getY() + _originOffsetY;
+		_originZ = ourpos.getZ() + _originOffsetZ;
+		_originOrientation = facing;
 
 		int radius = _radius + _upgradeLevel;
 		int areaUp = _areaUp;
 		int areaDown = _areaDown;
 
-		if (ourpos.orientation == ForgeDirection.UP || ourpos.orientation == ForgeDirection.DOWN)
+		if (facing == EnumFacing.UP || facing == EnumFacing.DOWN)
 		{
 			if (_upgradeVertical)
-				if (ourpos.orientation == ForgeDirection.UP)
+				if (facing == EnumFacing.UP)
 					areaUp += _upgradeLevel * 2;
 				else
 					areaDown += _upgradeLevel * 2;
-			ourpos.moveForwards(1);
+			ourpos = ourpos.offset(facing);
 		}
 		else
 		{
-			ourpos.moveForwards(radius + 1);
+			ourpos = ourpos.offset(facing, radius + 1);
 		}
 
-		ourpos.x += _originOffsetX;
-		ourpos.y += _originOffsetY;
-		ourpos.z += _originOffsetZ;
+		ourpos = new BlockPos(ourpos.getX() + _originOffsetX, ourpos.getY() + _originOffsetY, ourpos.getZ() + _originOffsetZ);
 
 		_harvestArea = new Area(ourpos, radius, areaDown, areaUp);
 		if (_usesBlocks)

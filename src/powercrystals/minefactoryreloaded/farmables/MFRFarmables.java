@@ -5,17 +5,18 @@ import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 import cofh.core.util.oredict.OreDictionaryArbiter;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.INpc;
-import net.minecraft.entity.boss.IBossDisplayData;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.util.ResourceLocation;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.INeedleAmmo;
 import powercrystals.minefactoryreloaded.circuits.Fanout;
@@ -109,7 +110,6 @@ import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SheepHandle
 import powercrystals.minefactoryreloaded.farmables.safarinethandlers.SlimeHandler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
 
-
 public class MFRFarmables {
 
 	public static void load() {
@@ -129,11 +129,13 @@ public class MFRFarmables {
 		MFRRegistry.registerSafariNetHandler(new SlimeHandler());
 
 		MFRRegistry.registerSafariNetBlacklist(EntityPlayer.class);
-		MFRRegistry.registerSafariNetBlacklist(IBossDisplayData.class);
+		MFRRegistry.registerSafariNetBlacklist(EntityWither.class); // TODO: Entity now has isNonBoss (probably should be isNormalMob)
+		MFRRegistry.registerSafariNetBlacklist(EntityDragon.class);
 
 		MFRRegistry.registerGrinderBlacklist(EntityPlayer.class);
 		MFRRegistry.registerGrinderBlacklist(INpc.class);
-		MFRRegistry.registerGrinderBlacklist(IBossDisplayData.class);
+		MFRRegistry.registerGrinderBlacklist(EntityWither.class);
+		MFRRegistry.registerGrinderBlacklist(EntityDragon.class);
 
 		MFRRegistry.registerPlantable(new PlantableSapling(rubberSaplingBlock));
 		MFRRegistry.registerPlantable(new PlantableSoil(fertileSoil, 3));
@@ -152,7 +154,7 @@ public class MFRFarmables {
 		MFRRegistry.registerLiquidDrinkHandler("biofuel", new DrinkHandlerBiofuel());
 		MFRRegistry.registerLiquidDrinkHandler("sewage", new DrinkHandlerSewage());
 		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
-		MFRRegistry.registerLiquidDrinkHandler("mobessence", new DrinkHandlerMobEssence());
+		MFRRegistry.registerLiquidDrinkHandler("mob_essence", new DrinkHandlerMobEssence());
 		MFRRegistry.registerLiquidDrinkHandler("meat", new DrinkHandlerMeat());
 		MFRRegistry.registerLiquidDrinkHandler("pinkslime", new DrinkHandlerPinkSlime());
 		MFRRegistry.registerLiquidDrinkHandler("chocolatemilk", new DrinkHandlerChocolateMilk());
@@ -242,7 +244,7 @@ public class MFRFarmables {
 				if (stack == null || stack.getItem() == null)
 					continue;
 				Block block = Block.getBlockFromItem(stack.getItem());
-				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
+				if (block != Blocks.AIR && !MFRRegistry.getHarvestables().containsKey(block))
 					MFRRegistry.registerHarvestable(new HarvestableWood(block));
 			}
 
@@ -251,12 +253,12 @@ public class MFRFarmables {
 				if (stack == null || stack.getItem() == null)
 					continue;
 				Block block = Block.getBlockFromItem(stack.getItem());
-				if (block != Blocks.air && !MFRRegistry.getHarvestables().containsKey(block))
+				if (block != Blocks.AIR && !MFRRegistry.getHarvestables().containsKey(block))
 					MFRRegistry.registerHarvestable(new HarvestableTreeLeaves(block));
 			}
 
-			for (String key : (Set<String>) Block.blockRegistry.getKeys()) {
-				Block block = Block.getBlockFromName(key);
+			for (ResourceLocation key : Block.REGISTRY.getKeys()) {
+				Block block = Block.getBlockFromName(key.toString());
 				if (block instanceof IGrowable && !MFRRegistry.getFertilizables().containsKey(block)) {
 					MFRRegistry.registerFertilizable(new FertilizableIGrowable(block));
 				}

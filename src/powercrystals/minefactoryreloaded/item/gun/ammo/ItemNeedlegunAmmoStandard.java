@@ -4,6 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo {
@@ -51,7 +53,7 @@ public class ItemNeedlegunAmmoStandard extends ItemNeedlegunAmmo {
 	}
 
 	@Override
-	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, int x, int y, int z, int side, double distance) {
+	public void onHitBlock(ItemStack stack, EntityPlayer owner, World world, BlockPos pos, EnumFacing side, double distance) {
 	}
 
 	@Override

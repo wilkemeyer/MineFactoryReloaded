@@ -1,26 +1,29 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.fluid.FluidTankCore;
 import com.google.common.base.Throwables;
-
-import java.util.Arrays;
-
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidTankMulti implements IFluidTank {
+import java.util.Arrays;
 
-	FluidTankAdv[] tanks = new FluidTankAdv[2];
+public class FluidTankMulti implements IFluidTank, IFluidHandler {
+
+	FluidTankCore[] tanks = new FluidTankCore[2];
 	int length, index;
 	private FluidStack fluid = null;
 	private TankNetwork grid;
+	private IFluidTankProperties[] tankProperties;
 
 	public FluidTankMulti(TankNetwork network) {
 		grid = network;
 	}
 
-	public void addTank(FluidTankAdv tank) {
+	public void addTank(FluidTankCore tank) {
 		if (tank == null)
 			throw new IllegalArgumentException("null");
 		for (int i = length; i --> 0; )
@@ -28,15 +31,15 @@ public class FluidTankMulti implements IFluidTank {
 				return;
 
 		if (++length >= tanks.length) {
-			FluidTankAdv[] old = tanks;
-			tanks = new FluidTankAdv[length * 2];
+			FluidTankCore[] old = tanks;
+			tanks = new FluidTankCore[length * 2];
 			System.arraycopy(old, 0, tanks, 0, length - 1);
 		}
 		tanks[length - 1] = tank;
 		fill(tank.drain(tank.getCapacity(), true), true);
 	}
 
-	public void removeTank(FluidTankAdv tank) {
+	public void removeTank(FluidTankCore tank) {
 		if (tank == null)
 			throw new IllegalArgumentException("null");
 		int i = length;
@@ -44,17 +47,17 @@ public class FluidTankMulti implements IFluidTank {
 		if (i < 0) return;
 
 		{
-			FluidTankAdv[] old = tanks;
+			FluidTankCore[] old = tanks;
 			if (--length != i) {
 				System.arraycopy(old, i + 1, old, i, length - i + 1);
 			}
 			if (length <= old.length / 4) {
-				tanks = new FluidTankAdv[old.length / 2];
+				tanks = new FluidTankCore[old.length / 2];
 				System.arraycopy(old, 0, tanks, 0, tanks.length);
 			}
 		}
 
-		if (index >= i) --index;
+		if (index >= i && index > 0) --index;
 
 		FluidStack r = tank.getFluid();
 		if (r != null) {
@@ -95,6 +98,12 @@ public class FluidTankMulti implements IFluidTank {
 	@Override
 	public FluidTankInfo getInfo() {
 		return new FluidTankInfo(this);
+	}
+
+	@Override
+	public IFluidTankProperties[] getTankProperties() {
+
+		return new IFluidTankProperties[] { new FluidTankProperties(getFluid(), getCapacity()) }; //TODO cache and update value
 	}
 
 	@Override

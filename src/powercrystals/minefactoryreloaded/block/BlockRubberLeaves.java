@@ -1,180 +1,178 @@
 package powercrystals.minefactoryreloaded.block;
 
-import static powercrystals.minefactoryreloaded.item.base.ItemMulti.getName;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
 import net.minecraft.block.BlockLeaves;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetNoConnection;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection
-{
-	static String[] _names = {null, "dry"};
-	private IIcon[] _iconOpaque = new IIcon[_names.length];
-	private IIcon[] _iconTransparent = new IIcon[_names.length];
+public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnection, IInitializer, IModelRegister, IColorRegister {
 
-	public BlockRubberLeaves()
-	{
-		setBlockName("mfr.rubberwood.leaves");
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class, input -> input.getMetadata() < 4);
+	public static final PropertyBool FANCY = PropertyBool.create("fancy");
+	
+	public BlockRubberLeaves() {
+
+		setUnlocalizedName("mfr.rubberwood.leaves");
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "rubberwood_leaves");
 	}
 
 	@Override
+	protected BlockStateContainer createBlockState() {
+
+		return new BlockStateContainer(this, VARIANT, FANCY, DECAYABLE, CHECK_DECAY);
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+
+		return state.withProperty(FANCY, !isOpaqueCube(state));
+	}
+
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{
-		String unlocalizedName = getUnlocalizedName();
-		for (int i = _names.length; i --> 0; )
-		{
-			String name = getName(unlocalizedName, _names[i]);
-			_iconOpaque[i] = ir.registerIcon("minefactoryreloaded:" + name + ".opaque");
-			_iconTransparent[i] = ir.registerIcon("minefactoryreloaded:" + name + ".transparent");
-		}
+	@Override
+	public BlockRenderLayer getBlockLayer()	{
+		
+		return Blocks.LEAVES.getBlockLayer();
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return getIcon(side, world.getBlockMetadata(x, y, z));
+	public boolean isOpaqueCube(IBlockState state) {
+
+		return Blocks.LEAVES.isOpaqueCube(state);
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		meta %= 4; // bits 3 and 4 are state flags
-		// using mod instead of bitand to preserve sign just incase something is passing us a negative value
-		if (meta < 0 || meta >= _names.length) {
-			return Blocks.bedrock.getIcon(0, 0); // invalid metadata gets something distinct (green bedrock!)
-		}
+	public BlockPlanks.EnumType getWoodType(int i) {
 
-		return isOpaqueCube() ? _iconOpaque[meta] : _iconTransparent[meta];
+		return null;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(int par1)
-	{
-		return par1 == 1 ? 0xFFFFFF : super.getRenderColor(par1);
-	}
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess iba, int x, int y, int z)
-	{
-		int meta = iba.getBlockMetadata(x, y, z) & 3;
-		int r = 0;
-		int g = 0;
-		int b = 0;
-
-		for (int l1 = -1; l1 <= 1; ++l1)
-			for (int i2 = -1; i2 <= 1; ++i2)
-			{
-				int j2 = iba.getBiomeGenForCoords(x + i2, z + l1).getBiomeFoliageColor(x, y, z);
-				r += (j2 & 16711680) >> 16;
-			g += (j2 & 65280) >> 8;
-			b += j2 & 255;
-			}
-
-		r = (r / 9 & 255);
-		g = (g / 9 & 255);
-		b = (b / 9 & 255);
-		if (meta == 1)
-			return (r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
-
-		return r << 16 | g << 8 | b;
-	}
-
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return Blocks.leaves.isOpaqueCube();
-	}
-
-	@Override
-	public Item getItemDropped(int par1, Random par2Random, int par3)
-	{
 		return Item.getItemFromBlock(MFRThings.rubberSaplingBlock);
 	}
 
 	@Override
-	protected boolean canSilkHarvest()
-	{
+	protected boolean canSilkHarvest() {
 		return false;
 	}
 
 	private ThreadLocal<Boolean> updating = new ThreadLocal<Boolean>();
 
 	@Override
-	public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune)
-	{
+	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune) {
+
 		if (updating.get() != null)
 			return;
-		super.dropBlockAsItemWithChance(world, x, y, z, meta, chance, fortune);
+		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
-	{
+	public IBlockState getStateFromMeta(int meta) {
+
+		return this.getDefaultState().withProperty(VARIANT, this.getVariant(meta)).withProperty(DECAYABLE, (meta & 4) == 0).withProperty(CHECK_DECAY, (meta & 8) > 0);
+	}
+
+	private Variant getVariant(int meta) {
+
+		return Variant.byMetadata(meta & 3);
+	}
+	
+	@Override
+	public int getMetaFromState(IBlockState state) {
+
+		int meta = state.getValue(VARIANT).getMetadata();
+		if(!state.getValue(DECAYABLE)) {
+			meta |= 4;
+		}
+
+		if(state.getValue(CHECK_DECAY)) {
+			meta |= 8;
+		}
+
+		return meta;	
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-		if ((meta & 4) != 0)
+		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
+
+		if (!state.getValue(DECAYABLE)) // HACK: shears drop saplings AND the block because forge doesn't pay attention to the code they edit
 			return ret;
 
-		int chance = 20 + 15 * (meta & 3);
+		int chance = 20 + 15 * state.getValue(VARIANT).getMetadata();
 
 		if (fortune > 0)
 			chance = Math.max(chance - (2 << fortune), 10);
 
-		if (world.rand.nextInt(chance) == 0)
-			ret.add(new ItemStack(getItemDropped(meta & 3, world.rand, fortune), 1,
-					world.rand.nextInt(50000) == 0 ? 2 : 0));
+		if (rand.nextInt(chance) == 0)
+			ret.add(new ItemStack(getItemDropped(getDefaultState().withProperty(VARIANT, state.getValue(VARIANT)), rand, fortune), 1,
+					rand.nextInt(50000) == 0 ? 2 : 0));
 
 		return ret;
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand)
-	{
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+
 		if (world.isRemote)
 			return;
-		int l = world.getBlockMetadata(x, y, z), meta = l & 3;
-		if (meta == 0 & ((l & 4) == 0))
-		{
-			boolean decay = (l & 8) != 0;
-			if (decay)
-			{
+		if (state.getValue(VARIANT) == Variant.NORMAL && !state.getValue(DECAYABLE)) {
+			boolean decay = state.getValue(CHECK_DECAY);
+			if (decay) {
 				updating.set(Boolean.TRUE);
-				super.updateTick(world, x, y, z, rand);
+				super.updateTick(world, pos, state, rand);
 				updating.set(null);
-				if (!world.getBlock(x, y, z).equals(this))
-					dropBlockAsItem(world, x, y, z, l, 0);
+				if (!world.getBlockState(pos).getBlock().equals(this))
+					dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
 				return;
 			}
 			int chance = 15;
-			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
-			if (b != null)
-			{
-				float temp = b.temperature;
-				float rain = b.rainfall; // getFloatRainfall is client only!?
+			Biome b = world.getBiome(pos);
+			if (b != null) {
+				float temp = b.getTemperature();
+				float rain = b.getRainfall();
 				boolean t;
 				decay |= (t = rain <= 0.05f);
 				if (t) chance -= 5;
@@ -186,27 +184,24 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 				else if (temp < 0.8f)
 					chance += 3;
 			}
-			if (decay && rand.nextInt(chance) == 0)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, l | 1, 2);
+			if (decay && rand.nextInt(chance) == 0) {
+				world.setBlockState(pos, state.withProperty(VARIANT, Variant.DRY));
 				return;
 			}
 		}
-		super.updateTick(world, x, y, z, rand);
+		super.updateTick(world, pos, state, rand);
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block id, int meta)
-	{
-		if (updating.get() != null)
-		{
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+
+		if (updating.get() != null) {
 			boolean decay = false;
 			int chance = 15;
-			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
-			if (b != null)
-			{
-				float temp = b.temperature;
-				float rain = b.rainfall; // getFloatRainfall is client only!?
+			Biome b = world.getBiome(pos);
+			if (b != null) {
+				float temp = b.getTemperature();
+				float rain = b.getRainfall();
 				boolean t;
 				decay |= (t = rain <= 0.05f);
 				if (t) chance -= 5;
@@ -219,34 +214,157 @@ public class BlockRubberLeaves extends BlockLeaves implements IRedNetNoConnectio
 					chance += 3;
 			}
 			if (decay && world.rand.nextInt(chance) == 0)
-				world.setBlock(x, y, z, id, meta | 1, 2);
+				world.setBlockState(pos, state.withProperty(VARIANT, Variant.DRY));
 		}
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-	{
-		return super.getFireSpreadSpeed(world, x, y, z, face) * ((world.getBlockMetadata(x, y, z) & 3) * 2 + 1);
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face) {
+
+		return super.getFireSpreadSpeed(world, pos, face) * ((world.getBlockState(pos).getValue(VARIANT).getMetadata()) * 2 + 1);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side)
-	{
-		boolean cube = isOpaqueCube();
-		if (cube && iba.getBlock(x, y, z) == this)
-			return false;
-		return cube ? super.shouldSideBeRendered(iba, x, y, z, side) : true;
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+
+		boolean cube = isOpaqueCube(state);
+		return cube ? super.shouldSideBeRendered(state, world, pos, side) : true;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void getSubBlocks(Item blockId, CreativeTabs creativeTab, List subTypes)
-	{
+	public void getSubBlocks(Item blockId, CreativeTabs creativeTab, List subTypes) {
+
 		subTypes.add(new ItemStack(blockId, 1, 0));
 		subTypes.add(new ItemStack(blockId, 1, 1));
 	}
 
-	@Override public String[] func_150125_e() { return null; }
+	@Override
+	public List<ItemStack> onSheared(ItemStack itemStack, IBlockAccess iBlockAccess, BlockPos blockPos, int i) {
+
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ret.add(new ItemStack(this, 1, this.getMetaFromState(iBlockAccess.getBlockState(blockPos)) & 3));
+		return ret;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		Blocks.FIRE.setFireInfo(this, 80, 25);
+		MFRRegistry.registerBlock(this, new ItemBlockFactoryLeaves(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(BlockRubberLeaves.CHECK_DECAY, BlockRubberLeaves.DECAYABLE).build());
+		Item item = Item.getItemFromBlock(this);
+		final ModelResourceLocation[] leavesModels = new ModelResourceLocation[4];
+		for(int i = 0; i < 4; i++) {
+			String variant = "fancy=" + (i < 2) + ",variant=" + (((i % 2) == 0) ? "normal" : "dry");
+			leavesModels[i] = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rubberwood_leaves", variant);
+			ModelLoader.registerItemVariants(item, leavesModels[i]);
+		}
+		ModelLoader.setCustomMeshDefinition(item, stack -> {
+			int id = Minecraft.getMinecraft().gameSettings.fancyGraphics ? 0 : 2;
+			id += (stack.getMetadata() == 0 ? 0 : 1);
+			return leavesModels[id];
+		});
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, world, pos, tintIndex) -> {
+
+			BlockRubberLeaves.Variant variant = state.getValue(VARIANT);
+
+			int foliageColor;
+			if (world != null && pos != null) {
+				foliageColor = BiomeColorHelper.getFoliageColorAtPos(world, pos);
+			} else {
+				foliageColor = ColorizerFoliage.getFoliageColorBasic();
+			}
+
+			if (variant == BlockRubberLeaves.Variant.DRY) {
+				int r = (foliageColor & 16711680) >> 16;
+				int g = (foliageColor & 65280) >> 8;
+				int b = foliageColor & 255;
+				return ( r / 4 << 16 | g / 4 << 8 | b / 4) + 0xc0c0c0;
+			}
+
+			return foliageColor;
+		}, MFRThings.rubberLeavesBlock);
+
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(
+				(stack, tintIndex) -> stack.getMetadata() == 1 ? 0xFFFFFF : ColorizerFoliage.getFoliageColorBasic(), this);
+
+	}
+
+	public enum Variant implements IStringSerializable {
+
+		NORMAL (0, "normal"),
+		DRY(1, "dry");
+
+		private int meta;
+		private String name;
+
+		private static final Variant[] META_LOOKUP = new Variant[values().length];
+		Variant(int meta, String name) {
+
+			this.meta = meta;
+			this.name = name;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		public int getMetadata() {
+			return meta;
+		}
+
+		public static Variant byMetadata(int meta) {
+			
+			if(meta < 0 || meta >= META_LOOKUP.length) {
+				meta = 0;
+			}
+
+			return META_LOOKUP[meta];
+		}
+
+		static {
+			for(int i = 0; i < values().length; ++i) {
+				Variant variant = values()[i];
+				META_LOOKUP[variant.getMetadata()] = variant;
+			}
+		}
+
+		public static final String[] NAMES;
+		static {
+			NAMES = new String[values().length];
+			for (Variant variant : values()) {
+				NAMES[variant.meta] = variant.name;
+			}
+		}
+
+	}
 
 }

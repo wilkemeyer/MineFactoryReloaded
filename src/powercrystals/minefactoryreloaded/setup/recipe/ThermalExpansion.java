@@ -1,14 +1,15 @@
+/*
 package powercrystals.minefactoryreloaded.setup.recipe;
 
 import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
 import cofh.api.modhelpers.ThermalExpansionHelper;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.MissingModsException;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.versioning.ArtifactVersion;
-import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.MissingModsException;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 
 import java.util.Collections;
 
@@ -57,14 +58,16 @@ public class ThermalExpansion extends Vanilla {
 		if (!Loader.isModLoaded(TE)) {
 			MineFactoryReloadedCore.log().fatal("ThermalExpansion is required for ThermalExpansion recipes to be enabled.");
 			throw new MissingModsException(Collections.
-					singleton((ArtifactVersion) new DefaultArtifactVersion(TE)));
+					singleton((ArtifactVersion) new DefaultArtifactVersion(TE)), MineFactoryReloadedCore.modId, MineFactoryReloadedCore.modName);
 		}
 
 		{
 			conduitLiquid = new ItemStack(plasticPipeBlock);
 		}
 
-		/* Blocks */
+		*/
+/* Blocks *//*
+
 		tankBasic = GameRegistry.findItemStack(TE, "tankBasic", 1);
 		tankReinforced = GameRegistry.findItemStack(TE, "tankReinforced", 1);
 		lamp = GameRegistry.findItemStack(TE, "illuminator", 1);
@@ -78,7 +81,9 @@ public class ThermalExpansion extends Vanilla {
 		cellResonant = GameRegistry.findItemStack(TE, "cellResonant", 1);
 		cellRedstone = GameRegistry.findItemStack(TE, "cellReinforced", 1);
 
-		/* Items */
+		*/
+/* Items *//*
+
 		pneumaticServo = GameRegistry.findItemStack(TE, "pneumaticServo", 1);
 		powerCoilElectrum = GameRegistry.findItemStack(TE, "powerCoilElectrum", 1);
 		powerCoilGold = GameRegistry.findItemStack(TE, "powerCoilGold", 1);
@@ -105,8 +110,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.flower_pot,
-				'S', Blocks.piston,
+				'T', Items.FLOWER_POT,
+				'S', Blocks.PISTON,
 				'F', machineFrame,
 				'O', prefix + "Copper",
 				'C', powerCoilGold,
@@ -117,8 +122,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.fishing_rod,
-				'S', Items.bucket,
+				'T', Items.FISHING_ROD,
+				'S', Items.BUCKET,
 				'F', machineFrame,
 				'O', prefix + "Iron",
 				'C', powerCoilGold
@@ -129,7 +134,7 @@ public class ThermalExpansion extends Vanilla {
 				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'S', Items.shears,
+				'S', Items.SHEARS,
 				'T', invarAxe,
 				'F', machineFrame,
 				'O', prefix + "Gold",
@@ -142,7 +147,7 @@ public class ThermalExpansion extends Vanilla {
 				"OCO",
 				'P', "sheetPlastic",
 				'T', conduitLiquid,
-				'S', Items.shears,
+				'S', Items.SHEARS,
 				'F', machineFrame,
 				'O', prefix + "Tin",
 				'C', powerCoilGold
@@ -153,8 +158,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.glass_bottle,
-				'S', Items.leather,
+				'T', Items.GLASS_BOTTLE,
+				'S', Items.LEATHER,
 				'F', machineFrame,
 				'O', prefix + "Nickel",
 				'C', powerCoilGold
@@ -177,7 +182,7 @@ public class ThermalExpansion extends Vanilla {
 				"PCP",
 				'P', "sheetPlastic",
 				'F', machineFrame,
-				'C', Blocks.chest
+				'C', Blocks.CHEST
 		});
 
 		registerMachine(Machine.BlockBreaker, new Object[] {
@@ -198,8 +203,8 @@ public class ThermalExpansion extends Vanilla {
 				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'B', Blocks.iron_bars,
-				'T', Items.bucket,
+				'B', Blocks.IRON_BARS,
+				'T', Items.BUCKET,
 				'F', machineFrame,
 				'O', prefix + "Copper",
 				'C', powerCoilGold
@@ -210,8 +215,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.bucket,
-				'S', Blocks.furnace,
+				'T', Items.BUCKET,
+				'S', Blocks.FURNACE,
 				'F', machineFrame,
 				'O', prefix + "Iron",
 				'C', powerCoilGold
@@ -222,8 +227,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"SQS",
 				'P', "sheetPlastic",
-				'T', Items.bucket,
-				'S', Items.brick,
+				'T', Items.BUCKET,
+				'S', Items.BRICK,
 				'F', machineFrame,
 				'Q', pneumaticServo,
 		});
@@ -233,10 +238,10 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.furnace,
-				'S', Blocks.piston,
+				'T', Blocks.FURNACE,
+				'S', Blocks.PISTON,
 				'F', machineFrame,
-				'O', Items.brick,
+				'O', Items.BRICK,
 				'C', powerCoilGold
 		});
 
@@ -245,8 +250,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.golden_apple,
-				'S', Items.golden_carrot,
+				'T', Items.GOLDEN_APPLE,
+				'S', Items.GOLDEN_CARROT,
 				'F', machineFrame,
 				'O', "dyePurple",
 				'C', powerCoilGold
@@ -258,7 +263,7 @@ public class ThermalExpansion extends Vanilla {
 				"SCS",
 				'P', "sheetPlastic",
 				'T', invarSword,
-				'O', Items.book,
+				'O', Items.BOOK,
 				'F', machineFrame,
 				'S', prefix + "Tin",
 				'C', powerCoilGold
@@ -269,8 +274,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.obsidian,
-				'S', Items.book,
+				'T', Blocks.OBSIDIAN,
+				'S', Items.BOOK,
 				'F', machineFrame,
 				'O', "gemDiamond",
 				'C', powerCoilGold
@@ -302,7 +307,7 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"PSP",
 				'P', "sheetPlastic",
-				'T', Blocks.chest,
+				'T', Blocks.CHEST,
 				'S', multimeter,
 				'F', machineFrame
 		});
@@ -343,10 +348,10 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.crafting_table,
+				'T', Blocks.CRAFTING_TABLE,
 				'S', tankBasic,
 				'F', machineFrame,
-				'O', Items.book,
+				'O', Items.BOOK,
 				'C', pneumaticServo
 		});
 
@@ -355,10 +360,10 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.obsidian,
-				'S', Items.magma_cream,
+				'T', Blocks.OBSIDIAN,
+				'S', Items.MAGMA_CREAM,
 				'F', machineFrame,
-				'O', Items.blaze_rod,
+				'O', Items.BLAZE_ROD,
 				'C', powerCoilGold
 		});
 
@@ -369,14 +374,14 @@ public class ThermalExpansion extends Vanilla {
 				'P', "sheetPlastic",
 				'T', tankReinforced,
 				'B', Machine.SludgeBoiler.getItemStack(),
-				'S', Blocks.nether_brick_stairs
+				'S', Blocks.NETHER_BRICK_STAIRS
 		});
 
 		registerMachine(Machine.AutoJukebox, new Object[] {
 				"PJP",
 				"PFP",
 				'P', "sheetPlastic",
-				'J', Blocks.jukebox,
+				'J', Blocks.JUKEBOX,
 				'F', machineFrame
 		});
 
@@ -386,10 +391,10 @@ public class ThermalExpansion extends Vanilla {
 				"SCS",
 				'P', "sheetPlastic",
 				'T', multimeter,
-				'O', Items.comparator,
+				'O', Items.COMPARATOR,
 				'F', machineFrame,
 				'S', prefix + "Silver",
-				'C', Items.book
+				'C', Items.BOOK
 		});
 
 		registerMachine(Machine.AutoSpawner, new Object[] {
@@ -397,8 +402,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.nether_wart,
-				'S', Items.magma_cream,
+				'T', Items.NETHER_WART,
+				'S', Items.MAGMA_CREAM,
 				'F', machineFrame,
 				'O', "gemEmerald",
 				'C', powerCoilGold
@@ -409,11 +414,11 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Items.fermented_spider_eye,
+				'T', Items.FERMENTED_SPIDER_EYE,
 				'S', "slimeball",
 				'F', machineFrame,
-				'O', Items.brick,
-				'C', Items.sugar
+				'O', Items.BRICK,
+				'C', Items.SUGAR
 		});
 
 		registerMachine(Machine.BioFuelGenerator, new Object[] {
@@ -421,10 +426,10 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.furnace,
-				'S', Blocks.piston,
+				'T', Blocks.FURNACE,
+				'S', Blocks.PISTON,
 				'F', machineFrame,
-				'O', Items.blaze_rod,
+				'O', Items.BLAZE_ROD,
 				'C', powerCoilSilver
 		});
 
@@ -433,8 +438,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"OCO",
 				'P', "sheetPlastic",
-				'T', Blocks.nether_brick,
-				'S', Items.book,
+				'T', Blocks.NETHER_BRICK,
+				'S', Items.BOOK,
 				'F', machineFrame,
 				'O', "gemDiamond",
 				'C', powerCoilGold
@@ -457,7 +462,7 @@ public class ThermalExpansion extends Vanilla {
 				"BFB",
 				"BCB",
 				'G', "sheetPlastic",
-				'B', Blocks.brick_block,
+				'B', Blocks.BRICK_BLOCK,
 				'S', igniter,
 				'F', machineFrame,
 				'C', powerCoilGold
@@ -468,8 +473,8 @@ public class ThermalExpansion extends Vanilla {
 				"SFS",
 				"PSP",
 				'P', "sheetPlastic",
-				'B', Items.book,
-				'S', Items.repeater,
+				'B', Items.BOOK,
+				'S', Items.REPEATER,
 				'F', machineFrame
 		});
 
@@ -501,7 +506,7 @@ public class ThermalExpansion extends Vanilla {
 				"AFA",
 				"OCO",
 				'G', "sheetPlastic",
-				'A', Blocks.anvil,
+				'A', Blocks.ANVIL,
 				'F', machineFrame,
 				'C', powerCoilGold,
 				'O', prefix + "Iron"
@@ -512,9 +517,9 @@ public class ThermalExpansion extends Vanilla {
 				"HFH",
 				"BCB",
 				'G', "sheetPlastic",
-				'P', Blocks.piston,
+				'P', Blocks.PISTON,
 				'H', factoryHammerItem,
-				'B', Items.book,
+				'B', Items.BOOK,
 				'F', machineFrame,
 				'C', powerCoilGold
 		});
@@ -524,7 +529,7 @@ public class ThermalExpansion extends Vanilla {
 				"CFC",
 				'G', "sheetPlastic",
 				'C', "cableRedNet",
-				'N', Blocks.noteblock,
+				'N', Blocks.NOTEBLOCK,
 				'F', machineFrame
 		});
 
@@ -534,8 +539,8 @@ public class ThermalExpansion extends Vanilla {
 				"RPR",
 				'G', "sheetPlastic",
 				'C', conduitLiquid,
-				'B', Items.brewing_stand,
-				'R', Items.repeater,
+				'B', Items.BREWING_STAND,
+				'R', Items.REPEATER,
 				'F', machineFrame,
 				'P', powerCoilGold
 		});
@@ -546,7 +551,7 @@ public class ThermalExpansion extends Vanilla {
 				"OCO",
 				'G', "sheetPlastic",
 				'X', invarAxe,
-				'S', Items.shears,
+				'S', Items.SHEARS,
 				'F', machineFrame,
 				'C', powerCoilGold,
 				'O', prefix + "Tin"
@@ -557,7 +562,7 @@ public class ThermalExpansion extends Vanilla {
 				"DMD",
 				"GSG",
 				'G', "sheetPlastic",
-				'D', Blocks.dispenser,
+				'D', Blocks.DISPENSER,
 				'S', powerCoilGold,
 				'M', machineFrame,
 		});
@@ -567,8 +572,8 @@ public class ThermalExpansion extends Vanilla {
 				"RCR",
 				"SMS",
 				'G', "sheetPlastic",
-				'R', Items.repeater,
-				'C', Items.comparator,
+				'R', Items.REPEATER,
+				'C', Items.COMPARATOR,
 				'S', multimeter,
 				'M', machineFrame,
 		});
@@ -579,7 +584,7 @@ public class ThermalExpansion extends Vanilla {
 				"OCO",
 				'P', "sheetPlastic",
 				'T', dynamoSteam,
-				'S', Blocks.piston,
+				'S', Blocks.PISTON,
 				'F', machineFrame,
 				'O', prefix + "Silver",
 				'C', powerCoilSilver
@@ -615,7 +620,7 @@ public class ThermalExpansion extends Vanilla {
 				"TFT",
 				"OCO",
 				'P', "sheetPlastic",
-				'B', Blocks.iron_bars,
+				'B', Blocks.IRON_BARS,
 				'T', tankBasic,
 				'F', machineFrame,
 				'O', prefix + "Nickel",
@@ -627,7 +632,7 @@ public class ThermalExpansion extends Vanilla {
 				"BRB",
 				"OCO",
 				'P', "sheetPlastic",
-				'B', Blocks.iron_bars,
+				'B', Blocks.IRON_BARS,
 				'R', Machine.ItemRouter.getItemStack(),
 				'O', "dyeOrange",
 				'C', Machine.Chronotyper.getItemStack(),
@@ -657,8 +662,8 @@ public class ThermalExpansion extends Vanilla {
 				"WBW",
 				"STS",
 				"WBW",
-				'W', Items.wheat,
-				'B', new ItemStack(Items.dye, 1, 15),
+				'W', Items.WHEAT,
+				'B', new ItemStack(Items.DYE, 1, 15),
 				'S', "dustSulfur",
 				'T', "stickWood",
 		}));
@@ -681,7 +686,7 @@ public class ThermalExpansion extends Vanilla {
 					'G', "ingotInvar",
 					'L', "blockGlass",
 					'D', "ingotEnderium",
-					'N', Items.nether_star
+					'N', Items.NETHER_STAR
 			}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(detCordBlock, 12), new Object[] {
@@ -689,7 +694,7 @@ public class ThermalExpansion extends Vanilla {
 				"PTP",
 				"PPP",
 				'P', "itemRubber",
-				'T', Blocks.tnt,
+				'T', Blocks.TNT,
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fishingRodItem, 1), new Object[] {
@@ -697,8 +702,8 @@ public class ThermalExpansion extends Vanilla {
 				"DFD",
 				"TDD",
 				'D', "wireExplosive",
-				'F', Items.fishing_rod,
-				'T', Blocks.redstone_torch
+				'F', Items.FISHING_ROD,
+				'T', Blocks.REDSTONE_TORCH
 		}));
 	}
 
@@ -730,7 +735,7 @@ public class ThermalExpansion extends Vanilla {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rednetCableBlock, 6, 2), new Object[] {
 				"ingotElectrum",
 				"ingotElectrum",
-				Blocks.redstone_block,
+				Blocks.REDSTONE_BLOCK,
 				new ItemStack(rednetCableBlock),
 				new ItemStack(rednetCableBlock),
 				new ItemStack(rednetCableBlock),
@@ -739,7 +744,7 @@ public class ThermalExpansion extends Vanilla {
 				new ItemStack(rednetCableBlock),
 		}));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineItem, 1, 1), new Object[] {
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(machineBlock, 1, 1), new Object[] {
 				"PRP",
 				"RGR",
 				"PIP",
@@ -753,7 +758,7 @@ public class ThermalExpansion extends Vanilla {
 				"RDR",
 				"LGL",
 				"PHP",
-				'H', new ItemStack(machineItem, 1, 1),
+				'H', new ItemStack(machineBlock, 1, 1),
 				'P', "sheetPlastic",
 				'G', "ingotGold",
 				'L', "gemLapis",
@@ -826,11 +831,12 @@ public class ThermalExpansion extends Vanilla {
 				"KPK",
 				'P', "sheetPlastic",
 				'C', rednetCableBlock,
-				'B', Blocks.bookshelf,
-				'K', new ItemStack(Items.dye, 1, 0)
+				'B', Blocks.BOOKSHELF,
+				'K', new ItemStack(Items.DYE, 1, 0)
 		}));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(rednetMemoryCardItem, 1, 0), new ItemStack(rednetMemoryCardItem, 1, 0));
 	}
 
 }
+*/

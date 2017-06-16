@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.entity;
 
+import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -8,52 +9,67 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 
 public class EntitySafariNet extends EntityThrowable {
 
+	protected static final DataParameter<Optional<ItemStack>> STORED_ENTITY = EntityDataManager.createKey(EntitySafariNet.class, DataSerializers.OPTIONAL_ITEM_STACK);
 	public EntitySafariNet(World world) {
 
 		super(world);
-        this.renderDistanceWeight = 10.0D;
-		dataWatcher.addObjectByDataType(13, 5);
+		dataManager.register(STORED_ENTITY, Optional.<ItemStack>absent());
 	}
 
 	public EntitySafariNet(World world, double x, double y, double z, ItemStack netStack) {
 
 		super(world, x, y, z);
-        this.renderDistanceWeight = 10.0D;
-		dataWatcher.addObject(13, netStack);
+		dataManager.register(STORED_ENTITY, Optional.fromNullable(netStack));
 	}
 
 	public EntitySafariNet(World world, EntityLivingBase owner, ItemStack netStack) {
 
 		super(world, owner);
-        this.renderDistanceWeight = 10.0D;
-		dataWatcher.addObject(13, netStack);
+		dataManager.register(STORED_ENTITY, Optional.fromNullable(netStack));
 	}
 
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance) {
+		double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+		if(Double.isNaN(d0)) {
+			d0 = 1.0D;
+		}
+
+		d0 = d0 * 64.0D * getRenderDistanceWeight();
+		return distance < d0 * d0;
+	}
+	
 	public ItemStack getStoredEntity() {
 
-		return dataWatcher.getWatchableObjectItemStack(13);
+		Optional<ItemStack> entity = dataManager.get(STORED_ENTITY);
+		return entity.isPresent() ? entity.get() : null;
 	}
 
 	public void setStoredEntity(ItemStack s) {
 
-		dataWatcher.updateObject(13, s);
+		dataManager.set(STORED_ENTITY, Optional.fromNullable(s));
 	}
 
-	protected boolean onHitBlock(ItemStack storedEntity, MovingObjectPosition mop) {
+	protected boolean onHitBlock(ItemStack storedEntity, RayTraceResult result) {
 
 		if (ItemSafariNet.isEmpty(storedEntity)) {
 			dropAsStack(storedEntity);
 		} else {
-			ItemSafariNet.releaseEntity(storedEntity, worldObj, mop.blockX, mop.blockY, mop.blockZ, mop.sideHit);
+			ItemSafariNet.releaseEntity(storedEntity, worldObj, result.getBlockPos(), result.sideHit);
 			if (ItemSafariNet.isSingleUse(storedEntity)) {
 				dropAsStack(null);
 			} else {
@@ -63,25 +79,24 @@ public class EntitySafariNet extends EntityThrowable {
 		return true;
 	}
 
-	protected boolean onHitEntity(ItemStack storedEntity, MovingObjectPosition mop) {
+	protected boolean onHitEntity(ItemStack storedEntity, RayTraceResult result) {
 
-		if (ItemSafariNet.isEmpty(storedEntity) && mop.entityHit instanceof EntityLivingBase) {
-			ItemSafariNet.captureEntity(storedEntity, (EntityLivingBase) mop.entityHit);
+		if (ItemSafariNet.isEmpty(storedEntity) && result.entityHit instanceof EntityLivingBase) {
+			ItemSafariNet.captureEntity(storedEntity, (EntityLivingBase) result.entityHit);
 			dropAsStack(storedEntity);
 		} else {
 			if (!ItemSafariNet.isEmpty(storedEntity)) {
-				Entity releasedEntity = ItemSafariNet.releaseEntity(storedEntity, worldObj, (int) mop.entityHit.posX,
-					(int) mop.entityHit.posY, (int) mop.entityHit.posZ, 1);
+				Entity releasedEntity = ItemSafariNet.releaseEntity(storedEntity, worldObj, result.entityHit.getPosition(), EnumFacing.UP);
 
-				if (mop.entityHit instanceof EntityLivingBase) {
+				if (result.entityHit instanceof EntityLivingBase) {
 					if (releasedEntity instanceof EntityLiving) {
 						//Functional for skeletons.
-						((EntityLiving) releasedEntity).setAttackTarget((EntityLivingBase) mop.entityHit);
+						((EntityLiving) releasedEntity).setAttackTarget((EntityLivingBase) result.entityHit);
 					}
 
-					if (releasedEntity instanceof EntityCreature) {
+					if (releasedEntity instanceof EntityCreature && result.entityHit instanceof EntityLivingBase) {
 						//functional for mobs that extend EntityCreature (everything but Ghasts) and not Skeletons.
-						((EntityCreature) releasedEntity).setTarget(mop.entityHit);
+						((EntityCreature) releasedEntity).setAttackTarget((EntityLivingBase) result.entityHit);
 					}
 				}
 
@@ -95,30 +110,31 @@ public class EntitySafariNet extends EntityThrowable {
 		return true;
 	}
 
-	protected void impact(double x, double y, double z, int side) {
+	protected void impact(double x, double y, double z, EnumFacing side) {
 
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop) {
+	protected void onImpact(RayTraceResult result) {
 
-		ItemStack storedEntity = dataWatcher.getWatchableObjectItemStack(13);
+		Optional<ItemStack> entity = dataManager.get(STORED_ENTITY);
+		ItemStack storedEntity = entity.isPresent() ? entity.get() : null;
 
 		boolean r = false;
 		double x, y, z;
-		int side;
-		if (mop.typeOfHit == MovingObjectType.ENTITY) {
-			r = onHitEntity(storedEntity, mop);
-			x = mop.entityHit.posX;
-			y = mop.entityHit.posY;
-			z = mop.entityHit.posZ;
-			side = -1;
+		EnumFacing side;
+		if (result.typeOfHit == Type.ENTITY) {
+			r = onHitEntity(storedEntity, result);
+			x = result.entityHit.posX;
+			y = result.entityHit.posY;
+			z = result.entityHit.posZ;
+			side = null;
 		} else {
-			r = onHitBlock(storedEntity, mop);
-			x = mop.blockX;
-			y = mop.blockY;
-			z = mop.blockZ;
-			side = mop.sideHit;
+			r = onHitBlock(storedEntity, result);
+			x = result.getBlockPos().getX();
+			y = result.getBlockPos().getY();
+			z = result.getBlockPos().getZ();
+			side = result.sideHit;
 		}
 		if (r)
 			impact(x, y, z, side);
@@ -128,23 +144,28 @@ public class EntitySafariNet extends EntityThrowable {
 
 		if (!worldObj.isRemote && stack != null) {
 			EntityItem ei = new EntityItem(worldObj, posX, posY, posZ, stack.copy());
-			ei.delayBeforeCanPickup = 40;
+			ei.setPickupDelay(40);
 			worldObj.spawnEntityInWorld(ei);
 		}
 		setDead();
 	}
 
+/*
 	public IIcon getIcon() {
 
 		return dataWatcher.getWatchableObjectItemStack(13).getIconIndex();
 	}
+*/
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
 
 		super.writeEntityToNBT(nbttagcompound);
 		NBTTagCompound stackTag = new NBTTagCompound();
-		dataWatcher.getWatchableObjectItemStack(13).writeToNBT(stackTag);
+		Optional<ItemStack> entity = dataManager.get(STORED_ENTITY);
+		if (entity.isPresent()) {
+			entity.get().writeToNBT(stackTag);
+		}
 		nbttagcompound.setTag("safariNetStack", stackTag);
 	}
 

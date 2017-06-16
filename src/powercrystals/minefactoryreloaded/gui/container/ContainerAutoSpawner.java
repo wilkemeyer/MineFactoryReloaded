@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptReusableSafariNet;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
@@ -24,11 +23,11 @@ public class ContainerAutoSpawner extends ContainerFactoryPowered
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, ((TileEntityAutoSpawner)_te).getSpawnExact() ? 1 : 0);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, ((TileEntityFactoryPowered)_te).getWorkMax() & 65535);
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 102, ((TileEntityFactoryPowered)_te).getWorkMax() >>> 16);
+			listeners.get(i).sendProgressBarUpdate(this, 100, ((TileEntityAutoSpawner)_te).getSpawnExact() ? 1 : 0);
+			listeners.get(i).sendProgressBarUpdate(this, 101, ((TileEntityFactoryPowered)_te).getWorkMax() & 65535);
+			listeners.get(i).sendProgressBarUpdate(this, 102, ((TileEntityFactoryPowered)_te).getWorkMax() >>> 16);
 		}
 	}
 

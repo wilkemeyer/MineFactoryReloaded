@@ -1,8 +1,9 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
 public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 {
-	protected BlockPosition bp;
+	protected BlockPos breakPos;
 	public TileEntityBlockBreaker()
 	{
 		super(Machine.BlockBreaker);
@@ -31,36 +32,41 @@ public class TileEntityBlockBreaker extends TileEntityFactoryPowered
 	@Override
 	protected void onRotate()
 	{
-		bp = BlockPosition.fromRotateableTile(this).moveForwards(1);
+		breakPos = pos.offset(getDirectionFacing());
 		super.onRotate();
+	}
+
+	@Override
+	public void cofh_validate() {
+
+		super.cofh_validate();
+		breakPos = pos.offset(getDirectionFacing());
 	}
 
 	@Override
 	public void onNeighborBlockChange()
 	{
-		if (bp != null && !worldObj.isAirBlock(bp.x, bp.y, bp.z))
+		if (breakPos != null && !worldObj.isAirBlock(breakPos))
 			setIdleTicks(0);
 	}
 
 	@Override
 	public boolean activateMachine()
 	{
-		int x = bp.x, y = bp.y, z = bp.z;
 		World worldObj = this.worldObj;
-		Block block = worldObj.getBlock(x, y, z);
-		int blockMeta = worldObj.getBlockMetadata(x, y, z);
+		IBlockState state = worldObj.getBlockState(breakPos);
+		Block block = state.getBlock();
 
-		if (!block.isAir(worldObj, x, y, z) &&
-				!block.getMaterial().isLiquid() &&
-				block.getBlockHardness(worldObj, x, y, z) >= 0)
+		if (!block.isAir(state, worldObj, breakPos) &&
+				!state.getMaterial().isLiquid() &&
+				state.getBlockHardness(worldObj, breakPos) >= 0)
 		{
-			List<ItemStack> drops = block.getDrops(worldObj, x, y, z, blockMeta, 0);
-			if (worldObj.setBlockToAir(x, y, z))
+			List<ItemStack> drops = block.getDrops(worldObj, breakPos, state, 0);
+			if (worldObj.setBlockToAir(breakPos))
 			{
 				doDrop(drops);
 				if (MFRConfig.playSounds.getBoolean(true))
-					worldObj.playAuxSFXAtEntity(null, 2001, x, y, z,
-							Block.getIdFromBlock(block) + (blockMeta << 12));
+					worldObj.playEvent(null, 2001, breakPos, Block.getStateId(state));
 			}
 			return true;
 		}

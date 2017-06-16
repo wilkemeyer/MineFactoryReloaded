@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
 import powercrystals.minefactoryreloaded.item.ItemUpgrade;
@@ -17,7 +16,7 @@ public class ContainerHarvester extends ContainerUpgradeable
 	@Override
 	protected void addSlots()
 	{
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 0, 152, 79, ItemUpgrade.background));
+		addSlotToContainer(new SlotAcceptUpgrade(_te, 0, 152, 79));
 	}
 
 	@Override
@@ -25,10 +24,10 @@ public class ContainerHarvester extends ContainerUpgradeable
 	{
 		super.detectAndSendChanges();
 
-		for(int i = 0; i < crafters.size(); i++)
+		for(int i = 0; i < listeners.size(); i++)
 		{
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, getSetting("silkTouch"));
-			((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 101, getSetting("harvestSmallMushrooms"));
+			listeners.get(i).sendProgressBarUpdate(this, 100, getSetting("silkTouch"));
+			listeners.get(i).sendProgressBarUpdate(this, 101, getSetting("harvestSmallMushrooms"));
 		}
 	}
 

@@ -1,12 +1,11 @@
 package powercrystals.minefactoryreloaded.render.tileentity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.EnumFacing;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,10 +20,10 @@ public class LaserRendererBase {
 
 	private static int r = 255, g = 255, b = 255;
 
-	public static void renderLaser(TileEntity host, double x, double y, double z, int length, ForgeDirection orientation, float partialTicks) {
+	public static void renderLaser(TileEntity host, double x, double y, double z, int length, EnumFacing orientation, float partialTicks) {
 
-		Tessellator tessellator = Tessellator.instance;
-		GL11.glPushMatrix();
+		Tessellator tessellator = Tessellator.getInstance();
+		GlStateManager.pushMatrix();
 
 		double xStart = x;
 		double yStart = y;
@@ -35,42 +34,42 @@ public class LaserRendererBase {
 			yStart -= length;
 			break;
 		case NORTH:
-			GL11.glRotatef(270, 1, 0, 0);
+			GlStateManager.rotate(270, 1, 0, 0);
 			yStart = -z;
 			zStart = y;
 			break;
 		case SOUTH:
-			GL11.glRotatef(90, 1, 0, 0);
+			GlStateManager.rotate(90, 1, 0, 0);
 			yStart = z + 1;
 			zStart = -y - 1;
 			break;
 		case EAST:
-			GL11.glRotatef(270, 0, 0, 1);
+			GlStateManager.rotate(270, 0, 0, 1);
 			yStart = x + 1;
 			xStart = -y - 1;
 			break;
 		case WEST:
-			GL11.glRotatef(90, 0, 0, 1);
+			GlStateManager.rotate(90, 0, 0, 1);
 			yStart = -x;
 			xStart = y;
 			break;
 		default:
 			break;
 		}
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		RenderHelper.disableStandardItemLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glDepthMask(true);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.disableCull();
+		GlStateManager.disableBlend();
+		GlStateManager.depthMask(true);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		float ticks = (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() + partialTicks);
 		float f3 = -ticks * 0.2F - MathHelper.floor_float(-ticks * 0.1F);
 		double d3 = ticks * 0.025D * (1.0D - 2.5D);
-		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA(r, g, b, 32);
+		VertexBuffer buffer = tessellator.getBuffer();
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		double d4 = 0.2D;
 		double d5 = 0.5D + Math.cos(d3 + 2.356194490192345D) * d4;
 		double d6 = 0.5D + Math.sin(d3 + 2.356194490192345D) * d4;
@@ -85,28 +84,27 @@ public class LaserRendererBase {
 		double uEnd = 1.0D;
 		double vStart = -1.0F + f3;
 		double vEnd = (height * 4) + vStart;
-		tessellator.addVertexWithUV(xStart + d5, yStart + height, zStart + d6, uEnd, vEnd);
-		tessellator.addVertexWithUV(xStart + d5, yStart, zStart + d6, uEnd, vStart);
-		tessellator.addVertexWithUV(xStart + d7, yStart, zStart + d8, uStart, vStart);
-		tessellator.addVertexWithUV(xStart + d7, yStart + height, zStart + d8, uStart, vEnd);
-		tessellator.addVertexWithUV(xStart + d11, yStart + height, zStart + d12, uEnd, vEnd);
-		tessellator.addVertexWithUV(xStart + d11, yStart, zStart + d12, uEnd, vStart);
-		tessellator.addVertexWithUV(xStart + d9, yStart, zStart + d10, uStart, vStart);
-		tessellator.addVertexWithUV(xStart + d9, yStart + height, zStart + d10, uStart, vEnd);
-		tessellator.addVertexWithUV(xStart + d7, yStart + height, zStart + d8, uEnd, vEnd);
-		tessellator.addVertexWithUV(xStart + d7, yStart, zStart + d8, uEnd, vStart);
-		tessellator.addVertexWithUV(xStart + d11, yStart, zStart + d12, uStart, vStart);
-		tessellator.addVertexWithUV(xStart + d11, yStart + height, zStart + d12, uStart, vEnd);
-		tessellator.addVertexWithUV(xStart + d9, yStart + height, zStart + d10, uEnd, vEnd);
-		tessellator.addVertexWithUV(xStart + d9, yStart, zStart + d10, uEnd, vStart);
-		tessellator.addVertexWithUV(xStart + d5, yStart, zStart + d6, uStart, vStart);
-		tessellator.addVertexWithUV(xStart + d5, yStart + height, zStart + d6, uStart, vEnd);
+		buffer.pos(xStart + d5, yStart + height, zStart + d6).tex(uEnd, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d5, yStart, zStart + d6).tex(uEnd, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d7, yStart, zStart + d8).tex(uStart, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d7, yStart + height, zStart + d8).tex(uStart, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d11, yStart + height, zStart + d12).tex(uEnd, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d11, yStart, zStart + d12).tex(uEnd, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d9, yStart, zStart + d10).tex(uStart, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d9, yStart + height, zStart + d10).tex(uStart, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d7, yStart + height, zStart + d8).tex(uEnd, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d7, yStart, zStart + d8).tex(uEnd, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d11, yStart, zStart + d12).tex(uStart, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d11, yStart + height, zStart + d12).tex(uStart, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d9, yStart + height, zStart + d10).tex(uEnd, vEnd).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d9, yStart, zStart + d10).tex(uEnd, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d5, yStart, zStart + d6).tex(uStart, vStart).color(r, g, b, 32).endVertex();
+		buffer.pos(xStart + d5, yStart + height, zStart + d6).tex(uStart, vEnd).color(r, g, b, 32).endVertex();
 		tessellator.draw();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDepthMask(false);
-		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA(255, 255, 255, 48);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.depthMask(false);
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		double d18 = 0.2D;
 		double d19 = 0.2D;
 		double d20 = 0.8D;
@@ -117,30 +115,30 @@ public class LaserRendererBase {
 		double d25 = 0.8D;
 		double d29 = -1.0F + f3;
 		double d30 = (height * 2) + d29;
-		tessellator.addVertexWithUV(xStart + d18, yStart + height, zStart + d19, uEnd, d30);
-		tessellator.addVertexWithUV(xStart + d18, yStart, zStart + d19, uEnd, d29);
-		tessellator.addVertexWithUV(xStart + d20, yStart, zStart + d21, uStart, d29);
-		tessellator.addVertexWithUV(xStart + d20, yStart + height, zStart + d21, uStart, d30);
-		tessellator.addVertexWithUV(xStart + d24, yStart + height, zStart + d25, uEnd, d30);
-		tessellator.addVertexWithUV(xStart + d24, yStart, zStart + d25, uEnd, d29);
-		tessellator.addVertexWithUV(xStart + d22, yStart, zStart + d23, uStart, d29);
-		tessellator.addVertexWithUV(xStart + d22, yStart + height, zStart + d23, uStart, d30);
-		tessellator.addVertexWithUV(xStart + d20, yStart + height, zStart + d21, uEnd, d30);
-		tessellator.addVertexWithUV(xStart + d20, yStart, zStart + d21, uEnd, d29);
-		tessellator.addVertexWithUV(xStart + d24, yStart, zStart + d25, uStart, d29);
-		tessellator.addVertexWithUV(xStart + d24, yStart + height, zStart + d25, uStart, d30);
-		tessellator.addVertexWithUV(xStart + d22, yStart + height, zStart + d23, uEnd, d30);
-		tessellator.addVertexWithUV(xStart + d22, yStart, zStart + d23, uEnd, d29);
-		tessellator.addVertexWithUV(xStart + d18, yStart, zStart + d19, uStart, d29);
-		tessellator.addVertexWithUV(xStart + d18, yStart + height, zStart + d19, uStart, d30);
+		buffer.pos(xStart + d18, yStart + height, zStart + d19).tex(uEnd, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d18, yStart, zStart + d19).tex(uEnd, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d20, yStart, zStart + d21).tex(uStart, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d20, yStart + height, zStart + d21).tex(uStart, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d24, yStart + height, zStart + d25).tex(uEnd, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d24, yStart, zStart + d25).tex(uEnd, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d22, yStart, zStart + d23).tex(uStart, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d22, yStart + height, zStart + d23).tex(uStart, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d20, yStart + height, zStart + d21).tex(uEnd, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d20, yStart, zStart + d21).tex(uEnd, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d24, yStart, zStart + d25).tex(uStart, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d24, yStart + height, zStart + d25).tex(uStart, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d22, yStart + height, zStart + d23).tex(uEnd, d30).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d22, yStart, zStart + d23).tex(uEnd, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d18, yStart, zStart + d19).tex(uStart, d29).color(255, 255, 255, 48).endVertex();
+		buffer.pos(xStart + d18, yStart + height, zStart + d19).tex(uStart, d30).color(255, 255, 255, 48).endVertex();
 
 		tessellator.draw();
 		setColor(0xFFFFFF);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDepthMask(true);
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.depthMask(true);
 		GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.base;
 
 import cofh.api.item.IAugmentItem;
-import cofh.core.util.fluid.FluidTankAdv;
+import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.FluidHelper;
 
 import java.util.ArrayList;
@@ -13,33 +13,44 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
+import powercrystals.minefactoryreloaded.item.ItemUpgrade;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
-public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-	protected final static FluidTankAdv[] emptyIFluidTank = new FluidTankAdv[] { };
-	protected final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
-	protected final static int BUCKET_VOLUME = FluidContainerRegistry.BUCKET_VOLUME;
+public abstract class TileEntityFactoryInventory extends TileEntityFactory implements ISidedInventory, ITankContainerBucketable {
+
+	public final static FluidTankCore[] emptyIFluidTank = new FluidTankCore[] { };
+	public final static FluidTankInfo[] emptyFluidTankInfo = FluidHelper.NULL_TANK_INFO;
+	public final static IFluidTankProperties[] emptyIFluidTankProperties = new IFluidTankProperties[] { };
+	protected final static int BUCKET_VOLUME = Fluid.BUCKET_VOLUME;
 
 	protected List<ItemStack> failedDrops = null;
 	private List<ItemStack> missedDrops = new ArrayList<ItemStack>(5);
 	protected int _failedDropTicksMax = 20;
 	private int _failedDropTicks = 0;
 
-	protected FluidTankAdv[] _tanks;
+	protected FluidTankCore[] _tanks;
 
 	protected ItemStack[] _inventory;
 
-	protected boolean internalChange = false, client = false;
+	protected boolean internalChange = false;
 
 	protected TileEntityFactoryInventory(Machine machine) {
 
@@ -50,21 +61,14 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public void cofh_validate() {
+	public String getName() {
 
-		super.cofh_validate();
-		client = worldObj.isRemote;
-	}
-
-	@Override
-	public String getInventoryName() {
-
-		return _invName != null ? _invName : StatCollector.
+		return _invName != null ? _invName : I18n.
 				translateToLocal(_machine.getInternalName() + ".name");
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 
 		return _invName != null;
 	}
@@ -90,7 +94,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 					}
 					itemstack.stackSize -= amountToDrop;
 					EntityItem entityitem = new EntityItem(worldObj,
-							xCoord + xOffset, yCoord + yOffset, zCoord + zOffset,
+							pos.getX() + xOffset, pos.getY() + yOffset, pos.getZ() + zOffset,
 							new ItemStack(itemstack.getItem(), amountToDrop, itemstack.getItemDamage()));
 					if (itemstack.getTagCompound() != null) {
 						entityitem.getEntityItem().setTagCompound(itemstack.getTagCompound());
@@ -111,7 +115,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		onDisassembled();
 	}
 
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+	public FluidTankInfo[] getTankInfo() {
 
 		IFluidTank[] tanks = getTanks();
 		if (tanks.length == 0)
@@ -122,22 +126,40 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return r;
 	}
 
-	protected FluidTankAdv[] createTanks() {
+	@Nullable
+	protected FluidTankCore[] createTanks() {
 
 		return null;
 	}
 
-	public FluidTankAdv[] getTanks() {
+	public FluidTankCore[] getTanks() {
 
 		if (_tanks != null)
 			return _tanks;
 		return emptyIFluidTank;
 	}
 
-	public int drain(FluidTankAdv _tank, int maxDrain, boolean doDrain) {
+	@Override
+	public IFluidTankProperties[] getTankProperties(EnumFacing facing) {
 
-		if (_tank.getFluidAmount() > 0) {
-			FluidStack drained = _tank.drain(maxDrain, doDrain);
+		FluidTankCore[] tanks = getTanks();
+
+		if (tanks.length == 0)
+			return emptyIFluidTankProperties;
+
+		IFluidTankProperties[] tankProps = new IFluidTankProperties[tanks.length];
+		for(int i=0; i<tanks.length; i++) {
+			tankProps[i] = new FluidTankProperties(tanks[i].getFluid(), tanks[i].getCapacity(),
+					canFillTank(facing, i), canDrainTank(facing, i));
+		}
+
+		return tankProps;
+	}
+
+	public int drain(int maxDrain, boolean doDrain, FluidTankCore tank) {
+
+		if (tank.getFluidAmount() > 0) {
+			FluidStack drained = tank.drain(maxDrain, doDrain);
 			if (drained != null) {
 				if (doDrain) {
 					internalChange = true;
@@ -150,30 +172,45 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return 0;
 	}
 
-	public FluidStack drain(int maxDrain, boolean doDrain) {
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
 
-		for (FluidTankAdv _tank : getTanks())
-			if (_tank.getFluidAmount() > 0)
-				return _tank.drain(maxDrain, doDrain);
+		if (resource != null)
+			for (FluidTankCore tank : getTanks())
+				if (resource.isFluidEqual(tank.getFluid()))
+					return tank.drain(resource.amount, doDrain);
 		return null;
 	}
 
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
 
-		if (resource != null)
-			for (FluidTankAdv _tank : getTanks())
-				if (resource.isFluidEqual(_tank.getFluid()))
-					return _tank.drain(resource.amount, doDrain);
+		for (FluidTankCore tank : getTanks())
+			if (tank.getFluidAmount() > 0)
+				return tank.drain(maxDrain, doDrain);
 		return null;
 	}
 
-	public int fill(FluidStack resource, boolean doFill) {
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
 		if (resource != null)
-			for (FluidTankAdv _tank : getTanks())
-				if (FluidHelper.isFluidEqualOrNull(_tank.getFluid(), resource))
-					return _tank.fill(resource, doFill);
+			for (FluidTankCore tank : getTanks())
+				if (FluidHelper.isFluidEqualOrNull(tank.getFluid(), resource))
+					return tank.fill(resource, doFill);
 		return 0;
+	}
+
+	protected boolean canFillTank(EnumFacing facing, int index) {
+
+		return true;
+	}
+
+	protected boolean canDrainTank(EnumFacing facing, int index) {
+
+		return true;
 	}
 
 	protected boolean shouldPumpLiquid() {
@@ -186,20 +223,22 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return true;
 	}
 
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return false;
-	}
-
-	public boolean allowBucketDrain(ItemStack stack) {
+	@Override
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
 		return false;
 	}
 
 	@Override
-	public void updateEntity() {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
-		super.updateEntity();
+		return false;
+	}
+
+	@Override
+	public void update() {
+
+		super.update();
 
 		if (!worldObj.isRemote && shouldPumpLiquid()) {
 			for (IFluidTank tank : getTanks())
@@ -279,7 +318,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 
 	protected boolean canUseUpgrade(ItemStack stack, IAugmentItem item) {
 
-		return _areaManager != null && item.getAugmentLevel(stack, "radius") != 0;
+		return _areaManager != null && item instanceof ItemUpgrade && ((ItemUpgrade) item).getAugmentLevel(stack, "radius") != 0;
 	}
 
 	public boolean isUsableAugment(ItemStack stack) {
@@ -308,12 +347,12 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 
 	}
 
@@ -375,11 +414,11 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int slot, @Nullable ItemStack itemstack) {
 
-		int start = getStartInventorySide(ForgeDirection.UNKNOWN);
+		int start = getStartInventorySide(null);
 		if (slot < start ||
-				slot > (start + getSizeInventorySide(ForgeDirection.UNKNOWN)))
+				slot > (start + getSizeInventorySide(null)))
 			return false;
 		if (itemstack == null)
 			return true;
@@ -392,10 +431,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 
-		if (isInvalid() || worldObj.getTileEntity(xCoord, yCoord, zCoord) != this) {
+		if (isInvalid() || worldObj.getTileEntity(pos) != this) {
 			return false;
 		}
-		return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+		return entityplayer.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64D;
 	}
 
 	@Override
@@ -428,7 +467,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				if (j < _tanks.length) {
 					FluidStack l = FluidStack.loadFluidStackFromNBT(nbttagcompound1);
 					if (l != null) {
-						((FluidTankAdv) _tanks[j]).setFluid(l);
+						((FluidTankCore) _tanks[j]).setFluid(l);
 					}
 				}
 			}
@@ -451,9 +490,9 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		if (_inventory.length > 0) {
 			NBTTagList items = new NBTTagList();
 			for (int i = 0; i < _inventory.length; i++) {
@@ -478,6 +517,8 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			if (dropItems.tagCount() > 0)
 				tag.setTag("DropItems", dropItems);
 		}
+
+		return tag;
 	}
 
 	@Override
@@ -494,8 +535,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 					nbttagcompound1.setByte("Tank", (byte) i);
 
-					FluidStack l = _tanks[i].getFluid();
-					l.writeToNBT(nbttagcompound1);
+					fluid.writeToNBT(nbttagcompound1);
 					tanks.appendTag(nbttagcompound1);
 				}
 			}
@@ -505,7 +545,7 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int var1) {
+	public ItemStack removeStackFromSlot(int slot) {
 
 		return null;
 	}
@@ -516,10 +556,10 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
+	public int[] getSlotsForFace(EnumFacing side) {
 
-		int start = getStartInventorySide(ForgeDirection.getOrientation(side));
-		int size = getSizeInventorySide(ForgeDirection.getOrientation(side));
+		int start = getStartInventorySide(side);
+		int size = getSizeInventorySide(side);
 
 		int[] slots = new int[size];
 		for (int i = 0; i < size; i++) {
@@ -528,29 +568,29 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		return slots;
 	}
 
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 0;
 	}
 
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return getSizeInventory();
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, @Nullable ItemStack itemstack, EnumFacing side) {
 
 		return itemstack == null || this.isItemValidForSlot(slot, itemstack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, @Nullable ItemStack itemstack, EnumFacing side) {
 
 		return true;
 	}
 
-	public int getComparatorOutput(int side) {
+	public int getComparatorOutput() {
 
 		IFluidTank[] tanks = getTanks();
 		IFluidTank tank = null;
@@ -564,15 +604,13 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 				tankPercent = ((float) tank.getFluid().amount) / tank.getCapacity();
 			}
 		}
-		int[] accSlots = getAccessibleSlotsFromSide(side);
-		if (accSlots.length > 0) {
+		if (_inventory.length > 0) {
 			hasInventory = true;
-			int[] slots = accSlots;
 			int len = 0;
 			float ret = 0;
-			for (int i = slots.length; i-- > 0;) {
-				if (canInsertItem(slots[i], null, side)) {
-					ItemStack stack = getStackInSlot(slots[i]);
+			for (int slot = _inventory.length; slot-- > 0;) {
+				if (canInsertItem(slot, null, null)) {
+					ItemStack stack = getStackInSlot(slot);
 					if (stack != null) {
 						float maxStack = Math.min(stack.getMaxStackSize(), getInventoryStackLimit());
 						ret += Math.max(Math.min(stack.stackSize / maxStack, 1), 0);
@@ -585,4 +623,88 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		float mult = hasTank & hasInventory ? (tankPercent + invPercent) / 2 : hasTank ? tankPercent : hasInventory ? invPercent : 0f;
 		return (int) Math.ceil(15 * mult);
 	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for(int slot=0; slot < getSizeInventory(); slot++) {
+			removeStackFromSlot(slot);
+		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return manageFluids();
+
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			if (manageFluids())
+				return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryFluidHandler(this, facing));
+			return null; // no external overriding via events
+		}
+
+		return super.getCapability(capability, facing);
+	}
+
+
+	public static class FactoryFluidHandler implements IFluidHandler {
+
+		private ITankContainerBucketable tile;
+		private EnumFacing facing;
+
+		public FactoryFluidHandler(ITankContainerBucketable tile, EnumFacing facing) {
+
+			this.tile = tile;
+			this.facing = facing;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+
+			return tile.getTankProperties(facing);
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+
+			return tile.fill(facing, resource, doFill);
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+			return tile.drain(facing, resource, doDrain);
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+
+			return tile.drain(facing, maxDrain, doDrain);
+		}
+
+	}
+
 }

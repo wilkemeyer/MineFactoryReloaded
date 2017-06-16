@@ -8,11 +8,24 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemSyringeZombie extends ItemSyringe
 {
+	public ItemSyringeZombie()
+	{
+		setUnlocalizedName("mfr.syringe.zombie");
+		setContainerItem(MFRThings.syringeEmptyItem);
+		setRegistryName(MineFactoryReloadedCore.modId, "syringe_zombie");
+	}
+
 	@Override
 	public boolean canInject(World world, EntityLivingBase entity, ItemStack syringe)
 	{
@@ -33,13 +46,13 @@ public class ItemSyringeZombie extends ItemSyringe
 			else if (entity instanceof EntityHorse)
 			{
 				EntityHorse ent = (EntityHorse)entity;
-				switch (ent.getHorseType())
+				switch (ent.getType())
 				{
-				case 0:
-					ent.setHorseType(3);
+				case HORSE:
+					ent.setType(HorseType.ZOMBIE);
 					break;
-				case 3:
-					ent.setHorseType(4);
+				case ZOMBIE:
+					ent.setType(HorseType.SKELETON);
 					break;
 				}
 			}
@@ -57,5 +70,11 @@ public class ItemSyringeZombie extends ItemSyringe
 		}
 		return true;
 	}
-	
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(MFRThings.syringeZombieItem, "syringe", "variant=zombie");
+	}
 }

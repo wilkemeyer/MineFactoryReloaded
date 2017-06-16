@@ -1,7 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class TileEntityVet extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public boolean canInsertItem(int slot, ItemStack s, int side)
+	public boolean canInsertItem(int slot, ItemStack s, EnumFacing side)
 	{
 		if (s != null && s.getItem() instanceof ISyringe)
 		{
@@ -104,7 +105,7 @@ public class TileEntityVet extends TileEntityFactoryPowered
 	}
 	
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side)
 	{
 		ItemStack s = getStackInSlot(slot);
 		if (s != null && s.getItem() instanceof ISyringe)

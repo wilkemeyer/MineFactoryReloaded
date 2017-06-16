@@ -166,7 +166,6 @@ pip-log.txt
 downloads
 screenshots
 techne
-.idea/
 
 #############
 ## denoflions
@@ -174,5 +173,6 @@ techne
 
 MFR-Forestry
 nbproject
+.idea/
 *.iml
 *.eml

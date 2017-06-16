@@ -1,30 +1,34 @@
 package powercrystals.minefactoryreloaded.render.entity;
 
-import org.lwjgl.opengl.GL11;
+import codechicken.lib.render.CCModel;
+import codechicken.lib.render.CCOBJParser;
+import codechicken.lib.render.CCRenderState;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.entity.EntityRocket;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class EntityRocketRenderer extends Render
 {
 	public static final ResourceLocation rocket =
-			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "Rocket.png");
-	private IModelCustom _model;
-	
-	public EntityRocketRenderer()
+			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "rocket.png");
+	private CCModel model;
+
+	public EntityRocketRenderer(RenderManager renderManager)
 	{
+		super(renderManager);
 		try
 		{
-			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					MineFactoryReloadedCore.modelFolder + "Rocket.obj"));
+			model = CCOBJParser.parseObjModels(new ResourceLocation(
+					MineFactoryReloadedCore.modelFolder + "rocket.obj")).get("Tube");
 		}
 		catch(Exception e)
 		{
@@ -34,17 +38,24 @@ public class EntityRocketRenderer extends Render
 	
     public void renderRocket(EntityRocket rocket, double x, double y, double z, float yaw, float partialTicks)
     {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
-		GL11.glTranslatef((float)x, (float)y, (float)z);
-		GL11.glRotatef(rocket.prevRotationYaw + (rocket.rotationYaw - rocket.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(90, 0, 0, 1);
-		GL11.glRotatef(rocket.prevRotationPitch + (rocket.rotationPitch - rocket.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
-		GL11.glScalef(0.01F, 0.01F, 0.01F);
-		
-		_model.renderAll();
-		
-		GL11.glPopMatrix();
+		GlStateManager.translate((float)x, (float)y, (float)z);
+		GlStateManager.rotate(rocket.prevRotationYaw + (rocket.rotationYaw - rocket.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(90, 0, 0, 1);
+		GlStateManager.rotate(rocket.prevRotationPitch + (rocket.rotationPitch - rocket.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
+		GlStateManager.scale(0.01F, 0.01F, 0.01F);
+
+		CCRenderState ccrs = CCRenderState.instance();
+		ccrs.reset();
+
+		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+
+		model.render(ccrs);
+
+		ccrs.draw();
+
+		GlStateManager.popMatrix();
     }
 
     @Override

@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -29,22 +31,24 @@ public class FertilizableCropReflection implements IFactoryFertilizable
 	}
 	
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
-		return world.getBlockMetadata(x, y, z) < _targetMeta && fertilizerType == FertilizerType.GrowPlant;
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().getMetaFromState(state) < _targetMeta && fertilizerType == FertilizerType.GrowPlant;
 	}
 	
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
 		try
 		{
-			_fertilize.invoke(_block, world, x, y, z);
+			_fertilize.invoke(_block, world, pos);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return world.getBlockMetadata(x, y, z) >= _targetMeta;
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().getMetaFromState(state) >= _targetMeta;
 	}
 }

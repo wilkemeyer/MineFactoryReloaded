@@ -1,54 +1,39 @@
 package powercrystals.minefactoryreloaded.item.base;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class ItemFactory extends Item {
+public class ItemFactory extends Item implements IInitializer, IModelRegister{
 
-	protected int _metaMax = 0;
-	protected boolean _hasIcons = true;
+	protected String modelName;
+	protected String variant;
 
 	public ItemFactory() {
 
 		setCreativeTab(MFRCreativeTab.tab);
-	}
-
-	@Override
-	public Item setUnlocalizedName(String name) {
-
-		super.setUnlocalizedName(name);
-		MFRRegistry.registerItem(this, getUnlocalizedName());
-		return this;
-	}
-
-	public Item setHasIcons(boolean icons) {
-
-		_hasIcons = icons;
-		return this;
-	}
-
-	protected void setMetaMax(int max) {
-
-		_metaMax = max;
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
 	}
 
 	public void getSubItems(Item item, List<ItemStack> subTypes) {
 
-		for (int meta = 0; meta <= _metaMax; meta++) {
-			subTypes.add(new ItemStack(item, 1, meta));
-		}
+		subTypes.add(new ItemStack(item, 1, 0));
 	}
 
 	public void addInfo(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
@@ -68,14 +53,6 @@ public class ItemFactory extends Item {
 		addInfo(stack, player, infoList, advancedTooltips);
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-
-		if (_hasIcons)
-			this.itemIcon = par1IconRegister.registerIcon("minefactoryreloaded:" + getUnlocalizedName());
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List subTypes) {
@@ -93,4 +70,37 @@ public class ItemFactory extends Item {
 		return b.toString();
 	}
 
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerItem(this);
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
+
+	public ItemFactory setModelLocation(String modelName, String variant) {
+
+		this.modelName = modelName;
+		this.variant = variant;
+
+		return this;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this, modelName, variant);
+	}
 }

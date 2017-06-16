@@ -3,9 +3,10 @@ package powercrystals.minefactoryreloaded.core;
 import gnu.trove.impl.unmodifiable.TUnmodifiableIntObjectMap;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import net.minecraft.util.math.Vec3i;
 
-public enum SideOffset
-{
+public enum SideOffset {
+
 	UNKNOWN(0, 0, 0),
 
 	/** +Y */
@@ -108,8 +109,7 @@ public enum SideOffset
 	public static SideOffset[] SIDES = {NORTH, SOUTH, WEST, EAST};
 
     public static final TIntObjectMap<SideOffset> lookup;
-    static
-    {
+    static {
     	TIntObjectHashMap<SideOffset> a = new TIntObjectHashMap<SideOffset>();
     	for (int i = 0x40; i --> 0;)
     		a.put(i, UNKNOWN);
@@ -123,8 +123,8 @@ public enum SideOffset
 	public final int offsetZ;
     public final int flag;
 
-	private SideOffset(int x, int y, int z)
-	{
+	SideOffset(int x, int y, int z) {
+
 		offsetX = x;
 		offsetY = y;
 		offsetZ = z;
@@ -133,11 +133,12 @@ public enum SideOffset
 		flag = f;
 	}
 
-    public SideOffset getOpposite()
-    {
+    public SideOffset getOpposite() {
+
 		int f = ~flag & 0x3F;
 		int t = (f & 21) & ((f & 42) >> 1);
 		f &= ~(t | (t << 1)); // unset fields with high&low bits set (invalid state)
         return lookup.get(f);
     }
+
 }

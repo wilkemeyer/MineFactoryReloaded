@@ -1,7 +1,7 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class TileEntityEnchantmentRouter extends TileEntityItemRouter {
 							}
 						}
 					}
-				} else if (_inventory[j].getItem().equals(Items.book)) {
+				} else if (_inventory[j].getItem().equals(Items.BOOK)) {
 					routeWeights[i] += (1 + _inventory[j].stackSize) / 2;
 				}
 			}

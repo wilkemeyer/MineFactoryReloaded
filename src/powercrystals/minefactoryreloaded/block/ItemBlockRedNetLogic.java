@@ -1,7 +1,8 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -13,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.StatCollector;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
@@ -105,7 +105,7 @@ public class ItemBlockRedNetLogic extends ItemBlock {
 		pages.appendTag(new NBTTagString("We hope you enjoy your new Programmable RedNet Controller!"));
 
 		nbt.setTag("pages", pages);
-		manual = new ItemStack(Items.written_book);
+		manual = new ItemStack(Items.WRITTEN_BOOK);
 		manual.setTagCompound(nbt);
 	}
 
@@ -131,7 +131,7 @@ public class ItemBlockRedNetLogic extends ItemBlock {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List infoList, boolean advancedTooltips) {
 
-		infoList.add(StatCollector.translateToLocal("tip.info.mfr.prc"));
+		infoList.add(I18n.translateToLocal("tip.info.mfr.prc"));
 		NBTTagCompound tag = stack.getTagCompound();
 		if (tag != null) {
 			if (tag.hasKey("circuits", 9)) {

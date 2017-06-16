@@ -3,12 +3,11 @@ package powercrystals.minefactoryreloaded.modhelpers.buildcraft;
 import buildcraft.api.fuels.BuildcraftFuelRegistry;
 
 import cofh.asm.relauncher.Strippable;
-import cofh.mod.ChildMod;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.CustomProperty;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.CustomProperty;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -17,11 +16,11 @@ import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
+/*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
 		name = "MFR Compat: BuildCraft",
 		version = MineFactoryReloadedCore.version,
 		dependencies = "after:MineFactoryReloaded;after:BuildCraftAPI|fuels",
-		customProperties = @CustomProperty(k = "cofhversion", v = "true")))
+		customProperties = @CustomProperty(k = "cofhversion", v = "true")))*/
 public class Buildcraft {
 
 	@Mod.EventHandler

@@ -1,12 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,13 +8,14 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiBlockSmasher;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -29,7 +24,11 @@ import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.world.SmashingWorld;
 
-public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 
 	public static final int MAX_FORTUNE = 3;
 	private int _fortune = 0;
@@ -44,7 +43,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 
 		super(Machine.BlockSmasher);
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	@Override
@@ -88,7 +87,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			setWorkDone(0);
 			return false;
 		}
-		if (_shouldWork && _fortune > 0 && (drain(_tanks[0], _fortune, false) != _fortune)) {
+		if (_shouldWork && _fortune > 0 && (drain(_fortune, false, _tanks[0]) != _fortune)) {
 			return false;
 		}
 		ItemStack outSlot = _inventory[1];
@@ -125,7 +124,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			}
 		} else {
 			if (!incrementWorkDone()) return false;
-			drain(_tanks[0], _fortune, true);
+			drain(_fortune, true, _tanks[0]);
 		}
 		return true;
 	}
@@ -138,20 +137,18 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 		return a == null && b.size() > 0 ? b.get(0) : null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<ItemStack> getOutput(ItemStack input) {
 
 		if (!(input.getItem() instanceof ItemBlock)) {
 			return null;
 		}
 		ItemBlock block = (ItemBlock) input.getItem();
-		Block b = block.field_150939_a;
+		Block b = block.getBlock();
 		if (b == null) {
 			return null;
 		}
 
-		@SuppressWarnings("rawtypes")
-		ArrayList drops = _smashingWorld.smashBlock(input, b, block.getMetadata(input.getItemDamage()), _fortune);
+		List<ItemStack> drops = _smashingWorld.smashBlock(input, b, block.getMetadata(input.getItemDamage()), _fortune);
 		if (drops != null && drops.size() > 0) {
 			return drops;
 		}
@@ -186,47 +183,23 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (slot == 0) return true;
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		if (slot == 1) return true;
 		return false;
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack) {
+	protected FluidTankCore[] createTanks() {
 
-		return true;
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	protected FluidTankAdv[] createTanks() {
-
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
@@ -250,9 +223,9 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setBoolean("shouldWork", _shouldWork);
 		if (_lastInput != null)
 			tag.setTag("stack", _lastInput.writeToNBT(new NBTTagCompound()));
@@ -266,6 +239,8 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 			}
 			tag.setTag("SmashedItems", nbttaglist);
 		}
+
+		return tag;
 	}
 
 	@Override
@@ -294,14 +269,29 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered implements 
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	protected boolean canDrainTank(EnumFacing facing, int index) {
 
 		return false;
 	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }

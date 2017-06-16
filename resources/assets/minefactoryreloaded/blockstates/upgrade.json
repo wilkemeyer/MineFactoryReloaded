@@ -1,0 +1,71 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"variant": {
+			"bronze": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.bronze"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.cobble"
+				}
+			},
+			"copper": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.copper"
+				}
+			},
+			"diamond": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.diamond"
+				}
+			},
+			"emerald": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.emerald"
+				}
+			},
+			"gold": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.gold"
+				}
+			},
+			"iron": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.iron"
+				}
+			},
+			"lapis": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.lapis"
+				}
+			},
+			"platinum": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.platinum"
+				}
+			},
+			"quartz": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.quartz"
+				}
+			},
+			"silver": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.silver"
+				}
+			},
+			"tin": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.upgrade.radius.tin"
+				}
+			}
+		}
+	}
+}

@@ -1,13 +1,13 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -32,9 +32,9 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void cofh_validate() {
+	public void validate() {
 
-		super.cofh_validate();
+		super.validate();
 		_ignoreChanges = false;
 		onFactoryInventoryChanged();
 	}
@@ -96,15 +96,15 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public ForgeDirection getDropDirection() {
+	public EnumFacing getDropDirection() {
 
-		return ForgeDirection.UP;
+		return EnumFacing.UP;
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 
 		if (worldObj.isRemote)
 			return;
@@ -133,7 +133,7 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		if ((_inventory[2] == null) & _storedItem != null & _storedQuantity > 0) {
 			_inventory[2] = _storedItem.copy();
 			_inventory[2].stackSize = Math.min(_storedQuantity,
-				Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
+					Math.min(_storedItem.getMaxStackSize(), getInventoryStackLimit()));
 			_storedQuantity -= _inventory[2].stackSize;
 		} else if (_inventory[2] != null & _storedQuantity > 0 &&
 				_inventory[2].stackSize < _inventory[2].getMaxStackSize() &&
@@ -146,7 +146,8 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 	private void checkInput(int slot) {
 
-		l: if (_inventory[slot] != null) {
+		l:
+		if (_inventory[slot] != null) {
 			if (_storedItem == null) {
 				_storedItem = _inventory[slot].copy();
 				_storedItem.stackSize = 1;
@@ -187,17 +188,17 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
 
-		return player.getDistanceSq(xCoord, yCoord, zCoord) <= 64D;
+		return player.getDistanceSq(pos) <= 64D;
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
+	public int getStartInventorySide(EnumFacing side) {
 
 		return 0;
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return getSizeInventory();
 	}
@@ -217,24 +218,26 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	 * Should only allow matching items to be inserted in the "in" slots. Nothing goes in the "out" slot.
 	 */
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		if (_passingItem)
 			return false;
-		if (slot >= 2) return false;
+		if (slot >= 2)
+			return false;
 		ItemStack stored = _storedItem;
-		if (stored == null) stored = _inventory[2];
+		if (stored == null)
+			stored = _inventory[2];
 		return stored == null || (UtilInventory.stacksEqual(stored, stack) && (getMaxStoredCount() - stored.getMaxStackSize()) > _storedQuantity);
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 
-		return canInsertItem(slot, itemstack, -1);
+		return canInsertItem(slot, itemstack, null);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return true;
 	}
@@ -259,13 +262,15 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
 		ItemStack o = _inventory[2];
 		_inventory[2] = null;
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		_inventory[2] = o;
 		writeItemNBT(tag);
+
+		return tag;
 	}
 
 	@Override
@@ -358,4 +363,5 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 
 		return Integer.MAX_VALUE;
 	}
+
 }

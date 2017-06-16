@@ -1,0 +1,91 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"color": {
+			"black": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.black"
+				}
+			},
+			"blue": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.blue"
+				}
+			},
+			"brown": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.brown"
+				}
+			},
+			"cyan": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.cyan"
+				}
+			},
+			"gray": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.gray"
+				}
+			},
+			"green": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.green"
+				}
+			},
+			"light_blue": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.lightblue"
+				}
+			},
+			"silver": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.lightgray"
+				}
+			},
+			"lime": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.lime"
+				}
+			},
+			"magenta": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.magenta"
+				}
+			},
+			"orange": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.orange"
+				}
+			},
+			"pink": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.pink"
+				}
+			},
+			"purple": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.purple"
+				}
+			},
+			"red": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.red"
+				}
+			},
+			"white": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.white"
+				}
+			},
+			"yellow": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.laserfocus.yellow"
+				}
+			}
+		}
+	}
+}

@@ -7,7 +7,7 @@ public class ItemBlockFactoryTree extends ItemBlockFactory
 	public ItemBlockFactoryTree(net.minecraft.block.Block id)
 	{
 		super(id);
-		setNames(new String[] {null, "sacred", "mega", "massive"});
+		setNames(new String[] {"normal", "sacred", "mega", "massive"});
 	}
 	
 	@Override

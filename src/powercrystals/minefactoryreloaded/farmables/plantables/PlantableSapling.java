@@ -1,11 +1,13 @@
 package powercrystals.minefactoryreloaded.farmables.plantables;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class PlantableSapling extends PlantableStandard
 {
@@ -22,17 +24,17 @@ public class PlantableSapling extends PlantableStandard
 	}
 	
 	@Override
-	public boolean canBePlantedHere(World world, int x, int y, int z, ItemStack stack)
+	public boolean canBePlantedHere(World world, BlockPos pos, ItemStack stack)
 	{
-		Block ground = world.getBlock(x, y - 1, z);
-		if(!world.isAirBlock(x, y, z))
+		IBlockState stateDown = world.getBlockState(pos.down());
+		Block ground = stateDown.getBlock();
+		if(!world.isAirBlock(pos))
 		{
 			return false;
 		}
-		return _block.canBlockStay(world, x, y, z) && (
-					_block.canPlaceBlockAt(world, x, y, z) || (
+		return _block.canPlaceBlockAt(world, pos) || (
 						_block instanceof IPlantable &&
-						ground.canSustainPlant(world, x, y, z,
-								ForgeDirection.UP, (IPlantable)_block)));
+						ground.canSustainPlant(stateDown, world, pos,
+								EnumFacing.UP, (IPlantable)_block));
 	}
 }

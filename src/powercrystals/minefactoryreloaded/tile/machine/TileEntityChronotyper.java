@@ -1,8 +1,8 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -50,17 +50,13 @@ public class TileEntityChronotyper extends TileEntityFactoryPowered {
 	@Override
 	protected boolean activateMachine() {
 
-		List<?> entities = worldObj.getEntitiesWithinAABB(EntityAgeable.class, _areaManager.getHarvestArea().toAxisAlignedBB());
+		List<EntityAgeable> entities = worldObj.getEntitiesWithinAABB(EntityAgeable.class, _areaManager.getHarvestArea().toAxisAlignedBB());
 
-		for (Object o : entities) {
-			if (!(o instanceof EntityAgeable)) {
-				continue;
-			}
-			EntityAgeable a = (EntityAgeable) o;
+		for (EntityAgeable a : entities) {
 			if ((a.getGrowingAge() < 0 && !_moveOld) || (a.getGrowingAge() >= 0 && _moveOld)) {
-				BlockPosition bp = BlockPosition.fromRotateableTile(this);
-				bp.moveBackwards(1);
-				a.setPosition(bp.x + 0.5, bp.y + 0.5, bp.z + 0.5);
+				BlockPos bp = pos.offset(getDirectionFacing().getOpposite());
+				a.setPosition(bp.getX() + 0.5, bp.getY() + 0.5, bp.getZ() + 0.5);
+				// TODO: take entity size into account so they don't clip inside the chronotyper
 
 				return true;
 			}

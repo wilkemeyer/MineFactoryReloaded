@@ -1,5 +1,8 @@
 package powercrystals.minefactoryreloaded.farmables.harvestables;
 
+import net.minecraft.block.BlockCocoa;
+import net.minecraft.util.math.BlockPos;
+
 public class HarvestableCocoa extends HarvestableStandard
 {
 	public HarvestableCocoa(net.minecraft.block.Block blockId)
@@ -8,11 +11,10 @@ public class HarvestableCocoa extends HarvestableStandard
 	}
 
 	@Override
-	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> settings, int x, int y, int z)
+	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> settings, BlockPos pos)
 	{
 		if (settings.get("isHarvestingTree") == Boolean.TRUE)
 			return true;
-		int blockMetadata = world.getBlockMetadata(x, y, z);
-		return ((blockMetadata & 12) >> 2) >= 2;
+		return world.getBlockState(pos).getValue(BlockCocoa.AGE) >= 2;
 	}
 }

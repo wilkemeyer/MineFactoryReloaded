@@ -1,0 +1,46 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"type": {
+			"rubber_raw": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.rubber.raw"
+				}
+			},
+			"rubber_bar": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.rubber.bar"
+				}
+			},
+			"plastic_raw": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.plastic.raw"
+				}
+			},
+			"plastic_sheet": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.plastic.sheet"
+				}
+			},
+			"sugar_charcoal": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.sugarcharcoal"
+				}
+			},
+			"fertilizer": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.fertilizer"
+				}
+			},
+			"blank_record": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.record.blank"
+				}
+			}
+		}
+	}
+}

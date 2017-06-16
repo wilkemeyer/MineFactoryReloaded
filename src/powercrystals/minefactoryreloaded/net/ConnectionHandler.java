@@ -1,11 +1,11 @@
 package powercrystals.minefactoryreloaded.net;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,7 +52,7 @@ public class ConnectionHandler
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent player)
 	{
-		String name = player.player.getCommandSenderName();
+		String name = player.player.getName();
 		onlinePlayerMap.put(name, Boolean.TRUE);
 		Iterator<Ticket> i = CommonProxy.ticketsInLimbo.iterator();
 		while (i.hasNext())
@@ -66,14 +66,14 @@ public class ConnectionHandler
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent player)
 	{
-		onlinePlayerMap.remove(player.player.getCommandSenderName());
+		onlinePlayerMap.remove(player.player.getName());
 	}
 
 	@SubscribeEvent
 	public void onItemPickUp(ItemPickupEvent evt) {
 		if (evt.pickedUp.getEntityItem().getItem() == MFRThings.rubberWoodItem) {
 			// TODO: give player a book
-			evt.player.triggerAchievement(AchievementList.mineWood);
+			evt.player.addStat(AchievementList.MINE_WOOD);
 		}
 	}
 }

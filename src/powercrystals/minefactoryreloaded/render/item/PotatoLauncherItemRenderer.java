@@ -1,86 +1,54 @@
 package powercrystals.minefactoryreloaded.render.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureManager;
+import codechicken.lib.render.CCModel;
+import codechicken.lib.render.CCOBJParser;
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.texture.TextureUtils;
+import codechicken.lib.util.TransformUtils;
+import codechicken.lib.vec.SwapYZ;
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-
-import org.lwjgl.opengl.GL11;
-
+import net.minecraftforge.common.model.TRSRTransformation;
+import org.apache.commons.lang3.tuple.Pair;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 
-@SideOnly(Side.CLIENT)
-public class PotatoLauncherItemRenderer implements IItemRenderer
-{
-	private static final ResourceLocation launcher =
-			new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "PotatoCannon.png");
-	private IModelCustom _model;
+import javax.vecmath.Matrix4f;
+import java.util.Map;
 
-	public PotatoLauncherItemRenderer()
-	{
-		try
-		{
-			_model = AdvancedModelLoader.loadModel(new ResourceLocation(
-					MineFactoryReloadedCore.modelFolder + "PotatoCannon.obj"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+public class PotatoLauncherItemRenderer extends BaseItemRenderer {
+
+	private static CCModel launcherModel;
+	private static ResourceLocation textureLocation = new ResourceLocation(MineFactoryReloadedCore.modelTextureFolder + "potato_launcher.png");
+	
+	public PotatoLauncherItemRenderer() {
+
+		Map<String, CCModel> models = CCOBJParser.parseObjModels(new ResourceLocation(MineFactoryReloadedCore.modelFolder + "potato_launcher.obj"), new SwapYZ());
+		launcherModel = models.get("Box009");
+
+		TRSRTransformation thirdPerson = TransformUtils.get(0, 3, 0, 90, 180, 0, 0.015f);
+		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
+		builder.put(ItemCameraTransforms.TransformType.GUI, TransformUtils.get(0, -1, 0, 30, 135, 0, 0.015f));
+		builder.put(ItemCameraTransforms.TransformType.GROUND, TransformUtils.get(0, 3, 0, 0, 0, 0, 0.01f));
+		builder.put(ItemCameraTransforms.TransformType.FIXED, TransformUtils.get(0, 0, 0, 0, 90, 0, 0.03f));
+		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdPerson);
+		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TransformUtils.leftify(thirdPerson));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, TransformUtils.get(0, -1, 0, 8, 190, 0, 0.025f));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, TransformUtils.get(0, -1, 0, 8, 190, 0, 0.025f));
+		transformations = builder.build();
 	}
 
 	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type)
-	{
-		return true;
-	}
+	protected void drawModel(CCRenderState ccrs, ItemStack stack) {
+		
+		TextureUtils.changeTexture(textureLocation);
+		ccrs.startDrawing(4, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-	{
-		return helper != ItemRendererHelper.EQUIPPED_BLOCK;
-	}
+		launcherModel.render(ccrs);
 
-	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
-	{
-		TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
-
-		if(renderengine != null)
-		{
-			renderengine.bindTexture(launcher);
-		}
-
-		GL11.glPushMatrix();
-
-		if(type == ItemRenderType.EQUIPPED_FIRST_PERSON)
-		{
-			GL11.glRotatef(270, 0, 1, 0);
-			GL11.glRotatef(300, 1, 0, 0);
-			GL11.glRotatef( 10, 0, 1, 0);
-			GL11.glTranslatef(-0.3F, 0.5F, -0.1F);
-			GL11.glScalef(0.03F, 0.03F, 0.03F);
-		}
-		else if(type == ItemRenderType.EQUIPPED)
-		{
-			GL11.glRotatef(270, 1, 0, 0);
-			GL11.glTranslatef(0.5F, 0F, .1F);
-			GL11.glScalef(0.03F, 0.03F, 0.03F);
-		}
-		else
-		{
-			GL11.glRotatef(270, 1, 0, 0);
-			GL11.glScalef(0.025F, 0.025F, 0.025F);
-		}
-
-		_model.renderAll();
-
-		GL11.glPopMatrix();
+		ccrs.draw();
 	}
 }

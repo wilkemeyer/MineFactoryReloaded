@@ -4,7 +4,6 @@ import cofh.lib.gui.slot.SlotAcceptValid;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityBlockSmasher;
 
@@ -29,8 +28,8 @@ public class ContainerBlockSmasher extends ContainerFactoryPowered {
 	public void detectAndSendChanges() {
 
 		super.detectAndSendChanges();
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 100, _smasher.getFortune());
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).sendProgressBarUpdate(this, 100, _smasher.getFortune());
 		}
 	}
 

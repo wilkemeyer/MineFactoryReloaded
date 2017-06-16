@@ -6,8 +6,8 @@ import cofh.asm.relauncher.Strippable;
 import cofh.core.util.CoreUtils;
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,7 +18,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -37,7 +37,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	protected boolean _ignoreDamage = true;
 
 	protected boolean _hasItems = false;
-	protected ForgeDirection[] _pullDirections = { };
+	protected EnumFacing[] _pullDirections = {};
 
 	public TileEntityEjector() {
 
@@ -49,36 +49,38 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	@Override
 	protected void onRotate() {
 
-		LinkedList<ForgeDirection> list = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> list = new LinkedList<EnumFacing>();
 		list.addAll(MFRUtil.VALID_DIRECTIONS);
 		list.remove(getDirectionFacing());
-		_pullDirections = list.toArray(new ForgeDirection[5]);
+		_pullDirections = list.toArray(new EnumFacing[5]);
 		super.onRotate();
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 
-		super.updateEntity();
+		super.update();
 		if (worldObj.isRemote) {
 			return;
 		}
 		boolean redstoneState = _rednetState != 0 || CoreUtils.isRedstonePowered(this);
 
 		if (redstoneState & !_lastRedstoneState & (!_whitelist | (_whitelist == _hasItems))) {
-			final ForgeDirection facing = getDirectionFacing();
-			Map<ForgeDirection, IInventory> chests = UtilInventory.
-					findChests(worldObj, xCoord, yCoord, zCoord, _pullDirections);
-			inv: for (Entry<ForgeDirection, IInventory> chest : chests.entrySet()) {
+			final EnumFacing facing = getDirectionFacing();
+			Map<EnumFacing, IInventory> chests = UtilInventory.
+					findChests(worldObj, pos, _pullDirections);
+			inv:
+			for (Entry<EnumFacing, IInventory> chest : chests.entrySet()) {
 				if (chest.getKey() == facing) {
 					continue;
 				}
 
 				IInventoryManager inventory = InventoryManager.create(chest.getValue(),
-					chest.getKey().getOpposite());
+						chest.getKey().getOpposite());
 				Map<Integer, ItemStack> contents = inventory.getContents();
 
-				set: for (Entry<Integer, ItemStack> stack : contents.entrySet()) {
+				set:
+				for (Entry<Integer, ItemStack> stack : contents.entrySet()) {
 					ItemStack itemstack = stack.getValue();
 					if (itemstack == null || itemstack.stackSize < 1 || !inventory.canRemoveItem(itemstack, stack.getKey()))
 						continue;
@@ -86,20 +88,21 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 					boolean hasMatch = false;
 
 					int amt = 1;
-					for (int i = getSizeItemList(); i-- > 0;)
+					for (int i = getSizeItemList(); i-- > 0; )
 						if (itemMatches(_inventory[i], itemstack)) {
 							hasMatch = true;
 							amt = Math.max(1, _inventory[i].stackSize);
 							break;
 						}
 
-					if (_whitelist != hasMatch) continue set;
+					if (_whitelist != hasMatch)
+						continue set;
 
 					ItemStack stackToDrop = itemstack.copy();
 					amt = Math.min(itemstack.stackSize, amt);
 					stackToDrop.stackSize = amt;
 					ItemStack remaining = UtilInventory.dropStack(this, stackToDrop,
-						facing, facing);
+							facing, facing);
 
 					// remaining == null if dropped successfully.
 					if (remaining == null || remaining.stackSize < amt) {
@@ -125,8 +128,10 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 				return false;
 
 		if (_matchNBT) {
-			if (itemA.getTagCompound() == null && itemB.getTagCompound() == null) return true;
-			if (itemA.getTagCompound() == null || itemB.getTagCompound() == null) return false;
+			if (itemA.getTagCompound() == null && itemB.getTagCompound() == null)
+				return true;
+			if (itemA.getTagCompound() == null || itemB.getTagCompound() == null)
+				return false;
 			return itemA.getTagCompound().equals(itemB.getTagCompound());
 		}
 
@@ -137,7 +142,7 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	protected void onFactoryInventoryChanged() {
 
 		super.onFactoryInventoryChanged();
-		for (int i = getSizeItemList(); i-- > 0;)
+		for (int i = getSizeItemList(); i-- > 0; )
 			if (_inventory[i] != null) {
 				_hasItems = true;
 				return;
@@ -162,13 +167,13 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return false;
 	}
@@ -222,10 +227,12 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 
-		super.writeToNBT(tag);
+		tag = super.writeToNBT(tag);
 		tag.setBoolean("redstone", _lastRedstoneState);
+
+		return tag;
 	}
 
 	@Override
@@ -269,14 +276,14 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 	}
 
 	@Override
-	public ConnectionType canConnectInventory(ForgeDirection from) {
+	public ConnectionType canConnectInventory(EnumFacing from) {
 
 		return from == getDirectionFacing() ? ConnectionType.FORCE : ConnectionType.DENY;
 	}
 
 	@Override
 	@Strippable("buildcraft.api.transport.IPipeConnection")
-	public ConnectOverride overridePipeConnection(PipeType type, ForgeDirection with) {
+	public ConnectOverride overridePipeConnection(PipeType type, EnumFacing with) {
 
 		if (type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
@@ -284,4 +291,5 @@ public class TileEntityEjector extends TileEntityFactoryInventory {
 			return super.overridePipeConnection(type, with);
 		return ConnectOverride.DISCONNECT;
 	}
+
 }

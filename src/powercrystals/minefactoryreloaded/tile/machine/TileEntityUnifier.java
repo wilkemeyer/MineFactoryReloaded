@@ -1,24 +1,18 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.OreDictionaryArbiter;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -27,7 +21,11 @@ import powercrystals.minefactoryreloaded.gui.container.ContainerUnifier;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
-public class TileEntityUnifier extends TileEntityFactoryInventory implements ITankContainerBucketable {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class TileEntityUnifier extends TileEntityFactoryInventory {
 
 	private boolean ignoreChange = false;
 	private static FluidStack _biofuel;
@@ -46,7 +44,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	public static void updateUnifierLiquids() {
 
 		_biofuel = FluidRegistry.getFluidStack("biofuel", 1);
-		_ethanol = FluidRegistry.getFluidStack("bioethanol", 1);
+		_ethanol = FluidRegistry.getFluidStack("bio.ethanol", 1);
 	}
 
 	@Override
@@ -63,9 +61,8 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public boolean canUpdate() {
-
-		return false;
+	public void update() {
+		//TODO again this TE isn't supposed to be tickable so needs a non tickable base to inherit from
 	}
 
 	private void unifyInventory() {
@@ -105,14 +102,14 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 
 		if (_inventory[1] == null) {
 			amt = Math.min(Math.min(getInventoryStackLimit(), source.getMaxStackSize()),
-				source.stackSize);
+					source.stackSize);
 		} else if (!UtilInventory.stacksEqual(source, _inventory[1], false)) {
 			return;
 		} else if (source.getTagCompound() != null || _inventory[1].getTagCompound() != null) {
 			return;
 		} else {
 			amt = Math.min(source.stackSize,
-				_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
+					_inventory[1].getMaxStackSize() - _inventory[1].stackSize);
 		}
 
 		if (_inventory[1] == null) {
@@ -199,52 +196,21 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
+	public int getSizeInventorySide(EnumFacing side) {
 
 		return 2;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int sideordinal) {
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
 
 		return slot == 0;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemstack, int sideordinal) {
+	public boolean canExtractItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return slot == 1;
-	}
-
-	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public boolean allowBucketDrain(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-
-		if (resource == null || resource.amount == 0) return 0;
-
-		FluidStack converted = unifierTransformLiquid(resource, doFill);
-
-		if (converted == null || converted.amount == 0) return 0;
-
-		int filled = _tanks[0].fill(converted, doFill);
-
-		if (filled == converted.amount) {
-			return resource.amount;
-		} else {
-			return filled * resource.amount / converted.amount +
-					(resource.amount & _roundingCompensation);
-		}
 	}
 
 	private FluidStack unifierTransformLiquid(FluidStack resource, boolean doFill) {
@@ -259,32 +225,42 @@ public class TileEntityUnifier extends TileEntityFactoryInventory implements ITa
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	protected FluidTankCore[] createTanks() {
 
-		return drain(maxDrain, doDrain);
+		return new FluidTankCore[] { new FluidTankCore(4 * BUCKET_VOLUME) };
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	protected FluidTankAdv[] createTanks() {
-
-		return new FluidTankAdv[] { new FluidTankAdv(4 * BUCKET_VOLUME) };
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	public boolean allowBucketDrain(EnumFacing facing, ItemStack stack) {
 
 		return true;
 	}
+
+	@Override
+	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
+
+		if (resource == null || resource.amount == 0)
+			return 0;
+
+		FluidStack converted = unifierTransformLiquid(resource, doFill);
+
+		if (converted == null || converted.amount == 0)
+			return 0;
+
+		int filled = _tanks[0].fill(converted, doFill);
+
+		if (filled == converted.amount) {
+			return resource.amount;
+		} else {
+			return filled * resource.amount / converted.amount +
+					(resource.amount & _roundingCompensation);
+		}
+	}
+
 }

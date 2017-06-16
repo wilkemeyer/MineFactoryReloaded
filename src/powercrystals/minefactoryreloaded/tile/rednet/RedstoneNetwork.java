@@ -3,7 +3,7 @@ package powercrystals.minefactoryreloaded.tile.rednet;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.rednetCableBlock;
 
 import cofh.lib.util.LinkedHashList;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -13,7 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,17 +41,17 @@ public class RedstoneNetwork implements IGrid {
 
 	@SuppressWarnings("unchecked")
 	// cast is a warning too. using a generic type is an error?
-	private Set<BlockPosition>[] _singleNodes = new Set[16];
-	private Set<BlockPosition> _omniNodes = new LinkedHashSet<BlockPosition>();
+	private Set<RedstoneNode>[] _singleNodes = new Set[16];
+	private Set<RedstoneNode> _omniNodes = new LinkedHashSet<RedstoneNode>();
 
-	private Set<BlockPosition> _weakNodes = new LinkedHashSet<BlockPosition>();
+	private Set<RedstoneNode> _weakNodes = new LinkedHashSet<RedstoneNode>();
 
 	private boolean regenerating;
 	private ArrayHashList<TileEntityRedNetCable> nodeSet = new ArrayHashList<TileEntityRedNetCable>();
 	private LinkedHashList<TileEntityRedNetCable> conduitSet;
 
 	private int[] _powerLevelOutput = new int[16];
-	private BlockPosition[] _powerProviders = new BlockPosition[16];
+	private RedstoneNode[] _powerProviders = new RedstoneNode[16];
 
 	private World _world;
 
@@ -71,12 +71,12 @@ public class RedstoneNetwork implements IGrid {
 		log = MFRConfig.redNetDebug.getBoolean(false);
 
 		for (int i = 0; i < 16; i++)
-			_singleNodes[i] = new LinkedHashSet<BlockPosition>();
+			_singleNodes[i] = new LinkedHashSet<RedstoneNode>();
 	}
 
 	public RedstoneNetwork(TileEntityRedNetCable base) {
 
-		this(base.getWorldObj());
+		this(base.getWorld());
 		conduitSet = new LinkedHashList<TileEntityRedNetCable>();
 		regenerating = true;
 		addConduit(base);
@@ -141,7 +141,7 @@ public class RedstoneNetwork implements IGrid {
 		//{ clearing nodes
 		_omniNodes.clear();
 		_weakNodes.clear();
-		for (Set<BlockPosition> a : _singleNodes)
+		for (Set<RedstoneNode> a : _singleNodes)
 			a.clear();
 		//}
 		LinkedHashList<TileEntityRedNetCable> oldSet = conduitSet;
@@ -149,21 +149,18 @@ public class RedstoneNetwork implements IGrid {
 
 		LinkedHashList<TileEntityRedNetCable> toCheck = new LinkedHashList<TileEntityRedNetCable>();
 		LinkedHashList<TileEntityRedNetCable> checked = new LinkedHashList<TileEntityRedNetCable>();
-		BlockPosition bp = new BlockPosition(0, 0, 0);
-		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
+		BlockPos bp = new BlockPos(0, 0, 0);
+		EnumFacing[] dir = EnumFacing.VALUES;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.shift();
 			addConduit(main);
-			World world = main.getWorldObj();
+			World world = main.getWorld();
 			for (int i = 6; i-- > 0;) {
-				bp.x = main.xCoord;
-				bp.y = main.yCoord;
-				bp.z = main.zCoord;
-				bp.step(dir[i]);
-				if (world.blockExists(bp.x, bp.y, bp.z)) {
-					TileEntity te = bp.getTileEntity(world);
+				bp = main.getPos().offset(dir[i]);
+				if (world.isBlockLoaded(bp)) {
+					TileEntity te = world.getTileEntity(bp);
 					if (te instanceof TileEntityRedNetCable) {
 						TileEntityRedNetCable tec = (TileEntityRedNetCable) te;
 						if (main.canInterface(tec, dir[i]) && checked.add(tec))
@@ -290,7 +287,7 @@ public class RedstoneNetwork implements IGrid {
 		return _powerLevelOutput[subnet];
 	}
 
-	boolean isPowerProvider(int subnet, BlockPosition node)
+	boolean isPowerProvider(int subnet, RedstoneNode node)
 	{
 
 		return node.equals(_powerProviders[subnet]);
@@ -304,14 +301,14 @@ public class RedstoneNetwork implements IGrid {
 
 	/// OLD CODE
 
-	public boolean isWeakNode(BlockPosition node) {
+	public boolean isWeakNode(RedstoneNode node) {
 
 		return _weakNodes.contains(node);
 	}
 
-	public void addOrUpdateNode(BlockPosition node) {
+	public void addOrUpdateNode(RedstoneNode node) {
 
-		Block block = _world.getBlock(node.x, node.y, node.z);
+		Block block = _world.getBlockState(node.getPos()).getBlock();
 		if (block == rednetCableBlock) {
 			return;
 		}
@@ -346,9 +343,9 @@ public class RedstoneNetwork implements IGrid {
 				_updateSubnets[i] = _mustUpdate = true;
 	}
 
-	public void addOrUpdateNode(BlockPosition node, int subnet, boolean allowWeak) {
+	public void addOrUpdateNode(RedstoneNode node, int subnet, boolean allowWeak) {
 
-		Block block = _world.getBlock(node.x, node.y, node.z);
+		Block block = _world.getBlockState(node.getPos()).getBlock();
 		if (block == rednetCableBlock) {
 			return;
 		}
@@ -385,7 +382,7 @@ public class RedstoneNetwork implements IGrid {
 			_updateSubnets[subnet] = _mustUpdate = true;
 	}
 
-	public void removeNode(BlockPosition node, boolean unloading) {
+	public void removeNode(RedstoneNode node, boolean unloading) {
 
 		boolean omniNode = _omniNodes.remove(node);
 		boolean notify = omniNode;
@@ -407,18 +404,18 @@ public class RedstoneNetwork implements IGrid {
 		}
 
 		if (notify & !unloading) {
-			Block block = _world.getBlock(node.x, node.y, node.z);
+			Block block = _world.getBlockState(node.getPos()).getBlock();
 			if (block == rednetCableBlock) {
 				return;
 			}
 			else if (block instanceof IRedNetInputNode) {
 				if (omniNode)
-					((IRedNetInputNode) block).onInputsChanged(_world, node.x, node.y, node.z,
-						node.orientation.getOpposite(), new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+					((IRedNetInputNode) block).onInputsChanged(_world, node.getPos(),
+							node.getFacing().getOpposite(), new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 				else
-					((IRedNetInputNode) block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), 0);
+					((IRedNetInputNode) block).onInputChanged(_world, node.getPos(), node.getFacing().getOpposite(), 0);
 			}
-			MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, Blocks.air);
+			MFRUtil.notifyNearbyBlocksExcept(_world, node.getPos(), Blocks.AIR);
 		}
 	}
 
@@ -438,7 +435,7 @@ public class RedstoneNetwork implements IGrid {
 
 		log("Network with ID %d:%d recalculating power levels for %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
 
-		for (BlockPosition node : _singleNodes[subnet]) {
+		for (RedstoneNode node : _singleNodes[subnet]) {
 			if (!isNodeLoaded(node)) {
 				continue;
 			}
@@ -449,7 +446,7 @@ public class RedstoneNetwork implements IGrid {
 			}
 		}
 
-		for (BlockPosition node : _omniNodes) {
+		for (RedstoneNode node : _omniNodes) {
 			if (!isNodeLoaded(node)) {
 				continue;
 			}
@@ -477,47 +474,47 @@ public class RedstoneNetwork implements IGrid {
 		_updateSubnets[subnet] = false;
 		_ignoreUpdates = true;
 		log("Network with ID %d:%d notifying %d single nodes and %d omni nodes", hashCode(), subnet, _singleNodes[subnet].size(), _omniNodes.size());
-		for (BlockPosition bp : _singleNodes[subnet]) {
-			log("Network with ID %d:%d notifying node %s of power state change to %d", hashCode(), subnet, bp, _powerLevelOutput[subnet]);
-			notifySingleNode(bp, subnet);
+		for (RedstoneNode node : _singleNodes[subnet]) {
+			log("Network with ID %d:%d notifying node %s of power state change to %d", hashCode(), subnet, node, _powerLevelOutput[subnet]);
+			notifySingleNode(node, subnet);
 		}
-		for (BlockPosition bp : _omniNodes) {
-			log("Network with ID %d:%d notifying omni node %s of power state change to %d", hashCode(), subnet, bp, _powerLevelOutput[subnet]);
-			notifyOmniNode(bp);
+		for (RedstoneNode node : _omniNodes) {
+			log("Network with ID %d:%d notifying omni node %s of power state change to %d", hashCode(), subnet, node, _powerLevelOutput[subnet]);
+			notifyOmniNode(node);
 		}
 		_ignoreUpdates = false;
 	}
 
-	private boolean isNodeLoaded(BlockPosition node) {
+	private boolean isNodeLoaded(RedstoneNode node) {
 
-		return _world.getChunkProvider().chunkExists(node.x >> 4, node.z >> 4);
+		return _world.isBlockLoaded(node.getPos());
 	}
 
-	private void notifySingleNode(BlockPosition node, int subnet) {
+	private void notifySingleNode(RedstoneNode node, int subnet) {
 
 		if (isNodeLoaded(node)) {
-			Block block = _world.getBlock(node.x, node.y, node.z);
+			Block block = _world.getBlockState(node.getPos()).getBlock();
 			if (block == rednetCableBlock) {
 				return;
 			} else if (block instanceof IRedNetInputNode) {
-				((IRedNetInputNode) block).onInputChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), _powerLevelOutput[subnet]);
+				((IRedNetInputNode) block).onInputChanged(_world, node.getPos(), node.getFacing().getOpposite(), _powerLevelOutput[subnet]);
 			} else {
-				MFRUtil.notifyNearbyBlocksExcept(_world, node.x, node.y, node.z, MFRThings.rednetCableBlock);
+				MFRUtil.notifyNearbyBlocksExcept(_world, node.getPos(), MFRThings.rednetCableBlock);
 			}
 		}
 	}
 
-	private void notifyOmniNode(BlockPosition node) {
+	private void notifyOmniNode(RedstoneNode node) {
 
 		if (isNodeLoaded(node)) {
-			Block block = _world.getBlock(node.x, node.y, node.z);
+			Block block = _world.getBlockState(node.getPos()).getBlock();
 			if (block instanceof IRedNetInputNode) {
-				((IRedNetInputNode) block).onInputsChanged(_world, node.x, node.y, node.z, node.orientation.getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
+				((IRedNetInputNode) block).onInputsChanged(_world, node.getPos(), node.getFacing().getOpposite(), Arrays.copyOf(_powerLevelOutput, 16));
 			}
 		}
 	}
 
-	private int getOmniNodePowerLevel(BlockPosition node, int subnet) {
+	private int getOmniNodePowerLevel(RedstoneNode node, int subnet) {
 
 		if (!isNodeLoaded(node)) {
 			return 0;
@@ -526,42 +523,42 @@ public class RedstoneNetwork implements IGrid {
 		return levels == null ? 0 : levels[subnet];
 	}
 
-	private int[] getOmniNodePowerLevel(BlockPosition node) {
+	private int[] getOmniNodePowerLevel(RedstoneNode node) {
 
 		if (!isNodeLoaded(node)) {
 			return null;
 		}
-		Block b = _world.getBlock(node.x, node.y, node.z);
+		Block b = _world.getBlockState(node.getPos()).getBlock();
 		if (b instanceof IRedNetOutputNode) {
-			return ((IRedNetOutputNode) b).getOutputValues(_world, node.x, node.y, node.z, node.orientation.getOpposite());
+			return ((IRedNetOutputNode) b).getOutputValues(_world, node.getPos(), node.getFacing().getOpposite());
 		} else {
 			return null;
 		}
 	}
 
-	private int getSingleNodePowerLevel(BlockPosition node, int subnet) {
+	private int getSingleNodePowerLevel(RedstoneNode node, int subnet) {
 
 		if (!isNodeLoaded(node)) {
 			return 0;
 		}
 
-		Block block = _world.getBlock(node.x, node.y, node.z);
+		Block block = _world.getBlockState(node.getPos()).getBlock();
 		if (block instanceof IRedNetOutputNode) {
-			return ((IRedNetOutputNode) block).getOutputValue(_world, node.x, node.y, node.z, node.orientation, subnet);
+			return ((IRedNetOutputNode) block).getOutputValue(_world, node.getPos(), node.getFacing(), subnet);
 		}
 
 		int offset = 0;
-		if (block == Blocks.redstone_wire || block instanceof IRedstoneAlike) {
+		if (block == Blocks.REDSTONE_WIRE || block instanceof IRedstoneAlike) {
 			offset = -1;
 		}
 
 		int ret = 0;
 		if (_weakNodes.contains(node)) {
-			int weakPower = _world.getIndirectPowerLevelTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
-			int strongPower = _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
+			int weakPower = _world.getRedstonePower(node.getPos(), node.getFacing()) + offset;
+			int strongPower = _world.getStrongPower(node.getPos(), node.getFacing()) + offset;
 			ret = Math.max(weakPower, strongPower);
 		} else {
-			ret = _world.isBlockProvidingPowerTo(node.x, node.y, node.z, node.orientation.ordinal()) + offset;
+			ret = _world.getStrongPower(node.getPos(), node.getFacing()) + offset;
 		}
 
 		if (offset == ret)

@@ -1,18 +1,16 @@
 package powercrystals.minefactoryreloaded.core;
 
-import cofh.lib.util.position.Area;
-import cofh.lib.util.position.BlockPosition;
-
 import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface IHarvestManager
 {
 	public void moveNext();
-	public BlockPosition getNextBlock();
-	public BlockPosition getOrigin();
+	public BlockPos getNextBlock();
+	public BlockPos getOrigin();
 	public void reset(World world, Area area, HarvestMode harvestMode, Map<String, Boolean> settings);
 	public void setWorld(World world);
 	public boolean getIsDone();

@@ -1,165 +1,140 @@
 package powercrystals.minefactoryreloaded.block;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.core.util.core.IInitializer;
+import cofh.core.render.IModelRegister;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.api.rednet.connectivity.IRedNetDecorative;
+import powercrystals.minefactoryreloaded.render.IColorRegister;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.gui.MFRCreativeTab;
+import powercrystals.minefactoryreloaded.setup.MFRThings;
 
-public class BlockVineScaffold extends Block implements IRedNetDecorative {
+import javax.annotation.Nullable;
 
-	private IIcon _sideIcon;
-	private IIcon _topIcon;
+public class BlockVineScaffold extends Block implements IRedNetDecorative, IInitializer, IModelRegister, IColorRegister{
 
-	private static final ForgeDirection[] _attachDirections = new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH,
-			ForgeDirection.EAST, ForgeDirection.WEST };
+	private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
+			
+	private static final EnumFacing[] _attachDirections = new EnumFacing[] { EnumFacing.NORTH, EnumFacing.SOUTH,
+			EnumFacing.EAST, EnumFacing.WEST };
 	private static final int _attachDistance = 11;
 
 	public BlockVineScaffold() {
 
-		super(Material.leaves);
-		setBlockName("mfr.vinescaffold");
-		setStepSound(soundTypeGrass);
+		super(Material.LEAVES);
+		setUnlocalizedName("mfr.vinescaffold");
+		setSoundType(SoundType.PLANT);
 		setHardness(0.1F);
-		setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
 		setTickRandomly(true);
 		setCreativeTab(MFRCreativeTab.tab);
+		MFRThings.registerInitializer(this);
+		MineFactoryReloadedCore.proxy.addModelRegister(this);
+		MineFactoryReloadedCore.proxy.addColorRegister(this);
+		setRegistryName(MineFactoryReloadedCore.modId, "vine_scaffold");
 	}
 
 	@Override
-	public int getRenderBlockPass() {
-
-		return 1;
-	}
-
-	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
 
 		float shrinkAmount = 1f / 45f;
-		if (entity.boundingBox.minY >= y + (1f - shrinkAmount) ||
-				entity.boundingBox.maxY <= y + shrinkAmount)
+		float oneTenComp = world.isRemote ? 0 : 0.12f; // sync the player's server desync so they don't float on the client and get kicked
+		if (entity.getEntityBoundingBox().minY >= pos.getY() + (1f - shrinkAmount) ||
+				entity.getEntityBoundingBox().maxY <= pos.getY() + shrinkAmount + oneTenComp)
 			return;
 		entity.fallDistance = 0;
 		if (entity.isCollidedHorizontally) {
 			entity.motionY = 0.2D;
 		} else if (entity.isSneaking()) {
 			double diff = entity.prevPosY - entity.posY;
-			entity.boundingBox.minY += diff;
-			entity.boundingBox.maxY += diff;
+			entity.setEntityBoundingBox(entity.getEntityBoundingBox().offset(0, diff, 0));
 			entity.posY = entity.prevPosY;
+			{
+				// induced by post 1.7 network changes on the player.
+				// player gets offset downward a small amount causing a slight stutter when they try to move up now
+				entity.motionY = 0;
+			}
 		} else {
 			entity.motionY = -0.12D;
 		}
+		/** TODO: apparently we need a packet now for 100% functionality,
+		 *  player's server packet handler now resets their position every tick after calling the movement code
+		 *  and the values that store that position are private, wirtten only by a single private function called
+		 *  in places that cannot be tricked into being invoked. used to be modifying the AABB would keep the data
+		 *  perfectly synced, but in making that write-only mojang has discarded the possibility of blocks like this
+		**/
+	}
+
+	@Nullable
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+		return COLLISION_AABB;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-
-		float shrinkAmount = 0.125F;
-		return AxisAlignedBB.getBoundingBox(x + this.minX + shrinkAmount, y + this.minY,
-			z + this.minZ + shrinkAmount, x + this.maxX - shrinkAmount,
-			y + this.maxY, z + this.maxZ - shrinkAmount);
+	public BlockRenderLayer getBlockLayer() {
+		
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-
-		_sideIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".side");
-		_topIcon = ir.registerIcon("minefactoryreloaded:" + getUnlocalizedName() + ".top");
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-
-		return side < 2 ? _topIcon : _sideIcon;
-	}
-
-	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public boolean renderAsNormalBlock() {
+	public boolean isFullCube(IBlockState state) {
 
 		return false;
 	}
 
 	@Override
-	public int getRenderType() {
-
-		return MineFactoryReloadedCore.renderIdVineScaffold;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		return !world.getBlock(x, y, z).isOpaqueCube();
+		return !state.isOpaqueCube();
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(int meta) {
-
-		return ColorizerFoliage.getFoliageColorBasic();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-
-		int r = 0;
-		int g = 0;
-		int b = 0;
-
-		for (int zOffset = -1; zOffset <= 1; ++zOffset) {
-			for (int xOffset = -1; xOffset <= 1; ++xOffset) {
-				int biomeColor = world.getBiomeGenForCoords(x + xOffset, z + zOffset).getBiomeFoliageColor(x, y, z);
-				r += (biomeColor & 16711680) >> 16;
-				g += (biomeColor & 65280) >> 8;
-				b += biomeColor & 255;
-			}
-		}
-
-		return (r / 9 & 255) << 16 | (g / 9 & 255) << 8 | b / 9 & 255;
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset,
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float xOffset,
 			float yOffset, float zOffset) {
 
-		ItemStack ci = player.inventory.mainInventory[player.inventory.currentItem];
-		if (ci != null && Block.getBlockFromItem(ci.getItem()).equals(this)) {
-			for (int i = y + 1, e = world.getActualHeight(); i < e; ++i) {
-				Block block = world.getBlock(x, i, z);
-				if (block.isAir(world, x, i, z) || block.isReplaceable(world, x, i, z)) {
-					if (!world.isRemote && world.setBlock(x, i, z, this, 0, 3)) {
-						world.playAuxSFXAtEntity(null, 2001, x, i, z, Block.getIdFromBlock(this));
+		if (heldItem != null && Block.getBlockFromItem(heldItem.getItem()).equals(this)) {
+			for (int i = pos.getY() + 1, e = world.getActualHeight(); i < e; ++i) {
+				BlockPos placePos = new BlockPos(pos.getX(), i, pos.getZ());
+				Block block = world.getBlockState(placePos).getBlock();
+				if (world.isAirBlock(placePos) || block.isReplaceable(world, placePos)) {
+					if (!world.isRemote && world.setBlockState(placePos, getDefaultState())) {
+						world.playEvent(null, 2001, placePos, Block.getIdFromBlock(this));
 						if (!player.capabilities.isCreativeMode) {
-							ci.stackSize--;
-							if (ci.stackSize == 0) {
+							heldItem.stackSize--;
+							if (heldItem.stackSize == 0) {
 								player.inventory.mainInventory[player.inventory.currentItem] = null;
 							}
 						}
@@ -174,23 +149,21 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+	public boolean canPlaceBlockAt(World world, BlockPos pos) {
 
-		return canBlockStay(world, x, y, z);
+		return canBlockStay(world, pos);
 	}
 
-	@Override
-	public boolean canBlockStay(World world, int x, int y, int z) {
+	public boolean canBlockStay(World world, BlockPos pos) {
 
-		if (world.isSideSolid(x, y - 1, z, ForgeDirection.UP)) {
+		if (world.isSideSolid(pos.down(), EnumFacing.UP)) {
 			return true;
 		}
-		for (ForgeDirection d : _attachDirections) {
-			BlockPosition bp = new BlockPosition(x, y, z, d);
-			for (int i = 0; i < _attachDistance; i++) {
-				bp.moveForwards(1);
-				if (world.getBlock(bp.x, bp.y, bp.z).equals(this)) {
-					if (world.isSideSolid(bp.x, bp.y - 1, bp.z, ForgeDirection.UP)) {
+		for (EnumFacing facing : _attachDirections) {
+			for (int i = 1; i <= _attachDistance; i++) {
+				BlockPos offsetPos = pos.offset(facing, i);
+				if (world.getBlockState(offsetPos).getBlock().equals(this)) {
+					if (world.isSideSolid(offsetPos.down(), EnumFacing.UP)) {
 						return true;
 					}
 				} else
@@ -200,40 +173,83 @@ public class BlockVineScaffold extends Block implements IRedNetDecorative {
 		return false;
 	}
 
-	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand) {
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
 
-		onNeighborBlockChange(world, x, y, z, null);
+		updateTick(worldIn, pos, state, random);
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
-		if (!canBlockStay(world, x, y, z)) {
-			for (int e = world.getActualHeight(); y < e; ++y) {
-				block = world.getBlock(x, y, z);
+		neighborChanged(state, world, pos, null);
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+
+		if (!canBlockStay(world, pos)) {
+			int height = world.getActualHeight();
+			BlockPos currentPos = pos;
+			while(currentPos.getY() < height) {
+				IBlockState currentState = world.getBlockState(currentPos);
+				block = currentState.getBlock();
 				if (!block.equals(this))
 					break;
-				dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-				world.setBlock(x, y, z, Blocks.air, 0, 2);
-				for (ForgeDirection d : _attachDirections) {
-					BlockPosition bp = new BlockPosition(x, y, z, d);
-					for (int i = 0; i < _attachDistance; i++) {
-						bp.moveForwards(1);
-						block = world.getBlock(bp.x, bp.y, bp.z);
+				dropBlockAsItem(world, currentPos, currentState, 0);
+				world.setBlockState(currentPos, Blocks.AIR.getDefaultState());
+				for (EnumFacing facing : _attachDirections) {
+					for (int i = 1; i <= _attachDistance; i++) {
+						BlockPos posSide = currentPos.offset(facing, i);
+						block = world.getBlockState(posSide).getBlock();
 						if (block.equals(this)) {
-							world.func_147446_b(bp.x, bp.y, bp.z, block, 0, 0);
+							world.scheduleBlockUpdate(posSide, block, 0, 0);
 						} else
 							break;
 					}
 				}
+				currentPos = currentPos.up();
 			}
 		}
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 
-		return side == ForgeDirection.UP || side == ForgeDirection.DOWN;
+		return side == EnumFacing.UP || side == EnumFacing.DOWN;
+	}
+
+	@Override
+	public boolean preInit() {
+
+		MFRRegistry.registerBlock(this, new ItemBlockVineScaffold(this));
+		return true;
+	}
+
+	@Override
+	public boolean initialize() {
+
+		return true;
+	}
+
+	@Override
+	public boolean postInit() {
+
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerModel(this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerColorHandlers() {
+
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, world, pos, tintIndex) ->
+				(world != null && pos != null) ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic(), this);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), this);
 	}
 }

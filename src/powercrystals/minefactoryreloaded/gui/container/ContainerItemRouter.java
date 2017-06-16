@@ -1,10 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotFake;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityItemRouter;
@@ -33,8 +32,8 @@ public class ContainerItemRouter extends ContainerFactoryInventory {
 	public void detectAndSendChanges() {
 
 		super.detectAndSendChanges();
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 100, _router.getRejectUnmapped() ? 1 : 0);
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).sendProgressBarUpdate(this, 100, _router.getRejectUnmapped() ? 1 : 0);
 		}
 	}
 

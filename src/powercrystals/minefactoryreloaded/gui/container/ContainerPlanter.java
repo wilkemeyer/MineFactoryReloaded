@@ -1,10 +1,9 @@
 package powercrystals.minefactoryreloaded.gui.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 
 import powercrystals.minefactoryreloaded.gui.slot.SlotAcceptUpgrade;
@@ -32,9 +31,9 @@ public class ContainerPlanter extends ContainerUpgradeable
 		{
 			consumeAll = _planter.getConsumeAll();
 			int data = (consumeAll ? 1 : 0);
-			for(int i = 0; i < crafters.size(); i++)
+			for(int i = 0; i < listeners.size(); i++)
 			{
-				((ICrafting)crafters.get(i)).sendProgressBarUpdate(this, 100, data);
+				listeners.get(i).sendProgressBarUpdate(this, 100, data);
 			}
 		}
 	}
@@ -66,7 +65,7 @@ public class ContainerPlanter extends ContainerUpgradeable
 		addSlotToContainer(new SlotFake(_te, 8, 44, 69));
 
 		//upgrade slot
-		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79, ItemUpgrade.background));
+		addSlotToContainer(new SlotAcceptUpgrade(_te, 9, 152, 79));
 
 		//resource slots
 		int xStart = 65;

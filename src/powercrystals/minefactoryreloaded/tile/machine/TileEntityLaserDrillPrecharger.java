@@ -1,16 +1,19 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.lib.util.position.BlockPosition;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraft.util.math.BlockPos;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
+import powercrystals.minefactoryreloaded.block.BlockFakeLaser;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
@@ -18,128 +21,118 @@ import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered implements IFactoryLaserSource
-{
-	public TileEntityLaserDrillPrecharger()
-	{
+public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered implements IFactoryLaserSource {
+
+	public TileEntityLaserDrillPrecharger() {
+
 		super(Machine.LaserDrillPrecharger);
 		setCanRotate(true);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer)
-	{
+	public GuiFactoryInventory getGui(InventoryPlayer inventoryPlayer) {
+
 		return new GuiFactoryPowered(getContainer(inventoryPlayer), this);
 	}
 
 	@Override
-	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer)
-	{
+	public ContainerFactoryPowered getContainer(InventoryPlayer inventoryPlayer) {
+
 		return new ContainerFactoryPowered(this, inventoryPlayer);
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
+	public int getSizeInventory() {
+
 		return 0;
 	}
 
 	@Override
-	protected boolean activateMachine()
-	{
+	protected boolean activateMachine() {
+
 		IFactoryLaserTarget drill = getDrill();
-		if (drill == null)
-		{
+		if (drill == null) {
 			setIdleTicks(getIdleTicksMax());
-		}
-		else
-		{
+		} else {
 			int energy = getActivationEnergy();
-			ForgeDirection facing = getDirectionFacing().getOpposite();
-			if (drill.canFormBeamWith(facing))
-			{
+			EnumFacing facing = getDirectionFacing().getOpposite();
+			if (drill.canFormBeamWith(facing)) {
 				stripBlock(false);
 				int excess = drill.addEnergy(facing, energy, true);
-				if (excess == 0)
-				{
+				if (excess == 0) {
 					drill.addEnergy(facing, energy, false);
 					return true;
-				}
-				else
-				{
+				} else {
 					excess = drill.addEnergy(facing, energy, false);
 					drainEnergy(energy - excess);
 					return false; // energy is manually drained because it's less than activation energy
 				}
-			}
-			else
+			} else
 				stripBlock(true);
 		}
 		return false;
 	}
 
 	@Override
-	public int getWorkMax()
-	{
+	public int getWorkMax() {
+
 		return 1;
 	}
 
 	@Override
-	public int getIdleTicksMax()
-	{
+	public int getIdleTicksMax() {
+
 		return 200;
 	}
 
-	public boolean shouldDrawBeam()
-	{
+	public boolean shouldDrawBeam() {
+
 		IFactoryLaserTarget drill = getDrill();
 		return drill != null && drill.canFormBeamWith(getDirectionFacing().getOpposite());
 	}
 
-	protected IFactoryLaserTarget getDrill()
-	{
-		BlockPosition bp = new BlockPosition(this);
-		bp.orientation = getDirectionFacing();
-		bp.moveForwards(1);
+	protected IFactoryLaserTarget getDrill() {
 
-		if (!worldObj.blockExists(bp.x, bp.y, bp.z))
+		BlockPos bp = pos.offset(getDirectionFacing());
+
+		if (!worldObj.isBlockLoaded(bp))
 			return null;
 
-		if (!TileEntityLaserDrill.canReplaceBlock(worldObj.getBlock(bp.x, bp.y, bp.z),
-				worldObj, bp.x, bp.y, bp.z))
+		if (!TileEntityLaserDrill.canReplaceBlock(worldObj.getBlockState(bp).getBlock(),
+				worldObj, bp))
 			return null;
 
-		bp.moveForwards(1);
+		bp = bp.offset(getDirectionFacing());
 
-		TileEntity te = worldObj.getTileEntity(bp.x, bp.y, bp.z);
+		TileEntity te = worldObj.getTileEntity(bp);
 		if (te instanceof IFactoryLaserTarget)
-			return ((IFactoryLaserTarget)te);
+			return ((IFactoryLaserTarget) te);
 
 		return null;
 	}
 
 	private int stripTick = 0;
-	protected void stripBlock(boolean set)
-	{
-		if (stripTick > 0)
-		{
+
+	protected void stripBlock(boolean set) {
+
+		if (stripTick > 0) {
 			--stripTick;
 			return;
 		}
 		stripTick = 20;
-		BlockPosition bp = new BlockPosition(this);
-		bp.orientation = getDirectionFacing();
-		bp.moveForwards(1);
-		if (set == worldObj.getBlock(bp.x, bp.y, bp.z).equals(MFRThings.fakeLaserBlock))
-			worldObj.setBlock(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, bp.orientation.getOpposite().ordinal() + 1, 3);
+
+		EnumFacing facing = getDirectionFacing();
+		BlockPos laserPos = pos.offset(facing);
+		if (set == worldObj.getBlockState(laserPos).getBlock().equals(MFRThings.fakeLaserBlock))
+			worldObj.setBlockState(laserPos, MFRThings.fakeLaserBlock.getDefaultState().withProperty(BlockFakeLaser.FACING, facing.getOpposite()), 3);
 		else if (set)
-			worldObj.scheduleBlockUpdate(bp.x, bp.y, bp.z, MFRThings.fakeLaserBlock, 1);
+			worldObj.scheduleBlockUpdate(laserPos, MFRThings.fakeLaserBlock, 1, 1);
 	}
 
 	@Override
-	public boolean canFormBeamFrom(ForgeDirection from)
-	{
+	public boolean canFormBeamFrom(EnumFacing from) {
+
 		if (from != getDirectionFacing().getOpposite())
 			return false;
 		IFactoryLaserTarget drill = getDrill();
@@ -148,15 +141,16 @@ public class TileEntityLaserDrillPrecharger extends TileEntityFactoryPowered imp
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
+	public AxisAlignedBB getRenderBoundingBox() {
+
 		return INFINITE_EXTENT_AABB;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public double getMaxRenderDistanceSquared()
-	{
+	public double getMaxRenderDistanceSquared() {
+
 		return 65536;
 	}
+
 }

@@ -1,0 +1,41 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "builtin/generated",
+		"transform": "forge:default-tool"
+	},
+	"variants": {
+		"variant": {
+			"empty": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.syringe.empty"
+				}
+			},
+			"health": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.syringe.health"
+				}
+			},
+			"growth": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.syringe.growth"
+				}
+			},
+			"zombie": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.syringe.zombie"
+				}
+			},
+			"slime": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.syringe.slime"
+				}
+			},
+			"cure": {
+				"textures": {
+					"layer0": "minefactoryreloaded:items/item.mfr.syringe.cure"
+				}
+			}
+		}
+	}
+}

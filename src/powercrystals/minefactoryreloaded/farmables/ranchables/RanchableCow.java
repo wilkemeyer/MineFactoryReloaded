@@ -13,8 +13,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -38,14 +38,14 @@ public class RanchableCow implements IFactoryRanchable {
 		tag.setLong("mfr:lastRanched", world.getTotalWorldTime() + 20 * 30);
 
 		List<RanchedItem> drops = new LinkedList<RanchedItem>();
-		IInventoryManager manager = InventoryManager.create(rancher, ForgeDirection.UP);
+		IInventoryManager manager = InventoryManager.create(rancher, EnumFacing.UP);
 
-		int bucketIndex = manager.findItem(new ItemStack(Items.bucket));
+		int bucketIndex = manager.findItem(new ItemStack(Items.BUCKET));
 		if (bucketIndex >= 0) {
-			drops.add(new RanchedItem(Items.milk_bucket));
+			drops.add(new RanchedItem(Items.MILK_BUCKET));
 			rancher.decrStackSize(bucketIndex, 1);
 		} else {
-			FluidStack milk = FluidRegistry.getFluidStack("milk", FluidContainerRegistry.BUCKET_VOLUME);
+			FluidStack milk = FluidRegistry.getFluidStack("milk", Fluid.BUCKET_VOLUME);
 			drops.add(new RanchedItem(milk));
 		}
 

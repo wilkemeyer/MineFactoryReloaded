@@ -2,10 +2,17 @@ package powercrystals.minefactoryreloaded.item;
 
 import java.util.List;
 
+import codechicken.lib.model.ModelRegistryHelper;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.item.base.ItemMulti;
+import powercrystals.minefactoryreloaded.render.item.RedNetCardItemRenderer;
 
 public class ItemLogicUpgradeCard extends ItemMulti {
 
@@ -14,7 +21,9 @@ public class ItemLogicUpgradeCard extends ItemMulti {
 	public ItemLogicUpgradeCard() {
 
 		setNames(_upgradeNames);
-		setHasIcons(false);
+		setUnlocalizedName("mfr.upgrade.logic");
+		setMaxStackSize(1);
+		setRegistryName(MineFactoryReloadedCore.modId, "upgrade_logic");
 	}
 
 	@Override
@@ -35,4 +44,13 @@ public class ItemLogicUpgradeCard extends ItemMulti {
 		return level == 0 ? 0 : 8 * level;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelResourceLocation rednetCard = new ModelResourceLocation(MineFactoryReloadedCore.modId + ":rednet_card", "inventory");
+		ModelLoader.setCustomMeshDefinition(this, stack -> rednetCard);
+		ModelLoader.registerItemVariants(this, rednetCard);
+		ModelRegistryHelper.register(rednetCard, new RedNetCardItemRenderer());
+	}
 }

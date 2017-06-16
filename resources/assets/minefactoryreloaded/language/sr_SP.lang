@@ -104,35 +104,35 @@ tile.mfr.decorative.brick.lapis.name = Lapis Cigle
 tile.mfr.decorative.brick.obsidian.name = Opsidijanske Cigle
 tile.mfr.decorative.brick.pavedstone.name = Popločane Kamene Cigle
 tile.mfr.decorative.brick.snow.name = Snežne Cigle
-tile.mfr.decorative.brick.glowstone_large.name = Velike Svetlokamene Cigle
-tile.mfr.decorative.brick.ice_large.name = Velike Ledene Cigle
-tile.mfr.decorative.brick.lapis_large.name = Velike Lapis Cigle
-tile.mfr.decorative.brick.obsidian_large.name = Velike Opsidijanske Cigle
-tile.mfr.decorative.brick.snow_large.name = Velike Snežne Cigle
+tile.mfr.decorative.brick.glowstonelarge.name = Velike Svetlokamene Cigle
+tile.mfr.decorative.brick.icelarge.name = Velike Ledene Cigle
+tile.mfr.decorative.brick.lapislarge.name = Velike Lapis Cigle
+tile.mfr.decorative.brick.obsidianlarge.name = Velike Opsidijanske Cigle
+tile.mfr.decorative.brick.snowlarge.name = Velike Snežne Cigle
 tile.mfr.machineblock.prc.name = Kućište Programerskog RedNet Kontrolera
-tile.mfr.decorative.brick.meat.raw.name = Kocka Sirovog Mesa
-tile.mfr.decorative.brick.meat.cooked.name = Kocka Kuvanog Mesa
+tile.mfr.decorative.brick.meatraw.name = Kocka Sirovog Mesa
+tile.mfr.decorative.brick.meatcooked.name = Kocka Kuvanog Mesa
 
-tile.mfr.decorative.stone.black.smooth.name = Glatak Crnokamen
-tile.mfr.decorative.stone.black.cobble.name = Kaldrmasti Crnokamen
-tile.mfr.decorative.stone.black.brick.small.name = Male Crnokamene Cigle
-tile.mfr.decorative.stone.black.brick.large.name = Velike Crnokamene Cigle
-tile.mfr.decorative.stone.black.gravel.name = Crnokameni Šljunak
-tile.mfr.decorative.stone.black.paved.name = Popločan Crnokamen
-tile.mfr.decorative.stone.white.smooth.name = Gladak Belokamen
-tile.mfr.decorative.stone.white.cobble.name = Kaldrmasti Belokamen
-tile.mfr.decorative.stone.white.brick.small.name = Male Belokamene Cigle
-tile.mfr.decorative.stone.white.brick.large.name = Velike Belokamene Cigle
-tile.mfr.decorative.stone.white.gravel.name = Belokameni Šljunak
-tile.mfr.decorative.stone.white.paved.name = Popločani Belokamen
+tile.mfr.decorative.stone.blacksmooth.name = Glatak Crnokamen
+tile.mfr.decorative.stone.blackcobble.name = Kaldrmasti Crnokamen
+tile.mfr.decorative.stone.blackbricksmall.name = Male Crnokamene Cigle
+tile.mfr.decorative.stone.blackbricklarge.name = Velike Crnokamene Cigle
+tile.mfr.decorative.stone.blackgravel.name = Crnokameni Šljunak
+tile.mfr.decorative.stone.blackpaved.name = Popločan Crnokamen
+tile.mfr.decorative.stone.whitesmooth.name = Gladak Belokamen
+tile.mfr.decorative.stone.whitecobble.name = Kaldrmasti Belokamen
+tile.mfr.decorative.stone.whitebricksmall.name = Male Belokamene Cigle
+tile.mfr.decorative.stone.whitebricklarge.name = Velike Belokamene Cigle
+tile.mfr.decorative.stone.whitegravel.name = Belokameni Šljunak
+tile.mfr.decorative.stone.whitepaved.name = Popločani Belokamen
 
 tile.ice.unmelting.name = Led koji se ne topi
 
 tile.mfr.vinescaffold.name = Skele od Lijana
 
-tile.mfr.rubberwood.sapling.name = Začetak Kaučuvog Drveta
+tile.mfr.rubberwood.sapling.normal.name = Začetak Kaučuvog Drveta
 tile.mfr.rubberwood.log.name = Kaučukovo Drvo
-tile.mfr.rubberwood.leaves.name = Lišće Kaučukovog Drveta
+tile.mfr.rubberwood.leaves.normal.name = Lišće Kaučukovog Drveta
 
 tile.mfr.rail.cargo.dropoff.name = Šina za Izbacivanje Tereta
 tile.mfr.rail.cargo.pickup.name = Šina za Uzimanje Tereta

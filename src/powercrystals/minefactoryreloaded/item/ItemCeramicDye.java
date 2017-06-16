@@ -3,41 +3,61 @@ package powercrystals.minefactoryreloaded.item;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.item.base.ItemFactoryColored;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 import powercrystals.minefactoryreloaded.setup.MFRThings;
 
 public class ItemCeramicDye extends ItemFactoryColored {
 
-	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+	public ItemCeramicDye() {
 
-		Block block = world.getBlock(x, y, z);
-		if (!world.isRemote & block != null) {
-			if (Blocks.glass.equals(block)) {
-				if (world.setBlock(x, y, z, MFRThings.factoryGlassBlock, stack.getItemDamage(), 3)) {
-					if (!player.capabilities.isCreativeMode)
-						stack.stackSize--;
-					return true;
-				}
-			}
-			if (Blocks.glass_pane.equals(block)) {
-				if (world.setBlock(x, y, z, MFRThings.factoryGlassPaneBlock, stack.getItemDamage(), 3)) {
-					if (!player.capabilities.isCreativeMode)
-						stack.stackSize--;
-					return true;
-				}
-			}
-			if (block.recolourBlock(world, x, y, z, ForgeDirection.getOrientation(side), stack.getItemDamage())) {
-				if (!player.capabilities.isCreativeMode)
-					stack.stackSize--;
-				return true;
-			}
-		}
-		return false;
+		setUnlocalizedName("mfr.ceramicdye");
+		setRegistryName(MineFactoryReloadedCore.modId, "ceramic_dye");
 	}
 
+	@Override
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+
+		Block block = world.getBlockState(pos).getBlock();
+		if (!world.isRemote & block != null) {
+			if (Blocks.GLASS.equals(block)) {
+				if (world.setBlockState(pos, MFRThings.factoryGlassBlock.getStateFromMeta(stack.getItemDamage()), 3)) {
+					if (!player.capabilities.isCreativeMode)
+						stack.stackSize--;
+					return EnumActionResult.SUCCESS;
+				}
+			}
+			if (Blocks.GLASS_PANE.equals(block)) {
+				if (world.setBlockState(pos, MFRThings.factoryGlassPaneBlock.getStateFromMeta(stack.getItemDamage()), 3)) {
+					if (!player.capabilities.isCreativeMode)
+						stack.stackSize--;
+					return EnumActionResult.SUCCESS;
+				}
+			}
+			if (block.recolorBlock(world, pos, side, EnumDyeColor.byMetadata(stack.getItemDamage()))) {
+				if (!player.capabilities.isCreativeMode)
+					stack.stackSize--;
+				return EnumActionResult.SUCCESS;
+			}
+		}
+		return EnumActionResult.PASS;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerColoredItemModels(this, "ceramic_dye");
+	}
 }

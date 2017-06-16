@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.FertilizerType;
@@ -34,27 +35,27 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 	}
 
 	@Override
-	public boolean canBeHarvested(World world, Map<String, Boolean> settings, int x, int y, int z)
+	public boolean canBeHarvested(World world, Map<String, Boolean> settings, BlockPos pos)
 	{
 		if (settings.get("isHarvestingTree") == Boolean.TRUE)
 			return true;
 
-		return canBePicked(world, x, y, z);
+		return canBePicked(world, pos);
 	}
 
 	@Override
-	public boolean canFertilize(World world, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean canFertilize(World world, BlockPos pos, FertilizerType fertilizerType)
 	{
 		if (fertilizerType != FertilizerType.GrowPlant)
 			return false;
 
-		return !canBePicked(world, x, y, z);
+		return !canBePicked(world, pos);
 	}
 
 	@Override
-	public boolean canBePicked(World world, int x, int y, int z)
+	public boolean canBePicked(World world, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IFruitBearer)
 		{
 			IFruitBearer fruit = (IFruitBearer)te;
@@ -64,9 +65,9 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 	}
 
 	@Override
-	public boolean fertilize(World world, Random rand, int x, int y, int z, FertilizerType fertilizerType)
+	public boolean fertilize(World world, Random rand, BlockPos pos, FertilizerType fertilizerType)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IFruitBearer)
 		{
 			IFruitBearer fruit = (IFruitBearer)te;
@@ -77,26 +78,21 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 	}
 
 	@Override
-	public ReplacementBlock getReplacementBlock(World world, int x, int y, int z)
+	public ReplacementBlock getReplacementBlock(World world, BlockPos pos)
 	{
 		return repl;
 	}
 
-	@Override
-	public void prePick(World world, int x, int y, int z)
-	{
-	}
-
 	@Override // HARVESTER
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> settings, BlockPos pos)
 	{
-		return getDrops(world, rand, x, y, z);
+		return getDrops(world, rand, pos);
 	}
 
 	@Override // FRUIT PICKER
-	public List<ItemStack> getDrops(World world, Random rand, int x, int y, int z)
+	public List<ItemStack> getDrops(World world, Random rand, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof IFruitBearer)
 		{
 			List<ItemStack> prod = new ArrayList<ItemStack>();
@@ -104,10 +100,5 @@ public class ForestryPod extends HarvestableStandard implements IFactoryFruit, I
 			return prod;
 		}
 		return null;
-	}
-
-	@Override
-	public void postPick(World world, int x, int y, int z)
-	{
 	}
 }

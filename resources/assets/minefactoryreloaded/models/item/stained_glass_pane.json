@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "minefactoryreloaded:items/item.mfr.stainedglasspane.base",
+        "layer1": "minefactoryreloaded:items/item.mfr.stainedglasspane.overlay"
+    }
+}

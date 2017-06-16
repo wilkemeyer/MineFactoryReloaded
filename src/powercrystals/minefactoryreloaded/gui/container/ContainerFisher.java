@@ -3,15 +3,14 @@ package powercrystals.minefactoryreloaded.gui.container;
 import cofh.lib.gui.slot.SlotAcceptValid;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.IIcon;
 
+import net.minecraft.util.ResourceLocation;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityFisher;
 
 public class ContainerFisher extends ContainerFactoryPowered {
 
-	public static IIcon background;
+	public static String background;
 
 	public ContainerFisher(TileEntityFactoryPowered te, InventoryPlayer inv) {
 
@@ -23,16 +22,16 @@ public class ContainerFisher extends ContainerFactoryPowered {
 
 		addSlotToContainer(new SlotAcceptValid(_te, 0, 8, 24));
 
-		getSlot(0).setBackgroundIcon(background);
+		getSlot(0).setBackgroundName(background);
 	}
 
 	@Override
 	public void detectAndSendChanges() {
 
 		super.detectAndSendChanges();
-		for (int i = 0; i < crafters.size(); i++) {
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 100, ((TileEntityFactoryPowered) _te).getWorkMax() & 65535);
-			((ICrafting) crafters.get(i)).sendProgressBarUpdate(this, 101, ((TileEntityFactoryPowered) _te).getWorkMax() >>> 16);
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).sendProgressBarUpdate(this, 100, ((TileEntityFactoryPowered) _te).getWorkMax() & 65535);
+			listeners.get(i).sendProgressBarUpdate(this, 101, ((TileEntityFactoryPowered) _te).getWorkMax() >>> 16);
 		}
 	}
 

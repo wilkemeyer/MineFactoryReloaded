@@ -1,11 +1,23 @@
 package powercrystals.minefactoryreloaded.item.base;
 
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.core.MFRDyeColor;
+import powercrystals.minefactoryreloaded.render.ModelHelper;
 
 public class ItemFactoryColored extends ItemMulti {
 
 	public ItemFactoryColored() {
 
-		setNames("white", "orange", "magenta", "lightblue", "yellow", "lime", "pink", "gray", "lightgray", "cyan", "purple", "blue", "brown", "green", "red", "black");
+		setNames(MFRDyeColor.UNLOC_NAMES);
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		ModelHelper.registerColoredItemModels(this, modelName);
+	}
 }

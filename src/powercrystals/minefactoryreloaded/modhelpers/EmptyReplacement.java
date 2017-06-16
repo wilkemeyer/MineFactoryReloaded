@@ -2,6 +2,7 @@ package powercrystals.minefactoryreloaded.modhelpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.ReplacementBlock;
@@ -16,7 +17,7 @@ public class EmptyReplacement extends ReplacementBlock
 	}
 
 	@Override
-	public boolean replaceBlock(World world, int x, int y, int z, ItemStack stack) {
+	public boolean replaceBlock(World world, BlockPos pos, ItemStack stack) {
 		return true;
 	}
 }

@@ -6,8 +6,12 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockTallGrass;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import powercrystals.minefactoryreloaded.api.HarvestType;
@@ -20,48 +24,56 @@ public class HarvestableShrub extends HarvestableStandard {
 	}
 
 	@Override
-	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, int x, int y, int z) {
+	public List<ItemStack> getDrops(World world, Random rand, Map<String, Boolean> harvesterSettings, BlockPos pos) {
 
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 
-		boolean doublePlant = getPlant() == Blocks.double_plant, top = false;
+		boolean doublePlant = getPlant() == Blocks.DOUBLE_PLANT, top = false;
 
-		int meta = world.getBlockMetadata(x, y, z);
-		if (doublePlant && (meta & 8) == 8) {
+		IBlockState state = world.getBlockState(pos);
+		if (doublePlant && world.getBlockState(pos).getValue(BlockDoublePlant.HALF) == BlockDoublePlant.EnumBlockHalf.UPPER) {
 			top = true;
-			meta = world.getBlockMetadata(x, y - 1, z);
+			state = world.getBlockState(pos.down());
 		}
 
-		if (harvesterSettings.get("silkTouch") == Boolean.TRUE &&
-				((getPlant() == Blocks.tallgrass && (meta == 1 || meta == 2)) ||
-				(doublePlant && (meta == 2 || meta == 3)))) {
+		if (harvesterSettings.get("silkTouch") == Boolean.TRUE) {
+			//TODO get back to this and try to replace meta magic numbers with something better
 			int size = 1, oMeta = 1;
-			if (doublePlant) {
-				size = 2;
-				if (meta == 3) {
-					oMeta = 2;
+			if (getPlant() == Blocks.TALLGRASS) {
+				BlockTallGrass.EnumType type = state.getValue(BlockTallGrass.TYPE);
+				if (type == BlockTallGrass.EnumType.GRASS || type == BlockTallGrass.EnumType.FERN) {
+					if (type == BlockTallGrass.EnumType.FERN) {
+						oMeta = 1;
+					}
+					drops.add(new ItemStack(Blocks.TALLGRASS , size, oMeta));
 				}
-			} else if (meta == 2) {
-				oMeta = 2;
+			} else if (doublePlant) {
+				BlockDoublePlant.EnumPlantType variant = state.getValue(BlockDoublePlant.VARIANT);
+				if (variant == BlockDoublePlant.EnumPlantType.GRASS || variant == BlockDoublePlant.EnumPlantType.FERN) {
+					size = 2;
+					if (variant == BlockDoublePlant.EnumPlantType.FERN) {
+						oMeta = 2;
+					}
+					drops.add(new ItemStack(Blocks.TALLGRASS , size, oMeta));
+				}
 			}
-			drops.add(new ItemStack(Blocks.tallgrass , size, oMeta));
 		} else {
-			drops.addAll(getPlant().getDrops(world, x, y, z, meta, 0));
+			drops.addAll(getPlant().getDrops(world, pos, state, 0));
 		}
 
 		if (doublePlant && top) {
-			world.setBlock(x, y - 1, z, Blocks.air, 0, 2);
+			world.setBlockToAir(pos.down());
 		}
 
 		return drops;
 	}
 
 	@Override
-	public void postHarvest(World world, int x, int y, int z) {
+	public void postHarvest(World world, BlockPos pos) {
 
-		super.postHarvest(world, x, y, z);
-		if (getPlant() == Blocks.double_plant) {
-			super.postHarvest(world, x, y - 1, z);
+		super.postHarvest(world, pos);
+		if (getPlant() == Blocks.DOUBLE_PLANT) {
+			super.postHarvest(world, pos.down());
 		}
 	}
 

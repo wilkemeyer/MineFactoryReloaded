@@ -1,0 +1,124 @@
+// This simple grabs the latest 'forge' plugin, or ForgeGradle, from Forge's servers.
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+
+// We apply the 'forge' plugin, so ForgeGradle can do it's stuff.
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
+
+group = 'powercrystals' // Your main package.
+archivesBaseName = 'MineFactoryReloaded'
+
+repositories {
+    maven {
+        name = "ChickenBones repo"
+        url = "http://chickenbones.net/maven/"
+    }
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net/"
+    }
+    maven {
+        name = "Player's Maven"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven { url "http://dvs1.progwml6.com/files/maven" }
+}
+
+dependencies {
+    compile "codechicken:CodeChickenLib:${mc_version}-${ccl_version}:deobf"
+    compile "cofh:CoFHCore:${mc_version}-${cofhcore_version}:deobf"
+    compile "net.industrial-craft:industrialcraft-2:${ic2_version}"
+    compile "net.sengir.forestry:forestry_${mc_version}:${forestry_version}"
+    //deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = "${mod_version}." + (System.getenv("BUILD_NUMBER") ?: "1")
+
+minecraft {
+    version = mc_version + "-" + forge_version
+    mappings = mcp_mappings
+    runDir = "run"
+    replace '${mod_version}', mod_version
+    makeObfSourceJar = false
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
+
+processResources {
+    inputs.property "version", version
+    inputs.property "mc_version", mc_version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mc_version': mc_version
+    }
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+version = "${project.minecraft.version}-${project.version}"
+
+def commonManifest = {
+    attributes 'FMLAT': 'MFR_at.cfg'
+}
+
+jar {
+    classifier = 'universal'
+    manifest commonManifest
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest commonManifest
+}
+
+task srcJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+    manifest commonManifest
+}
+
+// Tell the artifact system about our extra jars
+artifacts {
+    archives deobfJar
+    archives srcJar
+}
+
+// Configure an upload task.
+curseforge {
+    apiKey = project.hasProperty('CF_API_TOKEN') ? project.CF_API_TOKEN : '0'
+    project {
+        id = project.hasProperty('CF_MOD_ID') ? project.CF_MOD_ID : -1
+        displayName = 'MineFactoryReloaded-[${project.minecraft.version}]${mod_version}-' + (System.getenv("BUILD_NUMBER") ?: "CUSTOM_BUILD")
+        changelog = ''
+        releaseType = 'alpha'
+
+        mainArtifact jar
+    }
+}

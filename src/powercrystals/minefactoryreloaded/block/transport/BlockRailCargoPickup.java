@@ -8,29 +8,33 @@ import java.util.Map.Entry;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
-
 
 public class BlockRailCargoPickup extends BlockFactoryRail
 {
 	public BlockRailCargoPickup()
 	{
 		super(true, false);
-		setBlockName("mfr.rail.cargo.pickup");
+		setUnlocalizedName("mfr.rail.cargo.pickup");
+		setRegistryName(MineFactoryReloadedCore.modId, "rail_cargo_pickup");
 	}
 
 	@Override
-	public void onMinecartPass(World world, EntityMinecart entity, int x, int y, int z)
+	public void onMinecartPass(World world, EntityMinecart entity, BlockPos pos)
 	{
 		if (world.isRemote || !(entity instanceof IInventory))
 			return;
 
-		IInventoryManager minecart = InventoryManager.create(entity, ForgeDirection.UNKNOWN);
+		IInventoryManager minecart = InventoryManager.create(entity, null);
 
-		for (Entry<ForgeDirection, IInventory> inventory : UtilInventory.findChests(world, x, y, z).entrySet())
+		for (Entry<EnumFacing, IInventory> inventory : UtilInventory.findChests(world, pos).entrySet())
 		{
 			IInventoryManager chest = InventoryManager.create(inventory.getValue(), inventory.getKey().getOpposite()); 
 			for (Entry<Integer, ItemStack> contents : chest.getContents().entrySet())
@@ -58,5 +62,12 @@ public class BlockRailCargoPickup extends BlockFactoryRail
 				}
 			}
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModels() {
+
+		registerRailModel(this, "cargo_pickup");
 	}
 }

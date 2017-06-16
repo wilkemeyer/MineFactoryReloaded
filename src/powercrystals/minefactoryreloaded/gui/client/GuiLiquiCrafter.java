@@ -2,11 +2,13 @@ package powercrystals.minefactoryreloaded.gui.client;
 
 import java.util.Arrays;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
@@ -36,12 +38,12 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("info.cofh.template"), 67 + 27, 27, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("info.cofh.output"), 128 + 27, 26, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("info.mfr.template"), 67 + 27, 27, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("info.mfr.output"), 128 + 27, 26, 4210752);
 
-		FluidTankInfo[] tanks = _crafter.getTankInfo(ForgeDirection.UNKNOWN);
+		FluidTankInfo[] tanks = _crafter.getTankInfo();
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		for (int i = 0; i < 9; i++) {
 			FluidStack l = tanks[i].fluid;
 			if (l != null) {
@@ -75,13 +77,14 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float gameTicks, int mouseX, int mouseY) {
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(texture);
 		int x = (width - xSize - 56) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 
+	//TODO replace with call to drawFluid from GuiBase
 	@Override
 	protected void drawTank(int xOffset, int yOffset, FluidStack stack, int level) {
 
@@ -91,9 +94,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 
 		int vertOffset = 0;
 
-		IIcon icon = fluid.getIcon(stack);
+		ResourceLocation icon = fluid.getStill();
 		if (icon == null)
-			icon = Blocks.flowing_lava.getIcon(0, 0);
+			icon = FluidRegistry.LAVA.getFlowing();
 
 		while (level > 0) {
 			int texHeight = 0;
@@ -106,9 +109,9 @@ public class GuiLiquiCrafter extends GuiFactoryInventory {
 				level = 0;
 			}
 
-			bindTexture(fluid);
+			bindTexture();
 
-			drawTexturedModelRectFromIcon(xOffset, yOffset - texHeight - vertOffset, icon, 16, texHeight);
+			drawTexturedModalRect(xOffset, yOffset - texHeight - vertOffset, mc.getTextureMapBlocks().getAtlasSprite(icon.toString()), 16, texHeight);
 			vertOffset = vertOffset + 16;
 		}
 

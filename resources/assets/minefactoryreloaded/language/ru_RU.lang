@@ -104,7 +104,7 @@ tile.mfr.road.light.on.name = Светящаяся дорожка
 tile.mfr.road.light.inverted.off.name = Светящаяся дорожка (Перевёрнутая)
 tile.mfr.road.light.inverted.on.name = Светящаяся дорожка (Перевёрнутая)
 
-tile.mfr.plastic.name = Блок пластика
+tile.mfr.plastic.plain.name = Блок пластика
 
 tile.mfr.decorative.brick.ice.name = Ледяные кирпичи
 tile.mfr.decorative.brick.glowstone.name = Светящиеся кирпичи
@@ -112,29 +112,29 @@ tile.mfr.decorative.brick.lapis.name = Лазуритовые кирпичи
 tile.mfr.decorative.brick.obsidian.name = Обсидиановые кирпичи
 tile.mfr.decorative.brick.pavedstone.name = Асфальтовые кирпичи
 tile.mfr.decorative.brick.snow.name = Снежные кирпичи
-tile.mfr.decorative.brick.ice_large.name = Большие ледяные кирпичи
-tile.mfr.decorative.brick.glowstone_large.name = Большие светящиеся кирпичи
-tile.mfr.decorative.brick.lapis_large.name = Большие лазуритовые кирпичи
-tile.mfr.decorative.brick.obsidian_large.name = Большие обсидиановые кирпичи
-tile.mfr.decorative.brick.pavedstone_large.name = Большие мощённые каменные кирпичи
-tile.mfr.decorative.brick.snow_large.name = Большие снежные кирпичи
-tile.mfr.decorative.brick.meat.raw.name = Блок сырого мяса
-tile.mfr.decorative.brick.meat.cooked.name = Блок приготовленного мяса
-tile.mfr.decorative.brick.brick_large.name = Большие кирпичи
-tile.mfr.decorative.brick.sugar_charcoal.name = Сахарный древесноугольный блок
+tile.mfr.decorative.brick.icelarge.name = Большие ледяные кирпичи
+tile.mfr.decorative.brick.glowstonelarge.name = Большие светящиеся кирпичи
+tile.mfr.decorative.brick.lapislarge.name = Большие лазуритовые кирпичи
+tile.mfr.decorative.brick.obsidianlarge.name = Большие обсидиановые кирпичи
+tile.mfr.decorative.brick.pavedstonelarge.name = Большие мощённые каменные кирпичи
+tile.mfr.decorative.brick.snowlarge.name = Большие снежные кирпичи
+tile.mfr.decorative.brick.meatraw.name = Блок сырого мяса
+tile.mfr.decorative.brick.meatcooked.name = Блок приготовленного мяса
+tile.mfr.decorative.brick.bricklarge.name = Большие кирпичи
+tile.mfr.decorative.brick.sugarcharcoal.name = Сахарный древесноугольный блок
 
-tile.mfr.decorative.stone.black.smooth.name = Гладкий чёрный камень
-tile.mfr.decorative.stone.black.cobble.name = Чёрный булыжник
-tile.mfr.decorative.stone.black.brick.small.name = Маленькие чёрные кирпичи
-tile.mfr.decorative.stone.black.brick.large.name = Большие чёрные кирпичи
-tile.mfr.decorative.stone.black.gravel.name = Гравиевый чёрный камень
-tile.mfr.decorative.stone.black.paved.name = Мощёный чёрный камень
-tile.mfr.decorative.stone.white.smooth.name = Гладкий белый камень
-tile.mfr.decorative.stone.white.cobble.name = Белый булыжник
-tile.mfr.decorative.stone.white.brick.small.name = Маленькие белые кирпичи
-tile.mfr.decorative.stone.white.brick.large.name = Большие белые кирпичи
-tile.mfr.decorative.stone.white.gravel.name = Гравиевый белый камень
-tile.mfr.decorative.stone.white.paved.name = Мощёный белый камень
+tile.mfr.decorative.stone.blacksmooth.name = Гладкий чёрный камень
+tile.mfr.decorative.stone.blackcobble.name = Чёрный булыжник
+tile.mfr.decorative.stone.blackbricksmall.name = Маленькие чёрные кирпичи
+tile.mfr.decorative.stone.blackbricklarge.name = Большие чёрные кирпичи
+tile.mfr.decorative.stone.blackgravel.name = Гравиевый чёрный камень
+tile.mfr.decorative.stone.blackpaved.name = Мощёный чёрный камень
+tile.mfr.decorative.stone.whitesmooth.name = Гладкий белый камень
+tile.mfr.decorative.stone.whitecobble.name = Белый булыжник
+tile.mfr.decorative.stone.whitebricksmall.name = Маленькие белые кирпичи
+tile.mfr.decorative.stone.whitebricklarge.name = Большие белые кирпичи
+tile.mfr.decorative.stone.whitegravel.name = Гравиевый белый камень
+tile.mfr.decorative.stone.whitepaved.name = Мощёный белый камень
 
 tile.mfr.pinkslime.block.name = Блок розовой слизи
 
@@ -146,12 +146,12 @@ tile.mfr.detcord.name = DetCord
 
 tile.mfr.farmland.name = Плодородная почва
 
-tile.mfr.rubberwood.sapling.name = Саженец гевеи
+tile.mfr.rubberwood.sapling.normal.name = Саженец гевеи
 tile.mfr.rubberwood.sapling.sacred.name = Священный саженец гевеи
 tile.mfr.rubberwood.sapling.mega.name = Большой саженец гевеи
 tile.mfr.rubberwood.sapling.massive.name = Священный саженец гевеи
 tile.mfr.rubberwood.log.name = Древесина гевеи
-tile.mfr.rubberwood.leaves.name = Листва гевеи
+tile.mfr.rubberwood.leaves.normal.name = Листва гевеи
 tile.mfr.rubberwood.leaves.dry.name = Сухая листва гевеи
 
 tile.mfr.rail.cargo.dropoff.name = Грузовой высаживающий путь
@@ -168,7 +168,7 @@ tile.mfr.cable.plastic.name = Пластиковая труба
 tile.mfr.rednet.logic.name = Программируемый RedNet контроллер
 tile.mfr.rednet.panel.historian.name = RedNet гистограф
 
-tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.machine = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Корпус программируемого RedNet контроллера
 
 tile.mfr.tank.name = Пластиковый резервуар

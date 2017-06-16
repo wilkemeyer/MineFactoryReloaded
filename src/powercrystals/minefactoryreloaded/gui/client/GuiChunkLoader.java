@@ -1,9 +1,10 @@
 package powercrystals.minefactoryreloaded.gui.client;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.StatCollector;
 
+import net.minecraft.util.text.translation.I18n;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.net.MFRPacket;
 import powercrystals.minefactoryreloaded.net.Packets;
 import powercrystals.minefactoryreloaded.tile.machine.TileEntityChunkLoader;
 
@@ -40,9 +41,9 @@ public class GuiChunkLoader extends GuiFactoryPowered
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.mfr.radius"), _xOffset, 16, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("container.mfr.radius"), _xOffset, 16, 4210752);
 		fontRendererObj.drawString(_cl.getRadius() + "", _xOffset + 25, 31, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.mfr.power"), _xOffset, 51, 4210752);
+		fontRendererObj.drawString(I18n.translateToLocal("container.mfr.power"), _xOffset, 51, 4210752);
 		fontRendererObj.drawString(_cl.getActivationEnergy() + " RF", _xOffset + 17, 51 + 11, 4210752);
 	}
 	
@@ -51,11 +52,11 @@ public class GuiChunkLoader extends GuiFactoryPowered
 	{
 		if (button.id == 1)
 		{
-			Packets.sendToServer(Packets.RouterButton, _tileEntity, _cl.getRadius() - 1);
+			MFRPacket.sendRouterButtonToServer(_tileEntity, _cl.getRadius() - 1);
 		}
 		else if (button.id == 2)
 		{
-			Packets.sendToServer(Packets.RouterButton, _tileEntity, _cl.getRadius() + 1);
+			MFRPacket.sendRouterButtonToServer(_tileEntity, _cl.getRadius() + 1);
 		}
 	}
 }

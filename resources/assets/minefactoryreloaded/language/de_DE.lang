@@ -104,7 +104,7 @@ tile.mfr.road.light.on.name = Straßenlaterne
 tile.mfr.road.light.inverted.off.name = Invertierte Straßenlaterne
 tile.mfr.road.light.inverted.on.name = Invertierte Straßenlaterne
 
-tile.mfr.plastic.name = Plastikblock
+tile.mfr.plastic.plain.name = Plastikblock
 
 tile.mfr.decorative.brick.ice.name = Eisziegel
 tile.mfr.decorative.brick.glowstone.name = Glühsteinziegel
@@ -112,29 +112,29 @@ tile.mfr.decorative.brick.lapis.name = Lapislazuliziegel
 tile.mfr.decorative.brick.obsidian.name = Obsidianziegel
 tile.mfr.decorative.brick.pavedstone.name = Gepflasterte Steinziegel
 tile.mfr.decorative.brick.snow.name = Schneeziegel
-tile.mfr.decorative.brick.ice_large.name = Großer Eisziegel
-tile.mfr.decorative.brick.glowstone_large.name = Großer Glühsteinziegel
-tile.mfr.decorative.brick.lapis_large.name = Großer Lapislazuliziegel
-tile.mfr.decorative.brick.obsidian_large.name = Großer Obsidianziegel
-tile.mfr.decorative.brick.pavedstone_large.name = Große Gepflasterte Steinziegel
-tile.mfr.decorative.brick.snow_large.name = Großer Schneeziegel
-tile.mfr.decorative.brick.meat.raw.name = Roher Fleischblock
-tile.mfr.decorative.brick.meat.cooked.name = Gekochter Fleischblock
-tile.mfr.decorative.brick.brick_large.name = Große Ziegel
-tile.mfr.decorative.brick.sugar_charcoal.name = Zuckerkohleblock
+tile.mfr.decorative.brick.icelarge.name = Großer Eisziegel
+tile.mfr.decorative.brick.glowstonelarge.name = Großer Glühsteinziegel
+tile.mfr.decorative.brick.lapislarge.name = Großer Lapislazuliziegel
+tile.mfr.decorative.brick.obsidianlarge.name = Großer Obsidianziegel
+tile.mfr.decorative.brick.pavedstonelarge.name = Große Gepflasterte Steinziegel
+tile.mfr.decorative.brick.snowlarge.name = Großer Schneeziegel
+tile.mfr.decorative.brick.meatraw.name = Roher Fleischblock
+tile.mfr.decorative.brick.meatcooked.name = Gekochter Fleischblock
+tile.mfr.decorative.brick.bricklarge.name = Große Ziegel
+tile.mfr.decorative.brick.sugarcharcoal.name = Zuckerkohleblock
 
-tile.mfr.decorative.stone.black.smooth.name = Glatter schwarzer Stein
-tile.mfr.decorative.stone.black.cobble.name = Schwarzer Pflasterstein
-tile.mfr.decorative.stone.black.brick.small.name = Kleine schwarze Ziegel
-tile.mfr.decorative.stone.black.brick.large.name = Große schwarze Ziegel
-tile.mfr.decorative.stone.black.gravel.name = Schwarzer Kies
-tile.mfr.decorative.stone.black.paved.name = Schwarzer gepflasterter Stein
-tile.mfr.decorative.stone.white.smooth.name = Glatter weißer Stein
-tile.mfr.decorative.stone.white.cobble.name = Weißer Pflasterstein
-tile.mfr.decorative.stone.white.brick.small.name = Kleine weiße Ziegel
-tile.mfr.decorative.stone.white.brick.large.name = Große weiße Ziegel
-tile.mfr.decorative.stone.white.gravel.name = Weißer Kies
-tile.mfr.decorative.stone.white.paved.name = Weißer gepflasterter Stein
+tile.mfr.decorative.stone.blacksmooth.name = Glatter schwarzer Stein
+tile.mfr.decorative.stone.blackcobble.name = Schwarzer Pflasterstein
+tile.mfr.decorative.stone.blackbricksmall.name = Kleine schwarze Ziegel
+tile.mfr.decorative.stone.blackbricklarge.name = Große schwarze Ziegel
+tile.mfr.decorative.stone.blackgravel.name = Schwarzer Kies
+tile.mfr.decorative.stone.blackpaved.name = Schwarzer gepflasterter Stein
+tile.mfr.decorative.stone.whitesmooth.name = Glatter weißer Stein
+tile.mfr.decorative.stone.whitecobble.name = Weißer Pflasterstein
+tile.mfr.decorative.stone.whitebricksmall.name = Kleine weiße Ziegel
+tile.mfr.decorative.stone.whitebricklarge.name = Große weiße Ziegel
+tile.mfr.decorative.stone.whitegravel.name = Weißer Kies
+tile.mfr.decorative.stone.whitepaved.name = Weißer gepflasterter Stein
 
 tile.mfr.pinkslime.block.name = Rosa Schleimblock
 
@@ -146,12 +146,12 @@ tile.mfr.detcord.name = Sprengschnur
 
 tile.mfr.farmland.name = Fruchtbare Erde
 
-tile.mfr.rubberwood.sapling.name = Gummibaumsetzling
+tile.mfr.rubberwood.sapling.normal.name = Gummibaumsetzling
 tile.mfr.rubberwood.sapling.sacred.name = Heiliger Gummibaumsetzling
 tile.mfr.rubberwood.sapling.mega.name = Mega-Gummibaumsetzling
 tile.mfr.rubberwood.sapling.massive.name = Heiliger Gummibaumsetzling
 tile.mfr.rubberwood.log.name = Gummibaumholz
-tile.mfr.rubberwood.leaves.name = Gummibaumblätter
+tile.mfr.rubberwood.leaves.normal.name = Gummibaumblätter
 tile.mfr.rubberwood.leaves.dry.name = Trockene Gummibaumblätter
 
 tile.mfr.rail.cargo.dropoff.name = Entladungsgleis
@@ -168,7 +168,7 @@ tile.mfr.cable.plastic.name = Plastikrohr
 tile.mfr.rednet.logic.name = Programmierbarer RedNet-Controller
 tile.mfr.rednet.panel.historian.name = Graph
 
-tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.machine = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Gehäuse für den Programmierbaren RedNet-Controller
 
 tile.mfr.tank.name = Plastiktank

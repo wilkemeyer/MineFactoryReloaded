@@ -104,7 +104,7 @@ tile.mfr.road.light.on.name = Luce stradale
 tile.mfr.road.light.inverted.off.name = Luce stradale (invertito)
 tile.mfr.road.light.inverted.on.name = Luce stradale (invertito)
 
-tile.mfr.plastic.name = Blocco di plastica
+tile.mfr.plastic.plain.name = Blocco di plastica
 
 tile.mfr.decorative.brick.ice.name = Mattoni di ghiaccio
 tile.mfr.decorative.brick.glowstone.name = Mattoni di luminite
@@ -112,29 +112,29 @@ tile.mfr.decorative.brick.lapis.name = Mattoni di lapislazzuli
 tile.mfr.decorative.brick.obsidian.name = Mattoni di ossidiana
 tile.mfr.decorative.brick.pavedstone.name = Mattoni di strada lastricata
 tile.mfr.decorative.brick.snow.name = Mattoni di neve
-tile.mfr.decorative.brick.ice_large.name = Ghiaccio concio
-tile.mfr.decorative.brick.glowstone_large.name = Luminite concia
-tile.mfr.decorative.brick.lapis_large.name = Lapislazzuli conci
-tile.mfr.decorative.brick.obsidian_large.name = Ossidiana concia
-tile.mfr.decorative.brick.pavedstone_large.name = Strada lastricata concia
-tile.mfr.decorative.brick.snow_large.name = Neve concia
-tile.mfr.decorative.brick.meat.raw.name = Blocco di carne cruda
-tile.mfr.decorative.brick.meat.cooked.name = Blocco di carne cotta
-tile.mfr.decorative.brick.brick_large.name = Mattoni conci
-tile.mfr.decorative.brick.sugar_charcoal.name = Blocco di carbonella di zucchero
+tile.mfr.decorative.brick.icelarge.name = Ghiaccio concio
+tile.mfr.decorative.brick.glowstonelarge.name = Luminite concia
+tile.mfr.decorative.brick.lapislarge.name = Lapislazzuli conci
+tile.mfr.decorative.brick.obsidianlarge.name = Ossidiana concia
+tile.mfr.decorative.brick.pavedstonelarge.name = Strada lastricata concia
+tile.mfr.decorative.brick.snowlarge.name = Neve concia
+tile.mfr.decorative.brick.meatraw.name = Blocco di carne cruda
+tile.mfr.decorative.brick.meatcooked.name = Blocco di carne cotta
+tile.mfr.decorative.brick.bricklarge.name = Mattoni conci
+tile.mfr.decorative.brick.sugarcharcoal.name = Blocco di carbonella di zucchero
 
-tile.mfr.decorative.stone.black.smooth.name = Roccianera
-tile.mfr.decorative.stone.black.cobble.name = Pietramenero
-tile.mfr.decorative.stone.black.brick.small.name = Mattoni di pietranera
-tile.mfr.decorative.stone.black.brick.large.name = Pietranera concia
-tile.mfr.decorative.stone.black.gravel.name = Ghiaia di pietranera
-tile.mfr.decorative.stone.black.paved.name = Pietranera lastricata
-tile.mfr.decorative.stone.white.smooth.name = Rocciabianca
-tile.mfr.decorative.stone.white.cobble.name = Pietramebianco
-tile.mfr.decorative.stone.white.brick.small.name = Mattoni di pietrabianca
-tile.mfr.decorative.stone.white.brick.large.name = Pietrabianca concia
-tile.mfr.decorative.stone.white.gravel.name = Ghiaia di pietrabianca
-tile.mfr.decorative.stone.white.paved.name = Pietrabianca lastricata
+tile.mfr.decorative.stone.blacksmooth.name = Roccianera
+tile.mfr.decorative.stone.blackcobble.name = Pietramenero
+tile.mfr.decorative.stone.blackbricksmall.name = Mattoni di pietranera
+tile.mfr.decorative.stone.blackbricklarge.name = Pietranera concia
+tile.mfr.decorative.stone.blackgravel.name = Ghiaia di pietranera
+tile.mfr.decorative.stone.blackpaved.name = Pietranera lastricata
+tile.mfr.decorative.stone.whitesmooth.name = Rocciabianca
+tile.mfr.decorative.stone.whitecobble.name = Pietramebianco
+tile.mfr.decorative.stone.whitebricksmall.name = Mattoni di pietrabianca
+tile.mfr.decorative.stone.whitebricklarge.name = Pietrabianca concia
+tile.mfr.decorative.stone.whitegravel.name = Ghiaia di pietrabianca
+tile.mfr.decorative.stone.whitepaved.name = Pietrabianca lastricata
 
 tile.mfr.pinkslime.block.name = Blocco di gelatina rosa
 
@@ -146,12 +146,12 @@ tile.mfr.detcord.name = Filo detonante
 
 tile.mfr.farmland.name = Terreno fertile
 
-tile.mfr.rubberwood.sapling.name = Arboscello della gomma
+tile.mfr.rubberwood.sapling.normal.name = Arboscello della gomma
 tile.mfr.rubberwood.sapling.sacred.name = Arboscello della gomma sacro
 tile.mfr.rubberwood.sapling.mega.name = Mega arboscello della gomma
 tile.mfr.rubberwood.sapling.massive.name = Arboscello della gomma sacro
 tile.mfr.rubberwood.log.name = Legno della gomma
-tile.mfr.rubberwood.leaves.name = Foglie della gomma
+tile.mfr.rubberwood.leaves.normal.name = Foglie della gomma
 tile.mfr.rubberwood.leaves.dry.name = Foglie della gomma secche
 
 tile.mfr.rail.cargo.dropoff.name = Rotaia di sbarco per merci
@@ -168,7 +168,7 @@ tile.mfr.cable.plastic.name = Tubo di plastica
 tile.mfr.rednet.logic.name = Regolatrice programmabile RedNet
 tile.mfr.rednet.panel.historian.name = Storico RedNet
 
-tile.mfr.machineblock = item.mfr.machineblock
+tile.mfr.machineblock.machine = item.mfr.machineblock
 tile.mfr.machineblock.prc.name = Custodia per regolatrice programmabile RedNet
 
 tile.mfr.tank.name = Serbatoio di plastica

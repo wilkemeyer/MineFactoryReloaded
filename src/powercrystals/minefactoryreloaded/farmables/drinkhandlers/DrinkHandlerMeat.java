@@ -1,19 +1,22 @@
 package powercrystals.minefactoryreloaded.farmables.drinkhandlers;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
+import net.minecraftforge.fluids.FluidStack;
 import powercrystals.minefactoryreloaded.api.ILiquidDrinkHandler;
 
-public class DrinkHandlerMeat implements ILiquidDrinkHandler
-{
+public class DrinkHandlerMeat implements ILiquidDrinkHandler {
+
 	@Override
-	public void onDrink(EntityLivingBase player)
-	{
-		player.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 5 * 20, 2));
-		player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 8 * 20, 0));
-		player.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 15 * 20, 2));
-		player.addPotionEffect(new PotionEffect(Potion.hunger.id, 6 * 20, 0));
+	public void onDrink(EntityLivingBase player, FluidStack fluid) {
+
+		player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 5 * 20, 2));
+		player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 8 * 20, 0));
+		player.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 15 * 20, 2));
+		player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 6 * 20, 0));
 	}
+
 }

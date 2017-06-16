@@ -1,0 +1,71 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "conveyor": "minefactoryreloaded:blocks/tile.mfr.conveyor.base"
+        },
+        "model": "minefactoryreloaded:conveyor"
+    },
+    "variants": {
+        "direction": {
+            "south": {
+            },
+            "west": {
+                "y": 90
+            },
+            "north": {
+                "y": 180
+            },
+            "east": {
+                "y": 270
+            },
+            "ascending_south": {
+                "model": "minefactoryreloaded:conveyor_ascending"
+            },
+            "ascending_west": {
+                "model": "minefactoryreloaded:conveyor_ascending",
+                "y": 90
+            },
+            "ascending_north": {
+                "model": "minefactoryreloaded:conveyor_ascending",
+                "y": 180
+            },
+            "ascending_east": {
+                "model": "minefactoryreloaded:conveyor_ascending",
+                "y": 270
+            },
+            "descending_south": {
+                "model": "minefactoryreloaded:conveyor_descending"
+            },
+            "descending_west": {
+                "model": "minefactoryreloaded:conveyor_descending",
+                "y": 90
+            },
+            "descending_north": {
+                "model": "minefactoryreloaded:conveyor_descending",
+                "y": 180
+            },
+            "descending_east": {
+                "model": "minefactoryreloaded:conveyor_descending",
+                "y": 270
+            }
+        },
+        "speed": {
+            "stopped": {
+                "textures": {
+                    "overlay": "minefactoryreloaded:blocks/tile.mfr.conveyor.overlay.stopped"
+                }
+            },
+            "slow": {
+                "textures": {
+                    "overlay": "minefactoryreloaded:blocks/tile.mfr.conveyor.overlay"
+                }
+            },
+            "fast": {
+                "textures": {
+                    "overlay": "minefactoryreloaded:blocks/tile.mfr.conveyor.overlay.fast"
+                }
+            }
+        }
+    }
+}

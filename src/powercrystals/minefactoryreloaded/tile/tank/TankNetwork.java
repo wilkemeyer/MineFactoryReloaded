@@ -1,14 +1,15 @@
 package powercrystals.minefactoryreloaded.tile.tank;
 
 import cofh.lib.util.helpers.FluidHelper;
-import cofh.lib.util.position.BlockPosition;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.LinkedHashSet;
 
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import powercrystals.minefactoryreloaded.core.IDelayedValidate;
+import powercrystals.minefactoryreloaded.core.MFRUtil;
 import powercrystals.minefactoryreloaded.net.ConnectionHandler;
 
 public class TankNetwork implements IDelayedValidate {
@@ -66,21 +67,18 @@ public class TankNetwork implements IDelayedValidate {
 
 		LinkedHashSet<TileEntityTank> toCheck = new LinkedHashSet<TileEntityTank>();
 		LinkedHashSet<TileEntityTank> checked = new LinkedHashSet<TileEntityTank>();
-		BlockPosition bp = new BlockPosition(0, 0, 0);
-		ForgeDirection[] dir = ForgeDirection.VALID_DIRECTIONS;
+		BlockPos bp = new BlockPos(0, 0, 0);
+		EnumFacing[] dir = EnumFacing.VALUES;
 		toCheck.add(main);
 		checked.add(main);
 		while (!toCheck.isEmpty()) {
 			main = toCheck.iterator().next();
 			addNode(main);
-			World world = main.getWorldObj();
+			World world = main.getWorld();
 			for (int i = 6; i-- > 0;) {
-				bp.x = main.xCoord;
-				bp.y = main.yCoord;
-				bp.z = main.zCoord;
-				bp.step(dir[i]);
-				if (world.blockExists(bp.x, bp.y, bp.z)) {
-					TileEntityTank te = bp.getTileEntity(world, TileEntityTank.class);
+				bp = main.getPos().offset(dir[i]);
+				if (world.isBlockLoaded(bp)) {
+					TileEntityTank te = MFRUtil.getTile(world, bp, TileEntityTank.class);
 					if (te != null) {
 						if (main.isInterfacing(dir[i]) && !checked.contains(te))
 							toCheck.add(te);
@@ -111,7 +109,7 @@ public class TankNetwork implements IDelayedValidate {
 
 		for (TileEntityTank node : nodeSet) {
 			node.markDirty();
-			node.getWorldObj().markBlockForUpdate(node.xCoord, node.yCoord, node.zCoord);
+			MFRUtil.notifyBlockUpdate(node.getWorld(), node.getPos());
 		}
 	}
 

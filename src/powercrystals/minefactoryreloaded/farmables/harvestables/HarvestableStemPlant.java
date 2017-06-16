@@ -1,6 +1,7 @@
 package powercrystals.minefactoryreloaded.farmables.harvestables;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.math.BlockPos;
 
 public class HarvestableStemPlant extends HarvestableGourd
 {
@@ -13,8 +14,8 @@ public class HarvestableStemPlant extends HarvestableGourd
 	}
 
 	@Override
-	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> s, int x, int y, int z)
+	public boolean canBeHarvested(net.minecraft.world.World world, java.util.Map<String, Boolean> s, BlockPos pos)
 	{
-		return world.getBlock(x, y, z).equals(_fruit);
+		return world.getBlockState(pos).getBlock().equals(_fruit);
 	}
 }

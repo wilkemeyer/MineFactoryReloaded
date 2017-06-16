@@ -1,9 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
-import cofh.core.util.fluid.FluidTankAdv;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
+import cofh.core.fluid.FluidTankCore;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -11,16 +8,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.api.IMobSpawnHandler;
-import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoSpawner;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -30,7 +29,9 @@ import powercrystals.minefactoryreloaded.setup.MFRConfig;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
-public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements ITankContainerBucketable {
+import javax.annotation.Nullable;
+
+public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 
 	protected static final int _spawnRange = 4;
 
@@ -44,8 +45,8 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		super(Machine.AutoSpawner);
 		setManageSolids(true);
 		createHAM(this, _spawnRange, 0, 2, false);
-		_areaManager.setOverrideDirection(ForgeDirection.UP);
-		_tanks[0].setLock(FluidRegistry.getFluid("mobessence"));
+		_areaManager.setOverrideDirection(EnumFacing.UP);
+		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
 	}
 
 	public boolean getSpawnExact() {
@@ -89,13 +90,21 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 		if (e instanceof EntityLiving) {
 			EntityLiving el = (EntityLiving) e;
+
 			int t = Math.abs(el.experienceValue) + 1;
 			r += t + t / 3;
 
-			ItemStack[] aitemstack = el.getLastActiveItems();
-			for (int j = 0; j < aitemstack.length; ++j)
-				if (aitemstack[j] != null && el.equipmentDropChances[j] <= 1.0F)
+			for (int j = 0; j < el.inventoryArmor.length; ++j) {
+				if (el.inventoryArmor[j] != null && el.inventoryArmorDropChances[j] <= 1.0F) {
 					r += 1 + 4;
+				}
+			}
+
+			for (int k = 0; k < el.inventoryHands.length; ++k) {
+				if (el.inventoryHands[k] != null && el.inventoryHandsDropChances[k] <= 1.0F) {
+					r += 1 + 4;
+				}
+			}
 
 			r = Math.max(r, 4);
 		}
@@ -107,7 +116,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	protected boolean activateMachine() {
 
 		ItemStack item = getStackInSlot(0);
-		if (item == null || !canInsertItem(0, item, 6)) {
+		if (item == null || !canInsertItem(0, item, null)) {
 			setWorkDone(0);
 			setIdleTicks(getIdleTicksMax());
 			return false;
@@ -117,8 +126,9 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		if (_spawn == null) {
 			String entityID = itemTag.getString("id");
 			boolean isBlackListed = MFRRegistry.getAutoSpawnerBlacklist().contains(entityID);
-			blackList: if (!isBlackListed) {
-				Class<?> e = (Class<?>) EntityList.stringToClassMapping.get(entityID);
+			blackList:
+			if (!isBlackListed) {
+				Class<?> e = (Class<?>) EntityList.NAME_TO_CLASS.get(entityID);
 				if (e == null) {
 					isBlackListed = true;
 					break blackList;
@@ -145,11 +155,11 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 			EntityLivingBase spawnedLiving = (EntityLivingBase) spawnedEntity;
 
 			if (_spawnExact) {
-				NBTTagCompound tag = (NBTTagCompound) itemTag.copy();
+				NBTTagCompound tag = itemTag.copy();
 				spawnedLiving.readEntityFromNBT(tag);
-				for (int i = 0; i < 5; ++i) {
+				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 					if (spawnedLiving instanceof EntityLiving)
-						((EntityLiving) spawnedLiving).setEquipmentDropChance(i, Float.NEGATIVE_INFINITY);
+						((EntityLiving) spawnedLiving).setDropChance(slot, Float.NEGATIVE_INFINITY);
 				}
 			}
 
@@ -157,7 +167,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 			if (!_spawnExact) {
 				if (spawnedLiving instanceof EntityLiving)
-					((EntityLiving) spawnedLiving).onSpawnWithEgg(null);
+					((EntityLiving) spawnedLiving).onInitialSpawn(worldObj.getDifficultyForLocation(pos), null);
 				if (handler != null)
 					handler.onMobSpawn(spawnedLiving);
 			} else {
@@ -169,15 +179,14 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 		}
 
 		if (getWorkDone() < getWorkMax()) {
-			if (drain(_tanks[0], 10, false) == 10) {
-				drain(_tanks[0], 10, true);
+			if (drain(10, false, _tanks[0]) == 10) {
+				drain(10, true, _tanks[0]);
 				setWorkDone(getWorkDone() + 1);
 				return true;
 			} else {
 				return false;
 			}
-		}
-		else {
+		} else {
 			Entity spawnedEntity = _spawn;
 			_spawn = null;
 
@@ -187,21 +196,22 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 			EntityLivingBase spawnedLiving = (EntityLivingBase) spawnedEntity;
 
-			double x = xCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
-			double y = yCoord + worldObj.rand.nextInt(3) - 1;
-			double z = zCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
+			double x = pos.getX() + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
+			double y = pos.getY() + worldObj.rand.nextInt(3) - 1;
+			double z = pos.getZ() + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * _spawnRange;
 
 			spawnedLiving.setLocationAndAngles(x, y, z, worldObj.rand.nextFloat() * 360.0F, 0.0F);
 
-			if (!worldObj.checkNoEntityCollision(spawnedLiving.boundingBox) ||
-					!worldObj.getCollidingBoundingBoxes(spawnedLiving, spawnedLiving.boundingBox).isEmpty() ||
-					(worldObj.isAnyLiquid(spawnedLiving.boundingBox) != (spawnedLiving instanceof EntityWaterMob))) {
+			if (!worldObj.checkNoEntityCollision(spawnedLiving.getEntityBoundingBox()) ||
+					!worldObj.getCollisionBoxes(spawnedLiving, spawnedLiving.getEntityBoundingBox()).isEmpty() ||
+					(worldObj.containsAnyLiquid(spawnedLiving.getEntityBoundingBox()) != (spawnedLiving instanceof EntityWaterMob))) {
+				// TODO: mob valid spawn location logic shifted to mob, but includes random shit too. need to review the logic
 				setIdleTicks(10);
 				return false;
 			}
 
 			worldObj.spawnEntityInWorld(spawnedLiving);
-			worldObj.playAuxSFX(2004, this.xCoord, this.yCoord, this.zCoord, 0);
+			worldObj.playEvent(2004, pos, 0);
 
 			if (spawnedLiving instanceof EntityLiving) {
 				((EntityLiving) spawnedLiving).spawnExplosionParticle();
@@ -252,37 +262,13 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	protected FluidTankAdv[] createTanks() {
+	protected FluidTankCore[] createTanks() {
 
-		return new FluidTankAdv[] { new FluidTankAdv(BUCKET_VOLUME * 4) };
+		return new FluidTankCore[] { new FluidTankCore(BUCKET_VOLUME * 4) };
 	}
 
 	@Override
-	public boolean allowBucketFill(ItemStack stack) {
-
-		return true;
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-
-		return fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-
-		return drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-
-		return drain(resource, doDrain);
-	}
-
-	@Override
-	public boolean canInsertItem(int slot, ItemStack itemstack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemstack, EnumFacing side) {
 
 		return ItemSafariNet.isSafariNet(itemstack) &&
 				!ItemSafariNet.isSingleUse(itemstack) &&
@@ -306,7 +292,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 
 		super.writeItemNBT(tag);
 		if (_spawnExact)
-			tag.setBoolean("spawnExact", _spawnExact);
+			tag.setBoolean("spawnExact", true);
 	}
 
 	@Override
@@ -317,14 +303,29 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered implements I
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public boolean allowBucketFill(EnumFacing facing, ItemStack stack) {
 
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+	protected boolean canDrainTank(EnumFacing facing, int index) {
 
 		return false;
 	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, FluidStack resource, boolean doDrain) {
+
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public FluidStack drain(EnumFacing facing, int maxDrain, boolean doDrain) {
+
+		return null;
+	}
+
 }
