@@ -2,7 +2,7 @@ package powercrystals.minefactoryreloaded.core;
 
 import buildcraft.api.transport.IPipeTile;
 
-import cofh.api.tileentity.IItemDuct;
+//import cofh.api.tileentity.IItemDuct;
 import cofh.asm.relauncher.Strippable;
 import cofh.lib.inventory.IInventoryManager;
 import cofh.lib.inventory.InventoryManager;
@@ -34,17 +34,17 @@ public abstract class UtilInventory
 	 * Searches from position x, y, z, checking for TE-compatible pipes in all directions.
 	 *
 	 * @return Map<EnumFacing, IItemDuct> specifying all found pipes and their directions.
-	 */
+	 *//*
 	public static Map<EnumFacing, IItemDuct> findConduits(World world, BlockPos pos)
 	{
 	return findConduits(world, pos, EnumFacing.VALUES);
-	}
+	}//*/
 
 	/**
 	 * Searches from position x, y, z, checking for TE-compatible pipes in each directiontocheck.
 	 *
 	 * @return Map<EnumFacing, IItemDuct> specifying all found pipes and their directions.
-	 */
+	 *//*
 	public static Map<EnumFacing, IItemDuct> findConduits(World world, BlockPos pos,
 			EnumFacing[] directionstocheck)
 	{
@@ -58,7 +58,7 @@ public abstract class UtilInventory
 			}
 		}
 		return pipes;
-	}
+	}//*/
 
 	/**
 	 * Searches from position x, y, z, checking for BC-compatible pipes in all directions.
@@ -222,7 +222,7 @@ public abstract class UtilInventory
 		if (world.isRemote | stack == null || stack.stackSize == 0 || stack.getItem() == null)
 			return null;
 
-		stack = stack.copy();
+		stack = stack.copy();/*
 		// (0.5) Try to put stack in conduits that are in valid directions
 		for (Entry<EnumFacing, IItemDuct> pipe : findConduits(world, pos, dropdirections).entrySet())
 		{
@@ -232,7 +232,7 @@ public abstract class UtilInventory
 			{
 				return null;
 			}
-		}
+		}//*/
 		// (1) Try to put stack in pipes that are in valid directions
 		if (handlePipeTiles) {
 			stack = handleIPipeTile(world, pos, dropdirections, stack);
