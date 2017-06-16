@@ -115,9 +115,9 @@ artifacts {
 
 // Configure an upload task.
 curseforge {
-    apiKey = project.hasProperty('CF_API_TOKEN') ? project.CF_API_TOKEN : '0'
+    apiKey = project.hasProperty('CF_API_TOKEN') ? project.CF_API_TOKEN : ''
     project {
-        id = project.hasProperty('CF_MOD_ID') ? project.CF_MOD_ID : -1
+        id = project.hasProperty('CF_MOD_ID') ? project.CF_MOD_ID : ''
         changelog = ''
 
         mainArtifact(jar) {
