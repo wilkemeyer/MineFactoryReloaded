@@ -14,6 +14,9 @@
 	<property name="verclass.dir" value="${src.dir}/${class.pckg}" />
 	<property name="verclass.name" value="MineFactoryReloadedCore.java"/>
 
+	<!-- BON version -->
+	<property name="bon.verison" value="1.6"/>
+	
 	<!-- Forge version -->
 	<property name="mc.version"  value="1.10.2"/>
 	<property name="forge.major" value="12"/>
@@ -39,7 +42,7 @@
 	<property name="forge.stsh" value="${build.dir}/.gradle/caches/minecraft/net/minecraftforge/forge/${forge.version}"/>
 	<property name="mcp.stsh" value="${mcp.dir}/mcp_snapshot/${mcp.mapping}"/>
 	<property name="forge.jar" value="${forge.stsh}/forgeSrc-${forge.version}.jar"/>
-	<property name="reobf.cmd" value="${download.dir}/bon5.jar"/>
+	<property name="reobf.cmd" value="${download.dir}/bon${bon.verison}.jar"/>
 	<property name="forge.url" value="http://files.minecraftforge.net/maven/net/minecraftforge/forge/${forge.version}/forge-${forge.version}-mdk.zip"/>
 
 	<!-- Classpaths -->
@@ -311,7 +314,7 @@
 
 	<target name="setup-bon" depends="properties" unless="bon.exists">
 		<echo message="Downloading BON..."/>
-		<get src="https://github.com/skyboy/bearded-octo-nemesis/releases/download/1.5/BON.jar" dest="${reobf.cmd}"/>
+		<get src="https://github.com/skyboy/bearded-octo-nemesis/releases/download/${bon.verison}/BON.jar" dest="${reobf.cmd}"/>
 	</target>
 
 	<target name="get-cf-token" depends="cf-token-there" unless="curse.maven.token">
