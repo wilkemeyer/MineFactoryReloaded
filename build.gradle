@@ -15,9 +15,6 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
-plugins {
-  id 'com.matthewprenger.cursegradle' version '1.0.8'
-}
 
 // We apply the 'forge' plugin, so ForgeGradle can do it's stuff.
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -114,20 +111,34 @@ artifacts {
 }
 
 // Configure an upload task.
-curseforge {
-    apiKey = project.hasProperty('CF_API_TOKEN') ? project.CF_API_TOKEN : ''
-    project {
-        id = project.hasProperty('CF_MOD_ID') ? project.CF_MOD_ID : ''
-        changelog = ''
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (project.hasProperty("local_maven")) {
+                repository(url: "file://${local_maven}")
+                pom {
+                    groupId = project.group
+                    // Force the maven upload to use the <mcversion>-<version> syntax preferred at files
+                    artifactId = project.archivesBaseName
+                    project {
+                        name project.archivesBaseName
+                        packaging 'jar'
+                        description 'MinefactoryReloaded'
+                        url 'https://github.com/skyboy/MinefactoryReloaded'
 
-        mainArtifact(jar) {
-			displayName = 'MineFactoryReloaded-[${project.minecraft.version}]${mod_version}-' + (System.getenv("BUILD_NUMBER") ?: "CUSTOM_BUILD")
-			releaseType = 'alpha'
-			relations {
-				requiredLibrary 'cofhcore'
-				requiredLibrary 'cofhlib'
-				requiredLibrary 'codechickenlib'
-			}
-		}
-    }
+                        scm {
+                            url 'https://github.com/skyboy/MinefactoryReloaded'
+                            connection 'scm:git:git://github.com/skyboy/MinefactoryReloaded.git'
+                            developerConnection 'scm:git:git@github.com:skyboy/MinefactoryReloaded.git'
+                        }
+
+                        issueManagement {
+                            system 'github'
+                            url 'https://github.com/skyboy/MinefactoryReloaded/issues'
+                        }
+                    }
+                }
+            }
+        }
+	}
 }
