@@ -16,7 +16,7 @@
 
 	<!-- BON version -->
 	<property name="bon.verison" value="1.6"/>
-	
+
 	<!-- Forge version -->
 	<property name="mc.version"  value="1.10.2"/>
 	<property name="forge.major" value="12"/>
@@ -148,7 +148,7 @@
 		<sequential>
 			<copy todir="${classes.dir}" preservelastmodified="true">
 				<fileset dir="@{classes}">
-					<include name="**/*.class"/>
+					<include name="powercrystals/**/*.class"/>
 				</fileset>
 				<fileset dir="${resources.dir}"/>
 			</copy>
