@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.setup;
 
+import cofh.lib.util.RegistryUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
@@ -11,8 +12,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ExistingSubstitutionException;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
 import powercrystals.minefactoryreloaded.block.fluid.BlockExplodingFluid;
@@ -98,11 +97,7 @@ public class MFRFluids {
 		MFRRegistry.registerBlock(steamFluid, new ItemBlock(steamFluid));
 
 		if (MFRConfig.vanillaOverrideMilkBucket.getBoolean(true)) {
-			try {
-				GameRegistry.addSubstitutionAlias("minecraft:milk_bucket", GameRegistry.Type.ITEM, new ItemMFRBucketMilk());
-			} catch (ExistingSubstitutionException e) {
-				MineFactoryReloadedCore.log().error("Failed replacing milk bucket. Another mod must have already replaced it");
-			}
+			RegistryUtils.overwriteEntry(Item.REGISTRY, "minecraft:milk_bucket", new ItemMFRBucketMilk());
 		}
 	}
 
