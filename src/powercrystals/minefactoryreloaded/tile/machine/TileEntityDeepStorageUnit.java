@@ -1,5 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -9,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiDeepStorageUnit;
@@ -364,4 +367,26 @@ public class TileEntityDeepStorageUnit extends TileEntityFactoryInventory implem
 		return Integer.MAX_VALUE;
 	}
 
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new InvWrapper(this) {
+
+				@Override
+				public ItemStack getStackInSlot(int slot) {
+
+					return slot < 2 ? super.getStackInSlot(slot) : getStoredItemType();
+				}
+			});
+		}
+
+		return super.getCapability(capability, facing);
+	}
 }

@@ -68,8 +68,7 @@ public class TileEntityBlockPlacer extends TileEntityFactoryPowered {
 				int j1 = item.getMetadata(stack.getItemDamage());
 				FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((WorldServer) worldObj);
 				IBlockState placementState = block.getStateForPlacement(worldObj, bp, EnumFacing.DOWN, 0, 0, 0, j1, fakePlayer, stack);
-				if (worldObj.setBlockState(bp, placementState, 3)) {
-					block.onBlockPlacedBy(worldObj, bp, placementState, fakePlayer, stack);
+				if (item.placeBlockAt(stack, fakePlayer, worldObj, bp, EnumFacing.DOWN, 0, 0, 0, placementState)) {
 					if (MFRConfig.playSounds.getBoolean(true)) {
 						SoundType soundType = block.getSoundType(placementState, worldObj, bp, null);
 						worldObj.playSound(null, bp, soundType.getStepSound(), SoundCategory.BLOCKS,
