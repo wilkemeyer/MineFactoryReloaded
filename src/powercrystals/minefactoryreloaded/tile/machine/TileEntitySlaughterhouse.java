@@ -24,7 +24,7 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		_entityEventController.setAllowItemDrops(false);
 		_entityEventController.setConsumeXP(false);
 		_tanks[0].setLock(FluidRegistry.getFluid("meat"));
-		_tanks[1].setLock(FluidRegistry.getFluid("pinkslime"));
+		_tanks[1].setLock(FluidRegistry.getFluid("pink_slime"));
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 				if (_rand.nextInt(8) != 0)
 					fillTank(_tanks[0], "meat", massFound);
 				else
-					fillTank(_tanks[1], "pinkslime", massFound);
+					fillTank(_tanks[1], "pink_slime", massFound);
 				setIdleTicks(10);
 			}
 			else
