@@ -127,8 +127,6 @@ public class MineFactoryReloadedCore extends BaseMod {
 
 		Vanilla.registerOredict();
 
-		loadLang();
-
 		Blocks.FIRE.setFireInfo(MFRFluids.biofuelLiquid, 300, 30);
 
 		//TODO remove once mods actually switch over to fluid caps instead of IFluidContainerItem

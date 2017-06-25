@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 tile.mfr.machine.planter.name = 파종기
 tile.mfr.machine.fisher.name = 자동 낚시
 tile.mfr.machine.harvester.name = 작물 수확기

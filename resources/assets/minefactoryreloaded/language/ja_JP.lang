@@ -1,4 +1,5 @@
-﻿tile.mfr.machine.planter.name = プランター
+﻿#PARSE_ESCAPES
+tile.mfr.machine.planter.name = プランター
 tile.mfr.machine.fisher.name = フィッシャー
 tile.mfr.machine.harvester.name = ハーヴェスター
 tile.mfr.machine.rancher.name = ランチャー
