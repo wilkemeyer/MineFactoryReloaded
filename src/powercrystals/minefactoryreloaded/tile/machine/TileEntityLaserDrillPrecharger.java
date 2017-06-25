@@ -4,13 +4,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 
-import net.minecraft.util.math.BlockPos;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserSource;
 import powercrystals.minefactoryreloaded.api.IFactoryLaserTarget;
 import powercrystals.minefactoryreloaded.block.BlockFakeLaser;

@@ -2,9 +2,9 @@ package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
 
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityLiquidGenerator;
 
@@ -16,7 +16,7 @@ public class TileEntitySteamTurbine extends TileEntityLiquidGenerator
 	public TileEntitySteamTurbine()
 	{
 		super(Machine.SteamTurbine, liquidConsumedPerTick, ticksBetweenConsumption);
-		_tanks[0].setLock(FluidRegistry.getFluid("steam"));
+		_tanks[0].setLock(MFRFluids.getFluid("steam"));
 	}
 	
 	@Override

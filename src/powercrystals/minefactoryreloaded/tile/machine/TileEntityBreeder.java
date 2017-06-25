@@ -12,7 +12,6 @@ import net.minecraft.entity.ai.EntityAIVillagerMate;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
