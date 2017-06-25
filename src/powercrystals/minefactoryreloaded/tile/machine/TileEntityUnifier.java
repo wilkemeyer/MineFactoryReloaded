@@ -66,7 +66,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory {
 	private void unifyInventory() {
 
 		if (worldObj != null && !worldObj.isRemote) {
-			ItemStack output = null;
+			ItemStack output;
 			if (_inventory[0] != null) {
 				List<String> names = OreDictionaryArbiter.getAllOreNames(_inventory[0]);
 				// tracker does *not* also check the wildcard meta,
@@ -82,7 +82,7 @@ public class TileEntityUnifier extends TileEntityFactoryInventory {
 					output.stackSize = _inventory[0].stackSize;
 				}
 
-				if (output != null && _inventory[0].getItem().equals(output.getItem()))
+				if (_inventory[0].getItem().equals(output.getItem()))
 					output = _inventory[0].copy();
 
 				moveItemStack(output);
