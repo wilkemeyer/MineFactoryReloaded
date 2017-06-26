@@ -3,6 +3,12 @@ package powercrystals.minefactoryreloaded.setup.recipe;
 import static cofh.lib.util.helpers.ItemHelper.*;
 import static powercrystals.minefactoryreloaded.setup.MFRThings.*;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.MissingModsException;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -25,41 +31,39 @@ public class EnderIO extends Vanilla {
 
 	private static final String EIO = "EnderIO";
 
-	String redstone = "dustRedstone";
+	private String redstone = "dustRedstone";
 
 	/* Items */
-	ItemStack capacitorBasic;
-	ItemStack capacitorDouble;
-	ItemStack capacitorOctadic;
-	ItemStack gear;
-	ItemStack chassis;
-	ItemStack zombieElectrode;
-	ItemStack zombieController;
-	ItemStack frankNZombie;
-	ItemStack enderTransmitter;
-	ItemStack dsAxe;
-	ItemStack dsPick;
-	ItemStack dsSword;
-	ItemStack probe;
-	ItemStack conduitLiquid;
-	ItemStack xpRod;
-	ItemStack soulVial;
-	ItemStack fireWaterBucket;
+	private ItemStack capacitorBasic;
+	private ItemStack capacitorDouble;
+	private ItemStack capacitorOctadic;
+	private ItemStack gear;
+	private ItemStack chassis;
+	private ItemStack zombieElectrode;
+	private ItemStack zombieController;
+	private ItemStack dsAxe;
+	private ItemStack dsPick;
+	private ItemStack dsSword;
+	private ItemStack probe;
+	private ItemStack conduitLiquid;
+	private ItemStack xpRod;
+	private ItemStack soulVial;
+	private ItemStack fireWaterBucket;
 
 	/* Blocks */
-	ItemStack light;
-	ItemStack reservoir;
-	ItemStack dimTrans;
-	ItemStack vacuumChest;
-	ItemStack tank, tankPressurized;
-	ItemStack xpObelisk;
-	ItemStack darkSteelAnvil;
-	ItemStack capBank;
-	ItemStack reinforcedObsidian;
+	private ItemStack light;
+	private ItemStack reservoir;
+	private ItemStack dimTrans;
+	private ItemStack vacuumChest;
+	private ItemStack tank, tankPressurized;
+	private ItemStack xpObelisk;
+	private ItemStack darkSteelAnvil;
+	private ItemStack capBank;
+	private ItemStack reinforcedObsidian;
 
 	/* Machines */
-	ItemStack crafter;
-	ItemStack combustionGen;
+	private ItemStack crafter;
+	private ItemStack combustionGen;
 
 	@Override
 	protected void gatherItems() {
@@ -77,16 +81,14 @@ public class EnderIO extends Vanilla {
 		gear = stackFor("itemMachinePart", 1);
 		zombieElectrode = stackFor("itemFrankenSkull");
 		zombieController = stackFor("itemFrankenSkull", 1);
-		frankNZombie = stackFor("itemFrankenSkull", 2);
-		enderTransmitter = stackFor("itemFrankenSkull", 3);
-		dsAxe = stackFor("item.darkSteel_axe");
-		dsSword = stackFor("item.darkSteel_sword");
-		dsPick = stackFor("item.darkSteel_pickaxe");
+		dsAxe = stackFor("darkSteel_axe");
+		dsSword = stackFor("darkSteel_sword");
+		dsPick = stackFor("darkSteel_pickaxe");
 		probe = stackFor("itemConduitProbe");
 		conduitLiquid = stackFor("itemLiquidConduit");
 		xpRod = stackFor("itemXpTransfer");
 		soulVial = stackFor("itemSoulVessel");
-		fireWaterBucket = stackFor("bucketFire_water");
+		fireWaterBucket = UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, FluidRegistry.getFluid("rocket_fuel"));
 
 		/* Blocks */
 		light = stackForBlock("blockElectricLight", 2);
@@ -97,7 +99,7 @@ public class EnderIO extends Vanilla {
 		tankPressurized = stackForBlock("blockTank", 1);
 		xpObelisk = stackForBlock("blockExperienceObelisk");
 		darkSteelAnvil = stackForBlock("blockDarkSteelAnvil");
-		capBank = stackForBlock("blockCapacitorBank");
+		capBank = stackForBlock("blockCapBank", 2);
 		reinforcedObsidian = stackForBlock("blockReinforcedObsidian");
 
 		/* Machines */
@@ -112,7 +114,7 @@ public class EnderIO extends Vanilla {
 
 	private ItemStack stackFor(String itemName, int damage) {
 
-		return new ItemStack(GameRegistry.findItem(EIO, itemName), 1, damage);
+		return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(EIO, itemName)), 1, damage);
 	}
 
 	private ItemStack stackForBlock(String blockName) {
@@ -122,7 +124,7 @@ public class EnderIO extends Vanilla {
 
 	private ItemStack stackForBlock(String blockName, int damage) {
 
-		return new ItemStack(GameRegistry.findBlock(EIO, blockName), 1, damage);
+		return new ItemStack(Block.REGISTRY.getObject(new ResourceLocation(EIO, blockName)), 1, damage);
 	}
 
 	@Override
@@ -130,7 +132,7 @@ public class EnderIO extends Vanilla {
 
 		String prefix = "ingot";
 
-		registerMachine(Machine.Planter, new Object[] {
+		registerMachine(Machine.Planter,
 				"PTP",
 				"SFS",
 				"OCO",
@@ -139,8 +141,7 @@ public class EnderIO extends Vanilla {
 				'S', Blocks.PISTON,
 				'F', chassis,
 				'O', prefix + "ElectricalSteel",
-				'C', zombieController,
-		});
+				'C', zombieController);
 
 		registerMachine(Machine.Fisher, new Object[] {
 				"PTP",
