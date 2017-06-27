@@ -17,6 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import powercrystals.minefactoryreloaded.block.transport.BlockConveyor;
 import static powercrystals.minefactoryreloaded.block.transport.BlockConveyor.ConveyorDirection.*;
 
@@ -564,5 +568,24 @@ public class TileEntityConveyor extends TileEntityBase
 		if (with == EnumFacing.DOWN & type == PipeType.STRUCTURE)
 			return ConnectOverride.CONNECT;
 		return ConnectOverride.DISCONNECT;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+    	if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		if (facing != null) {
+    			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new SidedInvWrapper(this, facing));
+			} else {
+    			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new InvWrapper(this));
+			}
+		}
+		return super.getCapability(capability, facing);
 	}
 }
