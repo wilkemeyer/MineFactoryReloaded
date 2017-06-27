@@ -50,7 +50,7 @@ public class RanchableMooshroom implements IFactoryRanchable {
 			drops.add(new RanchedItem(Items.MILK_BUCKET));
 			rancher.decrStackSize(bucketIndex, 1);
 		} else if (bowlIndex < 0) {
-			FluidStack soup = FluidRegistry.getFluidStack("mushroomsoup", 1000);
+			FluidStack soup = FluidRegistry.getFluidStack("mushroom_soup", 1000);
 			drops.add(new RanchedItem(soup));
 		}
 
