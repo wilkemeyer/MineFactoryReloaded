@@ -112,7 +112,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered {
 	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
 		if (resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
-				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1)))) {
+				resource.isFluidEqual(FluidRegistry.getFluidStack("pink_slime", 1)))) {
 			return 0;
 		} else {
 			if (drain(2, false, _tanks[0]) == 1) {
