@@ -3,8 +3,6 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cofh.core.util.CoreUtils;
 import cofh.core.fluid.FluidTankCore;
 import cofh.lib.util.helpers.ItemHelper;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

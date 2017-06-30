@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 tile.mfr.machine.planter.name = Sembrador
 tile.mfr.machine.fisher.name = Pescador
 tile.mfr.machine.harvester.name = Cosechador

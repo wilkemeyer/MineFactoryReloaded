@@ -10,16 +10,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiBlockSmasher;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerBlockSmasher;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 import powercrystals.minefactoryreloaded.world.SmashingWorld;
@@ -43,7 +41,7 @@ public class TileEntityBlockSmasher extends TileEntityFactoryPowered {
 
 		super(Machine.BlockSmasher);
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
+		_tanks[0].setLock(MFRFluids.getFluid("mob_essence"));
 	}
 
 	@Override

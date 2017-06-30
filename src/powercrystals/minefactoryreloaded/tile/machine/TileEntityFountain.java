@@ -10,12 +10,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.Area;
@@ -78,7 +76,7 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 				Block block = state.getBlock();
 				if (_reverse) {
 					idleTicks = 10;
-					l2: if (block != null && state.getMaterial().isLiquid())
+					l2: if (state.getMaterial().isLiquid())
 						if (block instanceof IFluidBlock) {
 							IFluidBlock fluidBlock = ((IFluidBlock) block);
 							if (!fluidBlock.canDrain(worldObj, fillPos))
@@ -107,8 +105,8 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 							}
 						}
 				}
-				else if (block == null || block.isReplaceable(worldObj, fillPos)) {
-					if (block != null && state.getMaterial().isLiquid())
+				else if (block.isReplaceable(worldObj, fillPos)) {
+					if (state.getMaterial().isLiquid())
 						if (block instanceof BlockFluidClassic) {
 							if (((BlockFluidClassic) block).isSourceBlock(worldObj, fillPos))
 								break l;
@@ -117,7 +115,14 @@ public class TileEntityFountain extends TileEntityFactoryPowered {
 							if (state.getValue(BlockLiquid.LEVEL) == 0)
 								break l;
 						}
-					if (worldObj.setBlockState(fillPos, getFlowingState(_tanks[0].getFluid()), 11)) {// TODO: when forge supports NBT fluid blocks, adapt this
+					if (_tanks[0].getFluid().getFluid().doesVaporize(_tanks[0].getFluid())) {
+						FluidStack drained = _tanks[0].getFluid().copy();
+						drained.amount = drain(BUCKET_VOLUME, true, _tanks[0]);
+						_tanks[0].getFluid().getFluid().vaporize(null, worldObj, fillPos, drained);
+						setIdleTicks(1);
+						return true;
+					}
+					else if (worldObj.setBlockState(fillPos, getFlowingState(_tanks[0].getFluid()), 11)) {// TODO: when forge supports NBT fluid blocks, adapt this
 						drain(BUCKET_VOLUME, true, _tanks[0]);
 						setIdleTicks(1);
 						return true;

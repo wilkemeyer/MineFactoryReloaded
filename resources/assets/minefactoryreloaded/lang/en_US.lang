@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 tile.mfr.machine.planter.name = Planter
 tile.mfr.machine.fisher.name = Fisher
 tile.mfr.machine.harvester.name = Harvester

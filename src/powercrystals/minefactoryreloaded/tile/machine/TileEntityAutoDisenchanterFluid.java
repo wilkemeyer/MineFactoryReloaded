@@ -3,10 +3,8 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import cofh.core.fluid.FluidTankCore;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -15,7 +13,7 @@ public class TileEntityAutoDisenchanterFluid extends TileEntityAutoDisenchanter 
 
 	public TileEntityAutoDisenchanterFluid() {
 
-		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
+		_tanks[0].setLock(MFRFluids.getFluid("mob_essence"));
 	}
 
 	@Override

@@ -8,10 +8,10 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.core.GrindingDamage;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 
 public class TileEntitySlaughterhouse extends TileEntityGrinder
@@ -23,8 +23,8 @@ public class TileEntitySlaughterhouse extends TileEntityGrinder
 		setManageSolids(false);
 		_entityEventController.setAllowItemDrops(false);
 		_entityEventController.setConsumeXP(false);
-		_tanks[0].setLock(FluidRegistry.getFluid("meat"));
-		_tanks[1].setLock(FluidRegistry.getFluid("pink_slime"));
+		_tanks[0].setLock(MFRFluids.getFluid("meat"));
+		_tanks[1].setLock(MFRFluids.getFluid("pink_slime"));
 	}
 
 	@Override

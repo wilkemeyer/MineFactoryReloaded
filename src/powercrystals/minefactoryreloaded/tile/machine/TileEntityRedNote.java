@@ -1,7 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.BlockNote;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;

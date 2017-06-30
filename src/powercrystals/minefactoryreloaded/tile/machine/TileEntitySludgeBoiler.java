@@ -11,10 +11,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.WeightedRandom;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -42,7 +39,7 @@ public class TileEntitySludgeBoiler extends TileEntityFactoryPowered {
 		setManageSolids(true);
 		_activeSyncTimeout = 5;
 		_rand = new Random();
-		_tanks[0].setLock(FluidRegistry.getFluid("sludge"));
+		_tanks[0].setLock(MFRFluids.getFluid("sludge"));
 	}
 
 	@Override

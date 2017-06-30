@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 tile.mfr.machine.planter.name = Pokládač
 tile.mfr.machine.fisher.name = Rybář
 tile.mfr.machine.harvester.name = Sklízeč

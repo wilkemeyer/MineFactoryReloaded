@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 tile.mfr.machine.planter.name = Magic Planter
 tile.mfr.machine.fisher.name = Magic Fisher
 tile.mfr.machine.harvester.name = Magic Hatchet

@@ -16,7 +16,6 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;

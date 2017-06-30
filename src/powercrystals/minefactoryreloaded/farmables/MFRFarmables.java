@@ -156,9 +156,9 @@ public class MFRFarmables {
 		MFRRegistry.registerLiquidDrinkHandler("sludge", new DrinkHandlerSludge());
 		MFRRegistry.registerLiquidDrinkHandler("mob_essence", new DrinkHandlerMobEssence());
 		MFRRegistry.registerLiquidDrinkHandler("meat", new DrinkHandlerMeat());
-		MFRRegistry.registerLiquidDrinkHandler("pinkslime", new DrinkHandlerPinkSlime());
-		MFRRegistry.registerLiquidDrinkHandler("chocolatemilk", new DrinkHandlerChocolateMilk());
-		MFRRegistry.registerLiquidDrinkHandler("mushroomsoup", new DrinkHandlerMushroomSoup());
+		MFRRegistry.registerLiquidDrinkHandler("pink_slime", new DrinkHandlerPinkSlime());
+		MFRRegistry.registerLiquidDrinkHandler("chocolate_milk", new DrinkHandlerChocolateMilk());
+		MFRRegistry.registerLiquidDrinkHandler("mushroom_soup", new DrinkHandlerMushroomSoup());
 
 		MFRRegistry.registerNeedleAmmoType(needlegunAmmoStandardItem, (INeedleAmmo)needlegunAmmoStandardItem);
 		MFRRegistry.registerNeedleAmmoType(needlegunAmmoPierceItem, (INeedleAmmo)needlegunAmmoPierceItem);

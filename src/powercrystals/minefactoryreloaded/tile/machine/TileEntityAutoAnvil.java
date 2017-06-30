@@ -1,8 +1,6 @@
 package powercrystals.minefactoryreloaded.tile.machine;
 
 import cofh.core.fluid.FluidTankCore;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,13 +17,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import powercrystals.minefactoryreloaded.gui.client.GuiAutoAnvil;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoAnvil;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -43,7 +41,7 @@ public class TileEntityAutoAnvil extends TileEntityFactoryPowered {
 
 		super(Machine.AutoAnvil);
 		setManageSolids(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
+		_tanks[0].setLock(MFRFluids.getFluid("mob_essence"));
 	}
 
 	@Override

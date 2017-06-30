@@ -21,9 +21,7 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import powercrystals.minefactoryreloaded.MFRRegistry;
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
@@ -47,7 +45,7 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 
 	private static Fluid ensureFluid(String name) {
 
-		Fluid fluid = FluidRegistry.getFluid(name);
+		Fluid fluid = MFRFluids.getFluid(name);
 		if (fluid.canBePlacedInWorld())
 			ReflectionHelper.setPrivateValue(Fluid.class, fluid, null, "block");
 		return fluid;
@@ -131,9 +129,9 @@ public class BlockFactoryFluid extends BlockFluidCore implements IRedNetDecorati
 
 	protected void checkCanStay(World world, BlockPos pos, Random rand) {
 
-		/*BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-		l: if (biome != null && biome.getFloatTemperature() > 1.9f)//*/
-		l: if (BiomeDictionary.isBiomeOfType(world.getBiome(pos), BiomeDictionary.Type.NETHER))
+		if (this == MFRFluids.steamFluid)
+			return;
+		l: if (world.provider.doesWaterVaporize())
 		{
 			if (!isSourceBlock(world, pos)) {
 				if (world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2))

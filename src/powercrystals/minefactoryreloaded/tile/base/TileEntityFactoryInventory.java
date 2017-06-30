@@ -25,6 +25,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import powercrystals.minefactoryreloaded.core.ITankContainerBucketable;
 import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -652,6 +656,9 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return manageFluids();
 
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return manageSolids();
+
 		return super.hasCapability(capability, facing);
 	}
 
@@ -662,6 +669,15 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 			if (manageFluids())
 				return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FactoryFluidHandler(this, facing));
 			return null; // no external overriding via events
+		} else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			if (manageSolids()) {
+				if (facing != null) {
+					return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new SidedInvWrapper(this, facing));
+				} else {
+					return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new InvWrapper(this));
+				}
+			}
+			return null;
 		}
 
 		return super.getCapability(capability, facing);
@@ -706,5 +722,4 @@ public abstract class TileEntityFactoryInventory extends TileEntityFactory imple
 		}
 
 	}
-
 }

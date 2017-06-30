@@ -34,6 +34,7 @@ import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryPowered;
 import powercrystals.minefactoryreloaded.gui.container.ContainerFactoryPowered;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -62,7 +63,7 @@ public class TileEntityGrinder extends TileEntityFactoryPowered {
 		_damageSource = new GrindingDamage();
 		_entityEventController.setAllowItemDrops(false);
 		_entityEventController.setConsumeXP(true);
-		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
+		_tanks[0].setLock(MFRFluids.getFluid("mob_essence"));
 	}
 
 	@Override

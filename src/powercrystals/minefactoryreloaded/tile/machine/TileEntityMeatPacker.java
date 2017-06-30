@@ -4,10 +4,8 @@ import cofh.core.fluid.FluidTankCore;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
@@ -114,7 +112,7 @@ public class TileEntityMeatPacker extends TileEntityFactoryPowered {
 	public int fill(EnumFacing facing, FluidStack resource, boolean doFill) {
 
 		if (resource == null || !(resource.isFluidEqual(FluidRegistry.getFluidStack("meat", 1)) ||
-				resource.isFluidEqual(FluidRegistry.getFluidStack("pinkslime", 1)))) {
+				resource.isFluidEqual(FluidRegistry.getFluidStack("pink_slime", 1)))) {
 			return 0;
 		} else {
 			if (drain(2, false, _tanks[0]) == 1) {

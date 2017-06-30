@@ -3,7 +3,6 @@ package powercrystals.minefactoryreloaded.tile.machine;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 
-import powercrystals.minefactoryreloaded.setup.MFRThings;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactory;
 

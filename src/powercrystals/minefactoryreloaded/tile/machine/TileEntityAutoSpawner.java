@@ -12,10 +12,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.MFRRegistry;
@@ -26,6 +23,7 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.container.ContainerAutoSpawner;
 import powercrystals.minefactoryreloaded.item.ItemSafariNet;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryPowered;
 
@@ -46,7 +44,7 @@ public class TileEntityAutoSpawner extends TileEntityFactoryPowered {
 		setManageSolids(true);
 		createHAM(this, _spawnRange, 0, 2, false);
 		_areaManager.setOverrideDirection(EnumFacing.UP);
-		_tanks[0].setLock(FluidRegistry.getFluid("mob_essence"));
+		_tanks[0].setLock(MFRFluids.getFluid("mob_essence"));
 	}
 
 	public boolean getSpawnExact() {

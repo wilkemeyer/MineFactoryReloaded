@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 tile.mfr.machine.planter.name = 播种机
 tile.mfr.machine.fisher.name = 钓鱼机
 tile.mfr.machine.harvester.name = 收割机

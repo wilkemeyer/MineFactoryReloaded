@@ -8,12 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.core.UtilInventory;
@@ -21,6 +19,7 @@ import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSteamBoiler;
 import powercrystals.minefactoryreloaded.gui.container.ContainerSteamBoiler;
 import powercrystals.minefactoryreloaded.setup.MFRConfig;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -45,9 +44,9 @@ public class TileEntitySteamBoiler extends TileEntityFactoryInventory {
 
 		super(Machine.SteamBoiler);
 		setManageSolids(true);
-		_liquid = FluidRegistry.getFluid("steam");
-		_tanks[0].setLock(FluidRegistry.getFluid("steam"));
-		_tanks[1].setLock(FluidRegistry.getFluid("water"));
+		_liquid = MFRFluids.getFluid("steam");
+		_tanks[0].setLock(_liquid);
+		_tanks[1].setLock(MFRFluids.getFluid("water"));
 	}
 
 	@Override

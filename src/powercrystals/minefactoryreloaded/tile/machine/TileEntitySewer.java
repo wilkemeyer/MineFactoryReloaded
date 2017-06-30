@@ -14,10 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.block.BlockFactoryMachine;
@@ -26,6 +24,7 @@ import powercrystals.minefactoryreloaded.core.MFRLiquidMover;
 import powercrystals.minefactoryreloaded.gui.client.GuiFactoryInventory;
 import powercrystals.minefactoryreloaded.gui.client.GuiSewer;
 import powercrystals.minefactoryreloaded.gui.container.ContainerSewer;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 import powercrystals.minefactoryreloaded.setup.Machine;
 import powercrystals.minefactoryreloaded.tile.base.TileEntityFactoryInventory;
 
@@ -42,7 +41,7 @@ public class TileEntitySewer extends TileEntityFactoryInventory {
 		super(Machine.Sewer);
 		createHAM(this, 0, 1, 0, false);
 		_areaManager.setOverrideDirection(EnumFacing.UP);
-		_tanks[0].setLock(FluidRegistry.getFluid("sewage"));
+		_tanks[0].setLock(MFRFluids.getFluid("sewage"));
 	}
 
 	@Override

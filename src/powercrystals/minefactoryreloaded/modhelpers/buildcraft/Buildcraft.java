@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import powercrystals.minefactoryreloaded.MineFactoryReloadedCore;
+import powercrystals.minefactoryreloaded.setup.MFRFluids;
 
 /*@ChildMod(parent = MineFactoryReloadedCore.modId, mod = @Mod(modid = "MineFactoryReloaded|CompatBuildCraft",
 		name = "MFR Compat: BuildCraft",
@@ -29,7 +30,7 @@ public class Buildcraft {
 
 		try {
 			if (BuildcraftFuelRegistry.fuel != null)
-				BuildcraftFuelRegistry.fuel.addFuel(FluidRegistry.getFluid("biofuel"), 40, 15000);
+				BuildcraftFuelRegistry.fuel.addFuel(MFRFluids.getFluid("biofuel"), 40, 15000);
 		} catch (Throwable $) {
 			ModContainer This = FMLCommonHandler.instance().findContainerFor(this);
 			LogManager.getLogger(This.getModId()).log(Level.ERROR, "There was a problem loading " + This.getName(), $);
