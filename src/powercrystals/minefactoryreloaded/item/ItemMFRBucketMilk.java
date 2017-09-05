@@ -1,6 +1,8 @@
 package powercrystals.minefactoryreloaded.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
@@ -15,13 +17,16 @@ import powercrystals.minefactoryreloaded.setup.MFRFluids;
 public class ItemMFRBucketMilk extends ItemBucketMilk {
 
 	private ItemBucket bucketDelegate;
+	private Item vBucket;
 
-	public ItemMFRBucketMilk() {
+	public ItemMFRBucketMilk(Item vBucket) {
 
 		super();
+		this.vBucket = vBucket;
 		bucketDelegate = new ItemBucket(MFRFluids.milkLiquid);
 		setUnlocalizedName("mfr.bucket.milk");
 		setRegistryName(MineFactoryReloadedCore.modId + ":milk_bucket");
+		setContainerItem(Items.BUCKET);
 	}
 
 	@Override
@@ -35,4 +40,17 @@ public class ItemMFRBucketMilk extends ItemBucketMilk {
 
 		return bucketDelegate.initCapabilities(stack, nbt);
 	}
+
+	@Override
+	public int hashCode() {
+
+		return vBucket.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		return this == o || o == vBucket;
+	}
+
 }
